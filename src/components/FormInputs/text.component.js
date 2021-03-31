@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from 'react-bootstrap';
+import { Form, Image, InputGroup } from 'react-bootstrap';
 
 export default function TextComponent(props) {
   const {
@@ -9,13 +9,24 @@ export default function TextComponent(props) {
     value,
     onInputChange,
     name,
-    className,
+    inputClass,
+    inputIcon,
+    type,
+    containerClass,
+    inputVarible,
+    errorMessage,
   } = props;
 
   return (
     <>
-      <Form.Group>
-        <Form.Label>{label}</Form.Label>
+      <Form.Group className={containerClass}>
+        {label ? <Form.Label> {label} </Form.Label> : ''}
+        {inputIcon ? <Image src={inputIcon} rounded /> : ''}
+        {inputVarible ? (
+          <InputGroup.Prepend>{inputVarible}</InputGroup.Prepend>
+        ) : (
+          ''
+        )}
         <Form.Control
           id={id}
           value={value}
@@ -23,9 +34,11 @@ export default function TextComponent(props) {
             if (onInputChange) onInputChange(e);
           }}
           name={name}
+          type={type}
           placeholder={placeholder}
-          className={className}
+          className={inputClass}
         />
+        <p style={{ color: 'red' }}> {errorMessage} </p>
       </Form.Group>
     </>
   );

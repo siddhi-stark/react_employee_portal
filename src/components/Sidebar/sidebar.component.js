@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import menu from '../../helper/menu';
 
 function Sidebar() {
+  const history = useHistory();
   const [activeMenu, setActiveMenu] = useState(0);
   return (
     <>
@@ -29,7 +30,14 @@ function Sidebar() {
                   <Link
                     className={parentLinkCls}
                     to={menuItem.path}
-                    onClick={() => setActiveMenu(menuIndex)}
+                    onClick={() => {
+                      if (menuItem.title === 'Logout') {
+                        localStorage.removeItem('access_token');
+                        localStorage.removeItem('email');
+                        history.push('/login');
+                      }
+                      setActiveMenu(menuIndex);
+                    }}
                   >
                     <img
                       src={`images/${menuItem.icon}`}

@@ -3,7 +3,7 @@ import { Component } from 'react';
 export default class Api extends Component {
   static baseUrl = Api.getBaseUrl();
 
-  static loginUrl = `${Api.baseUrl}admin/login`;
+  static loginUrl = `${Api.baseUrl}login/`;
 
   // Get base URL of APIs
   static getBaseUrl() {
@@ -16,7 +16,7 @@ export default class Api extends Component {
       // Default: development server
       default:
         url =
-          'https://85brgtkdy3.execute-api.ca-central-1.amazonaws.com/dev/api/';
+          'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/';
         break;
     }
     return url;
