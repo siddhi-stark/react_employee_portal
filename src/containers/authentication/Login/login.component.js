@@ -11,39 +11,49 @@ import Api from '../../../helper/api';
 const validator = new SimpleReactValidator();
 
 function Login(props) {
-  const initialState = {
-    email: '',
-    password: '',
-  };
-  const [userData, setUserData] = useState(initialState);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
   const [count, forceUpdate] = useState(0);
   const dispatch = useDispatch();
   useEffect(() => {
+    const emailLocal = localStorage.getItem('email');
+    const passwordLocal = localStorage.getItem('password');
+    if (localStorage.checkbox && localStorage.email !== '') {
+      setUsername(emailLocal);
+      setRemember(true);
+      setPassword(passwordLocal);
+    } else {
+      setUsername('');
+      setRemember('');
+      setPassword('');
+    }
     dispatch({ type: 'LOGIN', value: false });
   }, [dispatch]);
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserData((inputValues) => {
-      return { ...inputValues, [name]: value };
-    });
-  };
-
   const loginUser = async () => {
-    const payload = {
-      username: userData.email,
-      password: userData.password,
+    if (remember && username !== '') {
+      await localStorage.setItem('checkbox', remember);
+      await localStorage.setItem('email', username);
+    } else {
+      localStorage.email = '';
+      localStorage.checkbox = '';
+    }
+
+    const postData = {
+      username,
+      password,
     };
 
     const { data, message } = await AuthApi.postDataToServer(
       Api.loginUrl,
-      payload
+      postData
     );
 
-    console.log('data', data);
     if (data && data.data && data.data.token && data.data.token.access_token) {
       await localStorage.setItem('access_token', data.data.token.access_token);
       await localStorage.setItem('email', data.data.email);
+      await localStorage.setItem('password', password);
 
       dispatch({ type: 'LOGIN', value: true });
 
@@ -74,7 +84,7 @@ function Login(props) {
             <img src="images/logo-black.svg" alt="img" />
           </a>
         </div>
-        <Form className="login-form">
+        <Form className="login-form" autocomplete="off">
           <div className="title text-center">
             <h1>Welcome!</h1>
           </div>
@@ -82,16 +92,16 @@ function Login(props) {
             <img src="images/user.svg" alt="Username" />
 
             <TextInput
-              onInputChange={(e) => handleInputChange(e)}
-              name="email"
+              onInputChange={(e) => setUsername(e.target.value)}
+              name="username"
               inputIcon="images/user.svg"
               containerClass="form-group"
               inputClass="form-control form-control-lg"
-              value={userData.email}
+              value={username}
               placeholder="Username"
               errorMessage={validator.message(
-                'email',
-                userData.email,
+                'username',
+                username,
                 'required|name'
               )}
             />
@@ -99,30 +109,33 @@ function Login(props) {
           <div className="form-group m-0">
             <img src="images/password.svg" alt="Username" />
             <TextInput
-              onInputChange={(e) => handleInputChange(e)}
+              onInputChange={(e) => setPassword(e.target.value)}
               name="password"
+              type="password"
               inputIcon="images/user.svg"
               containerClass="form-group"
               inputClass="form-control form-control-lg"
-              value={userData.password}
-              placeholder="Username"
+              value={password}
+              placeholder="Password"
               errorMessage={validator.message(
                 'password',
-                userData.password,
+                password,
                 'required|name'
               )}
             />
           </div>
           <div className="form-row d-flex align-items-center justify-content-between rememberme-password">
-            <label className="login__rememberme">
+            <Form.Label className="login__rememberme">
               <input
-                name="rememberme"
+                onChange={(e) => setRemember(e.target.checked)}
+                name="remember"
                 type="checkbox"
-                id="rememberme"
-                value="forever"
+                checked={remember}
+                id="remember"
+                value={remember}
               />
               <span>Remember me</span>
-            </label>
+            </Form.Label>
             <p className="lost_password">
               {' '}
               <a href="#">Forgot password ?</a>

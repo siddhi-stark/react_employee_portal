@@ -33,7 +33,6 @@ function Sidebar() {
                     onClick={() => {
                       if (menuItem.title === 'Logout') {
                         localStorage.removeItem('access_token');
-                        localStorage.removeItem('email');
                         history.push('/login');
                       }
                       setActiveMenu(menuIndex);
