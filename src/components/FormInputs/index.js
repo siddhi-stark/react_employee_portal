@@ -15,5 +15,5 @@ export {
   FileInput,
   CheckboxInput,
   DropdownInput,
-  ModalInput
+  ModalInput,
 };

@@ -99,11 +99,7 @@ function Login(props) {
               inputClass="form-control form-control-lg"
               value={username}
               placeholder="Username"
-              errorMessage={validator.message(
-                'username',
-                username,
-                'required'
-              )}
+              errorMessage={validator.message('username', username, 'required')}
             />
           </div>
           <div className="form-group m-0">
@@ -117,11 +113,7 @@ function Login(props) {
               inputClass="form-control form-control-lg"
               value={password}
               placeholder="Password"
-              errorMessage={validator.message(
-                'password',
-                password,
-                'required'
-              )}
+              errorMessage={validator.message('password', password, 'required')}
             />
           </div>
           <div className="form-row d-flex align-items-center justify-content-between rememberme-password">
@@ -138,7 +130,7 @@ function Login(props) {
             </Form.Label>
             <p className="lost_password">
               {' '}
-              <a href="#">Forgot password ?</a>
+              <a href="/forget-password">Forgot password ?</a>
             </p>
           </div>
           <div className="text-center mt-3">

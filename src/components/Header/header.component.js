@@ -23,7 +23,9 @@ function Header() {
                 <div className="dropdown-menu">
                   <div className="header-navheading text-center">
                     <h5 className="main-notification-title">Alexa John</h5>
-                    <p className="main-notification-text">Web & Graphic Designer</p>
+                    <p className="main-notification-text">
+                      Web & Graphic Designer
+                    </p>
                     <div className="employee-id">
                       <span>Employee ID SDMS 204</span>
                     </div>
@@ -31,22 +33,42 @@ function Header() {
                   <ul className="m-0 list-unstyled p-0">
                     <li>
                       <a className="dropdown-item border-top" href="#">
-                        <img src="/images/user.svg" alt="User" className="svg" /> My Profile
+                        <img
+                          src="/images/user.svg"
+                          alt="User"
+                          className="svg"
+                        />{' '}
+                        My Profile
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="#">
-                        <img src="/images/edit.svg" alt="Edit" className="svg" /> Edit Profile
+                        <img
+                          src="/images/edit.svg"
+                          alt="Edit"
+                          className="svg"
+                        />{' '}
+                        Edit Profile
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="#">
-                        <img src="/images/change-password.svg" alt="Change" className="svg" /> Change Password
+                        <img
+                          src="/images/change-password.svg"
+                          alt="Change"
+                          className="svg"
+                        />{' '}
+                        Change Password
                       </a>
                     </li>
                     <li>
                       <a className="dropdown-item" href="#">
-                        <img src="/images/logout-profile.svg" alt="Logout" className="svg" /> Log Out
+                        <img
+                          src="/images/logout-profile.svg"
+                          alt="Logout"
+                          className="svg"
+                        />{' '}
+                        Log Out
                       </a>
                     </li>
                   </ul>

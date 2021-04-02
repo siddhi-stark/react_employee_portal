@@ -6,12 +6,11 @@ import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 // import Api from '../../../helper/api';
 
 function Dashboard() {
-
-// const getClockInTime = async () => {
-//   const endPoint = `${Api.clockInUrl}`;
-//   const { data } = await AuthApi.getDataFromServer(endPoint);
-//   // if(data && data.data){
-//   }
+  // const getClockInTime = async () => {
+  //   const endPoint = `${Api.clockInUrl}`;
+  //   const { data } = await AuthApi.getDataFromServer(endPoint);
+  //   // if(data && data.data){
+  //   }
 
   return (
     <>
@@ -28,7 +27,7 @@ function Dashboard() {
           <Col xl={8} id="main-content">
             <Jumbotron className="welcome-box">
               <Row className="align-items-center">
-                <Col md = {5}>
+                <Col md={5}>
                   <div className="welcome-text">
                     <h1>
                       Welcome <strong>Alexa,</strong>
@@ -63,7 +62,7 @@ function Dashboard() {
             <Card className="flex-fill w-100 weekly-status-box">
               <Card.Body>
                 <Row>
-                  <Col md = {6}>
+                  <Col md={6}>
                     <h5 className="card-title mb-0">Weekly Status</h5>
                     <div className="weekly-status">
                       <ul className="list-unstyled p-0">

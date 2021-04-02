@@ -4,8 +4,12 @@ export default class Api extends Component {
   static baseUrl = Api.getBaseUrl();
 
   static loginUrl = `${Api.baseUrl}login/`;
-  
+
   static clockInUrl = `${Api.baseUrl}clock-in/`;
+
+  static forgetPasswordUrl = `${Api.baseUrl}forget-password/`;
+
+  static resetPasswordUrl = `${Api.baseUrl}reset-password/`;
 
   // Get base URL of APIs
   static getBaseUrl() {

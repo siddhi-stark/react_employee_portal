@@ -5,7 +5,7 @@ const menu = [
     icon: 'dashboard.svg',
     submenu: [],
   },
-  
+
   {
     title: 'Logout',
     path: '#',
