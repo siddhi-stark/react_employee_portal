@@ -7,6 +7,27 @@ jQuery(document).ready(function () {
     /*$('.nav-item').toggleClass('open');*/
   });
 
+  $('body').on('click', '.profile-img', function (event) {
+    $(this).toggleClass('show');
+    /*$('.nav-item').toggleClass('open');*/
+  });
+
+  $('body').on('click', '.main-header-menu-icon', function (event) {
+    $(this).toggleClass('main-sidebar-hide');
+    /*$('.nav-item').toggleClass('open');*/
+  });
+
+  $('body').on('click', '.header-settings', function (event) {
+    $(this).toggleClass('open');
+    /*$('.nav-item').toggleClass('open');*/
+  });
+
+  $('body').on('click', '.main-header-menu-icon', function (event) {
+    $(this).toggleClass('open');
+    $('html body').toggleClass('main-sidebar-hide');
+    /*$('.nav-item').toggleClass('open');*/
+  });
+
 
   // Js for SVG
   jQuery('img.svg').each(function () {

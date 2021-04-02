@@ -5,12 +5,7 @@ const menu = [
     icon: 'dashboard.svg',
     submenu: [],
   },
-  {
-    title: 'Employee',
-    path: '/employee',
-    icon: 'dashboard.svg',
-    submenu: [],
-  },
+  
   {
     title: 'Logout',
     path: '#',

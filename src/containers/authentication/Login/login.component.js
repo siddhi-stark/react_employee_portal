@@ -84,7 +84,7 @@ function Login(props) {
             <img src="images/logo-black.svg" alt="img" />
           </a>
         </div>
-        <Form className="login-form" autocomplete="off">
+        <Form className="login-form" autoComplete="off">
           <div className="title text-center">
             <h1>Welcome!</h1>
           </div>
@@ -102,7 +102,7 @@ function Login(props) {
               errorMessage={validator.message(
                 'username',
                 username,
-                'required|name'
+                'required'
               )}
             />
           </div>
@@ -120,7 +120,7 @@ function Login(props) {
               errorMessage={validator.message(
                 'password',
                 password,
-                'required|name'
+                'required'
               )}
             />
           </div>
