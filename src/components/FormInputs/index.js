@@ -6,6 +6,7 @@ import FileInput from './file.component';
 import RadioInput from './radio.component';
 import CheckboxInput from './checkbox.component';
 import DropdownInput from './selectDropdown.component';
+import ModalInput from './modal.component';
 
 export {
   TextInput,
@@ -14,4 +15,5 @@ export {
   FileInput,
   CheckboxInput,
   DropdownInput,
+  ModalInput
 };

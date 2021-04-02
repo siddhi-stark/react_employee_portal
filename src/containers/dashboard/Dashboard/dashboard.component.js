@@ -1,9 +1,18 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card } from 'react-bootstrap';
+import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
+// import AuthApi from '../../../helper/authApi';
+// import Api from '../../../helper/api';
 
 function Dashboard() {
+
+// const getClockInTime = async () => {
+//   const endPoint = `${Api.clockInUrl}`;
+//   const { data } = await AuthApi.getDataFromServer(endPoint);
+//   // if(data && data.data){
+//   }
+
   return (
     <>
       <div className="page-header">
@@ -15,11 +24,11 @@ function Dashboard() {
         </div>
       </div>
       <section className="content-area">
-        <div className="row">
-          <div className="col-xl-8" id="main-content">
+        <Row>
+          <Col xl={8} id="main-content">
             <Jumbotron className="welcome-box">
-              <div className="row align-items-center">
-                <div className="col-md-5">
+              <Row className="align-items-center">
+                <Col md = {5}>
                   <div className="welcome-text">
                     <h1>
                       Welcome <strong>Alexa,</strong>
@@ -31,30 +40,30 @@ function Dashboard() {
                       </p>
                     </blockquote>
                   </div>
-                </div>
-                <div className="col-md-2">
+                </Col>
+                <Col md={2}>
                   <div className="check-in">
                     <div className="time-count text-center">
                       <span>00 : 00</span>
                     </div>
-                    <button type="button" className="btn btn-primary">
+                    <Button type="button" className="btn btn-primary">
                       Clock In
-                    </button>
+                    </Button>
                   </div>
-                </div>
-                <div className="col-md-5">
+                </Col>
+                <Col md={5}>
                   <div className="welcome-img text-right">
                     <img src="images/welcome-img.svg" alt="img" />
                   </div>
-                </div>
-              </div>
+                </Col>
+              </Row>
             </Jumbotron>
-          </div>
-          <div className="col-xl-4" id="right-sidebar">
+          </Col>
+          <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
               <Card.Body>
-                <div className="row">
-                  <div className="col-md-6">
+                <Row>
+                  <Col md = {6}>
                     <h5 className="card-title mb-0">Weekly Status</h5>
                     <div className="weekly-status">
                       <ul className="list-unstyled p-0">
@@ -69,13 +78,13 @@ function Dashboard() {
                         </li>
                       </ul>
                     </div>
-                  </div>
-                  <div className="col-md-6">
+                  </Col>
+                  <Col md={6}>
                     <div className="persentage-circle">
                       <img src="images/persentage-circle.svg" alt="img" />
                     </div>
-                  </div>
-                </div>
+                  </Col>
+                </Row>
                 <div className="last-week">
                   <a href="#">
                     <img src="images/previous.svg" alt="" /> Last Week
@@ -209,8 +218,8 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </section>
     </>
   );
