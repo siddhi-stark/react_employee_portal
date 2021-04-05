@@ -31,7 +31,7 @@ function ForgetPassword() {
       email: userData.email,
     };
 
-    const { data } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.postDataToServer(
       `${Api.forgetPasswordUrl}`,
       payload
     );
@@ -39,6 +39,8 @@ function ForgetPassword() {
     if (data) {
       console.log(data); //eslint-disable-line
       swal('Email has been sent successfully.');
+    } else {
+      swal(message);
     }
   };
 

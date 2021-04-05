@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
+import { Form } from 'react-bootstrap';
 import { TextInput } from '../../../components/FormInputs';
 import Api from '../../../helper/api';
 import AuthApi from '../../../helper/authApi';
@@ -60,7 +61,7 @@ function ResetPassword(props) {
       payload
     );
 
-    if (data && data.success === true) {
+    if (data && data.success) {
       swal('Password changed successfully', '', 'success');
       props.history.push('/login');
     } else {
@@ -87,7 +88,7 @@ function ResetPassword(props) {
             <img src="/images/logo-black.svg" alt="img" />
           </a>
         </div>
-        <form className="login-form" id="resetPassword">
+        <Form className="login-form" id="resetPassword">
           <div className="title text-center">
             <h1>Reset Password</h1>
           </div>
@@ -149,7 +150,7 @@ function ResetPassword(props) {
           <a href="/login" className="back-to-login">
             Back to Login
           </a>
-        </form>
+        </Form>
       </div>
     </>
   );
