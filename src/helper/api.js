@@ -11,6 +11,8 @@ export default class Api extends Component {
 
   static resetPasswordUrl = `${Api.baseUrl}reset-password/`;
 
+  static verifyToken = `${Api.baseUrl}password/find/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

@@ -25,8 +25,12 @@ function ResetPassword(props) {
 
   const verifyToken = async (tkn) => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.tokenVerifyUrl}?token=${tkn}`
+      `${Api.verifyToken}?token=${tkn}`
     );
+    if (data) {
+      console.log('data', data.data.email); //eslint-disable-line
+      setEmail(data.data.email);
+    }
     if (!data) {
       swal('Token is invalid', '', 'error');
       props.history.push('/login');
@@ -45,18 +49,20 @@ function ResetPassword(props) {
 
   const setNewPassword = async () => {
     const payload = {
+      token,
       email,
       password,
       confirm_password: confirmPassword,
     };
 
     const { data, message } = await AuthApi.postDataToServer(
-      `${Api.resetPasswordUrl}?token=${token}`,
+      `${Api.resetPasswordUrl}`,
       payload
     );
 
     if (data && data.success === true) {
       swal('Password changed successfully', '', 'success');
+      props.history.push('/login');
     } else {
       swal(message, '', 'error');
     }

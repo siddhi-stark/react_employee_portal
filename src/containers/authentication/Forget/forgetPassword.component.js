@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import { Form, Button, Image } from 'react-bootstrap';
+import swal from 'sweetalert';
 import { TextInput } from '../../../components/FormInputs';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
@@ -25,23 +26,6 @@ function ForgetPassword() {
     });
   };
 
-  // const sendResetPasswordEmail = async () => {
-  //     const payload = {
-  //       email: email.trim(),
-  //     };
-  //     const { data, message } = await AuthApi.postDataToServer(
-  //       `${Api.forgotPasswordUrl}`,
-  //       payload
-  //     );
-
-  //     if (data && data.success === true) {
-  //       swal('Link successfully sent to your Email.', '', 'success');
-  //       await resetData();
-  //     } else {
-  //       swal(message, '', 'error');
-  //     }
-  //   };
-
   const onResetPasswordEmail = async () => {
     const payload = {
       email: userData.email,
@@ -54,6 +38,7 @@ function ForgetPassword() {
 
     if (data) {
       console.log(data); //eslint-disable-line
+      swal('Email has been sent successfully.');
     }
   };
 
