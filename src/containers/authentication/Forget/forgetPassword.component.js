@@ -37,7 +37,6 @@ function ForgetPassword() {
     );
 
     if (data) {
-      console.log(data); //eslint-disable-line
       swal('Email has been sent successfully.');
     } else {
       swal(message);
