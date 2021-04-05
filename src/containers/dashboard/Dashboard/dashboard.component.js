@@ -1,9 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
+import { Jumbotron, Card, Button, Row, Col, Image } from 'react-bootstrap';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
+import Table from '../../../components/Table/simpletable.component';
+import materialnew from '../../../helper/materialnew';
+import {
+  ModalInput
+  } from '../../../components/FormInputs';
 // import AuthApi from '../../../helper/authApi';
 // import Api from '../../../helper/api';
+
+const columns = [
+{
+    id: 'date',
+    label: 'Date',
+},
+{
+    id: 'clockin',
+    label: 'Clock-in',
+},
+{
+    id: 'clockout',
+    label: 'Clock-out',
+},
+{
+    id: 'totalworking',
+    label: 'Total Working',
+}
+];
 
 function Dashboard() {
   // const getClockInTime = async () => {
@@ -11,6 +35,56 @@ function Dashboard() {
   //   const { data } = await AuthApi.getDataFromServer(endPoint);
   //   // if(data && data.data){
   //   }
+ 
+ const [rows, setRows] = useState('');
+ const [modalShow, setModalShow] = useState(false);
+
+  const getTableData = async () => {
+
+      const row = [];  
+      // data.map((dt, i) => {
+      materialnew.map((mat) => {
+      console.log('mat', mat); //eslint-disable-line
+        row.push({
+          date: mat.date,
+          clockin: mat.startime,
+          clockout: mat.endtime,
+          totalworking: mat.total,
+          
+          action: (
+            <>
+              <a
+                href="/"
+                className="pl-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+               <Image src="images/edit.svg" />
+              </a>
+              <a
+                href="/"
+                className=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+               <Image src="images/edit.svg" />
+              </a>
+            </>
+          ),
+        });
+        return mat;
+      });
+      setRows(row);
+    // }
+  };
+
+  useEffect(() => {
+    getTableData();
+  },[]);
 
   return (
     <>
@@ -92,59 +166,57 @@ function Dashboard() {
               </Card.Body>
             </Card>
             <div className="table-projects time-sheet-table">
-              <div className="card">
+            <Button
+                size="sm"
+                variant="primary"
+                type="submit"
+                onClick={() => setModalShow(true)}
+              >
+                Add Task
+              </Button>
+
+              <ModalInput
+        size="lg"
+        // aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={modalShow}
+        label="Add Study Material"
+        id="contained-modal-title-vcenter"
+        modalBody={
+           <h6>Modalll</h6>
+        }
+        modalFooter={
+           <div className="float-end">
+            <Button variant="secondary" onClick={() => setModalShow(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              className="ms-4"
+              // onClick={(e) => addData(e)}
+            >
+              Add
+            </Button>
+          </div>
+        }
+      />
+              <Card>
                 <div className="table-title">
-                  <h5 className="card-title">Time Sheet</h5>
+                  <Card.Title>Time Sheet</Card.Title>
                 </div>
-                <div className="table-responsive">
-                  <table className="table table-striped m-0">
-                    <thead>
-                      <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Clock in</th>
-                        <th scope="col">Clock out</th>
-                        <th scope="col">Total working</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">15/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">16/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">17/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">18/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">19/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                <Table
+                  columns={columns}
+                  rows={rows}
+                  showPagination="true"
+                  showCheckbox="true"
+                   />
+                   
+              </Card>
             </div>
             <div className="holidays-applied">
-              <div className="row">
-                <div className="col-xl-6">
+              <Row>
+                <Col xl={6}>
                   <div className="upcoming-bg">
                     <div className="upcoming-event-box">
                       <div className="upcoming-event-img">
@@ -162,8 +234,8 @@ function Dashboard() {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="col-xl-6">
+                </Col>
+                <Col xl={6}>
                   <div className="upcoming-bg faint-orange">
                     <div className="upcoming-event-box">
                       <div className="upcoming-event-img">
@@ -181,12 +253,12 @@ function Dashboard() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </Col>
+              </Row>
             </div>
             <div className="social-media">
-              <div className="card flex-fill w-100">
-                <div className="card-body">
+              <Card flex-fill w-100>
+                <Card.Body>
                   <div className="table-title">
                     <h5 className="card-title mb-0">Social Media</h5>
                   </div>
@@ -214,8 +286,8 @@ function Dashboard() {
                       </li>
                     </ul>
                   </div>
-                </div>
-              </div>
+                </Card.Body>
+              </Card>
             </div>
           </Col>
         </Row>
