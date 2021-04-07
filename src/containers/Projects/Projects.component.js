@@ -58,19 +58,15 @@ function Projects() {
   });
 
   const onRtSupport = async (id) => {
-    console.log('id', id);
     const endPoint = `${Api.getProjects}${id}/`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    console.log('data', data);
   };
 
   const getTableData = async (pageNo = 0) => {
-    console.log('jfkjdgif');
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.getProjects}?page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
-      console.log(data.paginator);
       setPagination({
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
