@@ -60,6 +60,7 @@ function Projects() {
   const onRtSupport = async (id) => {
     const endPoint = `${Api.getProjects}${id}/`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
+    console.log('data', data);
   };
 
   const getTableData = async (pageNo = 0) => {
