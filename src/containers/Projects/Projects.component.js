@@ -90,7 +90,10 @@ function Projects() {
               label={`${percentage}%`}
             />
           ),
-          link: <a href="#">{proj.tw_id}</a>,
+          link: <a href={`https://sdms.teamwork.com/#tasks/${proj.tw_id}`}>
+          <span><Image src="images/redirect.png" /></span>
+          {/* {proj.tw_id} */}
+          </a>,
         });
         return proj;
       });
