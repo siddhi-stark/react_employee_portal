@@ -90,6 +90,7 @@
     "jsx-a11y/anchor-is-valid": "off",
     "no-script-url": "off",
     "react/no-array-index-key": "off",
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "react/jsx-no-target-blank": "off"
   }
 }

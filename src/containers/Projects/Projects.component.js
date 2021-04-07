@@ -4,6 +4,7 @@ import { Card, Row, Col, Image, ProgressBar } from 'react-bootstrap';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import constants from '../../helper/constants';
 
 const columns = [
   {
@@ -89,7 +90,7 @@ function Projects() {
             ),
           completion: <ProgressBar variant="success" now={proj.completion} />,
           link: (
-            <a href={`constants.link${proj.tw_id}`}>
+            <a href={`${constants.link}${proj.tw_id}`} target="_blank">
               <span>
                 <Image src="/images/redirect.png" />
               </span>
