@@ -57,12 +57,20 @@ function Projects() {
     totalItems: 10,
   });
 
-  const getTableData = async () => {
+  const onRtSupport = async (id) => {
+    console.log('id', id);
+    const endPoint = `${Api.getProjects}${id}/`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    console.log('data', data);
+  };
+
+  const getTableData = async (pageNo = 0) => {
     console.log('jfkjdgif');
-    // const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.getProjects}?types=all`;
+    const page = pageNo || pagination.current_page;
+    const endPoint = `${Api.getProjects}?page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
+      console.log(data.paginator);
       setPagination({
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
@@ -77,11 +85,20 @@ function Projects() {
           name: proj.name,
           spend: proj.spend,
           allocated: proj.allocated,
+          completed: proj.completed,
+          remaining: proj.remaining,
           support:
             proj.rt_support !== false ? (
               <Image src="images/success.svg" />
             ) : (
-              <Image src="images/fail.svg" />
+              <Image
+                src="images/fail.svg"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onRtSupport(proj.id);
+                }}
+              />
             ),
           completion: (
             <ProgressBar
@@ -90,10 +107,14 @@ function Projects() {
               label={`${percentage}%`}
             />
           ),
-          link: <a href={`https://sdms.teamwork.com/#tasks/${proj.tw_id}`}>
-          <span><Image src="images/redirect.png" /></span>
-          {/* {proj.tw_id} */}
-          </a>,
+          link: (
+            <a href={`https://sdms.teamwork.com/#tasks/${proj.tw_id}`}>
+              <span>
+                <Image src="images/redirect.png" />
+              </span>
+              {/* {proj.tw_id} */}
+            </a>
+          ),
         });
         return proj;
       });
