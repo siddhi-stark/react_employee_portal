@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
+import {
+  Jumbotron,
+  Card,
+  Button,
+  Row,
+  Col,
+  Image,
+  ProgressBar,
+} from 'react-bootstrap';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
@@ -39,10 +47,6 @@ const columns = [
     id: 'link',
     label: 'TW Link',
   },
-  {
-    id: 'action',
-    label: 'Action',
-  },
 ];
 
 function Projects() {
@@ -53,12 +57,11 @@ function Projects() {
     totalItems: 10,
   });
 
-  const getTableData = async (pageNo = 0) => {
+  const getTableData = async () => {
     console.log('jfkjdgif');
-    const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.getProjects}?types=all&limit=${pagination.itemsPerPage}&page=${page}`;
+    // const page = pageNo || pagination.current_page;
+    const endPoint = `${Api.getProjects}?types=all`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    console.log('data', data);
     if (data && data.data) {
       setPagination({
         activePage: data.paginator.current_page,
@@ -69,10 +72,25 @@ function Projects() {
       const row = [];
 
       data.data.map((proj) => {
+        const percentage = 60;
         row.push({
           name: proj.name,
           spend: proj.spend,
           allocated: proj.allocated,
+          support:
+            proj.rt_support !== false ? (
+              <Image src="images/success.svg" />
+            ) : (
+              <Image src="images/fail.svg" />
+            ),
+          completion: (
+            <ProgressBar
+              variant="success"
+              now={percentage}
+              label={`${percentage}%`}
+            />
+          ),
+          link: <a href="#">{proj.tw_id}</a>,
         });
         return proj;
       });
