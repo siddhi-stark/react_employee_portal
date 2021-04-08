@@ -90,7 +90,7 @@ function Projects() {
             ),
           completion: <ProgressBar variant="success" now={proj.completion} />,
           link: (
-            <a href={`${constants.link}${proj.tw_id}`} target="_blank">
+            <a href={`${constants.link}${proj.tw_id}`}>
               <span>
                 <Image src="/images/redirect.png" />
               </span>

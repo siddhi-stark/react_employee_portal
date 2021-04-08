@@ -1,15 +1,49 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
+import React, {useState, useEffect } from 'react';
+import { withRouter, useHistory } from 'react-router-dom';
+import {  Button, Row, Col, Card, Jumbotron } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
 import Projects from '../../containers/Projects/Projects.component';
+import Reports from '../../containers/Reports/reports.component';
 
 function DashboardNew() {
+  const [showReport, setShowReport] = useState(false);
+
+  // function updateReport() {
+  //   const url = window.location.pathname;
+  //   if (url === '/reports') {
+  //     console.log('urlNew', url);
+  //     setShowReport(true);
+  //   }
+  //   else{
+  //     setShowReport(!showReport);
+  //   }
+  // }
+  const history = useHistory() 
+
+  useEffect(() => {
+     return history.listen((location) => { 
+        console.log(`You changed the page to: ${location.pathname}`) 
+        if(location.pathname === '/reports') {
+          setShowReport(true)
+        }
+        else{
+          setShowReport(false)
+        }
+     })
+
+      
+  },[history]) 
+
+  // useEffect(() => {
+  //   updateReport();
+  // }, [])
+
   return (
     <>
+    {console.log('showReport', showReport)}
       <div className="page-header">
         <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
+          <h2 className="main-content-title tx-24 mg-b-5">Report</h2>
           <Breadcrumb />
         </div>
       </div>
@@ -48,7 +82,14 @@ function DashboardNew() {
                 </Col>
               </Row>
             </Jumbotron>
-            <Projects />
+            { showReport === true 
+            ?
+            <Reports />
+            :
+             <Projects />
+             }
+            
+             
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

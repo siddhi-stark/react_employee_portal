@@ -11,7 +11,12 @@ const menu = [
     icon: 'dashboard.svg',
     submenu: [],
   },
-
+  {
+    title: 'Reports',
+    path: '/reports',
+    icon: 'report.svg',
+    submenu: [],
+  },
   {
     title: 'Logout',
     path: '#',
