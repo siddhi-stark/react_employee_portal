@@ -17,6 +17,8 @@ export default class Api extends Component {
 
   static designationUrl = `${Api.baseUrl}designations/`;
 
+  static employeeUrl = `${Api.baseUrl}employee/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

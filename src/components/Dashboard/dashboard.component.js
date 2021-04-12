@@ -4,18 +4,25 @@ import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
 import Projects from '../../containers/Projects/Projects.component';
 import Designations from '../../containers/Designations/designation.component';
+import Employee from '../../containers/Employee/employee.component';
 
 function DashboardNew() {
   const [showDesignation, setShowDesignation] = useState(false);
-
+  const [showEmployee, setShowEmployee] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
     return history.listen((location) => {
       if (location.pathname === '/designation') {
         setShowDesignation(true);
-      } else {
+        setShowEmployee(false);
+      }else if (location.pathname === '/employee') {
+        setShowEmployee(true);
         setShowDesignation(false);
+      }
+      else {
+        setShowDesignation(false);
+        setShowEmployee(false);
       }
     });
   }, [history]);
@@ -63,7 +70,31 @@ function DashboardNew() {
                 </Col>
               </Row>
             </Jumbotron>
-            {showDesignation === true ? <Designations /> : <Projects />}
+            {/* {
+              showDesignation === true ? <Designations /> : 
+              showEmployee === true ? <Employee /> :
+               <Projects  />
+            } */}
+            {
+              showDesignation === true && (
+                <Designations />
+              )
+            }
+            {
+              showDesignation === false && showEmployee === true && (
+                <Employee />
+              )
+            }
+            {
+              showDesignation === false && showEmployee === false && (
+                <Projects />
+              )
+            }
+    
+            {/* {showDesignation === true ? <Designations /> : <Projects  />}
+            {(!showDesignation && showEmployee) && (
+              <Employee />
+            )} */}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

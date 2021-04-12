@@ -6,6 +6,7 @@ import Login from './containers/authentication/Login/login.component';
 import ForgetPassword from './containers/authentication/Forget/forgetPassword.component';
 import ResetPassword from './containers/authentication/Forget/resetPassword.component';
 import DashboardNew from './components/Dashboard/dashboard.component';
+// import Employee from './containers/Employee/employee.component';
 
 function Routes() {
   return (
@@ -16,6 +17,7 @@ function Routes() {
       <Route path="/password/find/:token" exact component={ResetPassword} />
       <Route path="/projects" exact component={DashboardNew} />
       <Route path="/designation" exact component={DashboardNew} />
+      <Route path="/employee" exact component={DashboardNew} />
     </Switch>
   );
 }
