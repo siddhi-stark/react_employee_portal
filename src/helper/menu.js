@@ -11,6 +11,12 @@ const menu = [
     icon: 'dashboard.svg',
     submenu: [],
   },
+  {
+    title: 'Designation',
+    path: '/designation',
+    icon: 'dashboard.svg',
+    submenu: [],
+  },
 
   {
     title: 'Logout',
