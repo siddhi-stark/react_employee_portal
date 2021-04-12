@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Image, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
+import SweetAlert from 'react-bootstrap-sweetalert';
 import { ModalInput, TextInput } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
@@ -22,11 +23,11 @@ const columns = [
 const validator = new SimpleReactValidator();
 
 function Projects() {
-  const history = useHistory();
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [designationId, setDesignationId] = useState(null);
+  const [ShowDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -71,7 +72,9 @@ function Projects() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  removeDesignation(desgn.id); //eslint-disable-line
+                  setShowDelete(true);
+                  setDesignationId(desgn.id);
+                  // removeDesignation(desgn.id); //eslint-disable-line
                 }}
               >
                 <Image src="images/delete.png" />
@@ -96,6 +99,8 @@ function Projects() {
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
+          setShowDelete(false);
+          setDesignationId(null);
           getTableData(1);
         }
       });
@@ -126,14 +131,12 @@ function Projects() {
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
-          history.push('/designation');
           setModalShow(false);
           getTableData(1);
         }
       });
     } else {
       swal(data && data.message, '', 'error');
-      history.push('/desingation');
     }
   };
 
@@ -149,6 +152,25 @@ function Projects() {
 
   return (
     <>
+      {ShowDelete && (
+        <SweetAlert
+          title="Are you sure, do you want to remove the designation ?"
+          error
+          showCancel
+          confirmBtnBsStyle="success"
+          cancelBtnBsStyle="danger"
+          onConfirm={() => {
+            removeDesignation(designationId);
+          }}
+          onCancel={() => {
+            setShowDelete(false);
+            setShowDelete(null);
+          }}
+        >
+          You wont be able to revert this!
+        </SweetAlert>
+      )}
+
       <div className="mt-3">
         <Card>
           <Card.Body>
