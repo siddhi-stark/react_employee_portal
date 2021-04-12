@@ -11,21 +11,17 @@ function DashboardNew() {
   const history = useHistory();
 
   useEffect(() => {
-    return history.listen((location) => { 
-       console.log(`You changed the page to: ${location.pathname}`) 
-       if(location.pathname === '/designation') {
-         setShowDesignation(true)
-       }
-       else{
-         setShowDesignation(false)
-       }
-    })
+    return history.listen((location) => {
+      if (location.pathname === '/designation') {
+        setShowDesignation(true);
+      } else {
+        setShowDesignation(false);
+      }
+    });
+  }, [history]);
 
-     
- },[history])  
   return (
     <>
-    {console.log('showDesignation', showDesignation)}
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
@@ -67,12 +63,7 @@ function DashboardNew() {
                 </Col>
               </Row>
             </Jumbotron>
-            { showDesignation === true 
-            ?
-            <Designations />
-            :
-             <Projects />
-             }
+            {showDesignation === true ? <Designations /> : <Projects />}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

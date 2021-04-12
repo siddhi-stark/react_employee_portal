@@ -15,6 +15,8 @@ export default class Api extends Component {
 
   static getProjects = `${Api.baseUrl}projects/`;
 
+  static designationUrl = `${Api.baseUrl}designations/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
