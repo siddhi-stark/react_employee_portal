@@ -1,12 +1,31 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
 import Projects from '../../containers/Projects/Projects.component';
+import Designations from '../../containers/Designations/designation.component';
 
 function DashboardNew() {
+  const [showDesignation, setShowDesignation] = useState(false);
+
+  const history = useHistory();
+
+  useEffect(() => {
+    return history.listen((location) => { 
+       console.log(`You changed the page to: ${location.pathname}`) 
+       if(location.pathname === '/designation') {
+         setShowDesignation(true)
+       }
+       else{
+         setShowDesignation(false)
+       }
+    })
+
+     
+ },[history])  
   return (
     <>
+    {console.log('showDesignation', showDesignation)}
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
@@ -48,7 +67,12 @@ function DashboardNew() {
                 </Col>
               </Row>
             </Jumbotron>
-            <Projects />
+            { showDesignation === true 
+            ?
+            <Designations />
+            :
+             <Projects />
+             }
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
