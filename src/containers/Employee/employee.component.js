@@ -35,9 +35,15 @@ function Employee() {
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
-  const [designationId, setDesignationId] = useState(null);
+  const [employeeId, setEmployeeId] = useState(null);
   const [ShowDelete, setShowDelete] = useState(false);
-  const [designation, setDesignation] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [password, setPassword] = useState('');
+  const [designation, setDesignation] = useState([]);
+  const [selectedDesignationOption, setSelectedDesignationOption] = useState(null);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -67,26 +73,33 @@ function Employee() {
               <a
                 href="/"
                 className="pl-2"
-                // onClick={(e) => {
-                //   setModalShow(true);
-                //   e.preventDefault();
-                //   e.stopPropagation();
-                //   setDesignationId(desgn.id);
-                //   setDesignation(desgn.name);
-                // }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setModalShow(true);  
+                  setEmployeeId(emp.id);
+                  setSelectedDesignationOption({
+                      label: emp.designation_name,
+                      id: emp.designation_id
+                  });
+                  setFullName(emp.full_name);
+                  setEmail(emp.email);
+                  setPassword(emp.password);
+                  setMobile(emp.mobile);
+                }}
               >
                 <Image src="images/edit.svg" />
               </a>
               <a
                 href="/"
                 className=""
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   e.stopPropagation();
-                //   setShowDelete(true);
-                //   setDesignationId(desgn.id);
-                //   // removeDesignation(desgn.id); //eslint-disable-line
-                // }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowDelete(true);
+                  setEmployeeId(emp.id);
+                  // removeDesignation(desgn.id); //eslint-disable-line
+                }}
               >
                 <Image src="images/delete.png" />
               </a>
@@ -99,79 +112,121 @@ function Employee() {
     }
   };
 
+  const getDesignation = async () => {
+      const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}`);
+      if(data) {
+          console.log('data', data.data);
+          setDesignation(data.data);
+      };
+  };
+
   useEffect(() => {
     getTableData(1);
+    getDesignation();
   }, []);
 
-  const removeDesignation = async (id) => {
+  const deleteEmployee = async (id) => {
     const { data } = await AuthApi.deleteDataFromServer(
-      `${Api.designationUrl}${id}/`
+      `${Api.employeeUrl}${id}/`
     );
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setShowDelete(false);
-          setDesignationId(null);
+          setEmployeeId(null);
           getTableData(1);
         }
       });
     } else {
       swal(data && data.message[0], '', 'error');
+      setModalShow(false);
     }
   };
 
   const onCancel = () => {
+    setSelectedDesignationOption();
     validator.hideMessages();
-    setDesignation();
+    setFullName();
+    setEmail();
+    setMobile();
+    setPassword();
     setModalShow(false);
   };
 
-  const addDesignation = async () => {
+  const addEmployee = async () => {
+      console.log('setEmployeeID', setEmployeeId);
     const postData = {
-      name: designation,
-      is_deleted: 'false',
+      full_name: fullName, 
+      email,
+      mobile, 
+      designation_id: selectedDesignationOption.id,
+      designation_name: selectedDesignationOption.label,
+      role_id: '5',
+      password,
     };
-    const callback = designationId
+    const callback = employeeId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
-    const endPoint = designationId
-      ? `${Api.designationUrl}${designationId}/`
-      : Api.designationUrl;
+    const endPoint = employeeId
+      ? `${Api.employeeUrl}${employeeId}/`
+      : Api.employeeUrl;
     const { data } = await callback(endPoint, postData);
 
     if (data) {
-      swal(data && data.message[0], '', 'success').then((result) => {
+        setSelectedDesignationOption();
+        console.log('employee added successfullyy');
+        swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
+          setEmployeeId();
+          setSelectedDesignationOption();
+          validator.hideMessages();
+          setFullName();
+          setEmail();
+          setPassword();
+          setMobile(); 
           setModalShow(false);
           getTableData(1);
         }
       });
     } else {
       swal(data && data.message, '', 'error');
+      setModalShow();
     }
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (validator.allValid()) {
-      addDesignation();
+      addEmployee();
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
     }
   };
 
+  const getDesignationList = () => {
+      if(!designation) return [];
+      const options = [];
+      designation.map((desgn) => {
+          return options.push({
+              label: desgn.name,
+              id: desgn.id,
+          });
+      });
+      return options; 
+  }
+
   return (
     <>
       {ShowDelete && (
         <SweetAlert
-          title="Are you sure, do you want to remove the designation ?"
+          title="Are you sure, do you want to delete the employee ?"
           error
           showCancel
           confirmBtnBsStyle="success"
           cancelBtnBsStyle="danger"
           onConfirm={() => {
-            removeDesignation(designationId);
+            deleteEmployee(employeeId);
           }}
           onCancel={() => {
             setShowDelete(false);
@@ -186,6 +241,25 @@ function Employee() {
         <Card>
           <Card.Body>
             <Row>
+              <Col sm={4}>
+              <div className="search-bar-input">  
+                <TextInput
+                  inputClass="form-control"
+                  value={keyword}
+                  placeholder="search.."
+                  onInputChange={(e) => {
+                    setKeyword(e.target.value);
+                  }}
+                />
+                <Button
+                  variant="primary"
+                  type="button"
+                  onClick={() => getTableData(1)}
+                >
+                  search
+                </Button>
+                </div>
+              </Col>
               <Row>
                 <Col>
                   <h4>Employee</h4>
@@ -198,7 +272,7 @@ function Employee() {
                       type="submit"
                       onClick={() => {
                         setModalShow(true);
-                        setDesignationId();
+                        setEmployeeId();
                       }}
                     >
                       Add Employee
@@ -236,32 +310,32 @@ function Employee() {
               <Row>
                 <Col sm={6}>
                   <TextInput
-                    onInputChange={(e) => setDesignation(e.target.value)}
-                    label="First Name"
+                    onInputChange={(e) => setFullName(e.target.value)}
+                    label="Full Name"
                     containerClass="form-group"
                     type="text"
-                    name="designationtitle"
-                    value={designation}
-                    placeholder="Enter designation"
+                    name="firstNameTitle"
+                    value={fullName}
+                    placeholder="Enter first name"
                     errorMessage={validator.message(
-                      'name',
-                      designation,
+                      'Full Name',
+                      fullName,
                       'required'
                     )}
                   />
                 </Col>
                 <Col sm={6}>
-                  <TextInput
-                    onInputChange={(e) => setDesignation(e.target.value)}
-                    label="Last Name"
+                <TextInput
+                    onInputChange={(e) => setEmail(e.target.value)}
+                    label="Email"
                     containerClass="form-group"
                     type="text"
-                    name="designationtitle"
-                    value={designation}
-                    placeholder="Enter designation"
+                    name="emailTitle"
+                    value={email}
+                    placeholder="Enter email"
                     errorMessage={validator.message(
-                      'designation',
-                      designation,
+                      'email',
+                      email,
                       'required'
                     )}
                   />
@@ -269,33 +343,33 @@ function Employee() {
               </Row>
               <Row>
               <Col sm={6}>
-                  <TextInput
-                    onInputChange={(e) => setDesignation(e.target.value)}
-                    label="Email"
+              <TextInput
+                    onInputChange={(e) => setPassword(e.target.value)}
+                    label="Password"
                     containerClass="form-group"
-                    type="text"
-                    name="designationtitle"
-                    value={designation}
-                    placeholder="Enter designation"
+                    type="password"
+                    name="passwordTitle"
+                    value={password}
+                    placeholder="Enter Password"
                     errorMessage={validator.message(
-                      'designation',
-                      designation,
+                      'password',
+                      password,
                       'required'
                     )}
                   />
                 </Col> 
                 <Col sm={6}>
                   <TextInput
-                    onInputChange={(e) => setDesignation(e.target.value)}
+                    onInputChange={(e) => setMobile(e.target.value)}
                     label="Mobile"
                     containerClass="form-group"
                     type="text"
-                    name="designationtitle"
-                    value={designation}
-                    placeholder="Enter designation"
+                    name="mobileTitle"
+                    value={mobile}
+                    placeholder="Enter Contact Number"
                     errorMessage={validator.message(
-                      'designation',
-                      designation,
+                      'mobile',
+                      mobile,
                       'required'
                     )}
                   />
@@ -306,15 +380,15 @@ function Employee() {
               <DropdownInput
                       label="Designation"
                       asterisk="*"
-                      options={getSubjectData()}
+                      options={getDesignationList()}
                       placeholder='Select Subject'
-                      defaultValue={selectOptionSubject}
+                     defaultValue={selectedDesignationOption}
                       onSelectHandler={(select) =>
-                        setSelectOptionSubject(select)
+                        setSelectedDesignationOption(select)
                       }
                       errorMessage={validator.message(
-                        'selectOptionSubject',
-                        selectOptionSubject,
+                        'selectedDesignationOption',
+                        selectedDesignationOption,
                         'required'
                       )}
                     />

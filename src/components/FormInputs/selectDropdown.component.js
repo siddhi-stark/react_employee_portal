@@ -7,26 +7,37 @@ export default function SelectDropdown(props) {
     label,
     defaultValue,
     name,
-    className,
+    inputClass,
     isMulti,
     onSelectHandler,
     options,
+    containerClass,
+    errorMessage,
+    asterisk,
+    placeholder,
   } = props;
 
   return (
     <>
-      <Form.Group>
-        <Form.Label>{label}</Form.Label>
+      <Form.Group className={containerClass}>
+        {label && (
+          <Form.Label>
+            {' '}
+            {label} <span style={{ color: 'red' }}>{asterisk}</span>
+          </Form.Label>
+        )}
         <Select
           value={defaultValue}
           onChange={(e) => {
             if (onSelectHandler) onSelectHandler(e);
           }}
           name={name}
-          className={className}
+          className={inputClass}
+          placeholder={placeholder}
           options={options}
           isMulti={isMulti}
         />
+        <p style={{ color: 'red' }}> {errorMessage} </p>
       </Form.Group>
     </>
   );
