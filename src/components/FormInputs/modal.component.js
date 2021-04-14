@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 
 export default function ModalComponent(props) {
-  const { show, size, id, label, onClick, modalBody, modalFooter, centered } = props;
+  const { show, size, id, label, onClick, modalBody, modalFooter, centered, closebutton } = props;
 
   return (
     <>
@@ -14,7 +14,7 @@ export default function ModalComponent(props) {
           if (onClick) onClick(e);
         }}
       >
-        <Modal.Header>
+        <Modal.Header closeButton={closebutton}>
           <Modal.Title id={id}>{label}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{modalBody}</Modal.Body>

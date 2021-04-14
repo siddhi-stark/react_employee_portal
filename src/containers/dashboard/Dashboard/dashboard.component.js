@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col, Image } from 'react-bootstrap';
+import { Jumbotron, Card, Button, Row, Col, Image, Container } from 'react-bootstrap';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import Table from '../../../components/Table/simpletable.component';
 import materialnew from '../../../helper/materialnew';
+import TaskData from '../../../helper/TaskData';
 import {
-  ModalInput
+  ModalInput, TextInput
   } from '../../../components/FormInputs';
 // import AuthApi from '../../../helper/authApi';
 // import Api from '../../../helper/api';
@@ -29,6 +30,29 @@ const columns = [
 }
 ];
 
+const columnsnew = [
+{
+    id: 'todo',
+    label: 'To Do Tasks',
+},
+{
+    id: 'projects',
+    label: 'Projects',
+},
+{
+    id: 'status',
+    label: 'status',
+},
+{
+    id: 'eta',
+    label: 'ETA',
+},
+{
+    id: 'at',
+    label: 'AT',
+}
+];
+
 function Dashboard() {
   // const getClockInTime = async () => {
   //   const endPoint = `${Api.clockInUrl}`;
@@ -37,6 +61,7 @@ function Dashboard() {
   //   }
  
  const [rows, setRows] = useState('');
+ const [taskRows, setTaskRows] = useState('');
  const [modalShow, setModalShow] = useState(false);
 
   const getTableData = async () => {
@@ -82,8 +107,29 @@ function Dashboard() {
     // }
   };
 
+  const getTaskData = async () => {
+
+      const row = [];  
+      // data.map((dt, i) => {
+      TaskData.map((mat) => {
+      console.log('mat', mat); //eslint-disable-line
+        row.push({
+          todo: mat.date,
+          projects: mat.startime,
+          status: mat.endtime,
+          eta: mat.total,
+          at: mat.at
+        
+        });
+        return mat;
+      });
+      setTaskRows(row);
+    // }
+  };
+
   useEffect(() => {
     getTableData();
+    getTaskData();
   },[]);
 
   return (
@@ -130,8 +176,50 @@ function Dashboard() {
                   </div>
                 </Col>
               </Row>
+
             </Jumbotron>
+            <hr />
+            <Row className='mt-3'>
+            <div>
+            To Do
+              <div className="float-end">
+              <Button
+                size="sm"
+                variant="primary"
+                type="submit"
+                onClick={() => setModalShow(true)}
+              >
+                Add Task
+              </Button>
+            </div>
+            </div>
+            <div className='mt-3'>
+              
+             <Table
+                  columns={columnsnew}
+                  rows={taskRows}
+                  showPagination="true"
+                  showCheckbox="true"
+                   />
+            </div>
+
+            <div>
+            <div className="float-end">
+              
+              <Button
+                size="sm"
+                variant="primary"
+                type="submit"
+               
+              >
+               ClockIn & ClockOut
+              </Button>
+            </div>
+            </div>
+
+            </Row>
           </Col>
+
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
               <Card.Body>
@@ -166,41 +254,127 @@ function Dashboard() {
               </Card.Body>
             </Card>
             <div className="table-projects time-sheet-table">
-            <Button
-                size="sm"
-                variant="primary"
-                type="submit"
-                onClick={() => setModalShow(true)}
-              >
-                Add Task
-              </Button>
+          
+           <ModalInput
+            size="sm"
+            // aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={modalShow}
+            label="Add Task"
+            id="contained-modal-title-vcenter"
+            // closebutton="closeButton"
+            modalBody={
+              <Container>
+               <Row>
+               <Col sm={6}>
+               <TextInput
+               label="Add Task Name" 
+              // containerClass="form-group"
+              inputClass="form-control form-control-lg"
+              type="email"
+              name="email"
+            // onInputChange={(e) => handleInputChange(e)}
+           
+            placeholder="Enter your Email and instructions will be sent to you!"
+           
+          />
+               </Col>
 
-              <ModalInput
-        size="lg"
-        // aria-labelledby="contained-modal-title-vcenter"
-        centered
-        show={modalShow}
-        label="Add Study Material"
-        id="contained-modal-title-vcenter"
-        modalBody={
-           <h6>Modalll</h6>
-        }
-        modalFooter={
-           <div className="float-end">
-            <Button variant="secondary" onClick={() => setModalShow(false)}>
+               <Col sm={6}>
+               <TextInput
+               label="Project Name" 
+              // containerClass="form-group"
+              inputClass="form-control form-control-lg"
+              type="email"
+              name="email"
+            // onInputChange={(e) => handleInputChange(e)}
+           
+            placeholder="Enter your Email and instructions will be sent to you!"
+           
+          />
+               </Col>
+               </Row> 
+
+               <Row>
+                 <Col sm={2}>
+                 <TextInput
+               label="Start Time" 
+              // containerClass="form-group"
+              inputClass="form-control form-control-lg"
+              type="time"
+              name="email"
+            // onInputChange={(e) => handleInputChange(e)
+           
+          />
+                 </Col>
+
+                 <Col sm={2}>
+                    <TextInput
+               label="End Time" 
+              // containerClass="form-group"
+              inputClass="form-control form-control-lg"
+              type="time"
+              name="email"
+            // onInputChange={(e) => handleInputChange(e)}
+           
+          />
+                 </Col>
+                 <Col sm={2}>
+                     <TextInput
+               label="Time Spent" 
+              // containerClass="form-group"
+              inputClass="form-control form-control-lg"
+              type="email"
+              name="email"
+            // onInputChange={(e) => handleInputChange(e)}
+           
+          />
+                 </Col>
+
+                 <Col sm={4}>
+                     <TextInput
+               label="Progress" 
+              // containerClass="form-group"
+              inputClass="form-control form-control-lg"
+              type="email"
+              name="email"
+            // onInputChange={(e) => handleInputChange(e)}
+           
+          />
+                 </Col>
+
+                 <Col sm={2}>
+                    <Button
+                  variant="secondary"
+                  type="submit"
+                  // className="ms-4"
+                  // // onClick={(e) => addData(e)}
+                >
+                  Cancel
+                </Button>
+                 </Col>
+               </Row>
+
+              </Container>
+            }
+            modalFooter={
+               <div className="float-end">
+               <Button variant="secondary" onClick={() => setModalShow(false)}>
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              className="ms-4"
-              // onClick={(e) => addData(e)}
-            >
-              Add
-            </Button>
-          </div>
-        }
-      />
+                <Button
+                  variant="primary"
+                  type="submit"
+                  className="ms-4"
+                  // onClick={(e) => addData(e)}
+                >
+                  Submit
+                </Button>
+              </div>
+            }
+          />
+
+
               <Card>
                 <div className="table-title">
                   <Card.Title>Time Sheet</Card.Title>
