@@ -13,6 +13,7 @@ export default function InputComponent(props) {
     inputClass,
     inputIcon,
     type,
+    maxlength,
     containerClass,
     inputVarible,
     errorMessage,
@@ -51,6 +52,7 @@ export default function InputComponent(props) {
             placeholder={placeholder}
             className={inputClass}
             disabled={disabled}
+            maxlength={maxlength}
             multiple={multiple}
             accept={accept}
             rows={rows}

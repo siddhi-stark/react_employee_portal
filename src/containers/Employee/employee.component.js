@@ -52,7 +52,7 @@ function Employee() {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.employeeUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.employeeUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
@@ -115,7 +115,6 @@ function Employee() {
   const getDesignation = async () => {
       const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}`);
       if(data) {
-          console.log('data', data.data);
           setDesignation(data.data);
       };
   };
@@ -154,7 +153,6 @@ function Employee() {
   };
 
   const addEmployee = async () => {
-      console.log('setEmployeeID', setEmployeeId);
     const postData = {
       full_name: fullName, 
       email,
@@ -174,7 +172,6 @@ function Employee() {
 
     if (data) {
         setSelectedDesignationOption();
-        console.log('employee added successfullyy');
         swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setEmployeeId();
@@ -214,7 +211,12 @@ function Employee() {
           });
       });
       return options; 
-  }
+  };
+
+  const clearSearch = () => {
+    setKeyword('');
+    getTableData(1);
+  };
 
   return (
     <>
@@ -241,32 +243,16 @@ function Employee() {
         <Card>
           <Card.Body>
             <Row>
-              <Col sm={4}>
-              <div className="search-bar-input">  
-                <TextInput
-                  inputClass="form-control"
-                  value={keyword}
-                  placeholder="search.."
-                  onInputChange={(e) => {
-                    setKeyword(e.target.value);
-                  }}
-                />
-                <Button
-                  variant="primary"
-                  type="button"
-                  onClick={() => getTableData(1)}
-                >
-                  search
-                </Button>
-                </div>
-              </Col>
-              <Row>
-                <Col>
-                  <h4>Employee</h4>
-                </Col>
-                <Col>
-                  <div className="float-end">
-                    <Button
+
+            <Row>
+            <Col>
+            <div className="pull-left">
+            <h5>Employee</h5> 
+            </div>
+           </Col>
+            <Col>
+            <div className="pull-right">
+            <Button
                       size="sm"
                       variant="primary"
                       type="submit"
@@ -277,11 +263,48 @@ function Employee() {
                     >
                       Add Employee
                     </Button>
-                  </div>
-                </Col>
-              </Row>
+            </div>
 
-              <Col className="mt-3">
+            </Col>
+            </Row>
+
+            <Row className="mt-3">
+            <Col md={4}>
+              <div className="search-bar-input">  
+                <TextInput
+                  inputClass="form-control"
+                  value={keyword}
+                  placeholder="search.."
+                  onInputChange={(e) => {
+                    setKeyword(e.target.value);
+                 }}
+                />
+                </div>
+              </Col>
+              <Col md={4}>
+              <Button
+                  variant="primary"
+                  type="button"
+                  onClick={() => getTableData(1)}
+                >
+                  search
+                </Button>
+              </Col>
+              <Col md={4}>
+              <div className="float-end">
+              <Button
+                      size="sm"
+                      variant="primary"
+                      type="reset"
+                      onClick={() => clearSearch()}
+                    >
+                      Clear
+                    </Button>
+              </div>
+              </Col>
+            </Row>
+            
+             <Col className="mt-3">
                 <Table
                   tableClass="table table-striped"
                   columns={columns}
@@ -365,6 +388,7 @@ function Employee() {
                     containerClass="form-group"
                     type="text"
                     name="mobileTitle"
+                    maxlength="10"
                     value={mobile}
                     placeholder="Enter Contact Number"
                     errorMessage={validator.message(
@@ -401,7 +425,18 @@ function Employee() {
               <Button variant="secondary" onClick={() => onCancel()}>
                 Cancel
               </Button>
-              <Button
+
+              { employeeId ?  
+                <Button
+                variant="primary"
+                type="submit"
+                className="ms-4"
+                onClick={(e) => onSubmit(e)}
+              >
+                Update
+              </Button>
+              :
+                <Button
                 variant="primary"
                 type="submit"
                 className="ms-4"
@@ -409,6 +444,8 @@ function Employee() {
               >
                 Add
               </Button>
+               }
+
             </div>
           }
         />
