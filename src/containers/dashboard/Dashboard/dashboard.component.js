@@ -1,34 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col, Image, Container } from 'react-bootstrap';
+import { Jumbotron, Card, Button, Row, Col, Image, Form } from 'react-bootstrap';
+import SimpleReactValidator from 'simple-react-validator';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import Table from '../../../components/Table/simpletable.component';
-import materialnew from '../../../helper/materialnew';
-import TaskData from '../../../helper/TaskData';
 import {
   ModalInput, TextInput
   } from '../../../components/FormInputs';
-// import AuthApi from '../../../helper/authApi';
-// import Api from '../../../helper/api';
+import AuthApi from '../../../helper/authApi';
+import Api from '../../../helper/api';
 
-const columns = [
-{
-    id: 'date',
-    label: 'Date',
-},
-{
-    id: 'clockin',
-    label: 'Clock-in',
-},
-{
-    id: 'clockout',
-    label: 'Clock-out',
-},
-{
-    id: 'totalworking',
-    label: 'Total Working',
-}
-];
+// const columns = [
+// {
+//     id: 'date',
+//     label: 'Date',
+// },
+// {
+//     id: 'clockin',
+//     label: 'Clock-in',
+// },
+// {
+//     id: 'clockout',
+//     label: 'Clock-out',
+// },
+// {
+//     id: 'totalworking',
+//     label: 'Total Working',
+// }
+// ];
 
 const columnsnew = [
 {
@@ -53,12 +52,90 @@ const columnsnew = [
 }
 ];
 
+const validator = new SimpleReactValidator();
+
 function Dashboard() {
   // const getClockInTime = async () => {
   //   const endPoint = `${Api.clockInUrl}`;
   //   const { data } = await AuthApi.getDataFromServer(endPoint);
   //   // if(data && data.data){
   //   }
+  const [rows, setRows] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+  // const [count, forceUpdate] = useState(0);
+  // const [designationId, setDesignationId] = useState(null);
+  // const [ShowDelete, setShowDelete] = useState(false);
+  const [designation, setDesignation] = useState('');
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    itemsPerPage: 5,
+    totalItems: 10,
+  });
+
+
+  const getTableData = async (pageNo = 0) => {
+    const page = pageNo || pagination.current_page;
+    const endPoint = `${Api.designationUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data && data.data) {
+      setPagination({
+        activePage: data.paginator.current_page,
+        itemsPerPage: data.paginator.limit,
+        totalItems: data.paginator.total_count,
+      });
+
+      const row = [];
+
+      data.data.map((desgn) => {
+        row.push({
+          name: desgn.name,
+          action: (
+            <>
+              <a
+                href="/"
+                className="pl-2"
+                onClick={(e) => {
+                  setModalShow(true);
+                  e.preventDefault();
+                  e.stopPropagation();
+                  // setDesignationId(desgn.id);
+                  setDesignation(desgn.name);
+                }}
+              >
+                <Image src="images/edit.svg" />
+              </a>
+              <a
+                href="/"
+                className=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  // setShowDelete(true);
+                  // setDesignationId(desgn.id);
+                  // removeDesignation(desgn.id); //eslint-disable-line
+                }}
+              >
+                <Image src="images/delete.png" />
+              </a>
+            </>
+          ),
+        });
+        return desgn;
+      });
+      setRows(row);
+    }
+  };
+
+  useEffect(() => {
+    getTableData(1);
+  }, []);
+
+  const onCancel = () => {
+    validator.hideMessages();
+    setDesignation();
+    setModalShow(false);
+  };
+
 
   return (
     <>
@@ -107,9 +184,91 @@ function Dashboard() {
 
             </Jumbotron>
             <div className="mt-3">
-              <h6>To DO List</h6>
-            
+            <Card>
+            <Row>
+              <Row>
+                <Col>
+                  <h4>To Do</h4>
+                </Col>
+                <Col>
+                  <div className="float-end">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      type="submit"
+                      onClick={() => {
+                        setModalShow(true);
+                        // setDesignationId();
+                      }}
+                    >
+                      Add Task
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+
+              <Col className="mt-3">
+                <Table
+                  tableClass="table table-striped"
+                  columns={columnsnew}
+                  rows={rows}
+                  showPagination
+                  showCheckbox
+                  paginationProps={{
+                    ...pagination,
+                    onPageChange: (pageNo) => {
+                      getTableData(pageNo);
+                    },
+                  }}
+                />
+              </Col>
+            </Row>
+            </Card>
+        <ModalInput
+          size="md"
+          centered
+          show={modalShow}
+          label="Add Designation"
+          id="contained-modal-title-vcenter"
+          modalBody={
+            <Form>
+              <Row>
+                <Col sm={6}>
+                  <TextInput
+                    onInputChange={(e) => setDesignation(e.target.value)}
+                    label="Desination Name"
+                    containerClass="form-group"
+                    type="text"
+                    name="designationtitle"
+                    value={designation}
+                    placeholder="Enter designation"
+                    errorMessage={validator.message(
+                      'designation',
+                      designation,
+                      'required'
+                    )}
+                  />
+                </Col>
+              </Row>
+            </Form>
+          }
+          modalFooter={
+            <div className="float-end">
+              <Button variant="secondary" onClick={() => onCancel()}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                className="ms-4"
+                // onClick={(e) => onSubmit(e)}
+              >
+                Add
+              </Button>
             </div>
+          }
+        />
+      </div>
           </Col>
 
           <Col xl={4} id="right-sidebar">
