@@ -1,9 +1,57 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
+import { Jumbotron, Card, Button, Row, Col, Image, Container } from 'react-bootstrap';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
+import Table from '../../../components/Table/simpletable.component';
+import materialnew from '../../../helper/materialnew';
+import TaskData from '../../../helper/TaskData';
+import {
+  ModalInput, TextInput
+  } from '../../../components/FormInputs';
 // import AuthApi from '../../../helper/authApi';
 // import Api from '../../../helper/api';
+
+const columns = [
+{
+    id: 'date',
+    label: 'Date',
+},
+{
+    id: 'clockin',
+    label: 'Clock-in',
+},
+{
+    id: 'clockout',
+    label: 'Clock-out',
+},
+{
+    id: 'totalworking',
+    label: 'Total Working',
+}
+];
+
+const columnsnew = [
+{
+    id: 'todo',
+    label: 'To Do Tasks',
+},
+{
+    id: 'projects',
+    label: 'Projects',
+},
+{
+    id: 'status',
+    label: 'status',
+},
+{
+    id: 'eta',
+    label: 'ETA',
+},
+{
+    id: 'at',
+    label: 'AT',
+}
+];
 
 function Dashboard() {
   // const getClockInTime = async () => {
@@ -56,12 +104,14 @@ function Dashboard() {
                   </div>
                 </Col>
               </Row>
+
             </Jumbotron>
             <div className="mt-3">
               <h6>To DO List</h6>
             
             </div>
           </Col>
+
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
               <Card.Body>
