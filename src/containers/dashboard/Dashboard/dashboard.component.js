@@ -57,6 +57,10 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
+            <div className="mt-3">
+              <h6>To DO List</h6>
+            
+            </div>
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
