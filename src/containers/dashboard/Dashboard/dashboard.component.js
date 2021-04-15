@@ -116,9 +116,7 @@ function Dashboard() {
     <>
       <div className="page-header">
         <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">
-            Welcome To Dashboard
-          </h2>
+          <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
           <Breadcrumb />
         </div>
       </div>
@@ -152,16 +150,13 @@ function Dashboard() {
                 </Col>
                 <Col md={5}>
                   <div className="welcome-img text-right">
-                    <img src="images/welcome-img.svg" alt="img" />
+                    <img src="/images/welcome-img.svg" alt="img" />
                   </div>
                 </Col>
               </Row>
-
             </Jumbotron>
-            <ToDoList />
-           
+           <ToDoList />
           </Col>
-
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
               <Card.Body>
@@ -184,68 +179,17 @@ function Dashboard() {
                   </Col>
                   <Col md={6}>
                     <div className="persentage-circle">
-                      <img src="images/persentage-circle.svg" alt="img" />
+                      <img src="/images/persentage-circle.svg" alt="img" />
                     </div>
                   </Col>
                 </Row>
                 <div className="last-week">
                   <a href="#">
-                    <img src="images/previous.svg" alt="" /> Last Week
+                    <img src="/images/previous.svg" alt="" /> Last Week
                   </a>
                 </div>
               </Card.Body>
             </Card>
-            <div className="table-projects time-sheet-table">
-              <div className="card">
-                <div className="table-title">
-                  <h5 className="card-title">Time Sheet</h5>
-                </div>
-                <div className="table-responsive">
-                  <table className="table table-striped m-0">
-                    <thead>
-                      <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Clock in</th>
-                        <th scope="col">Clock out</th>
-                        <th scope="col">Total working</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">15/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">16/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">17/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">18/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">19/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
             <div className="holidays-applied">
               <div className="row">
                 <div className="col-xl-6">
@@ -253,7 +197,7 @@ function Dashboard() {
                     <div className="upcoming-event-box">
                       <div className="upcoming-event-img">
                         <img
-                          src="images/leaves-holiday.svg"
+                          src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
                         <p>Up Coming Holidays</p>
@@ -272,7 +216,7 @@ function Dashboard() {
                     <div className="upcoming-event-box">
                       <div className="upcoming-event-img">
                         <img
-                          src="images/leaves-holiday.svg"
+                          src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
                         <p>Leaves Applied</p>
@@ -298,22 +242,22 @@ function Dashboard() {
                     <ul className="list-unstyled p-0 d-flex align-items-center justify-content-between">
                       <li>
                         <a href="#">
-                          <img src="images/social-media4.png" alt="img" />
+                          <img src="/images/social-media4.png" alt="img" />
                         </a>
                       </li>
                       <li>
                         <a href="#">
-                          <img src="images/social-media4.png" alt="img" />
+                          <img src="/images/social-media4.png" alt="img" />
                         </a>
                       </li>
                       <li>
                         <a href="#">
-                          <img src="images/social-media4.png" alt="img" />
+                          <img src="/images/social-media4.png" alt="img" />
                         </a>
                       </li>
                       <li>
                         <a href="#">
-                          <img src="images/social-media4.png" alt="img" />
+                          <img src="/images/social-media4.png" alt="img" />
                         </a>
                       </li>
                     </ul>
