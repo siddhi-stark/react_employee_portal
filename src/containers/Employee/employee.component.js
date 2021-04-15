@@ -51,7 +51,16 @@ function Employee() {
   });
 
   const getTableData = async (pageNo = 0) => {
+
+    // let endPoint;
+    // const hasSearch = (keyword !== '');
     const page = pageNo || pagination.current_page;
+      // endPoint = `${Api.employeeUrl}`;
+      //   if(keyword){
+      //   endPoint = hasSearch ? `${endPoint}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}` : `${endPoint}`;  
+      // } 
+
+   
     const endPoint = `${Api.employeeUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
@@ -109,7 +118,9 @@ function Employee() {
         return emp;
       });
       setRows(row);
+      
     }
+    setKeyword('')
   };
 
   const getDesignation = async () => {
@@ -213,9 +224,17 @@ function Employee() {
       return options; 
   };
 
-  const clearSearch = () => {
+  // const onClear = () => {
+  //   getTableData(1, () => {
+  //     setKeyword('');
+  //   });
+    
+  // };
+
+  const onClear = () => {
     setKeyword('');
     getTableData(1);
+    
   };
 
   return (
@@ -296,7 +315,7 @@ function Employee() {
                       size="sm"
                       variant="primary"
                       type="reset"
-                      onClick={() => clearSearch()}
+                      onClick={() => onClear()}
                     >
                       Clear
                     </Button>
