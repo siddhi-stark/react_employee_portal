@@ -6,51 +6,51 @@ import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import Table from '../../../components/Table/simpletable.component';
 import {
   ModalInput, TextInput
-  } from '../../../components/FormInputs';
+} from '../../../components/FormInputs';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
 
-// const columns = [
+const columns = [
+  {
+    id: 'date',
+    label: 'Date',
+  },
+  {
+    id: 'clockin',
+    label: 'Clock-in',
+  },
+  {
+    id: 'clockout',
+    label: 'Clock-out',
+  },
+  {
+    id: 'totalworking',
+    label: 'Total Working',
+  }
+];
+
+// const columnsnew = [
 // {
-//     id: 'date',
-//     label: 'Date',
+//     id: 'todo',
+//     label: 'To Do Tasks',
 // },
 // {
-//     id: 'clockin',
-//     label: 'Clock-in',
+//     id: 'projects',
+//     label: 'Projects',
 // },
 // {
-//     id: 'clockout',
-//     label: 'Clock-out',
+//     id: 'status',
+//     label: 'status',
 // },
 // {
-//     id: 'totalworking',
-//     label: 'Total Working',
+//     id: 'eta',
+//     label: 'ETA',
+// },
+// {
+//     id: 'at',
+//     label: 'AT',
 // }
 // ];
-
-const columnsnew = [
-{
-    id: 'todo',
-    label: 'To Do Tasks',
-},
-{
-    id: 'projects',
-    label: 'Projects',
-},
-{
-    id: 'status',
-    label: 'status',
-},
-{
-    id: 'eta',
-    label: 'ETA',
-},
-{
-    id: 'at',
-    label: 'AT',
-}
-];
 
 const validator = new SimpleReactValidator();
 
@@ -184,91 +184,185 @@ function Dashboard() {
 
             </Jumbotron>
             <div className="mt-3">
-            <Card>
-            <Row>
-              <Row>
-                <Col>
-                  <h4>To Do</h4>
-                </Col>
-                <Col>
+              <Card>
+                <Card.Body>
+                  <Row>
+                    <Row>
+                      <Col>
+                        <h4>Desingation</h4>
+                      </Col>
+                      <Col>
+                        <div className="float-end">
+                          <Button
+                            size="sm"
+                            variant="primary"
+                            type="submit"
+                            onClick={() => {
+                              setModalShow(true);
+                              // setDesignationId();
+                            }}
+                          >
+                            Add Task
+                    </Button>
+                        </div>
+                      </Col>
+                    </Row>
+
+                    <Col className="mt-3">
+                      <Table
+                        tableClass="table table-striped"
+                        columns={columns}
+                        rows={rows}
+                        showPagination
+                        showCheckbox
+                        paginationProps={{
+                          ...pagination,
+                          onPageChange: (pageNo) => {
+                            getTableData(pageNo);
+                          },
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+              <ModalInput
+                size="lg"
+                centered
+                show={modalShow}
+                label="Add Task"
+                id="contained-modal-title-vcenter"
+                modalBody={
+                  <Form>
+                    <Row>
+                      <Col sm={6}>
+                        <TextInput
+                          onInputChange={(e) => setDesignation(e.target.value)}
+                          label="Add Task Name"
+                          containerClass="form-group"
+                          type="text"
+                          name="designationtitle"
+                          value={designation}
+                          placeholder="Enter designation"
+                          errorMessage={validator.message(
+                            'designation',
+                            designation,
+                            'required'
+                          )}
+                        />
+                      </Col>
+                      <Col sm={6}>
+                        <TextInput
+                          onInputChange={(e) => setDesignation(e.target.value)}
+                          label="Project Name"
+                          containerClass="form-group"
+                          type="text"
+                          name="designationtitle"
+                          value={designation}
+                          placeholder="Enter designation"
+                          errorMessage={validator.message(
+                            'designation',
+                            designation,
+                            'required'
+                          )}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm={2}>
+                        <TextInput
+                          onInputChange={(e) => setDesignation(e.target.value)}
+                          label="Start Time"
+                          containerClass="form-group"
+                          type="time"
+                          name="designationtitle"
+                          value={designation}
+                          image='images/time.svg'
+                          placeholder="Enter designation"
+                          errorMessage={validator.message(
+                            'designation',
+                            designation,
+                            'required'
+                          )}
+                        />
+                      </Col>
+                      <Col sm={2}>
+                        <TextInput
+                          onInputChange={(e) => setDesignation(e.target.value)}
+                          label="End Time"
+                          containerClass="form-group"
+                          type="text"
+                          name="designationtitle"
+                          value={designation}
+                          placeholder="Enter designation"
+                          errorMessage={validator.message(
+                            'designation',
+                            designation,
+                            'required'
+                          )}
+                        />
+                      </Col>
+                      <Col sm={2}>
+                        <TextInput
+                          onInputChange={(e) => setDesignation(e.target.value)}
+                          label="Time Spent"
+                          containerClass="form-group"
+                          type="text"
+                          name="designationtitle"
+                          value={designation}
+                          placeholder="Enter designation"
+                          errorMessage={validator.message(
+                            'designation',
+                            designation,
+                            'required'
+                          )}
+                        />
+                      </Col>
+                      <Col sm={6}>
+                      {/* <TextInput
+                          onInputChange={(e) => setDesignation(e.target.value)}
+                          label="Progress"
+                          containerClass="form-group"
+                          progressClass="progress-main"
+                          type="text"
+                          name="designationtitle"
+                          value={designation}
+                          placeholder="Enter designation"
+                          errorMessage={validator.message(
+                            'designation',
+                            designation,
+                            'required'
+                          )}
+                        /> */}
+                        <div className="form-group">
+                        <label htmlFor="" className="col-form-label">Progress</label>
+                            <div className="progress-main">
+                              <div className="progress">
+                                <div className="progress-bar bg-secondary" role="progressbar" style={{'width': '5%'}} aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                              </div>
+                        </div>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Form>
+                }
+                modalFooter={
                   <div className="float-end">
+                    <Button variant="secondary" onClick={() => onCancel()}>
+                      Cancel
+              </Button>
                     <Button
-                      size="sm"
                       variant="primary"
                       type="submit"
-                      onClick={() => {
-                        setModalShow(true);
-                        // setDesignationId();
-                      }}
+                      className="ms-4"
+                    // onClick={(e) => onSubmit(e)}
                     >
-                      Add Task
-                    </Button>
+                      Add
+              </Button>
                   </div>
-                </Col>
-              </Row>
-
-              <Col className="mt-3">
-                <Table
-                  tableClass="table table-striped"
-                  columns={columnsnew}
-                  rows={rows}
-                  showPagination
-                  showCheckbox
-                  paginationProps={{
-                    ...pagination,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                />
-              </Col>
-            </Row>
-            </Card>
-        <ModalInput
-          size="md"
-          centered
-          show={modalShow}
-          label="Add Designation"
-          id="contained-modal-title-vcenter"
-          modalBody={
-            <Form>
-              <Row>
-                <Col sm={6}>
-                  <TextInput
-                    onInputChange={(e) => setDesignation(e.target.value)}
-                    label="Desination Name"
-                    containerClass="form-group"
-                    type="text"
-                    name="designationtitle"
-                    value={designation}
-                    placeholder="Enter designation"
-                    errorMessage={validator.message(
-                      'designation',
-                      designation,
-                      'required'
-                    )}
-                  />
-                </Col>
-              </Row>
-            </Form>
-          }
-          modalFooter={
-            <div className="float-end">
-              <Button variant="secondary" onClick={() => onCancel()}>
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                type="submit"
-                className="ms-4"
-                // onClick={(e) => onSubmit(e)}
-              >
-                Add
-              </Button>
+                }
+              />
             </div>
-          }
-        />
-      </div>
           </Col>
 
           <Col xl={4} id="right-sidebar">

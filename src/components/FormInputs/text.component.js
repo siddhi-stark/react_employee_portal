@@ -6,12 +6,14 @@ export default function TextComponent(props) {
     label,
     placeholder,
     id,
+    image,
     value,
     onInputChange,
     name,
     inputClass,
     inputIcon,
     type,
+    progressClass,
     containerClass,
     inputVarible,
     errorMessage,
@@ -28,11 +30,13 @@ export default function TextComponent(props) {
           ''
         )}
         <Form.Control
+          progressClass = {progressClass}
           id={id}
           value={value}
           onChange={(e) => {
             if (onInputChange) onInputChange(e);
           }}
+          image={<Image src={image} rounded />}
           name={name}
           type={type}
           placeholder={placeholder}
