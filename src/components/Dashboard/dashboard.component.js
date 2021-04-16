@@ -3,7 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 import {  Button, Row, Col, Card, Jumbotron } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
 import Projects from '../../containers/Projects/Projects.component';
-import Reports from '../../containers/Reports/reports.component';
+import AllReports from '../../containers/Reports/allReports.component';
 
 function DashboardNew() {
   const [showReport, setShowReport] = useState(false);
@@ -23,7 +23,7 @@ function DashboardNew() {
   useEffect(() => {
      return history.listen((location) => { 
         console.log(`You changed the page to: ${location.pathname}`) 
-        if(location.pathname === '/reports') {
+        if(location.pathname === '/allreports') {
           setShowReport(true)
         }
         else{
@@ -84,7 +84,7 @@ function DashboardNew() {
             </Jumbotron>
             { showReport === true 
             ?
-            <Reports />
+            <AllReports />
             :
              <Projects />
              }
