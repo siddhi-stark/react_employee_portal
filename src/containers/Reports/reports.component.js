@@ -27,7 +27,7 @@ const columns = [
   {
     id: 'at',
     label: 'AT',
-  }
+  },
 ];
 
 function Reports() {
@@ -110,14 +110,14 @@ function Reports() {
   };
 
   // onRegularExpense = () => {
-	// 	// e.preventDefault();
-	// 	const { expense_type } = this.state;
-	// 	this.setState({
-	// 		expense_type: "1"
-	// 	})
-	// 	var $this = this;
-	// 	$this.props.history.push('/add-newexpense');
-	// }
+  // 	// e.preventDefault();
+  // 	const { expense_type } = this.state;
+  // 	this.setState({
+  // 		expense_type: "1"
+  // 	})
+  // 	var $this = this;
+  // 	$this.props.history.push('/add-newexpense');
+  // }
 
   return (
     <>
@@ -125,35 +125,46 @@ function Reports() {
         <Card>
           <Card.Body>
             <Row>
-            <div>Reports: 16/04/2021</div>
+              <div>Reports: 16/04/2021</div>
               <div className="light-bg buttons d-flex align-items-center mt-3">
-              {/* <button onClick={this.onRegularExpense} style={{ backgroundColor: this.state.expense_type == 1 ? "black" : "" }} className="btn btn-outline-secondary">
+                {/* <button onClick={this.onRegularExpense} style={{ backgroundColor: this.state.expense_type == 1 ? "black" : "" }} className="btn btn-outline-secondary">
 														Regular Expenses
                           </button> */}
-				        	<Button type="button" onClick={() => onMorningReport()} variant= { showButton === 1 ? 'primary ml-1' : ''} >Morning Report</Button>
-				        	<Button type="button" onClick={() => onEveningReport() } variant= { showButton === 0 ? 'secondary ml-1' : ''} >Evening Report</Button>
-				        </div>
-        
-              <Col className="mt-3">
+                <Button
+                  type="button"
+                  onClick={() => onMorningReport()}
+                  variant={showButton === 1 ? 'primary ml-1' : ''}
+                >
+                  Morning Report
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => onEveningReport()}
+                  variant={showButton === 0 ? 'secondary ml-1' : ''}
+                >
+                  Evening Report
+                </Button>
+              </div>
 
-              {showEvngReport=== true ? 
-                <EveningReport />
-                :
-                <Table
-                  tableClass="table table-striped"
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  showCheckbox
-                  paginationProps={{
-                    ...pagination,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                />
-                }
-               </Col>
+              <Col className="mt-3">
+                {showEvngReport === true ? (
+                  <EveningReport />
+                ) : (
+                  <Table
+                    tableClass="table table-striped"
+                    columns={columns}
+                    rows={rows}
+                    showPagination
+                    showCheckbox
+                    paginationProps={{
+                      ...pagination,
+                      onPageChange: (pageNo) => {
+                        getTableData(pageNo);
+                      },
+                    }}
+                  />
+                )}
+              </Col>
             </Row>
           </Card.Body>
         </Card>

@@ -1,6 +1,6 @@
-import React, {useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import {  Button, Row, Col, Card, Jumbotron } from 'react-bootstrap';
+import { Button, Row, Col, Card, Jumbotron } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
 import Projects from '../../containers/Projects/Projects.component';
 import AllReports from '../../containers/Reports/allReports.component';
@@ -18,19 +18,17 @@ function DashboardNew() {
   //     setShowReport(!showReport);
   //   }
   // }
-  const history = useHistory(); 
+  const history = useHistory();
 
   useEffect(() => {
-     return history.listen((location) => { 
-        if(location.pathname === '/allreports') {
-          setShowReport(true);
-        }
-        else{
-          setShowReport(false);
-        }
-     });
-     
-  },[history]); 
+    return history.listen((location) => {
+      if (location.pathname === '/allreports') {
+        setShowReport(true);
+      } else {
+        setShowReport(false);
+      }
+    });
+  }, [history]);
 
   // useEffect(() => {
   //   updateReport();
@@ -79,13 +77,7 @@ function DashboardNew() {
                 </Col>
               </Row>
             </Jumbotron>
-            { showReport === true 
-            ?
-            <AllReports />
-            :
-             <Projects />
-             }
-             
+            {showReport === true ? <AllReports /> : <Projects />}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

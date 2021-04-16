@@ -28,7 +28,7 @@ const columns = [
   {
     id: 'link',
     label: 'View Report',
-  }
+  },
 ];
 
 function AllReports() {
@@ -68,9 +68,7 @@ function AllReports() {
           remaining: proj.remaining,
           link: (
             <a href="/reports">
-              <span>
-               View Report
-              </span>
+              <span>View Report</span>
             </a>
           ),
         });
@@ -90,95 +88,90 @@ function AllReports() {
         <Card>
           <Card.Body>
             <Row>
-            <Row>
-            <Col>
-            <div className="pull-left">
-            <h5>All Reports</h5> 
-            </div>
-           </Col>
-            <Col>
-            <div className="pull-right">
-            <a
-                href="/"
-                className=""
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowFilter(true);
-                // removeDesignation(); 
-                }}
-              >
-            <img src="images/filter.svg" alt="filter" />
-            </a>
-            </div>
+              <Row>
+                <Col>
+                  <div className="pull-left">
+                    <h5>All Reports</h5>
+                  </div>
+                </Col>
+                <Col>
+                  <div className="pull-right">
+                    <a
+                      href="/"
+                      className=""
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setShowFilter(true);
+                        // removeDesignation();
+                      }}
+                    >
+                      <img src="images/filter.svg" alt="filter" />
+                    </a>
+                  </div>
+                </Col>
+              </Row>
 
-            </Col>
-           
-            </Row>  
-          
-            { showFilter === true && (
-              <Row className="mt-3">
-            <Col sm={3}>
-            <div className="search-bar-input">  
-                <TextInput
-                  inputClass="form-control"
-                  // value={keyword}
-                  placeholder="employee name"
-                //   onInputChange={(e) => {
-                //     setKeyword(e.target.value);
-                //  }}
-                />
-                </div>
-           </Col>
-           
-            <Col sm={3}>
-            
-            <DatePicker
-                            className="form-control"
-                            // selected={date}
-                            // onChange={(date) => {
-                            //   this.setState({ workOrderDate: date });
-                            //   this.restrictCompletionDate(date);
-                            // }}
-                            // onChange={(e) => { this.setState({ workOrderDate: e }); this.restrictCompletionDate(e) }}
-                            // onChange={this.dateChange}
-                            autoComplete="off"
-                            name="startDate"
-                            dateFormat="MM/dd/yyyy"
-                            placeholderText=" MM/DD/YYYY"
-                          />
-        
-            </Col>
-            
-            <Col sm={3}>
-            <DatePicker
-                            className="form-control"
-                            // selected={date}
-                            // onChange={(date) => {
-                            //   this.setState({ workOrderDate: date });
-                            //   this.restrictCompletionDate(date);
-                            // }}
-                            // onChange={(e) => { this.setState({ workOrderDate: e }); this.restrictCompletionDate(e) }}
-                            // onChange={this.dateChange}
-                            autoComplete="off"
-                            name="startDate"
-                            dateFormat="MM/dd/yyyy"
-                            placeholderText=" MM/DD/YYYY"
-                          />
-                         
-                          </Col>
+              {showFilter === true && (
+                <Row className="mt-3">
+                  <Col sm={3}>
+                    <div className="search-bar-input">
+                      <TextInput
+                        inputClass="form-control"
+                        // value={keyword}
+                        placeholder="employee name"
+                        //   onInputChange={(e) => {
+                        //     setKeyword(e.target.value);
+                        //  }}
+                      />
+                    </div>
+                  </Col>
 
-            <Col sm={2}>
-            <div className="form-group">
-            <Button type="button" className="btn btn-primary">Filter</Button>
-          </div>
-            </Col>
+                  <Col sm={3}>
+                    <DatePicker
+                      className="form-control"
+                      // selected={date}
+                      // onChange={(date) => {
+                      //   this.setState({ workOrderDate: date });
+                      //   this.restrictCompletionDate(date);
+                      // }}
+                      // onChange={(e) => { this.setState({ workOrderDate: e }); this.restrictCompletionDate(e) }}
+                      // onChange={this.dateChange}
+                      autoComplete="off"
+                      name="startDate"
+                      dateFormat="MM/dd/yyyy"
+                      placeholderText=" MM/DD/YYYY"
+                    />
+                  </Col>
 
-            </Row>
-            ) }    
-                         
+                  <Col sm={3}>
+                    <DatePicker
+                      className="form-control"
+                      // selected={date}
+                      // onChange={(date) => {
+                      //   this.setState({ workOrderDate: date });
+                      //   this.restrictCompletionDate(date);
+                      // }}
+                      // onChange={(e) => { this.setState({ workOrderDate: e }); this.restrictCompletionDate(e) }}
+                      // onChange={this.dateChange}
+                      autoComplete="off"
+                      name="startDate"
+                      dateFormat="MM/dd/yyyy"
+                      placeholderText=" MM/DD/YYYY"
+                    />
+                  </Col>
+
+                  <Col sm={2}>
+                    <div className="form-group">
+                      <Button type="button" className="btn btn-primary">
+                        Filter
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              )}
+
               <Col className="mt-3">
-
                 <Table
                   tableClass="table table-striped"
                   columns={columns}
@@ -192,8 +185,7 @@ function AllReports() {
                     },
                   }}
                 />
-                
-               </Col>
+              </Col>
             </Row>
           </Card.Body>
         </Card>
