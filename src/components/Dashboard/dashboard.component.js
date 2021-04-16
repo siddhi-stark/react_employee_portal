@@ -18,21 +18,19 @@ function DashboardNew() {
   //     setShowReport(!showReport);
   //   }
   // }
-  const history = useHistory() 
+  const history = useHistory(); 
 
   useEffect(() => {
      return history.listen((location) => { 
-        console.log(`You changed the page to: ${location.pathname}`) 
         if(location.pathname === '/allreports') {
-          setShowReport(true)
+          setShowReport(true);
         }
         else{
-          setShowReport(false)
+          setShowReport(false);
         }
-     })
-
-      
-  },[history]) 
+     });
+     
+  },[history]); 
 
   // useEffect(() => {
   //   updateReport();
@@ -40,7 +38,6 @@ function DashboardNew() {
 
   return (
     <>
-    {console.log('showReport', showReport)}
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Report</h2>
@@ -88,7 +85,6 @@ function DashboardNew() {
             :
              <Projects />
              }
-            
              
           </Col>
           <Col xl={4} id="right-sidebar">

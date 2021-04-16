@@ -100,14 +100,14 @@ function Reports() {
   }, []);
 
   const onMorningReport = () => {
-    setShowButton(1)
-    setShowEvngReport(false)
-  }
+    setShowButton(1);
+    setShowEvngReport(false);
+  };
 
   const onEveningReport = () => {
-    setShowButton(0)
-    setShowEvngReport(true)
-  }
+    setShowButton(0);
+    setShowEvngReport(true);
+  };
 
   // onRegularExpense = () => {
 	// 	// e.preventDefault();

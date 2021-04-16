@@ -1,36 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Image, ProgressBar } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { TextInput } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-import constants from '../../helper/constants';
 
 const columns = [
   {
-    id: 'task',
+    id: 'name',
     label: 'Date',
   },
   {
-    id: 'project',
+    id: 'spend',
     label: 'Clock in',
   },
   {
-    id: 'status',
+    id: 'allocated',
     label: 'Clock Out',
   },
   {
-    id: 'eta',
+    id: 'remaining',
     label: 'Total Working',
   },
   {
-    id: 'at',
+    id: 'link',
     label: 'View Report',
   }
 ];
 
 function AllReports() {
   const [rows, setRows] = useState([]);
+  const [showFilter, setShowFilter] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -63,26 +66,11 @@ function AllReports() {
           allocated: proj.allocated,
           completed: proj.completed,
           remaining: proj.remaining,
-          support:
-            proj.rt_support !== false ? (
-              <Image src="/images/success.svg" />
-            ) : (
-              <Image
-                src="/images/fail.svg"
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   e.stopPropagation();
-                //   onRtSupport(proj.id);
-                // }}
-              />
-            ),
-          completion: <ProgressBar variant="success" now={proj.completion} />,
           link: (
-            <a href={`${constants.link}${proj.tw_id}`}>
+            <a href="/reports">
               <span>
-                <Image src="/images/redirect.png" />
+               View Report
               </span>
-              {/* {proj.tw_id} */}
             </a>
           ),
         });
@@ -96,16 +84,99 @@ function AllReports() {
     getTableData();
   }, []);
 
- 
-
   return (
     <>
       <div className="mt-3">
         <Card>
           <Card.Body>
             <Row>
-            <div>All Reports</div>
-             
+            <Row>
+            <Col>
+            <div className="pull-left">
+            <h5>All Reports</h5> 
+            </div>
+           </Col>
+            <Col>
+            <div className="pull-right">
+            <a
+                href="/"
+                className=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowFilter(true);
+                // removeDesignation(); 
+                }}
+              >
+            <img src="images/filter.svg" alt="filter" />
+            </a>
+            </div>
+
+            </Col>
+           
+            </Row>  
+          
+            { showFilter === true && (
+              <Row className="mt-3">
+            <Col sm={3}>
+            <div className="search-bar-input">  
+                <TextInput
+                  inputClass="form-control"
+                  // value={keyword}
+                  placeholder="employee name"
+                //   onInputChange={(e) => {
+                //     setKeyword(e.target.value);
+                //  }}
+                />
+                </div>
+           </Col>
+           
+            <Col sm={3}>
+            
+            <DatePicker
+                            className="form-control"
+                            // selected={date}
+                            // onChange={(date) => {
+                            //   this.setState({ workOrderDate: date });
+                            //   this.restrictCompletionDate(date);
+                            // }}
+                            // onChange={(e) => { this.setState({ workOrderDate: e }); this.restrictCompletionDate(e) }}
+                            // onChange={this.dateChange}
+                            autoComplete="off"
+                            name="startDate"
+                            dateFormat="MM/dd/yyyy"
+                            placeholderText=" MM/DD/YYYY"
+                          />
+        
+            </Col>
+            
+            <Col sm={3}>
+            <DatePicker
+                            className="form-control"
+                            // selected={date}
+                            // onChange={(date) => {
+                            //   this.setState({ workOrderDate: date });
+                            //   this.restrictCompletionDate(date);
+                            // }}
+                            // onChange={(e) => { this.setState({ workOrderDate: e }); this.restrictCompletionDate(e) }}
+                            // onChange={this.dateChange}
+                            autoComplete="off"
+                            name="startDate"
+                            dateFormat="MM/dd/yyyy"
+                            placeholderText=" MM/DD/YYYY"
+                          />
+                         
+                          </Col>
+
+            <Col sm={2}>
+            <div className="form-group">
+            <Button type="button" className="btn btn-primary">Filter</Button>
+          </div>
+            </Col>
+
+            </Row>
+            ) }    
+                         
               <Col className="mt-3">
 
                 <Table
