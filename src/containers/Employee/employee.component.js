@@ -4,13 +4,16 @@ import { Card, Row, Col, Image, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
-import { ModalInput, TextInput, DropdownInput } from '../../components/FormInputs';
+import {
+  ModalInput,
+  TextInput,
+  DropdownInput,
+} from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 const columns = [
- 
   {
     id: 'name',
     label: 'Full Name',
@@ -43,7 +46,9 @@ function Employee() {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [designation, setDesignation] = useState([]);
-  const [selectedDesignationOption, setSelectedDesignationOption] = useState(null);
+  const [selectedDesignationOption, setSelectedDesignationOption] = useState(
+    null
+  );
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -51,16 +56,14 @@ function Employee() {
   });
 
   const getTableData = async (pageNo = 0) => {
-
     // let endPoint;
     // const hasSearch = (keyword !== '');
     const page = pageNo || pagination.current_page;
-      // endPoint = `${Api.employeeUrl}`;
-      //   if(keyword){
-      //   endPoint = hasSearch ? `${endPoint}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}` : `${endPoint}`;  
-      // } 
+    // endPoint = `${Api.employeeUrl}`;
+    //   if(keyword){
+    //   endPoint = hasSearch ? `${endPoint}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}` : `${endPoint}`;
+    // }
 
-   
     const endPoint = `${Api.employeeUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
@@ -85,11 +88,11 @@ function Employee() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setModalShow(true);  
+                  setModalShow(true);
                   setEmployeeId(emp.id);
                   setSelectedDesignationOption({
-                      label: emp.designation_name,
-                      id: emp.designation_id
+                    label: emp.designation_name,
+                    id: emp.designation_id,
                   });
                   setFullName(emp.full_name);
                   setEmail(emp.email);
@@ -118,16 +121,15 @@ function Employee() {
         return emp;
       });
       setRows(row);
-      
     }
-    setKeyword('')
+    setKeyword('');
   };
 
   const getDesignation = async () => {
-      const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}`);
-      if(data) {
-          setDesignation(data.data);
-      };
+    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}`);
+    if (data) {
+      setDesignation(data.data);
+    }
   };
 
   useEffect(() => {
@@ -165,9 +167,9 @@ function Employee() {
 
   const addEmployee = async () => {
     const postData = {
-      full_name: fullName, 
+      full_name: fullName,
       email,
-      mobile, 
+      mobile,
       designation_id: selectedDesignationOption.id,
       designation_name: selectedDesignationOption.label,
       role_id: '5',
@@ -182,8 +184,8 @@ function Employee() {
     const { data } = await callback(endPoint, postData);
 
     if (data) {
-        setSelectedDesignationOption();
-        swal(data && data.message[0], '', 'success').then((result) => {
+      setSelectedDesignationOption();
+      swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setEmployeeId();
           setSelectedDesignationOption();
@@ -191,7 +193,7 @@ function Employee() {
           setFullName();
           setEmail();
           setPassword();
-          setMobile(); 
+          setMobile();
           setModalShow(false);
           getTableData(1);
         }
@@ -213,28 +215,27 @@ function Employee() {
   };
 
   const getDesignationList = () => {
-      if(!designation) return [];
-      const options = [];
-      designation.map((desgn) => {
-          return options.push({
-              label: desgn.name,
-              id: desgn.id,
-          });
+    if (!designation) return [];
+    const options = [];
+    designation.map((desgn) => {
+      return options.push({
+        label: desgn.name,
+        id: desgn.id,
       });
-      return options; 
+    });
+    return options;
   };
 
   // const onClear = () => {
   //   getTableData(1, () => {
   //     setKeyword('');
   //   });
-    
+
   // };
 
   const onClear = () => {
     setKeyword('');
     getTableData(1);
-    
   };
 
   return (
@@ -262,16 +263,15 @@ function Employee() {
         <Card>
           <Card.Body>
             <Row>
-
-            <Row>
-            <Col>
-            <div className="pull-left">
-            <h5>Employee</h5> 
-            </div>
-           </Col>
-            <Col>
-            <div className="pull-right">
-            <Button
+              <Row>
+                <Col>
+                  <div className="pull-left">
+                    <h5>Employee</h5>
+                  </div>
+                </Col>
+                <Col>
+                  <div className="pull-right">
+                    <Button
                       size="sm"
                       variant="primary"
                       type="submit"
@@ -282,36 +282,35 @@ function Employee() {
                     >
                       Add Employee
                     </Button>
-            </div>
+                  </div>
+                </Col>
+              </Row>
 
-            </Col>
-            </Row>
-
-            <Row className="mt-3">
-            <Col md={4}>
-              <div className="search-bar-input">  
-                <TextInput
-                  inputClass="form-control"
-                  value={keyword}
-                  placeholder="search.."
-                  onInputChange={(e) => {
-                    setKeyword(e.target.value);
-                 }}
-                />
-                </div>
-              </Col>
-              <Col md={4}>
-              <Button
-                  variant="primary"
-                  type="button"
-                  onClick={() => getTableData(1)}
-                >
-                  search
-                </Button>
-              </Col>
-              <Col md={4}>
-              <div className="float-end">
-              <Button
+              <Row className="mt-3">
+                <Col md={4}>
+                  <div className="search-bar-input">
+                    <TextInput
+                      inputClass="form-control"
+                      value={keyword}
+                      placeholder="search.."
+                      onInputChange={(e) => {
+                        setKeyword(e.target.value);
+                      }}
+                    />
+                  </div>
+                </Col>
+                <Col md={4}>
+                  <Button
+                    variant="primary"
+                    type="button"
+                    onClick={() => getTableData(1)}
+                  >
+                    search
+                  </Button>
+                </Col>
+                <Col md={4}>
+                  <div className="float-end">
+                    <Button
                       size="sm"
                       variant="primary"
                       type="reset"
@@ -319,11 +318,11 @@ function Employee() {
                     >
                       Clear
                     </Button>
-              </div>
-              </Col>
-            </Row>
-            
-             <Col className="mt-3">
+                  </div>
+                </Col>
+              </Row>
+
+              <Col className="mt-3">
                 <Table
                   tableClass="table table-striped"
                   columns={columns}
@@ -368,7 +367,7 @@ function Employee() {
                   />
                 </Col>
                 <Col sm={6}>
-                <TextInput
+                  <TextInput
                     onInputChange={(e) => setEmail(e.target.value)}
                     label="Email"
                     asterisk="*"
@@ -377,17 +376,13 @@ function Employee() {
                     name="emailTitle"
                     value={email}
                     placeholder="Enter email"
-                    errorMessage={validator.message(
-                      'email',
-                      email,
-                      'required'
-                    )}
+                    errorMessage={validator.message('email', email, 'required')}
                   />
                 </Col>
               </Row>
               <Row>
-              <Col sm={6}>
-              <TextInput
+                <Col sm={6}>
+                  <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
                     label="Password"
                     asterisk="*"
@@ -402,7 +397,7 @@ function Employee() {
                       'required'
                     )}
                   />
-                </Col> 
+                </Col>
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setMobile(e.target.value)}
@@ -420,26 +415,26 @@ function Employee() {
                       'required'
                     )}
                   />
-                </Col> 
+                </Col>
               </Row>
               <Row>
-              <Col sm={6}>
-              <DropdownInput
-                      label="Designation"
-                      asterisk="*"
-                      options={getDesignationList()}
-                      placeholder='Select Subject'
-                     defaultValue={selectedDesignationOption}
-                      onSelectHandler={(select) =>
-                        setSelectedDesignationOption(select)
-                      }
-                      errorMessage={validator.message(
-                        'selectedDesignationOption',
-                        selectedDesignationOption,
-                        'required'
-                      )}
-                    />
-                </Col>   
+                <Col sm={6}>
+                  <DropdownInput
+                    label="Designation"
+                    asterisk="*"
+                    options={getDesignationList()}
+                    placeholder="Select Subject"
+                    defaultValue={selectedDesignationOption}
+                    onSelectHandler={(select) =>
+                      setSelectedDesignationOption(select)
+                    }
+                    errorMessage={validator.message(
+                      'selectedDesignationOption',
+                      selectedDesignationOption,
+                      'required'
+                    )}
+                  />
+                </Col>
               </Row>
             </Form>
           }
@@ -449,26 +444,25 @@ function Employee() {
                 Cancel
               </Button>
 
-              { employeeId ?  
+              {employeeId ? (
                 <Button
-                variant="primary"
-                type="submit"
-                className="ms-4"
-                onClick={(e) => onSubmit(e)}
-              >
-                Update
-              </Button>
-              :
+                  variant="primary"
+                  type="submit"
+                  className="ms-4"
+                  onClick={(e) => onSubmit(e)}
+                >
+                  Update
+                </Button>
+              ) : (
                 <Button
-                variant="primary"
-                type="submit"
-                className="ms-4"
-                onClick={(e) => onSubmit(e)}
-              >
-                Add
-              </Button>
-               }
-
+                  variant="primary"
+                  type="submit"
+                  className="ms-4"
+                  onClick={(e) => onSubmit(e)}
+                >
+                  Add
+                </Button>
+              )}
             </div>
           }
         />

@@ -16,11 +16,10 @@ function DashboardNew() {
       if (location.pathname === '/designation') {
         setShowDesignation(true);
         setShowEmployee(false);
-      }else if (location.pathname === '/employee') {
+      } else if (location.pathname === '/employee') {
         setShowEmployee(true);
         setShowDesignation(false);
-      }
-      else {
+      } else {
         setShowDesignation(false);
         setShowEmployee(false);
       }
@@ -75,22 +74,12 @@ function DashboardNew() {
               showEmployee === true ? <Employee /> :
                <Projects  />
             } */}
-            {
-              showDesignation === true && (
-                <Designations />
-              )
-            }
-            {
-              showDesignation === false && showEmployee === true && (
-                <Employee />
-              )
-            }
-            {
-              showDesignation === false && showEmployee === false && (
-                <Projects />
-              )
-            }
-    
+            {showDesignation === true && <Designations />}
+            {showDesignation === false && showEmployee === true && <Employee />}
+            {showDesignation === false && showEmployee === false && (
+              <Projects />
+            )}
+
             {/* {showDesignation === true ? <Designations /> : <Projects  />}
             {(!showDesignation && showEmployee) && (
               <Employee />
