@@ -354,6 +354,7 @@ function Employee() {
                   <TextInput
                     onInputChange={(e) => setFullName(e.target.value)}
                     label="Full Name"
+                    asterisk="*"
                     containerClass="form-group"
                     type="text"
                     name="firstNameTitle"
@@ -370,6 +371,7 @@ function Employee() {
                 <TextInput
                     onInputChange={(e) => setEmail(e.target.value)}
                     label="Email"
+                    asterisk="*"
                     containerClass="form-group"
                     type="text"
                     name="emailTitle"
@@ -388,6 +390,7 @@ function Employee() {
               <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
                     label="Password"
+                    asterisk="*"
                     containerClass="form-group"
                     type="password"
                     name="passwordTitle"
@@ -404,6 +407,7 @@ function Employee() {
                   <TextInput
                     onInputChange={(e) => setMobile(e.target.value)}
                     label="Mobile"
+                    asterisk="*"
                     containerClass="form-group"
                     type="text"
                     name="mobileTitle"
