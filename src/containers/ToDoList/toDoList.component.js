@@ -4,7 +4,7 @@ import { Card, Row, Col, Image, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 // import SweetAlert from 'react-bootstrap-sweetalert';
-import { ModalInput, TextInput, DropdownInput} from '../../components/FormInputs';
+import { ModalInput, TextInput } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -38,7 +38,9 @@ function ToDoList() {
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
+  const [showSkipBreak, setShowSkipBreak] = useState(false);
   const [count, forceUpdate] = useState(0);
+  const [index, setIndex] = useState(null);
   const [designationId, setDesignationId] = useState(null);
   //   const [ShowDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
@@ -54,33 +56,39 @@ function ToDoList() {
 
   const [breakData, setBreakData] = useState([
     {
-    selectedBreakOption:'',
-    startTime:'',
-    endTime:'',
-    timeSpend:''
+      selectedBreakOption: '1',
+      startTime: '',
+      endTime: '',
+      timeSpend: ''
+    },
+    {
+      selectedBreakOption: '3',
+      startTime: '',
+      endTime: '',
+      timeSpend: ''
     }
-    ])
+  ])
 
   const BreakList = [
     {
       'id': 1,
-      'name': 'Lunch Break'
+      'label': 'Lunch Break'
     },
     {
       'id': 2,
-      'name': 'Morning Refreshment'
+      'label': 'Morning Refreshment'
     },
     {
       'id': 3,
-      'name': 'Evening Refreshment'
+      'label': 'Evening Refreshment'
     },
     {
       'id': 4,
-      'name': 'Infrastructure'
+      'label': 'Infrastructure'
     },
     {
       'id': 5,
-      'name': 'Other'
+      'label': 'Other'
     },
 
   ]
@@ -158,6 +166,19 @@ function ToDoList() {
   //       swal(data && data.message[0], '', 'error');
   //     }
   //   };
+  // const getBreakList = () => {
+  //   console.log('breaklist', BreakList);
+  //   if (!BreakList) return [];
+  //   const breakListOptions = [];
+  //   BreakList.map((mat) => {
+  //     console.log('mat',mat);
+  //     return breakListOptions.push({
+  //       label: mat.name,
+  //       id: mat.id,
+  //     });
+  //   });
+  //   return breakListOptions;
+  // };
 
   const onCancel = () => {
     validator.hideMessages();
@@ -166,11 +187,11 @@ function ToDoList() {
     setShowBreak(false);
     setBreakData([
       {
-        selectedBreakOption:'',
-        startTime:'',
-        endTime:'',
-        timeSpend:''
-        }
+        selectedBreakOption: '',
+        startTime: '',
+        endTime: '',
+        timeSpend: ''
+      }
     ]);
   };
 
@@ -211,22 +232,30 @@ function ToDoList() {
 
   const addBreak = () => {
     console.log('addbreakkkkkkkkkkkkkkkk');
-    const list = breakData; 
+    const list = breakData;
     list.push({
-      selectedBreakOption:'',
-      startTime:'',
-      endTime:'',
-      timeSpend:''
+      selectedBreakOption: '',
+      startTime: '',
+      endTime: '',
+      timeSpend: ''
     });
     console.log('list', list);
     setBreakData([...list]);
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event, idx) => {
+    console.log('breakData', breakData)
+    console.log('idx', idx);
+    console.log('event', event);
     const { name, value } = event.target;
-    setBreakData((inputValues) => {
-      return { ...inputValues, [name]: value };
-    });
+    console.log('name', name, value);
+    breakData[idx][name] = value;
+    console.log('breakData', breakData[idx]);
+
+    setBreakData([...breakData]);
+    // setBreakData((inputValues) => {
+    //   return { ...inputValues, [name]: value };
+    // });
   };
 
   // addressChangeHandler = (event) => {
@@ -239,7 +268,7 @@ function ToDoList() {
 
   return (
     <>
-    {console.log('breakData', breakData)}
+      {console.log('breakData', breakData)}
       {/* {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to remove the designation ?"
@@ -448,93 +477,101 @@ function ToDoList() {
           show={showBreak}
           label={<Button variant="primary">Add Break</Button>}
           id="contained-modal-title-vcenter"
-          
+
           modalBody={
             <Form>
-            
-                
-             <div className="add-break d-flex align-items-center justify-content-between">
+
+
+              <div className="add-break d-flex align-items-center justify-content-between">
                 <h3 className="mb-1">Add Break</h3>
                 <button type="button" className="btn btn-primary" onClick={() => addBreak()}>Add Break</button>
               </div>
-              {breakData && breakData.length > 0 && breakData.map((data)=>(
-               <>
-               {console.log('dataaa',data)}
-            
-              <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
-                <label htmlFor="exampleFormControlSelect1">Break Type <sup className="text-danger">*</sup></label>
-                <div className="skip-form">
-                  <a><img src="images/skip.svg" alt="skip" /></a>
-                </div>
-              </div>
-              <Row>
-              <DropdownInput
-                //   label="Designation"
-                asterisk="*"
-                options={BreakList}
-                placeholder='Select Subject'
-               defaultValue={data.selectedBreakOption}
-                onSelectHandler={(e) => handleInputChange(e)}
-                // errorMessage={validator.message(
-                //   'selectedDesignationOption',
-                //   selectedDesignationOption,
-                //   'required'
-                // )}
-              />
-              </Row>
-              <Row>
-                <Col md={4}>
-                <TextInput
-                    onInputChange={(e) => handleInputChange(e)}
-                    label="Start Time"
-                    containerClass="form-group"
-                    type="time"
-                    name="startTime"
-                    value={data.startTime}
-                    placeholder="Enter Password"
-                    // errorMessage={validator.message(
-                    //   'password',
-                    //   password,
-                    //   'required'
-                    // )}
-                  />
-                </Col>
-                <Col md={4}>
-                <TextInput
-                    onInputChange={(e) => handleInputChange(e)}
-                    label="End Time"
-                    containerClass="form-group"
-                    type="time"
-                    name="endTime"
-                    value={data.endTime}
-                    placeholder="Enter Password"
-                    // errorMessage={validator.message(
-                    //   'password',
-                    //   password,
-                    //   'required'
-                    // )}
-                  />
-                </Col>
-                <Col md={4}>
-                <TextInput
-                    onInputChange={(e) => handleInputChange(e)}
-                    label="Time Spent"
-                    containerClass="form-group"
-                    type="time"
-                    name="timeSpent"
-                    value={data.timeSpent}
-                    placeholder="Enter Password"
-                    // errorMessage={validator.message(
-                    //   'password',
-                    //   password,
-                    //   'required'
-                    // )}
-                  />
-                </Col>
-              </Row>
-              </>
+              {breakData && breakData.length > 0 && breakData.map((data, i) => (
+                <>
+                  {console.log('dataaa', data)}
+
+                  <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
+                    <label htmlFor="exampleFormControlSelect1">Break Type <sup className="text-danger">*</sup></label>
+                    <div className="skip-form">
+                      <a
+                        href="/"
+                        className="pl-2"
+                        onClick={(e) => {
+                          setIndex(i);
+                          setShowSkipBreak(true);
+                          e.preventDefault();
+                          e.stopPropagation();
+
+                        }}
+                      >
+                        <img src="images/skip.svg" alt="skip" />
+                      </a>
+                    </div>
+                  </div>
+                  <Row>
+                    <select
+                    value={data.selectedBreakOption}
+                    // onChange={(e) => setSelectedAction(e.target.value)}
+                    >
+                      {/* <option value="">Lunch Break</option> */}
+                      {BreakList.map((action) => (
+                        <option value={action.id}>{action.label}</option>
+                      ))}
+                    </select>
+                  </Row>
+                  <Row>
+                    <Col md={4}>
+                      <TextInput
+                        onInputChange={(e) => handleInputChange(e, i)}
+                        label="Start Time"
+                        containerClass="form-group"
+                        type="time"
+                        name="startTime"
+                        value={data.startTime}
+                        placeholder="Enter Password"
+                      // errorMessage={validator.message(
+                      //   'password',
+                      //   password,
+                      //   'required'
+                      // )}
+                      />
+                    </Col>
+                    <Col md={4}>
+                      <TextInput
+                        onInputChange={(e) => handleInputChange(e, i)}
+                        label="End Time"
+                        containerClass="form-group"
+                        type="time"
+                        name="endTime"
+                        value={data.endTime}
+                        placeholder="Enter Password"
+                      // errorMessage={validator.message(
+                      //   'password',
+                      //   password,
+                      //   'required'
+                      // )}
+                      />
+                    </Col>
+                    <Col md={4}>
+                      <TextInput
+                        onInputChange={(e) => handleInputChange(e, i)}
+                        label="Time Spent"
+                        containerClass="form-group"
+                        type="time"
+                        name="timeSpent"
+                        value={data.timeSpent}
+                        placeholder="Enter Password"
+                      // errorMessage={validator.message(
+                      //   'password',
+                      //   password,
+                      //   'required'
+                      // )}
+                      />
+                    </Col>
+                  </Row>
+                </>
               ))
-              }              
+              }
             </Form>
           }
           modalFooter={
@@ -554,6 +591,34 @@ function ToDoList() {
           }
         />
       </div>
+      <ModalInput
+        size="sm"
+        centered
+        show={showSkipBreak}
+        id="contained-modal-title-vcenter"
+        closeButton="closeButton"
+        modalBody={
+          <>
+            <img src="images/skip-image.svg" style={{ 'height': '40px', 'textAlign': 'center' }} alt="Send Report" />
+            <h5>Are you sure you want to <br /> Skip Break?</h5>
+            <div className="light-bg buttons d-flex align-items-center mb-1 mt-3 justify-content-between">
+              <button type="button" className="btn btn-secondary mr-3" onClick={(e) => {
+                setShowSkipBreak(false);
+                e.preventDefault();
+                e.stopPropagation();
+
+              }}>No</button>
+              <button type="button" className="btn btn-primary" onClick={() => {
+                console.log('breakdata', breakData);
+                setShowSkipBreak(false);
+                breakData.splice(index, 1);
+                setBreakData(breakData);
+              }}>Yes</button>
+            </div>
+          </>
+        }
+
+      />
     </>
   );
 }
