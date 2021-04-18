@@ -9,25 +9,52 @@ import Employee from '../../containers/Employee/employee.component';
 function DashboardNew() {
   const [showDesignation, setShowDesignation] = useState(false);
   const [showEmployee, setShowEmployee] = useState(false);
+  const [showProject, setShowProject] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
+    async function data(){
+      // const urlSegement =  props.match.url.split('/');
+      // console.log('urllllllllll',urlSegement);
+      // if (urlSegement && urlSegement.includes('designation')) {
+      //   setShowDesignation(true);
+      //   setShowEmployee(false);
+      //   setShowProject(false);
+      // }else if(urlSegement && urlSegement.includes('employee')) {
+      //   setShowEmployee(true);
+      //   setShowDesignation(false);
+      //   setShowProject(false);
+      // }else if(urlSegement && urlSegement.includes('projects')) {
+      //   setShowProject(true);
+      //   setShowDesignation(false);
+      //   setShowEmployee(false);
+      // }
     return history.listen((location) => {
+      console.log('location', location);
       if (location.pathname === '/designation') {
         setShowDesignation(true);
         setShowEmployee(false);
+        setShowProject(false);
       } else if (location.pathname === '/employee') {
         setShowEmployee(true);
         setShowDesignation(false);
-      } else {
+        setShowProject(false);
+        
+      } else if (location.pathname === '/projects') {
+        setShowProject(true);
         setShowDesignation(false);
         setShowEmployee(false);
       }
     });
+  }
+  data();
   }, [history]);
 
   return (
     <>
+    { console.log('showDesignation', showDesignation) }
+    { console.log('showEmployee', showEmployee) }
+    { console.log('showProject', showProject) }
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
@@ -74,11 +101,10 @@ function DashboardNew() {
               showEmployee === true ? <Employee /> :
                <Projects  />
             } */}
-            {showDesignation === true && <Designations />}
-            {showDesignation === false && showEmployee === true && <Employee />}
-            {showDesignation === false && showEmployee === false && (
-              <Projects />
-            )}
+            
+            {(showDesignation === true && showEmployee === false && showProject === false) ? <Designations /> : '' }
+            {(showEmployee === true && showDesignation === false && showProject === false) ? <Employee /> :'' }
+            {(showProject === true && showDesignation === false && showEmployee === false)? <Projects /> :''}
 
             {/* {showDesignation === true ? <Designations /> : <Projects  />}
             {(!showDesignation && showEmployee) && (

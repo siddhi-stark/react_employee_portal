@@ -46,6 +46,7 @@ function Employee() {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [designation, setDesignation] = useState([]);
+  const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedDesignationOption, setSelectedDesignationOption] = useState(
     null
   );
@@ -122,7 +123,6 @@ function Employee() {
       });
       setRows(row);
     }
-    setKeyword('');
   };
 
   const getDesignation = async () => {
@@ -133,9 +133,17 @@ function Employee() {
   };
 
   useEffect(() => {
+    async function getData() {
     getTableData(1);
     getDesignation();
+     }
+    getData();
   }, []);
+
+  useEffect(() => {
+    getTableData(1)
+  }, [cntClearFilter]);
+
 
   const deleteEmployee = async (id) => {
     const { data } = await AuthApi.deleteDataFromServer(
@@ -235,7 +243,7 @@ function Employee() {
 
   const onClear = () => {
     setKeyword('');
-    getTableData(1);
+    setCntClearFilter(cntClearFilter+1);
   };
 
   return (
