@@ -105,7 +105,7 @@ function Employee() {
               </a>
               <a
                 href="/"
-                className=""
+                className="ml-2"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -304,17 +304,16 @@ function Employee() {
                         setKeyword(e.target.value);
                       }}
                     />
+                    <Button
+                      variant="primary"
+                      type="button"
+                      onClick={() => getTableData(1)}
+                    >
+                      <Image src="images/search.svg" className="svg" />
+                    </Button>
                   </div>
                 </Col>
-                <Col md={4}>
-                  <Button
-                    variant="primary"
-                    type="button"
-                    onClick={() => getTableData(1)}
-                  >
-                    search
-                  </Button>
-                </Col>
+
                 <Col md={4}>
                   <div className="float-end">
                     <Button
@@ -428,6 +427,23 @@ function Employee() {
                 <Col sm={6}>
                   <DropdownInput
                     label="Designation"
+                    asterisk="*"
+                    options={getDesignationList()}
+                    placeholder="Select Subject"
+                    defaultValue={selectedDesignationOption}
+                    onSelectHandler={(select) =>
+                      setSelectedDesignationOption(select)
+                    }
+                    errorMessage={validator.message(
+                      'selectedDesignationOption',
+                      selectedDesignationOption,
+                      'required'
+                    )}
+                  />
+                </Col>
+                <Col sm={6}>
+                  <DropdownInput
+                    label="RollName"
                     asterisk="*"
                     options={getDesignationList()}
                     placeholder="Select Subject"
