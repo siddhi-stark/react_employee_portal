@@ -8,7 +8,7 @@ const menu = [
   {
     title: 'Projects',
     path: '/projects',
-    icon: 'dashboard.svg',
+    icon: 'project.svg',
     submenu: [],
   },
   {

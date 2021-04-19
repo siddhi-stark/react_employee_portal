@@ -134,16 +134,15 @@ function Employee() {
 
   useEffect(() => {
     async function getData() {
-    getTableData(1);
-    getDesignation();
-     }
+      getTableData(1);
+      getDesignation();
+    }
     getData();
   }, []);
 
   useEffect(() => {
-    getTableData(1)
+    getTableData(1);
   }, [cntClearFilter]);
-
 
   const deleteEmployee = async (id) => {
     const { data } = await AuthApi.deleteDataFromServer(
@@ -243,7 +242,7 @@ function Employee() {
 
   const onClear = () => {
     setKeyword('');
-    setCntClearFilter(cntClearFilter+1);
+    setCntClearFilter(cntClearFilter + 1);
   };
 
   return (
