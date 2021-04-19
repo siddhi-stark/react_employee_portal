@@ -47,7 +47,6 @@ function Dashboard() {
   //   totalItems: 10,
   // });
 
-
   // const getTableData = async (pageNo = 0) => {
   //   const page = pageNo || pagination.current_page;
   //   const endPoint = `${Api.designationUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
@@ -111,7 +110,6 @@ function Dashboard() {
   //   setModalShow(false);
   // };
 
-
   return (
     <>
       <div className="page-header">
@@ -155,7 +153,7 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-           <ToDoList />
+            <ToDoList />
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

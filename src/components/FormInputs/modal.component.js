@@ -2,11 +2,23 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 
 export default function ModalComponent(props) {
-  const { show, size, id, label, onClick, modalBody, modalFooter, centered, closebutton } = props;
+  const {
+    show,
+    size,
+    id,
+    label,
+    onClick,
+    modalBody,
+    modalFooter,
+    centered,
+    closebutton,
+    className,
+  } = props;
 
   return (
     <>
       <Modal
+        className={className}
         size={size}
         show={show}
         centered={centered}

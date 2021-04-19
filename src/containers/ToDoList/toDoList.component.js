@@ -29,7 +29,7 @@ const columns = [
   {
     id: 'at',
     label: 'AT',
-  }
+  },
 ];
 
 const validator = new SimpleReactValidator();
@@ -59,39 +59,38 @@ function ToDoList() {
       selectedBreakOption: '1',
       startTime: '',
       endTime: '',
-      timeSpend: ''
+      timeSpend: '',
     },
     {
       selectedBreakOption: '3',
       startTime: '',
       endTime: '',
-      timeSpend: ''
-    }
-  ])
+      timeSpend: '',
+    },
+  ]);
 
   const BreakList = [
     {
-      'id': 1,
-      'label': 'Lunch Break'
+      id: 1,
+      label: 'Lunch Break',
     },
     {
-      'id': 2,
-      'label': 'Morning Refreshment'
+      id: 2,
+      label: 'Morning Refreshment',
     },
     {
-      'id': 3,
-      'label': 'Evening Refreshment'
+      id: 3,
+      label: 'Evening Refreshment',
     },
     {
-      'id': 4,
-      'label': 'Infrastructure'
+      id: 4,
+      label: 'Infrastructure',
     },
     {
-      'id': 5,
-      'label': 'Other'
+      id: 5,
+      label: 'Other',
     },
-
-  ]
+  ];
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
@@ -190,8 +189,8 @@ function ToDoList() {
         selectedBreakOption: '',
         startTime: '',
         endTime: '',
-        timeSpend: ''
-      }
+        timeSpend: '',
+      },
     ]);
   };
 
@@ -237,14 +236,14 @@ function ToDoList() {
       selectedBreakOption: '',
       startTime: '',
       endTime: '',
-      timeSpend: ''
+      timeSpend: '',
     });
     console.log('list', list);
     setBreakData([...list]);
   };
 
   const handleInputChange = (event, idx) => {
-    console.log('breakData', breakData)
+    console.log('breakData', breakData);
     console.log('idx', idx);
     console.log('event', event);
     const { name, value } = event.target;
@@ -264,7 +263,6 @@ function ToDoList() {
   //     [name]: value
   //   });
   // }
-
 
   return (
     <>
@@ -329,11 +327,18 @@ function ToDoList() {
                 />
               </Col>
             </Row>
+            <div className="d-flex justify-content-end mr-3">
+              <Button
+                variant="primary"
+                className="mb-3"
+                onClick={() => {
+                  setShowBreak(true);
+                }}
+              >
+                Clock Out & Send Report
+              </Button>
+            </div>
           </Card.Body>
-          <div className="d-flex justify-content-end mr-3">
-            <Button variant="primary" className="mb-3" onClick={() => { setShowBreak(true) }} >Clock Out & Send Report</Button>
-
-          </div>
         </Card>
         <ModalInput
           size="lg"
@@ -386,7 +391,7 @@ function ToDoList() {
                     type="time"
                     name="designationtitle"
                     value={designation}
-                    image='images/time.svg'
+                    image="images/time.svg"
                     placeholder="Enter designation"
                     errorMessage={validator.message(
                       'designation',
@@ -444,10 +449,21 @@ function ToDoList() {
                           )}
                         /> */}
                   <div className="form-group">
-                    <label htmlFor="" className="col-form-label">Progress</label>
+                    <label htmlFor="" className="col-form-label">
+                      Progress
+                    </label>
                     <div className="progress-main">
                       <div className="progress">
-                        <div className="progress-bar bg-secondary" role="progressbar" style={{ 'width': '5%' }} aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        <div
+                          className="progress-bar bg-secondary"
+                          role="progressbar"
+                          style={{ width: '5%' }}
+                          aria-valuenow="0"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          0%
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -477,101 +493,106 @@ function ToDoList() {
           show={showBreak}
           label={<Button variant="primary">Add Break</Button>}
           id="contained-modal-title-vcenter"
-
           modalBody={
             <Form>
-
-
               <div className="add-break d-flex align-items-center justify-content-between">
                 <h3 className="mb-1">Add Break</h3>
-                <button type="button" className="btn btn-primary" onClick={() => addBreak()}>Add Break</button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => addBreak()}
+                >
+                  Add Break
+                </button>
               </div>
-              {breakData && breakData.length > 0 && breakData.map((data, i) => (
-                <>
-                  {console.log('dataaa', data)}
+              {breakData &&
+                breakData.length > 0 &&
+                breakData.map((data, i) => (
+                  <>
+                    {console.log('dataaa', data)}
 
-                  <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
-                    <label htmlFor="exampleFormControlSelect1">Break Type <sup className="text-danger">*</sup></label>
-                    <div className="skip-form">
-                      <a
-                        href="/"
-                        className="pl-2"
-                        onClick={(e) => {
-                          setIndex(i);
-                          setShowSkipBreak(true);
-                          e.preventDefault();
-                          e.stopPropagation();
-
-                        }}
-                      >
-                        <img src="images/skip.svg" alt="skip" />
-                      </a>
+                    <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
+                      <label htmlFor="exampleFormControlSelect1">
+                        Break Type <sup className="text-danger">*</sup>
+                      </label>
+                      <div className="skip-form">
+                        <a
+                          href="/"
+                          className="pl-2"
+                          onClick={(e) => {
+                            setIndex(i);
+                            setShowSkipBreak(true);
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                        >
+                          <img src="images/skip.svg" alt="skip" />
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                  <Row>
-                    <select
-                    value={data.selectedBreakOption}
-                    // onChange={(e) => setSelectedAction(e.target.value)}
-                    >
-                      {/* <option value="">Lunch Break</option> */}
-                      {BreakList.map((action) => (
-                        <option value={action.id}>{action.label}</option>
-                      ))}
-                    </select>
-                  </Row>
-                  <Row>
-                    <Col md={4}>
-                      <TextInput
-                        onInputChange={(e) => handleInputChange(e, i)}
-                        label="Start Time"
-                        containerClass="form-group"
-                        type="time"
-                        name="startTime"
-                        value={data.startTime}
-                        placeholder="Enter Password"
-                      // errorMessage={validator.message(
-                      //   'password',
-                      //   password,
-                      //   'required'
-                      // )}
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <TextInput
-                        onInputChange={(e) => handleInputChange(e, i)}
-                        label="End Time"
-                        containerClass="form-group"
-                        type="time"
-                        name="endTime"
-                        value={data.endTime}
-                        placeholder="Enter Password"
-                      // errorMessage={validator.message(
-                      //   'password',
-                      //   password,
-                      //   'required'
-                      // )}
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <TextInput
-                        onInputChange={(e) => handleInputChange(e, i)}
-                        label="Time Spent"
-                        containerClass="form-group"
-                        type="time"
-                        name="timeSpent"
-                        value={data.timeSpent}
-                        placeholder="Enter Password"
-                      // errorMessage={validator.message(
-                      //   'password',
-                      //   password,
-                      //   'required'
-                      // )}
-                      />
-                    </Col>
-                  </Row>
-                </>
-              ))
-              }
+                    <Row>
+                      <select
+                        value={data.selectedBreakOption}
+                        // onChange={(e) => setSelectedAction(e.target.value)}
+                      >
+                        {/* <option value="">Lunch Break</option> */}
+                        {BreakList.map((action) => (
+                          <option value={action.id}>{action.label}</option>
+                        ))}
+                      </select>
+                    </Row>
+                    <Row>
+                      <Col md={4}>
+                        <TextInput
+                          onInputChange={(e) => handleInputChange(e, i)}
+                          label="Start Time"
+                          containerClass="form-group"
+                          type="time"
+                          name="startTime"
+                          value={data.startTime}
+                          placeholder="Enter Password"
+                          // errorMessage={validator.message(
+                          //   'password',
+                          //   password,
+                          //   'required'
+                          // )}
+                        />
+                      </Col>
+                      <Col md={4}>
+                        <TextInput
+                          onInputChange={(e) => handleInputChange(e, i)}
+                          label="End Time"
+                          containerClass="form-group"
+                          type="time"
+                          name="endTime"
+                          value={data.endTime}
+                          placeholder="Enter Password"
+                          // errorMessage={validator.message(
+                          //   'password',
+                          //   password,
+                          //   'required'
+                          // )}
+                        />
+                      </Col>
+                      <Col md={4}>
+                        <TextInput
+                          onInputChange={(e) => handleInputChange(e, i)}
+                          label="Time Spent"
+                          containerClass="form-group"
+                          type="time"
+                          name="timeSpent"
+                          value={data.timeSpent}
+                          placeholder="Enter Password"
+                          // errorMessage={validator.message(
+                          //   'password',
+                          //   password,
+                          //   'required'
+                          // )}
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                ))}
             </Form>
           }
           modalFooter={
@@ -594,30 +615,47 @@ function ToDoList() {
       <ModalInput
         size="sm"
         centered
+        className="send-report-confirm"
         show={showSkipBreak}
         id="contained-modal-title-vcenter"
         closeButton="closeButton"
         modalBody={
           <>
-            <img src="images/skip-image.svg" style={{ 'height': '40px', 'textAlign': 'center' }} alt="Send Report" />
-            <h5>Are you sure you want to <br /> Skip Break?</h5>
+            <img
+              src="images/skip-image.svg"
+              style={{ height: '40px', textAlign: 'center' }}
+              alt="Send Report"
+            />
+            <h5>
+              Are you sure you want to <br /> Skip Break?
+            </h5>
             <div className="light-bg buttons d-flex align-items-center mb-1 mt-3 justify-content-between">
-              <button type="button" className="btn btn-secondary mr-3" onClick={(e) => {
-                setShowSkipBreak(false);
-                e.preventDefault();
-                e.stopPropagation();
-
-              }}>No</button>
-              <button type="button" className="btn btn-primary" onClick={() => {
-                console.log('breakdata', breakData);
-                setShowSkipBreak(false);
-                breakData.splice(index, 1);
-                setBreakData(breakData);
-              }}>Yes</button>
+              <button
+                type="button"
+                className="btn btn-secondary mr-3"
+                onClick={(e) => {
+                  setShowSkipBreak(false);
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                No
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => {
+                  console.log('breakdata', breakData);
+                  setShowSkipBreak(false);
+                  breakData.splice(index, 1);
+                  setBreakData(breakData);
+                }}
+              >
+                Yes
+              </button>
             </div>
           </>
         }
-
       />
     </>
   );

@@ -30,7 +30,7 @@ export default function TextComponent(props) {
           ''
         )}
         <Form.Control
-          progressClass = {progressClass}
+          progressClass={progressClass}
           id={id}
           value={value}
           onChange={(e) => {

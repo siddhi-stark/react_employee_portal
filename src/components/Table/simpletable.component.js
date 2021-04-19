@@ -14,7 +14,9 @@ export default function SimpleTable(props) {
   };
 
   const [allSelected, setAllSelected] = useState(false);
-  const [selectedRows, setSelectedRows] = useState(rows && rows.map(() => false));
+  const [selectedRows, setSelectedRows] = useState(
+    rows && rows.map(() => false)
+  );
 
   const allColumnIds = columns.map((column) => column.id);
 
@@ -79,27 +81,28 @@ export default function SimpleTable(props) {
                 </thead>
               )}
               <tbody>
-                {rows && rows.map((row, rowIndex) => (
-                  <tr key={`row-${rowIndex}`}>
-                    {showCheckbox && (
-                      <th>
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            checked={selectedRows[rowIndex]}
-                            onChange={(e) => {
-                              onSelectRow(e.target.checked, rowIndex);
-                            }}
-                          />
-                        </div>
-                      </th>
-                    )}
-                    {allColumnIds.map((rowDataId) => (
-                      <th>{row[rowDataId]}</th>
-                    ))}
-                  </tr>
-                ))}
+                {rows &&
+                  rows.map((row, rowIndex) => (
+                    <tr key={`row-${rowIndex}`}>
+                      {showCheckbox && (
+                        <th>
+                          <div className="form-check">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              checked={selectedRows[rowIndex]}
+                              onChange={(e) => {
+                                onSelectRow(e.target.checked, rowIndex);
+                              }}
+                            />
+                          </div>
+                        </th>
+                      )}
+                      {allColumnIds.map((rowDataId) => (
+                        <th>{row[rowDataId]}</th>
+                      ))}
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
