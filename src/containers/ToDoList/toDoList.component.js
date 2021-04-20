@@ -230,7 +230,7 @@ function ToDoList() {
   };
 
   const addBreak = () => {
-    console.log('addbreakkkkkkkkkkkkkkkk');
+    // console.log('addbreakkkkkkkkkkkkkkkk');
     const list = breakData;
     list.push({
       selectedBreakOption: '',
@@ -238,18 +238,18 @@ function ToDoList() {
       endTime: '',
       timeSpend: '',
     });
-    console.log('list', list);
+    // console.log('list', list);
     setBreakData([...list]);
   };
 
   const handleInputChange = (event, idx) => {
-    console.log('breakData', breakData);
-    console.log('idx', idx);
-    console.log('event', event);
+    // console.log('breakData', breakData);
+    // console.log('idx', idx);
+    // console.log('event', event);
     const { name, value } = event.target;
-    console.log('name', name, value);
+    // console.log('name', name, value);
     breakData[idx][name] = value;
-    console.log('breakData', breakData[idx]);
+    // console.log('breakData', breakData[idx]);
 
     setBreakData([...breakData]);
     // setBreakData((inputValues) => {
@@ -266,7 +266,6 @@ function ToDoList() {
 
   return (
     <>
-      {console.log('breakData', breakData)}
       {/* {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to remove the designation ?"
@@ -509,7 +508,7 @@ function ToDoList() {
                 breakData.length > 0 &&
                 breakData.map((data, i) => (
                   <>
-                    {console.log('dataaa', data)}
+                    {/* {console.log('dataaa', data)} */}
 
                     <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
                       <label htmlFor="exampleFormControlSelect1">
@@ -645,7 +644,7 @@ function ToDoList() {
                 type="button"
                 className="btn btn-primary"
                 onClick={() => {
-                  console.log('breakdata', breakData);
+                  // console.log('breakdata', breakData);
                   setShowSkipBreak(false);
                   breakData.splice(index, 1);
                   setBreakData(breakData);
