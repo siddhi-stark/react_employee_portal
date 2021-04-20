@@ -315,7 +315,7 @@ function Employee() {
                 </Col>
 
                 <Col md={4}>
-                  <div className="float-end">
+                  <div className="float-end mt-1">
                     <Button
                       size="sm"
                       variant="primary"
@@ -350,6 +350,7 @@ function Employee() {
           size="lg"
           centered
           show={modalShow}
+          popupClass="add-task-popup"
           label="Add Employee"
           id="contained-modal-title-vcenter"
           modalBody={

@@ -26,6 +26,7 @@ function Projects() {
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
+  const [keyword, setKeyword] = useState('');
   const [designationId, setDesignationId] = useState(null);
   const [ShowDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
@@ -177,10 +178,12 @@ function Projects() {
             <Row>
               <Row>
                 <Col>
-                  <h4>Desingation</h4>
+                  <div className="pull-left">
+                    <h5>Designation</h5>
+                  </div>
                 </Col>
                 <Col>
-                  <div className="float-end">
+                  <div className="pull-right">
                     <Button
                       size="sm"
                       variant="primary"
@@ -190,7 +193,42 @@ function Projects() {
                         setDesignationId();
                       }}
                     >
-                      Add Desingation
+                      Add Designation
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row className="mt-3">
+                <Col md={4}>
+                  <div className="search-bar-input">
+                    <TextInput
+                      inputClass="form-control"
+                      value={keyword}
+                      placeholder="search.."
+                      onInputChange={(e) => {
+                        setKeyword(e.target.value);
+                      }}
+                    />
+                    <Button
+                      variant="primary"
+                      type="button"
+                      onClick={() => getTableData(1)}
+                    >
+                      <Image src="images/search.svg" className="svg" />
+                    </Button>
+                  </div>
+                </Col>
+
+                <Col md={4}>
+                  <div className="float-end mt-1">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      type="reset"
+                      // onClick={() => onClear()}
+                    >
+                      Clear
                     </Button>
                   </div>
                 </Col>
