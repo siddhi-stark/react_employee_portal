@@ -1,6 +1,17 @@
 import React, { Component } from 'react'; // eslint-disable-line
 
 class CustomFunctions extends Component {
+  getDate(dateTime) {
+    //eslint-disable-line
+    var newdate = new Date(dateTime);
+    var d = newdate.getDate();
+    var m = newdate.getMonth() + 1;
+    var y = newdate.getFullYear();
+    const formattedate =
+      y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+    return formattedate;
+  }
+
   jsonParse = (jsonString) => {
     try {
       return JSON.parse(jsonString);

@@ -10,6 +10,7 @@ import {
   DropdownInput,
 } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
+import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
@@ -46,10 +47,21 @@ function Employee() {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [designation, setDesignation] = useState([]);
+  const [TwEmployee, setTwEmployee] = useState([]);
+  const [role, setRole] = useState([]);
+  const [manager, setManager] = useState([]);
+  const [selectedManager, setSelectedManager] = useState([]);
+  const [teamLead, setTeamLead] = useState([]);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedDesignationOption, setSelectedDesignationOption] = useState(
     null
   );
+  const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
+  const [selectedTeamLead, setSelectedTeamLead] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [twId, setTwId] = useState(null);
+  const [date, setDate] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -125,10 +137,78 @@ function Employee() {
     }
   };
 
+  const Department = [
+    {
+      id: '1',
+      value: 'Management',
+      label: 'Management',
+    },
+    {
+      id: '2',
+      value: 'Development',
+      label: 'Development',
+    },
+    {
+      id: '3',
+      value: 'Design',
+      label: 'Design',
+    },
+    {
+      id: '4',
+      value: 'Quality Analyst',
+      label: 'Quality Analyst',
+    },
+    {
+      id: '5',
+      value: 'Other',
+      label: 'Other',
+    },
+  ];
+
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}`);
     if (data) {
+      // console.log('designationdata', data);
       setDesignation(data.data);
+    }
+  };
+
+  const getTwEmployee = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.TwEmployeeUrl}`);
+    if (data && data.data) {
+      console.log('data.data', data.data);
+      setTwEmployee(data.data);
+      // setTwId(data.data.tw_id);
+      // console.log('twid', data.tw_id);
+      // console.log('tw_id', TwId);
+    }
+  };
+
+  const getRole = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.roleUrl}`);
+    if (data) {
+      // console.log('data', data);
+      setRole(data.data);
+    }
+  };
+
+  const getManager = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?role_id=${3}`
+    );
+    if (data) {
+      // console.log('data', data);
+      setManager(data.data);
+    }
+  };
+
+  const getTeamLead = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?role_id=${2}`
+    );
+    if (data) {
+      console.log('data', data);
+      setTeamLead(data.data);
     }
   };
 
@@ -136,6 +216,10 @@ function Employee() {
     async function getData() {
       getTableData(1);
       getDesignation();
+      getTwEmployee();
+      getRole();
+      getManager();
+      getTeamLead();
     }
     getData();
   }, []);
@@ -169,19 +253,62 @@ function Employee() {
     setEmail();
     setMobile();
     setPassword();
+    setSelectedDesignationOption();
+    setSelectedRole();
+    setSelectedManager();
+    setSelectedTeamLead();
+    setSelectedDepartment();
+    setDate();
     setModalShow(false);
   };
 
   const addEmployee = async () => {
+    const teamIdList = [];
+    selectedTeamLead.map((team) => {
+      teamIdList.push(team.id);
+      return team;
+    });
+
+    const managerList = [];
+    selectedManager.map((mngr) => {
+      managerList.push(mngr.id);
+      return mngr;
+    });
+
+    // const departmentList = [];
+
+    // selectedDepartment.map((dep) => {
+    //   managerList.push(dep.id);
+    //   return dep;
+    // })
+
+    // const roleList = [];
+    // selectedRole.map((roleId) => {
+    //   roleList.push(roleId.id);
+    //   return roleId;
+    TwEmployee.map((tw) => {
+      if (tw.full_name === fullName) {
+        setTwId(tw.id);
+      }
+      return tw;
+    });
+
     const postData = {
       full_name: fullName,
       email,
       mobile,
-      designation_id: selectedDesignationOption.id,
-      designation_name: selectedDesignationOption.label,
-      role_id: '5',
+      // designation_id: selectedDesignationOption.id,
+      role: selectedRole.id,
       password,
+      team_leads: teamIdList,
+      managers: managerList,
+      dob: customFunctions.getDate(date),
+      tw_emp: twId,
+      department: selectedDepartment.id,
     };
+    if (selectedDesignationOption) {
+      postData.designation_id = selectedDesignationOption.id;
+    }
     const callback = employeeId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
@@ -233,12 +360,68 @@ function Employee() {
     return options;
   };
 
-  // const onClear = () => {
-  //   getTableData(1, () => {
-  //     setKeyword('');
-  //   });
+  const getEmployeeList = () => {
+    if (!TwEmployee) return [];
+    const options = [];
+    TwEmployee.map((emp) => {
+      return options.push({
+        label: emp.full_name,
+        // id: desgn.id,
+      });
+    });
+    return options;
+  };
 
-  // };
+  const getEmployeeRole = () => {
+    if (!role) return [];
+    const options = [];
+    role.map((data) => {
+      return options.push({
+        label: data.name,
+        id: data.id,
+      });
+    });
+    return options;
+  };
+
+  const getManagerList = () => {
+    if (!manager) return [];
+    const options = [];
+    manager.map((data) => {
+      return options.push({
+        label: data.full_name,
+        id: data.id,
+        value: data.full_name,
+      });
+    });
+    return options;
+  };
+
+  const getTeamLeadList = () => {
+    if (!teamLead) return [];
+    const options = [];
+    teamLead.map((data) => {
+      return options.push({
+        label: data.full_name,
+        id: data.id,
+        value: data.full_name,
+      });
+    });
+    return options;
+  };
+
+  const getDepartment = () => {
+    if (!Department) return [];
+    const depart = [];
+    Department.map((dep) => {
+      return depart.push({
+        label: dep.label,
+        id: dep.id,
+        value: dep.value,
+      });
+    });
+    return depart;
+  };
 
   const onClear = () => {
     setKeyword('');
@@ -247,6 +430,8 @@ function Employee() {
 
   return (
     <>
+      {console.log('selectedRole', selectedRole)}
+
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the employee ?"
@@ -350,12 +535,30 @@ function Employee() {
           size="lg"
           centered
           show={modalShow}
-          popupClass="add-task-popup"
           label="Add Employee"
           id="contained-modal-title-vcenter"
           modalBody={
             <Form>
               <Row>
+                <Col sm={6}>
+                  <DropdownInput
+                    label="TW Employee"
+                    asterisk="*"
+                    options={getEmployeeList()}
+                    placeholder="Select Employee"
+                    defaultValue={selectedEmployee}
+                    onSelectHandler={(select) => setSelectedEmployee(select)}
+                    errorMessage={
+                      selectedEmployee && selectedEmployee > 0
+                        ? validator.message(
+                            'setSelectedEmployee',
+                            selectedDesignationOption,
+                            'required'
+                          )
+                        : ''
+                    }
+                  />
+                </Col>
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setFullName(e.target.value)}
@@ -373,6 +576,8 @@ function Employee() {
                     )}
                   />
                 </Col>
+              </Row>
+              <Row>
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setEmail(e.target.value)}
@@ -386,8 +591,6 @@ function Employee() {
                     errorMessage={validator.message('email', email, 'required')}
                   />
                 </Col>
-              </Row>
-              <Row>
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
@@ -405,6 +608,8 @@ function Employee() {
                     )}
                   />
                 </Col>
+              </Row>
+              <Row>
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setMobile(e.target.value)}
@@ -423,8 +628,6 @@ function Employee() {
                     )}
                   />
                 </Col>
-              </Row>
-              <Row>
                 <Col sm={6}>
                   <DropdownInput
                     label="Designation"
@@ -435,28 +638,109 @@ function Employee() {
                     onSelectHandler={(select) =>
                       setSelectedDesignationOption(select)
                     }
-                    errorMessage={validator.message(
-                      'selectedDesignationOption',
-                      selectedDesignationOption,
-                      'required'
-                    )}
+                    errorMessage={
+                      selectedDesignationOption &&
+                      selectedDesignationOption.length > 0
+                        ? validator.message(
+                            'Designation',
+                            selectedDesignationOption,
+                            'required'
+                          )
+                        : ''
+                    }
                   />
                 </Col>
+              </Row>
+              <Row>
                 <Col sm={6}>
                   <DropdownInput
                     label="RollName"
                     asterisk="*"
-                    options={getDesignationList()}
-                    placeholder="Select Subject"
-                    defaultValue={selectedDesignationOption}
-                    onSelectHandler={(select) =>
-                      setSelectedDesignationOption(select)
+                    options={getEmployeeRole()}
+                    placeholder="Select Role"
+                    defaultValue={selectedRole}
+                    onSelectHandler={(select) => setSelectedRole(select)}
+                    errorMessage={
+                      selectedRole && selectedRole > 0
+                        ? validator.message('Role', selectedRole, 'required')
+                        : ''
                     }
-                    errorMessage={validator.message(
-                      'selectedDesignationOption',
-                      selectedDesignationOption,
-                      'required'
-                    )}
+                  />
+                </Col>
+                <Col sm={6}>
+                  <DropdownInput
+                    label="Manager"
+                    asterisk="*"
+                    options={getManagerList()}
+                    placeholder="Select Manager"
+                    defaultValue={selectedManager}
+                    isMulti
+                    onSelectHandler={(select) => setSelectedManager(select)}
+                    errorMessage={
+                      selectedManager && selectedManager > 0
+                        ? validator.message(
+                            'Manager',
+                            selectedDesignationOption,
+                            'required'
+                          )
+                        : ''
+                    }
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={6}>
+                  <DropdownInput
+                    label="Teamlead"
+                    asterisk="*"
+                    options={getTeamLeadList()}
+                    placeholder="Select TeamLead"
+                    defaultValue={selectedTeamLead}
+                    isMulti
+                    onSelectHandler={(select) => setSelectedTeamLead(select)}
+                    errorMessage={
+                      selectedTeamLead && selectedTeamLead > 0
+                        ? validator.message(
+                            'TeamLead',
+                            selectedDesignationOption,
+                            'required'
+                          )
+                        : ''
+                    }
+                  />
+                </Col>
+                <Col sm={6}>
+                  <TextInput
+                    onInputChange={(e) => setDate(e.target.value)}
+                    label="DOB"
+                    asterisk="*"
+                    containerClass="form-group"
+                    type="date"
+                    name="DOB"
+                    value={date}
+                    // placeholder="Enter Contact Number"
+                    errorMessage={validator.message('DOB', mobile, 'required')}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col sm={6}>
+                  <DropdownInput
+                    label="Department"
+                    asterisk="*"
+                    options={getDepartment()}
+                    placeholder="Select Department"
+                    defaultValue={selectedDepartment}
+                    onSelectHandler={(select) => setSelectedDepartment(select)}
+                    errorMessage={
+                      selectedDepartment && selectedDepartment.length > 0
+                        ? validator.message(
+                            'Department',
+                            selectedDesignationOption,
+                            'required'
+                          )
+                        : ''
+                    }
                   />
                 </Col>
               </Row>

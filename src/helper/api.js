@@ -19,6 +19,10 @@ export default class Api extends Component {
 
   static employeeUrl = `${Api.baseUrl}employee/`;
 
+  static TwEmployeeUrl = `${Api.baseUrl}tw-employee/`;
+
+  static roleUrl = `${Api.baseUrl}roles/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
