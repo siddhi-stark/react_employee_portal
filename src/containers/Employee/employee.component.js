@@ -10,7 +10,7 @@ import {
   DropdownInput,
 } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
-import customFunctions from '../../helper/customFunctions';
+// import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
@@ -62,81 +62,12 @@ function Employee() {
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
+  const [empId, setEmpId] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
     totalItems: 10,
   });
-
-  const getTableData = async (pageNo = 0) => {
-    // let endPoint;
-    // const hasSearch = (keyword !== '');
-    const page = pageNo || pagination.current_page;
-    // endPoint = `${Api.employeeUrl}`;
-    //   if(keyword){
-    //   endPoint = hasSearch ? `${endPoint}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}` : `${endPoint}`;
-    // }
-
-    const endPoint = `${Api.employeeUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
-      setPagination({
-        activePage: data.paginator.current_page,
-        itemsPerPage: data.paginator.limit,
-        totalItems: data.paginator.total_count,
-      });
-
-      const row = [];
-
-      data.data.map((emp) => {
-        row.push({
-          name: emp.full_name,
-          email: emp.email,
-          mobile: emp.mobile,
-          action: (
-            <>
-              <a
-                href="/"
-                className="pl-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setModalShow(true);
-                  setEmployeeId(emp.id);
-                  setSelectedDesignationOption({
-                    label: emp.designation_name,
-                    id: emp.designation_id,
-                  });
-                  setFullName(emp.full_name);
-                  setEmail(emp.email);
-                  setPassword(emp.password);
-                  setMobile(emp.mobile);
-                }}
-              >
-                <Image src="images/edit.svg" />
-              </a>
-              <a
-                href="/"
-                className="ml-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowDelete(true);
-                  setEmployeeId(emp.id);
-                  // removeDesignation(desgn.id); //eslint-disable-line
-                }}
-              >
-                <Image src="images/delete.png" />
-              </a>
-            </>
-          ),
-        });
-        return emp;
-      });
-      setRows(row);
-    }
-  };
-
   const Department = [
     {
       id: '1',
@@ -165,6 +96,132 @@ function Employee() {
     },
   ];
 
+  const getTableData = async (pageNo = 0) => {
+    // let endPoint;
+    // const hasSearch = (keyword !== '');
+    const page = pageNo || pagination.current_page;
+    // endPoint = `${Api.employeeUrl}`;
+    //   if(keyword){
+    //   endPoint = hasSearch ? `${endPoint}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}` : `${endPoint}`;
+    // }
+
+    const endPoint = `${Api.employeeUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data && data.data) {
+      setPagination({
+        activePage: data.paginator.current_page,
+        itemsPerPage: data.paginator.limit,
+        totalItems: data.paginator.total_count,
+      });
+
+      const row = [];
+
+      data.data.map((emp) => {
+        // console.log('idd', emp.id);
+        row.push({
+          name: emp.full_name,
+          email: emp.email,
+          mobile: emp.mobile,
+          action: (
+            <>
+              <a
+                href="/"
+                className="pl-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setModalShow(true);
+                  setEmployeeId(emp.id);
+
+                  // console.log('emp.id',emp.id);
+                  setEmpId(emp.id);
+                  setCntClearFilter(cntClearFilter + 1);
+                }}
+              >
+                <Image src="images/edit.svg" />
+              </a>
+              <a
+                href="/"
+                className="ml-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowDelete(true);
+                  setEmployeeId(emp.id);
+                  // removeDesignation(desgn.id); //eslint-disable-line
+                }}
+              >
+                <Image src="images/delete.png" />
+              </a>
+            </>
+          ),
+        });
+        return emp;
+      });
+      setRows(row);
+    }
+  };
+
+  const getEmployeeById = async (id) => {
+    // console.log('id', id);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}${id}/`
+    );
+
+    // TwEmployee.map((tw) => {
+    //   console.log('tw',tw);
+    //   return tw;
+    // })
+
+    if (data && data.data) {
+      // const list=[]
+      // teamLead.map((team) => {
+      //    console.log('team', team);
+      //   data.data.assigned_team_leads.map((assign)=> {
+      //     console.log('assign', assign);
+      //     console.log('team.id === assign',team.id !== assign);
+      //     // (team.id === assign)? setSelectedTeamLead()
+      //     if(team.id === assign){
+      //       console.log('object if');
+      //       list.push({label:team.full_name})
+      //     }
+      //     return assign;
+      //   })
+      //   return team;
+      //   setSelectedTeamLead(list)
+      // });
+
+      // Department.map((dept) => {
+      //   console.log('dept',dept.id);
+      //   console.log('data.data.department_id',data.data.department_id);
+      //   console.log('ifDepartm', data.data.department_id === dept.id);
+      //   if(data.data.department_id === dept.id){
+      //     console.log('if stat');
+      //     setSelectedDepartment({
+      //       label:dept.label,
+      //       id:dept.id
+      //     })
+      //   }
+      //   return dept;
+      // })
+
+      setSelectedDesignationOption({
+        label: data.data.designation_name,
+        id: data.data.designation_id,
+      });
+      setSelectedRole({
+        label: data.data.role_name,
+        id: data.data.role_id,
+      });
+
+      setFullName(data.data.full_name);
+      setEmail(data.data.email);
+      setDate(data.data.dob);
+      setPassword(data.data.password);
+      setMobile(data.data.mobile);
+    }
+  };
+
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}`);
     if (data) {
@@ -176,7 +233,7 @@ function Employee() {
   const getTwEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.TwEmployeeUrl}`);
     if (data && data.data) {
-      console.log('data.data', data.data);
+      // console.log('data.data', data.data);
       setTwEmployee(data.data);
       // setTwId(data.data.tw_id);
       // console.log('twid', data.tw_id);
@@ -207,13 +264,15 @@ function Employee() {
       `${Api.employeeUrl}?role_id=${2}`
     );
     if (data) {
-      console.log('data', data);
+      // console.log('data', data);
       setTeamLead(data.data);
     }
   };
 
   useEffect(() => {
     async function getData() {
+      // console.log('empId', empId);
+
       getTableData(1);
       getDesignation();
       getTwEmployee();
@@ -226,6 +285,9 @@ function Employee() {
 
   useEffect(() => {
     getTableData(1);
+    if (empId) {
+      getEmployeeById(empId);
+    }
   }, [cntClearFilter]);
 
   const deleteEmployee = async (id) => {
@@ -302,7 +364,7 @@ function Employee() {
       password,
       team_leads: teamIdList,
       managers: managerList,
-      dob: customFunctions.getDate(date),
+      dob: date, // customFunctions.getDate(date),
       tw_emp: twId,
       department: selectedDepartment.id,
     };
@@ -319,10 +381,12 @@ function Employee() {
 
     if (data) {
       setSelectedDesignationOption();
+      setSelectedRole();
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setEmployeeId();
           setSelectedDesignationOption();
+          setSelectedRole();
           validator.hideMessages();
           setFullName();
           setEmail();
@@ -430,7 +494,7 @@ function Employee() {
 
   return (
     <>
-      {console.log('selectedRole', selectedRole)}
+      {/* {console.log('selectedRole', selectedRole)} */}
 
       {ShowDelete && (
         <SweetAlert
@@ -591,23 +655,25 @@ function Employee() {
                     errorMessage={validator.message('email', email, 'required')}
                   />
                 </Col>
-                <Col sm={6}>
-                  <TextInput
-                    onInputChange={(e) => setPassword(e.target.value)}
-                    label="Password"
-                    asterisk="*"
-                    containerClass="form-group"
-                    type="password"
-                    name="passwordTitle"
-                    value={password}
-                    placeholder="Enter Password"
-                    errorMessage={validator.message(
-                      'password',
-                      password,
-                      'required'
-                    )}
-                  />
-                </Col>
+                {!empId && (
+                  <Col sm={6}>
+                    <TextInput
+                      onInputChange={(e) => setPassword(e.target.value)}
+                      label="Password"
+                      asterisk="*"
+                      containerClass="form-group"
+                      type="password"
+                      name="passwordTitle"
+                      value={password}
+                      placeholder="Enter Password"
+                      errorMessage={validator.message(
+                        'password',
+                        password,
+                        'required'
+                      )}
+                    />
+                  </Col>
+                )}
               </Row>
               <Row>
                 <Col sm={6}>

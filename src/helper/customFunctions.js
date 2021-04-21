@@ -12,6 +12,17 @@ class CustomFunctions extends Component {
     return formattedate;
   }
 
+  getFormattedDate(dateTime) {
+    //eslint-disable-line
+    var newdate = new Date(dateTime);
+    var d = newdate.getDate();
+    var m = newdate.getMonth() + 1;
+    var y = newdate.getFullYear();
+    const formattedate =
+      (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y;
+    return formattedate;
+  }
+
   jsonParse = (jsonString) => {
     try {
       return JSON.parse(jsonString);

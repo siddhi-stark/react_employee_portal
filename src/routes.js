@@ -18,6 +18,7 @@ function Routes() {
       <Route path="/projects" exact component={DashboardNew} />
       <Route path="/designation" exact component={DashboardNew} />
       <Route path="/employee" exact component={DashboardNew} />
+      {/* <Route path="/edit-employee/:empId" exact component={DashboardNew} /> */}
     </Switch>
   );
 }
