@@ -28,6 +28,7 @@ function Projects() {
   const [count, forceUpdate] = useState(0);
   const [keyword, setKeyword] = useState('');
   const [designationId, setDesignationId] = useState(null);
+  const [cntClearFilter, setCntClearFilter] = useState(0);
   const [ShowDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
   const [pagination, setPagination] = useState({
@@ -38,7 +39,7 @@ function Projects() {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.designationUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.designationUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
@@ -90,8 +91,15 @@ function Projects() {
   };
 
   useEffect(() => {
+    async function getData() {
     getTableData(1);
+   };
+   getData();
   }, []);
+
+  useEffect(() => {
+    getTableData(1);
+  }, [cntClearFilter]);
 
   const removeDesignation = async (id) => {
     const { data } = await AuthApi.deleteDataFromServer(
@@ -150,6 +158,12 @@ function Projects() {
       forceUpdate(count + 1);
     }
   };
+
+  const onClear = () => {
+    setKeyword('');
+    setCntClearFilter(cntClearFilter + 1);
+  };
+
 
   return (
     <>
@@ -226,7 +240,7 @@ function Projects() {
                       size="sm"
                       variant="primary"
                       type="reset"
-                      // onClick={() => onClear()}
+                      onClick={() => onClear()}
                     >
                       Clear
                     </Button>

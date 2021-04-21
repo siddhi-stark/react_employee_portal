@@ -60,7 +60,7 @@ function Employee() {
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedTeamLead, setSelectedTeamLead] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
-  // const [twId, setTwId] = useState(null);
+  const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
   const [empId, setEmpId] = useState('');
   const [pagination, setPagination] = useState({
@@ -204,9 +204,10 @@ function Employee() {
       });
 
       TwEmployee.map((tw) => {
-        console.log('tw', tw);
+        // console.log('tw', tw);
         if (data.data.tw_id === tw.tw_id) {
           setSelectedEmployee({ label: tw.full_name });
+          setTwId(tw.tw_id);
         }
         return tw;
       });
@@ -297,7 +298,6 @@ function Employee() {
 
   useEffect(() => {
     async function getData() {
-      // console.log('empId', empId);
 
       getTableData(1);
       getDesignation();
@@ -365,29 +365,6 @@ function Employee() {
       return mngr;
     });
 
-    // TwEmployee.filter((tw) => {
-    //   if (tw.full_name === selectedEmployee) {
-    //    setTwId(tw.id)
-    //   }
-    //   return tw;
-    // });
-
-    // const TwEmpId = TwEmployee.filter(item => item.full_name === selectedEmployee)[0].id;
-    // setTwId(TwEmpId);
-    // console.log('TwEmpId', TwEmpId);
-
-    const isFind = TwEmployee.find(
-      (item) => item.full_name === selectedEmployee.label
-    );
-    console.log('selectedEmpl', selectedEmployee);
-    console.log('isFInd', isFind);
-    let TwEmpId = null;
-    if (isFind) {
-      console.log('isFInd', isFind);
-      TwEmpId = isFind.id;
-      // setTwId(TwEmpId);
-    }
-
     const postData = {
       full_name: fullName,
       email,
@@ -398,12 +375,21 @@ function Employee() {
       team_leads: teamIdList,
       managers: managerList,
       dob: customFunctions.getDate(date),
-      tw_emp: TwEmpId,
+      tw_emp: twId,
       department: selectedDepartment.id,
     };
     if (selectedDesignationOption) {
-      postData.designation_id = selectedDesignationOption.id;
+      postData.designation = selectedDesignationOption.id;
     }
+
+    const isFind = TwEmployee.find(
+      (item) => item.full_name === selectedEmployee.label
+    );
+    if (isFind) {
+      postData.tw_emp = isFind.tw_id;
+      if(employeeId) postData.tw_emp =  isFind.tw_id; 
+    }
+    console.log('employeeID', employeeId);
     const callback = employeeId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
@@ -412,9 +398,11 @@ function Employee() {
       : Api.employeeUrl;
     const { data } = await callback(endPoint, postData);
 
+      
     if (data) {
       setSelectedDesignationOption();
       setSelectedRole();
+      setModalShow(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setEmployeeId();
@@ -619,7 +607,7 @@ function Employee() {
           size="lg"
           centered
           show={modalShow}
-          label="Add Employee"
+          label= { employeeId ? 'Update Employee' : 'Add Employee' } 
           id="contained-modal-title-vcenter"
           modalBody={
             <Form>
@@ -675,7 +663,7 @@ function Employee() {
                     errorMessage={validator.message('email', email, 'required')}
                   />
                 </Col>
-                {!empId && (
+                {!employeeId && (
                   <Col sm={6}>
                     <TextInput
                       onInputChange={(e) => setPassword(e.target.value)}
