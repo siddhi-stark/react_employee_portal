@@ -117,7 +117,6 @@ function Employee() {
       const row = [];
 
       data.data.map((emp) => {
-        // console.log('idd', emp.id);
         row.push({
           name: emp.full_name,
           email: emp.email,
@@ -133,7 +132,6 @@ function Employee() {
                   setModalShow(true);
                   setEmployeeId(emp.id);
 
-                  // console.log('emp.id',emp.id);
                   setEmpId(emp.id);
                   setCntClearFilter(cntClearFilter + 1);
                 }}
@@ -163,7 +161,6 @@ function Employee() {
   };
 
   const getEmployeeById = async (id) => {
-    // console.log('id', id);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${id}/`
     );
@@ -188,7 +185,6 @@ function Employee() {
         return team;
       });
 
-      console.log('manager', manager);
       manager.map((mngr) => {
         data.data.assigned_managers.map((assgnmgmr) => {
           if (mngr.id === assgnmgmr) {
@@ -204,7 +200,6 @@ function Employee() {
       });
 
       TwEmployee.map((tw) => {
-        // console.log('tw', tw);
         if (data.data.tw_id === tw.tw_id) {
           setSelectedEmployee({ label: tw.full_name });
           setTwId(tw.tw_id);
@@ -239,7 +234,6 @@ function Employee() {
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}`);
     if (data) {
-      // console.log('designationdata', data);
       setDesignation(data.data);
     }
   };
@@ -247,18 +241,13 @@ function Employee() {
   const getTwEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.TwEmployeeUrl}`);
     if (data && data.data) {
-      // console.log('data.data', data.data);
       setTwEmployee(data.data);
-      // setTwId(data.data.tw_id);
-      // console.log('twid', data.tw_id);
-      // console.log('tw_id', TwId);
     }
   };
 
   const getRole = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.roleUrl}`);
     if (data) {
-      // console.log('data', data);
       setRole(data.data);
     }
   };
@@ -298,7 +287,6 @@ function Employee() {
 
   useEffect(() => {
     async function getData() {
-
       getTableData(1);
       getDesignation();
       getTwEmployee();
@@ -387,7 +375,7 @@ function Employee() {
     );
     if (isFind) {
       postData.tw_emp = isFind.tw_id;
-      if(employeeId) postData.tw_emp =  isFind.tw_id; 
+      if (employeeId) postData.tw_emp = isFind.tw_id;
     }
     console.log('employeeID', employeeId);
     const callback = employeeId
@@ -398,7 +386,6 @@ function Employee() {
       : Api.employeeUrl;
     const { data } = await callback(endPoint, postData);
 
-      
     if (data) {
       setSelectedDesignationOption();
       setSelectedRole();
@@ -425,6 +412,7 @@ function Employee() {
   };
 
   const onSubmit = (e) => {
+    console.log('updatebutton');
     e.preventDefault();
     if (validator.allValid()) {
       addEmployee();
@@ -503,7 +491,6 @@ function Employee() {
 
   return (
     <>
-      {/* {console.log('twId', twId)} */}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the employee ?"
@@ -607,7 +594,7 @@ function Employee() {
           size="lg"
           centered
           show={modalShow}
-          label= { employeeId ? 'Update Employee' : 'Add Employee' } 
+          label={employeeId ? 'Update Employee' : 'Add Employee'}
           id="contained-modal-title-vcenter"
           modalBody={
             <Form>

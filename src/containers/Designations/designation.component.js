@@ -92,9 +92,9 @@ function Projects() {
 
   useEffect(() => {
     async function getData() {
-    getTableData(1);
-   };
-   getData();
+      getTableData(1);
+    }
+    getData();
   }, []);
 
   useEffect(() => {
@@ -136,16 +136,20 @@ function Projects() {
       ? `${Api.designationUrl}${designationId}/`
       : Api.designationUrl;
     const { data } = await callback(endPoint, postData);
-
     if (data) {
+      setModalShow(false);
+      setDesignation();
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
-          setModalShow(false);
           getTableData(1);
         }
       });
     } else {
-      swal(data && data.message, '', 'error');
+      swal(data && data.message[0], '', 'error').then((result) => {
+        if (result) {
+          getTableData(1);
+        }
+      });
     }
   };
 
@@ -163,7 +167,6 @@ function Projects() {
     setKeyword('');
     setCntClearFilter(cntClearFilter + 1);
   };
-
 
   return (
     <>
