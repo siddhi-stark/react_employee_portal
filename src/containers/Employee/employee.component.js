@@ -10,7 +10,7 @@ import {
   DropdownInput,
 } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
-// import customFunctions from '../../helper/customFunctions';
+import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
@@ -60,7 +60,7 @@ function Employee() {
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedTeamLead, setSelectedTeamLead] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
-  const [twId, setTwId] = useState(null);
+  // const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
   const [empId, setEmpId] = useState('');
   const [pagination, setPagination] = useState({
@@ -70,27 +70,27 @@ function Employee() {
   });
   const Department = [
     {
-      id: '1',
+      id: 1,
       value: 'Management',
       label: 'Management',
     },
     {
-      id: '2',
+      id: 2,
       value: 'Development',
       label: 'Development',
     },
     {
-      id: '3',
+      id: 3,
       value: 'Design',
       label: 'Design',
     },
     {
-      id: '4',
+      id: 4,
       value: 'Quality Analyst',
       label: 'Quality Analyst',
     },
     {
-      id: '5',
+      id: 5,
       value: 'Other',
       label: 'Other',
     },
@@ -168,42 +168,55 @@ function Employee() {
       `${Api.employeeUrl}${id}/`
     );
 
-    // TwEmployee.map((tw) => {
-    //   console.log('tw',tw);
-    //   return tw;
-    // })
-
     if (data && data.data) {
-      // const list=[]
-      // teamLead.map((team) => {
-      //    console.log('team', team);
-      //   data.data.assigned_team_leads.map((assign)=> {
-      //     console.log('assign', assign);
-      //     console.log('team.id === assign',team.id !== assign);
-      //     // (team.id === assign)? setSelectedTeamLead()
-      //     if(team.id === assign){
-      //       console.log('object if');
-      //       list.push({label:team.full_name})
-      //     }
-      //     return assign;
-      //   })
-      //   return team;
-      //   setSelectedTeamLead(list)
-      // });
+      const list = [];
+      const managerList = [];
 
-      // Department.map((dept) => {
-      //   console.log('dept',dept.id);
-      //   console.log('data.data.department_id',data.data.department_id);
-      //   console.log('ifDepartm', data.data.department_id === dept.id);
-      //   if(data.data.department_id === dept.id){
-      //     console.log('if stat');
-      //     setSelectedDepartment({
-      //       label:dept.label,
-      //       id:dept.id
-      //     })
-      //   }
-      //   return dept;
-      // })
+      teamLead.map((team) => {
+        data.data.assigned_team_leads.map((assign) => {
+          // (team.id === assign)? setSelectedTeamLead()
+          if (team.id === assign) {
+            list.push({
+              id: team.id,
+              label: team.full_name,
+            });
+          }
+
+          return assign;
+        });
+        setSelectedTeamLead(list);
+        return team;
+      });
+
+      console.log('manager', manager);
+      manager.map((mngr) => {
+        data.data.assigned_managers.map((assgnmgmr) => {
+          if (mngr.id === assgnmgmr) {
+            managerList.push({
+              id: mngr.id,
+              label: mngr.full_name,
+            });
+          }
+          return assgnmgmr;
+        });
+        setSelectedManager(managerList);
+        return mngr;
+      });
+
+      TwEmployee.map((tw) => {
+        console.log('tw', tw);
+        if (data.data.tw_id === tw.tw_id) {
+          setSelectedEmployee({ label: tw.full_name });
+        }
+        return tw;
+      });
+
+      Department.map((dept) => {
+        if (data.data.department_id === dept.id) {
+          setSelectedDepartment(dept);
+        }
+        return dept;
+      });
 
       setSelectedDesignationOption({
         label: data.data.designation_name,
@@ -216,7 +229,7 @@ function Employee() {
 
       setFullName(data.data.full_name);
       setEmail(data.data.email);
-      setDate(data.data.dob);
+      setDate(data.data.dob ? data.data.dob : '');
       setPassword(data.data.password);
       setMobile(data.data.mobile);
     }
@@ -251,7 +264,7 @@ function Employee() {
 
   const getManager = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?role_id=${3}`
+      `${Api.employeeUrl}?role_id=${2}`
     );
     if (data) {
       // console.log('data', data);
@@ -261,12 +274,25 @@ function Employee() {
 
   const getTeamLead = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?role_id=${2}`
+      `${Api.employeeUrl}?role_id=${3}`
     );
     if (data) {
       // console.log('data', data);
       setTeamLead(data.data);
     }
+  };
+
+  const getDepartment = () => {
+    if (!Department) return [];
+    const depart = [];
+    Department.map((dep) => {
+      return depart.push({
+        label: dep.label,
+        id: dep.id,
+        value: dep.value,
+      });
+    });
+    return depart;
   };
 
   useEffect(() => {
@@ -279,6 +305,7 @@ function Employee() {
       getRole();
       getManager();
       getTeamLead();
+      getDepartment();
     }
     getData();
   }, []);
@@ -312,6 +339,7 @@ function Employee() {
     setSelectedDesignationOption();
     validator.hideMessages();
     setFullName();
+    setSelectedEmployee();
     setEmail();
     setMobile();
     setPassword();
@@ -337,23 +365,28 @@ function Employee() {
       return mngr;
     });
 
-    // const departmentList = [];
+    // TwEmployee.filter((tw) => {
+    //   if (tw.full_name === selectedEmployee) {
+    //    setTwId(tw.id)
+    //   }
+    //   return tw;
+    // });
 
-    // selectedDepartment.map((dep) => {
-    //   managerList.push(dep.id);
-    //   return dep;
-    // })
+    // const TwEmpId = TwEmployee.filter(item => item.full_name === selectedEmployee)[0].id;
+    // setTwId(TwEmpId);
+    // console.log('TwEmpId', TwEmpId);
 
-    // const roleList = [];
-    // selectedRole.map((roleId) => {
-    //   roleList.push(roleId.id);
-    //   return roleId;
-    TwEmployee.map((tw) => {
-      if (tw.full_name === fullName) {
-        setTwId(tw.id);
-      }
-      return tw;
-    });
+    const isFind = TwEmployee.find(
+      (item) => item.full_name === selectedEmployee.label
+    );
+    console.log('selectedEmpl', selectedEmployee);
+    console.log('isFInd', isFind);
+    let TwEmpId = null;
+    if (isFind) {
+      console.log('isFInd', isFind);
+      TwEmpId = isFind.id;
+      // setTwId(TwEmpId);
+    }
 
     const postData = {
       full_name: fullName,
@@ -364,8 +397,8 @@ function Employee() {
       password,
       team_leads: teamIdList,
       managers: managerList,
-      dob: date, // customFunctions.getDate(date),
-      tw_emp: twId,
+      dob: customFunctions.getDate(date),
+      tw_emp: TwEmpId,
       department: selectedDepartment.id,
     };
     if (selectedDesignationOption) {
@@ -389,6 +422,7 @@ function Employee() {
           setSelectedRole();
           validator.hideMessages();
           setFullName();
+          setSelectedEmployee();
           setEmail();
           setPassword();
           setMobile();
@@ -474,19 +508,6 @@ function Employee() {
     return options;
   };
 
-  const getDepartment = () => {
-    if (!Department) return [];
-    const depart = [];
-    Department.map((dep) => {
-      return depart.push({
-        label: dep.label,
-        id: dep.id,
-        value: dep.value,
-      });
-    });
-    return depart;
-  };
-
   const onClear = () => {
     setKeyword('');
     setCntClearFilter(cntClearFilter + 1);
@@ -494,8 +515,7 @@ function Employee() {
 
   return (
     <>
-      {/* {console.log('selectedRole', selectedRole)} */}
-
+      {/* {console.log('twId', twId)} */}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the employee ?"
@@ -807,6 +827,7 @@ function Employee() {
                           )
                         : ''
                     }
+                    isMulti={false}
                   />
                 </Col>
               </Row>

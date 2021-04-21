@@ -29,6 +29,7 @@ export default function SelectDropdown(props) {
         <Select
           value={defaultValue}
           onChange={(e) => {
+            console.log('e', e);
             if (onSelectHandler) onSelectHandler(e);
           }}
           name={name}
