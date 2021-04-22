@@ -13,6 +13,8 @@ export default class Api extends Component {
 
   static verifyToken = `${Api.baseUrl}password/find/`;
 
+  static taskUrl = `${Api.baseUrl}tasks/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

@@ -1,117 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import ToDoList from '../../ToDoList/toDoList.component';
-
-// const columnsnew = [
-// {
-//     id: 'todo',
-//     label: 'To Do Tasks',
-// },
-// {
-//     id: 'projects',
-//     label: 'Projects',
-// },
-// {
-//     id: 'status',
-//     label: 'status',
-// },
-// {
-//     id: 'eta',
-//     label: 'ETA',
-// },
-// {
-//     id: 'at',
-//     label: 'AT',
-// }
-// ];
-
-// const validator = new SimpleReactValidator();
+import AuthApi from '../../../helper/authApi';
+import Api from '../../../helper/api';
 
 function Dashboard() {
-  // const getClockInTime = async () => {
-  //   const endPoint = `${Api.clockInUrl}`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
-  //   // if(data && data.data){
-  //   }
-  // const [rows, setRows] = useState([]);
-  // const [modalShow, setModalShow] = useState(false);
-  // const [count, forceUpdate] = useState(0);
-  // const [designationId, setDesignationId] = useState(null);
-  // const [ShowDelete, setShowDelete] = useState(false);
-  // const [designation, setDesignation] = useState('');
-  // const [pagination, setPagination] = useState({
-  //   current_page: 1,
-  //   itemsPerPage: 5,
-  //   totalItems: 10,
-  // });
+  const [signInTime, setSignInTime] = useState('');
+  const [showButton, setShowButton] = useState(true);
 
-  // const getTableData = async (pageNo = 0) => {
-  //   const page = pageNo || pagination.current_page;
-  //   const endPoint = `${Api.designationUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
-  //   if (data && data.data) {
-  //     setPagination({
-  //       activePage: data.paginator.current_page,
-  //       itemsPerPage: data.paginator.limit,
-  //       totalItems: data.paginator.total_count,
-  //     });
-
-  //     const row = [];
-
-  //     data.data.map((desgn) => {
-  //       row.push({
-  //         name: desgn.name,
-  //         action: (
-  //           <>
-  //             <a
-  //               href="/"
-  //               className="pl-2"
-  //               onClick={(e) => {
-  //                 setModalShow(true);
-  //                 e.preventDefault();
-  //                 e.stopPropagation();
-  //                 // setDesignationId(desgn.id);
-  //                 setDesignation(desgn.name);
-  //               }}
-  //             >
-  //               <Image src="images/edit.svg" />
-  //             </a>
-  //             <a
-  //               href="/"
-  //               className=""
-  //               onClick={(e) => {
-  //                 e.preventDefault();
-  //                 e.stopPropagation();
-  //                 // setShowDelete(true);
-  //                 // setDesignationId(desgn.id);
-  //                 // removeDesignation(desgn.id); //eslint-disable-line
-  //               }}
-  //             >
-  //               <Image src="images/delete.png" />
-  //             </a>
-  //           </>
-  //         ),
-  //       });
-  //       return desgn;
-  //     });
-  //     setRows(row);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getTableData(1);
-  // }, []);
-
-  // const onCancel = () => {
-  //   validator.hideMessages();
-  //   setDesignation();
-  //   setModalShow(false);
-  // };
+  const getClockInTime = async () => {
+    const endPoint = `${Api.clockInUrl}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    console.log('data', data.data);
+    if (data && data.data) {
+      setSignInTime(data.data.sign_in_time);
+      setShowButton(false);
+    }
+  };
 
   return (
     <>
+      {console.log('signinTime', signInTime)}
+
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
@@ -139,11 +51,17 @@ function Dashboard() {
                 <Col md={2}>
                   <div className="check-in">
                     <div className="time-count text-center">
-                      <span>00 : 00</span>
+                      <span>{signInTime}</span>
                     </div>
-                    <Button type="button" className="btn btn-primary">
-                      Clock In
-                    </Button>
+                    {showButton && (
+                      <Button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => getClockInTime()}
+                      >
+                        Clock In
+                      </Button>
+                    )}
                   </div>
                 </Col>
                 <Col md={5}>
@@ -153,7 +71,7 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            <ToDoList />
+            <div className="mt-3">{!showButton && <ToDoList />}</div>
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
