@@ -1,34 +1,68 @@
 import React, { useState } from 'react';
-import { Card } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import Pagination from '../Pagination/pagination.component';
 
 const defaults = {
   columns: [],
   rows: [],
   showCheckbox: false,
+  tableClass: '',
+  tableContainerClass: '',
+  paginationProps: {},
+  showPagination: false,
+  dropdownContainerClass: '',
+  bulkActions: [],
 };
 
+// Columns structure
+// [{id: 'id', label: 'Id'},{id: 'name', label: 'Name'}{id: 'email', label: 'Email'}]
+
+// Rows structure
+// [{id: 1, name: 'Sample name', email: 'john.doe@example.com'}]
+
+// Bulk action structure
+// [
+//   {
+//     id: 'delete',
+//     actionTitle: 'Delete',
+//     actionCallback: () => { }
+//   }
+// ]
+
 export default function SimpleTable(props) {
-  const { columns, rows, showCheckbox, onSelectRowsIndexes } = {
+  const {
+    columns,
+    rows,
+    showCheckbox,
+    onSelectRowsIndexes,
+    tableClass,
+    tableContainerClass,
+    paginationProps,
+    showPagination,
+    dropdownContainerClass,
+    bulkActions,
+    label,
+  } = {
     ...defaults,
     ...props,
   };
 
   const [allSelected, setAllSelected] = useState(false);
-  const [selectedRows, setSelectedRows] = useState(
-    rows && rows.map(() => false)
-  );
+  const [selectedAction, setSelectedAction] = useState('');
+  const [selectedRows, setSelectedRows] = useState(rows.map(() => false));
+  const [selectedRowIndexes, setSelectedRowIndexes] = useState([]);
 
   const allColumnIds = columns.map((column) => column.id);
 
   const onSelectHead = (isChecked) => {
     const selectedIndexes = [];
     const selectedItems = rows.map((row, rowIndex) => {
-      // eslint-disable-line
       if (isChecked) selectedIndexes.push(rowIndex);
       return isChecked;
     });
     setSelectedRows([...selectedItems]);
     setAllSelected(isChecked);
+    setSelectedRowIndexes([...selectedIndexes]);
     if (onSelectRowsIndexes) {
       onSelectRowsIndexes(selectedIndexes);
     }
@@ -44,6 +78,7 @@ export default function SimpleTable(props) {
     }).length;
     setSelectedRows(selectedItems);
     setAllSelected(selectedCount === rows.length);
+    setSelectedRowIndexes([...selectedIndexes]);
     if (onSelectRowsIndexes) {
       onSelectRowsIndexes(selectedIndexes);
     }
@@ -51,63 +86,96 @@ export default function SimpleTable(props) {
 
   return (
     <>
-      <div className="table-projects">
-        <Card>
-          <div className="table-responsive">
-            <table className="table table-striped">
-              {columns && columns.length > 0 && (
-                <thead>
-                  <tr>
-                    {showCheckbox && (
-                      <th>
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            checked={allSelected}
-                            onChange={(e) => {
-                              onSelectHead(e.target.checked);
-                            }}
-                          />
-                        </div>
-                      </th>
-                    )}
-                    {columns.map((column, columnIndex) => (
-                      <th scope="col" key={`column-${columnIndex}`}>
-                        {column.label}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-              )}
-              <tbody>
-                {rows &&
-                  rows.map((row, rowIndex) => (
-                    <tr key={`row-${rowIndex}`}>
-                      {showCheckbox && (
-                        <th>
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              checked={selectedRows[rowIndex]}
-                              onChange={(e) => {
-                                onSelectRow(e.target.checked, rowIndex);
-                              }}
-                            />
-                          </div>
-                        </th>
-                      )}
-                      {allColumnIds.map((rowDataId) => (
-                        <th>{row[rowDataId]}</th>
-                      ))}
-                    </tr>
+      <div className={`table-projects  ${tableContainerClass}`}>
+        {bulkActions && bulkActions.length > 0 && (
+          <>
+            <div className="mb-2 bulk-action-apply">
+              <select //eslint-disable-line
+                className={`${dropdownContainerClass}`}
+                onChange={(e) => setSelectedAction(e.target.value)}
+              >
+                <option value="">Bulk Actions</option>
+                {bulkActions.map((action, index) => (
+                  <option value={index}>{action.actionTitle}</option>
+                ))}
+              </select>
+
+              <Button
+                className="apply-btn"
+                onClick={() => {
+                  if (!selectedRowIndexes.length || !selectedAction) return;
+                  bulkActions[selectedAction].actionCallback(
+                    selectedRowIndexes,
+                    setAllSelected(false)
+                  );
+                }}
+              >
+                {label}
+              </Button>
+            </div>
+          </>
+        )}
+        <div className="table-responsive">
+          <table className={`table ${tableClass}`}>
+            {columns && columns.length > 0 && (
+              <thead>
+                <tr>
+                  {showCheckbox && (
+                    <th>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          checked={allSelected}
+                          onChange={(e) => {
+                            onSelectHead(e.target.checked);
+                          }}
+                        />
+                      </div>
+                    </th>
+                  )}
+                  {columns.map((column, columnIndex) => (
+                    <th
+                      scope="col"
+                      key={`column-${columnIndex}`} //eslint-disable-line
+                    >
+                      {' '}
+                      {column.label}
+                    </th>
                   ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                </tr>
+              </thead>
+            )}
+            <tbody>
+              {rows.map((row, rowIndex) => (
+                <tr
+                  key={`row-${rowIndex}`} //eslint-disable-line
+                  className={row.rowClass}
+                >
+                  {showCheckbox && (
+                    <td>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          checked={selectedRows[rowIndex]}
+                          onChange={(e) => {
+                            onSelectRow(e.target.checked, rowIndex);
+                          }}
+                        />
+                      </div>
+                    </td>
+                  )}
+                  {allColumnIds.map((rowDataId) => (
+                    <td>{row[rowDataId]}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+      {showPagination && <Pagination {...paginationProps} />}
     </>
   );
 }

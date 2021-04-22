@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
-// import swal from 'sweetalert';
+import swal from 'sweetalert';
 // import SweetAlert from 'react-bootstrap-sweetalert';
-import { ModalInput, TextInput } from '../../components/FormInputs';
+import {
+  ModalInput,
+  TextInput,
+  DropdownInput,
+} from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -39,15 +43,19 @@ function ToDoList() {
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
   const [showSkipBreak, setShowSkipBreak] = useState(false);
+  const [showClockoutBtn, setShowClockoutBtn] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [index, setIndex] = useState(null);
+  const [selectedRowIndex, setSelectedRowIndex] = useState([]);
+  const [taskList, setTaskList] = useState([]);
+  // const [reportType, setReportType] = useState('');
   // const [designationId, setDesignationId] = useState(null);
   //   const [ShowDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
-  // const [selectedBreakOption, setSelectedBreakOption] = useState('');
-  // const [startTime, setStartTime] = useState('');
-  // const [endTime, setEndTime] = useState('');
-  // const [timeSpent, setTimeSpent] = useState('');
+  const [selectedBreakOption, setSelectedBreakOption] = useState(null);
+  const [startTime, setStartTime] = useState(''); //eslint-disable-line
+  const [endTime, setEndTime] = useState(''); //eslint-disable-line
+  const [timeSpent, setTimeSpent] = useState(''); //eslint-disable-line
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -56,16 +64,16 @@ function ToDoList() {
 
   const [breakData, setBreakData] = useState([
     {
-      selectedBreakOption: '1',
+      selectedBreakOption: '',
       startTime: '',
       endTime: '',
-      timeSpend: '',
+      timeSpent: '',
     },
     {
-      selectedBreakOption: '3',
+      selectedBreakOption: '',
       startTime: '',
       endTime: '',
-      timeSpend: '',
+      timeSpent: '',
     },
   ]);
 
@@ -103,6 +111,7 @@ function ToDoList() {
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
       });
+      setTaskList(data.data);
 
       const row = [];
 
@@ -199,68 +208,82 @@ function ToDoList() {
     ]);
   };
 
-  // const addDesignation = async () => {
-  //   const postData = {
-  //     name: designation,
-  //     is_deleted: 'false',
-  //   };
-  //   const callback = designationId
-  //     ? AuthApi.putDataToServer
-  //     : AuthApi.postDataToServer;
-  //   const endPoint = designationId
-  //     ? `${Api.designationUrl}${designationId}/`
-  //     : Api.designationUrl;
-  //   const { data } = await callback(endPoint, postData);
+  const onSendScrum = async () => {
+    console.log('TaskList', selectedRowIndex);
+    // console.log('Typeeee', reportType);
+    const postData = {
+      type: 'morning',
+      tasks: selectedRowIndex,
+    };
 
-  //   if (data) {
-  //     swal(data && data.message[0], '', 'success').then((result) => {
-  //       if (result) {
-  //         setModalShow(false);
-  //         getTableData(1);
-  //       }
-  //     });
-  //   } else {
-  //     swal(data && data.message, '', 'error');
-  //   }
-  // };
+    // const endPoint = designationId
+    //   ? `${Api.designationUrl}${designationId}/`
+    //   : Api.designationUrl;
+    // const { data } = await callback(endPoint, postData);
+
+    const endPoint = `${Api.reportUrl}`;
+    const { data, message } = await AuthApi.postDataToServer(
+      endPoint,
+      postData
+    );
+
+    if (data) {
+      swal(data && data.message[0], '', 'success');
+    } else {
+      swal(message, '', 'error');
+      setShowClockoutBtn(true);
+    }
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (validator.allValid()) {
-      // addDesignation();
+      onSendScrum();
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
     }
   };
 
+  // const addBreak = () => {
+  //   // console.log('addbreakkkkkkkkkkkkkkkk');
+  //   const list = breakData;
+  //   list.push({
+  //     selectedBreakOption: '',
+  //     startTime: '',
+  //     endTime: '',
+  //     timeSpend: '',
+  //   });
+  //   // console.log('list', list);
+  //   setBreakData([...list]);
+  // };
+
   const addBreak = () => {
-    // console.log('addbreakkkkkkkkkkkkkkkk');
-    const list = breakData;
-    list.push({
-      selectedBreakOption: '',
-      startTime: '',
-      endTime: '',
-      timeSpend: '',
-    });
-    // console.log('list', list);
-    setBreakData([...list]);
+    return setBreakData([
+      ...breakData,
+      { selectedBreakOption: '', startTime: '', endTime: '', timeSpent: '' },
+    ]);
   };
 
-  const handleInputChange = (event, idx) => {
-    // console.log('breakData', breakData);
-    // console.log('idx', idx);
-    // console.log('event', event);
-    const { name, value } = event.target;
-    // console.log('name', name, value);
-    breakData[idx][name] = value;
-    // console.log('breakData', breakData[idx]);
+  // const removeSubjectTutor = (index) => {
+  //   subjectTutor.splice(index, 1)
+  //    return setSubjectTutor([...subjectTutor]);
+  //  };
 
-    setBreakData([...breakData]);
-    // setBreakData((inputValues) => {
-    //   return { ...inputValues, [name]: value };
-    // });
-  };
+  // const handleInputChange = (event, idx) => {
+  //   // console.log('breakData', breakData);
+  //   // console.log('idx', idx);
+  //   // console.log('event', event);
+  //   const { name, value } = event.target;
+  //   // console.log('name', name, value);
+  //   breakData[idx][name] = value;
+  //   // console.log('breakData', breakData[idx]);
+
+  //   setBreakData([...breakData]);
+  //   // setBreakData((inputValues) => {
+  //   //   return { ...inputValues, [name]: value };
+  //   // });
+  // };
 
   // addressChangeHandler = (event) => {
   //   const { name, value } = event.target
@@ -268,6 +291,31 @@ function ToDoList() {
   //     [name]: value
   //   });
   // }
+
+  const getBreakTypes = () => {
+    if (!BreakList) return [];
+    const BreakTypes = [];
+    BreakList.map((sub) => {
+      return BreakTypes.push({
+        label: sub.label,
+        id: sub.id,
+      });
+    });
+    return BreakTypes;
+  };
+
+  const onComfirm = () => {
+    const BreakPostData = [];
+    breakData.map((dt) => {
+      return BreakPostData.push({
+        description: dt.selectedBreakOption,
+        start_time: dt.startTime,
+        end_time: dt.endTime.id,
+        task_type: 'Break',
+      });
+    });
+    console.log('breakdata', BreakPostData);
+  };
 
   return (
     <>
@@ -321,6 +369,21 @@ function ToDoList() {
                 rows={rows}
                 showPagination
                 showCheckbox
+                onSelectRowsIndexes={(rowIndex) => {
+                  const twId = [];
+                  taskList.map((task, ind) => {
+                    rowIndex.map((i) => {
+                      if (ind === i) {
+                        twId.push(task.tw_id);
+                      }
+                      return i;
+                    });
+
+                    console.log('twId', twId);
+                    return ind;
+                  });
+                  setSelectedRowIndex(twId);
+                }}
                 paginationProps={{
                   ...pagination,
                   onPageChange: (pageNo) => {
@@ -331,15 +394,27 @@ function ToDoList() {
             </Col>
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            <Button
-              variant="primary"
-              className="mb-3"
-              onClick={() => {
-                setShowBreak(true);
-              }}
-            >
-              Send Scrum
-            </Button>
+            {showClockoutBtn ? (
+              <Button
+                variant="primary"
+                className="mb-3"
+                onClick={() => {
+                  setShowBreak(true);
+                }}
+              >
+                Clockout & Send Report
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                className="mb-3"
+                onClick={() => {
+                  onSendScrum();
+                }}
+              >
+                Send Scrum
+              </Button>
+            )}
           </div>
         </Card.Body>
       </Card>
@@ -534,36 +609,59 @@ function ToDoList() {
                     </div>
                   </div>
                   <Row>
-                    <select
+                    <DropdownInput
+                      label="Subject"
+                      options={getBreakTypes()}
+                      asterisk="*"
                       value={data.selectedBreakOption}
-                      // onChange={(e) => setSelectedAction(e.target.value)}
-                    >
-                      {/* <option value="">Lunch Break</option> */}
-                      {BreakList.map((action) => (
-                        <option value={action.id}>{action.label}</option>
-                      ))}
-                    </select>
+                      onSelectHandler={(select) => {
+                        breakData[i].selectedBreakOption = select;
+                        setSelectedBreakOption(breakData);
+                      }}
+                      errorMessage={validator.message(
+                        'selectedBreakOption',
+                        selectedBreakOption,
+                        'required'
+                      )}
+                    />
                   </Row>
                   <Row>
                     <Col md={4}>
                       <TextInput
-                        onInputChange={(e) => handleInputChange(e, i)}
+                        onInputChange={(e) => {
+                          breakData[i].startTime = e.target.value;
+                          setStartTime(breakData);
+                        }}
                         label="Start Time"
                         containerClass="form-group"
                         type="time"
                         name="startTime"
                         value={data.startTime}
-                        placeholder="Enter Password"
                         // errorMessage={validator.message(
                         //   'password',
                         //   password,
                         //   'required'
                         // )}
                       />
+                      <DatePicker
+                        selected={ToTime}
+                        onChange={(date) => {
+                          breakData[i].startTime = date;
+                          setStartTime({ ToTime: date });
+                        }}
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={1}
+                        timeCaption="From"
+                        dateFormat="h:mm aa"
+                      />
                     </Col>
                     <Col md={4}>
                       <TextInput
-                        onInputChange={(e) => handleInputChange(e, i)}
+                        onInputChange={(e) => {
+                          breakData[i].endTime = e.target.value;
+                          setEndTime(breakData);
+                        }}
                         label="End Time"
                         containerClass="form-group"
                         type="time"
@@ -579,7 +677,11 @@ function ToDoList() {
                     </Col>
                     <Col md={4}>
                       <TextInput
-                        onInputChange={(e) => handleInputChange(e, i)}
+                        onInputChange={(e) => {
+                          breakData[i].timeSpent = e.target.value;
+                          console.log('e', e);
+                          setTimeSpent(breakData);
+                        }}
                         label="Time Spent"
                         containerClass="form-group"
                         type="time"
@@ -600,8 +702,8 @@ function ToDoList() {
         }
         modalFooter={
           <div className="float-end">
-            <Button variant="secondary" onClick={() => onCancel()}>
-              Cancel
+            <Button variant="secondary" onClick={() => onComfirm()}>
+              Confirm
             </Button>
             <Button
               variant="primary"
@@ -609,7 +711,7 @@ function ToDoList() {
               className="ms-4"
               onClick={(e) => onSubmit(e)}
             >
-              Add
+              Send Report
             </Button>
           </div>
         }
