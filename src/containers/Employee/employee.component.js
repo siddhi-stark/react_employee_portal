@@ -412,7 +412,7 @@ function Employee() {
   };
 
   const onSubmit = (e) => {
-    console.log('updatebutton');
+    // console.log('updatebutton');
     e.preventDefault();
     if (validator.allValid()) {
       addEmployee();

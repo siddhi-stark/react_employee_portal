@@ -135,21 +135,19 @@ function Projects() {
     const endPoint = designationId
       ? `${Api.designationUrl}${designationId}/`
       : Api.designationUrl;
-    const { data } = await callback(endPoint, postData);
+    const { data, message } = await callback(endPoint, postData);
     if (data) {
       setModalShow(false);
       setDesignation();
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           getTableData(1);
+          setModalShow(false);
         }
       });
     } else {
-      swal(data && data.message[0], '', 'error').then((result) => {
-        if (result) {
-          getTableData(1);
-        }
-      });
+      swal(message, '', 'error');
+      setModalShow(false);
     }
   };
 
