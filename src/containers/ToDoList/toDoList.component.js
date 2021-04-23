@@ -4,7 +4,7 @@ import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 // import moment from 'moment';
-// import SweetAlert from 'react-bootstrap-sweetalert';
+import SweetAlert from 'react-bootstrap-sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import {
   ModalInput,
@@ -55,6 +55,7 @@ function ToDoList() {
   const [index, setIndex] = useState(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState([]);
   const [taskList, setTaskList] = useState([]);
+  const [ShowDelete, setShowDelete] = useState(false);
   // const [reportType, setReportType] = useState('');
   // const [designationId, setDesignationId] = useState(null);
   //   const [ShowDelete, setShowDelete] = useState(false);
@@ -70,6 +71,7 @@ function ToDoList() {
   const [taskMins, setTaskMinutes] = useState('');
   const [taskStartTime, setTaskStartTime] = useState(new Date());
   const [taskEndTime, setTaskEndTime] = useState(new Date());
+  const [taskId, setTaskId] = useState(null);
   const [description, setDescription] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -111,6 +113,7 @@ function ToDoList() {
   ];
 
   const getTableData = async (pageNo = 0) => {
+    console.log('id', taskId);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.taskUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
@@ -151,6 +154,8 @@ function ToDoList() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  setShowDelete(true);
+                  setTaskId(task.id);
                 }}
               >
                 {task.tw_id === null ? <Image src="images/delete.png" /> : ''}
@@ -272,15 +277,19 @@ function ToDoList() {
     }
   };
 
-  // const onAddSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (validator.allValid()) {
-  //     onAddTask();
-  //   } else {
-  //     validator.showMessages();
-  //     forceUpdate(count + 1);
-  //   }
-  // };
+  const onAddSubmit = (e) => {
+    e.preventDefault();
+    if (validator.allValid()) {
+      console.log('validatorrr');
+      onAddTask();
+    } else {
+      console.log('else block');
+      console.log('validamessage', validator.fieldValid('taskName'));
+      console.log('validaDescmessage', validator.fieldValid('description'));
+      validator.showMessages();
+      forceUpdate(count + 1);
+    }
+  };
 
   // const addBreak = () => {
   //   // console.log('addbreakkkkkkkkkkkkkkkk');
@@ -374,17 +383,32 @@ function ToDoList() {
     }
   };
 
+  const deleteTask = async (id) => {
+    const { data } = await AuthApi.deleteDataFromServer(`${Api.taskUrl}${id}/`);
+    if (data) {
+      swal(data && data.message[0], '', 'success').then((result) => {
+        if (result) {
+          setShowDelete(false);
+          setTaskId(null);
+          getTableData(1);
+        }
+      });
+    } else {
+      swal(data && data.message[0], '', 'error');
+    }
+  };
+
   return (
     <>
-      {/* {ShowDelete && (
+      {ShowDelete && (
         <SweetAlert
-          title="Are you sure, do you want to remove the designation ?"
+          title="Are you sure, do you want to delete the task ?"
           error
           showCancel
           confirmBtnBsStyle="success"
           cancelBtnBsStyle="danger"
           onConfirm={() => {
-            removeDesignation(designationId);
+            deleteTask(taskId);
           }}
           onCancel={() => {
             setShowDelete(false);
@@ -393,7 +417,7 @@ function ToDoList() {
         >
           You wont be able to revert this!
         </SweetAlert>
-      )} */}
+      )}
 
       <Card>
         <Card.Body>
@@ -490,11 +514,11 @@ function ToDoList() {
                   label="Add Task Name"
                   containerClass="form-group"
                   type="text"
-                  name="taskTitle"
+                  name="designationtitle"
                   value={taskName}
                   placeholder="Enter Task Name"
                   errorMessage={validator.message(
-                    'TaskName',
+                    'taskName',
                     taskName,
                     'required'
                   )}
@@ -653,7 +677,7 @@ function ToDoList() {
               variant="primary"
               type="submit"
               className="ms-4"
-              onClick={(e) => onAddTask(e)}
+              onClick={(e) => onAddSubmit(e)}
             >
               Add
             </Button>
