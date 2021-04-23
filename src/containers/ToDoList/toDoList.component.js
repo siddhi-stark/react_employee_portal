@@ -3,11 +3,13 @@ import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
+// import moment from 'moment';
 // import SweetAlert from 'react-bootstrap-sweetalert';
 import {
   ModalInput,
   TextInput,
   DropdownInput,
+  DateTimerInput,
 } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
@@ -53,8 +55,8 @@ function ToDoList() {
   //   const [ShowDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
-  const [startTime, setStartTime] = useState(''); //eslint-disable-line
-  const [endTime, setEndTime] = useState(''); //eslint-disable-line
+  const [startTime, setStartTime] = useState(new Date()); //eslint-disable-line
+  const [endTime, setEndTime] = useState(new Date()); //eslint-disable-line
   const [timeSpent, setTimeSpent] = useState(''); //eslint-disable-line
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -65,14 +67,14 @@ function ToDoList() {
   const [breakData, setBreakData] = useState([
     {
       selectedBreakOption: '',
-      startTime: '',
-      endTime: '',
+      startTime: new Date(),
+      endTime: new Date(),
       timeSpent: '',
     },
     {
       selectedBreakOption: '',
-      startTime: '',
-      endTime: '',
+      startTime: new Date(),
+      endTime: new Date(),
       timeSpent: '',
     },
   ]);
@@ -308,9 +310,10 @@ function ToDoList() {
     const BreakPostData = [];
     breakData.map((dt) => {
       return BreakPostData.push({
-        description: dt.selectedBreakOption,
+        description: dt.selectedBreakOption.label,
         start_time: dt.startTime,
         end_time: dt.endTime.id,
+        timeSpent: dt.timeSpent,
         task_type: 'Break',
       });
     });
@@ -626,57 +629,69 @@ function ToDoList() {
                     />
                   </Row>
                   <Row>
-                    <Col md={4}>
-                      <TextInput
-                        onInputChange={(e) => {
-                          breakData[i].startTime = e.target.value;
-                          setStartTime(breakData);
+                    <Col sm={4}>
+                      <DateTimerInput
+                        className="form-control"
+                        label="To"
+                        selected={startTime}
+                        onChange={(e) => {
+                          breakData[i].startTime = e;
+                          setStartTime(e);
                         }}
-                        label="Start Time"
-                        containerClass="form-group"
-                        type="time"
-                        name="startTime"
-                        value={data.startTime}
-                        // errorMessage={validator.message(
-                        //   'password',
-                        //   password,
-                        //   'required'
-                        // )}
-                      />
-                      <DatePicker
-                        selected={ToTime}
-                        onChange={(date) => {
-                          breakData[i].startTime = date;
-                          setStartTime({ ToTime: date });
-                        }}
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={1}
-                        timeCaption="From"
+                        showTimeSelect="showTimeSelect"
+                        showTimeSelectOnly="showTimeSelectOnly"
+                        timeIntervals="1"
                         dateFormat="h:mm aa"
                       />
                     </Col>
                     <Col md={4}>
-                      <TextInput
-                        onInputChange={(e) => {
-                          breakData[i].endTime = e.target.value;
-                          setEndTime(breakData);
+                      <DateTimerInput
+                        className="form-control"
+                        label="To"
+                        selected={endTime}
+                        onChange={(e) => {
+                          console.log('e', e);
+                          breakData[i].endTime = e;
+                          setEndTime(e);
+                          const endTimeNew = new Date(e);
+                          const startTimeNew = new Date(startTime);
+                          let differenceInTime =
+                            Math.abs(
+                              endTimeNew.getTime() - startTimeNew.getTime()
+                            ) / 1000;
+                          console.log('diff', differenceInTime);
+
+                          const hours =
+                            Math.floor(differenceInTime / 3600) % 24;
+                          differenceInTime -= hours * 3600;
+                          console.log('calculated hours', hours);
+
+                          const minutes =
+                            Math.floor(differenceInTime / 60) % 60;
+                          differenceInTime -= minutes * 60;
+                          console.log('minutes', minutes);
+                          let difference = '';
+                          difference +=
+                            hours === 0 || hours === 1
+                              ? `${hours} `
+                              : `${hours} `;
+
+                          difference +=
+                            minutes === 0 || hours === 1
+                              ? `${minutes}`
+                              : `${minutes}`;
+                          console.log('difiference', difference);
+                          breakData[i].timeSpent = difference;
+                          setTimeSpent(difference);
                         }}
-                        label="End Time"
-                        containerClass="form-group"
-                        type="time"
-                        name="endTime"
-                        value={data.endTime}
-                        placeholder="Enter Password"
-                        // errorMessage={validator.message(
-                        //   'password',
-                        //   password,
-                        //   'required'
-                        // )}
+                        showTimeSelect="showTimeSelect"
+                        showTimeSelectOnly="showTimeSelectOnly"
+                        timeIntervals="1"
+                        dateFormat="h:mm aa"
                       />
                     </Col>
                     <Col md={4}>
-                      <TextInput
+                      {/* <TextInput
                         onInputChange={(e) => {
                           breakData[i].timeSpent = e.target.value;
                           console.log('e', e);
@@ -693,6 +708,14 @@ function ToDoList() {
                         //   password,
                         //   'required'
                         // )}
+                      /> */}
+                      <TextInput
+                        label="Time Spent"
+                        containerClass="form-group"
+                        type="text"
+                        disabled
+                        name="designationtitle"
+                        value={timeSpent}
                       />
                     </Col>
                   </Row>
