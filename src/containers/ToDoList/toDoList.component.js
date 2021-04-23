@@ -39,8 +39,8 @@ const columns = [
   },
   {
     id: 'action',
-    label: 'Action'
-  }
+    label: 'Action',
+  },
 ];
 
 const validator = new SimpleReactValidator();
@@ -141,7 +141,6 @@ function ToDoList() {
                   setModalShow(true);
                   e.preventDefault();
                   e.stopPropagation();
-                 
                 }}
               >
                 <Image src="images/edit.svg" />
@@ -154,7 +153,7 @@ function ToDoList() {
                   e.stopPropagation();
                 }}
               >
-                <Image src="images/delete.png" />
+                {task.tw_id === null ? <Image src="images/delete.png" /> : ''}
               </a>
             </>
           ),
@@ -241,8 +240,8 @@ function ToDoList() {
     }
   };
 
- const onAddTask = async () => {
-  const postData = {
+  const onAddTask = async () => {
+    const postData = {
       tasks: [
         {
           start_time: customFunctions.getDate(taskStartTime),
@@ -261,7 +260,6 @@ function ToDoList() {
     if (data) {
       console.log('OnAddTask', data);
     }
-  
   };
 
   const onSubmit = (e) => {
@@ -274,15 +272,15 @@ function ToDoList() {
     }
   };
 
-  const onAddSubmit = (e) => {
-    e.preventDefault();
-    if (validator.allValid()) {
-      onAddTask();
-    } else {
-      validator.showMessages();
-      forceUpdate(count + 1);
-    }
-  };
+  // const onAddSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (validator.allValid()) {
+  //     onAddTask();
+  //   } else {
+  //     validator.showMessages();
+  //     forceUpdate(count + 1);
+  //   }
+  // };
 
   // const addBreak = () => {
   //   // console.log('addbreakkkkkkkkkkkkkkkk');
@@ -628,7 +626,7 @@ function ToDoList() {
             </Row>
             <Row>
               <Col sm={12}>
-              <TextInput
+                <TextInput
                   onInputChange={(e) => setDescription(e.target.value)}
                   label="Description"
                   containerClass="form-group"
@@ -655,7 +653,7 @@ function ToDoList() {
               variant="primary"
               type="submit"
               className="ms-4"
-              onClick={(e) => onAddSubmit(e)}
+              onClick={(e) => onAddTask(e)}
             >
               Add
             </Button>

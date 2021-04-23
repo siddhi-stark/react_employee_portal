@@ -27,7 +27,11 @@ export default function ModalComponent(props) {
         }}
       >
         <Modal.Header closeButton={closebutton}>
-          <Modal.Title id={id}><div className="title"><h2>{label}</h2></div></Modal.Title>
+          <Modal.Title id={id}>
+            <div className="title">
+              <h2>{label}</h2>
+            </div>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>{modalBody}</Modal.Body>
         <Modal.Footer>{modalFooter}</Modal.Footer>
