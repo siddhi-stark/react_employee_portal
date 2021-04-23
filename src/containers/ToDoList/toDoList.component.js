@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Button, Form } from 'react-bootstrap';
+import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 // import moment from 'moment';
@@ -37,6 +37,10 @@ const columns = [
     id: 'at',
     label: 'AT',
   },
+  {
+    id: 'action',
+    label: 'Action'
+  }
 ];
 
 const validator = new SimpleReactValidator();
@@ -54,7 +58,7 @@ function ToDoList() {
   // const [reportType, setReportType] = useState('');
   // const [designationId, setDesignationId] = useState(null);
   //   const [ShowDelete, setShowDelete] = useState(false);
-  const [designation, setDesignation] = useState('');
+  // const [designation, setDesignation] = useState('');
   const [taskName, setTaskName] = useState('');
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
   const [startTime, setStartTime] = useState(new Date()); //eslint-disable-line
@@ -66,6 +70,7 @@ function ToDoList() {
   const [taskMins, setTaskMinutes] = useState('');
   const [taskStartTime, setTaskStartTime] = useState(new Date());
   const [taskEndTime, setTaskEndTime] = useState(new Date());
+  const [description, setDescription] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -127,36 +132,32 @@ function ToDoList() {
           status: task.status,
           eta: task.start_time,
           at: task.end_time,
-          // action: (
-          //   <>
-          //     <a
-          //       href="/"
-          //       className="pl-2"
-          //       onClick={(e) => {
-          //         setModalShow(true);
-          //         e.preventDefault();
-          //         e.stopPropagation();
-          //         setDesignationId(desgn.id);
-          //         setDesignation(desgn.name);
-          //       }}
-          //     >
-          //       <Image src="images/edit.svg" />
-          //     </a>
-          //     <a
-          //       href="/"
-          //       className=""
-          //       onClick={(e) => {
-          //         e.preventDefault();
-          //         e.stopPropagation();
-          //         //   setShowDelete(true);
-          //         setDesignationId(desgn.id);
-          //         // removeDesignation(desgn.id); //eslint-disable-line
-          //       }}
-          //     >
-          //       <Image src="images/delete.png" />
-          //     </a>
-          //   </>
-          // ),
+          action: (
+            <>
+              <a
+                href="/"
+                className="pl-2"
+                onClick={(e) => {
+                  setModalShow(true);
+                  e.preventDefault();
+                  e.stopPropagation();
+                 
+                }}
+              >
+                <Image src="images/edit.svg" />
+              </a>
+              <a
+                href="/"
+                className=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <Image src="images/delete.png" />
+              </a>
+            </>
+          ),
         });
         return task;
       });
@@ -200,7 +201,7 @@ function ToDoList() {
 
   const onCancel = () => {
     validator.hideMessages();
-    setDesignation();
+    // setDesignation();
     setModalShow(false);
     setShowBreak(false);
     setBreakData([
@@ -240,10 +241,43 @@ function ToDoList() {
     }
   };
 
+ const onAddTask = async () => {
+  const postData = {
+      tasks: [
+        {
+          start_time: customFunctions.getDate(taskStartTime),
+          end_time: customFunctions.getDate(taskEndTime),
+          hours: Number(taskHrs),
+          minutes: Number(taskMins),
+          description,
+          content: taskName,
+          task_type: 'Other',
+        },
+      ],
+    };
+    const endPoint = `${Api.taskUrl}`;
+    const { data } = await AuthApi.postDataToServer(endPoint, postData);
+
+    if (data) {
+      console.log('OnAddTask', data);
+    }
+  
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
     if (validator.allValid()) {
       onSendScrum();
+    } else {
+      validator.showMessages();
+      forceUpdate(count + 1);
+    }
+  };
+
+  const onAddSubmit = (e) => {
+    e.preventDefault();
+    if (validator.allValid()) {
+      onAddTask();
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
@@ -307,28 +341,6 @@ function ToDoList() {
       });
     });
     return BreakTypes;
-  };
-
-  const onAddTask = async () => {
-    const postData = {
-      tasks: [
-        {
-          start_time: customFunctions.getDate(taskStartTime),
-          end_time: customFunctions.getDate(taskEndTime),
-          hours: Number(taskHrs),
-          minutes: Number(taskMins),
-          description: taskName,
-          content: 'PQR',
-          task_type: 'Other',
-        },
-      ],
-    };
-    const endPoint = `${Api.taskUrl}`;
-    const { data } = await AuthApi.postDataToServer(endPoint, postData);
-
-    if (data) {
-      console.log('OnAddTask', data);
-    }
   };
 
   const onComfirm = async () => {
@@ -480,12 +492,12 @@ function ToDoList() {
                   label="Add Task Name"
                   containerClass="form-group"
                   type="text"
-                  name="designationtitle"
+                  name="taskTitle"
                   value={taskName}
-                  placeholder="Enter designation"
+                  placeholder="Enter Task Name"
                   errorMessage={validator.message(
-                    'designation',
-                    designation,
+                    'TaskName',
+                    taskName,
                     'required'
                   )}
                 />
@@ -569,18 +581,12 @@ function ToDoList() {
               </Col>
               <Col sm={2}>
                 <TextInput
-                  onInputChange={(e) => setDesignation(e.target.value)}
                   label="Time Spent"
                   containerClass="form-group"
                   type="text"
                   name="designationtitle"
-                  value={designation}
-                  placeholder="Enter designation"
-                  errorMessage={validator.message(
-                    'designation',
-                    designation,
-                    'required'
-                  )}
+                  value={taskHrs}
+                  placeholder="--Hrs:--Min"
                 />
               </Col>
               <Col sm={6}>
@@ -620,6 +626,24 @@ function ToDoList() {
                 </div>
               </Col>
             </Row>
+            <Row>
+              <Col sm={12}>
+              <TextInput
+                  onInputChange={(e) => setDescription(e.target.value)}
+                  label="Description"
+                  containerClass="form-group"
+                  type="textarea"
+                  name="descritionTitle"
+                  value={description}
+                  placeholder="Enter Description"
+                  errorMessage={validator.message(
+                    'description',
+                    description,
+                    'required'
+                  )}
+                />
+              </Col>
+            </Row>
           </Form>
         }
         modalFooter={
@@ -631,7 +655,7 @@ function ToDoList() {
               variant="primary"
               type="submit"
               className="ms-4"
-              onClick={(e) => onAddTask(e)}
+              onClick={(e) => onAddSubmit(e)}
             >
               Add
             </Button>
