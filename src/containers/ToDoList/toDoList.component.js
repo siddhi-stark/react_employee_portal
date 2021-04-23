@@ -15,6 +15,7 @@ import {
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import constants from '../../helper/constant';
 
 const columns = [
   {
@@ -137,17 +138,24 @@ function ToDoList() {
           at: task.end_time,
           action: (
             <>
-              <a
-                href="/"
-                className="pl-2"
-                onClick={(e) => {
-                  setModalShow(true);
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                <Image src="images/edit.svg" />
-              </a>
+              {task.task_type === 'tw' ? (
+                <a href={`${constants.link}${task.tw_id}`} className="pl-2">
+                  <Image src="images/edit.svg" />
+                </a>
+              ) : (
+                <a
+                  href="/"
+                  className="pl-2"
+                  onClick={(e) => {
+                    setModalShow(true);
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
+                  <Image src="images/edit.svg" />
+                </a>
+              )}
+
               <a
                 href="/"
                 className=""
@@ -514,9 +522,9 @@ function ToDoList() {
                   label="Add Task Name"
                   containerClass="form-group"
                   type="text"
-                  name="designationtitle"
                   value={taskName}
                   placeholder="Enter Task Name"
+                  // {...validator.message('taskName', taskName, 'required|taskName')}
                   errorMessage={validator.message(
                     'taskName',
                     taskName,
@@ -606,7 +614,6 @@ function ToDoList() {
                   label="Time Spent"
                   containerClass="form-group"
                   type="text"
-                  name="designationtitle"
                   value={taskHrs}
                   placeholder="--Hrs:--Min"
                 />
@@ -655,7 +662,6 @@ function ToDoList() {
                   label="Description"
                   containerClass="form-group"
                   type="textarea"
-                  name="descritionTitle"
                   value={description}
                   placeholder="Enter Description"
                   errorMessage={validator.message(
