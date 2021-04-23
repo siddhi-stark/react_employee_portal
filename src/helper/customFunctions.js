@@ -1,12 +1,52 @@
 import React, { Component } from 'react'; // eslint-disable-line
 
 class CustomFunctions extends Component {
-  jsonParse = (jsonString) => {
-    try {
-      return JSON.parse(jsonString);
-    } catch (error) {
-      return jsonString;
-    }
+  getDate = (dateTime) => {
+    const newdate = new Date(dateTime);
+    const d = newdate.getDate();
+    const m = newdate.getMonth() + 1;
+    const y = newdate.getFullYear();
+    const formattedate =
+      y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d); //eslint-disable-line
+    return formattedate;
+  };
+
+  getTime = (time) => {
+    const newDate = new Date(time);
+    const h = newDate.getHours();
+    const m = newDate.getMinutes();
+    const formattedTime = h + ':' + m; //eslint-disable-line
+    return formattedTime;
+  };
+
+  getFormattedDate = (dateTime) => {
+    const newdate = new Date(dateTime);
+    const d = newdate.getDate();
+    const m = newdate.getMonth() + 1;
+    const y = newdate.getFullYear();
+    const formattedate =
+      (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y; //eslint-disable-line
+    return formattedate;
+  };
+
+  getMonthDate = (dateTime) => {
+    const newdate = new Date(dateTime);
+    const d = newdate.getDate();
+    const m = newdate.getMonth() + 1;
+    const y = newdate.getFullYear();
+    const formattedate =
+      (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d) + '-' + y; //eslint-disable-line
+    return formattedate;
+  };
+
+  getMonthDate = (dateTime) => {
+    const newdate = new Date(dateTime);
+    const d = newdate.getDate();
+    const m = newdate.getMonth() + 1;
+    const y = newdate.getFullYear();
+    const formattedate =
+      (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d) + '-' + y; //eslint-disable-line
+    return formattedate;
   };
 
   validateEmail = (email) => {

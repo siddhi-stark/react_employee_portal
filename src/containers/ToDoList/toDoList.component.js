@@ -5,6 +5,7 @@ import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 // import moment from 'moment';
 // import SweetAlert from 'react-bootstrap-sweetalert';
+import customFunctions from '../../helper/customFunctions';
 import {
   ModalInput,
   TextInput,
@@ -54,10 +55,17 @@ function ToDoList() {
   // const [designationId, setDesignationId] = useState(null);
   //   const [ShowDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
+  const [taskName, setTaskName] = useState('');
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
   const [startTime, setStartTime] = useState(new Date()); //eslint-disable-line
   const [endTime, setEndTime] = useState(new Date()); //eslint-disable-line
-  const [timeSpent, setTimeSpent] = useState(''); //eslint-disable-line
+  // const [timeSpent, setTimeSpent] = useState(''); //eslint-disable-line
+  const [hrs, setHours] = useState(''); //eslint-disable-line
+  const [min, setMinutes] = useState(''); //eslint-disable-line
+  const [taskHrs, setTaskHours] = useState('');
+  const [taskMins, setTaskMinutes] = useState('');
+  const [taskStartTime, setTaskStartTime] = useState(new Date());
+  const [taskEndTime, setTaskEndTime] = useState(new Date());
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -69,13 +77,8 @@ function ToDoList() {
       selectedBreakOption: '',
       startTime: new Date(),
       endTime: new Date(),
-      timeSpent: '',
-    },
-    {
-      selectedBreakOption: '',
-      startTime: new Date(),
-      endTime: new Date(),
-      timeSpent: '',
+      hrs: null,
+      min: null,
     },
   ]);
 
@@ -306,18 +309,59 @@ function ToDoList() {
     return BreakTypes;
   };
 
-  const onComfirm = () => {
+  const onAddTask = async () => {
+    const postData = {
+      tasks: [
+        {
+          start_time: customFunctions.getDate(taskStartTime),
+          end_time: customFunctions.getDate(taskEndTime),
+          hours: Number(taskHrs),
+          minutes: Number(taskMins),
+          description: taskName,
+          content: 'PQR',
+          task_type: 'Other',
+        },
+      ],
+    };
+    const endPoint = `${Api.taskUrl}`;
+    const { data } = await AuthApi.postDataToServer(endPoint, postData);
+
+    if (data) {
+      console.log('OnAddTask', data);
+    }
+  };
+
+  const onComfirm = async () => {
     const BreakPostData = [];
     breakData.map((dt) => {
+      const hr = Number(dt.hrs);
+      console.log('hr', hr);
       return BreakPostData.push({
         description: dt.selectedBreakOption.label,
-        start_time: dt.startTime,
-        end_time: dt.endTime.id,
-        timeSpent: dt.timeSpent,
+        start_time: customFunctions.getTime(dt.startTime),
+        end_time: customFunctions.getTime(dt.endTime),
+        hours: Number(dt.hrs),
+        minutes: Number(dt.min),
         task_type: 'Break',
       });
     });
     console.log('breakdata', BreakPostData);
+    const postData = {
+      type: 'break',
+      tasks: BreakPostData,
+    };
+    const endPoint = `${Api.taskUrl}`;
+    const { data } = await AuthApi.postDataToServer(endPoint, postData);
+    if (data) {
+      console.log('data', data);
+      setHours();
+      setMinutes();
+      setSelectedBreakOption();
+      setStartTime();
+      setEndTime();
+    } else {
+      console.log('breakTask');
+    }
   };
 
   return (
@@ -432,12 +476,12 @@ function ToDoList() {
             <Row>
               <Col sm={6}>
                 <TextInput
-                  onInputChange={(e) => setDesignation(e.target.value)}
+                  onInputChange={(e) => setTaskName(e.target.value)}
                   label="Add Task Name"
                   containerClass="form-group"
                   type="text"
                   name="designationtitle"
-                  value={designation}
+                  value={taskName}
                   placeholder="Enter designation"
                   errorMessage={validator.message(
                     'designation',
@@ -447,7 +491,7 @@ function ToDoList() {
                 />
               </Col>
               <Col sm={6}>
-                <TextInput
+                {/* <TextInput
                   onInputChange={(e) => setDesignation(e.target.value)}
                   label="Project Name"
                   containerClass="form-group"
@@ -460,41 +504,67 @@ function ToDoList() {
                     designation,
                     'required'
                   )}
-                />
+                /> */}
               </Col>
             </Row>
             <Row>
               <Col sm={2}>
-                <TextInput
-                  onInputChange={(e) => setDesignation(e.target.value)}
-                  label="Start Time"
-                  containerClass="form-group"
-                  type="time"
-                  name="designationtitle"
-                  value={designation}
-                  image="images/time.svg"
-                  placeholder="Enter designation"
-                  errorMessage={validator.message(
-                    'designation',
-                    designation,
-                    'required'
-                  )}
+                <DateTimerInput
+                  className="form-control"
+                  label="StartTime"
+                  selected={taskStartTime}
+                  onChange={(e) => {
+                    setTaskStartTime(e);
+                  }}
+                  showTimeSelect="showTimeSelect"
+                  showTimeSelectOnly="showTimeSelectOnly"
+                  timeIntervals="1"
+                  dateFormat="h:mm aa"
                 />
               </Col>
               <Col sm={2}>
-                <TextInput
-                  onInputChange={(e) => setDesignation(e.target.value)}
-                  label="End Time"
-                  containerClass="form-group"
-                  type="text"
-                  name="designationtitle"
-                  value={designation}
-                  placeholder="Enter designation"
-                  errorMessage={validator.message(
-                    'designation',
-                    designation,
-                    'required'
-                  )}
+                <DateTimerInput
+                  className="form-control"
+                  label="EndTime"
+                  selected={taskEndTime}
+                  onChange={(e) => {
+                    setTaskEndTime(e);
+                    const taskStrtTime = new Date(e);
+                    const taskEnTime = new Date(taskStartTime);
+                    let differenceInTasksTime =
+                      Math.abs(taskEnTime.getTime() - taskStrtTime.getTime()) /
+                      1000;
+                    console.log('diff', differenceInTasksTime);
+
+                    const taskHours =
+                      Math.floor(differenceInTasksTime / 3600) % 24;
+                    differenceInTasksTime -= taskHours * 3600;
+                    console.log('calculated hours', taskHours);
+
+                    const taskMinutes =
+                      Math.floor(differenceInTasksTime / 60) % 60;
+                    differenceInTasksTime -= taskMinutes * 60;
+                    console.log('minutes', taskMinutes);
+                    let taskHourDifference = '';
+                    let taskMinDifference = '';
+                    taskHourDifference +=
+                      taskHours === 0 || taskHours === 1
+                        ? `${taskHours} `
+                        : `${taskHours} `;
+
+                    taskMinDifference +=
+                      taskMinutes === 0 || taskMinutes === 1
+                        ? `${taskMinutes}`
+                        : `${taskMinutes}`;
+                    // taskHrs = taskHourDifference
+                    // taskMins = taskMinDifference
+                    setTaskHours(taskHourDifference);
+                    setTaskMinutes(taskMinDifference);
+                  }}
+                  showTimeSelect="showTimeSelect"
+                  showTimeSelectOnly="showTimeSelectOnly"
+                  timeIntervals="1"
+                  dateFormat="h:mm aa"
                 />
               </Col>
               <Col sm={2}>
@@ -561,7 +631,7 @@ function ToDoList() {
               variant="primary"
               type="submit"
               className="ms-4"
-              onClick={(e) => onSubmit(e)}
+              onClick={(e) => onAddTask(e)}
             >
               Add
             </Button>
@@ -613,7 +683,6 @@ function ToDoList() {
                   </div>
                   <Row>
                     <DropdownInput
-                      label="Subject"
                       options={getBreakTypes()}
                       asterisk="*"
                       value={data.selectedBreakOption}
@@ -632,7 +701,7 @@ function ToDoList() {
                     <Col sm={4}>
                       <DateTimerInput
                         className="form-control"
-                        label="To"
+                        label="StartTime"
                         selected={startTime}
                         onChange={(e) => {
                           breakData[i].startTime = e;
@@ -647,10 +716,9 @@ function ToDoList() {
                     <Col md={4}>
                       <DateTimerInput
                         className="form-control"
-                        label="To"
+                        label="EndTime"
                         selected={endTime}
                         onChange={(e) => {
-                          console.log('e', e);
                           breakData[i].endTime = e;
                           setEndTime(e);
                           const endTimeNew = new Date(e);
@@ -670,19 +738,21 @@ function ToDoList() {
                             Math.floor(differenceInTime / 60) % 60;
                           differenceInTime -= minutes * 60;
                           console.log('minutes', minutes);
-                          let difference = '';
-                          difference +=
+                          let hourDifference = '';
+                          let minDifference = '';
+                          hourDifference +=
                             hours === 0 || hours === 1
                               ? `${hours} `
                               : `${hours} `;
 
-                          difference +=
+                          minDifference +=
                             minutes === 0 || hours === 1
                               ? `${minutes}`
                               : `${minutes}`;
-                          console.log('difiference', difference);
-                          breakData[i].timeSpent = difference;
-                          setTimeSpent(difference);
+                          breakData[i].hrs = hourDifference;
+                          breakData[i].min = minDifference;
+                          setHours(hourDifference);
+                          setMinutes(minDifference);
                         }}
                         showTimeSelect="showTimeSelect"
                         showTimeSelectOnly="showTimeSelectOnly"
@@ -691,31 +761,13 @@ function ToDoList() {
                       />
                     </Col>
                     <Col md={4}>
-                      {/* <TextInput
-                        onInputChange={(e) => {
-                          breakData[i].timeSpent = e.target.value;
-                          console.log('e', e);
-                          setTimeSpent(breakData);
-                        }}
-                        label="Time Spent"
-                        containerClass="form-group"
-                        type="time"
-                        name="timeSpent"
-                        value={data.timeSpent}
-                        placeholder="Enter Password"
-                        // errorMessage={validator.message(
-                        //   'password',
-                        //   password,
-                        //   'required'
-                        // )}
-                      /> */}
                       <TextInput
                         label="Time Spent"
                         containerClass="form-group"
                         type="text"
                         disabled
                         name="designationtitle"
-                        value={timeSpent}
+                        value={hrs + ':' + min} // eslint-disable-line
                       />
                     </Col>
                   </Row>
