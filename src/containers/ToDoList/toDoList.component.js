@@ -57,6 +57,7 @@ function ToDoList() {
   const [selectedRowIndex, setSelectedRowIndex] = useState([]);
   const [taskList, setTaskList] = useState([]);
   const [ShowDelete, setShowDelete] = useState(false);
+  const [cntClearFilter, setCntClearFilter] = useState(0);
   // const [reportType, setReportType] = useState('');
   // const [designationId, setDesignationId] = useState(null);
   //   const [ShowDelete, setShowDelete] = useState(false);
@@ -74,6 +75,10 @@ function ToDoList() {
   const [taskEndTime, setTaskEndTime] = useState(new Date());
   const [taskId, setTaskId] = useState(null);
   const [description, setDescription] = useState('');
+  const [staticStartTime, setStaticStartTime] = useState(new Date()); //eslint-disable-line
+  const [staticEndTime, setStaticEndTime] = useState(new Date()); //eslint-disable-line
+  const [staticHrs, setStaticHours] = useState(''); //eslint-disable-line
+  const [staticMin, setStaticMinutes] = useState(''); //eslint-disable-line
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -83,8 +88,8 @@ function ToDoList() {
   const [breakData, setBreakData] = useState([
     {
       selectedBreakOption: '',
-      startTime: new Date(),
-      endTime: new Date(),
+      startTime: '',
+      endTime: '',
       hrs: null,
       min: null,
     },
@@ -114,11 +119,9 @@ function ToDoList() {
   ];
 
   const getTableData = async (pageNo = 0) => {
-    console.log('id', taskId);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.taskUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    console.log('data', data);
     if (data && data.data) {
       setPagination({
         activePage: data.paginator.current_page,
@@ -138,11 +141,13 @@ function ToDoList() {
           at: task.end_time,
           action: (
             <>
-              {task.task_type === 'tw' ? (
+              {task.task_type === 'tw' && (
                 <a href={`${constants.link}${task.tw_id}`} className="pl-2">
                   <Image src="images/edit.svg" />
                 </a>
-              ) : (
+              ) }
+              { task.task_type !== 'tw' && (
+
                 <a
                   href="/"
                   className="pl-2"
@@ -150,11 +155,15 @@ function ToDoList() {
                     setModalShow(true);
                     e.preventDefault();
                     e.stopPropagation();
+                    setTaskId(task.id);
+                    setCntClearFilter(cntClearFilter+1);
+                    
                   }}
                 >
                   <Image src="images/edit.svg" />
                 </a>
-              )}
+              ) }
+              
 
               <a
                 href="/"
@@ -177,26 +186,48 @@ function ToDoList() {
     }
   };
 
+  const getTaskById = async (id) => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.taskUrl}${id}/`
+    );
+    if(data) {
+      console.log('data', data.data.start_time);
+      // const start =new Date(data.data.start_date);
+      // // const date = start.toLocaleTimeString();
+
+      // let hours = start.getHours();
+      // let minutes = start.getMinutes();
+      // const ampm = hours >= 12 ? 'pm' : 'am';
+      // hours = hours % 12; // eslint-disable-line
+      // hours = hours ? hours : 12; // eslint-disable-line
+      // minutes = minutes < 10 ? '0'+minutes : minutes; // eslint-disable-line
+      // const strTime = hours + ':' + minutes + ' ' + ampm; // eslint-disable-line
+      // console.log('dateeeeee', strTime);
+      // setTaskStartTime(strTime);
+      // d.toTimeString().split(' ')[0]
+      const dt = new Date();
+      const startTm = data.data.start_time;
+      const hrmin = startTm.split(':');
+      dt.setHours(hrmin[0])
+      dt.setMinutes(hrmin[1])
+      setTaskStartTime(dt);
+      // new Date(data.data[0].FromTime) || '',
+    }
+  }
+
   useEffect(() => {
-    getTableData(1);
+    async function getData() {
+      getTableData(1);
+    }
+    getData();
   }, []);
 
-  //   const removeDesignation = async (id) => {
-  //     const { data } = await AuthApi.deleteDataFromServer(
-  //       `${Api.designationUrl}${id}/`
-  //     );
-  //     if (data) {
-  //       swal(data && data.message[0], '', 'success').then((result) => {
-  //         if (result) {
-  //           setShowDelete(false);
-  //           setDesignationId(null);
-  //           getTableData(1);
-  //         }
-  //       });
-  //     } else {
-  //       swal(data && data.message[0], '', 'error');
-  //     }
-  //   };
+  useEffect(() => {
+    getTableData(1);
+    if (taskId) {
+      getTaskById(taskId);
+    }
+  }, [cntClearFilter]);
   // const getBreakList = () => {
   //   console.log('breaklist', BreakList);
   //   if (!BreakList) return [];
@@ -211,45 +242,50 @@ function ToDoList() {
   //   return breakListOptions;
   // };
 
-  const onCancel = () => {
-    validator.hideMessages();
-    // setDesignation();
-    setModalShow(false);
-    setShowBreak(false);
-    setBreakData([
-      {
-        selectedBreakOption: '',
-        startTime: '',
-        endTime: '',
-        timeSpend: '',
-      },
-    ]);
-  };
+  // const onCancel = () => {
+  //   validator.hideMessages();
+  //   setModalShow(false);
+  //   setShowBreak(false);
+  //   setBreakData([
+  //     {
+  //       selectedBreakOption: '',
+  //       startTime: '',
+  //       endTime: '',
+  //       timeSpend: '',
+  //     },
+  //   ]);
+  // };
+
+  const onTaskCancel = () => {
+        setTaskStartTime();
+          setTaskEndTime();
+          setTaskHours();
+          setTaskMinutes();
+          setDescription();
+          setTaskName();
+          setTaskId();
+          setModalShow(false);
+  }
 
   const onSendScrum = async () => {
-    console.log('TaskList', selectedRowIndex);
-    // console.log('Typeeee', reportType);
     const postData = {
       type: 'morning',
       tasks: selectedRowIndex,
     };
 
-    // const endPoint = designationId
-    //   ? `${Api.designationUrl}${designationId}/`
-    //   : Api.designationUrl;
-    // const { data } = await callback(endPoint, postData);
-
     const endPoint = `${Api.reportUrl}`;
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data } = await AuthApi.postDataToServer(
       endPoint,
       postData
     );
 
     if (data) {
       swal(data && data.message[0], '', 'success');
-    } else {
-      swal(message, '', 'error');
       setShowClockoutBtn(true);
+    } else {
+      // swal(message, '', 'error');
+      setShowClockoutBtn(true);
+      
     }
   };
 
@@ -257,8 +293,8 @@ function ToDoList() {
     const postData = {
       tasks: [
         {
-          start_time: customFunctions.getDate(taskStartTime),
-          end_time: customFunctions.getDate(taskEndTime),
+          start_time: customFunctions.getTime(taskStartTime),
+          end_time: customFunctions.getTime(taskEndTime),
           hours: Number(taskHrs),
           minutes: Number(taskMins),
           description,
@@ -267,11 +303,33 @@ function ToDoList() {
         },
       ],
     };
-    const endPoint = `${Api.taskUrl}`;
-    const { data } = await AuthApi.postDataToServer(endPoint, postData);
+   
+    const callback = taskId
+    ? AuthApi.putDataToServer
+    : AuthApi.postDataToServer;
+  const endPoint = taskId
+    ? `${Api.taskUrl}${taskId}/`
+    : Api.taskUrl;
+  const { data } = await callback(endPoint, postData);
 
     if (data) {
       console.log('OnAddTask', data);
+      setModalShow(false);
+      swal(data && data.message[0], '', 'success').then((result) => {
+        if(result) {
+          setTaskStartTime();
+          setTaskEndTime();
+          setTaskHours();
+          setTaskMinutes();
+          setDescription();
+          setTaskName();
+          setModalShow(false);
+        }
+      })
+    }else {
+      swal(data && data.message, '', 'error');
+      setModalShow(false);
+      
     }
   };
 
@@ -285,19 +343,19 @@ function ToDoList() {
     }
   };
 
-  const onAddSubmit = (e) => {
-    e.preventDefault();
-    if (validator.allValid()) {
-      console.log('validatorrr');
-      onAddTask();
-    } else {
-      console.log('else block');
-      console.log('validamessage', validator.fieldValid('taskName'));
-      console.log('validaDescmessage', validator.fieldValid('description'));
-      validator.showMessages();
-      forceUpdate(count + 1);
-    }
-  };
+  // const onAddSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (validator.allValid()) {
+  //     console.log('validatorrr');
+  //     onAddTask();
+  //   } else {
+  //     console.log('else block');
+  //     console.log('validamessage', validator.fieldValid('taskName'));
+  //     console.log('validaDescmessage', validator.fieldValid('description'));
+  //     validator.showMessages();
+  //     forceUpdate(count + 1);
+  //   }
+  // };
 
   // const addBreak = () => {
   //   // console.log('addbreakkkkkkkkkkkkkkkk');
@@ -319,10 +377,6 @@ function ToDoList() {
     ]);
   };
 
-  // const removeSubjectTutor = (index) => {
-  //   subjectTutor.splice(index, 1)
-  //    return setSubjectTutor([...subjectTutor]);
-  //  };
 
   // const handleInputChange = (event, idx) => {
   //   // console.log('breakData', breakData);
@@ -339,13 +393,6 @@ function ToDoList() {
   //   // });
   // };
 
-  // addressChangeHandler = (event) => {
-  //   const { name, value } = event.target
-  //   this.setState({
-  //     [name]: value
-  //   });
-  // }
-
   const getBreakTypes = () => {
     if (!BreakList) return [];
     const BreakTypes = [];
@@ -359,6 +406,7 @@ function ToDoList() {
   };
 
   const onComfirm = async () => {
+    console.log('static', staticHrs, staticMin, staticStartTime, staticEndTime, selectedBreakOption);
     const BreakPostData = [];
     breakData.map((dt) => {
       const hr = Number(dt.hrs);
@@ -532,22 +580,6 @@ function ToDoList() {
                   )}
                 />
               </Col>
-              <Col sm={6}>
-                {/* <TextInput
-                  onInputChange={(e) => setDesignation(e.target.value)}
-                  label="Project Name"
-                  containerClass="form-group"
-                  type="text"
-                  name="designationtitle"
-                  value={designation}
-                  placeholder="Enter designation"
-                  errorMessage={validator.message(
-                    'designation',
-                    designation,
-                    'required'
-                  )}
-                /> */}
-              </Col>
             </Row>
             <Row>
               <Col sm={2}>
@@ -556,6 +588,7 @@ function ToDoList() {
                   label="StartTime"
                   selected={taskStartTime}
                   onChange={(e) => {
+                    console.log('eeeeee', e);
                     setTaskStartTime(e);
                   }}
                   showTimeSelect="showTimeSelect"
@@ -598,8 +631,6 @@ function ToDoList() {
                       taskMinutes === 0 || taskMinutes === 1
                         ? `${taskMinutes}`
                         : `${taskMinutes}`;
-                    // taskHrs = taskHourDifference
-                    // taskMins = taskMinDifference
                     setTaskHours(taskHourDifference);
                     setTaskMinutes(taskMinDifference);
                   }}
@@ -614,26 +645,10 @@ function ToDoList() {
                   label="Time Spent"
                   containerClass="form-group"
                   type="text"
-                  value={taskHrs}
-                  placeholder="--Hrs:--Min"
+                  value={taskHrs +'Hrs' + ' ' + taskMins + 'Mins'} // eslint-disable-line
                 />
               </Col>
               <Col sm={6}>
-                {/* <TextInput
-                          onInputChange={(e) => setDesignation(e.target.value)}
-                          label="Progress"
-                          containerClass="form-group"
-                          progressClass="progress-main"
-                          type="text"
-                          name="designationtitle"
-                          value={designation}
-                          placeholder="Enter designation"
-                          errorMessage={validator.message(
-                            'designation',
-                            designation,
-                            'required'
-                          )}
-                        /> */}
                 <div className="form-group">
                   <label htmlFor="" className="col-form-label">
                     Progress
@@ -676,16 +691,23 @@ function ToDoList() {
         }
         modalFooter={
           <div className="float-end">
-            <Button variant="secondary" onClick={() => onCancel()}>
+            <Button variant="secondary" onClick={() => onTaskCancel()}>
               Cancel
             </Button>
             <Button
               variant="primary"
               type="submit"
               className="ms-4"
-              onClick={(e) => onAddSubmit(e)}
+              onClick={(e) =>{
+                //  setTaskId(null)
+                onAddTask(e)
+        
+                }}
             >
-              Add
+             
+            {taskId ? 
+            'Update' : 'Add' 
+          } 
             </Button>
           </div>
         }
@@ -708,6 +730,111 @@ function ToDoList() {
                 Add Break
               </button>
             </div>
+            <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
+                    <label htmlFor="exampleFormControlSelect1">
+                      Break Type <sup className="text-danger">*</sup>
+                    </label>
+                    <div className="skip-form">
+                      <a
+                        href="/"
+                        className="pl-2"
+                        onClick={(e) => {
+                          // setIndex(i);
+                          setShowSkipBreak(true);
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                      >
+                        <img src="images/skip.svg" alt="skip" />
+                      </a>
+                    </div>
+                  </div>
+                  <Row>
+                    <DropdownInput
+                      options={getBreakTypes()}
+                      asterisk="*"
+                      value={selectedBreakOption}
+                      onSelectHandler={(select) => {
+                        
+                        setSelectedBreakOption(select);
+                      }}
+                      errorMessage={validator.message(
+                        'selectedBreakOption',
+                        selectedBreakOption,
+                        'required'
+                      )}
+                    />
+                  </Row>
+                  <Row>
+                    <Col sm={4}>
+                      <DateTimerInput
+                        className="form-control"
+                        label="StartTime"
+                        selected={staticStartTime}
+                        onChange={(e) => {
+                          setStaticStartTime(e);
+                        }}
+                        showTimeSelect="showTimeSelect"
+                        showTimeSelectOnly="showTimeSelectOnly"
+                        timeIntervals="1"
+                        dateFormat="h:mm aa"
+                      />
+                    </Col>
+                    <Col md={4}>
+                      <DateTimerInput
+                        className="form-control"
+                        label="EndTime"
+                        selected={staticEndTime}
+                        onChange={(e) => {
+                          setStaticEndTime(e);
+                          const endTimeNew = new Date(e);
+                          const startTimeNew = new Date(startTime);
+                          let differenceInTime =
+                            Math.abs(
+                              endTimeNew.getTime() - startTimeNew.getTime()
+                            ) / 1000;
+                          console.log('diff', differenceInTime);
+
+                          const hours =
+                            Math.floor(differenceInTime / 3600) % 24;
+                          differenceInTime -= hours * 3600;
+                          console.log('calculated hours', hours);
+
+                          const minutes =
+                            Math.floor(differenceInTime / 60) % 60;
+                          differenceInTime -= minutes * 60;
+                          console.log('minutes', minutes);
+                          let hourDifference = '';
+                          let minDifference = '';
+                          hourDifference +=
+                            hours === 0 || hours === 1
+                              ? `${hours} `
+                              : `${hours} `;
+
+                          minDifference +=
+                            minutes === 0 || hours === 1
+                              ? `${minutes}`
+                              : `${minutes}`;
+                          setStaticHours(hourDifference);
+                          setStaticMinutes(minDifference);
+                        }}
+                        showTimeSelect="showTimeSelect"
+                        showTimeSelectOnly="showTimeSelectOnly"
+                        timeIntervals="1"
+                        dateFormat="h:mm aa"
+                      />
+                    </Col>
+                    <Col md={4}>
+                      <TextInput
+                        label="Time Spent"
+                        containerClass="form-group"
+                        type="text"
+                        disabled
+                        name="designationtitle"
+                        value={hrs + ':' + min} // eslint-disable-line
+                      />
+                    </Col>
+                  </Row>
             {breakData &&
               breakData.length > 0 &&
               breakData.map((data, i) => (

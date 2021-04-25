@@ -21,7 +21,7 @@ export default function TextComponent(props) {
 
   return (
     <>
-      <Form.Group className={containerClass}>
+     
         {label ? <Form.Label> {label} </Form.Label> : ''}
         {inputIcon ? <Image src={inputIcon} rounded /> : ''}
         {inputVarible ? (
@@ -29,6 +29,7 @@ export default function TextComponent(props) {
         ) : (
           ''
         )}
+        <Form.Group className={containerClass}>
         <Form.Control
           progressClass={progressClass}
           id={id}
