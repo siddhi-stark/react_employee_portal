@@ -7,7 +7,6 @@ function Layout(props) {
   const { children } = props;
   // const isLoggedIn = false;
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  console.log('isLoggedIN', isLoggedIn);
   return (
     <>
       {isLoggedIn ? (

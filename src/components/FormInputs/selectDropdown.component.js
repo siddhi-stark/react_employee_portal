@@ -11,12 +11,15 @@ export default function SelectDropdown(props) {
     isMulti,
     onSelectHandler,
     options,
+    asterisk,
   } = props;
 
   return (
     <>
       <Form.Group>
-        <Form.Label>{label}</Form.Label>
+        <Form.Label>
+          {label} <span style={{ color: 'red' }}>{asterisk}</span>
+        </Form.Label>
         <Select
           value={defaultValue}
           onChange={(e) => {

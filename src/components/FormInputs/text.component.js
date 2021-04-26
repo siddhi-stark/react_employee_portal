@@ -17,19 +17,28 @@ export default function TextComponent(props) {
     containerClass,
     inputVarible,
     errorMessage,
+    labelIcon,
+    asterisk,
   } = props;
 
   return (
     <>
-     
-        {label ? <Form.Label> {label} </Form.Label> : ''}
-        {inputIcon ? <Image src={inputIcon} rounded /> : ''}
-        {inputVarible ? (
-          <InputGroup.Prepend>{inputVarible}</InputGroup.Prepend>
-        ) : (
-          ''
-        )}
-        <Form.Group className={containerClass}>
+      {label ? (
+        <Form.Label>
+          {' '}
+          {labelIcon ? <Image src={labelIcon} /> : ''} {label}
+          <span style={{ color: 'red' }}>{asterisk}</span>{' '}
+        </Form.Label>
+      ) : (
+        ''
+      )}
+      {inputIcon ? <Image src={inputIcon} rounded /> : ''}
+      {inputVarible ? (
+        <InputGroup.Prepend>{inputVarible}</InputGroup.Prepend>
+      ) : (
+        ''
+      )}
+      <Form.Group className={containerClass}>
         <Form.Control
           progressClass={progressClass}
           id={id}

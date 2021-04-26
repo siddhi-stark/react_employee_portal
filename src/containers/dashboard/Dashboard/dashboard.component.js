@@ -21,30 +21,28 @@ function Dashboard() {
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
-    if(data) {
-      if(data.data.clock_in_time) {
+    if (data) {
+      if (data.data.clock_in_time) {
         const stime = data.data.clock_in_time.split(' ');
         const newtime = stime[0];
-        console.log('newtime', newtime);
         setSignInTime(newtime);
-        if(data.data.clock_in_time) {
+        if (data.data.clock_in_time) {
           setShowClockButton(false);
           // setShowToDoList(true);
         }
-      }else{
+      } else {
         setShowClockButton(true);
         // setShowToDoList(false);
       }
     }
-  }
+  };
 
   useEffect(() => {
-  getDailyActivity();
+    getDailyActivity();
   });
 
   return (
     <>
-
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
@@ -94,10 +92,7 @@ function Dashboard() {
             </Jumbotron>
             {/* <div className="mt-3">{showButton === false && <ToDoList />}</div> */}
             {/* <addTaskComponent /> */}
-            {showClockButton === false && (
-
-            <ToDoList />
-            ) }
+            {showClockButton === false && <ToDoList />}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
-// import moment from 'moment';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import {
@@ -51,6 +50,7 @@ function ToDoList() {
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
+  const [editShow, setEditShow] = useState(false);
   const [showSkipBreak, setShowSkipBreak] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [index, setIndex] = useState(null);
@@ -58,23 +58,14 @@ function ToDoList() {
   const [taskList, setTaskList] = useState([]);
   const [ShowDelete, setShowDelete] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
-  // const [reportType, setReportType] = useState('');
-  // const [designationId, setDesignationId] = useState(null);
-  //   const [ShowDelete, setShowDelete] = useState(false);
-  // const [designation, setDesignation] = useState('');
-  // const [taskName, setTaskName] = useState('');
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
   const [startTime, setStartTime] = useState(new Date()); //eslint-disable-line
   const [endTime, setEndTime] = useState(new Date()); //eslint-disable-line
   // const [timeSpent, setTimeSpent] = useState(''); //eslint-disable-line
   const [hrs, setHours] = useState(''); //eslint-disable-line
   const [min, setMinutes] = useState(''); //eslint-disable-line
-  // const [taskHrs, setTaskHours] = useState('');
-  // const [taskMins, setTaskMinutes] = useState('');
-  // const [taskStartTime, setTaskStartTime] = useState(new Date());
-  // const [taskEndTime, setTaskEndTime] = useState(new Date());
+
   const [taskId, setTaskId] = useState(null);
-  // const [description, setDescription] = useState('');
   const [staticStartTime, setStaticStartTime] = useState(new Date()); //eslint-disable-line
   const [staticEndTime, setStaticEndTime] = useState(new Date()); //eslint-disable-line
   const [staticHrs, setStaticHours] = useState(''); //eslint-disable-line
@@ -146,27 +137,24 @@ function ToDoList() {
                 <a href={`${constants.link}${task.tw_id}`} className="pl-2">
                   <Image src="images/edit.svg" />
                 </a>
-              ) }
-              { task.task_type !== 'tw' && (
-
+              )}
+              {task.task_type !== 'tw' && (
                 <a
                   href="/"
                   className="pl-2"
                   onClick={(e) => {
                     setModalShow(true);
+                    setEditShow(true);
                     e.preventDefault();
                     e.stopPropagation();
                     setTaskId(task.id);
-                    setCntClearFilter(cntClearFilter+1);
+                    setCntClearFilter(cntClearFilter + 1);
                     localStorage.setItem('taskid', task.id);
-                    
                   }}
                 >
                   <Image src="images/edit.svg" />
                 </a>
-              ) }
-              
-
+              )}
               <a
                 href="/"
                 className=""
@@ -175,7 +163,6 @@ function ToDoList() {
                   e.stopPropagation();
                   setShowDelete(true);
                   setTaskId(task.id);
-                  
                 }}
               >
                 {task.tw_id === null ? <Image src="images/delete.png" /> : ''}
@@ -189,48 +176,6 @@ function ToDoList() {
     }
   };
 
-  // const getTaskById = async (id) => {
-  //   const { data } = await AuthApi.getDataFromServer(
-  //     `${Api.taskUrl}${id}/`
-  //   );
-  //   if(data) {
-  //     console.log('data', data.data.start_time);
-  //     const dt = new Date();
-  //     const startTm = data.data.start_time;
-  //     const hrmin = startTm.split(':');
-  //     dt.setHours(hrmin[0])
-  //     dt.setMinutes(hrmin[1])
-  //     setTaskStartTime(dt);
-      
-  //     const dt1 = new Date();
-  //     const endTm = data.data.end_time;
-  //     const hrminNew = endTm.split(':');
-  //     dt1.setHours(hrminNew[0]);
-  //     dt1.setMinutes(hrminNew[1]);
-  //     setTaskEndTime(dt1);
-
-  //     const spent = data.data.estimation;
-  //     console.log('spent', spent);
-  //     const spentNew = spent.split(' ');
-  //     console.log('spentNew', spentNew);
-  //     const spent1 = spentNew[0];
-  //     console.log('spent1', spent1);
-  //     setTaskHours(spent1);
-  //     const spent2 = spentNew[2];
-  //     setTaskMinutes(spent2);
-
-  //     setTaskName(data.data.content);
-  //     // // const spentNw = spentNew.split('Hrs');
-  //     // console.log('spentNw', spentNw);
-  //     // const hr = spentNew[0];
-  //     // console.log('hr', hr);
-  //     // setTaskHours(hr);
-  //     // const estmin = spentNew[6];
-  //     // const estmin1 = spentNew[7];
-  //     // console.log('min', estmin,estmin1);
-  //   }
-  // }
-
   useEffect(() => {
     async function getData() {
       getTableData(1);
@@ -240,10 +185,8 @@ function ToDoList() {
 
   useEffect(() => {
     getTableData(1);
-    // if (taskId) {
-    //   getTaskById(taskId);
-    // }
   }, [cntClearFilter]);
+
   // const getBreakList = () => {
   //   console.log('breaklist', BreakList);
   //   if (!BreakList) return [];
@@ -258,43 +201,16 @@ function ToDoList() {
   //   return breakListOptions;
   // };
 
-  // const onCancel = () => {
-  //   validator.hideMessages();
-  //   setModalShow(false);
-  //   setShowBreak(false);
-  //   setBreakData([
-  //     {
-  //       selectedBreakOption: '',
-  //       startTime: '',
-  //       endTime: '',
-  //       timeSpend: '',
-  //     },
-  //   ]);
-  // };
-
-  // const onTaskCancel = () => {
-  //       setTaskStartTime();
-  //         setTaskEndTime();
-  //         setTaskHours();
-  //         setTaskMinutes();
-  //         setDescription();
-  //         setTaskName();
-  //         setTaskId();
-  //         setModalShow(false);
-  // }
-
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
-    if(data) {
-      console.log('daildata', data.data.morning_mail);
-     
-      if(data.data.clock_in_time) {
+    if (data) {
+      if (data.data.clock_in_time) {
         setShowScrum(false);
-      }else{
+      } else {
         setShowScrum(true);
       }
     }
-  }
+  };
 
   const onSendScrum = async () => {
     const postData = {
@@ -303,10 +219,7 @@ function ToDoList() {
     };
 
     const endPoint = `${Api.reportUrl}`;
-    const { data } = await AuthApi.postDataToServer(
-      endPoint,
-      postData
-    );
+    const { data } = await AuthApi.postDataToServer(endPoint, postData);
 
     if (data) {
       swal(data && data.message[0], '', 'success');
@@ -314,54 +227,9 @@ function ToDoList() {
     } else {
       // swal(message, '', 'error');
       // setShowClockoutBtn(true);
-      
     }
     getDailyActivity();
   };
-
-  // const onAddTask = async () => {
-  //   const postData = {
-  //     tasks: [
-  //       {
-  //         start_time: customFunctions.getTime(taskStartTime),
-  //         end_time: customFunctions.getTime(taskEndTime),
-  //         hours: Number(taskHrs),
-  //         minutes: Number(taskMins),
-  //         description,
-  //         content: taskName,
-  //         task_type: 'Other',
-  //       },
-  //     ],
-  //   };
-   
-  //   const callback = taskId
-  //   ? AuthApi.putDataToServer
-  //   : AuthApi.postDataToServer;
-  // const endPoint = taskId
-  //   ? `${Api.taskUrl}${taskId}/`
-  //   : Api.taskUrl;
-  // const { data } = await callback(endPoint, postData);
-
-  //   if (data) {
-  //     console.log('OnAddTask', data);
-  //     setModalShow(false);
-  //     swal(data && data.message[0], '', 'success').then((result) => {
-  //       if(result) {
-  //         setTaskStartTime();
-  //         setTaskEndTime();
-  //         setTaskHours();
-  //         setTaskMinutes();
-  //         setDescription();
-  //         setTaskName();
-  //         setModalShow(false);
-  //       }
-  //     })
-  //   }else {
-  //     swal(data && data.message, '', 'error');
-  //     setModalShow(false);
-      
-  //   }
-  // };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -372,20 +240,6 @@ function ToDoList() {
       forceUpdate(count + 1);
     }
   };
-
-  // const onAddSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (validator.allValid()) {
-  //     console.log('validatorrr');
-  //     onAddTask();
-  //   } else {
-  //     console.log('else block');
-  //     console.log('validamessage', validator.fieldValid('taskName'));
-  //     console.log('validaDescmessage', validator.fieldValid('description'));
-  //     validator.showMessages();
-  //     forceUpdate(count + 1);
-  //   }
-  // };
 
   // const addBreak = () => {
   //   // console.log('addbreakkkkkkkkkkkkkkkk');
@@ -406,7 +260,6 @@ function ToDoList() {
       { selectedBreakOption: '', startTime: '', endTime: '', timeSpent: '' },
     ]);
   };
-
 
   // const handleInputChange = (event, idx) => {
   //   // console.log('breakData', breakData);
@@ -436,11 +289,10 @@ function ToDoList() {
   };
 
   const onComfirm = async () => {
-    console.log('static', staticHrs, staticMin, staticStartTime, staticEndTime, selectedBreakOption);
+    // console.log('static', staticHrs, staticMin, staticStartTime, staticEndTime, selectedBreakOption);
     const BreakPostData = [];
     breakData.map((dt) => {
-      const hr = Number(dt.hrs);
-      console.log('hr', hr);
+      // const hr = Number(dt.hrs);
       return BreakPostData.push({
         description: dt.selectedBreakOption.label,
         start_time: customFunctions.getTime(dt.startTime),
@@ -450,7 +302,6 @@ function ToDoList() {
         task_type: 'Break',
       });
     });
-    console.log('breakdata', BreakPostData);
     const postData = {
       type: 'break',
       tasks: BreakPostData,
@@ -458,14 +309,11 @@ function ToDoList() {
     const endPoint = `${Api.taskUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
-      console.log('data', data);
       setHours();
       setMinutes();
       setSelectedBreakOption();
       setStartTime();
       setEndTime();
-    } else {
-      console.log('breakTask');
     }
   };
 
@@ -486,8 +334,6 @@ function ToDoList() {
 
   return (
     <>
-    {console.log('modalShow', modalShow)}
-    {console.log('showScrum',showScrum)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -521,11 +367,9 @@ function ToDoList() {
                     variant="primary"
                     type="submit"
                     onClick={() => {
-                     
                       localStorage.removeItem('taskid');
                       setModalShow(true);
-                      forceUpdate(count+1);
-                      console.log('testngg');
+                      forceUpdate(count + 1);
                     }}
                   >
                     Add Task
@@ -551,7 +395,6 @@ function ToDoList() {
                       return i;
                     });
 
-                    console.log('twId', twId);
                     return ind;
                   });
                   setSelectedRowIndex(twId);
@@ -576,9 +419,8 @@ function ToDoList() {
               >
                 Send Scrum
               </Button>
-            ) : 
-            
-            <Button
+            ) : (
+              <Button
                 variant="primary"
                 className="mb-3"
                 onClick={() => {
@@ -587,171 +429,17 @@ function ToDoList() {
               >
                 Clockout & Send Report
               </Button>
-            }
+            )}
           </div>
         </Card.Body>
       </Card>
       {modalShow && (
-
-      <Task show={modalShow} handleModalCLose={(e) => setModalShow(e)}/>
+        <Task
+          show={modalShow}
+          edit={editShow}
+          handleModalCLose={(e) => setModalShow(e)}
+        />
       )}
-      {/* <ModalInput
-        size="lg"
-        centered
-        show={modalShow}
-        label="Add Task"
-        id="contained-modal-title-vcenter"
-        modalBody={
-          <Form>
-            <Row>
-              <Col sm={6}>
-                <TextInput
-                  onInputChange={(e) => setTaskName(e.target.value)}
-                  label="Add Task Name"
-                  containerClass="form-group"
-                  type="text"
-                  value={taskName}
-                  placeholder="Enter Task Name"
-                  // {...validator.message('taskName', taskName, 'required|taskName')}
-                  errorMessage={validator.message(
-                    'taskName',
-                    taskName,
-                    'required'
-                  )}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={2}>
-                <DateTimerInput
-                  className="form-control"
-                  label="StartTime"
-                  selected={taskStartTime}
-                  onChange={(e) => {
-                    console.log('eeeeee', e);
-                    setTaskStartTime(e);
-                  }}
-                  showTimeSelect="showTimeSelect"
-                  showTimeSelectOnly="showTimeSelectOnly"
-                  timeIntervals="1"
-                  dateFormat="h:mm aa"
-                />
-              </Col>
-              <Col sm={2}>
-                <DateTimerInput
-                  className="form-control"
-                  label="EndTime"
-                  selected={taskEndTime}
-                  onChange={(e) => {
-                    setTaskEndTime(e);
-                    const taskStrtTime = new Date(e);
-                    const taskEnTime = new Date(taskStartTime);
-                    let differenceInTasksTime =
-                      Math.abs(taskEnTime.getTime() - taskStrtTime.getTime()) /
-                      1000;
-                    console.log('diff', differenceInTasksTime);
-
-                    const taskHours =
-                      Math.floor(differenceInTasksTime / 3600) % 24;
-                    differenceInTasksTime -= taskHours * 3600;
-                    console.log('calculated hours', taskHours);
-
-                    const taskMinutes =
-                      Math.floor(differenceInTasksTime / 60) % 60;
-                    differenceInTasksTime -= taskMinutes * 60;
-                    console.log('minutes', taskMinutes);
-                    let taskHourDifference = '';
-                    let taskMinDifference = '';
-                    taskHourDifference +=
-                      taskHours === 0 || taskHours === 1
-                        ? `${taskHours} `
-                        : `${taskHours} `;
-
-                    taskMinDifference +=
-                      taskMinutes === 0 || taskMinutes === 1
-                        ? `${taskMinutes}`
-                        : `${taskMinutes}`;
-                    setTaskHours(taskHourDifference);
-                    setTaskMinutes(taskMinDifference);
-                  }}
-                  showTimeSelect="showTimeSelect"
-                  showTimeSelectOnly="showTimeSelectOnly"
-                  timeIntervals="1"
-                  dateFormat="h:mm aa"
-                />
-              </Col>
-              <Col sm={2}>
-                <TextInput
-                  label="Time Spent"
-                  containerClass="form-group"
-                  type="text"
-                  value={taskHrs +'Hrs' + ' ' + taskMins + 'Mins'} // eslint-disable-line
-                />
-              </Col>
-              <Col sm={6}>
-                <div className="form-group">
-                  <label htmlFor="" className="col-form-label">
-                    Progress
-                  </label>
-                  <div className="progress-main">
-                    <div className="progress">
-                      <div
-                        className="progress-bar bg-secondary"
-                        role="progressbar"
-                        style={{ width: '5%' }}
-                        aria-valuenow="0"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      >
-                        0%
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={12}>
-                <TextInput
-                  onInputChange={(e) => setDescription(e.target.value)}
-                  label="Description"
-                  containerClass="form-group"
-                  type="textarea"
-                  value={description}
-                  placeholder="Enter Description"
-                  errorMessage={validator.message(
-                    'description',
-                    description,
-                    'required'
-                  )}
-                />
-              </Col>
-            </Row>
-          </Form>
-        }
-        modalFooter={
-          <div className="float-end">
-            <Button variant="secondary" onClick={() => onTaskCancel()}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              className="ms-4"
-              onClick={(e) =>{
-                //  setTaskId(null)
-                onAddTask(e)
-        
-                }}
-            >
-             
-            {taskId ? 
-            'Update' : 'Add' 
-          } 
-            </Button>
-          </div>
-        }
-      /> */}
       <ModalInput
         size="md"
         centered
@@ -771,110 +459,101 @@ function ToDoList() {
               </button>
             </div>
             <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
-                    <label htmlFor="exampleFormControlSelect1">
-                      Break Type <sup className="text-danger">*</sup>
-                    </label>
-                    <div className="skip-form">
-                      <a
-                        href="/"
-                        className="pl-2"
-                        onClick={(e) => {
-                          // setIndex(i);
-                          setShowSkipBreak(true);
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                      >
-                        <img src="images/skip.svg" alt="skip" />
-                      </a>
-                    </div>
-                  </div>
-                  <Row>
-                    <DropdownInput
-                      options={getBreakTypes()}
-                      asterisk="*"
-                      value={selectedBreakOption}
-                      onSelectHandler={(select) => {
-                        
-                        setSelectedBreakOption(select);
-                      }}
-                      errorMessage={validator.message(
-                        'selectedBreakOption',
-                        selectedBreakOption,
-                        'required'
-                      )}
-                    />
-                  </Row>
-                  <Row>
-                    <Col sm={4}>
-                      <DateTimerInput
-                        className="form-control"
-                        label="StartTime"
-                        selected={staticStartTime}
-                        onChange={(e) => {
-                          setStaticStartTime(e);
-                        }}
-                        showTimeSelect="showTimeSelect"
-                        showTimeSelectOnly="showTimeSelectOnly"
-                        timeIntervals="1"
-                        dateFormat="h:mm aa"
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <DateTimerInput
-                        className="form-control"
-                        label="EndTime"
-                        selected={staticEndTime}
-                        onChange={(e) => {
-                          setStaticEndTime(e);
-                          const endTimeNew = new Date(e);
-                          const startTimeNew = new Date(startTime);
-                          let differenceInTime =
-                            Math.abs(
-                              endTimeNew.getTime() - startTimeNew.getTime()
-                            ) / 1000;
-                          console.log('diff', differenceInTime);
+              <label htmlFor="exampleFormControlSelect1">
+                Break Type <sup className="text-danger">*</sup>
+              </label>
+              <div className="skip-form">
+                <a
+                  href="/"
+                  className="pl-2"
+                  onClick={(e) => {
+                    // setIndex(i);
+                    setShowSkipBreak(true);
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
+                  <img src="images/skip.svg" alt="skip" />
+                </a>
+              </div>
+            </div>
+            <Row>
+              <DropdownInput
+                options={getBreakTypes()}
+                asterisk="*"
+                value={selectedBreakOption}
+                onSelectHandler={(select) => {
+                  setSelectedBreakOption(select);
+                }}
+                errorMessage={validator.message(
+                  'selectedBreakOption',
+                  selectedBreakOption,
+                  'required'
+                )}
+              />
+            </Row>
+            <Row>
+              <Col sm={4}>
+                <DateTimerInput
+                  className="form-control"
+                  label="StartTime"
+                  selected={staticStartTime}
+                  onChange={(e) => {
+                    setStaticStartTime(e);
+                  }}
+                  showTimeSelect="showTimeSelect"
+                  showTimeSelectOnly="showTimeSelectOnly"
+                  timeIntervals="1"
+                  dateFormat="h:mm aa"
+                />
+              </Col>
+              <Col md={4}>
+                <DateTimerInput
+                  className="form-control"
+                  label="EndTime"
+                  selected={staticEndTime}
+                  onChange={(e) => {
+                    setStaticEndTime(e);
+                    const endTimeNew = new Date(e);
+                    const startTimeNew = new Date(startTime);
+                    let differenceInTime =
+                      Math.abs(endTimeNew.getTime() - startTimeNew.getTime()) /
+                      1000;
 
-                          const hours =
-                            Math.floor(differenceInTime / 3600) % 24;
-                          differenceInTime -= hours * 3600;
-                          console.log('calculated hours', hours);
+                    const hours = Math.floor(differenceInTime / 3600) % 24;
+                    differenceInTime -= hours * 3600;
 
-                          const minutes =
-                            Math.floor(differenceInTime / 60) % 60;
-                          differenceInTime -= minutes * 60;
-                          console.log('minutes', minutes);
-                          let hourDifference = '';
-                          let minDifference = '';
-                          hourDifference +=
-                            hours === 0 || hours === 1
-                              ? `${hours} `
-                              : `${hours} `;
+                    const minutes = Math.floor(differenceInTime / 60) % 60;
+                    differenceInTime -= minutes * 60;
+                    let hourDifference = '';
+                    let minDifference = '';
+                    hourDifference +=
+                      hours === 0 || hours === 1 ? `${hours} ` : `${hours} `;
 
-                          minDifference +=
-                            minutes === 0 || hours === 1
-                              ? `${minutes}`
-                              : `${minutes}`;
-                          setStaticHours(hourDifference);
-                          setStaticMinutes(minDifference);
-                        }}
-                        showTimeSelect="showTimeSelect"
-                        showTimeSelectOnly="showTimeSelectOnly"
-                        timeIntervals="1"
-                        dateFormat="h:mm aa"
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <TextInput
-                        label="Time Spent"
-                        containerClass="form-group"
-                        type="text"
-                        disabled
-                        name="designationtitle"
-                        value={hrs + ':' + min} // eslint-disable-line
-                      />
-                    </Col>
-                  </Row>
+                    minDifference +=
+                      minutes === 0 || hours === 1
+                        ? `${minutes}`
+                        : `${minutes}`;
+                    setStaticHours(hourDifference);
+                    setStaticMinutes(minDifference);
+                  }}
+                  showTimeSelect="showTimeSelect"
+                  showTimeSelectOnly="showTimeSelectOnly"
+                  timeIntervals="1"
+                  dateFormat="h:mm aa"
+                />
+              </Col>
+              <Col md={4}>
+                <TextInput
+                  label="Time Spent"
+                  containerClass="form-group"
+                  type="text"
+                  disabled
+                  name="designationtitle"
+                  value={hrs + ':' + min} // eslint-disable-line
+                />
+              </Col>
+            </Row>
             {breakData &&
               breakData.length > 0 &&
               breakData.map((data, i) => (
@@ -946,17 +625,14 @@ function ToDoList() {
                             Math.abs(
                               endTimeNew.getTime() - startTimeNew.getTime()
                             ) / 1000;
-                          console.log('diff', differenceInTime);
 
                           const hours =
                             Math.floor(differenceInTime / 3600) % 24;
                           differenceInTime -= hours * 3600;
-                          console.log('calculated hours', hours);
 
                           const minutes =
                             Math.floor(differenceInTime / 60) % 60;
                           differenceInTime -= minutes * 60;
-                          console.log('minutes', minutes);
                           let hourDifference = '';
                           let minDifference = '';
                           hourDifference +=

@@ -31,9 +31,9 @@ function Login(props) {
     }
     dispatch({ type: 'LOGIN', value: false });
     const token = localStorage.getItem('access_token');
-    if(token) {
+    if (token) {
       dispatch({ type: 'LOGIN', value: true });
-      history.push('/')
+      history.push('/');
     }
   }, [dispatch]);
 
