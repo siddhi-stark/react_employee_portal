@@ -1,28 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
-import ToDoList from '../../ToDoList/toDoList.component';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
+import ToDoList from '../../ToDoList/toDoList.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
-  const [showButton, setShowButton] = useState(true);
+  const [showClockButton, setShowClockButton] = useState(true);
+  // const [showToDoList, setShowToDoList] = useState(false);
 
   const getClockInTime = async () => {
     const endPoint = `${Api.clockInUrl}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    console.log('data', data.data);
     if (data && data.data) {
       setSignInTime(data.data.sign_in_time);
-      setShowButton(false);
     }
   };
 
+  const getDailyActivity = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
+    if(data) {
+      if(data.data.clock_in_time) {
+        const stime = data.data.clock_in_time.split(' ');
+        const newtime = stime[0];
+        console.log('newtime', newtime);
+        setSignInTime(newtime);
+        if(data.data.clock_in_time) {
+          setShowClockButton(false);
+          // setShowToDoList(true);
+        }
+      }else{
+        setShowClockButton(true);
+        // setShowToDoList(false);
+      }
+    }
+  }
+
+  useEffect(() => {
+  getDailyActivity();
+  });
+
   return (
     <>
-      {console.log('signinTime', signInTime)}
 
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -53,7 +74,7 @@ function Dashboard() {
                     <div className="time-count text-center">
                       <span>{signInTime}</span>
                     </div>
-                    {showButton && (
+                    {showClockButton === true && (
                       <Button
                         type="button"
                         className="btn btn-primary"
@@ -71,7 +92,12 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            <div className="mt-3">{!showButton && <ToDoList />}</div>
+            {/* <div className="mt-3">{showButton === false && <ToDoList />}</div> */}
+            {/* <addTaskComponent /> */}
+            {showClockButton === false && (
+
+            <ToDoList />
+            ) }
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

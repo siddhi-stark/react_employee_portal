@@ -17,6 +17,8 @@ export default class Api extends Component {
 
   static reportUrl = `${Api.baseUrl}send-report/`;
 
+  static dailyActivityUrl = `${Api.baseUrl}daily-activity/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

@@ -16,6 +16,7 @@ import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constant';
+import Task from './Task.component';
 
 const columns = [
   {
@@ -51,7 +52,6 @@ function ToDoList() {
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
   const [showSkipBreak, setShowSkipBreak] = useState(false);
-  const [showClockoutBtn, setShowClockoutBtn] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [index, setIndex] = useState(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState([]);
@@ -62,23 +62,24 @@ function ToDoList() {
   // const [designationId, setDesignationId] = useState(null);
   //   const [ShowDelete, setShowDelete] = useState(false);
   // const [designation, setDesignation] = useState('');
-  const [taskName, setTaskName] = useState('');
+  // const [taskName, setTaskName] = useState('');
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
   const [startTime, setStartTime] = useState(new Date()); //eslint-disable-line
   const [endTime, setEndTime] = useState(new Date()); //eslint-disable-line
   // const [timeSpent, setTimeSpent] = useState(''); //eslint-disable-line
   const [hrs, setHours] = useState(''); //eslint-disable-line
   const [min, setMinutes] = useState(''); //eslint-disable-line
-  const [taskHrs, setTaskHours] = useState('');
-  const [taskMins, setTaskMinutes] = useState('');
-  const [taskStartTime, setTaskStartTime] = useState(new Date());
-  const [taskEndTime, setTaskEndTime] = useState(new Date());
+  // const [taskHrs, setTaskHours] = useState('');
+  // const [taskMins, setTaskMinutes] = useState('');
+  // const [taskStartTime, setTaskStartTime] = useState(new Date());
+  // const [taskEndTime, setTaskEndTime] = useState(new Date());
   const [taskId, setTaskId] = useState(null);
-  const [description, setDescription] = useState('');
+  // const [description, setDescription] = useState('');
   const [staticStartTime, setStaticStartTime] = useState(new Date()); //eslint-disable-line
   const [staticEndTime, setStaticEndTime] = useState(new Date()); //eslint-disable-line
   const [staticHrs, setStaticHours] = useState(''); //eslint-disable-line
   const [staticMin, setStaticMinutes] = useState(''); //eslint-disable-line
+  const [showScrum, setShowScrum] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -157,6 +158,7 @@ function ToDoList() {
                     e.stopPropagation();
                     setTaskId(task.id);
                     setCntClearFilter(cntClearFilter+1);
+                    localStorage.setItem('taskid', task.id);
                     
                   }}
                 >
@@ -173,6 +175,7 @@ function ToDoList() {
                   e.stopPropagation();
                   setShowDelete(true);
                   setTaskId(task.id);
+                  
                 }}
               >
                 {task.tw_id === null ? <Image src="images/delete.png" /> : ''}
@@ -186,34 +189,47 @@ function ToDoList() {
     }
   };
 
-  const getTaskById = async (id) => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.taskUrl}${id}/`
-    );
-    if(data) {
-      console.log('data', data.data.start_time);
-      // const start =new Date(data.data.start_date);
-      // // const date = start.toLocaleTimeString();
+  // const getTaskById = async (id) => {
+  //   const { data } = await AuthApi.getDataFromServer(
+  //     `${Api.taskUrl}${id}/`
+  //   );
+  //   if(data) {
+  //     console.log('data', data.data.start_time);
+  //     const dt = new Date();
+  //     const startTm = data.data.start_time;
+  //     const hrmin = startTm.split(':');
+  //     dt.setHours(hrmin[0])
+  //     dt.setMinutes(hrmin[1])
+  //     setTaskStartTime(dt);
+      
+  //     const dt1 = new Date();
+  //     const endTm = data.data.end_time;
+  //     const hrminNew = endTm.split(':');
+  //     dt1.setHours(hrminNew[0]);
+  //     dt1.setMinutes(hrminNew[1]);
+  //     setTaskEndTime(dt1);
 
-      // let hours = start.getHours();
-      // let minutes = start.getMinutes();
-      // const ampm = hours >= 12 ? 'pm' : 'am';
-      // hours = hours % 12; // eslint-disable-line
-      // hours = hours ? hours : 12; // eslint-disable-line
-      // minutes = minutes < 10 ? '0'+minutes : minutes; // eslint-disable-line
-      // const strTime = hours + ':' + minutes + ' ' + ampm; // eslint-disable-line
-      // console.log('dateeeeee', strTime);
-      // setTaskStartTime(strTime);
-      // d.toTimeString().split(' ')[0]
-      const dt = new Date();
-      const startTm = data.data.start_time;
-      const hrmin = startTm.split(':');
-      dt.setHours(hrmin[0])
-      dt.setMinutes(hrmin[1])
-      setTaskStartTime(dt);
-      // new Date(data.data[0].FromTime) || '',
-    }
-  }
+  //     const spent = data.data.estimation;
+  //     console.log('spent', spent);
+  //     const spentNew = spent.split(' ');
+  //     console.log('spentNew', spentNew);
+  //     const spent1 = spentNew[0];
+  //     console.log('spent1', spent1);
+  //     setTaskHours(spent1);
+  //     const spent2 = spentNew[2];
+  //     setTaskMinutes(spent2);
+
+  //     setTaskName(data.data.content);
+  //     // // const spentNw = spentNew.split('Hrs');
+  //     // console.log('spentNw', spentNw);
+  //     // const hr = spentNew[0];
+  //     // console.log('hr', hr);
+  //     // setTaskHours(hr);
+  //     // const estmin = spentNew[6];
+  //     // const estmin1 = spentNew[7];
+  //     // console.log('min', estmin,estmin1);
+  //   }
+  // }
 
   useEffect(() => {
     async function getData() {
@@ -224,9 +240,9 @@ function ToDoList() {
 
   useEffect(() => {
     getTableData(1);
-    if (taskId) {
-      getTaskById(taskId);
-    }
+    // if (taskId) {
+    //   getTaskById(taskId);
+    // }
   }, [cntClearFilter]);
   // const getBreakList = () => {
   //   console.log('breaklist', BreakList);
@@ -256,15 +272,28 @@ function ToDoList() {
   //   ]);
   // };
 
-  const onTaskCancel = () => {
-        setTaskStartTime();
-          setTaskEndTime();
-          setTaskHours();
-          setTaskMinutes();
-          setDescription();
-          setTaskName();
-          setTaskId();
-          setModalShow(false);
+  // const onTaskCancel = () => {
+  //       setTaskStartTime();
+  //         setTaskEndTime();
+  //         setTaskHours();
+  //         setTaskMinutes();
+  //         setDescription();
+  //         setTaskName();
+  //         setTaskId();
+  //         setModalShow(false);
+  // }
+
+  const getDailyActivity = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
+    if(data) {
+      console.log('daildata', data.data.morning_mail);
+     
+      if(data.data.clock_in_time) {
+        setShowScrum(false);
+      }else{
+        setShowScrum(true);
+      }
+    }
   }
 
   const onSendScrum = async () => {
@@ -281,57 +310,58 @@ function ToDoList() {
 
     if (data) {
       swal(data && data.message[0], '', 'success');
-      setShowClockoutBtn(true);
+      // setShowClockoutBtn(true);
     } else {
       // swal(message, '', 'error');
-      setShowClockoutBtn(true);
+      // setShowClockoutBtn(true);
       
     }
+    getDailyActivity();
   };
 
-  const onAddTask = async () => {
-    const postData = {
-      tasks: [
-        {
-          start_time: customFunctions.getTime(taskStartTime),
-          end_time: customFunctions.getTime(taskEndTime),
-          hours: Number(taskHrs),
-          minutes: Number(taskMins),
-          description,
-          content: taskName,
-          task_type: 'Other',
-        },
-      ],
-    };
+  // const onAddTask = async () => {
+  //   const postData = {
+  //     tasks: [
+  //       {
+  //         start_time: customFunctions.getTime(taskStartTime),
+  //         end_time: customFunctions.getTime(taskEndTime),
+  //         hours: Number(taskHrs),
+  //         minutes: Number(taskMins),
+  //         description,
+  //         content: taskName,
+  //         task_type: 'Other',
+  //       },
+  //     ],
+  //   };
    
-    const callback = taskId
-    ? AuthApi.putDataToServer
-    : AuthApi.postDataToServer;
-  const endPoint = taskId
-    ? `${Api.taskUrl}${taskId}/`
-    : Api.taskUrl;
-  const { data } = await callback(endPoint, postData);
+  //   const callback = taskId
+  //   ? AuthApi.putDataToServer
+  //   : AuthApi.postDataToServer;
+  // const endPoint = taskId
+  //   ? `${Api.taskUrl}${taskId}/`
+  //   : Api.taskUrl;
+  // const { data } = await callback(endPoint, postData);
 
-    if (data) {
-      console.log('OnAddTask', data);
-      setModalShow(false);
-      swal(data && data.message[0], '', 'success').then((result) => {
-        if(result) {
-          setTaskStartTime();
-          setTaskEndTime();
-          setTaskHours();
-          setTaskMinutes();
-          setDescription();
-          setTaskName();
-          setModalShow(false);
-        }
-      })
-    }else {
-      swal(data && data.message, '', 'error');
-      setModalShow(false);
+  //   if (data) {
+  //     console.log('OnAddTask', data);
+  //     setModalShow(false);
+  //     swal(data && data.message[0], '', 'success').then((result) => {
+  //       if(result) {
+  //         setTaskStartTime();
+  //         setTaskEndTime();
+  //         setTaskHours();
+  //         setTaskMinutes();
+  //         setDescription();
+  //         setTaskName();
+  //         setModalShow(false);
+  //       }
+  //     })
+  //   }else {
+  //     swal(data && data.message, '', 'error');
+  //     setModalShow(false);
       
-    }
-  };
+  //   }
+  // };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -456,6 +486,8 @@ function ToDoList() {
 
   return (
     <>
+    {console.log('modalShow', modalShow)}
+    {console.log('showScrum',showScrum)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -489,8 +521,11 @@ function ToDoList() {
                     variant="primary"
                     type="submit"
                     onClick={() => {
+                     
+                      localStorage.removeItem('taskid');
                       setModalShow(true);
-                      // setDesignationId();
+                      forceUpdate(count+1);
+                      console.log('testngg');
                     }}
                   >
                     Add Task
@@ -531,17 +566,7 @@ function ToDoList() {
             </Col>
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            {showClockoutBtn ? (
-              <Button
-                variant="primary"
-                className="mb-3"
-                onClick={() => {
-                  setShowBreak(true);
-                }}
-              >
-                Clockout & Send Report
-              </Button>
-            ) : (
+            {showScrum === true ? (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -551,11 +576,26 @@ function ToDoList() {
               >
                 Send Scrum
               </Button>
-            )}
+            ) : 
+            
+            <Button
+                variant="primary"
+                className="mb-3"
+                onClick={() => {
+                  setShowBreak(true);
+                }}
+              >
+                Clockout & Send Report
+              </Button>
+            }
           </div>
         </Card.Body>
       </Card>
-      <ModalInput
+      {modalShow && (
+
+      <Task show={modalShow} handleModalCLose={(e) => setModalShow(e)}/>
+      )}
+      {/* <ModalInput
         size="lg"
         centered
         show={modalShow}
@@ -711,7 +751,7 @@ function ToDoList() {
             </Button>
           </div>
         }
-      />
+      /> */}
       <ModalInput
         size="md"
         centered

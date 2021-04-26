@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import { Form, Button } from 'react-bootstrap';
@@ -11,6 +11,7 @@ import Api from '../../../helper/api';
 const validator = new SimpleReactValidator();
 
 function Login(props) {
+  const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -29,6 +30,11 @@ function Login(props) {
       setPassword('');
     }
     dispatch({ type: 'LOGIN', value: false });
+    const token = localStorage.getItem('access_token');
+    if(token) {
+      dispatch({ type: 'LOGIN', value: true });
+      history.push('/')
+    }
   }, [dispatch]);
 
   const loginUser = async () => {
