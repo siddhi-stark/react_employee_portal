@@ -13,7 +13,7 @@ const menu = [
   },
   {
     title: 'Reports',
-    path: '/allreports',
+    path: '/reports',
     icon: 'report.svg',
     submenu: [],
   },

@@ -6,7 +6,8 @@ import Login from './containers/authentication/Login/login.component';
 import ForgetPassword from './containers/authentication/Forget/forgetPassword.component';
 import ResetPassword from './containers/authentication/Forget/resetPassword.component';
 import DashboardNew from './components/Dashboard/dashboard.component';
-// import Reports from './containers/Reports/reports.component';
+import AllReports from './containers/Reports/allReports.component';
+import Reports from './containers/Reports/reports.component';
 
 function Routes() {
   return (
@@ -16,8 +17,8 @@ function Routes() {
       <Route path="/forget-password" exact component={ForgetPassword} />
       <Route path="/password/reset/:token" exact component={ResetPassword} />
       <Route path="/projects" exact component={DashboardNew} />
-      <Route path="/allreports" exact component={DashboardNew} />
-      <Route path="/daily-report" exact component={DashboardNew} />
+      <Route path="/reports" exact component={AllReports} />
+      <Route path="/daily-report" exact component={Reports} />
     </Switch>
   );
 }

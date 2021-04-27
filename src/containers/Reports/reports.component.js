@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Image, ProgressBar, Button } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-import constants from '../../helper/constants';
 import EveningReport from './eveningReport.component';
+import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
 
 const columns = [
   {
@@ -40,16 +40,22 @@ function Reports() {
     totalItems: 10,
   });
 
-  // const onRtSupport = async (id) => {
-  //   const endPoint = `${Api.getProjects}${id}/`;
+  // const getDailyReport = async (dt,pageNo = 0) => {
+  //   const page = pageNo || pagination.current_page;
+  //   const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
   //   const { data } = await AuthApi.getDataFromServer(endPoint);
-
-  // };
+  //   if(data) {
+  //     console.log('data', data);
+  //   }
+  // }
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.getProjects}?page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${
+      Api.dailyReportUrl
+    }?date=${'2021-03-24'}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
+    console.log('data', data.data);
     if (data && data.data) {
       setPagination({
         activePage: data.paginator.current_page,
@@ -59,35 +65,14 @@ function Reports() {
 
       const row = [];
 
-      data.data.map((proj) => {
+      data.data.morning_data.map((proj) => {
+        console.log('evngData', proj);
         row.push({
-          name: proj.name,
-          spend: proj.spend,
-          allocated: proj.allocated,
-          completed: proj.completed,
-          remaining: proj.remaining,
-          support:
-            proj.rt_support !== false ? (
-              <Image src="/images/success.svg" />
-            ) : (
-              <Image
-                src="/images/fail.svg"
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   e.stopPropagation();
-                //   onRtSupport(proj.id);
-                // }}
-              />
-            ),
-          completion: <ProgressBar variant="success" now={proj.completion} />,
-          link: (
-            <a href={`${constants.link}${proj.tw_id}`}>
-              <span>
-                <Image src="/images/redirect.png" />
-              </span>
-              {/* {proj.tw_id} */}
-            </a>
-          ),
+          task: proj.activity,
+          project: proj.project_name,
+          status: proj.status,
+          eta: proj.duration,
+          at: proj.end_date,
         });
         return proj;
       });
@@ -96,7 +81,9 @@ function Reports() {
   };
 
   useEffect(() => {
+    // const date = localStorage.getItem('date');
     getTableData();
+    // getDailyReport(date);
   }, []);
 
   const onMorningReport = () => {
@@ -121,6 +108,7 @@ function Reports() {
 
   return (
     <>
+      <WelcomeScreen />
       <div className="mt-3">
         <Card>
           <Card.Body>

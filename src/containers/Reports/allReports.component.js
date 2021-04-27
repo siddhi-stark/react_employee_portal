@@ -8,7 +8,7 @@ import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
-// import DashboardNew from '../../components/Dashboard/dashboard.component';
+import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
 
 const columns = [
   {
@@ -58,22 +58,20 @@ function AllReports() {
       });
       const row = [];
       data.data.map((report) => {
+        localStorage.setItem(
+          'date',
+          customFunctions.getDate(report.created_at)
+        );
         row.push({
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: report.estimation,
-          // report: <a 
-          // href="/daily-report"
-          // onClick={(e) =>{
-          // e.preventDefault();
-          // e.stopPropagation();
-          //  setShowDailyReport(true);
-          //   }}
-          // >
-          // <span>View Report</span>
-          // </a>,
-          
+          report: (
+            <a href="/daily-report">
+              <span>View Report</span>
+            </a>
+          ),
         });
         return report;
       });
@@ -124,6 +122,7 @@ function AllReports() {
 
   return (
     <>
+      <WelcomeScreen />
       <div className="mt-3">
         <Card>
           <Card.Body>
@@ -233,7 +232,6 @@ function AllReports() {
       {/* { showDailyReport && (
         <DashboardNew  dailyReport={(e) => setShowDailyReport(e)} />
       ) } */}
-      
     </>
   );
 }
