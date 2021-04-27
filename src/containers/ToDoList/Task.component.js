@@ -50,6 +50,7 @@ function Task(props) {
       setTaskMinutes(spent2);
 
       setTaskName(data.data.content);
+      setDescription(data.data.description);
     }
   };
 
@@ -66,26 +67,28 @@ function Task(props) {
   }, []);
 
   const onAddTask = async () => {
-    const postData = {
-      tasks: [
-        {
-          start_time: customFunctions.getTime(taskStartTime),
-          end_time: customFunctions.getTime(taskEndTime),
-          hours: Number(taskHrs),
-          minutes: Number(taskMins),
-          description,
-          content: taskName,
-          task_type: 'Other',
-        },
-      ],
+    const obj = {
+      start_time: customFunctions.getTime(taskStartTime),
+      end_time: customFunctions.getTime(taskEndTime),
+      hours: Number(taskHrs),
+      minutes: Number(taskMins),
+      description,
+      content: taskName,
+      task_type: 'other',
     };
+    let postData = {};
+    if (!id) {
+      postData = {
+        tasks: [{ ...obj }],
+      };
+    }
 
     const callback = id ? AuthApi.putDataToServer : AuthApi.postDataToServer;
     const endPoint = id ? `${Api.taskUrl}${id}/` : Api.taskUrl;
-    const { data } = await callback(endPoint, postData);
+    const { data } = await callback(endPoint, id ? obj : postData);
 
     if (data) {
-      // setModalShow(false);
+      props.handleModalCLose(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setTaskStartTime();
@@ -94,12 +97,13 @@ function Task(props) {
           setTaskMinutes();
           setDescription();
           setTaskName();
-          // setModalShow(false);
+          props.handleModalCLose(false);
+          props.onChanges();
         }
       });
     } else {
       swal(data && data.message, '', 'error');
-      // setModalShow(false);
+      props.handleModalCLose(false);
     }
   };
 

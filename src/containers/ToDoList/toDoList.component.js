@@ -126,7 +126,7 @@ function ToDoList() {
 
       data.data.map((task) => {
         row.push({
-          todo: task.parent_content,
+          todo: task.content,
           projects: task.project_name,
           status: task.status,
           eta: task.start_time,
@@ -332,6 +332,10 @@ function ToDoList() {
     }
   };
 
+  const onChangeInTask = () => {
+    getTableData(1);
+  };
+
   return (
     <>
       {ShowDelete && (
@@ -438,6 +442,9 @@ function ToDoList() {
           show={modalShow}
           edit={editShow}
           handleModalCLose={(e) => setModalShow(e)}
+          onChanges={() => {
+            onChangeInTask();
+          }}
         />
       )}
       <ModalInput
