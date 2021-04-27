@@ -17,6 +17,7 @@ function Routes() {
       <Route path="/password/reset/:token" exact component={ResetPassword} />
       <Route path="/projects" exact component={DashboardNew} />
       <Route path="/allreports" exact component={DashboardNew} />
+      <Route path="/daily-report" exact component={DashboardNew} />
     </Switch>
   );
 }

@@ -7,6 +7,7 @@ import { TextInput } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import customFunctions from '../../helper/customFunctions';
 
 const columns = [
   {
@@ -35,6 +36,7 @@ function AllReports() {
   const [rows, setRows] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [userId, setUserId] = useState(null);
+  // const [showDailyReport, setShowDailyReport] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -56,16 +58,21 @@ function AllReports() {
       const row = [];
       data.data.map((report) => {
         row.push({
-          name: report.date,
+          date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: report.estimation,
-          report: report.estimation,
-          // link: (
-          //   <a href="/reports">
-          //     <span>View Report</span>
-          //   </a>
-          // ),
+          // report: <a 
+          // href="/daily-report"
+          // onClick={(e) =>{
+          // e.preventDefault();
+          // e.stopPropagation();
+          //  setShowDailyReport(true);
+          //   }}
+          // >
+          // <span>View Report</span>
+          // </a>,
+          
         });
         return report;
       });
