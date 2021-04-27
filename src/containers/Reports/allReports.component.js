@@ -8,6 +8,7 @@ import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+// import DashboardNew from '../../components/Dashboard/dashboard.component';
 
 const columns = [
   {
@@ -229,6 +230,10 @@ function AllReports() {
           </Card.Body>
         </Card>
       </div>
+      {/* { showDailyReport && (
+        <DashboardNew  dailyReport={(e) => setShowDailyReport(e)} />
+      ) } */}
+      
     </>
   );
 }
