@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Image, ProgressBar, Button } from 'react-bootstrap';
+import swal from 'sweetalert';
 import { TextInput } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constants';
+import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
 
 const columns = [
   {
@@ -51,11 +53,19 @@ function Projects() {
     totalItems: 10,
   });
 
-  // const onRtSupport = async (id) => {
-  //   const endPoint = `${Api.getProjects}${id}/`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
+  const onRtSupport = async (id, Support) => {
+    const payload = {
+      rt_support: Number(!Support),
+    };
+    const endPoint = `${Api.getProjects}${id}/`;
+    const { data } = await AuthApi.putDataToServer(endPoint, payload);
 
-  // };
+    if (data) {
+      console.log(data);
+      swal(data.message && data.message[0], '', 'success');
+      getTableData(1); // eslint-disable-line
+    }
+  };
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
@@ -78,16 +88,23 @@ function Projects() {
           completed: proj.completed,
           remaining: proj.remaining,
           support:
-            proj.rt_support !== false ? (
-              <Image src="/images/success.svg" />
+            proj.rt_support === true ? (
+              <Image
+                src="/images/success.svg"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onRtSupport(proj.id, proj.rt_support);
+                }}
+              />
             ) : (
               <Image
                 src="/images/fail.svg"
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   e.stopPropagation();
-                //   onRtSupport(proj.id);
-                // }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onRtSupport(proj.id, proj.rt_support);
+                }}
               />
             ),
           completion: <ProgressBar variant="success" now={proj.completion} />,
@@ -107,13 +124,15 @@ function Projects() {
   };
 
   useEffect(() => {
-    getTableData();
+    getTableData(1);
   }, []);
 
   return (
     <>
-      <div className="mt-3">
-        <Card>
+      <WelcomeScreen />
+
+      <div className="content-area">
+        <Card id="main-content">
           <Card.Body>
             <Row>
               <Row>

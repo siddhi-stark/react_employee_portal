@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
-import Projects from '../../containers/Projects/Projects.component';
 import Designations from '../../containers/Designations/designation.component';
 import Employee from '../../containers/Employee/employee.component';
 
 function DashboardNew() {
   const [showDesignation, setShowDesignation] = useState(false);
   const [showEmployee, setShowEmployee] = useState(false);
-  const [showProject, setShowProject] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -34,15 +32,9 @@ function DashboardNew() {
         if (location.pathname === '/designation') {
           setShowDesignation(true);
           setShowEmployee(false);
-          setShowProject(false);
         } else if (location.pathname === '/employee') {
           setShowEmployee(true);
           setShowDesignation(false);
-          setShowProject(false);
-        } else if (location.pathname === '/projects') {
-          setShowProject(true);
-          setShowDesignation(false);
-          setShowEmployee(false);
         }
       });
     }
@@ -53,7 +45,6 @@ function DashboardNew() {
     <>
       {console.log('showDesignation', showDesignation)}
       {console.log('showEmployee', showEmployee)}
-      {console.log('showProject', showProject)}
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
@@ -101,27 +92,23 @@ function DashboardNew() {
                <Projects  />
             } */}
 
-            {showDesignation === true &&
-            showEmployee === false &&
-            showProject === false ? (
+            {showDesignation === true && showEmployee === false ? (
               <Designations />
             ) : (
               ''
             )}
-            {showEmployee === true &&
-            showDesignation === false &&
-            showProject === false ? (
+            {showEmployee === true && showDesignation === false ? (
               <Employee />
             ) : (
               ''
             )}
-            {showProject === true &&
+            {/* {showProject === true &&
             showDesignation === false &&
             showEmployee === false ? (
               <Projects />
             ) : (
               ''
-            )}
+            )} */}
 
             {/* {showDesignation === true ? <Designations /> : <Projects  />}
             {(!showDesignation && showEmployee) && (
