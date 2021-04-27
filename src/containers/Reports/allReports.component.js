@@ -10,23 +10,23 @@ import Api from '../../helper/api';
 
 const columns = [
   {
-    id: 'name',
+    id: 'date',
     label: 'Date',
   },
   {
-    id: 'spend',
+    id: 'clockin',
     label: 'Clock in',
   },
   {
-    id: 'allocated',
+    id: 'clockout',
     label: 'Clock Out',
   },
   {
-    id: 'remaining',
+    id: 'total',
     label: 'Total Working',
   },
   {
-    id: 'link',
+    id: 'report',
     label: 'View Report',
   },
 ];
@@ -34,52 +34,84 @@ const columns = [
 function AllReports() {
   const [rows, setRows] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
+  const [userId, setUserId] = useState(null);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
     totalItems: 10,
   });
 
-  // const onRtSupport = async (id) => {
-  //   const endPoint = `${Api.getProjects}${id}/`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
-
-  // };
-
-  const getTableData = async (pageNo = 0) => {
-    const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.getProjects}?page=${page}&limit=${pagination.itemsPerPage}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
+  const getReports = async () => {
+    const postData = {
+      userId: [userId],
+    };
+    const { data } = await AuthApi.postDataToServer(Api.reportUrl, postData);
+    if (data) {
+      console.log('reportData', data.data);
       setPagination({
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
       });
-
       const row = [];
-
-      data.data.map((proj) => {
+      data.data.map((report) => {
         row.push({
-          name: proj.name,
-          spend: proj.spend,
-          allocated: proj.allocated,
-          completed: proj.completed,
-          remaining: proj.remaining,
-          link: (
-            <a href="/reports">
-              <span>View Report</span>
-            </a>
-          ),
+          name: report.date,
+          clockin: report.sign_in,
+          clockout: report.sign_out,
+          total: report.estimation,
+          report: report.estimation,
+          // link: (
+          //   <a href="/reports">
+          //     <span>View Report</span>
+          //   </a>
+          // ),
         });
-        return proj;
+        return report;
       });
       setRows(row);
     }
   };
 
+  // const getTableData = async (pageNo = 0) => {
+  //   const page = pageNo || pagination.current_page;
+  //   const endPoint = `${Api.reportUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
+  //   const { data } = await AuthApi.getDataFromServer(endPoint);
+  //   if (data && data.data) {
+  //     setPagination({
+  //       activePage: data.paginator.current_page,
+  //       itemsPerPage: data.paginator.limit,
+  //       totalItems: data.paginator.total_count,
+  //     });
+
+  //     const row = [];
+
+  //     data.data.map((proj) => {
+  //       row.push({
+  //         name: proj.name,
+  //         spend: proj.spend,
+  //         allocated: proj.allocated,
+  //         completed: proj.completed,
+  //         remaining: proj.remaining,
+  //         link: (
+  //           <a href="/reports">
+  //             <span>View Report</span>
+  //           </a>
+  //         ),
+  //       });
+  //       return proj;
+  //     });
+  //     setRows(row);
+  //   }
+  // };
   useEffect(() => {
-    getTableData();
+    const Id = localStorage.getItem('userId');
+    setUserId(Id);
+  });
+
+  useEffect(() => {
+    // getTableData();
+    getReports();
   }, []);
 
   return (
@@ -181,7 +213,7 @@ function AllReports() {
                   paginationProps={{
                     ...pagination,
                     onPageChange: (pageNo) => {
-                      getTableData(pageNo);
+                      getReports(pageNo);
                     },
                   }}
                 />

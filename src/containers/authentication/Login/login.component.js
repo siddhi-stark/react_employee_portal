@@ -53,6 +53,7 @@ function Login(props) {
     if (data && data.data && data.data.token && data.data.token.access_token) {
       await localStorage.setItem('access_token', data.data.token.access_token);
       await localStorage.setItem('email', data.data.email);
+      await localStorage.setItem('userId', data.data.id);
       await localStorage.setItem('password', password);
 
       dispatch({ type: 'LOGIN', value: true });
