@@ -47,6 +47,7 @@ const columns = [
 function Projects() {
   const [rows, setRows] = useState([]);
   const [keyword, setKeyword] = useState('');
+  const [cntClearFilter, setCntClearFilter] = useState(0);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -69,7 +70,7 @@ function Projects() {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.getProjects}?page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.getProjects}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
@@ -127,6 +128,16 @@ function Projects() {
     getTableData(1);
   }, []);
 
+  useEffect(() => {
+    getTableData(1);
+    
+  }, [cntClearFilter]);
+
+  const onClear = () => {
+    setKeyword('');
+    setCntClearFilter(cntClearFilter + 1);
+  };
+
   return (
     <>
       <WelcomeScreen />
@@ -170,7 +181,7 @@ function Projects() {
                       size="sm"
                       variant="primary"
                       type="reset"
-                      // onClick={() => onClear()}
+                      onClick={() => onClear()}
                     >
                       Clear
                     </Button>
