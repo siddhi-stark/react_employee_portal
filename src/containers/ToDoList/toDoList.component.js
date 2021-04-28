@@ -71,6 +71,7 @@ function ToDoList() {
   const [staticHrs, setStaticHours] = useState(''); //eslint-disable-line
   const [staticMin, setStaticMinutes] = useState(''); //eslint-disable-line
   const [showScrum, setShowScrum] = useState(false);
+  const [showClockoutBtn, setShowClockoutBtn] = useState(false);
   const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [isOverdue, setIsOverdue] = useState('');
   // const [type, setType] = useState('morning');
@@ -210,7 +211,9 @@ function ToDoList() {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
       if (data.data.clock_in_time && data.data.morning_mail === false) {
-        setShowScrum(false);
+        setShowClockoutBtn(true);
+      }else{
+        setShowClockoutBtn(false)
       }
       if (data.data.clock_in_time && data.data.morning_mail === true) {
         setShowScrum(true);
@@ -231,8 +234,10 @@ function ToDoList() {
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
 
     if (data) {
+      console.log('setshowpopup');
+      setShowBreak(false)
       swal(data && data.message[0], '', 'success');
-      // setShowClockoutBtn(true);
+      setShowBreak(false)
     } else {
       // swal(message, '', 'error');
       // setShowClockoutBtn(true);
@@ -354,7 +359,8 @@ function ToDoList() {
 
   return (
     <>
-      {console.log('ids', selectedRowIndex)}
+      {console.log('showClockoutBtn', showClockoutBtn)}
+      {console.log('showScrum', showScrum)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -451,7 +457,7 @@ function ToDoList() {
             </Col>
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            {showScrum === false ? (
+            {showScrum === false && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -462,7 +468,8 @@ function ToDoList() {
               >
                 Send Scrum
               </Button>
-            ) : (
+            )}
+            {showClockoutBtn === false && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -473,6 +480,8 @@ function ToDoList() {
                 Clockout & Send Report
               </Button>
             )}
+             
+            
           </div>
         </Card.Body>
       </Card>
