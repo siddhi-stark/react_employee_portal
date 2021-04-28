@@ -71,6 +71,7 @@ function ToDoList() {
   const [staticHrs, setStaticHours] = useState(''); //eslint-disable-line
   const [staticMin, setStaticMinutes] = useState(''); //eslint-disable-line
   const [showScrum, setShowScrum] = useState(false);
+  const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -205,14 +206,15 @@ function ToDoList() {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
       if (data.data.clock_in_time) {
-        setShowScrum(false);
-      } else {
         setShowScrum(true);
+      } else {
+        setShowScrum(false);
       }
     }
   };
 
   const onSendScrum = async () => {
+    console.log('selectedINdex', selectedRowIndex);
     const postData = {
       type: 'morning',
       tasks: selectedRowIndex,
@@ -338,6 +340,7 @@ function ToDoList() {
 
   return (
     <>
+      {console.log('Hours', hrs)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -390,11 +393,21 @@ function ToDoList() {
                 showPagination
                 showCheckbox
                 onSelectRowsIndexes={(rowIndex) => {
+                  // console.log('ids', rowIndex )
                   const twId = [];
                   taskList.map((task, ind) => {
+                    // console.log('twid', task);
+                    // console.log('ind', ind);
+                    // console.log('rowIndex', rowIndex);
                     rowIndex.map((i) => {
+                      // console.log('i',i);
+                      // console.log(ind===i);
                       if (ind === i) {
-                        twId.push(task.tw_id);
+                        if (task.task_type === 'tw') {
+                          twId.push(task.tw_id);
+                        } else {
+                          twId.push(task.id);
+                        }
                       }
                       return i;
                     });
@@ -413,12 +426,13 @@ function ToDoList() {
             </Col>
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            {showScrum === true ? (
+            {showScrum === false ? (
               <Button
                 variant="primary"
                 className="mb-3"
                 onClick={() => {
-                  onSendScrum();
+                  // onSendScrum();
+                  setShowScrumPopup(true);
                 }}
               >
                 Send Scrum
@@ -691,6 +705,49 @@ function ToDoList() {
               Send Report
             </Button>
           </div>
+        }
+      />
+      <ModalInput
+        size="sm"
+        centered
+        className="send-report-confirm"
+        show={showScrumPopup}
+        id="contained-modal-title-vcenter"
+        closeButton="closeButton"
+        modalBody={
+          <>
+            <img
+              src="images/send-report.svg"
+              style={{ height: '40px', textAlign: 'center' }}
+              alt="Send Report"
+            />
+            <h5>Are you sure ?</h5>
+            <div className="light-bg buttons d-flex align-items-center mb-1 mt-3 justify-content-between">
+              <button
+                type="button"
+                className="btn btn-secondary mr-3"
+                onClick={(e) => {
+                  setShowScrumPopup(false);
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                No
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onSendScrum();
+                  // setShowScrumPopup(true);
+                }}
+              >
+                Yes
+              </button>
+            </div>
+          </>
         }
       />
       <ModalInput
