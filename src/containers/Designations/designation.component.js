@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import {
-  Card,
-  Row,
-  Col,
-  Image,
-  Button,
-  Form,
-  Accordion,
-} from 'react-bootstrap';
+import { Card, Row, Col, Image, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
@@ -220,44 +212,42 @@ function Projects() {
                   </div>
                 </Col>
               </Row>
-              <Accordion defaultActiveKey="0">
-                <Form>
-                  <Row className="mt-3">
-                    <Col md={4}>
-                      <div className="search-bar-input">
-                        <TextInput
-                          inputClass="form-control"
-                          value={keyword}
-                          placeholder="search.."
-                          onInputChange={(e) => {
-                            setKeyword(e.target.value);
-                          }}
-                        />
-                        <Button
-                          variant="primary"
-                          type="button"
-                          onClick={() => getTableData(1)}
-                        >
-                          <Image src="images/search.svg" className="svg" />
-                        </Button>
-                      </div>
-                    </Col>
+              <Form>
+                <Row className="mt-3">
+                  <Col md={4}>
+                    <div className="search-bar-input">
+                      <TextInput
+                        inputClass="form-control"
+                        value={keyword}
+                        placeholder="search.."
+                        onInputChange={(e) => {
+                          setKeyword(e.target.value);
+                        }}
+                      />
+                      <Button
+                        variant="primary"
+                        type="button"
+                        onClick={() => getTableData(1)}
+                      >
+                        <Image src="images/search.svg" className="svg" />
+                      </Button>
+                    </div>
+                  </Col>
 
-                    <Col md={4}>
-                      <div className="mt-1">
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          type="reset"
-                          onClick={() => onClear()}
-                        >
-                          Clear
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                </Form>
-              </Accordion>
+                  <Col md={4}>
+                    <div className="mt-1">
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        type="reset"
+                        onClick={() => onClear()}
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Form>
 
               <Col className="mt-3">
                 <Table
