@@ -1,54 +1,43 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Row, Col, Card, Jumbotron, Button } from 'react-bootstrap';
-import Breadcrumb from '../Breadcrumb/breadcrumb.component';
+import { Row, Col, Jumbotron, Button } from 'react-bootstrap';
 
 function WelcomeScreen() {
   return (
     <>
-      <div className="page-header">
-        <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
-          <Breadcrumb />
-        </div>
-      </div>
-      <section className="content-area">
-        <Row>
-          <Col xl={8} id="main-content">
-            <Jumbotron className="welcome-box">
-              <Row className="align-items-center">
-                <Col md={5}>
-                  <div className="welcome-text">
-                    <h1>
-                      Welcome <strong>Alexa,</strong>
-                    </h1>
-                    <blockquote className="blockquote quote">
-                      <p className="mb-0">
-                        The secret of your success is determined by your daily
-                        agenda
-                      </p>
-                    </blockquote>
-                  </div>
-                </Col>
-                <Col md={2}>
-                  <div className="check-in">
-                    <div className="time-count text-center">
-                      <span>00 : 00</span>
-                    </div>
-                    <Button type="button" className="btn btn-primary">
-                      Clock In
-                    </Button>
-                  </div>
-                </Col>
-                <Col md={5}>
-                  <div className="welcome-img text-right">
-                    <img src="/images/welcome-img.svg" alt="img" />
-                  </div>
-                </Col>
-              </Row>
-            </Jumbotron>
+      <Jumbotron className="welcome-box">
+        <Row className="align-items-center">
+          <Col md={5}>
+            <div className="welcome-text">
+              <h1>
+                Welcome <strong>Alexa,</strong>
+              </h1>
+              <blockquote className="blockquote quote">
+                <p className="mb-0">
+                  The secret of your success is determined by your daily agenda
+                </p>
+              </blockquote>
+            </div>
           </Col>
-          <Card>
+          <Col md={2}>
+            <div className="check-in">
+              <div className="time-count text-center">
+                <span>00 : 00</span>
+              </div>
+              <Button type="button" className="btn btn-primary">
+                Clock In
+              </Button>
+            </div>
+          </Col>
+          <Col md={5}>
+            <div className="welcome-img text-right">
+              <img src="/images/welcome-img.svg" alt="img" />
+            </div>
+          </Col>
+        </Row>
+      </Jumbotron>
+
+      {/* <Card>
             <Card.Body>
               <Row>
                 <Col md={2}>
@@ -79,9 +68,7 @@ function WelcomeScreen() {
                 </a>
               </div>
             </Card.Body>
-          </Card>
-        </Row>
-      </section>
+          </Card> */}
     </>
   );
 }

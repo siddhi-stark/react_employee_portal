@@ -386,7 +386,7 @@ function Employee() {
       ? `${Api.employeeUrl}${employeeId}/`
       : Api.employeeUrl;
     const { data } = await callback(endPoint, postData);
-    // console.log('update', 'update');
+    console.log('update', 'update');
     if (data) {
       setSelectedDesignationOption();
       setSelectedRole();
@@ -413,13 +413,15 @@ function Employee() {
   };
 
   const onSubmit = (e) => {
-    // console.log('updatebutton');
+    console.log('updatebutton');
     e.preventDefault();
     if (validator.allValid()) {
+      console.log('updatebutton');
       addEmployee();
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
+      console.log('updatebuttonelse block');
     }
   };
 
@@ -519,7 +521,7 @@ function Employee() {
               <Row>
                 <Col>
                   <div className="pull-left">
-                    <h5>Employee</h5>
+                    <h5>Employeeeeee</h5>
                   </div>
                 </Col>
                 <Col>

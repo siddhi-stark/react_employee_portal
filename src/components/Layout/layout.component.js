@@ -27,12 +27,12 @@ function Layout(props) {
                       </h2>
                     </div>
                   </div>
-                  <WelcomeScreen />
                 </div>
               </div>
               <section className="content-area">
                 <div className="row">
                   <div className="col-xl-8" id="main-content">
+                    <WelcomeScreen />
                     {children}
                   </div>
                   <div className="col-xl-4" id="right-sidebar">

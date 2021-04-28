@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
-import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
+// import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
+// import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 // import AuthApi from '../../../helper/authApi';
 // import Api from '../../../helper/api';
 
@@ -14,7 +14,7 @@ function Dashboard() {
 
   return (
     <>
-      <div className="page-header">
+      {/* <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">
             Welcome To Dashboard
@@ -219,7 +219,7 @@ function Dashboard() {
             </div>
           </Col>
         </Row>
-      </section>
+      </section> */}
     </>
   );
 }

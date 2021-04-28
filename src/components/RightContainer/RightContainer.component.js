@@ -1,9 +1,42 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import { Row, Col, Card } from 'react-bootstrap';
 
 function RightContainer() {
   return (
     <>
+      <Card className="flex-fill w-100 weekly-status-box">
+        <Card.Body>
+          <Row>
+            <Col md={6}>
+              <h5 className="card-title mb-0">Weekly Status</h5>
+              <div className="weekly-status">
+                <ul className="list-unstyled p-0">
+                  <li>
+                    Completed <span className="bluebg">65%</span>
+                  </li>
+                  <li>
+                    Pending <span className="pinkbg">25%</span>
+                  </li>
+                  <li>
+                    Remaining <span className="yellowbg">10%</span>
+                  </li>
+                </ul>
+              </div>
+            </Col>
+            <Col md={6}>
+              <div className="persentage-circle">
+                <img src="images/persentage-circle.svg" alt="img" />
+              </div>
+            </Col>
+          </Row>
+          <div className="last-week">
+            <a href="#">
+              <img src="images/previous.svg" alt="" /> Last Week
+            </a>
+          </div>
+        </Card.Body>
+      </Card>
       <div className="table-projects time-sheet-table">
         <div className="card">
           <div className="table-title">

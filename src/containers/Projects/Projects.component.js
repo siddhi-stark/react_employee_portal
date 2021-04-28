@@ -109,7 +109,7 @@ function Projects() {
             ),
           completion: <ProgressBar variant="success" now={proj.completion} />,
           link: (
-            <a href={`${constants.link}${proj.tw_id}`}>
+            <a href={`${constants.link}${proj.tw_id}`} target="_blank">
               <span>
                 <Image src="/images/redirect.png" />
               </span>
@@ -138,8 +138,8 @@ function Projects() {
 
   return (
     <>
-      <div className="content-area">
-        <Card id="main-content">
+      <div className="mt-3">
+        <Card>
           <Card.Body>
             <Row>
               <Row>
