@@ -31,6 +31,7 @@ function Projects() {
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [showDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
+  const [searchErr, setSearchErr] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -162,7 +163,24 @@ function Projects() {
 
   const onClear = () => {
     setKeyword('');
+    setSearchErr('');
     setCntClearFilter(cntClearFilter + 1);
+  };
+
+  const filterSearch = (e) => {
+    e.preventDefault();
+    let searchError = '';
+    let isValid = true;
+
+    if (keyword === '') {
+      searchError = 'Please enter some keyword';
+      setSearchErr(searchError);
+      isValid = false;
+    }
+    if (isValid) {
+      setSearchErr('');
+      getTableData(1);
+    }
   };
 
   return (
@@ -212,7 +230,7 @@ function Projects() {
                   </div>
                 </Col>
               </Row>
-              <Form>
+              <Form onSubmit={(e) => filterSearch(e)}>
                 <Row className="mt-3">
                   <Col md={4}>
                     <div className="search-bar-input">
@@ -221,14 +239,13 @@ function Projects() {
                         value={keyword}
                         placeholder="search.."
                         onInputChange={(e) => {
+                          setSearchErr('');
                           setKeyword(e.target.value);
                         }}
                       />
-                      <Button
-                        variant="primary"
-                        type="button"
-                        onClick={() => getTableData(1)}
-                      >
+                      <div className="text-danger">{searchErr}</div>
+
+                      <Button variant="primary" type="submit">
                         <Image src="images/search.svg" className="svg" />
                       </Button>
                     </div>
