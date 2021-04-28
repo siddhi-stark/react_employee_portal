@@ -22,7 +22,7 @@ const columns = [
 
 const validator = new SimpleReactValidator();
 
-function Projects() {
+function Designation() {
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
@@ -333,4 +333,4 @@ function Projects() {
   );
 }
 
-export default withRouter(Projects);
+export default withRouter(Designation);
