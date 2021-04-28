@@ -13,7 +13,6 @@ import Table from '../../components/Table/simpletable.component';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-// import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
 
 const columns = [
   {

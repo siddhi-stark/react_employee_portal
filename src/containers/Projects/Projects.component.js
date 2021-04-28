@@ -61,7 +61,6 @@ function Projects() {
     const { data } = await AuthApi.putDataToServer(endPoint, payload);
 
     if (data) {
-      console.log(data);
       swal(data.message && data.message[0], '', 'success');
       getTableData(1); // eslint-disable-line
     }

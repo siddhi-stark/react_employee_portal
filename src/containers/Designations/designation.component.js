@@ -29,7 +29,7 @@ function Projects() {
   const [keyword, setKeyword] = useState('');
   const [designationId, setDesignationId] = useState(null);
   const [cntClearFilter, setCntClearFilter] = useState(0);
-  const [ShowDelete, setShowDelete] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -76,7 +76,6 @@ function Projects() {
                   e.stopPropagation();
                   setShowDelete(true);
                   setDesignationId(desgn.id);
-                  // removeDesignation(desgn.id); //eslint-disable-line
                 }}
               >
                 <Image src="images/delete.png" />
@@ -168,7 +167,7 @@ function Projects() {
 
   return (
     <>
-      {ShowDelete && (
+      {showDelete && (
         <SweetAlert
           title="Are you sure, do you want to remove the designation ?"
           error
