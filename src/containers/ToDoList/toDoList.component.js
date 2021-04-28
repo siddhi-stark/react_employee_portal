@@ -72,6 +72,8 @@ function ToDoList() {
   const [staticMin, setStaticMinutes] = useState(''); //eslint-disable-line
   const [showScrum, setShowScrum] = useState(false);
   const [showScrumPopup, setShowScrumPopup] = useState(false);
+  const [isOverdue, setIsOverdue] = useState('');
+  // const [type, setType] = useState('morning');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -121,11 +123,13 @@ function ToDoList() {
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
       });
+
       setTaskList(data.data);
 
       const row = [];
 
       data.data.map((task) => {
+        setIsOverdue(task.is_overdue);
         row.push({
           todo: task.content,
           projects: task.project_name,
@@ -205,7 +209,10 @@ function ToDoList() {
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
-      if (data.data.clock_in_time) {
+      if (data.data.clock_in_time && data.data.morning_mail === false) {
+        setShowScrum(false);
+      }
+      if (data.data.clock_in_time && data.data.morning_mail === true) {
         setShowScrum(true);
       } else {
         setShowScrum(false);
@@ -216,7 +223,7 @@ function ToDoList() {
   const onSendScrum = async () => {
     console.log('selectedINdex', selectedRowIndex);
     const postData = {
-      type: 'morning',
+      type: 'logout',
       tasks: selectedRowIndex,
     };
 
@@ -233,15 +240,15 @@ function ToDoList() {
     getDailyActivity();
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (validator.allValid()) {
-      onSendScrum();
-    } else {
-      validator.showMessages();
-      forceUpdate(count + 1);
-    }
-  };
+  // const onSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (validator.allValid()) {
+  //     onSendScrum();
+  //   } else {
+  //     validator.showMessages();
+  //     forceUpdate(count + 1);
+  //   }
+  // };
 
   // const addBreak = () => {
   //   // console.log('addbreakkkkkkkkkkkkkkkk');
@@ -305,17 +312,24 @@ function ToDoList() {
       });
     });
     const postData = {
-      type: 'break',
       tasks: BreakPostData,
     };
     const endPoint = `${Api.taskUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
+      console.log('breakresponseData', data.data.task_created_ids);
+      data.data.task_created_ids.map((e) => {
+        console.log('eeee', e);
+        selectedRowIndex.push(e);
+        return e;
+      });
+      setSelectedRowIndex(data.data.task_created_ids);
       setHours();
       setMinutes();
       setSelectedBreakOption();
       setStartTime();
       setEndTime();
+      console.log('generatedIds', selectedRowIndex);
     }
   };
 
@@ -340,7 +354,7 @@ function ToDoList() {
 
   return (
     <>
-      {console.log('Hours', hrs)}
+      {console.log('ids', selectedRowIndex)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -391,7 +405,18 @@ function ToDoList() {
                 columns={columns}
                 rows={rows}
                 showPagination
+                overDueClass={
+                  isOverdue ? (
+                    <span className="badge badge-danger">Danger</span>
+                  ) : (
+                    ''
+                  )
+                }
                 showCheckbox
+                selectedRowItems={selectedRowIndex}
+                // onSelectRowsIndexes={(indexes) => {
+                //   console.log('indexes',indexes);
+                // }}
                 onSelectRowsIndexes={(rowIndex) => {
                   // console.log('ids', rowIndex )
                   const twId = [];
@@ -700,7 +725,10 @@ function ToDoList() {
               variant="primary"
               type="submit"
               className="ms-4"
-              onClick={(e) => onSubmit(e)}
+              onClick={(e) => {
+                onSendScrum(e);
+                // setType('logout');
+              }}
             >
               Send Report
             </Button>
