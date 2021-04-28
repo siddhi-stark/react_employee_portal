@@ -13,6 +13,7 @@ import Table from '../../components/Table/simpletable.component';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+// import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
 
 const columns = [
   {
@@ -385,7 +386,7 @@ function Employee() {
       ? `${Api.employeeUrl}${employeeId}/`
       : Api.employeeUrl;
     const { data } = await callback(endPoint, postData);
-
+    // console.log('update', 'update');
     if (data) {
       setSelectedDesignationOption();
       setSelectedRole();
@@ -491,6 +492,7 @@ function Employee() {
 
   return (
     <>
+      {/* <WelcomeScreen /> */}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the employee ?"
@@ -602,20 +604,20 @@ function Employee() {
                 <Col sm={6}>
                   <DropdownInput
                     label="TW Employee"
-                    asterisk="*"
+                    // asterisk="*"
                     options={getEmployeeList()}
                     placeholder="Select Employee"
                     defaultValue={selectedEmployee}
                     onSelectHandler={(select) => setSelectedEmployee(select)}
-                    errorMessage={
-                      selectedEmployee && selectedEmployee > 0
-                        ? validator.message(
-                            'setSelectedEmployee',
-                            selectedDesignationOption,
-                            'required'
-                          )
-                        : ''
-                    }
+                    // errorMessage={
+                    //   selectedEmployee && selectedEmployee > 0
+                    //     ? validator.message(
+                    //         'setSelectedEmployee',
+                    //         selectedDesignationOption,
+                    //         'required'
+                    //       )
+                    //     : ''
+                    // }
                   />
                 </Col>
                 <Col sm={6}>
@@ -716,36 +718,36 @@ function Employee() {
                 <Col sm={6}>
                   <DropdownInput
                     label="RollName"
-                    asterisk="*"
+                    // asterisk="*"
                     options={getEmployeeRole()}
                     placeholder="Select Role"
                     defaultValue={selectedRole}
                     onSelectHandler={(select) => setSelectedRole(select)}
-                    errorMessage={
-                      selectedRole && selectedRole > 0
-                        ? validator.message('Role', selectedRole, 'required')
-                        : ''
-                    }
+                    // errorMessage={
+                    //   selectedRole && selectedRole > 0
+                    //     ? validator.message('Role', selectedRole, 'required')
+                    //     : ''
+                    // }
                   />
                 </Col>
                 <Col sm={6}>
                   <DropdownInput
                     label="Manager"
-                    asterisk="*"
+                    // asterisk="*"
                     options={getManagerList()}
                     placeholder="Select Manager"
                     defaultValue={selectedManager}
                     isMulti
                     onSelectHandler={(select) => setSelectedManager(select)}
-                    errorMessage={
-                      selectedManager && selectedManager > 0
-                        ? validator.message(
-                            'Manager',
-                            selectedDesignationOption,
-                            'required'
-                          )
-                        : ''
-                    }
+                    // errorMessage={
+                    //   selectedManager && selectedManager > 0
+                    //     ? validator.message(
+                    //         'Manager',
+                    //         selectedDesignationOption,
+                    //         'required'
+                    //       )
+                    //     : ''
+                    // }
                   />
                 </Col>
               </Row>
@@ -753,34 +755,34 @@ function Employee() {
                 <Col sm={6}>
                   <DropdownInput
                     label="Teamlead"
-                    asterisk="*"
+                    // asterisk="*"
                     options={getTeamLeadList()}
                     placeholder="Select TeamLead"
                     defaultValue={selectedTeamLead}
                     isMulti
                     onSelectHandler={(select) => setSelectedTeamLead(select)}
-                    errorMessage={
-                      selectedTeamLead && selectedTeamLead > 0
-                        ? validator.message(
-                            'TeamLead',
-                            selectedDesignationOption,
-                            'required'
-                          )
-                        : ''
-                    }
+                    // errorMessage={
+                    //   selectedTeamLead && selectedTeamLead > 0
+                    //     ? validator.message(
+                    //         'TeamLead',
+                    //         selectedDesignationOption,
+                    //         'required'
+                    //       )
+                    //     : ''
+                    // }
                   />
                 </Col>
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setDate(e.target.value)}
                     label="DOB"
-                    asterisk="*"
+                    // asterisk="*"
                     containerClass="form-group"
                     type="date"
                     name="DOB"
                     value={date}
                     // placeholder="Enter Contact Number"
-                    errorMessage={validator.message('DOB', mobile, 'required')}
+                    // errorMessage={validator.message('DOB', mobile, 'required')}
                   />
                 </Col>
               </Row>
@@ -788,20 +790,20 @@ function Employee() {
                 <Col sm={6}>
                   <DropdownInput
                     label="Department"
-                    asterisk="*"
+                    // asterisk="*"
                     options={getDepartment()}
                     placeholder="Select Department"
                     defaultValue={selectedDepartment}
                     onSelectHandler={(select) => setSelectedDepartment(select)}
-                    errorMessage={
-                      selectedDepartment && selectedDepartment.length > 0
-                        ? validator.message(
-                            'Department',
-                            selectedDesignationOption,
-                            'required'
-                          )
-                        : ''
-                    }
+                    // errorMessage={
+                    //   selectedDepartment && selectedDepartment.length > 0
+                    //     ? validator.message(
+                    //         'Department',
+                    //         selectedDesignationOption,
+                    //         'required'
+                    //       )
+                    //     : ''
+                    // }
                     isMulti={false}
                   />
                 </Col>
@@ -814,25 +816,14 @@ function Employee() {
                 Cancel
               </Button>
 
-              {employeeId ? (
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="ms-4"
-                  onClick={(e) => onSubmit(e)}
-                >
-                  Update
-                </Button>
-              ) : (
-                <Button
-                  variant="primary"
-                  type="submit"
-                  className="ms-4"
-                  onClick={(e) => onSubmit(e)}
-                >
-                  Add
-                </Button>
-              )}
+              <Button
+                variant="primary"
+                type="submit"
+                className="ms-4"
+                onClick={(e) => onSubmit(e)}
+              >
+                {employeeId ? 'Update' : 'Add'}
+              </Button>
             </div>
           }
         />

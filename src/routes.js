@@ -5,10 +5,12 @@ import Dashboard from './containers/dashboard/Dashboard/dashboard.component';
 import Login from './containers/authentication/Login/login.component';
 import ForgetPassword from './containers/authentication/Forget/forgetPassword.component';
 import ResetPassword from './containers/authentication/Forget/resetPassword.component';
-import DashboardNew from './components/Dashboard/dashboard.component';
+// import DashboardNew from './components/Dashboard/dashboard.component';
 import WelcomeScreen from './components/WelcomScreen/WelcomeScreen.component';
 import RightContainer from './components/RightContainer/RightContainer.component';
 import Projects from './containers/Projects/Projects.component';
+import Designation from './containers/Designations/designation.component';
+import Employee from './containers/Employee/employee.component';
 
 function Routes() {
   return (
@@ -17,12 +19,12 @@ function Routes() {
       <Route path="/login" exact component={Login} />
       <Route path="/forget-password" exact component={ForgetPassword} />
       <Route path="/password/reset/:token" exact component={ResetPassword} />
-      <Route path="/designation" exact component={DashboardNew} />
-      <Route path="/employee" exact component={DashboardNew} />
+      {/* <Route path="/employee" exact component={DashboardNew} /> */}
       <Route path="/welcome" exact component={WelcomeScreen} />
       <Route path="/right" exact component={RightContainer} />
       <Route path="/projects" exact component={Projects} />
-      {/* <Route path="/edit-employee/:empId" exact component={DashboardNew} /> */}
+      <Route path="/designation" exact component={Designation} />
+      <Route path="/employee" exact component={Employee} />
     </Switch>
   );
 }

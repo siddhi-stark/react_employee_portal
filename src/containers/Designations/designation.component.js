@@ -236,7 +236,7 @@ function Projects() {
                 </Col>
 
                 <Col md={4}>
-                  <div className="float-end mt-1">
+                  <div className="mt-1">
                     <Button
                       size="sm"
                       variant="primary"
@@ -306,7 +306,7 @@ function Projects() {
                 className="ms-4"
                 onClick={(e) => onSubmit(e)}
               >
-                Add
+                {designationId ? 'Update' : 'Add'}
               </Button>
             </div>
           }

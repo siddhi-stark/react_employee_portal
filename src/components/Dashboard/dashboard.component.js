@@ -1,50 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
-import Designations from '../../containers/Designations/designation.component';
-import Employee from '../../containers/Employee/employee.component';
+// import Employee from '../../containers/Employee/employee.component';
 
 function DashboardNew() {
-  const [showDesignation, setShowDesignation] = useState(false);
-  const [showEmployee, setShowEmployee] = useState(false);
-  const history = useHistory();
-
-  useEffect(() => {
-    async function data() {
-      // const urlSegement =  props.match.url.split('/');
-      // console.log('urllllllllll',urlSegement);
-      // if (urlSegement && urlSegement.includes('designation')) {
-      //   setShowDesignation(true);
-      //   setShowEmployee(false);
-      //   setShowProject(false);
-      // }else if(urlSegement && urlSegement.includes('employee')) {
-      //   setShowEmployee(true);
-      //   setShowDesignation(false);
-      //   setShowProject(false);
-      // }else if(urlSegement && urlSegement.includes('projects')) {
-      //   setShowProject(true);
-      //   setShowDesignation(false);
-      //   setShowEmployee(false);
-      // }
-      return history.listen((location) => {
-        console.log('location', location);
-        if (location.pathname === '/designation') {
-          setShowDesignation(true);
-          setShowEmployee(false);
-        } else if (location.pathname === '/employee') {
-          setShowEmployee(true);
-          setShowDesignation(false);
-        }
-      });
-    }
-    data();
-  }, [history]);
-
   return (
     <>
-      {console.log('showDesignation', showDesignation)}
-      {console.log('showEmployee', showEmployee)}
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
@@ -86,22 +48,12 @@ function DashboardNew() {
                 </Col>
               </Row>
             </Jumbotron>
-            {/* {
-              showDesignation === true ? <Designations /> : 
-              showEmployee === true ? <Employee /> :
-               <Projects  />
-            } */}
 
-            {showDesignation === true && showEmployee === false ? (
-              <Designations />
-            ) : (
-              ''
-            )}
-            {showEmployee === true && showDesignation === false ? (
+            {/* {showEmployee === true   ? (
               <Employee />
             ) : (
               ''
-            )}
+            )} */}
             {/* {showProject === true &&
             showDesignation === false &&
             showEmployee === false ? (

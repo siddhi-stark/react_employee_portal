@@ -7,7 +7,6 @@ import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constants';
-import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
 
 const columns = [
   {
@@ -130,7 +129,6 @@ function Projects() {
 
   useEffect(() => {
     getTableData(1);
-    
   }, [cntClearFilter]);
 
   const onClear = () => {
@@ -140,8 +138,6 @@ function Projects() {
 
   return (
     <>
-      <WelcomeScreen />
-
       <div className="content-area">
         <Card id="main-content">
           <Card.Body>
