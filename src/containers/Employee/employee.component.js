@@ -47,7 +47,7 @@ function Employee() {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [designation, setDesignation] = useState([]);
-  const [TwEmployee, setTwEmployee] = useState([]);
+  const [twEmployee, setTwEmployee] = useState([]);
   const [role, setRole] = useState([]);
   const [manager, setManager] = useState([]);
   const [selectedManager, setSelectedManager] = useState([]);
@@ -199,7 +199,7 @@ function Employee() {
         return mngr;
       });
 
-      TwEmployee.map((tw) => {
+      twEmployee.map((tw) => {
         if (data.data.tw_id === tw.tw_id) {
           setSelectedEmployee({ label: tw.full_name });
           setTwId(tw.tw_id);
@@ -370,7 +370,7 @@ function Employee() {
       postData.designation = selectedDesignationOption.id;
     }
 
-    const isFind = TwEmployee.find(
+    const isFind = twEmployee.find(
       (item) => item.full_name === selectedEmployee.label
     );
     if (isFind) {
@@ -437,9 +437,9 @@ function Employee() {
   };
 
   const getEmployeeList = () => {
-    if (!TwEmployee) return [];
+    if (!twEmployee) return [];
     const options = [];
-    TwEmployee.map((emp) => {
+    twEmployee.map((emp) => {
       return options.push({
         label: emp.full_name,
         // id: desgn.id,
