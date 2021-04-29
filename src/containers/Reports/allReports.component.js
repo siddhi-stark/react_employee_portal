@@ -71,6 +71,8 @@ function AllReports() {
       });
       const row = [];
       data.data.map((report) => {
+        const date = customFunctions.getDate(report.created_at);
+        const dt = new Date(date).getTime();
         row.push({
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
@@ -78,9 +80,8 @@ function AllReports() {
           total: report.estimation,
           report: (
             <a
-              href={`/daily-report/${customFunctions.getDate(
-                report.created_at
-              )}`}
+              href={`/daily-report/${dt
+              }`}
             >
               <span>View Report</span>
             </a>
@@ -152,7 +153,7 @@ function AllReports() {
               </div>
             </Card.Title>
             <Row>
-              {showFilter === true && (
+              {showFilter && (
                 <Form onSubmit={(e) => onFilter(e)}>
                   <Row className="mt-3">
                     <Col sm={2}>

@@ -6,6 +6,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import EveningReport from './eveningReport.component';
 import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
+import customFunctions from '../../helper/customFunctions';
 
 const columns = [
   {
@@ -42,7 +43,9 @@ function Reports(props) {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const dt = props.match.params.date;
+    
+    const dt =customFunctions.getDate(new Date(Number(props.match.params.date))) ;
+    console.log('date', dt);
     setReportDate(dt);
     const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
