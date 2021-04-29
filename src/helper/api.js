@@ -18,6 +18,14 @@ export default class Api extends Component {
   static reportUrl = `${Api.baseUrl}report/`;
 
   static dailyReportUrl = `${Api.baseUrl}daily-report`;
+  
+  static designationUrl = `${Api.baseUrl}designations/`;
+
+  static employeeUrl = `${Api.baseUrl}employee/`;
+
+  static TwEmployeeUrl = `${Api.baseUrl}tw-employee/`;
+
+  static roleUrl = `${Api.baseUrl}roles/`;
 
   // Get base URL of APIs
   static getBaseUrl() {

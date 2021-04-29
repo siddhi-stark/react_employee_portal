@@ -11,12 +11,17 @@ import Api from '../../../helper/api';
 const validator = new SimpleReactValidator();
 
 function Login(props) {
+  // const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
   const [count, forceUpdate] = useState(0);
   const dispatch = useDispatch();
   useEffect(() => {
+    // const token =  localStorage.getItem('token');
+    // if (token) {
+    //   history.push('/');
+    // }
     const emailLocal = localStorage.getItem('email');
     const passwordLocal = localStorage.getItem('password');
     if (localStorage.checkbox && localStorage.email !== '') {

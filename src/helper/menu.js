@@ -8,6 +8,18 @@ const menu = [
   {
     title: 'Projects',
     path: '/projects',
+    icon: 'project.svg',
+    submenu: [],
+  },
+  {
+    title: 'Designation',
+    path: '/designation',
+    icon: 'dashboard.svg',
+    submenu: [],
+  },
+  {
+    title: 'Employee',
+    path: '/employee',
     icon: 'dashboard.svg',
     submenu: [],
   },

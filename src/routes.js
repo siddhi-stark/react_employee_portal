@@ -8,6 +8,12 @@ import ResetPassword from './containers/authentication/Forget/resetPassword.comp
 import DashboardNew from './components/Dashboard/dashboard.component';
 import AllReports from './containers/Reports/allReports.component';
 import Reports from './containers/Reports/reports.component';
+// import DashboardNew from './components/Dashboard/dashboard.component';
+import WelcomeScreen from './components/WelcomScreen/WelcomeScreen.component';
+import RightContainer from './components/RightContainer/RightContainer.component';
+import Projects from './containers/Projects/Projects.component';
+import Designation from './containers/Designations/designation.component';
+import Employee from './containers/Employee/employee.component';
 
 function Routes() {
   return (
@@ -19,6 +25,12 @@ function Routes() {
       <Route path="/projects" exact component={DashboardNew} />
       <Route path="/reports" exact component={AllReports} />
       <Route path="/daily-report/:date" exact component={Reports} />
+      {/* <Route path="/employee" exact component={DashboardNew} /> */}
+      <Route path="/welcome" exact component={WelcomeScreen} />
+      <Route path="/right" exact component={RightContainer} />
+      <Route path="/projects" exact component={Projects} />
+      <Route path="/designation" exact component={Designation} />
+      <Route path="/employee" exact component={Employee} />
     </Switch>
   );
 }

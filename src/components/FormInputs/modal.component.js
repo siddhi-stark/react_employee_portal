@@ -13,11 +13,17 @@ export default function ModalComponent(props) {
           if (onClick) onClick(e);
         }}
       >
-        <Modal.Header>
-          <Modal.Title id={id}>{label}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{modalBody}</Modal.Body>
-        <Modal.Footer>{modalFooter}</Modal.Footer>
+        <div className="add-task-popup">
+          <Modal.Header>
+            <Modal.Title id={id}>
+              <div className="title">
+                <h2>{label}</h2>
+              </div>
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{modalBody}</Modal.Body>
+          <Modal.Footer>{modalFooter}</Modal.Footer>
+        </div>
       </Modal>
     </>
   );

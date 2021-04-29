@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Image, ProgressBar } from 'react-bootstrap';
+import { Card, Row, Col, Image, ProgressBar, Button } from 'react-bootstrap';
+import swal from 'sweetalert';
+import { TextInput } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -43,21 +45,30 @@ const columns = [
 
 function Projects() {
   const [rows, setRows] = useState([]);
+  const [keyword, setKeyword] = useState('');
+  const [cntClearFilter, setCntClearFilter] = useState(0);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
     totalItems: 10,
   });
 
-  // const onRtSupport = async (id) => {
-  //   const endPoint = `${Api.getProjects}${id}/`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
+  const onRtSupport = async (id, Support) => {
+    const payload = {
+      rt_support: Number(!Support),
+    };
+    const endPoint = `${Api.getProjects}${id}/`;
+    const { data } = await AuthApi.putDataToServer(endPoint, payload);
 
-  // };
+    if (data) {
+      swal(data.message && data.message[0], '', 'success');
+      getTableData(1); // eslint-disable-line
+    }
+  };
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.getProjects}?page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.getProjects}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
@@ -76,16 +87,23 @@ function Projects() {
           completed: proj.completed,
           remaining: proj.remaining,
           support:
-            proj.rt_support !== false ? (
-              <Image src="/images/success.svg" />
+            proj.rt_support === true ? (
+              <Image
+                src="/images/success.svg"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onRtSupport(proj.id, proj.rt_support);
+                }}
+              />
             ) : (
               <Image
                 src="/images/fail.svg"
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   e.stopPropagation();
-                //   onRtSupport(proj.id);
-                // }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onRtSupport(proj.id, proj.rt_support);
+                }}
               />
             ),
           completion: <ProgressBar variant="success" now={proj.completion} />,
@@ -105,8 +123,17 @@ function Projects() {
   };
 
   useEffect(() => {
-    getTableData();
+    getTableData(1);
   }, []);
+
+  useEffect(() => {
+    getTableData(1);
+  }, [cntClearFilter]);
+
+  const onClear = () => {
+    setKeyword('');
+    setCntClearFilter(cntClearFilter + 1);
+  };
 
   return (
     <>
@@ -114,7 +141,49 @@ function Projects() {
         <Card>
           <Card.Body>
             <Row>
-              <div>Projects</div>
+              <Row>
+                <Col>
+                  <div className="pull-left">
+                    <h5>Projects</h5>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row className="mt-3">
+                <Col md={4}>
+                  <div className="search-bar-input">
+                    <TextInput
+                      inputClass="form-control"
+                      value={keyword}
+                      placeholder="search.."
+                      onInputChange={(e) => {
+                        setKeyword(e.target.value);
+                      }}
+                    />
+                    <Button
+                      variant="primary"
+                      type="button"
+                      onClick={() => getTableData(1)}
+                    >
+                      <Image src="images/search.svg" className="svg" />
+                    </Button>
+                  </div>
+                </Col>
+
+                <Col md={4}>
+                  <div className="float-end mt-1">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      type="reset"
+                      onClick={() => onClear()}
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+
               <Col className="mt-3">
                 <Table
                   tableClass="table table-striped"

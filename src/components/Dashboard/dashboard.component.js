@@ -2,8 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button, Row, Col, Card, Jumbotron } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
-// import Projects from '../../containers/Projects/Projects.component';
-// import AllReports from '../../containers/Reports/allReports.component';
+// import Employee from '../../containers/Employee/employee.component';
 
 function DashboardNew() {
   // const [showReport, setShowReport] = useState(false);
@@ -77,7 +76,24 @@ function DashboardNew() {
                 </Col>
               </Row>
             </Jumbotron>
-            {/* {showReport === true ? <AllReports /> : <Projects />} */}
+
+            {/* {showEmployee === true   ? (
+              <Employee />
+            ) : (
+              ''
+            )} */}
+            {/* {showProject === true &&
+            showDesignation === false &&
+            showEmployee === false ? (
+              <Projects />
+            ) : (
+              ''
+            )} */}
+
+            {/* {showDesignation === true ? <Designations /> : <Projects  />}
+            {(!showDesignation && showEmployee) && (
+              <Employee />
+            )} */}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
