@@ -9,15 +9,7 @@ import ToDoList from '../../ToDoList/toDoList.component';
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
   const [showClockButton, setShowClockButton] = useState(true);
-  // const [showToDoList, setShowToDoList] = useState(false);
-
-  const getClockInTime = async () => {
-    const endPoint = `${Api.clockInUrl}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
-      setSignInTime(data.data.sign_in_time);
-    }
-  };
+  const [showScrumBtn, setShowScrumBtn] = useState(false);
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
@@ -26,6 +18,11 @@ function Dashboard() {
         const stime = data.data.clock_in_time.split(' ');
         const newtime = stime[0];
         setSignInTime(newtime);
+        if (data.data.morning_mail === false) {
+          setShowScrumBtn(true);
+        } else {
+          setShowScrumBtn(false);
+        }
         if (data.data.clock_in_time) {
           setShowClockButton(false);
           // setShowToDoList(true);
@@ -35,6 +32,15 @@ function Dashboard() {
         // setShowToDoList(false);
       }
     }
+  };
+
+  const getClockInTime = async () => {
+    const endPoint = `${Api.clockInUrl}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data && data.data) {
+      setSignInTime(data.data.sign_in_time);
+    }
+    getDailyActivity();
   };
 
   useEffect(() => {
@@ -92,7 +98,7 @@ function Dashboard() {
             </Jumbotron>
             {/* <div className="mt-3">{showButton === false && <ToDoList />}</div> */}
             {/* <addTaskComponent /> */}
-            {showClockButton === false && <ToDoList />}
+            {showClockButton === false && <ToDoList showScrum={showScrumBtn} />}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

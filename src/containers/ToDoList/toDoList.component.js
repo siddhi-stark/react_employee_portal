@@ -46,7 +46,7 @@ const columns = [
 
 const validator = new SimpleReactValidator();
 
-function ToDoList() {
+function ToDoList(props) {
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
@@ -187,6 +187,7 @@ function ToDoList() {
       getTableData(1);
     }
     getData();
+    setShowScrum(props.showScrum);
   }, []);
 
   useEffect(() => {
@@ -210,15 +211,11 @@ function ToDoList() {
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
-      if (data.data.clock_in_time && data.data.morning_mail === false) {
+      console.log('data', data.data);
+      if (data.data.signout_mail === false) {
         setShowClockoutBtn(true);
-      }else{
-        setShowClockoutBtn(false)
-      }
-      if (data.data.clock_in_time && data.data.morning_mail === true) {
-        setShowScrum(true);
       } else {
-        setShowScrum(false);
+        setShowClockoutBtn(false);
       }
     }
   };
@@ -226,7 +223,7 @@ function ToDoList() {
   const onSendScrum = async () => {
     console.log('selectedINdex', selectedRowIndex);
     const postData = {
-      type: 'logout',
+      type: 'morning',
       tasks: selectedRowIndex,
     };
 
@@ -235,12 +232,12 @@ function ToDoList() {
 
     if (data) {
       console.log('setshowpopup');
-      setShowBreak(false)
+      setShowBreak(false);
       swal(data && data.message[0], '', 'success');
-      setShowBreak(false)
+      setShowBreak(false);
     } else {
       // swal(message, '', 'error');
-      // setShowClockoutBtn(true);
+      setShowScrumPopup(false);
     }
     getDailyActivity();
   };
@@ -359,7 +356,6 @@ function ToDoList() {
 
   return (
     <>
-      {console.log('showClockoutBtn', showClockoutBtn)}
       {console.log('showScrum', showScrum)}
       {ShowDelete && (
         <SweetAlert
@@ -457,7 +453,7 @@ function ToDoList() {
             </Col>
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            {showScrum === false && (
+            {showScrum && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -469,7 +465,7 @@ function ToDoList() {
                 Send Scrum
               </Button>
             )}
-            {showClockoutBtn === false && (
+            {showClockoutBtn && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -480,8 +476,6 @@ function ToDoList() {
                 Clockout & Send Report
               </Button>
             )}
-             
-            
           </div>
         </Card.Body>
       </Card>
