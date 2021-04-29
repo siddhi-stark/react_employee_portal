@@ -79,10 +79,7 @@ function AllReports() {
           clockout: report.sign_out,
           total: report.estimation,
           report: (
-            <a
-              href={`/daily-report/${dt
-              }`}
-            >
+            <a href={`/daily-report/${dt}`}>
               <span>View Report</span>
             </a>
           ),

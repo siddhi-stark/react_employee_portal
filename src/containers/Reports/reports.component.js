@@ -43,9 +43,10 @@ function Reports(props) {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    
-    const dt =customFunctions.getDate(new Date(Number(props.match.params.date))) ;
-    console.log('date', dt);
+
+    const dt = customFunctions.getDate(
+      new Date(Number(props.match.params.date))
+    );
     setReportDate(dt);
     const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
