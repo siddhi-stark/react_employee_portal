@@ -19,7 +19,6 @@ export default function TextComponent(props) {
 
   return (
     <>
-      {console.log(errorMessage)}
       <Form.Group className={containerClass}>
         {label ? <Form.Label> {label} </Form.Label> : ''}
         {inputIcon ? <Image src={inputIcon} rounded /> : ''}

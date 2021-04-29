@@ -40,7 +40,6 @@ function EveningReport() {
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    console.log('data', data.data);
     if (data && data.data) {
       setPagination({
         activePage: data.paginator.current_page,
@@ -51,7 +50,6 @@ function EveningReport() {
       const row = [];
 
       data.data.evening_data.map((proj) => {
-        console.log('data', proj);
         row.push({
           task: proj.activity,
           project: proj.project_name,

@@ -71,17 +71,17 @@ function AllReports() {
       });
       const row = [];
       data.data.map((report) => {
-        localStorage.setItem(
-          'date',
-          customFunctions.getDate(report.created_at)
-        );
         row.push({
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: report.estimation,
           report: (
-            <a href="/daily-report">
+            <a
+              href={`/daily-report/${customFunctions.getDate(
+                report.created_at
+              )}`}
+            >
               <span>View Report</span>
             </a>
           ),
@@ -116,7 +116,6 @@ function AllReports() {
       isValid = false;
     }
     if (isValid) {
-      console.log('filter');
       setFilterErr('');
       getReports(1);
     }
@@ -137,7 +136,7 @@ function AllReports() {
         <Card>
           <Card.Body>
             <Card.Title>
-              Titleeeee
+              Reports
               <div className="pull-right">
                 <a
                   href="/"
@@ -146,7 +145,6 @@ function AllReports() {
                     e.preventDefault();
                     e.stopPropagation();
                     setShowFilter(true);
-                    // removeDesignation();
                   }}
                 >
                   <img src="images/filter.svg" alt="filter" />

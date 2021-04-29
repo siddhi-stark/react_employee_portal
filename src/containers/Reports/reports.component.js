@@ -30,21 +30,22 @@ const columns = [
   },
 ];
 
-function Reports() {
+function Reports(props) {
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
-  // const [showEvngReport, setShowEvngReport] = useState(false);
+  const [reportDate, setReportDate] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
     totalItems: 10,
   });
 
-  const getTableData = async (dt, pageNo = 0) => {
+  const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
+    const dt = props.match.params.date;
+    setReportDate(dt);
     const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    console.log('data', data.data);
     if (data && data.data) {
       setPagination({
         activePage: data.paginator.current_page,
@@ -55,7 +56,6 @@ function Reports() {
       const row = [];
 
       data.data.morning_data.map((proj) => {
-        console.log('evngData', proj);
         row.push({
           task: proj.activity,
           project: proj.project_name,
@@ -68,10 +68,8 @@ function Reports() {
       setRows(row);
     }
   };
-
   useEffect(() => {
-    const date = localStorage.getItem('date');
-    getTableData(date);
+    getTableData();
   }, []);
 
   return (
@@ -81,7 +79,7 @@ function Reports() {
         <Card>
           <Card.Body>
             <Row>
-              <Card.Title>Reports: {localStorage.getItem('date')}</Card.Title>
+              <Card.Title>Reports: {reportDate}</Card.Title>
               <div className="light-bg buttons d-flex align-items-center mt-3">
                 <Button
                   type="button"
@@ -100,7 +98,7 @@ function Reports() {
               </div>
 
               <Col className="mt-3">
-                {showButton === 1 ? (
+                {showButton ? (
                   <EveningReport />
                 ) : (
                   <Table
