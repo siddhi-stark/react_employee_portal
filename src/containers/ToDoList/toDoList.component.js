@@ -171,7 +171,7 @@ function ToDoList(props) {
                   setTaskId(task.id);
                 }}
               >
-                {task.tw_id === null ? <Image src="images/delete.png" /> : ''}
+                {task.tw_id ? '' : <Image src="images/delete.png" />}
               </a>
             </>
           ),
@@ -415,6 +415,12 @@ function ToDoList(props) {
                   )
                 }
                 showCheckbox
+                paginationProps={{
+                  ...pagination,
+                  onPageChange: (pageNo) => {
+                    getTableData(pageNo);
+                  },
+                }}
                 selectedRowItems={selectedRowIndex}
                 // onSelectRowsIndexes={(indexes) => {
                 //   console.log('indexes',indexes);
@@ -443,12 +449,7 @@ function ToDoList(props) {
                   });
                   setSelectedRowIndex(twId);
                 }}
-                paginationProps={{
-                  ...pagination,
-                  onPageChange: (pageNo) => {
-                    getTableData(pageNo);
-                  },
-                }}
+               
               />
             </Col>
           </Row>
