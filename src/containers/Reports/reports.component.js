@@ -4,7 +4,6 @@ import { Card, Row, Col, Button } from 'react-bootstrap';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-import EveningReport from './eveningReport.component';
 import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
 import customFunctions from '../../helper/customFunctions';
 
@@ -43,7 +42,6 @@ function Reports(props) {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-
     const dt = customFunctions.getDate(
       new Date(Number(props.match.params.date))
     );
@@ -51,15 +49,18 @@ function Reports(props) {
     const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
-      setPagination({
-        activePage: data.paginator.current_page,
-        itemsPerPage: data.paginator.limit,
-        totalItems: data.paginator.total_count,
-      });
-
+      if (data.paginator && Object.keys(data.paginator).length > 0) {
+        setPagination({
+          activePage: data.paginator.current_page,
+          itemsPerPage: pagination.itemsPerPage,
+          totalItems: data.paginator.total_count,
+        });
+      }
       const row = [];
-
-      data.data.morning_data.map((proj) => {
+      const reportData = showButton
+        ? data.data.morning_data
+        : data.data.evening_data;
+      reportData.map((proj) => {
         row.push({
           task: proj.activity,
           project: proj.project_name,
@@ -87,14 +88,20 @@ function Reports(props) {
               <div className="light-bg buttons d-flex align-items-center mt-3">
                 <Button
                   type="button"
-                  onClick={() => setShowButton(1)}
+                  onClick={() => {
+                    setShowButton(1);
+                    getTableData(1);
+                  }}
                   variant={showButton ? 'primary ml-1' : ''}
                 >
                   Morning Report
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => setShowButton(0)}
+                  onClick={() => {
+                    setShowButton(0);
+                    getTableData(1);
+                  }}
                   variant={!showButton ? 'secondary ml-1' : ''}
                 >
                   Evening Report
@@ -102,23 +109,19 @@ function Reports(props) {
               </div>
 
               <Col className="mt-3">
-                {showButton ? (
-                  <EveningReport />
-                ) : (
-                  <Table
-                    tableClass="table table-striped"
-                    columns={columns}
-                    rows={rows}
-                    showPagination
-                    showCheckbox
-                    paginationProps={{
-                      ...pagination,
-                      onPageChange: (pageNo) => {
-                        getTableData(pageNo);
-                      },
-                    }}
-                  />
-                )}
+                <Table
+                  tableClass="table table-striped"
+                  columns={columns}
+                  rows={rows}
+                  showPagination
+                  showCheckbox
+                  paginationProps={{
+                    ...pagination,
+                    onPageChange: (pageNo) => {
+                      getTableData(pageNo);
+                    },
+                  }}
+                />
               </Col>
             </Row>
           </Card.Body>
