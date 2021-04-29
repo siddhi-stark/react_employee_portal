@@ -59,21 +59,22 @@ function ToDoList(props) {
   const [ShowDelete, setShowDelete] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
-  const [startTime, setStartTime] = useState(new Date()); //eslint-disable-line
-  const [endTime, setEndTime] = useState(new Date()); //eslint-disable-line
-  const [hrs, setHours] = useState(''); //eslint-disable-line
-  const [min, setMinutes] = useState(''); //eslint-disable-line
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
+  const [hrs, setHours] = useState('');
+  const [min, setMinutes] = useState('');
 
   const [taskId, setTaskId] = useState(null);
-  const [staticStartTime, setStaticStartTime] = useState(new Date()); //eslint-disable-line
-  const [staticEndTime, setStaticEndTime] = useState(new Date()); //eslint-disable-line
-  const [staticHrs, setStaticHours] = useState(''); //eslint-disable-line
-  const [staticMin, setStaticMinutes] = useState(''); //eslint-disable-line
+  const [staticStartTime, setStaticStartTime] = useState(new Date());
+  const [staticEndTime, setStaticEndTime] = useState(new Date());
+  const [staticHrs, setStaticHours] = useState(''); // eslint-disable-line
+  const [staticMin, setStaticMinutes] = useState(''); // eslint-disable-line
   const [showScrum, setShowScrum] = useState(false);
   const [showClockoutBtn, setShowClockoutBtn] = useState(false);
   const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [isOverdue, setIsOverdue] = useState('');
   const [showErrorBlock, setShowErrorBlock] = useState(false);
+  const [type, setType] = useState('morning');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -195,18 +196,16 @@ function ToDoList(props) {
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
-    if (data) {
-      if (data.data.signout_mail === false) {
-        setShowClockoutBtn(true);
-      } else {
-        setShowClockoutBtn(false);
-      }
+    if (data && data.data) {
+      setShowClockoutBtn(!data.data.signout_mail);
+    } else {
+      setShowClockoutBtn(data.data.signout_mail);
     }
   };
 
   const onSendScrum = async () => {
     const postData = {
-      type: 'morning',
+      type,
       tasks: selectedRowIndex,
     };
 
@@ -715,6 +714,7 @@ function ToDoList(props) {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  setType('logout');
                   onSendScrum();
                 }}
               >
