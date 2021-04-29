@@ -49,13 +49,13 @@ export default function SimpleTable(props) {
     ...props,
   };
 
-  
-
   const [allSelected, setAllSelected] = useState(false);
   const [selectedAction, setSelectedAction] = useState('');
-  const [selectedRows, setSelectedRows] = useState(  rows.map((row, rowIndex) => {
-    return selectedRowItems.includes(rowIndex);
-  }));
+  const [selectedRows, setSelectedRows] = useState(
+    rows.map((row, rowIndex) => {
+      return selectedRowItems.includes(rowIndex);
+    })
+  );
   const [selectedRowIndexes, setSelectedRowIndexes] = useState([
     ...selectedRowItems,
   ]);

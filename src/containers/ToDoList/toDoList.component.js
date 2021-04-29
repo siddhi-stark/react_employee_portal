@@ -61,7 +61,6 @@ function ToDoList(props) {
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
   const [startTime, setStartTime] = useState(new Date()); //eslint-disable-line
   const [endTime, setEndTime] = useState(new Date()); //eslint-disable-line
-  // const [timeSpent, setTimeSpent] = useState(''); //eslint-disable-line
   const [hrs, setHours] = useState(''); //eslint-disable-line
   const [min, setMinutes] = useState(''); //eslint-disable-line
 
@@ -75,7 +74,6 @@ function ToDoList(props) {
   const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [isOverdue, setIsOverdue] = useState('');
   const [showErrorBlock, setShowErrorBlock] = useState(false);
-  // const [type, setType] = useState('morning');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -195,24 +193,9 @@ function ToDoList(props) {
     getTableData(1);
   }, [cntClearFilter]);
 
-  // const getBreakList = () => {
-  //   console.log('breaklist', BreakList);
-  //   if (!BreakList) return [];
-  //   const breakListOptions = [];
-  //   BreakList.map((mat) => {
-  //     console.log('mat',mat);
-  //     return breakListOptions.push({
-  //       label: mat.name,
-  //       id: mat.id,
-  //     });
-  //   });
-  //   return breakListOptions;
-  // };
-
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
-      console.log('data', data.data);
       if (data.data.signout_mail === false) {
         setShowClockoutBtn(true);
       } else {
@@ -222,7 +205,6 @@ function ToDoList(props) {
   };
 
   const onSendScrum = async () => {
-    console.log('selectedINdex', selectedRowIndex);
     const postData = {
       type: 'morning',
       tasks: selectedRowIndex,
@@ -232,41 +214,16 @@ function ToDoList(props) {
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
 
     if (data) {
-      console.log('setshowpopup');
       setShowBreak(false);
       swal(data && data.message[0], '', 'success');
       setShowBreak(false);
       setShowErrorBlock(false);
     } else {
-      // swal(message, '', 'error');
       setShowScrumPopup(false);
       setShowErrorBlock(true);
     }
     getDailyActivity();
   };
-
-  // const onSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (validator.allValid()) {
-  //     onSendScrum();
-  //   } else {
-  //     validator.showMessages();
-  //     forceUpdate(count + 1);
-  //   }
-  // };
-
-  // const addBreak = () => {
-  //   // console.log('addbreakkkkkkkkkkkkkkkk');
-  //   const list = breakData;
-  //   list.push({
-  //     selectedBreakOption: '',
-  //     startTime: '',
-  //     endTime: '',
-  //     timeSpend: '',
-  //   });
-  //   // console.log('list', list);
-  //   setBreakData([...list]);
-  // };
 
   const addBreak = () => {
     return setBreakData([
@@ -274,21 +231,6 @@ function ToDoList(props) {
       { selectedBreakOption: '', startTime: '', endTime: '', timeSpent: '' },
     ]);
   };
-
-  // const handleInputChange = (event, idx) => {
-  //   // console.log('breakData', breakData);
-  //   // console.log('idx', idx);
-  //   // console.log('event', event);
-  //   const { name, value } = event.target;
-  //   // console.log('name', name, value);
-  //   breakData[idx][name] = value;
-  //   // console.log('breakData', breakData[idx]);
-
-  //   setBreakData([...breakData]);
-  //   // setBreakData((inputValues) => {
-  //   //   return { ...inputValues, [name]: value };
-  //   // });
-  // };
 
   const getBreakTypes = () => {
     if (!BreakList) return [];
@@ -303,10 +245,8 @@ function ToDoList(props) {
   };
 
   const onComfirm = async () => {
-    // console.log('static', staticHrs, staticMin, staticStartTime, staticEndTime, selectedBreakOption);
     const BreakPostData = [];
     breakData.map((dt) => {
-      // const hr = Number(dt.hrs);
       return BreakPostData.push({
         description: dt.selectedBreakOption.label,
         start_time: customFunctions.getTime(dt.startTime),
@@ -322,9 +262,7 @@ function ToDoList(props) {
     const endPoint = `${Api.taskUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
-      console.log('breakresponseData', data.data.task_created_ids);
       data.data.task_created_ids.map((e) => {
-        console.log('eeee', e);
         selectedRowIndex.push(e);
         return e;
       });
@@ -334,7 +272,6 @@ function ToDoList(props) {
       setSelectedBreakOption();
       setStartTime();
       setEndTime();
-      console.log('generatedIds', selectedRowIndex);
     }
   };
 
@@ -359,7 +296,6 @@ function ToDoList(props) {
 
   return (
     <>
-      {console.log('showScrum', showScrum)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -383,14 +319,19 @@ function ToDoList(props) {
         <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
           <div className="img-text">
             <img src="images/fail.svg" alt="Success" /> Report Sent Failed !!
-  </div>
+          </div>
           <div className="close">
-            <button type="button" className="close" onClick={() => setShowErrorBlock(false)} data-dismiss="modal" aria-label="Close">
+            <button
+              type="button"
+              className="close"
+              onClick={() => setShowErrorBlock(false)}
+              data-dismiss="modal"
+              aria-label="Close"
+            >
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
         </div>
-
       )}
 
       <Card className="mt-3">
@@ -400,7 +341,7 @@ function ToDoList(props) {
               <Col>
                 <Card.Title>
                   ToDo
-                <div className="float-end">
+                  <div className="float-end">
                     <Button
                       size="sm"
                       variant="primary"
@@ -412,7 +353,7 @@ function ToDoList(props) {
                       }}
                     >
                       Add Task
-                  </Button>
+                    </Button>
                   </div>
                 </Card.Title>
               </Col>
@@ -428,8 +369,8 @@ function ToDoList(props) {
                   isOverdue ? (
                     <span className="badge badge-danger">Danger</span>
                   ) : (
-                      ''
-                    )
+                    ''
+                  )
                 }
                 showCheckbox
                 paginationProps={{
@@ -439,19 +380,10 @@ function ToDoList(props) {
                   },
                 }}
                 selectedRowItems={selectedRowIndex}
-                // onSelectRowsIndexes={(indexes) => {
-                //   console.log('indexes',indexes);
-                // }}
                 onSelectRowsIndexes={(rowIndex) => {
-                  // console.log('ids', rowIndex )
                   const twId = [];
                   taskList.map((task, ind) => {
-                    // console.log('twid', task);
-                    // console.log('ind', ind);
-                    // console.log('rowIndex', rowIndex);
                     rowIndex.map((i) => {
-                      // console.log('i',i);
-                      // console.log(ind===i);
                       if (ind === i) {
                         if (task.task_type === 'tw') {
                           twId.push(task.tw_id);
@@ -466,7 +398,6 @@ function ToDoList(props) {
                   });
                   setSelectedRowIndex(twId);
                 }}
-
               />
             </Col>
           </Row>
@@ -476,7 +407,6 @@ function ToDoList(props) {
                 variant="primary"
                 className="mb-3"
                 onClick={() => {
-                  // onSendScrum();
                   setShowScrumPopup(true);
                 }}
               >
@@ -534,7 +464,6 @@ function ToDoList(props) {
                   href="/"
                   className="pl-2"
                   onClick={(e) => {
-                    // setIndex(i);
                     setShowSkipBreak(true);
                     e.preventDefault();
                     e.stopPropagation();
@@ -625,8 +554,6 @@ function ToDoList(props) {
               breakData.length > 0 &&
               breakData.map((data, i) => (
                 <>
-                  {/* {console.log('dataaa', data)} */}
-
                   <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
                     <label htmlFor="exampleFormControlSelect1">
                       Break Type <sup className="text-danger">*</sup>
@@ -748,7 +675,6 @@ function ToDoList(props) {
               className="ms-4"
               onClick={(e) => {
                 onSendScrum(e);
-                // setType('logout');
               }}
             >
               Send Report
@@ -790,7 +716,6 @@ function ToDoList(props) {
                   e.preventDefault();
                   e.stopPropagation();
                   onSendScrum();
-                  // setShowScrumPopup(true);
                 }}
               >
                 Yes
@@ -832,7 +757,6 @@ function ToDoList(props) {
                 type="button"
                 className="btn btn-primary"
                 onClick={() => {
-                  // console.log('breakdata', breakData);
                   setShowSkipBreak(false);
                   breakData.splice(index, 1);
                   setBreakData(breakData);

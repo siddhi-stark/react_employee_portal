@@ -151,7 +151,6 @@ function Task(props) {
                   type="text"
                   value={taskName}
                   placeholder="Enter Task Name"
-                  // {...validator.message('taskName', taskName, 'required|taskName')}
                   errorMessage={validator.message(
                     'taskName',
                     taskName,
@@ -276,7 +275,6 @@ function Task(props) {
               type="submit"
               className="ms-4"
               onClick={(e) => {
-                //  setTaskId(null)
                 onSubmit(e);
               }}
             >
