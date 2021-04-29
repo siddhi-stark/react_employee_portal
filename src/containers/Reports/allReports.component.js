@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Button } from 'react-bootstrap';
+import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { TextInput } from '../../components/FormInputs';
@@ -79,37 +79,6 @@ function AllReports() {
     }
   };
 
-  // const getTableData = async (pageNo = 0) => {
-  //   const page = pageNo || pagination.current_page;
-  //   const endPoint = `${Api.reportUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
-  //   if (data && data.data) {
-  //     setPagination({
-  //       activePage: data.paginator.current_page,
-  //       itemsPerPage: data.paginator.limit,
-  //       totalItems: data.paginator.total_count,
-  //     });
-
-  //     const row = [];
-
-  //     data.data.map((proj) => {
-  //       row.push({
-  //         name: proj.name,
-  //         spend: proj.spend,
-  //         allocated: proj.allocated,
-  //         completed: proj.completed,
-  //         remaining: proj.remaining,
-  //         link: (
-  //           <a href="/reports">
-  //             <span>View Report</span>
-  //           </a>
-  //         ),
-  //       });
-  //       return proj;
-  //     });
-  //     setRows(row);
-  //   }
-  // };
   useEffect(() => {
     const Id = localStorage.getItem('userId');
     setUserId(Id);
@@ -152,6 +121,7 @@ function AllReports() {
               </Row>
 
               {showFilter === true && (
+                <Form>
                 <Row className="mt-3">
                   <Col sm={3}>
                     <div className="search-bar-input">
@@ -208,6 +178,7 @@ function AllReports() {
                     </div>
                   </Col>
                 </Row>
+                </Form>
               )}
 
               <Col className="mt-3">
