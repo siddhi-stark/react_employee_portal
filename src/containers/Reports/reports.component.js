@@ -40,20 +40,11 @@ function Reports() {
     totalItems: 10,
   });
 
-  // const getDailyReport = async (dt,pageNo = 0) => {
-  //   const page = pageNo || pagination.current_page;
-  //   const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
-  //   if(data) {
-  //     console.log('data', data);
-  //   }
-  // }
-
-  const getTableData = async (pageNo = 0) => {
+  const getTableData = async (dt, pageNo = 0) => {
     const page = pageNo || pagination.current_page;
     const endPoint = `${
       Api.dailyReportUrl
-    }?date=${'2021-03-24'}&page=${page}&limit=${pagination.itemsPerPage}`;
+    }?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     console.log('data', data.data);
     if (data && data.data) {
@@ -81,9 +72,8 @@ function Reports() {
   };
 
   useEffect(() => {
-    // const date = localStorage.getItem('date');
-    getTableData();
-    // getDailyReport(date);
+    const date = localStorage.getItem('date');
+    getTableData(date);
   }, []);
 
   const onMorningReport = () => {
@@ -96,15 +86,6 @@ function Reports() {
     setShowEvngReport(true);
   };
 
-  // onRegularExpense = () => {
-  // 	// e.preventDefault();
-  // 	const { expense_type } = this.state;
-  // 	this.setState({
-  // 		expense_type: "1"
-  // 	})
-  // 	var $this = this;
-  // 	$this.props.history.push('/add-newexpense');
-  // }
 
   return (
     <>
@@ -113,11 +94,9 @@ function Reports() {
         <Card>
           <Card.Body>
             <Row>
-              <div>Reports: 16/04/2021</div>
+              <div>Reports: {localStorage.getItem('date')}</div>
               <div className="light-bg buttons d-flex align-items-center mt-3">
-                {/* <button onClick={this.onRegularExpense} style={{ backgroundColor: this.state.expense_type == 1 ? "black" : "" }} className="btn btn-outline-secondary">
-														Regular Expenses
-                          </button> */}
+               
                 <Button
                   type="button"
                   onClick={() => onMorningReport()}
