@@ -4,7 +4,6 @@ import { Card, Row, Col, Button } from 'react-bootstrap';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
 import customFunctions from '../../helper/customFunctions';
 
 const columns = [
@@ -79,7 +78,6 @@ function Reports(props) {
 
   return (
     <>
-      <WelcomeScreen />
       <div className="mt-3">
         <Card>
           <Card.Body>

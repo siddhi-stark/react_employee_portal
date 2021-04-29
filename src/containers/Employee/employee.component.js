@@ -13,6 +13,7 @@ import Table from '../../components/Table/simpletable.component';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const columns = [
   {
@@ -34,6 +35,11 @@ const columns = [
 ];
 
 const validator = new SimpleReactValidator();
+
+const items = [
+  { to: '/', label: 'Home' },
+  { to: '/reports', label: 'Designation' },
+];
 
 function Employee() {
   const [rows, setRows] = useState([]);
@@ -493,7 +499,10 @@ function Employee() {
 
   return (
     <>
-      {/* <WelcomeScreen /> */}
+       <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
+          <Breadcrumb items={items} />
+        </div>
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the employee ?"

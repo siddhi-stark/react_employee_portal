@@ -6,7 +6,7 @@ import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
-import WelcomeScreen from '../../components/WelcomScreen/WelcomeScreen.component';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const columns = [
   {
@@ -29,6 +29,11 @@ const columns = [
     id: 'report',
     label: 'View Report',
   },
+];
+
+const items = [
+  { to: '/', label: 'Home' },
+  { to: '/reports', label: 'Reports' },
 ];
 
 function AllReports() {
@@ -129,7 +134,10 @@ function AllReports() {
 
   return (
     <>
-      <WelcomeScreen />
+     <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">Reports</h2>
+          <Breadcrumb items={items} />
+        </div>
       <div className="mt-3">
         <Card>
           <Card.Body>

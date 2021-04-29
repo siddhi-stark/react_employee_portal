@@ -23,7 +23,8 @@ function Layout(props) {
                   <div className="row">
                     <div className="col-xl-8" id="main-content">
                       <h2 className="main-content-title tx-24 mg-b-5">
-                        Welcome To Dashboard
+                       Dashboard
+                      
                       </h2>
                     </div>
                   </div>

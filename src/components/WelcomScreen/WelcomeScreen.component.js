@@ -36,39 +36,6 @@ function WelcomeScreen() {
           </Col>
         </Row>
       </Jumbotron>
-
-      {/* <Card>
-            <Card.Body>
-              <Row>
-                <Col md={2}>
-                  <h5 className="card-title mb-0">Weekly Status</h5>
-                  <div className="weekly-status">
-                    <ul className="list-unstyled p-0">
-                      <li>
-                        Completed <span className="bluebg">65%</span>
-                      </li>
-                      <li>
-                        Pending <span className="pinkbg">25%</span>
-                      </li>
-                      <li>
-                        Remaining <span className="yellowbg">10%</span>
-                      </li>
-                    </ul>
-                  </div>
-                </Col>
-                <Col md={2}>
-                  <div className="persentage-circle">
-                    <img src="/images/persentage-circle.svg" alt="img" />
-                  </div>
-                </Col>
-              </Row>
-              <div className="last-week">
-                <a href="#">
-                  <img src="/images/previous.svg" alt="" /> Last Week
-                </a>
-              </div>
-            </Card.Body>
-          </Card> */}
     </>
   );
 }

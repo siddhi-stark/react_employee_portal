@@ -7,6 +7,7 @@ import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constants';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const columns = [
   {
@@ -41,6 +42,11 @@ const columns = [
     id: 'link',
     label: 'TW Link',
   },
+];
+
+const items = [
+  { to: '/', label: 'Home' },
+  { to: '/projects', label: 'Projects' },
 ];
 
 function Projects() {
@@ -137,6 +143,12 @@ function Projects() {
 
   return (
     <>
+    
+        <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">Projects</h2>
+          <Breadcrumb items={items} />
+        </div>
+        <section className="content-area">
       <div className="mt-3">
         <Card>
           <Card.Body>
@@ -203,6 +215,7 @@ function Projects() {
           </Card.Body>
         </Card>
       </div>
+      </section>
     </>
   );
 }

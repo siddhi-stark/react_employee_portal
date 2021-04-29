@@ -1,16 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-// import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
-// import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
-// import AuthApi from '../../../helper/authApi';
-// import Api from '../../../helper/api';
+
 
 function Dashboard() {
-  // const getClockInTime = async () => {
-  //   const endPoint = `${Api.clockInUrl}`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
-  //   // if(data && data.data){
-  //   }
+ 
 
   return (
     <>

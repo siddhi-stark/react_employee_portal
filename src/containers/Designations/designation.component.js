@@ -8,6 +8,7 @@ import { ModalInput, TextInput } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const columns = [
   {
@@ -21,6 +22,11 @@ const columns = [
 ];
 
 const validator = new SimpleReactValidator();
+
+const items = [
+  { to: '/', label: 'Home' },
+  { to: '/reports', label: 'Designation' },
+];
 
 function Designation() {
   const [rows, setRows] = useState([]);
@@ -185,6 +191,11 @@ function Designation() {
 
   return (
     <>
+      <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">Designation</h2>
+          <Breadcrumb items={items} />
+        </div>
+
       {showDelete && (
         <SweetAlert
           title="Are you sure, do you want to remove the designation ?"
