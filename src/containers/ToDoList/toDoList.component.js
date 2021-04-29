@@ -74,6 +74,7 @@ function ToDoList(props) {
   const [showClockoutBtn, setShowClockoutBtn] = useState(false);
   const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [isOverdue, setIsOverdue] = useState('');
+  const [showErrorBlock, setShowErrorBlock] = useState(false);
   // const [type, setType] = useState('morning');
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -235,9 +236,11 @@ function ToDoList(props) {
       setShowBreak(false);
       swal(data && data.message[0], '', 'success');
       setShowBreak(false);
+      setShowErrorBlock(false);
     } else {
       // swal(message, '', 'error');
       setShowScrumPopup(false);
+      setShowErrorBlock(true);
     }
     getDailyActivity();
   };
@@ -376,28 +379,42 @@ function ToDoList(props) {
         </SweetAlert>
       )}
 
-      <Card>
+      {showErrorBlock && (
+        <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
+          <div className="img-text">
+            <img src="images/fail.svg" alt="Success" /> Report Sent Failed !!
+  </div>
+          <div className="close">
+            <button type="button" className="close" onClick={() => setShowErrorBlock(false)} data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+
+      )}
+
+      <Card className="mt-3">
         <Card.Body>
           <Row>
             <Row>
               <Col>
-                <h4>ToDo</h4>
-              </Col>
-              <Col>
+                <Card.Title>
+                  ToDo
                 <div className="float-end">
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    type="submit"
-                    onClick={() => {
-                      localStorage.removeItem('taskid');
-                      setModalShow(true);
-                      forceUpdate(count + 1);
-                    }}
-                  >
-                    Add Task
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      type="submit"
+                      onClick={() => {
+                        localStorage.removeItem('taskid');
+                        setModalShow(true);
+                        forceUpdate(count + 1);
+                      }}
+                    >
+                      Add Task
                   </Button>
-                </div>
+                  </div>
+                </Card.Title>
               </Col>
             </Row>
 
@@ -411,8 +428,8 @@ function ToDoList(props) {
                   isOverdue ? (
                     <span className="badge badge-danger">Danger</span>
                   ) : (
-                    ''
-                  )
+                      ''
+                    )
                 }
                 showCheckbox
                 paginationProps={{
@@ -449,7 +466,7 @@ function ToDoList(props) {
                   });
                   setSelectedRowIndex(twId);
                 }}
-               
+
               />
             </Col>
           </Row>
