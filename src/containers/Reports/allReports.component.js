@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { TextInput } from '../../components/FormInputs';
+import { TextInput, Datepicker } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -37,20 +35,35 @@ function AllReports() {
   const [rows, setRows] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
   const [userId, setUserId] = useState(null);
-  // const [showDailyReport, setShowDailyReport] = useState(false);
+  const [keyword, setKeyword] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [filterErr, setFilterErr] = useState('');
+  const [cntClearFilter, setCntClearFilter] = useState(0);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
     totalItems: 10,
   });
 
-  const getReports = async () => {
+  const getReports = async (pageNo = 0) => {
+    const page = pageNo || pagination.current_page;
+    let endPoint;
+    const hasSearch = keyword !== '';
+    endPoint = `${Api.reportUrl}?limit=${pagination.itemsPerPage}&page=${page}`;
+    if (hasSearch) {
+      endPoint = `${endPoint}keyword=${keyword}&`;
+    }
+    if (fromDate && toDate) {
+      endPoint = `${endPoint}&start_date=${customFunctions.getDate(
+        fromDate
+      )}&end_date=${customFunctions.getDate(toDate)}`;
+    }
     const postData = {
       userId: [userId],
     };
-    const { data } = await AuthApi.postDataToServer(Api.reportUrl, postData);
+    const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
-      console.log('reportData', data.data);
       setPagination({
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
@@ -80,14 +93,42 @@ function AllReports() {
   };
 
   useEffect(() => {
-    const Id = localStorage.getItem('userId');
-    setUserId(Id);
-  });
+    async function getData() {
+      getReports(1);
+      const Id = localStorage.getItem('userId');
+      setUserId(Id);
+    }
+    getData();
+  }, []);
 
   useEffect(() => {
-    // getTableData();
-    getReports();
-  }, []);
+    getReports(1);
+  }, [cntClearFilter]);
+
+  const onFilter = (e) => {
+    e.preventDefault();
+    let filterError = '';
+    let isValid = true;
+
+    if (fromDate === '' && toDate === '') {
+      filterError = 'Please select Dates';
+      setFilterErr(filterError);
+      isValid = false;
+    }
+    if (isValid) {
+      console.log('filter');
+      setFilterErr('');
+      getReports(1);
+    }
+  };
+
+  const onClear = () => {
+    setFilterErr('');
+    setKeyword('');
+    setFromDate('');
+    setToDate('');
+    setCntClearFilter(cntClearFilter + 1);
+  };
 
   return (
     <>
@@ -95,89 +136,91 @@ function AllReports() {
       <div className="mt-3">
         <Card>
           <Card.Body>
+            <Card.Title>
+              Titleeeee
+              <div className="pull-right">
+                <a
+                  href="/"
+                  className=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setShowFilter(true);
+                    // removeDesignation();
+                  }}
+                >
+                  <img src="images/filter.svg" alt="filter" />
+                </a>
+              </div>
+            </Card.Title>
             <Row>
-              <Row>
-                <Col>
-                  <div className="pull-left">
-                    <h5>All Reports</h5>
-                  </div>
-                </Col>
-                <Col>
-                  <div className="pull-right">
-                    <a
-                      href="/"
-                      className=""
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setShowFilter(true);
-                        // removeDesignation();
-                      }}
-                    >
-                      <img src="images/filter.svg" alt="filter" />
-                    </a>
-                  </div>
-                </Col>
-              </Row>
-
               {showFilter === true && (
-                <Form>
-                <Row className="mt-3">
-                  <Col sm={3}>
-                    <div className="search-bar-input">
-                      <TextInput
-                        inputClass="form-control"
-                        // value={keyword}
-                        placeholder="employee name"
-                        //   onInputChange={(e) => {
-                        //     setKeyword(e.target.value);
-                        //  }}
+                <Form onSubmit={(e) => onFilter(e)}>
+                  <Row className="mt-3">
+                    <Col sm={2}>
+                      <div className="search-bar-input">
+                        <TextInput
+                          inputClass="form-control"
+                          value={keyword}
+                          placeholder="search.."
+                          onInputChange={(e) => {
+                            setFilterErr('');
+                            setKeyword(e.target.value);
+                          }}
+                        />
+                      </div>
+                    </Col>
+
+                    <Col sm={3}>
+                      <Datepicker
+                        className="form-control"
+                        selected={fromDate}
+                        onChange={(e) => {
+                          setFromDate(e);
+                        }}
+                        autoComplete="off"
+                        name="startDate"
+                        dateFormat="MM/dd/yyyy"
+                        placeholderText=" MM/DD/YYYY"
+                        errorMessage={filterErr}
                       />
-                    </div>
-                  </Col>
+                    </Col>
 
-                  <Col sm={3}>
-                    <DatePicker
-                      className="form-control"
-                      // selected={date}
-                      // onChange={(date) => {
-                      //   this.setState({ workOrderDate: date });
-                      //   this.restrictCompletionDate(date);
-                      // }}
-                      // onChange={(e) => { this.setState({ workOrderDate: e }); this.restrictCompletionDate(e) }}
-                      // onChange={this.dateChange}
-                      autoComplete="off"
-                      name="startDate"
-                      dateFormat="MM/dd/yyyy"
-                      placeholderText=" MM/DD/YYYY"
-                    />
-                  </Col>
+                    <Col sm={3}>
+                      <Datepicker
+                        className="form-control"
+                        selected={toDate}
+                        onChange={(e) => {
+                          setToDate(e);
+                        }}
+                        autoComplete="off"
+                        name="startDate"
+                        dateFormat="MM/dd/yyyy"
+                        placeholderText=" MM/DD/YYYY"
+                        errorMessage={filterErr}
+                      />
+                    </Col>
 
-                  <Col sm={3}>
-                    <DatePicker
-                      className="form-control"
-                      // selected={date}
-                      // onChange={(date) => {
-                      //   this.setState({ workOrderDate: date });
-                      //   this.restrictCompletionDate(date);
-                      // }}
-                      // onChange={(e) => { this.setState({ workOrderDate: e }); this.restrictCompletionDate(e) }}
-                      // onChange={this.dateChange}
-                      autoComplete="off"
-                      name="startDate"
-                      dateFormat="MM/dd/yyyy"
-                      placeholderText=" MM/DD/YYYY"
-                    />
-                  </Col>
+                    <Col sm={2}>
+                      <div className="form-group">
+                        <Button type="submit" className="btn btn-primary">
+                          Filter
+                        </Button>
+                      </div>
+                    </Col>
 
-                  <Col sm={2}>
-                    <div className="form-group">
-                      <Button type="button" className="btn btn-primary">
-                        Filter
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
+                    <Col sm={2}>
+                      <div className="form-group">
+                        <Button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => onClear()}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
                 </Form>
               )}
 

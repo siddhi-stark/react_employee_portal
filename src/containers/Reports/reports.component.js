@@ -33,7 +33,7 @@ const columns = [
 function Reports() {
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
-  const [showEvngReport, setShowEvngReport] = useState(false);
+  // const [showEvngReport, setShowEvngReport] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -42,9 +42,7 @@ function Reports() {
 
   const getTableData = async (dt, pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${
-      Api.dailyReportUrl
-    }?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     console.log('data', data.data);
     if (data && data.data) {
@@ -76,17 +74,6 @@ function Reports() {
     getTableData(date);
   }, []);
 
-  const onMorningReport = () => {
-    setShowButton(1);
-    setShowEvngReport(false);
-  };
-
-  const onEveningReport = () => {
-    setShowButton(0);
-    setShowEvngReport(true);
-  };
-
-
   return (
     <>
       <WelcomeScreen />
@@ -94,27 +81,26 @@ function Reports() {
         <Card>
           <Card.Body>
             <Row>
-              <div>Reports: {localStorage.getItem('date')}</div>
+              <Card.Title>Reports: {localStorage.getItem('date')}</Card.Title>
               <div className="light-bg buttons d-flex align-items-center mt-3">
-               
                 <Button
                   type="button"
-                  onClick={() => onMorningReport()}
-                  variant={showButton === 1 ? 'primary ml-1' : ''}
+                  onClick={() => setShowButton(1)}
+                  variant={showButton ? 'primary ml-1' : ''}
                 >
                   Morning Report
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => onEveningReport()}
-                  variant={showButton === 0 ? 'secondary ml-1' : ''}
+                  onClick={() => setShowButton(0)}
+                  variant={!showButton ? 'secondary ml-1' : ''}
                 >
                   Evening Report
                 </Button>
               </div>
 
               <Col className="mt-3">
-                {showEvngReport === true ? (
+                {showButton === 1 ? (
                   <EveningReport />
                 ) : (
                   <Table

@@ -7,6 +7,7 @@ import RadioInput from './radio.component';
 import CheckboxInput from './checkbox.component';
 import DropdownInput from './selectDropdown.component';
 import ModalInput from './modal.component';
+import Datepicker from './datepicker.component';
 
 export {
   TextInput,
@@ -16,4 +17,5 @@ export {
   CheckboxInput,
   DropdownInput,
   ModalInput,
+  Datepicker,
 };

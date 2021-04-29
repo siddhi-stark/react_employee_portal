@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -36,11 +36,9 @@ function EveningReport() {
     totalItems: 10,
   });
 
-  const getTableData = async (pageNo = 0) => {
+  const getTableData = async (dt, pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${
-      Api.dailyReportUrl
-    }?date=${'2021-03-24'}&page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     console.log('data', data.data);
     if (data && data.data) {
@@ -68,36 +66,30 @@ function EveningReport() {
   };
 
   useEffect(() => {
-    // const date = localStorage.getItem('date');
-    getTableData();
-    // getDailyReport(date);
+    const date = localStorage.getItem('date');
+    getTableData(date);
   }, []);
 
   return (
     <>
       <div className="mt-3">
-        <Card>
-          <Card.Body>
-            <Row>
-              <div>Projects</div>
-              <Col className="mt-3">
-                <Table
-                  tableClass="table table-striped"
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  showCheckbox
-                  paginationProps={{
-                    ...pagination,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                />
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
+        <Row>
+          <Col className="mt-3">
+            <Table
+              tableClass="table table-striped"
+              columns={columns}
+              rows={rows}
+              showPagination
+              showCheckbox
+              paginationProps={{
+                ...pagination,
+                onPageChange: (pageNo) => {
+                  getTableData(pageNo);
+                },
+              }}
+            />
+          </Col>
+        </Row>
       </div>
     </>
   );
