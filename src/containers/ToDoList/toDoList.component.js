@@ -74,6 +74,7 @@ function ToDoList(props) {
   const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [isOverdue, setIsOverdue] = useState('');
   const [showErrorBlock, setShowErrorBlock] = useState(false);
+  const [showSuccessBlock, setShowSuccessBlock] = useState(false);
   const [type, setType] = useState('morning');
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -213,13 +214,15 @@ function ToDoList(props) {
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
 
     if (data) {
+      setShowScrum(false);
       setShowBreak(false);
-      swal(data && data.message[0], '', 'success');
       setShowBreak(false);
       setShowErrorBlock(false);
+      setShowSuccessBlock(true);
     } else {
       setShowScrumPopup(false);
       setShowErrorBlock(true);
+      setShowSuccessBlock(false);
     }
     getDailyActivity();
   };
@@ -324,6 +327,25 @@ function ToDoList(props) {
               type="button"
               className="close"
               onClick={() => setShowErrorBlock(false)}
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showSuccessBlock && (
+        <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
+          <div className="img-text">
+            <img src="images/success.svg" alt="Success" /> Report Sent
+            Successfully
+          </div>
+          <div className="close">
+            <button
+              type="button"
+              className="close"
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -715,6 +737,7 @@ function ToDoList(props) {
                   e.preventDefault();
                   e.stopPropagation();
                   setType('logout');
+                  setShowScrumPopup(false);
                   onSendScrum();
                 }}
               >

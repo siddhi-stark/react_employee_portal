@@ -18,18 +18,16 @@ function Dashboard() {
         const stime = data.data.clock_in_time.split(' ');
         const newtime = stime[0];
         setSignInTime(newtime);
-        if (data.data.morning_mail === false) {
+        if (data.data.morning_mail === true) {
           setShowScrumBtn(true);
         } else {
           setShowScrumBtn(false);
         }
         if (data.data.clock_in_time) {
           setShowClockButton(false);
-          // setShowToDoList(true);
         }
       } else {
         setShowClockButton(true);
-        // setShowToDoList(false);
       }
     }
   };
@@ -96,8 +94,6 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            {/* <div className="mt-3">{showButton === false && <ToDoList />}</div> */}
-            {/* <addTaskComponent /> */}
             {showClockButton === false && <ToDoList showScrum={showScrumBtn} />}
           </Col>
           <Col xl={4} id="right-sidebar">
