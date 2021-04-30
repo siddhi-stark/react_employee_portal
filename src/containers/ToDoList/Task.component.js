@@ -4,11 +4,7 @@ import { Row, Col, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
-import {
-  ModalInput,
-  TextInput,
-  Datepicker,
-} from '../../components/FormInputs';
+import { ModalInput, TextInput, Datepicker } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 

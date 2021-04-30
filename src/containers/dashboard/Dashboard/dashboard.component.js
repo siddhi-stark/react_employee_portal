@@ -1,53 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
-import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
-import AuthApi from '../../../helper/authApi';
-import Api from '../../../helper/api';
-import ToDoList from '../../ToDoList/toDoList.component';
+// import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
+// import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
+// import AuthApi from '../../../helper/authApi';
+// import Api from '../../../helper/api';
+// import ToDoList from '../../ToDoList/toDoList.component';
 
 function Dashboard() {
-  const [signInTime, setSignInTime] = useState('');
-  const [showClockButton, setShowClockButton] = useState(true);
-  const [showScrumBtn, setShowScrumBtn] = useState(false);
+  // const [signInTime, setSignInTime] = useState('');
+  // const [showClockButton, setShowClockButton] = useState(true);
+  // const [showScrumBtn, setShowScrumBtn] = useState(false);
 
-  const getDailyActivity = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
-    if (data) {
-      if (data.data.clock_in_time) {
-        const stime = data.data.clock_in_time.split(' ');
-        const newtime = stime[0];
-        setSignInTime(newtime);
-        if (data.data.morning_mail === true) {
-          setShowScrumBtn(true);
-        } else {
-          setShowScrumBtn(false);
-        }
-        if (data.data.clock_in_time) {
-          setShowClockButton(false);
-        }
-      } else {
-        setShowClockButton(true);
-      }
-    }
-  };
+  // const getDailyActivity = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
+  //   if (data) {
+  //     if (data.data.clock_in_time) {
+  //       const stime = data.data.clock_in_time.split(' ');
+  //       const newtime = stime[0];
+  //       setSignInTime(newtime);
+  //       if (data.data.morning_mail === true) {
+  //         setShowScrumBtn(true);
+  //       } else {
+  //         setShowScrumBtn(false);
+  //       }
+  //       if (data.data.clock_in_time) {
+  //         setShowClockButton(false);
+  //       }
+  //     } else {
+  //       setShowClockButton(true);
+  //     }
+  //   }
+  // };
 
-  const getClockInTime = async () => {
-    const endPoint = `${Api.clockInUrl}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
-      setSignInTime(data.data.sign_in_time);
-    }
-    getDailyActivity();
-  };
+  // const getClockInTime = async () => {
+  //   const endPoint = `${Api.clockInUrl}`;
+  //   const { data } = await AuthApi.getDataFromServer(endPoint);
+  //   if (data && data.data) {
+  //     setSignInTime(data.data.sign_in_time);
+  //   }
+  //   getDailyActivity();
+  // };
 
-  useEffect(() => {
-    getDailyActivity();
-  });
+  // useEffect(() => {
+  //   getDailyActivity();
+  // });
 
   return (
     <>
-      <div className="page-header">
+      {/* <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>
           <Breadcrumb />
@@ -206,7 +206,7 @@ function Dashboard() {
             </div>
           </Col>
         </Row>
-      </section>
+      </section> */}
     </>
   );
 }

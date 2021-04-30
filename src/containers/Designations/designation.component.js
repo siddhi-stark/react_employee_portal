@@ -192,9 +192,9 @@ function Designation() {
   return (
     <>
       <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Designation</h2>
-          <Breadcrumb items={items} />
-        </div>
+        <h2 className="main-content-title tx-24 mg-b-5">Designation</h2>
+        <Breadcrumb items={items} />
+      </div>
 
       {showDelete && (
         <SweetAlert

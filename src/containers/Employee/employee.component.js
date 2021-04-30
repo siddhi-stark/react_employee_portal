@@ -499,10 +499,10 @@ function Employee() {
 
   return (
     <>
-       <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
-          <Breadcrumb items={items} />
-        </div>
+      <div className="title-breadcrumb-section">
+        <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
+        <Breadcrumb items={items} />
+      </div>
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the employee ?"

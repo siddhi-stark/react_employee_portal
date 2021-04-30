@@ -114,7 +114,7 @@ function Projects() {
             ),
           completion: <ProgressBar variant="success" now={proj.completion} />,
           link: (
-            <a href={`${constants.link}${proj.tw_id}`}>
+            <a href={`${constants.link}${proj.tw_id}`} target="_blank">
               <span>
                 <Image src="/images/redirect.png" />
               </span>
@@ -143,78 +143,76 @@ function Projects() {
 
   return (
     <>
-    
-        <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Projects</h2>
-          <Breadcrumb items={items} />
-        </div>
-        <section className="content-area">
-      <div className="mt-3">
-        <Card>
-          <Card.Body>
-            <Row>
-              <Row>
-                <Col>
-                  <div className="pull-left">
-                    <h5>Projects</h5>
-                  </div>
-                </Col>
-              </Row>
-
-              <Row className="mt-3">
-                <Col md={4}>
-                  <div className="search-bar-input">
-                    <TextInput
-                      inputClass="form-control"
-                      value={keyword}
-                      placeholder="search.."
-                      onInputChange={(e) => {
-                        setKeyword(e.target.value);
-                      }}
-                    />
-                    <Button
-                      variant="primary"
-                      type="button"
-                      onClick={() => getTableData(1)}
-                    >
-                      <Image src="images/search.svg" className="svg" />
-                    </Button>
-                  </div>
-                </Col>
-
-                <Col md={4}>
-                  <div className="float-end mt-1">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      type="reset"
-                      onClick={() => onClear()}
-                    >
-                      Clear
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-
-              <Col className="mt-3">
-                <Table
-                  tableClass="table table-striped"
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  showCheckbox
-                  paginationProps={{
-                    ...pagination,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                />
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
+      <div className="title-breadcrumb-section">
+        <h2 className="main-content-title tx-24 mg-b-5">Projects</h2>
+        <Breadcrumb items={items} />
       </div>
+      <section className="content-area">
+        <div className="mt-3">
+          <Card>
+            <Card.Body>
+              <Row>
+                <Row>
+                  <Col>
+                    <div className="pull-left">
+                      <h5>Projects</h5>
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="mt-3">
+                  <Col md={4}>
+                    <div className="search-bar-input">
+                      <TextInput
+                        inputClass="form-control"
+                        value={keyword}
+                        placeholder="search.."
+                        onInputChange={(e) => {
+                          setKeyword(e.target.value);
+                        }}
+                      />
+                      <Button
+                        variant="primary"
+                        type="button"
+                        onClick={() => getTableData(1)}
+                      >
+                        <Image src="images/search.svg" className="svg" />
+                      </Button>
+                    </div>
+                  </Col>
+
+                  <Col md={4}>
+                    <div className="float-end mt-1">
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        type="reset"
+                        onClick={() => onClear()}
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+
+                <Col className="mt-3">
+                  <Table
+                    tableClass="table table-striped"
+                    columns={columns}
+                    rows={rows}
+                    showPagination
+                    paginationProps={{
+                      ...pagination,
+                      onPageChange: (pageNo) => {
+                        getTableData(pageNo);
+                      },
+                    }}
+                  />
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </div>
       </section>
     </>
   );

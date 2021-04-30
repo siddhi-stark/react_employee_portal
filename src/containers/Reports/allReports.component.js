@@ -134,10 +134,10 @@ function AllReports() {
 
   return (
     <>
-     <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Reports</h2>
-          <Breadcrumb items={items} />
-        </div>
+      <div className="title-breadcrumb-section">
+        <h2 className="main-content-title tx-24 mg-b-5">Reports</h2>
+        <Breadcrumb items={items} />
+      </div>
       <div className="mt-3">
         <Card>
           <Card.Body>

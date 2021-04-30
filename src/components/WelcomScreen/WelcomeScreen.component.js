@@ -1,8 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Row, Col, Jumbotron, Button } from 'react-bootstrap';
+// import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+import ToDoList from '../../containers/ToDoList/toDoList.component';
 
 function WelcomeScreen() {
+  const [signInTime, setSignInTime] = useState('');
+  const [showClockButton, setShowClockButton] = useState(true);
+  const [showScrumBtn, setShowScrumBtn] = useState(false);
+  const path = window.location.pathname;
+
+  const getDailyActivity = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
+    if (data) {
+      if (data.data.clock_in_time) {
+        const stime = data.data.clock_in_time.split(' ');
+        const newtime = stime[0];
+        setSignInTime(newtime);
+        if (data.data.morning_mail === true) {
+          setShowScrumBtn(true);
+        } else {
+          setShowScrumBtn(false);
+        }
+        if (data.data.clock_in_time) {
+          setShowClockButton(false);
+        }
+      } else {
+        setShowClockButton(true);
+      }
+    }
+  };
+
+  const getClockInTime = async () => {
+    const endPoint = `${Api.clockInUrl}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data && data.data) {
+      setSignInTime(data.data.sign_in_time);
+    }
+    getDailyActivity();
+  };
+
+  useEffect(() => {
+    getDailyActivity();
+  });
+
   return (
     <>
       <Jumbotron className="welcome-box">
@@ -22,11 +65,17 @@ function WelcomeScreen() {
           <Col md={2}>
             <div className="check-in">
               <div className="time-count text-center">
-                <span>00 : 00</span>
+                <span>{signInTime}</span>
               </div>
-              <Button type="button" className="btn btn-primary">
-                Clock In
-              </Button>
+              {showClockButton === true && (
+                <Button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => getClockInTime()}
+                >
+                  Clock In
+                </Button>
+              )}
             </div>
           </Col>
           <Col md={5}>
@@ -36,6 +85,9 @@ function WelcomeScreen() {
           </Col>
         </Row>
       </Jumbotron>
+      {path === '/'
+        ? showClockButton === false && <ToDoList showScrum={showScrumBtn} />
+        : ''}
     </>
   );
 }

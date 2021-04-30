@@ -5,7 +5,12 @@ import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import customFunctions from '../../helper/customFunctions';
-import { ModalInput, TextInput, DropdownInput, Datepicker } from '../../components/FormInputs';
+import {
+  ModalInput,
+  TextInput,
+  DropdownInput,
+  Datepicker,
+} from '../../components/FormInputs';
 // import {
 //   ModalInput,
 //   TextInput,
