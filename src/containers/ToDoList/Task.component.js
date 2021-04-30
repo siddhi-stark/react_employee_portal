@@ -17,8 +17,8 @@ const validator = new SimpleReactValidator();
 function Task(props) {
   const [taskHrs, setTaskHours] = useState('');
   const [taskMins, setTaskMinutes] = useState('');
-  const [taskStartTime, setTaskStartTime] = useState(new Date());
-  const [taskEndTime, setTaskEndTime] = useState(new Date());
+  const [taskStartTime, setTaskStartTime] = useState('');
+  const [taskEndTime, setTaskEndTime] = useState('');
   const [description, setDescription] = useState('');
   const [taskName, setTaskName] = useState('');
   const [count, forceUpdate] = useState(0);
@@ -30,6 +30,7 @@ function Task(props) {
     if (data) {
       const dt = new Date();
       const startTm = data.data.start_time;
+      console.log('startm', startTm);
       const hrmin = startTm.split(':');
       dt.setHours(hrmin[0]);
       dt.setMinutes(hrmin[1]);
@@ -37,16 +38,22 @@ function Task(props) {
 
       const dt1 = new Date();
       const endTm = data.data.end_time;
+      console.log('endTm', endTm);
       const hrminNew = endTm.split(':');
       dt1.setHours(hrminNew[0]);
       dt1.setMinutes(hrminNew[1]);
       setTaskEndTime(dt1);
 
       const spent = data.data.estimation;
-      const spentNew = spent.split(' ');
-      const spent1 = spentNew[0];
+      console.log('spent', spent);
+      const spentNew = spent.split('Hrs');
+
+      const spent1 = spentNew[0] ? spentNew[0] : 0;
+      const spentNewMins = spentNew[1].split('Mins');
+
+      // const spent3 = spentNew[1] ? spentNew[1] : 0;
       setTaskHours(spent1);
-      const spent2 = spentNew[2];
+      const spent2 = spentNewMins[0] ? spentNewMins[0] : 0;
       setTaskMinutes(spent2);
 
       setTaskName(data.data.content);
@@ -173,6 +180,11 @@ function Task(props) {
                   showTimeSelectOnly="showTimeSelectOnly"
                   timeIntervals="1"
                   dateFormat="h:mm aa"
+                  errorMessage={validator.message(
+                    'Start Time',
+                    taskStartTime,
+                    'required'
+                  )}
                 />
               </Col>
               <Col sm={2}>
@@ -183,8 +195,11 @@ function Task(props) {
                   selected={taskEndTime}
                   onChange={(e) => {
                     setTaskEndTime(e);
+
                     const taskStrtTime = new Date(e);
+
                     const taskEnTime = new Date(taskStartTime);
+                    console.log('taskstarttime', taskStrtTime, taskEnTime);
                     let differenceInTasksTime =
                       Math.abs(taskEnTime.getTime() - taskStrtTime.getTime()) /
                       1000;
@@ -214,6 +229,11 @@ function Task(props) {
                   showTimeSelectOnly="showTimeSelectOnly"
                   timeIntervals="1"
                   dateFormat="h:mm aa"
+                  errorMessage={validator.message(
+                    'End Time',
+                    taskEndTime,
+                    'required'
+                  )}
                 />
               </Col>
               <Col sm={2}>
@@ -221,7 +241,7 @@ function Task(props) {
                   label="Time Spent"
                   containerClass="form-group"
                   type="text"
-                  value={taskHrs + 'Hrs' + ' ' + taskMins + 'Mins'} // eslint-disable-line
+                  value={`${taskHrs} Hrs ${taskMins} Mins`}
                 />
               </Col>
               <Col sm={6}>

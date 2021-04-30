@@ -296,8 +296,19 @@ function ToDoList(props) {
     getTableData(1);
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log('scrum validation');
+    if (selectedRowIndex.length > 0) {
+      onSendScrum();
+    } else {
+      swal('Please Select Task', '', 'error');
+    }
+  };
+
   return (
     <>
+      {console.log('selectedRowINdex', selectedRowIndex)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -567,7 +578,7 @@ function ToDoList(props) {
                   type="text"
                   disabled
                   name="designationtitle"
-                  value={hrs + ':' + min} // eslint-disable-line
+                  value={`${hrs} : ${min}`}
                 />
               </Col>
             </Row>
@@ -677,7 +688,7 @@ function ToDoList(props) {
                         type="text"
                         disabled
                         name="designationtitle"
-                        value={hrs + ':' + min} // eslint-disable-line
+                        value={`${hrs}: ${min}`}
                       />
                     </Col>
                   </Row>
@@ -738,7 +749,7 @@ function ToDoList(props) {
                   e.stopPropagation();
                   setType('logout');
                   setShowScrumPopup(false);
-                  onSendScrum();
+                  onSubmit(e);
                 }}
               >
                 Yes
