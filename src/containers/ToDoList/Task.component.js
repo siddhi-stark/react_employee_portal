@@ -7,7 +7,7 @@ import customFunctions from '../../helper/customFunctions';
 import {
   ModalInput,
   TextInput,
-  DateTimerInput,
+  Datepicker,
 } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -168,7 +168,7 @@ function Task(props) {
             </Row>
             <Row>
               <Col sm={2}>
-                <DateTimerInput
+                <Datepicker
                   className="form-control"
                   label="StartTime"
                   asterisk="*"
@@ -188,7 +188,7 @@ function Task(props) {
                 />
               </Col>
               <Col sm={2}>
-                <DateTimerInput
+                <Datepicker
                   className="form-control"
                   label="EndTime"
                   asterisk="*"

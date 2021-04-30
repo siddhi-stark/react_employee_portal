@@ -1,7 +1,8 @@
+/* eslint no-unneeded-ternary: "error" */
 import React from 'react';
-import { Form, Image, InputGroup } from 'react-bootstrap';
+import { Form, InputGroup, Image } from 'react-bootstrap';
 
-export default function TextComponent(props) {
+export default function InputComponent(props) {
   const {
     label,
     placeholder,
@@ -13,12 +14,17 @@ export default function TextComponent(props) {
     inputClass,
     inputIcon,
     type,
-    progressClass,
+    labelIcon,
+    maxlength,
     containerClass,
     inputVarible,
     errorMessage,
-    labelIcon,
+    disabled,
+    multiple,
+    rows,
+    as,
     asterisk,
+    accept,
   } = props;
 
   return (
@@ -39,19 +45,38 @@ export default function TextComponent(props) {
         ''
       )}
       <Form.Group className={containerClass}>
-        <Form.Control
-          progressClass={progressClass}
-          id={id}
-          value={value}
-          onChange={(e) => {
-            if (onInputChange) onInputChange(e);
-          }}
-          image={<Image src={image} rounded />}
-          name={name}
-          type={type}
-          placeholder={placeholder}
-          className={inputClass}
-        />
+        {label && (
+          <Form.Label>
+            {' '}
+            {label} <span style={{ color: 'red' }}>{asterisk}</span>{' '}
+          </Form.Label>
+        )}
+        <InputGroup>
+          {inputVarible && (
+            <InputGroup.Prepend>
+              <InputGroup.Text>{inputVarible}</InputGroup.Text>
+            </InputGroup.Prepend>
+          )}
+          {inputIcon && <Image src={inputIcon} rounded />}
+          <Form.Control
+            id={id}
+            value={value}
+            image={<Image src={image} rounded />}
+            onChange={(e) => {
+              if (onInputChange) onInputChange(e);
+            }}
+            name={name}
+            type={type}
+            placeholder={placeholder}
+            className={inputClass}
+            disabled={disabled}
+            maxlength={maxlength}
+            multiple={multiple}
+            accept={accept}
+            rows={rows}
+            as={as}
+          />
+        </InputGroup>
         <p style={{ color: 'red' }}> {errorMessage} </p>
       </Form.Group>
     </>

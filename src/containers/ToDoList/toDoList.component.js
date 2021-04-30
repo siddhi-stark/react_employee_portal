@@ -5,12 +5,13 @@ import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import customFunctions from '../../helper/customFunctions';
-import {
-  ModalInput,
-  TextInput,
-  DropdownInput,
-  DateTimerInput,
-} from '../../components/FormInputs';
+import { ModalInput, TextInput, DropdownInput, Datepicker } from '../../components/FormInputs';
+// import {
+//   ModalInput,
+//   TextInput,
+//   DropdownInput,
+//   Datepicker,
+// } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -522,7 +523,7 @@ function ToDoList(props) {
             </Row>
             <Row>
               <Col sm={4}>
-                <DateTimerInput
+                <Datepicker
                   className="form-control"
                   label="StartTime"
                   selected={staticStartTime}
@@ -536,7 +537,7 @@ function ToDoList(props) {
                 />
               </Col>
               <Col md={4}>
-                <DateTimerInput
+                <Datepicker
                   className="form-control"
                   label="EndTime"
                   selected={staticEndTime}
@@ -623,7 +624,7 @@ function ToDoList(props) {
                   </Row>
                   <Row>
                     <Col sm={4}>
-                      <DateTimerInput
+                      <Datepicker
                         className="form-control"
                         label="StartTime"
                         selected={startTime}
@@ -638,7 +639,7 @@ function ToDoList(props) {
                       />
                     </Col>
                     <Col md={4}>
-                      <DateTimerInput
+                      <Datepicker
                         className="form-control"
                         label="EndTime"
                         selected={endTime}

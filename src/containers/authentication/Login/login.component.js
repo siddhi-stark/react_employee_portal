@@ -12,12 +12,17 @@ const validator = new SimpleReactValidator();
 
 function Login(props) {
   const history = useHistory();
+  // const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
   const [count, forceUpdate] = useState(0);
   const dispatch = useDispatch();
   useEffect(() => {
+    // const token =  localStorage.getItem('token');
+    // if (token) {
+    //   history.push('/');
+    // }
     const emailLocal = localStorage.getItem('email');
     const passwordLocal = localStorage.getItem('password');
     if (localStorage.checkbox && localStorage.email !== '') {
@@ -59,6 +64,7 @@ function Login(props) {
     if (data && data.data && data.data.token && data.data.token.access_token) {
       await localStorage.setItem('access_token', data.data.token.access_token);
       await localStorage.setItem('email', data.data.email);
+      await localStorage.setItem('userId', data.data.id);
       await localStorage.setItem('password', password);
 
       dispatch({ type: 'LOGIN', value: true });
