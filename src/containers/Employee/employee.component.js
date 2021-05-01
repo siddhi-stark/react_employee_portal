@@ -38,7 +38,7 @@ const validator = new SimpleReactValidator();
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/reports', label: 'Designation' },
+  { to: '/reports', label: 'Employee' },
 ];
 
 function Employee() {
@@ -115,6 +115,7 @@ function Employee() {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
+        current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
@@ -263,7 +264,6 @@ function Employee() {
       `${Api.employeeUrl}?role_id=${2}`
     );
     if (data) {
-      // console.log('data', data);
       setManager(data.data);
     }
   };
@@ -273,7 +273,6 @@ function Employee() {
       `${Api.employeeUrl}?role_id=${3}`
     );
     if (data) {
-      // console.log('data', data);
       setTeamLead(data.data);
     }
   };
@@ -383,7 +382,6 @@ function Employee() {
       postData.tw_emp = isFind.tw_id;
       if (employeeId) postData.tw_emp = isFind.tw_id;
     }
-    console.log('employeeID', employeeId);
     const callback = employeeId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
@@ -391,7 +389,6 @@ function Employee() {
       ? `${Api.employeeUrl}${employeeId}/`
       : Api.employeeUrl;
     const { data } = await callback(endPoint, postData);
-    console.log('update', 'update');
     if (data) {
       setSelectedDesignationOption();
       setSelectedRole();
@@ -418,15 +415,12 @@ function Employee() {
   };
 
   const onSubmit = (e) => {
-    console.log('updatebutton');
     e.preventDefault();
     if (validator.allValid()) {
-      console.log('updatebutton');
       addEmployee();
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
-      console.log('updatebuttonelse block');
     }
   };
 
@@ -497,6 +491,17 @@ function Employee() {
     setCntClearFilter(cntClearFilter + 1);
   };
 
+  const updateData = (e) => {
+    twEmployee.map((emp) => {
+      if (emp.full_name === e.label) {
+        const name = e.label;
+        setEmail(emp.email);
+        setFullName(name);
+      }
+      return emp;
+    });
+  };
+
   return (
     <>
       <div className="title-breadcrumb-section">
@@ -529,7 +534,7 @@ function Employee() {
               <Row>
                 <Col>
                   <div className="pull-left">
-                    <h5>Employeeeeee</h5>
+                    <h5>Employee</h5>
                   </div>
                 </Col>
                 <Col>
@@ -583,22 +588,28 @@ function Employee() {
                   </div>
                 </Col>
               </Row>
-
-              <Col className="mt-3">
-                <Table
-                  tableClass="table table-striped"
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  showCheckbox
-                  paginationProps={{
-                    ...pagination,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                />
-              </Col>
+              {pagination.totalItems > 0 ? (
+                <Col className="mt-3">
+                  <Table
+                    tableClass="table table-striped"
+                    columns={columns}
+                    rows={rows}
+                    showPagination
+                    paginationProps={{
+                      ...pagination,
+                      activePage: pagination.current_page,
+                      onPageChange: (pageNo) => {
+                        getTableData(pageNo);
+                      },
+                    }}
+                    dropdownContainerClass="mb-3"
+                  />
+                </Col>
+              ) : (
+                <Col>
+                  <p className="text-center mb-0">No record found</p>
+                </Col>
+              )}
             </Row>
           </Card.Body>
         </Card>
@@ -618,7 +629,10 @@ function Employee() {
                     options={getEmployeeList()}
                     placeholder="Select Employee"
                     defaultValue={selectedEmployee}
-                    onSelectHandler={(select) => setSelectedEmployee(select)}
+                    onSelectHandler={(select) => {
+                      setSelectedEmployee(select);
+                      updateData(select);
+                    }}
                     // errorMessage={
                     //   selectedEmployee && selectedEmployee > 0
                     //     ? validator.message(
@@ -639,7 +653,7 @@ function Employee() {
                     type="text"
                     name="firstNameTitle"
                     value={fullName}
-                    placeholder="Enter first name"
+                    placeholder="Enter Full  Name"
                     errorMessage={validator.message(
                       'Full Name',
                       fullName,
@@ -656,7 +670,7 @@ function Employee() {
                     asterisk="*"
                     containerClass="form-group"
                     type="text"
-                    name="emailTitle"
+                    // name="emailTitle"
                     value={email}
                     placeholder="Enter email"
                     errorMessage={validator.message('email', email, 'required')}
@@ -667,17 +681,16 @@ function Employee() {
                     <TextInput
                       onInputChange={(e) => setPassword(e.target.value)}
                       label="Password"
-                      asterisk="*"
                       containerClass="form-group"
                       type="password"
                       name="passwordTitle"
                       value={password}
                       placeholder="Enter Password"
-                      errorMessage={validator.message(
-                        'password',
-                        password,
-                        'required'
-                      )}
+                      // errorMessage={validator.message(
+                      //   'password',
+                      //   password,
+                      //   'required'
+                      // )}
                     />
                   </Col>
                 )}
@@ -706,38 +719,33 @@ function Employee() {
                     label="Designation"
                     asterisk="*"
                     options={getDesignationList()}
-                    placeholder="Select Subject"
+                    placeholder="Select Designation"
                     defaultValue={selectedDesignationOption}
                     onSelectHandler={(select) =>
                       setSelectedDesignationOption(select)
                     }
-                    errorMessage={
-                      selectedDesignationOption &&
-                      selectedDesignationOption.length > 0
-                        ? validator.message(
-                            'Designation',
-                            selectedDesignationOption,
-                            'required'
-                          )
-                        : ''
-                    }
+                    errorMessage={validator.message(
+                      'selectedDesignationOption',
+                      selectedDesignationOption,
+                      'required'
+                    )}
                   />
                 </Col>
               </Row>
               <Row>
                 <Col sm={6}>
                   <DropdownInput
-                    label="RollName"
+                    label="Role Name"
                     // asterisk="*"
                     options={getEmployeeRole()}
                     placeholder="Select Role"
                     defaultValue={selectedRole}
                     onSelectHandler={(select) => setSelectedRole(select)}
-                    // errorMessage={
-                    //   selectedRole && selectedRole > 0
-                    //     ? validator.message('Role', selectedRole, 'required')
-                    //     : ''
-                    // }
+                    errorMessage={validator.message(
+                      'Role',
+                      selectedRole,
+                      'required'
+                    )}
                   />
                 </Col>
                 <Col sm={6}>

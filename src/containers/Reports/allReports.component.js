@@ -39,7 +39,7 @@ const items = [
 function AllReports() {
   const [rows, setRows] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-  const [userId, setUserId] = useState(null);
+  // const [userId, setUserId] = useState(null);
   const [keyword, setKeyword] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
@@ -57,19 +57,20 @@ function AllReports() {
     const hasSearch = keyword !== '';
     endPoint = `${Api.reportUrl}?limit=${pagination.itemsPerPage}&page=${page}`;
     if (hasSearch) {
-      endPoint = `${endPoint}keyword=${keyword}&`;
+      endPoint = `${endPoint}&keyword=${keyword}`;
     }
     if (fromDate && toDate) {
       endPoint = `${endPoint}&start_date=${customFunctions.getDate(
         fromDate
       )}&end_date=${customFunctions.getDate(toDate)}`;
     }
-    const postData = {
-      userId: [userId],
-    };
-    const { data } = await AuthApi.postDataToServer(endPoint, postData);
+    // const postData = {
+    //   userId: [userId],
+    // };
+    const { data } = await AuthApi.postDataToServer(endPoint);
     if (data) {
       setPagination({
+        current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
@@ -98,8 +99,8 @@ function AllReports() {
   useEffect(() => {
     async function getData() {
       getReports(1);
-      const Id = localStorage.getItem('userId');
-      setUserId(Id);
+      // const Id = localStorage.getItem('userId');
+      // setUserId(Id);
     }
     getData();
   }, []);
@@ -113,8 +114,8 @@ function AllReports() {
     let filterError = '';
     let isValid = true;
 
-    if (fromDate === '' && toDate === '') {
-      filterError = 'Please select Dates';
+    if (fromDate === '' && toDate === '' && keyword === '') {
+      filterError = 'Please select data';
       setFilterErr(filterError);
       isValid = false;
     }
@@ -161,7 +162,7 @@ function AllReports() {
               {showFilter && (
                 <Form onSubmit={(e) => onFilter(e)}>
                   <Row className="mt-3">
-                    <Col sm={2}>
+                    <Col sm={4}>
                       <div className="search-bar-input">
                         <TextInput
                           inputClass="form-control"
@@ -175,7 +176,7 @@ function AllReports() {
                       </div>
                     </Col>
 
-                    <Col sm={3}>
+                    <Col sm={4}>
                       <Datepicker
                         className="form-control"
                         selected={fromDate}
@@ -190,7 +191,7 @@ function AllReports() {
                       />
                     </Col>
 
-                    <Col sm={3}>
+                    <Col sm={4}>
                       <Datepicker
                         className="form-control"
                         selected={toDate}
@@ -204,8 +205,9 @@ function AllReports() {
                         errorMessage={filterErr}
                       />
                     </Col>
-
-                    <Col sm={2}>
+                  </Row>
+                  <Row className="d-flex justify-content-center">
+                    <Col sm={3}>
                       <div className="form-group">
                         <Button type="submit" className="btn btn-primary">
                           Filter
@@ -213,7 +215,7 @@ function AllReports() {
                       </div>
                     </Col>
 
-                    <Col sm={2}>
+                    <Col sm={3}>
                       <div className="form-group">
                         <Button
                           type="button"
@@ -234,13 +236,14 @@ function AllReports() {
                   columns={columns}
                   rows={rows}
                   showPagination
-                  showCheckbox
                   paginationProps={{
                     ...pagination,
+                    activePage: pagination.current_page,
                     onPageChange: (pageNo) => {
                       getReports(pageNo);
                     },
                   }}
+                  dropdownContainerClass="mb-3"
                 />
               </Col>
             </Row>

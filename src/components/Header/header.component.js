@@ -1,6 +1,8 @@
 import React from 'react';
 
 function Header() {
+  const newDate = localStorage.getItem('headerDate').split(' ');
+  const newDatee = `${newDate[0]}, ${newDate[2]} ${newDate[1]}, ${newDate[3]}`;
   return (
     <>
       <div className="main-header side-header sticky sticky-pin">
@@ -12,7 +14,7 @@ function Header() {
           </div>
           <div className="main-header-right">
             <div className="day-date">
-              <h5>Thursday, 18 Jun, 2021</h5>
+              <h5>{newDatee}</h5>
             </div>
             <div className="profile-name-img d-flex align-items-center">
               <h6>Alexa John</h6>

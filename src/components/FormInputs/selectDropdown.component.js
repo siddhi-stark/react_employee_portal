@@ -19,17 +19,16 @@ export default function SelectDropdown(props) {
 
   return (
     <>
+      {label && (
+        <Form.Label>
+          {' '}
+          {label} <span style={{ color: 'red' }}>{asterisk}</span>
+        </Form.Label>
+      )}
       <Form.Group className={containerClass}>
-        {label && (
-          <Form.Label>
-            {' '}
-            {label} <span style={{ color: 'red' }}>{asterisk}</span>
-          </Form.Label>
-        )}
         <Select
           value={defaultValue}
           onChange={(e) => {
-            console.log('e', e);
             if (onSelectHandler) onSelectHandler(e);
           }}
           name={name}

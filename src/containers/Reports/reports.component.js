@@ -112,7 +112,6 @@ function Reports(props) {
                   columns={columns}
                   rows={rows}
                   showPagination
-                  showCheckbox
                   paginationProps={{
                     ...pagination,
                     onPageChange: (pageNo) => {

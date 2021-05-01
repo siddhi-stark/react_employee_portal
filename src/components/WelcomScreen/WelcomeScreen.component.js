@@ -45,7 +45,6 @@ function WelcomeScreen() {
   useEffect(() => {
     getDailyActivity();
   });
-
   return (
     <>
       <Jumbotron className="welcome-box">

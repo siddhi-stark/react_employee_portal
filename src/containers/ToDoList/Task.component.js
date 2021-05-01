@@ -26,7 +26,6 @@ function Task(props) {
     if (data) {
       const dt = new Date();
       const startTm = data.data.start_time;
-      console.log('startm', startTm);
       const hrmin = startTm.split(':');
       dt.setHours(hrmin[0]);
       dt.setMinutes(hrmin[1]);
@@ -34,14 +33,12 @@ function Task(props) {
 
       const dt1 = new Date();
       const endTm = data.data.end_time;
-      console.log('endTm', endTm);
       const hrminNew = endTm.split(':');
       dt1.setHours(hrminNew[0]);
       dt1.setMinutes(hrminNew[1]);
       setTaskEndTime(dt1);
 
       const spent = data.data.estimation;
-      console.log('spent', spent);
       const spentNew = spent.split('Hrs');
 
       const spent1 = spentNew[0] ? spentNew[0] : 0;
@@ -195,7 +192,6 @@ function Task(props) {
                     const taskStrtTime = new Date(e);
 
                     const taskEnTime = new Date(taskStartTime);
-                    console.log('taskstarttime', taskStrtTime, taskEnTime);
                     let differenceInTasksTime =
                       Math.abs(taskEnTime.getTime() - taskStrtTime.getTime()) /
                       1000;

@@ -78,6 +78,7 @@ function Projects() {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
+        current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
@@ -203,10 +204,12 @@ function Projects() {
                     showPagination
                     paginationProps={{
                       ...pagination,
+                      activePage: pagination.current_page,
                       onPageChange: (pageNo) => {
                         getTableData(pageNo);
                       },
                     }}
+                    dropdownContainerClass="mb-3"
                   />
                 </Col>
               </Row>

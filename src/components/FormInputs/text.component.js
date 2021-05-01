@@ -14,7 +14,6 @@ export default function InputComponent(props) {
     inputClass,
     inputIcon,
     type,
-    labelIcon,
     maxlength,
     containerClass,
     inputVarible,
@@ -29,28 +28,13 @@ export default function InputComponent(props) {
 
   return (
     <>
-      {label ? (
+      {label && (
         <Form.Label>
           {' '}
-          {labelIcon ? <Image src={labelIcon} /> : ''} {label}
-          <span style={{ color: 'red' }}>{asterisk}</span>{' '}
+          {label} <span style={{ color: 'red' }}>{asterisk}</span>{' '}
         </Form.Label>
-      ) : (
-        ''
-      )}
-      {inputIcon ? <Image src={inputIcon} rounded /> : ''}
-      {inputVarible ? (
-        <InputGroup.Prepend>{inputVarible}</InputGroup.Prepend>
-      ) : (
-        ''
       )}
       <Form.Group className={containerClass}>
-        {label && (
-          <Form.Label>
-            {' '}
-            {label} <span style={{ color: 'red' }}>{asterisk}</span>{' '}
-          </Form.Label>
-        )}
         <InputGroup>
           {inputVarible && (
             <InputGroup.Prepend>

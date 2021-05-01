@@ -11,12 +11,6 @@ import {
   DropdownInput,
   Datepicker,
 } from '../../components/FormInputs';
-// import {
-//   ModalInput,
-//   TextInput,
-//   DropdownInput,
-//   Datepicker,
-// } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -127,6 +121,7 @@ function ToDoList(props) {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
+        current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
@@ -147,7 +142,11 @@ function ToDoList(props) {
           action: (
             <>
               {task.task_type === 'tw' && (
-                <a href={`${constants.link}${task.tw_id}`} className="pl-2">
+                <a
+                  href={`${constants.link}${task.tw_id}`}
+                  className="pl-2"
+                  target="_blank"
+                >
                   <Image src="images/edit.svg" />
                 </a>
               )}
@@ -204,9 +203,11 @@ function ToDoList(props) {
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data && data.data) {
-      setShowClockoutBtn(!data.data.signout_mail);
+      setShowScrum(data.data.signout_mail);
+      setShowClockoutBtn(data.data.morning_mail);
     } else {
-      setShowClockoutBtn(data.data.signout_mail);
+      setShowScrum(!data.data.signout_mail);
+      setShowClockoutBtn(!data.data.morning_mail);
     }
   };
 
@@ -217,11 +218,14 @@ function ToDoList(props) {
     };
 
     const endPoint = `${Api.reportUrl}`;
-    const { data } = await AuthApi.postDataToServer(endPoint, postData);
+    const { data, message } = await AuthApi.postDataToServer(
+      endPoint,
+      postData
+    );
 
     if (data) {
+      setType('logout');
       setShowScrum(false);
-      setShowBreak(false);
       setShowBreak(false);
       setShowErrorBlock(false);
       setShowSuccessBlock(true);
@@ -229,6 +233,7 @@ function ToDoList(props) {
       setShowScrumPopup(false);
       setShowErrorBlock(true);
       setShowSuccessBlock(false);
+      swal(message, '', 'error');
     }
     getDailyActivity();
   };
@@ -304,7 +309,6 @@ function ToDoList(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log('scrum validation');
     if (selectedRowIndex.length > 0) {
       onSendScrum();
     } else {
@@ -314,7 +318,6 @@ function ToDoList(props) {
 
   return (
     <>
-      {console.log('selectedRowINdex', selectedRowIndex)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -363,6 +366,7 @@ function ToDoList(props) {
             <button
               type="button"
               className="close"
+              onClick={() => setShowSuccessBlock(false)}
               data-dismiss="modal"
               aria-label="Close"
             >
@@ -403,6 +407,14 @@ function ToDoList(props) {
                 columns={columns}
                 rows={rows}
                 showPagination
+                paginationProps={{
+                  ...pagination,
+                  activePage: pagination.current_page,
+                  onPageChange: (pageNo) => {
+                    getTableData(pageNo);
+                  },
+                }}
+                dropdownContainerClass="mb-3"
                 overDueClass={
                   isOverdue ? (
                     <span className="badge badge-danger">Danger</span>
@@ -410,13 +422,6 @@ function ToDoList(props) {
                     ''
                   )
                 }
-                showCheckbox
-                paginationProps={{
-                  ...pagination,
-                  onPageChange: (pageNo) => {
-                    getTableData(pageNo);
-                  },
-                }}
                 selectedRowItems={selectedRowIndex}
                 onSelectRowsIndexes={(rowIndex) => {
                   const twId = [];
@@ -440,7 +445,7 @@ function ToDoList(props) {
             </Col>
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            {showScrum && (
+            {showScrum === true && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -451,7 +456,7 @@ function ToDoList(props) {
                 Send Scrum
               </Button>
             )}
-            {showClockoutBtn && (
+            {showClockoutBtn === true && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -753,8 +758,8 @@ function ToDoList(props) {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  setType('logout');
                   setShowScrumPopup(false);
+                  // setType('morning')
                   onSubmit(e);
                 }}
               >

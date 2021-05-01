@@ -19,6 +19,14 @@ class CustomFunctions extends Component {
     return formattedTime;
   };
 
+  headerDate = (date) => {
+    const newDate = new Date(date);
+    const splitDate = newDate.split(' ');
+    const formattedDate =
+      splitDate[0] + ',' + splitDate[2] + splitDate[1] + ',' + splitDate[3]; //eslint-disable-line
+    return formattedDate;
+  };
+
   getFormattedDate = (dateTime) => {
     const newdate = new Date(dateTime);
     const d = newdate.getDate();

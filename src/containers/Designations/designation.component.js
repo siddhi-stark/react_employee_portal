@@ -50,6 +50,7 @@ function Designation() {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
+        current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
@@ -276,22 +277,28 @@ function Designation() {
                   </Col>
                 </Row>
               </Form>
-
-              <Col className="mt-3">
-                <Table
-                  tableClass="table table-striped"
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  showCheckbox
-                  paginationProps={{
-                    ...pagination,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                />
-              </Col>
+              {pagination.totalItems > 0 ? (
+                <Col className="mt-3">
+                  <Table
+                    tableClass="table table-striped"
+                    columns={columns}
+                    rows={rows}
+                    showPagination
+                    paginationProps={{
+                      ...pagination,
+                      activePage: pagination.current_page,
+                      onPageChange: (pageNo) => {
+                        getTableData(pageNo);
+                      },
+                    }}
+                    dropdownContainerClass="mb-3"
+                  />
+                </Col>
+              ) : (
+                <Col>
+                  <p className="text-center mb-0">No record found</p>
+                </Col>
+              )}
             </Row>
           </Card.Body>
         </Card>
@@ -299,14 +306,20 @@ function Designation() {
           size="md"
           centered
           show={modalShow}
-          label="Add Designation"
+          label={designationId ? 'Update Designation' : 'Add Designation'}
           id="contained-modal-title-vcenter"
           modalBody={
             <Form>
               <Row>
                 <Col sm={6}>
                   <TextInput
-                    onInputChange={(e) => setDesignation(e.target.value)}
+                    // onInputChange={(e) => setDesignation(e.target.value)}
+                    onInputChange={(e) => {
+                      const re = /^[a-zA-Z ]*$/;
+                      if (e.target.value === '' || re.test(e.target.value)) {
+                        setDesignation(e.target.value);
+                      }
+                    }}
                     label="Desination Name"
                     containerClass="form-group"
                     type="text"
