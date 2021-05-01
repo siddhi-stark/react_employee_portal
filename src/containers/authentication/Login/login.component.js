@@ -66,7 +66,6 @@ function Login(props) {
       await localStorage.setItem('email', data.data.email);
       await localStorage.setItem('userId', data.data.id);
       await localStorage.setItem('password', password);
-      await localStorage.setItem('headerDate', new Date());
 
       dispatch({ type: 'LOGIN', value: true });
 
