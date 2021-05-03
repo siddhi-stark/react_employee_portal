@@ -407,6 +407,7 @@ function ToDoList(props) {
                 columns={columns}
                 rows={rows}
                 showPagination
+                showCheckbox
                 paginationProps={{
                   ...pagination,
                   activePage: pagination.current_page,
