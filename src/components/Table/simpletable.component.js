@@ -53,6 +53,7 @@ export default function SimpleTable(props) {
   const [selectedAction, setSelectedAction] = useState('');
   const [selectedRows, setSelectedRows] = useState(
     rows.map((row, rowIndex) => {
+      // console.log('tablecomponent', row);
       return selectedRowItems.includes(rowIndex);
     })
   );

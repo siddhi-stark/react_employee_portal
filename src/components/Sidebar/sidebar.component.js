@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import menu from '../../helper/menu';
 
 function Sidebar() {
   const history = useHistory();
   const [activeMenu, setActiveMenu] = useState(0);
+
+  // useEffect(() => {
+  //   const token = await localStorage.getItem('token');
+  //   if (token){
+  //   const roleId = await customFunctions.getUserData();
+  //   this.setState({roleId : JSON.stringify( roleId.role_id)});
+  // }
+
+  const dispatch = useDispatch();
+  const event = new Event('Login', { isLogin: false });
+
   return (
     <>
       <div className="main-sidebar main-sidebar-sticky side-menu ps">
@@ -46,6 +58,11 @@ function Sidebar() {
                         localStorage.removeItem('access_token');
                         localStorage.removeItem('userId');
                         localStorage.removeItem('headerDate');
+                        localStorage.removeItem('name');
+                        // localStorage.removeItem('password');
+                        // localStorage.removeItem('email');
+                        document.dispatchEvent(event);
+                        dispatch({ type: 'LOGIN', value: false });
                         history.push('/login');
                       }
                       setActiveMenu(menuIndex);

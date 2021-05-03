@@ -239,7 +239,7 @@ function Employee() {
   };
 
   const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if (data) {
       setDesignation(data.data);
     }
@@ -531,7 +531,8 @@ function Employee() {
         <Card>
           <Card.Body>
             <Row>
-              <Row>
+            
+              <div className="custom-header-wrapper">
                 <Col>
                   <div className="pull-left">
                     <h5>Employee</h5>
@@ -552,7 +553,7 @@ function Employee() {
                     </Button>
                   </div>
                 </Col>
-              </Row>
+              </div>
 
               <Row className="mt-3">
                 <Col md={4}>
@@ -576,7 +577,7 @@ function Employee() {
                 </Col>
 
                 <Col md={4}>
-                  <div className="float-end mt-1">
+                  <div className="">
                     <Button
                       size="sm"
                       variant="primary"

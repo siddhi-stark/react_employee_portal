@@ -212,7 +212,7 @@ function Designation() {
             setShowDelete(null);
           }}
         >
-          You wont be able to revert this!
+          You wont be able to revert this! 
         </SweetAlert>
       )}
 
@@ -220,7 +220,7 @@ function Designation() {
         <Card>
           <Card.Body>
             <Row>
-              <Row>
+              <div className="custom-header-wrapper">
                 <Col>
                   <div className="pull-left">
                     <h5>Designation</h5>
@@ -241,7 +241,7 @@ function Designation() {
                     </Button>
                   </div>
                 </Col>
-              </Row>
+              </div>
               <Form onSubmit={(e) => filterSearch(e)}>
                 <Row className="mt-3">
                   <Col md={4}>
@@ -264,7 +264,7 @@ function Designation() {
                   </Col>
 
                   <Col md={4}>
-                    <div className="mt-1">
+                    <div className="">
                       <Button
                         size="sm"
                         variant="primary"

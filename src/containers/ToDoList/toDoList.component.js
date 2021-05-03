@@ -46,8 +46,9 @@ const columns = [
 
 const validator = new SimpleReactValidator();
 
-function ToDoList(props) {
+function ToDoList() {
   const [rows, setRows] = useState([]);
+  const [selectedId, setSelectedId] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
   const [editShow, setEditShow] = useState(false);
@@ -59,14 +60,14 @@ function ToDoList(props) {
   const [ShowDelete, setShowDelete] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [hrs, setHours] = useState('');
   const [min, setMinutes] = useState('');
 
   const [taskId, setTaskId] = useState(null);
-  const [staticStartTime, setStaticStartTime] = useState(new Date());
-  const [staticEndTime, setStaticEndTime] = useState(new Date());
+  // const [staticStartTime, setStaticStartTime] = useState(new Date());
+  // const [staticEndTime, setStaticEndTime] = useState(new Date());
   const [staticHrs, setStaticHours] = useState(''); // eslint-disable-line
   const [staticMin, setStaticMinutes] = useState(''); // eslint-disable-line
   const [showScrum, setShowScrum] = useState(false);
@@ -83,13 +84,7 @@ function ToDoList(props) {
   });
 
   const [breakData, setBreakData] = useState([
-    {
-      selectedBreakOption: '',
-      startTime: '',
-      endTime: '',
-      hrs: null,
-      min: null,
-    },
+  
   ]);
 
   const BreakList = [
@@ -134,6 +129,7 @@ function ToDoList(props) {
       data.data.map((task) => {
         setIsOverdue(task.is_overdue);
         row.push({
+          
           todo: task.content,
           projects: task.project_name,
           status: task.status,
@@ -190,10 +186,31 @@ function ToDoList(props) {
 
   useEffect(() => {
     async function getData() {
+      const selectedBreak = [];
+   BreakList.map((item) => {
+     if(item.id === 3 || item.id === 2) {
+      selectedBreak.push({
+        selectedBreakOption: {label: item.label, id: item.id}
+        ,
+        startTime: '',
+        endTime: '',
+        hrs: null,
+        min: null,
+        isDefault: true
+      })
+      
+     }
+    //  console.log('selectedBreak', selectedBreak);
+    return selectedBreak;
+    
+   })
+   setBreakData(selectedBreak);
+
       getTableData(1);
+      getDailyActivity();
     }
     getData();
-    setShowScrum(props.showScrum);
+    // setShowScrum(props.showScrum);
   }, []);
 
   useEffect(() => {
@@ -203,11 +220,15 @@ function ToDoList(props) {
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data && data.data) {
-      setShowScrum(data.data.signout_mail);
-      setShowClockoutBtn(data.data.morning_mail);
-    } else {
-      setShowScrum(!data.data.signout_mail);
+      
+      setShowScrum(data.data.signout_mail);  
       setShowClockoutBtn(!data.data.morning_mail);
+    } else {
+      setShowScrum(data.data.signout_mail);
+      setShowClockoutBtn(!data.data.morning_mail);
+    }
+    if(data.data.clock_out_time) {
+      localStorage.setItem('time', data.data.clock_out_time)
     }
   };
 
@@ -222,7 +243,7 @@ function ToDoList(props) {
       endPoint,
       postData
     );
-
+// console.log('postData', postData);
     if (data) {
       setType('logout');
       setShowScrum(false);
@@ -241,7 +262,7 @@ function ToDoList(props) {
   const addBreak = () => {
     return setBreakData([
       ...breakData,
-      { selectedBreakOption: '', startTime: '', endTime: '', timeSpent: '' },
+      { selectedBreakOption: '', startTime: '', endTime: '', hrs: null, mins: null, isDefault: false },
     ]);
   };
 
@@ -260,6 +281,8 @@ function ToDoList(props) {
   const onComfirm = async () => {
     const BreakPostData = [];
     breakData.map((dt) => {
+    console.log('dateeee', customFunctions.getTime(dt.startTime) )
+
       return BreakPostData.push({
         description: dt.selectedBreakOption.label,
         start_time: customFunctions.getTime(dt.startTime),
@@ -272,14 +295,17 @@ function ToDoList(props) {
     const postData = {
       tasks: BreakPostData,
     };
+    console.log('postData', postData);
     const endPoint = `${Api.taskUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
       data.data.task_created_ids.map((e) => {
+        // console.log('e',e);
         selectedRowIndex.push(e);
         return e;
       });
-      setSelectedRowIndex(data.data.task_created_ids);
+      setType('logout');
+      setSelectedRowIndex(selectedRowIndex);
       setHours();
       setMinutes();
       setSelectedBreakOption();
@@ -316,8 +342,44 @@ function ToDoList(props) {
     }
   };
 
+  const onBreakSubmit = (e) => {
+    e.preventDefault();
+    console.log('data',breakData.startTime === '' && breakData.endTime === '');
+    if (startTime && endTime) {
+      console.log('validation');
+      // setShowBreak(false);
+      onComfirm();
+      setStartTime('');
+      setEndTime('');
+      setHours('');
+      setMinutes('');
+    } else {
+      setShowBreak(false);
+      swal('Please Select Break', '', 'error');
+      onComfirm();
+      setStartTime('');
+      setEndTime('');
+      setHours('');
+      setMinutes('');
+    }
+  };
+
+  const onDeleteBreakHandler = (idx,e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const data = [...breakData];
+    data.splice(idx, 1);
+    setBreakData([...data]);
+   
+  }
+
   return (
     <>
+    {/* {console.log('selectedID', selectedRowIndex)}
+    {console.log('showScrum', showScrum)} */}
+    {/* {console.log('toeItems',selectedId)}; */}
+    {console.log('breakData', startTime)}
+    {console.log('breakData', breakData)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -379,10 +441,10 @@ function ToDoList(props) {
       <Card className="mt-3">
         <Card.Body>
           <Row>
-            <Row>
+          <div className="custom-header-wrapper">
               <Col>
                 <Card.Title>
-                  ToDo
+                  To Do
                   <div className="float-end">
                     <Button
                       size="sm"
@@ -399,7 +461,7 @@ function ToDoList(props) {
                   </div>
                 </Card.Title>
               </Col>
-            </Row>
+            </div>
 
             <Col className="mt-3">
               <Table
@@ -423,7 +485,7 @@ function ToDoList(props) {
                     ''
                   )
                 }
-                selectedRowItems={selectedRowIndex}
+                selectedRowItems={selectedId}
                 onSelectRowsIndexes={(rowIndex) => {
                   const twId = [];
                   taskList.map((task, ind) => {
@@ -441,12 +503,14 @@ function ToDoList(props) {
                     return ind;
                   });
                   setSelectedRowIndex(twId);
+                  setSelectedId(rowIndex)
+                  
                 }}
               />
             </Col>
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            {showScrum === true && (
+            {!showScrum && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -457,7 +521,7 @@ function ToDoList(props) {
                 Send Scrum
               </Button>
             )}
-            {showClockoutBtn === true && (
+            {showClockoutBtn && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -499,7 +563,7 @@ function ToDoList(props) {
                 Add Break
               </button>
             </div>
-            <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
+            {/* <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
               <label htmlFor="exampleFormControlSelect1">
                 Break Type <sup className="text-danger">*</sup>
               </label>
@@ -516,8 +580,8 @@ function ToDoList(props) {
                   <img src="images/skip.svg" alt="skip" />
                 </a>
               </div>
-            </div>
-            <Row>
+            </div> */}
+            {/* <Row>
               <DropdownInput
                 options={getBreakTypes()}
                 asterisk="*"
@@ -531,8 +595,8 @@ function ToDoList(props) {
                   'required'
                 )}
               />
-            </Row>
-            <Row>
+            </Row> */}
+            {/* <Row>
               <Col sm={4}>
                 <Datepicker
                   className="form-control"
@@ -593,7 +657,7 @@ function ToDoList(props) {
                   value={`${hrs} : ${min}`}
                 />
               </Col>
-            </Row>
+            </Row> */}
             {breakData &&
               breakData.length > 0 &&
               breakData.map((data, i) => (
@@ -614,15 +678,30 @@ function ToDoList(props) {
                         }}
                       >
                         <img src="images/skip.svg" alt="skip" />
+
                       </a>
+                      {breakData.length > 1 &&(
+                        <a 
+                      href="/"
+                      onClick={(e) => {
+                         
+                          onDeleteBreakHandler(i,e);
+                        }}
+                      >
+                      <img src="images/delete.png" alt="delete" />
+
+                      </a>
+                      )}
+                     
                     </div>
                   </div>
                   <Row>
                     <DropdownInput
                       options={getBreakTypes()}
                       asterisk="*"
-                      value={data.selectedBreakOption}
+                      defaultValue={data.selectedBreakOption}
                       onSelectHandler={(select) => {
+                        // console.log('drowdown', select)
                         breakData[i].selectedBreakOption = select;
                         setSelectedBreakOption(breakData);
                       }}
@@ -710,7 +789,7 @@ function ToDoList(props) {
         }
         modalFooter={
           <div className="float-end">
-            <Button variant="secondary" onClick={() => onComfirm()}>
+            <Button variant="secondary" onClick={(e) => onBreakSubmit(e)}>
               Confirm
             </Button>
             <Button

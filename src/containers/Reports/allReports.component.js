@@ -55,7 +55,7 @@ function AllReports() {
     const page = pageNo || pagination.current_page;
     let endPoint;
     const hasSearch = keyword !== '';
-    endPoint = `${Api.reportUrl}?limit=${pagination.itemsPerPage}&page=${page}`;
+    endPoint = `${Api.reportListingUrl}?limit=${pagination.itemsPerPage}&page=${page}`;
     if (hasSearch) {
       endPoint = `${endPoint}&keyword=${keyword}`;
     }

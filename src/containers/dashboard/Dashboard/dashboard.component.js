@@ -9,20 +9,15 @@ import ToDoList from '../../ToDoList/toDoList.component';
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
   const [showClockButton, setShowClockButton] = useState(true);
-  const [showScrumBtn, setShowScrumBtn] = useState(false);
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
+      console.log('data', data);
       if (data.data.clock_in_time) {
         const stime = data.data.clock_in_time.split(' ');
         const newtime = stime[0];
         setSignInTime(newtime);
-        if (data.data.morning_mail === false) {
-          setShowScrumBtn(true);
-        } else {
-          setShowScrumBtn(false);
-        }
         if (data.data.clock_in_time) {
           setShowClockButton(false);
         }
@@ -61,7 +56,7 @@ function Dashboard() {
                 <Col md={5}>
                   <div className="welcome-text">
                     <h1>
-                      Welcome <strong>Alexa,</strong>
+                      Welcome <strong>{localStorage.getItem('name').split(' ')[0] ? localStorage.getItem('name').split(' ')[0] :''},</strong>
                     </h1>
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
@@ -75,6 +70,11 @@ function Dashboard() {
                   <div className="check-in">
                     <div className="time-count text-center">
                       <span>{signInTime}</span>
+                      
+                    </div>
+                    <div className="time-count text-center">
+                      <span>{localStorage.getItem('time').split(' ')[0]}</span>
+                      
                     </div>
                     {showClockButton === true && (
                       <Button
@@ -94,7 +94,7 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            {showClockButton === false && <ToDoList showScrum={showScrumBtn} />}
+            {showClockButton === false && <ToDoList />}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
@@ -105,13 +105,16 @@ function Dashboard() {
                     <div className="weekly-status">
                       <ul className="list-unstyled p-0">
                         <li>
-                          Completed <span className="bluebg">65%</span>
+                        <p className="status-label">Completed</p>
+                          <span className="bluebg">65%</span>
                         </li>
                         <li>
-                          Pending <span className="pinkbg">25%</span>
+                        <p className="status-label">Pending</p>
+                        <span className="pinkbg">25%</span>
                         </li>
                         <li>
-                          Remaining <span className="yellowbg">10%</span>
+                        <p className="status-label">Remaining</p>
+                           <span className="yellowbg">10%</span>
                         </li>
                       </ul>
                     </div>

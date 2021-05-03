@@ -21,7 +21,7 @@ export default class Api extends Component {
 
   static getProjects = `${Api.baseUrl}projects/`;
 
-  static reportUrl = `${Api.baseUrl}report/`;
+  static reportListingUrl = `${Api.baseUrl}report/`;
 
   static dailyReportUrl = `${Api.baseUrl}daily-report`;
 

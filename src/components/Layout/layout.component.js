@@ -1,15 +1,32 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Sidebar from '../Sidebar/sidebar.component';
 import Header from '../Header/header.component';
-// import WelcomeScreen from '../WelcomScreen/WelcomeScreen.component';
-// import Breadcrumb from '../Breadcrumb/breadcrumb.component';
-// import RightContainer from '../RightContainer/RightContainer.component';
 
 function Layout(props) {
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    useSelector((state) => state.auth.isLoggedIn)
+  );
   const { children } = props;
+  const dispatch = useDispatch();
 
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  useEffect(() => {
+    document.addEventListener('Login', () => {
+      dispatch({ type: 'LOGIN', value: false });
+      setIsLoggedIn(false);
+    });
+  }, [isLoggedIn]);
+
+  const code = localStorage.getItem('access_token');
+  useEffect(() => {
+    if (code) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+    dispatch({ type: 'LOGIN', value: false });
+  }, [code]);
+  
   return (
     <>
       {isLoggedIn ? (

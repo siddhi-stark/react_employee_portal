@@ -214,7 +214,7 @@ function Projects() {
                   </Col>
 
                   <Col md={4}>
-                    <div className="float-end mt-1">
+                    <div className="">
                       <Button
                         size="sm"
                         variant="primary"

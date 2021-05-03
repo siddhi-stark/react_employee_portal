@@ -1,19 +1,21 @@
 import React from 'react';
 
 function Header() {
-  const date = new Date();
-  const formattedDate = date.toLocaleString('en-US', {
-    weekday: 'short', // long, short, narrow
-    day: 'numeric', // numeric, 2-digit
-    year: 'numeric', // numeric, 2-digit
-    month: 'long', // numeric, 2-digit, long, short, narrow
-  });
+  const date = new Date().toDateString().split(' ');
+  const formattedDate = `${date[0]}, ${date[1]} ${date[2]} ${date[3]} `
+  // const formattedDate = date.toLocaleString('en-US', {
+  //   weekday: 'short', 
+  //   day: 'numeric', 
+  //   year: 'numeric', 
+  //   month: 'long' 
+  // });
+  
   return (
     <>
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-between h-100">
           <div className="main-header-left">
-            <a className="main-header-menu-icon" href="" id="mainSidebarToggle">
+            <a  href="" id="mainSidebarToggle">
               <span />
             </a>
           </div>
@@ -22,11 +24,11 @@ function Header() {
               <h5>{formattedDate}</h5>
             </div>
             <div className="profile-name-img d-flex align-items-center">
-              <h6>Alexa John</h6>
+              <h6>{localStorage.getItem('name') ? localStorage.getItem('name') : ''}</h6>
               <div className="profile-img">
-                <a href="#">
+                {/* <a href="#">
                   <img src="/images/profile-img.png" alt="Profile" />
-                </a>
+                </a> */}
                 <div className="dropdown-menu">
                   <div className="header-navheading text-center">
                     <h5 className="main-notification-title">Alexa John</h5>
@@ -82,7 +84,7 @@ function Header() {
                 </div>
               </div>
             </div>
-            <div className="dropdown d-md-flex header-settings">
+            {/* <div className="dropdown d-md-flex header-settings">
               <a
                 href="#"
                 className="nav-link icon"
@@ -91,7 +93,7 @@ function Header() {
               >
                 <img src="images/profile-setting.svg" alt="profile" />
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
