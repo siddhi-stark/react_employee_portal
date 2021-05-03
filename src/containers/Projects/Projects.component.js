@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Image, ProgressBar, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
+import SweetAlert from 'react-bootstrap-sweetalert';
 import { TextInput } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
@@ -53,6 +54,9 @@ function Projects() {
   const [rows, setRows] = useState([]);
   const [keyword, setKeyword] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
+  const [showUpdate, setShowUpdate] = useState(false);
+  const [projectId, setProjectId] = useState(null);
+  const [rtSupport, setRtSupport] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 5,
@@ -68,6 +72,9 @@ function Projects() {
 
     if (data) {
       swal(data.message && data.message[0], '', 'success');
+      setShowUpdate(false);
+      setProjectId(null);
+      setRtSupport('');
       getTableData(1); // eslint-disable-line
     }
   };
@@ -100,7 +107,10 @@ function Projects() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  onRtSupport(proj.id, proj.rt_support);
+                  setProjectId(proj.id);
+                  setRtSupport(proj.rt_support);
+                  setShowUpdate(true);
+                  // onRtSupport(proj.id, proj.rt_support);
                 }}
               />
             ) : (
@@ -109,7 +119,10 @@ function Projects() {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  onRtSupport(proj.id, proj.rt_support);
+                  setProjectId(proj.id);
+                  setRtSupport(proj.rt_support);
+                  setShowUpdate(true);
+                  // onRtSupport(proj.id, proj.rt_support);
                 }}
               />
             ),
@@ -144,6 +157,24 @@ function Projects() {
 
   return (
     <>
+      {showUpdate && (
+        <SweetAlert
+          title="Are you sure, do you want to update the project ?"
+          error
+          showCancel
+          confirmBtnBsStyle="success"
+          cancelBtnBsStyle="danger"
+          onConfirm={() => {
+            onRtSupport(projectId, rtSupport);
+          }}
+          onCancel={() => {
+            setShowUpdate(false);
+            setShowUpdate(null);
+          }}
+        >
+          You wont be able to revert this!
+        </SweetAlert>
+      )}
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Projects</h2>
         <Breadcrumb items={items} />
@@ -195,23 +226,28 @@ function Projects() {
                     </div>
                   </Col>
                 </Row>
-
-                <Col className="mt-3">
-                  <Table
-                    tableClass="table table-striped"
-                    columns={columns}
-                    rows={rows}
-                    showPagination
-                    paginationProps={{
-                      ...pagination,
-                      activePage: pagination.current_page,
-                      onPageChange: (pageNo) => {
-                        getTableData(pageNo);
-                      },
-                    }}
-                    dropdownContainerClass="mb-3"
-                  />
-                </Col>
+                {pagination.totalItems > 0 ? (
+                  <Col className="mt-3">
+                    <Table
+                      tableClass="table table-striped"
+                      columns={columns}
+                      rows={rows}
+                      showPagination
+                      paginationProps={{
+                        ...pagination,
+                        activePage: pagination.current_page,
+                        onPageChange: (pageNo) => {
+                          getTableData(pageNo);
+                        },
+                      }}
+                      dropdownContainerClass="mb-3"
+                    />
+                  </Col>
+                ) : (
+                  <Col>
+                    <p className="text-center mb-0">No record found</p>
+                  </Col>
+                )}
               </Row>
             </Card.Body>
           </Card>

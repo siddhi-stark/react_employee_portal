@@ -2,9 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Sidebar from '../Sidebar/sidebar.component';
 import Header from '../Header/header.component';
-import WelcomeScreen from '../WelcomScreen/WelcomeScreen.component';
+// import WelcomeScreen from '../WelcomScreen/WelcomeScreen.component';
 // import Breadcrumb from '../Breadcrumb/breadcrumb.component';
-import RightContainer from '../RightContainer/RightContainer.component';
+// import RightContainer from '../RightContainer/RightContainer.component';
 
 function Layout(props) {
   const { children } = props;
@@ -18,25 +18,14 @@ function Layout(props) {
           <div className="main-content side-content pt-0">
             <Header />
             <div className="container-fluid">
-              <div className="page-header">
-                <div className="title-breadcrumb-section">
-                  <div className="row">
-                    <div className="col-xl-8" id="main-content">
-                      <h2 className="main-content-title tx-24 mg-b-5">
-                        Dashboard
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-              </div>
               <section className="content-area">
                 <div className="row">
-                  <div className="col-xl-8" id="main-content">
-                    <WelcomeScreen />
+                  <div className="col-xl-12" id="main-content">
+                    {/* <WelcomeScreen /> */}
                     {children}
                   </div>
                   <div className="col-xl-4" id="right-sidebar">
-                    <RightContainer />
+                    {/* <RightContainer /> */}
                   </div>
                 </div>
               </section>
