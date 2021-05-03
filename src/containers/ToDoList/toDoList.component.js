@@ -78,7 +78,7 @@ function ToDoList(props) {
   const [type, setType] = useState('morning');
   const [pagination, setPagination] = useState({
     current_page: 1,
-    itemsPerPage: 5,
+    itemsPerPage: 10,
     totalItems: 10,
   });
 

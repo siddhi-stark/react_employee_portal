@@ -71,7 +71,7 @@ function Employee() {
   const [empId, setEmpId] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
-    itemsPerPage: 5,
+    itemsPerPage: 10,
     totalItems: 10,
   });
   const Department = [

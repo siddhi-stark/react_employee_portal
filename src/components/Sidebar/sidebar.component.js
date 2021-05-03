@@ -22,8 +22,19 @@ function Sidebar() {
             {menu.map((menuItem, menuIndex) => {
               const hasSubMenu =
                 menuItem.submenu && menuItem.submenu.length > 0;
-              const parentLiCls = `nav-item ${menuIndex === 0 ? 'show' : ''}`;
-              const parentActiveCls = activeMenu === menuIndex ? 'active' : '';
+              const parentLiCls = `nav-item ${
+                menuIndex === 0 || window.location.pathname === menuItem.path
+                  ? 'show'
+                  : ''
+              }`;
+              const parentActiveCls =
+                (activeMenu === menuIndex &&
+                  window.location.pathname === menuItem.path) ||
+                window.location.pathname === menuItem.path ||
+                (window.location.pathname.includes(menuItem.path) &&
+                  menuItem.path.length > 1)
+                  ? 'show active'
+                  : '';
               const parentLinkCls = `nav-link ${hasSubMenu ? 'with-sub' : ''}`;
               return (
                 <li className={`${parentLiCls} ${parentActiveCls}`}>
