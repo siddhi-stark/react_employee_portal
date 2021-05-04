@@ -140,8 +140,8 @@ function ToDoList() {
           ),
           projects: task.project_name,
           status: task.status,
-          eta: task.start_time,
-          at: task.end_time,
+          eta: `${task.start_time} Hrs`,
+          at: `${task.end_time} Hrs`,
           action: (
             <>
               {task.task_type === 'tw' && (

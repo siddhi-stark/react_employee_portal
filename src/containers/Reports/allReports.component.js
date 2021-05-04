@@ -10,6 +10,10 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const columns = [
   {
+    id: 'no',
+    label: 'Sr. No',
+  },
+  {
     id: 'date',
     label: 'Date',
   },
@@ -76,10 +80,11 @@ function AllReports() {
         totalItems: data.paginator.total_count,
       });
       const row = [];
-      data.data.map((report) => {
+      data.data.map((report, i) => {
         const date = customFunctions.getDate(report.created_at);
         const dt = new Date(date).getTime();
         row.push({
+          no: (page - 1) * pagination.itemsPerPage + (i + 1),
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
@@ -167,7 +172,7 @@ function AllReports() {
                         <TextInput
                           inputClass="form-control"
                           value={keyword}
-                          placeholder="search.."
+                          placeholder="Search Keyword.."
                           onInputChange={(e) => {
                             setFilterErr('');
                             setKeyword(e.target.value);
@@ -185,8 +190,7 @@ function AllReports() {
                         }}
                         autoComplete="off"
                         name="startDate"
-                        dateFormat="MM/dd/yyyy"
-                        placeholderText=" MM/DD/YYYY"
+                        placeholder="FromDate"
                         errorMessage={filterErr}
                       />
                     </Col>
@@ -201,7 +205,7 @@ function AllReports() {
                         autoComplete="off"
                         name="startDate"
                         dateFormat="MM/dd/yyyy"
-                        placeholderText=" MM/DD/YYYY"
+                        placeholder="ToDate"
                         errorMessage={filterErr}
                       />
                     </Col>

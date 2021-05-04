@@ -18,6 +18,10 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const columns = [
   {
+    id: 'no',
+    label: 'Sr. No',
+  },
+  {
     id: 'name',
     label: 'Full Name',
   },
@@ -129,8 +133,9 @@ function Employee() {
 
       const row = [];
 
-      data.data.map((emp) => {
+      data.data.map((emp, i) => {
         row.push({
+          no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: emp.full_name,
           email: emp.email,
           mobile: emp.mobile,
@@ -755,7 +760,7 @@ function Employee() {
                 <Col sm={6}>
                   <DropdownInput
                     label="Role Name"
-                    // asterisk="*"
+                    asterisk="*"
                     options={getEmployeeRole()}
                     placeholder="Select Role"
                     defaultValue={selectedRole}

@@ -12,6 +12,10 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const columns = [
   {
+    id: 'no',
+    label: 'Sr. No',
+  },
+  {
     id: 'name',
     label: 'Project Name',
   },
@@ -25,7 +29,7 @@ const columns = [
   },
   {
     id: 'remaining',
-    label: 'Remaining',
+    label: 'Remaining/Extra',
   },
   {
     id: 'completed',
@@ -93,8 +97,9 @@ function Projects() {
 
       const row = [];
 
-      data.data.map((proj) => {
+      data.data.map((proj, i) => {
         row.push({
+          no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: proj.name,
           spend: `${proj.spend} Hrs`,
           allocated: `${proj.allocated} Hrs`,

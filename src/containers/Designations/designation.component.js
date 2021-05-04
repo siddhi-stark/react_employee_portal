@@ -12,6 +12,10 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const columns = [
   {
+    id: 'no',
+    label: 'Sr. No',
+  },
+  {
     id: 'name',
     label: 'Designation',
   },
@@ -58,8 +62,9 @@ function Designation() {
 
       const row = [];
 
-      data.data.map((desgn) => {
+      data.data.map((desgn, i) => {
         row.push({
+          no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: desgn.name,
           action: (
             <>

@@ -8,6 +8,10 @@ import customFunctions from '../../helper/customFunctions';
 
 const columns = [
   {
+    id: 'no',
+    label: 'Sr. No',
+  },
+  {
     id: 'task',
     label: 'Todays Task',
   },
@@ -59,8 +63,9 @@ function Reports(props) {
       const reportData = showButton
         ? data.data.morning_data
         : data.data.evening_data;
-      reportData.map((proj) => {
+      reportData.map((proj, i) => {
         row.push({
+          no: (page - 1) * pagination.itemsPerPage + (i + 1),
           task: proj.activity,
           project: proj.project_name,
           status: proj.status,

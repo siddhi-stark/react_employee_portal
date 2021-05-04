@@ -264,6 +264,7 @@ function Task(props) {
                   onInputChange={(e) => setDescription(e.target.value)}
                   label="Description"
                   containerClass="form-group"
+                  asterisk="*"
                   type="textarea"
                   value={description}
                   placeholder="Enter Description"
