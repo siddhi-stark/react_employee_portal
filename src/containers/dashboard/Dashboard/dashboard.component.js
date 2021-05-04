@@ -13,8 +13,8 @@ function Dashboard() {
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
-      console.log('data', data);
       if (data.data.clock_in_time) {
+        localStorage.setItem('clockinTime', data.data.clock_in_time);
         const stime = data.data.clock_in_time.split(' ');
         const newtime = stime[0];
         setSignInTime(newtime);
@@ -56,7 +56,13 @@ function Dashboard() {
                 <Col md={5}>
                   <div className="welcome-text">
                     <h1>
-                      Welcome <strong>{localStorage.getItem('name').split(' ')[0] ? localStorage.getItem('name').split(' ')[0] :''},</strong>
+                      Welcome{' '}
+                      <strong>
+                        {localStorage.getItem('name').split(' ')[0]
+                          ? localStorage.getItem('name').split(' ')[0]
+                          : ''}
+                        ,
+                      </strong>
                     </h1>
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
@@ -68,14 +74,20 @@ function Dashboard() {
                 </Col>
                 <Col md={2}>
                   <div className="check-in">
-                    <div className="time-count text-center">
-                      <span>{signInTime}</span>
-                      
-                    </div>
-                    <div className="time-count text-center">
-                      <span>{localStorage.getItem('time').split(' ')[0]}</span>
-                      
-                    </div>
+                    {signInTime && (
+                      <div className="time-count text-center">
+                        <span>{signInTime}</span>
+                      </div>
+                    )}
+
+                    {localStorage.getItem('time') && (
+                      <div className="time-count text-center">
+                        <span>
+                          {localStorage.getItem('time').split(' ')[0]}
+                        </span>
+                      </div>
+                    )}
+
                     {showClockButton === true && (
                       <Button
                         type="button"
@@ -105,16 +117,16 @@ function Dashboard() {
                     <div className="weekly-status">
                       <ul className="list-unstyled p-0">
                         <li>
-                        <p className="status-label">Completed</p>
+                          <p className="status-label">Completed</p>
                           <span className="bluebg">65%</span>
                         </li>
                         <li>
-                        <p className="status-label">Pending</p>
-                        <span className="pinkbg">25%</span>
+                          <p className="status-label">Pending</p>
+                          <span className="pinkbg">25%</span>
                         </li>
                         <li>
-                        <p className="status-label">Remaining</p>
-                           <span className="yellowbg">10%</span>
+                          <p className="status-label">Remaining</p>
+                          <span className="yellowbg">10%</span>
                         </li>
                       </ul>
                     </div>

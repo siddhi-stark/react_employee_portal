@@ -8,6 +8,7 @@ import {
   ModalInput,
   TextInput,
   DropdownInput,
+  Datepicker,
 } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import customFunctions from '../../helper/customFunctions';
@@ -41,6 +42,10 @@ const items = [
   { to: '/reports', label: 'Employee' },
 ];
 
+const currentdate = new Date();
+// const currentYear = currentdate.getFullYear();
+const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
+
 function Employee() {
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
@@ -66,6 +71,7 @@ function Employee() {
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedTeamLead, setSelectedTeamLead] = useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
+  // const [validationDate, setValidationDate] = useState('');
   const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
   const [empId, setEmpId] = useState('');
@@ -143,7 +149,7 @@ function Employee() {
                   setCntClearFilter(cntClearFilter + 1);
                 }}
               >
-                <Image src="images/edit.svg" />
+                <Image src="images/edit.png" />
               </a>
               <a
                 href="/"
@@ -232,14 +238,16 @@ function Employee() {
 
       setFullName(data.data.full_name);
       setEmail(data.data.email);
-      setDate(data.data.dob ? data.data.dob : '');
+      // setDate(data.data.dob ? data.data.dob : '');
       setPassword(data.data.password);
       setMobile(data.data.mobile);
     }
   };
 
   const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.designationUrl}?type=all`
+    );
     if (data) {
       setDesignation(data.data);
     }
@@ -347,16 +355,21 @@ function Employee() {
 
   const addEmployee = async () => {
     const teamIdList = [];
-    selectedTeamLead.map((team) => {
-      teamIdList.push(team.id);
-      return team;
-    });
-
+    if (Object.keys(selectedTeamLead).length > 0) {
+      teamIdList.push(selectedTeamLead.id);
+      // selectedTeamLead.map((team) => {
+      //     teamIdList.push(team.id);
+      //     return team;
+      //   });
+    }
     const managerList = [];
-    selectedManager.map((mngr) => {
-      managerList.push(mngr.id);
-      return mngr;
-    });
+
+    if (selectedManager.length > 0) {
+      selectedManager.map((mngr) => {
+        managerList.push(mngr.id);
+        return mngr;
+      });
+    }
 
     const postData = {
       full_name: fullName,
@@ -367,7 +380,7 @@ function Employee() {
       password,
       team_leads: teamIdList,
       managers: managerList,
-      dob: customFunctions.getDate(date),
+      dob: date ? customFunctions.getDate(date) : null,
       tw_emp: twId,
       department: selectedDepartment.id,
     };
@@ -504,6 +517,7 @@ function Employee() {
 
   return (
     <>
+      {/* {console.log('validationDate',validationDate)} */}
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
         <Breadcrumb items={items} />
@@ -531,7 +545,6 @@ function Employee() {
         <Card>
           <Card.Body>
             <Row>
-            
               <div className="custom-header-wrapper">
                 <Col>
                   <div className="pull-left">
@@ -577,7 +590,7 @@ function Employee() {
                 </Col>
 
                 <Col md={4}>
-                  <div className="">
+                  <div className="clear-btn">
                     <Button
                       size="sm"
                       variant="primary"
@@ -699,7 +712,12 @@ function Employee() {
               <Row>
                 <Col sm={6}>
                   <TextInput
-                    onInputChange={(e) => setMobile(e.target.value)}
+                    onInputChange={(e) => {
+                      const re = /^[0-9\b]+$/;
+                      if (e.target.value === '' || re.test(e.target.value)) {
+                        setMobile(e.target.value);
+                      }
+                    }}
                     label="Mobile"
                     asterisk="*"
                     containerClass="form-group"
@@ -778,7 +796,6 @@ function Employee() {
                     options={getTeamLeadList()}
                     placeholder="Select TeamLead"
                     defaultValue={selectedTeamLead}
-                    isMulti
                     onSelectHandler={(select) => setSelectedTeamLead(select)}
                     // errorMessage={
                     //   selectedTeamLead && selectedTeamLead > 0
@@ -792,7 +809,7 @@ function Employee() {
                   />
                 </Col>
                 <Col sm={6}>
-                  <TextInput
+                  {/* <TextInput
                     onInputChange={(e) => setDate(e.target.value)}
                     label="DOB"
                     // asterisk="*"
@@ -802,6 +819,23 @@ function Employee() {
                     value={date}
                     // placeholder="Enter Contact Number"
                     // errorMessage={validator.message('DOB', mobile, 'required')}
+                  /> */}
+
+                  <Datepicker
+                    label="DOB"
+                    className="form-control"
+                    selected={date}
+                    placeholder="MM-DD-YYYY"
+                    maxDate={maxdate}
+                    // minDate={new Date('2-10-2020')}
+                    onChange={(e) => {
+                      setDate(e);
+                    }}
+                    errorMessage={validator.message(
+                      'DOB',
+                      date,
+                      `required | before_or_equal:${maxdate}`
+                    )}
                   />
                 </Col>
               </Row>

@@ -31,6 +31,21 @@ $border-radius-lg: 5px;
 $warning: $yellow !default;
 $form-check-input-width: 1em !default;
 
+.btn-sm, .btn-group-sm > .btn {
+    padding: 9px 25px;
+    border-radius: 0.2rem;
+}
+.clear-btn {
+    .btn {
+        padding: 9px 25px;
+        border-radius: 0.2rem;
+        min-width: 100px;
+    }
+}
+.clock-in-time {
+    padding-right: 15px;
+}
+
 .btn-lg, .btn {
     min-width: 155px;
     width: auto;
@@ -1465,7 +1480,7 @@ p:empty {
         align-items: center;
         justify-content: center;
         span {
-            font-size: 36px;
+            font-size: 30px;
             color: $darkblue;
             letter-spacing: 0.9px;
             line-height: 1;
@@ -1532,8 +1547,14 @@ p:empty {
             img {
                 border: 1px solid $gray;
             }
+            .status-label {
+                min-width: 85px;
+                font-size: 14px;
+                margin: 0px;
+            }
         }
     }
+
 }
 .time-sheet-table {
     &.table-projects {
@@ -1566,10 +1587,12 @@ p:empty {
     }
 }
 .persentage-circle {    
-    margin-left: 35px;
+    /*margin-left: 35px;*/
+    text-align: right;
     img {
-        max-width: 158px;
+        max-width: 115px;
         width: 100%;
+        margin-left: auto;
     }
 }
 .holidays-applied {
@@ -1942,6 +1965,10 @@ table {
     .buttons {
         .btn {
             margin-right: 0;
+            min-width: 155px;
+            width: auto;
+            font-size: 14px !important;
+            min-height: 33px;
         }
     }
     .modal-dialog {
@@ -2184,6 +2211,12 @@ table {
 }
 
 
+.custom-header-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+
 /*@media (min-width: 576px){
     .bd-content .highlight {
         margin-right: 0;
@@ -2273,7 +2306,6 @@ table {
         }
     }
 }
-
 @media(max-width: 1280px){
     .content-area {
         .row {
@@ -2573,9 +2605,32 @@ table {
         }
     }
 }
+@media (max-width: 1440px) {
+    .welcome-box.jumbotron {
+        padding: 30px 0px 0px 29px;
+        background-size: 16% 57%;
+    }
+    /*.check-in {
+        .time-count {
+            span {
+                font-size: 30px;
+            }
+        }
+    }*/
+}
 @media (max-width: 1366px) {
     .weekly-status-box .row .col-md-6 {
         width: 100%;
+    }
+    .check-in {
+        .time-count {
+            span {
+                font-size: 26px;
+            }
+        }
+    }
+    .persentage-circle {
+        text-align: center;
     }
 }
 @media (max-width: 1280px) {
@@ -2586,23 +2641,9 @@ table {
             }
         }
     }
-}*/
+}
 
-/*@media(max-width: 1280px){
-    .content-area {
-        .row {
-            [class*="col"] {
-                width: 100%;
-            }
-            &.bundle-Images-boxes {
-                .bundle-Images-box {
-                    img {
-                        max-width: 100%;
-                    }
-                }
-            }
-        }
-    }
+@media(max-width: 1280px){
     .weekly-status-box {
         .card-body {
             padding: 20px;
@@ -2614,21 +2655,21 @@ table {
     .modal-dialog.modal-lg.modal-dialog-centered {
         margin-left: 31%;
     }
-}*/
-// @media(max-width: 1280px){
-//     .welcome-box{
-//         &.jumbotron {
-//             padding: 20px 0px 0px 20px;
-//         }
-//     }
-// }
-// @media(max-width: 1199px){
-//     .modal-dialog.modal-lg.modal-dialog-centered {
-//         margin-left: 29%;
-//     }
-// }
-// @media(max-width: 1100px){
-//     .modal-dialog.modal-lg.modal-dialog-centered {
-//         margin-left: auto;
-//     }
-// }
+}
+@media(max-width: 1280px){
+    .welcome-box{
+        &.jumbotron {
+            padding: 20px 0px 0px 20px;
+        }
+    }
+}
+@media(max-width: 1199px){
+    .modal-dialog.modal-lg.modal-dialog-centered {
+        margin-left: 29%;
+    }
+}
+@media(max-width: 1100px){
+    .modal-dialog.modal-lg.modal-dialog-centered {
+        margin-left: auto;
+    }
+}

@@ -96,10 +96,15 @@ function Projects() {
       data.data.map((proj) => {
         row.push({
           name: proj.name,
-          spend: proj.spend,
-          allocated: proj.allocated,
+          spend: `${proj.spend} Hrs`,
+          allocated: `${proj.allocated} Hrs`,
           completed: proj.completed,
-          remaining: proj.remaining,
+          remaining:
+            Math.sign(proj.remaining) === 1 ? (
+              `${proj.remaining} Hrs`
+            ) : (
+              <span className="text-danger">{proj.remaining} Hrs</span>
+            ),
           support:
             proj.rt_support === true ? (
               <Image
@@ -126,9 +131,15 @@ function Projects() {
                 }}
               />
             ),
-          completion: <ProgressBar variant="success" now={proj.completion} />,
+          completion: (
+            <ProgressBar
+              variant="success"
+              now={proj.completion}
+              label={`${proj.completion}% completed`}
+            />
+          ),
           link: (
-            <a href={`${constants.link}${proj.tw_id}`} target="_blank">
+            <a href={`${constants.project}${proj.tw_id}`} target="_blank">
               <span>
                 <Image src="/images/redirect.png" />
               </span>

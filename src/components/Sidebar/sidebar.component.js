@@ -59,8 +59,10 @@ function Sidebar() {
                         localStorage.removeItem('userId');
                         localStorage.removeItem('headerDate');
                         localStorage.removeItem('name');
+                        localStorage.removeItem('clockinTime');
                         // localStorage.removeItem('password');
                         // localStorage.removeItem('email');
+                        // localStorage.removeItem('checkbox');
                         document.dispatchEvent(event);
                         dispatch({ type: 'LOGIN', value: false });
                         history.push('/login');

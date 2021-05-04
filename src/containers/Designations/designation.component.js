@@ -65,7 +65,7 @@ function Designation() {
             <>
               <a
                 href="/"
-                className="pl-2"
+                className=""
                 onClick={(e) => {
                   setModalShow(true);
                   e.preventDefault();
@@ -74,11 +74,11 @@ function Designation() {
                   setDesignation(desgn.name);
                 }}
               >
-                <Image src="images/edit.svg" />
+                <Image src="images/edit.png" />
               </a>
               <a
                 href="/"
-                className=""
+                className="ml-2"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -212,7 +212,7 @@ function Designation() {
             setShowDelete(null);
           }}
         >
-          You wont be able to revert this! 
+          You wont be able to revert this!
         </SweetAlert>
       )}
 
@@ -264,7 +264,7 @@ function Designation() {
                   </Col>
 
                   <Col md={4}>
-                    <div className="">
+                    <div className="clear-btn">
                       <Button
                         size="sm"
                         variant="primary"
@@ -315,7 +315,7 @@ function Designation() {
                   <TextInput
                     // onInputChange={(e) => setDesignation(e.target.value)}
                     onInputChange={(e) => {
-                      const re = /^[a-zA-Z ]*$/;
+                      const re = /^[a-zA-Z .]*$/;
                       if (e.target.value === '' || re.test(e.target.value)) {
                         setDesignation(e.target.value);
                       }

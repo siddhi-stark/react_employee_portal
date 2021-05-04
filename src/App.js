@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Routes from './routes';
@@ -7,29 +7,42 @@ import Layout from './components/Layout/layout.component';
 const token = localStorage.getItem('access_token');
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(token ? true : false); // eslint-disable-line
+
   const history = useHistory();
   const dispatch = useDispatch();
-
   const checkLoggedIn = () => {
     if (!token) {
-      dispatch({ type: 'LOGIN', value: true });
-      history.push('/login');
+      const path = window.location.pathname;
+      if (path !== '/login') {
+        history.push('/login');
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(true);
+      }
+
+      // return false;
     } else {
-      dispatch({ type: 'LOGIN', value: false });
+      setIsLoggedIn(true);
+      dispatch({ type: 'LOGIN', value: true });
     }
   };
 
   useEffect(() => {
     checkLoggedIn();
-  }, [checkLoggedIn]);
+  }, [isLoggedIn, token]);
 
   return (
     <>
-      <Layout>
-        <Switch>
-          <Route path="/" component={Routes} />
-        </Switch>
-      </Layout>
+      {isLoggedIn ? (
+        <Layout>
+          <Switch>
+            <Route path="/" component={Routes} />
+          </Switch>
+        </Layout>
+      ) : (
+        ''
+      )}
     </>
   );
 }

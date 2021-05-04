@@ -1,30 +1,59 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 function Header() {
   const date = new Date().toDateString().split(' ');
-  const formattedDate = `${date[0]}, ${date[1]} ${date[2]} ${date[3]} `
+  const formattedDate = `${date[0]}, ${date[1]} ${date[2]} ${date[3]} `;
   // const formattedDate = date.toLocaleString('en-US', {
-  //   weekday: 'short', 
-  //   day: 'numeric', 
-  //   year: 'numeric', 
-  //   month: 'long' 
+  //   weekday: 'short',
+  //   day: 'numeric',
+  //   year: 'numeric',
+  //   month: 'long'
   // });
-  
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      history.push('/login');
+      // return false;
+    } else {
+      dispatch({ type: 'LOGIN', value: true });
+    }
+  }, []);
+
   return (
     <>
       <div className="main-header side-header sticky sticky-pin">
-        <div className="container-fluid d-flex align-items-center justify-content-between h-100">
+        <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <div className="main-header-left">
-            <a  href="" id="mainSidebarToggle">
+            <a href="" id="mainSidebarToggle">
               <span />
             </a>
           </div>
+          {localStorage.getItem('clockinTime') ? (
+            <div className="d-flex justify-content-end clock-in-time">
+              <h7>
+                you are clocked in at {localStorage.getItem('clockinTime')}{' '}
+              </h7>
+            </div>
+          ) : (
+            ''
+          )}
+
           <div className="main-header-right">
             <div className="day-date">
               <h5>{formattedDate}</h5>
             </div>
+
             <div className="profile-name-img d-flex align-items-center">
-              <h6>{localStorage.getItem('name') ? localStorage.getItem('name') : ''}</h6>
+              <h6>
+                {localStorage.getItem('name')
+                  ? localStorage.getItem('name')
+                  : ''}
+              </h6>
               <div className="profile-img">
                 {/* <a href="#">
                   <img src="/images/profile-img.png" alt="Profile" />

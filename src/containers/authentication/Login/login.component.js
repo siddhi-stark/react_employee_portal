@@ -34,7 +34,6 @@ function Login(props) {
       setRemember('');
       setPassword('');
     }
-    dispatch({ type: 'LOGIN', value: false });
     const token = localStorage.getItem('access_token');
     if (token) {
       dispatch({ type: 'LOGIN', value: true });
@@ -66,6 +65,7 @@ function Login(props) {
       await localStorage.setItem('email', data.data.email);
       await localStorage.setItem('userId', data.data.id);
       await localStorage.setItem('password', password);
+      await localStorage.setItem('group', data.data.group);
       await localStorage.setItem('name', data.data.full_name);
 
       dispatch({ type: 'LOGIN', value: true });

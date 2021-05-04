@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+// import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Sidebar from '../Sidebar/sidebar.component';
 import Header from '../Header/header.component';
@@ -9,7 +10,7 @@ function Layout(props) {
   );
   const { children } = props;
   const dispatch = useDispatch();
-
+  // const history = useHistory();
   useEffect(() => {
     document.addEventListener('Login', () => {
       dispatch({ type: 'LOGIN', value: false });
@@ -26,7 +27,7 @@ function Layout(props) {
     }
     dispatch({ type: 'LOGIN', value: false });
   }, [code]);
-  
+
   return (
     <>
       {isLoggedIn ? (

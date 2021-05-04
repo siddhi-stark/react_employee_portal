@@ -73,7 +73,6 @@ function ToDoList() {
   const [showScrum, setShowScrum] = useState(false);
   const [showClockoutBtn, setShowClockoutBtn] = useState(false);
   const [showScrumPopup, setShowScrumPopup] = useState(false);
-  const [isOverdue, setIsOverdue] = useState('');
   const [showErrorBlock, setShowErrorBlock] = useState(false);
   const [showSuccessBlock, setShowSuccessBlock] = useState(false);
   const [type, setType] = useState('morning');
@@ -83,9 +82,7 @@ function ToDoList() {
     totalItems: 10,
   });
 
-  const [breakData, setBreakData] = useState([
-  
-  ]);
+  const [breakData, setBreakData] = useState([]);
 
   const BreakList = [
     {
@@ -127,10 +124,20 @@ function ToDoList() {
       const row = [];
 
       data.data.map((task) => {
-        setIsOverdue(task.is_overdue);
         row.push({
-          
-          todo: task.content,
+          todo: (
+            <>
+              {task.content}
+              <br />
+              <div
+                className={
+                  task.is_overdue ? 'badge badge-danger' : 'badge badge-warning'
+                }
+              >
+                {task.is_overdue ? 'Overdue' : 'Today'}
+              </div>
+            </>
+          ),
           projects: task.project_name,
           status: task.status,
           eta: task.start_time,
@@ -143,13 +150,13 @@ function ToDoList() {
                   className="pl-2"
                   target="_blank"
                 >
-                  <Image src="images/edit.svg" />
+                  <Image src="images/edit.png" />
                 </a>
               )}
               {task.task_type !== 'tw' && (
                 <a
                   href="/"
-                  className="pl-2"
+                  className=""
                   onClick={(e) => {
                     setModalShow(true);
                     setEditShow(true);
@@ -160,12 +167,12 @@ function ToDoList() {
                     localStorage.setItem('taskid', task.id);
                   }}
                 >
-                  <Image src="images/edit.svg" />
+                  <Image src="images/edit.png" />
                 </a>
               )}
               <a
                 href="/"
-                className=""
+                className="ml-2"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -187,24 +194,20 @@ function ToDoList() {
   useEffect(() => {
     async function getData() {
       const selectedBreak = [];
-   BreakList.map((item) => {
-     if(item.id === 3 || item.id === 2) {
-      selectedBreak.push({
-        selectedBreakOption: {label: item.label, id: item.id}
-        ,
-        startTime: '',
-        endTime: '',
-        hrs: null,
-        min: null,
-        isDefault: true
-      })
-      
-     }
-    //  console.log('selectedBreak', selectedBreak);
-    return selectedBreak;
-    
-   })
-   setBreakData(selectedBreak);
+      BreakList.map((item) => {
+        if (item.id === 3 || item.id === 2) {
+          selectedBreak.push({
+            selectedBreakOption: { label: item.label, id: item.id },
+            startTime: '',
+            endTime: '',
+            hrs: null,
+            min: null,
+            isDefault: true,
+          });
+        }
+        return selectedBreak;
+      });
+      setBreakData(selectedBreak);
 
       getTableData(1);
       getDailyActivity();
@@ -220,15 +223,11 @@ function ToDoList() {
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data && data.data) {
-      
-      setShowScrum(data.data.signout_mail);  
-      setShowClockoutBtn(!data.data.morning_mail);
-    } else {
-      setShowScrum(data.data.signout_mail);
-      setShowClockoutBtn(!data.data.morning_mail);
+      setShowScrum(data.data.morning_mail);
+      setShowClockoutBtn(data.data.morning_mail);
     }
-    if(data.data.clock_out_time) {
-      localStorage.setItem('time', data.data.clock_out_time)
+    if (data.data.clock_out_time) {
+      localStorage.setItem('time', data.data.clock_out_time);
     }
   };
 
@@ -243,7 +242,6 @@ function ToDoList() {
       endPoint,
       postData
     );
-// console.log('postData', postData);
     if (data) {
       setType('logout');
       setShowScrum(false);
@@ -262,7 +260,14 @@ function ToDoList() {
   const addBreak = () => {
     return setBreakData([
       ...breakData,
-      { selectedBreakOption: '', startTime: '', endTime: '', hrs: null, mins: null, isDefault: false },
+      {
+        selectedBreakOption: '',
+        startTime: '',
+        endTime: '',
+        hrs: null,
+        mins: null,
+        isDefault: false,
+      },
     ]);
   };
 
@@ -281,8 +286,6 @@ function ToDoList() {
   const onComfirm = async () => {
     const BreakPostData = [];
     breakData.map((dt) => {
-    console.log('dateeee', customFunctions.getTime(dt.startTime) )
-
       return BreakPostData.push({
         description: dt.selectedBreakOption.label,
         start_time: customFunctions.getTime(dt.startTime),
@@ -295,12 +298,10 @@ function ToDoList() {
     const postData = {
       tasks: BreakPostData,
     };
-    console.log('postData', postData);
     const endPoint = `${Api.taskUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
       data.data.task_created_ids.map((e) => {
-        // console.log('e',e);
         selectedRowIndex.push(e);
         return e;
       });
@@ -344,9 +345,7 @@ function ToDoList() {
 
   const onBreakSubmit = (e) => {
     e.preventDefault();
-    console.log('data',breakData.startTime === '' && breakData.endTime === '');
     if (startTime && endTime) {
-      console.log('validation');
       // setShowBreak(false);
       onComfirm();
       setStartTime('');
@@ -364,22 +363,16 @@ function ToDoList() {
     }
   };
 
-  const onDeleteBreakHandler = (idx,e) => {
+  const onDeleteBreakHandler = (idx, e) => {
     e.preventDefault();
     e.stopPropagation();
     const data = [...breakData];
     data.splice(idx, 1);
     setBreakData([...data]);
-   
-  }
+  };
 
   return (
     <>
-    {/* {console.log('selectedID', selectedRowIndex)}
-    {console.log('showScrum', showScrum)} */}
-    {/* {console.log('toeItems',selectedId)}; */}
-    {console.log('breakData', startTime)}
-    {console.log('breakData', breakData)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -441,7 +434,7 @@ function ToDoList() {
       <Card className="mt-3">
         <Card.Body>
           <Row>
-          <div className="custom-header-wrapper">
+            <div className="custom-header-wrapper">
               <Col>
                 <Card.Title>
                   To Do
@@ -478,13 +471,6 @@ function ToDoList() {
                   },
                 }}
                 dropdownContainerClass="mb-3"
-                overDueClass={
-                  isOverdue ? (
-                    <span className="badge badge-danger">Danger</span>
-                  ) : (
-                    ''
-                  )
-                }
                 selectedRowItems={selectedId}
                 onSelectRowsIndexes={(rowIndex) => {
                   const twId = [];
@@ -503,8 +489,7 @@ function ToDoList() {
                     return ind;
                   });
                   setSelectedRowIndex(twId);
-                  setSelectedId(rowIndex)
-                  
+                  setSelectedId(rowIndex);
                 }}
               />
             </Col>
@@ -521,7 +506,7 @@ function ToDoList() {
                 Send Scrum
               </Button>
             )}
-            {showClockoutBtn && (
+            {!showClockoutBtn && showScrum && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -678,21 +663,17 @@ function ToDoList() {
                         }}
                       >
                         <img src="images/skip.svg" alt="skip" />
-
                       </a>
-                      {breakData.length > 1 &&(
-                        <a 
-                      href="/"
-                      onClick={(e) => {
-                         
-                          onDeleteBreakHandler(i,e);
-                        }}
-                      >
-                      <img src="images/delete.png" alt="delete" />
-
-                      </a>
+                      {breakData.length > 1 && (
+                        <a
+                          href="/"
+                          onClick={(e) => {
+                            onDeleteBreakHandler(i, e);
+                          }}
+                        >
+                          <img src="images/delete.png" alt="delete" />
+                        </a>
                       )}
-                     
                     </div>
                   </div>
                   <Row>
@@ -701,7 +682,6 @@ function ToDoList() {
                       asterisk="*"
                       defaultValue={data.selectedBreakOption}
                       onSelectHandler={(select) => {
-                        // console.log('drowdown', select)
                         breakData[i].selectedBreakOption = select;
                         setSelectedBreakOption(breakData);
                       }}

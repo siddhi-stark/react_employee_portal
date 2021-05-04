@@ -15,7 +15,26 @@ export default function SelectDropdown(props) {
     errorMessage,
     asterisk,
     placeholder,
+    disabled,
   } = props;
+
+  const CustomStyle = {
+    option: (provided, state) => ({
+      ...provided,
+      color: '#212529',
+      backgroundColor: state.isSelected ? 'white' : 'white',
+    }),
+    control: (provided, state) => ({
+      ...provided,
+      color: '#212529',
+      backgroundColor: state.isSelected ? 'white' : 'white',
+    }),
+    singleValue: (provided, state) => ({
+      ...provided,
+      color: '#212529',
+      backgroundColor: state.isSelected ? 'white' : 'white',
+    }),
+  };
 
   return (
     <>
@@ -36,6 +55,8 @@ export default function SelectDropdown(props) {
           placeholder={placeholder}
           options={options}
           isMulti={isMulti}
+          styles={CustomStyle}
+          isDisabled={disabled}
         />
         <p style={{ color: 'red' }}> {errorMessage} </p>
       </Form.Group>
