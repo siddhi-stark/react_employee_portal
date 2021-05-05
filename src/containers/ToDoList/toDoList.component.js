@@ -28,7 +28,7 @@ const columns = [
   },
   {
     id: 'status',
-    label: 'status',
+    label: 'Status',
   },
   {
     id: 'eta',
@@ -378,8 +378,8 @@ function ToDoList() {
           title="Are you sure, do you want to delete the task ?"
           error
           showCancel
-          confirmBtnBsStyle="success"
-          cancelBtnBsStyle="danger"
+          confirmBtnBsStyle="btn btn-primary btn-lg"
+          cancelBtnBsStyle="btn btn-lg btn-secondary"
           onConfirm={() => {
             deleteTask(taskId);
           }}
@@ -436,7 +436,7 @@ function ToDoList() {
           <Row>
             <div className="custom-header-wrapper">
               <Col>
-                <Card.Title>
+                <Card.Title className="card-title h5 d-flex align-items-center justify-content-between">
                   To Do
                   <div className="float-end">
                     <Button

@@ -4,7 +4,7 @@ import { Card, Row, Col, Image, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
-import { ModalInput, TextInput } from '../../components/FormInputs';
+import { ModalInput, TextInput, Helmet } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -42,6 +42,7 @@ function Designation() {
   const [showDelete, setShowDelete] = useState(false);
   const [designation, setDesignation] = useState('');
   const [searchErr, setSearchErr] = useState('');
+  const [title, setTitle] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -105,6 +106,7 @@ function Designation() {
   useEffect(() => {
     async function getData() {
       getTableData(1);
+      setTitle('Designation');
     }
     getData();
   }, []);
@@ -151,7 +153,7 @@ function Designation() {
     if (data) {
       setModalShow(false);
       setDesignation();
-      swal(data && data.message[0], '', 'success').then((result) => {
+      swal('Designation Updated Successfully', '', 'success').then((result) => {
         if (result) {
           getTableData(1);
           setModalShow(false);
@@ -197,6 +199,7 @@ function Designation() {
 
   return (
     <>
+      <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Designation</h2>
         <Breadcrumb items={items} />
@@ -207,8 +210,8 @@ function Designation() {
           title="Are you sure, do you want to remove the designation ?"
           error
           showCancel
-          confirmBtnBsStyle="success"
-          cancelBtnBsStyle="danger"
+          confirmBtnBsStyle="btn btn-primary btn-lg"
+          cancelBtnBsStyle="btn btn-lg btn-secondary"
           onConfirm={() => {
             removeDesignation(designationId);
           }}
@@ -217,7 +220,7 @@ function Designation() {
             setShowDelete(null);
           }}
         >
-          You wont be able to revert this!
+          You will not be able to revert this!
         </SweetAlert>
       )}
 
@@ -325,7 +328,7 @@ function Designation() {
                         setDesignation(e.target.value);
                       }
                     }}
-                    label="Desination Name"
+                    label="Designation Name"
                     containerClass="form-group"
                     type="text"
                     name="designationtitle"
@@ -342,7 +345,7 @@ function Designation() {
             </Form>
           }
           modalFooter={
-            <div className="float-end">
+            <div className="cancel-update-btn justify-content-between d-flex align-items-center w-100">
               <Button variant="secondary" onClick={() => onCancel()}>
                 Cancel
               </Button>

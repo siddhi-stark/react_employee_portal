@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Button } from 'react-bootstrap';
+import { Helmet } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -37,6 +38,7 @@ function Reports(props) {
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
   const [reportDate, setReportDate] = useState('');
+  const [title, setTitle] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -79,10 +81,12 @@ function Reports(props) {
   };
   useEffect(() => {
     getTableData();
+    setTitle('Detail Report');
   }, []);
 
   return (
     <>
+      <Helmet title={title} />
       <div className="mt-3">
         <Card>
           <Card.Body>

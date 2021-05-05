@@ -3,6 +3,8 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Form } from 'react-bootstrap';
 import 'react-datepicker/dist/react-datepicker.css';
+// import setHours from "date-fns/setHours";
+// import setMinutes from "date-fns/setMinutes";
 
 export default function DateTimePicker(props) {
   const {
@@ -12,6 +14,8 @@ export default function DateTimePicker(props) {
     onChange,
     minDate,
     maxDate,
+    minTime,
+    maxTime,
     isClearable,
     dateFormat,
     showMonthYearPicker,
@@ -32,6 +36,7 @@ export default function DateTimePicker(props) {
     containerClass,
     asterisk,
     placeholder,
+    excludeTimes,
   } = props;
 
   return (
@@ -46,6 +51,7 @@ export default function DateTimePicker(props) {
         <DatePicker
           selected={selected}
           startDate={startDate}
+          excludeTimes={excludeTimes}
           endDate={endDate}
           minDate={minDate}
           maxDate={maxDate}
@@ -60,6 +66,8 @@ export default function DateTimePicker(props) {
           timeIntervals={timeIntervals}
           timeCaption={timeCaption}
           className={className}
+          minTime={minTime}
+          maxTime={maxTime}
           showYearDropdown={showYearDropdown}
           yearDropdownItemNumber={yearDropdownItemNumber}
           showMonthDropdown={showMonthDropdown}

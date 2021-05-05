@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Image, ProgressBar, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
-import { TextInput } from '../../components/FormInputs';
+import { TextInput, Helmet } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -61,6 +61,7 @@ function Projects() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [projectId, setProjectId] = useState(null);
   const [rtSupport, setRtSupport] = useState('');
+  const [title, setTitle] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -160,6 +161,7 @@ function Projects() {
 
   useEffect(() => {
     getTableData(1);
+    setTitle('Projects');
   }, []);
 
   useEffect(() => {
@@ -173,6 +175,7 @@ function Projects() {
 
   return (
     <>
+      <Helmet title={title} />
       {showUpdate && (
         <SweetAlert
           title="Are you sure, do you want to update the project ?"
@@ -230,7 +233,7 @@ function Projects() {
                   </Col>
 
                   <Col md={4}>
-                    <div className="">
+                    <div className="clear-btn">
                       <Button
                         size="sm"
                         variant="primary"

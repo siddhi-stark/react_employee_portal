@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
-import { TextInput, Datepicker } from '../../components/FormInputs';
+import { TextInput, Datepicker, Helmet } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -49,6 +49,7 @@ function AllReports() {
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
+  const [title, setTitle] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -106,6 +107,7 @@ function AllReports() {
       getReports(1);
       // const Id = localStorage.getItem('userId');
       // setUserId(Id);
+      setTitle('Reports');
     }
     getData();
   }, []);
@@ -140,6 +142,7 @@ function AllReports() {
 
   return (
     <>
+      <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Reports</h2>
         <Breadcrumb items={items} />
@@ -147,12 +150,12 @@ function AllReports() {
       <div className="mt-3">
         <Card>
           <Card.Body>
-            <Card.Title>
-              Reports
+            <Card.Title className="d-flex align-items-center justify-content-between">
+              <h5 className="m-0">Reports</h5>
               <div className="pull-right">
                 <a
                   href="/"
-                  className=""
+                  className="btn btn-primary filter-btn"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

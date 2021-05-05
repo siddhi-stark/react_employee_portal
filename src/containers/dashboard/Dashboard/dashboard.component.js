@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
+import { Helmet } from '../../../components/FormInputs';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
@@ -9,7 +10,7 @@ import ToDoList from '../../ToDoList/toDoList.component';
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
   const [showClockButton, setShowClockButton] = useState(true);
-
+  const [title, setTitle] = useState('');
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
@@ -38,10 +39,12 @@ function Dashboard() {
 
   useEffect(() => {
     getDailyActivity();
+    setTitle('Dashboard');
   });
 
   return (
     <>
+      <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>

@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
+import { setHours, setMinutes } from 'date-fns';
 import customFunctions from '../../helper/customFunctions';
 import { ModalInput, TextInput, Datepicker } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
@@ -19,7 +20,11 @@ function Task(props) {
   const [taskName, setTaskName] = useState('');
   const [count, forceUpdate] = useState(0);
   const [taskModalShow, setTaskModalShow] = useState(false);
+  // const [validateTime, setValidateTime] = useState([]);
+  const [progressValue, setProgressValue] = useState('');
   const [id, setId] = useState(null);
+  const [startHours, setStartHours] = useState(''); // eslint-disable-line
+  const [startMinutes, setStartMinutes] = useState(''); // eslint-disable-line
 
   const getTaskById = async (tid) => {
     const { data } = await AuthApi.getDataFromServer(`${Api.taskUrl}${tid}/`);
@@ -42,7 +47,7 @@ function Task(props) {
       const spentNew = spent.split('Hrs');
 
       const spent1 = spentNew[0] ? spentNew[0] : 0;
-      const spentNewMins = spentNew[1].split('Mins');
+      const spentNewMins = spentNew[0].split('Mins');
 
       // const spent3 = spentNew[1] ? spentNew[1] : 0;
       setTaskHours(spent1);
@@ -51,6 +56,7 @@ function Task(props) {
 
       setTaskName(data.data.content);
       setDescription(data.data.description);
+      setProgressValue(data.data.progress);
     }
   };
 
@@ -74,6 +80,7 @@ function Task(props) {
       minutes: Number(taskMins),
       description,
       content: taskName,
+      progress: Number(progressValue),
       task_type: 'other',
     };
     let postData = {};
@@ -82,7 +89,7 @@ function Task(props) {
         tasks: [{ ...obj }],
       };
     }
-
+    console.log('postData', postData);
     const callback = id ? AuthApi.putDataToServer : AuthApi.postDataToServer;
     const endPoint = id ? `${Api.taskUrl}${id}/` : Api.taskUrl;
     const { data } = await callback(endPoint, id ? obj : postData);
@@ -132,6 +139,7 @@ function Task(props) {
 
   return (
     <>
+      {console.log('progressValue', progressValue)}
       <ModalInput
         size="lg"
         centered
@@ -167,7 +175,12 @@ function Task(props) {
                   asterisk="*"
                   selected={taskStartTime}
                   onChange={(e) => {
+                    // console.log('e',customFunctions.getTime(e).split(':')[1]);
+                    // setValidateTime(customFunctions.getTime(e).split(':'));
                     setTaskStartTime(e);
+                    console.log('hours', e.getHours(), e.getMinutes());
+                    setStartHours(e.getHours());
+                    setStartMinutes(e.getMinutes());
                   }}
                   showTimeSelect="showTimeSelect"
                   showTimeSelectOnly="showTimeSelectOnly"
@@ -185,10 +198,17 @@ function Task(props) {
                   className="form-control"
                   label="EndTime"
                   asterisk="*"
+                  format="HH:mm"
+                  excludeOutOfBoundTimes
                   selected={taskEndTime}
+                  minDate={new Date(taskStartTime)}
+                  minTime={setHours(
+                    setMinutes(new Date(), startMinutes),
+                    startHours
+                  )}
+                  maxTime={setHours(setMinutes(new Date(), 59), 23)}
                   onChange={(e) => {
                     setTaskEndTime(e);
-
                     const taskStrtTime = new Date(e);
 
                     const taskEnTime = new Date(taskStartTime);
@@ -244,14 +264,24 @@ function Task(props) {
                   <div className="progress-main">
                     <div className="progress">
                       <div
-                        className="progress-bar bg-secondary"
-                        role="progressbar"
-                        style={{ width: '5%' }}
-                        aria-valuenow="0"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
+                        className="progress-bar bg-secondary w-100"
+                        // role="progressbar"
+                        // style={{'width': '5%;'}}
+                        // aria-valuenow="0"
+                        // aria-valuemin="0"
+                        //  aria-valuemax="100"
                       >
-                        0%
+                        <input
+                          type="range"
+                          name="rangeInput"
+                          min="0"
+                          max="100"
+                          value={progressValue}
+                          onChange={(e) => {
+                            setProgressValue(e.target.value);
+                            console.log(e.target.value);
+                          }}
+                        />
                       </div>
                     </div>
                   </div>

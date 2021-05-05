@@ -14,7 +14,7 @@ const menu = [
   {
     title: 'Designation',
     path: '/designation',
-    icon: 'dashboard.svg',
+    icon: 'Designation.svg',
     submenu: [],
   },
   {

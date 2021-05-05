@@ -9,6 +9,7 @@ import {
   TextInput,
   DropdownInput,
   Datepicker,
+  Helmet,
 } from '../../components/FormInputs';
 import Table from '../../components/Table/simpletable.component';
 import customFunctions from '../../helper/customFunctions';
@@ -79,6 +80,7 @@ function Employee() {
   const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
   const [empId, setEmpId] = useState('');
+  const [title, setTitle] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -312,6 +314,7 @@ function Employee() {
       getManager();
       getTeamLead();
       getDepartment();
+      setTitle('Employee');
     }
     getData();
   }, []);
@@ -519,9 +522,13 @@ function Employee() {
       return emp;
     });
   };
-
+  const filterSearch = (e) => {
+    e.preventDefault();
+    getTableData(1);
+  };
   return (
     <>
+      <Helmet title={title} />
       {/* {console.log('validationDate',validationDate)} */}
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
@@ -532,8 +539,8 @@ function Employee() {
           title="Are you sure, do you want to delete the employee ?"
           error
           showCancel
-          confirmBtnBsStyle="success"
-          cancelBtnBsStyle="danger"
+          confirmBtnBsStyle="btn btn-primary btn-lg ml-2"
+          cancelBtnBsStyle="btn btn-lg btn-secondary"
           onConfirm={() => {
             deleteEmployee(employeeId);
           }}
@@ -572,41 +579,42 @@ function Employee() {
                   </div>
                 </Col>
               </div>
+              <Form onSubmit={(e) => filterSearch(e)}>
+                <Row className="mt-3">
+                  <Col md={4}>
+                    <div className="search-bar-input">
+                      <TextInput
+                        inputClass="form-control"
+                        value={keyword}
+                        placeholder="search.."
+                        onInputChange={(e) => {
+                          setKeyword(e.target.value);
+                        }}
+                      />
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        // onClick={() => getTableData(1)}
+                      >
+                        <Image src="images/search.svg" className="svg" />
+                      </Button>
+                    </div>
+                  </Col>
 
-              <Row className="mt-3">
-                <Col md={4}>
-                  <div className="search-bar-input">
-                    <TextInput
-                      inputClass="form-control"
-                      value={keyword}
-                      placeholder="search.."
-                      onInputChange={(e) => {
-                        setKeyword(e.target.value);
-                      }}
-                    />
-                    <Button
-                      variant="primary"
-                      type="button"
-                      onClick={() => getTableData(1)}
-                    >
-                      <Image src="images/search.svg" className="svg" />
-                    </Button>
-                  </div>
-                </Col>
-
-                <Col md={4}>
-                  <div className="clear-btn">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      type="reset"
-                      onClick={() => onClear()}
-                    >
-                      Clear
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
+                  <Col md={4}>
+                    <div className="clear-btn">
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        type="reset"
+                        onClick={() => onClear()}
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Form>
               {pagination.totalItems > 0 ? (
                 <Col className="mt-3">
                   <Table
