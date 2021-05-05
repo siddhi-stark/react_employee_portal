@@ -69,8 +69,8 @@ function Dashboard() {
                     </h1>
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
-                        The secret of your success is determined by your daily
-                        agenda
+                        "The secret of your success is determined by your daily
+                        agenda"
                       </p>
                     </blockquote>
                   </div>
