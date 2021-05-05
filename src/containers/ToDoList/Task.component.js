@@ -89,7 +89,7 @@ function Task(props) {
         tasks: [{ ...obj }],
       };
     }
-    
+
     const callback = id ? AuthApi.putDataToServer : AuthApi.postDataToServer;
     const endPoint = id ? `${Api.taskUrl}${id}/` : Api.taskUrl;
     const { data } = await callback(endPoint, id ? obj : postData);
@@ -174,7 +174,6 @@ function Task(props) {
                   asterisk="*"
                   selected={taskStartTime}
                   onChange={(e) => {
-                    
                     setTaskStartTime(e);
                     setStartHours(e.getHours());
                     setStartMinutes(e.getMinutes());

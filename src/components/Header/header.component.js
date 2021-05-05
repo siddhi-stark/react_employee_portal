@@ -36,7 +36,7 @@ function Header() {
           {localStorage.getItem('clockinTime') ? (
             <div className="d-flex justify-content-end clock-in-time">
               <h7>
-                you are clocked in at {localStorage.getItem('clockinTime')}{' '}
+                You are clocked in at {localStorage.getItem('clockinTime')}{' '}
               </h7>
             </div>
           ) : (
