@@ -51,7 +51,10 @@ function Reports(props) {
       new Date(Number(props.match.params.date))
     );
     setReportDate(dt);
-    const endPoint = `${Api.dailyReportUrl}?date=${dt}&page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.dailyReportUrl}?date=${dt}&user_id=${props.match.params.id}&page=${page}&limit=${pagination.itemsPerPage}`;
+    // const postData = {
+    //   userId: props.match.params.id,
+    // };
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       if (data.paginator && Object.keys(data.paginator).length > 0) {
@@ -82,6 +85,8 @@ function Reports(props) {
   useEffect(() => {
     getTableData();
     setTitle('Detail Report');
+    // const idd = props.match.params.id;
+    // console.log('iddd', props.match.params.id);
   }, []);
 
   return (

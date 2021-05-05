@@ -22,7 +22,7 @@ function Routes() {
       <Route path="/forget-password" exact component={ForgetPassword} />
       <Route path="/password/reset/:token" exact component={ResetPassword} />
       <Route path="/reports" exact component={AllReports} />
-      <Route path="/daily-report/:date" exact component={Reports} />
+      <Route path="/daily-report/:date/:id" exact component={Reports} />
       {/* <Route path="/employee" exact component={DashboardNew} /> */}
       <Route path="/welcome" exact component={WelcomeScreen} />
       <Route path="/right" exact component={RightContainer} />
