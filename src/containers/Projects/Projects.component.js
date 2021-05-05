@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Image, ProgressBar, Button } from 'react-bootstrap';
+import {
+  Card,
+  Row,
+  Col,
+  Image,
+  ProgressBar,
+  Button,
+  Form,
+} from 'react-bootstrap';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { TextInput, Helmet } from '../../components/FormInputs';
@@ -173,6 +181,11 @@ function Projects() {
     setCntClearFilter(cntClearFilter + 1);
   };
 
+  const filterSearch = (e) => {
+    e.preventDefault();
+    getTableData(1);
+  };
+
   return (
     <>
       <Helmet title={title} />
@@ -210,41 +223,42 @@ function Projects() {
                     </div>
                   </Col>
                 </Row>
+                <Form onSubmit={(e) => filterSearch(e)}>
+                  <Row className="mt-3">
+                    <Col md={4}>
+                      <div className="search-bar-input">
+                        <TextInput
+                          inputClass="form-control"
+                          value={keyword}
+                          placeholder="search.."
+                          onInputChange={(e) => {
+                            setKeyword(e.target.value);
+                          }}
+                        />
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          // onClick={() => getTableData(1)}
+                        >
+                          <Image src="images/search.svg" className="svg" />
+                        </Button>
+                      </div>
+                    </Col>
 
-                <Row className="mt-3">
-                  <Col md={4}>
-                    <div className="search-bar-input">
-                      <TextInput
-                        inputClass="form-control"
-                        value={keyword}
-                        placeholder="search.."
-                        onInputChange={(e) => {
-                          setKeyword(e.target.value);
-                        }}
-                      />
-                      <Button
-                        variant="primary"
-                        type="button"
-                        onClick={() => getTableData(1)}
-                      >
-                        <Image src="images/search.svg" className="svg" />
-                      </Button>
-                    </div>
-                  </Col>
-
-                  <Col md={4}>
-                    <div className="clear-btn">
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        type="reset"
-                        onClick={() => onClear()}
-                      >
-                        Clear
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
+                    <Col md={4}>
+                      <div className="clear-btn">
+                        <Button
+                          size="sm"
+                          variant="primary"
+                          type="reset"
+                          onClick={() => onClear()}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
+                </Form>
                 {pagination.totalItems > 0 ? (
                   <Col className="mt-3">
                     <Table
