@@ -89,7 +89,7 @@ function Task(props) {
         tasks: [{ ...obj }],
       };
     }
-    console.log('postData', postData);
+    
     const callback = id ? AuthApi.putDataToServer : AuthApi.postDataToServer;
     const endPoint = id ? `${Api.taskUrl}${id}/` : Api.taskUrl;
     const { data } = await callback(endPoint, id ? obj : postData);
@@ -139,7 +139,6 @@ function Task(props) {
 
   return (
     <>
-      {console.log('progressValue', progressValue)}
       <ModalInput
         size="lg"
         centered
@@ -175,10 +174,8 @@ function Task(props) {
                   asterisk="*"
                   selected={taskStartTime}
                   onChange={(e) => {
-                    // console.log('e',customFunctions.getTime(e).split(':')[1]);
-                    // setValidateTime(customFunctions.getTime(e).split(':'));
+                    
                     setTaskStartTime(e);
-                    console.log('hours', e.getHours(), e.getMinutes());
                     setStartHours(e.getHours());
                     setStartMinutes(e.getMinutes());
                   }}
@@ -279,7 +276,6 @@ function Task(props) {
                           value={progressValue}
                           onChange={(e) => {
                             setProgressValue(e.target.value);
-                            console.log(e.target.value);
                           }}
                         />
                       </div>
