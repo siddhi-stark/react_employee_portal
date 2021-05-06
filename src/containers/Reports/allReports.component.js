@@ -122,7 +122,7 @@ function AllReports() {
     let isValid = true;
 
     if (fromDate === '' && toDate === '' && keyword === '') {
-      filterError = 'Please select data';
+      filterError = 'Please select date';
       setFilterErr(filterError);
       isValid = false;
     }
