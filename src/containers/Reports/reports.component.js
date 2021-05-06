@@ -55,6 +55,7 @@ function Reports(props) {
     // const postData = {
     //   userId: props.match.params.id,
     // };
+    // console.log('endpoint', endPoint);
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       if (data.paginator && Object.keys(data.paginator).length > 0) {
