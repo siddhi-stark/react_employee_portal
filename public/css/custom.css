@@ -9965,6 +9965,9 @@ p:empty {
     letter-spacing: 0.9px;
     line-height: 1; }
 
+.check-in .btn {
+  min-width: 90px; }
+
 .card-title {
   font-size: 16px !important;
   font-weight: 600 !important; }

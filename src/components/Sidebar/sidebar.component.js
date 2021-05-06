@@ -23,7 +23,7 @@ function Sidebar() {
         <div className="sidemenu-logo">
           <a className="main-logo" href="index.html">
             <img
-              src="images/logo.svg"
+              src="/images/logo.svg"
               className="header-brand-img desktop-logo svg"
               alt="logo"
             />
@@ -71,7 +71,7 @@ function Sidebar() {
                     }}
                   >
                     <img
-                      src={`images/${menuItem.icon}`}
+                      src={`/images/${menuItem.icon}`}
                       alt="Logout"
                       className="svg"
                     />

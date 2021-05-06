@@ -1492,6 +1492,9 @@ p:empty {
             line-height: 1;
         }
     }   
+    .btn {
+        min-width: 90px;
+    }
 }
 .card-title {
     font-size: 16px !important;
