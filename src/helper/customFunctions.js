@@ -98,6 +98,45 @@ class CustomFunctions extends Component {
     }
   };
 
+  userRestrictions = (element, permittedUsers = [], isLink = false) => {
+    const roleId = 1;
+    const hasPermissions =
+      permittedUsers &&
+      permittedUsers.length &&
+      permittedUsers.includes(roleId);
+    if (!hasPermissions) return isLink ? 'javascript:void(0)' : '';
+    return element;
+  };
+
+  checkIfEmpty = (value, type = 'default') => {
+    switch (type) {
+      case 'A':
+        return !value || (value && !value.length);
+      case 'O':
+        return !Object.keys(value).length;
+      default:
+        return !value;
+    }
+  };
+
+  cleanObject = (obj) => {
+    const cleanedObject = Object.entries(obj).reduce(
+      (a, [k, v]) => (v || v === false || v === 0 ? ((a[k] = v), a) : a), // eslint-disable-line
+      {}
+    );
+    return cleanedObject;
+  };
+
+  generateUrl = (url, urlParams = {}) => {
+    const searchParams = new URLSearchParams(
+      this.cleanObject(urlParams)
+    ).toString();
+    let apiEndpoint = url;
+    if (!this.checkIfEmpty(urlParams, 'O'))
+      apiEndpoint = `${apiEndpoint}?${searchParams}`;
+    return apiEndpoint;
+  };
+
   validateAmount = (amount) => {
     const amountFormat = /^[1-9]\d{0,8}(((,\d{3}){1})?(\.\d{0,2})?)$/;
     return amountFormat.test(amount);

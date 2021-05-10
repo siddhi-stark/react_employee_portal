@@ -13,6 +13,7 @@ import RightContainer from './components/RightContainer/RightContainer.component
 import Projects from './containers/Projects/Projects.component';
 import Designation from './containers/Designations/designation.component';
 import Employee from './containers/Employee/employee.component';
+import MyReports from './containers/Reports/myReports.component';
 
 function Routes() {
   return (
@@ -29,6 +30,7 @@ function Routes() {
       <Route path="/projects" exact component={Projects} />
       <Route path="/designation" exact component={Designation} />
       <Route path="/employee" exact component={Employee} />
+      <Route path="/report" exact component={MyReports} />
     </Switch>
   );
 }

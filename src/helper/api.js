@@ -33,6 +33,10 @@ export default class Api extends Component {
 
   static roleUrl = `${Api.baseUrl}roles/`;
 
+  static weeklyStatusUrl = `${Api.baseUrl}weekly-status/`;
+
+  static timeSheetUrl = `${Api.baseUrl}timesheet-list/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

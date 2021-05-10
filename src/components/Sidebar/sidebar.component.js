@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import menu from '../../helper/menu';
+import UserRestrictions from '../UserRestrictions/userrestrictions.component';
 
 function Sidebar() {
   const history = useHistory();
@@ -49,46 +50,51 @@ function Sidebar() {
                   : '';
               const parentLinkCls = `nav-link ${hasSubMenu ? 'with-sub' : ''}`;
               return (
-                <li className={`${parentLiCls} ${parentActiveCls}`}>
-                  <Link
-                    className={parentLinkCls}
-                    to={menuItem.path}
-                    onClick={() => {
-                      if (menuItem.title === 'Logout') {
-                        localStorage.removeItem('access_token');
-                        localStorage.removeItem('userId');
-                        localStorage.removeItem('headerDate');
-                        localStorage.removeItem('name');
-                        localStorage.removeItem('clockinTime');
-                        // localStorage.removeItem('password');
-                        // localStorage.removeItem('email');
-                        // localStorage.removeItem('checkbox');
-                        document.dispatchEvent(event);
-                        dispatch({ type: 'LOGIN', value: false });
-                        history.push('/login');
-                      }
-                      setActiveMenu(menuIndex);
-                    }}
-                  >
-                    <img
-                      src={`/images/${menuItem.icon}`}
-                      alt="Logout"
-                      className="svg"
-                    />
-                    <span className="sidemenu-label">{menuItem.title}</span>
-                  </Link>
-                  {hasSubMenu && (
-                    <ul className="nav-sub list-unstyled">
-                      {menuItem.submenu.map((submenuItem) => (
-                        <li className="nav-sub-item">
-                          <Link className="nav-sub-link" to={submenuItem.path}>
-                            {submenuItem.title}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
+                <UserRestrictions permittedUsers={menuItem.roleaccess}>
+                  <li className={`${parentLiCls} ${parentActiveCls}`}>
+                    <Link
+                      className={parentLinkCls}
+                      to={menuItem.path}
+                      onClick={() => {
+                        if (menuItem.title === 'Logout') {
+                          localStorage.removeItem('access_token');
+                          localStorage.removeItem('userId');
+                          localStorage.removeItem('headerDate');
+                          localStorage.removeItem('name');
+                          localStorage.removeItem('clockinTime');
+                          // localStorage.removeItem('password');
+                          // localStorage.removeItem('email');
+                          // localStorage.removeItem('checkbox');
+                          document.dispatchEvent(event);
+                          dispatch({ type: 'LOGIN', value: false });
+                          history.push('/login');
+                        }
+                        setActiveMenu(menuIndex);
+                      }}
+                    >
+                      <img
+                        src={`/images/${menuItem.icon}`}
+                        alt="Logout"
+                        className="svg"
+                      />
+                      <span className="sidemenu-label">{menuItem.title}</span>
+                    </Link>
+                    {hasSubMenu && (
+                      <ul className="nav-sub list-unstyled">
+                        {menuItem.submenu.map((submenuItem) => (
+                          <li className="nav-sub-item">
+                            <Link
+                              className="nav-sub-link"
+                              to={submenuItem.path}
+                            >
+                              {submenuItem.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                </UserRestrictions>
               );
             })}
           </ul>

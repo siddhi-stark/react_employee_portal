@@ -17,6 +17,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constants';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import customFunctions from '../../helper/customFunctions';
 
 const columns = [
   {
@@ -64,7 +65,7 @@ const items = [
 
 function Projects() {
   const [rows, setRows] = useState([]);
-  const [keyword, setKeyword] = useState('');
+  const [searchKeyword, setKeyword] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [showUpdate, setShowUpdate] = useState(false);
   const [projectId, setProjectId] = useState(null);
@@ -94,8 +95,25 @@ function Projects() {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.getProjects}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
+    const id = localStorage.getItem('userId');
+    const api = `${Api.getProjects}`;
+    const group = localStorage.getItem('group');
+
+    const params = {
+      page,
+      limit: pagination.itemsPerPage,
+      keyword: searchKeyword,
+      employee: id,
+    };
+
+    if (group === '1') {
+      delete params.employee;
+    }
+
+    const url = customFunctions.generateUrl(api, params);
+    console.log('url', url);
+    // const endPoint = `${Api.getProjects}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
+    const { data } = await AuthApi.getDataFromServer(url);
     if (data && data.data) {
       setPagination({
         current_page: Number(data.paginator.current_page),
@@ -229,7 +247,7 @@ function Projects() {
                       <div className="search-bar-input">
                         <TextInput
                           inputClass="form-control"
-                          value={keyword}
+                          value={searchKeyword}
                           placeholder="search.."
                           onInputChange={(e) => {
                             setKeyword(e.target.value);

@@ -11,6 +11,10 @@ function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
   const [showClockButton, setShowClockButton] = useState(true);
   const [title, setTitle] = useState('');
+  // const [completed, setCompleted] = useState('');
+  // const [pending, setPending] = useState('');
+  // const [remaining, setRemaining] = useState('');
+
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
@@ -37,8 +41,19 @@ function Dashboard() {
     getDailyActivity();
   };
 
+  // const getWeeklyStatus = async () => {
+  //   const endPoint = `${Api.weeklyStatusUrl}?mode=this_week`;
+  //   const { data } = await AuthApi.getDataFromServer(endPoint);
+  //   if(data && data.data) {
+  //     setCompleted(data.data.completed);
+  //     setPending(data.data.pending);
+  //     setRemaining(data.data.upcoming);
+  //   }
+  // }
+
   useEffect(() => {
     getDailyActivity();
+    // getWeeklyStatus();
     setTitle('Dashboard');
   });
 
@@ -129,7 +144,7 @@ function Dashboard() {
                         </li>
                         <li>
                           <p className="status-label">Remaining</p>
-                          <span className="yellowbg">10%</span>
+                          <span className="yellowbg">0%</span>
                         </li>
                       </ul>
                     </div>
