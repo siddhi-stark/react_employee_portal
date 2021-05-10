@@ -37,6 +37,8 @@ export default class Api extends Component {
 
   static timeSheetUrl = `${Api.baseUrl}timesheet-list/`;
 
+  static profileUrl = `${Api.baseUrl}profile/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

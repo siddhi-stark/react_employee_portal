@@ -29,9 +29,9 @@ function Header() {
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <div className="main-header-left">
-            <a href="" id="mainSidebarToggle">
+            {/* <a className="main-header-menu-icon" href="" id="mainSidebarToggle">
               <span />
-            </a>
+            </a> */}
           </div>
           {localStorage.getItem('clockinTime') ? (
             <div className="d-flex justify-content-end clock-in-time">
@@ -54,23 +54,32 @@ function Header() {
                   ? localStorage.getItem('name')
                   : ''}
               </h6>
-              <div className="profile-img">
+            
                 {/* <a href="#">
                   <img src="/images/profile-img.png" alt="Profile" />
                 </a> */}
+                </div>
+                <div className="dropdown d-md-flex header-settings">
+              <a
+                href="#"
+                className="nav-link icon"
+                data-toggle="sidebar-right"
+                data-target=".sidebar-right"
+              >
+                <img src="images/profile-setting.svg" alt="profile" />
+              </a>
+            
+                <div className="main-header-menu-icon">
                 <div className="dropdown-menu">
                   <div className="header-navheading text-center">
-                    <h5 className="main-notification-title">Alexa John</h5>
-                    <p className="main-notification-text">
-                      Web & Graphic Designer
-                    </p>
-                    <div className="employee-id">
-                      <span>Employee ID SDMS 204</span>
-                    </div>
+                    <h5 className="main-notification-title">{localStorage.getItem('name')
+                  ? localStorage.getItem('name')
+                  : ''}</h5>
+                   
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>
-                      <a className="dropdown-item border-top" href="#">
+                      <a className="dropdown-item border-top" href="/profile">
                         <img
                           src="/images/user.svg"
                           alt="User"
@@ -113,19 +122,12 @@ function Header() {
                 </div>
               </div>
             </div>
-            {/* <div className="dropdown d-md-flex header-settings">
-              <a
-                href="#"
-                className="nav-link icon"
-                data-toggle="sidebar-right"
-                data-target=".sidebar-right"
-              >
-                <img src="images/profile-setting.svg" alt="profile" />
-              </a>
-            </div> */}
+           
           </div>
+        
         </div>
-      </div>
+        </div>
+      
     </>
   );
 }

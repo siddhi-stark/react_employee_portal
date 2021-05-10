@@ -14,6 +14,7 @@ import Projects from './containers/Projects/Projects.component';
 import Designation from './containers/Designations/designation.component';
 import Employee from './containers/Employee/employee.component';
 import MyReports from './containers/Reports/myReports.component';
+import Profile from './containers/Profile/profile.component';
 
 function Routes() {
   return (
@@ -31,6 +32,7 @@ function Routes() {
       <Route path="/designation" exact component={Designation} />
       <Route path="/employee" exact component={Employee} />
       <Route path="/report" exact component={MyReports} />
+      <Route path="/profile" exact component={Profile} />
     </Switch>
   );
 }
