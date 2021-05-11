@@ -11,6 +11,7 @@ export default function DropdownComponent(props) {
     placeholder,
     multiple,
     className,
+    disabled
   } = props;
 
   return (
@@ -24,6 +25,7 @@ export default function DropdownComponent(props) {
           name={name}
           multiple={multiple}
           placeholder={placeholder}
+          isDisabled={disabled}
           onChange={(e) => {
             if (onSelectOptions) onSelectOptions(e);
           }}

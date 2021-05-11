@@ -43,10 +43,16 @@ const menu = [
         title: 'My Report',
         path: '/report',
         icon: 'report.svg',
-        roleaccess: [4],
+        roleaccess: [3,4],
+      },
+      {
+        title: 'Team Report',
+        path: '/report',
+        icon: 'report.svg',
+        roleaccess: [3],
       },
     ],
-    roleaccess: [1, 2, 3, 4],
+    roleaccess: [3,4],
   },
   {
     title: 'Logout',

@@ -39,6 +39,10 @@ export default class Api extends Component {
 
   static profileUrl = `${Api.baseUrl}profile/`;
 
+  static fileUploadUrl = `${Api.baseUrl}upload/`;
+
+  static changePasswordUrl = `${Api.baseUrl}change-password/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

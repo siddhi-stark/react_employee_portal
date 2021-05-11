@@ -79,9 +79,11 @@ function Sidebar() {
                       />
                       <span className="sidemenu-label">{menuItem.title}</span>
                     </Link>
+                    
                     {hasSubMenu && (
                       <ul className="nav-sub list-unstyled">
                         {menuItem.submenu.map((submenuItem) => (
+                          <UserRestrictions permittedUsers={submenuItem.roleaccess}>
                           <li className="nav-sub-item">
                             <Link
                               className="nav-sub-link"
@@ -90,6 +92,7 @@ function Sidebar() {
                               {submenuItem.title}
                             </Link>
                           </li>
+                          </UserRestrictions>
                         ))}
                       </ul>
                     )}

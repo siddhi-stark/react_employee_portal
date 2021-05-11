@@ -21,36 +21,98 @@ const items = [
 ];
 
 function Profile() {
+  const userId = localStorage.getItem('userId');
+
   const email = 'mrunaliPatil04@gmail.com';
-//   const mobile = '7757774289';
-  const birthday = '30 Oct 1997';
+  //   const mobile = '7757774289';
+  // const birthday = '30 Oct 1997';
   const [date, setDate] = useState('');
   // const [employeeId, setEmployeeId] = useState('');
   const [companyEmail, setEmail] = useState('');
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [id, setId] = useState(null);
-  const [department, setDepartment] = useState('');
   const [modalShow, setModalShow] = useState('');
   const [count, forceUpdate] = useState(0);
   const [designation, setDesignation] = useState([]);
   const [selectedDesignationOption, setSelectedDesignationOption] = useState(
     null
   );
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [manager, setManager] = useState([]);
+  const [selectedManager, setSelectedManager] = useState([]);
+  const [imageUrl, setImageUrl] = useState('');
+  const [birthDate, setBirthdate] = useState('');
+  const [imageProfile, setImageProfile] = useState('');
+  // const [imageFile, setImageFile] = useState(''); 
+  const Department = [
+    {
+      id: 1,
+      value: 'Management',
+      label: 'Management',
+    },
+    {
+      id: 2,
+      value: 'Development',
+      label: 'Development',
+    },
+    {
+      id: 3,
+      value: 'Design',
+      label: 'Design',
+    },
+    {
+      id: 4,
+      value: 'Quality Analyst',
+      label: 'Quality Analyst',
+    },
+    {
+      id: 5,
+      value: 'Other',
+      label: 'Other',
+    },
+  ];
 
   const getProfile = async () => {
     const { data } = await AuthApi.getDataFromServer(
-        `${Api.profileUrl}`
-      );
-    if(customFunctions.checkIfEmpty(data && data.data)) {
+      `${Api.profileUrl}`
+    );
+    if (customFunctions.checkIfEmpty(data && data.data,'A')) {
+
+      const managerList = [];
       setEmail(data.data.email);
-        setName(data.data.full_name);
-        setMobile(data.data.mobile);
-        setId(data.data.id);
-        setSelectedDesignationOption({
-          label: data.data.designation_name,
-          id: data.data.designation_id,
+      setName(data.data.full_name);
+      setMobile(data.data.mobile);
+      setId(data.data.id);
+      setBirthdate(data.data.dob);
+      setImageProfile(data.data.profile_image_url);
+      setSelectedDesignationOption({
+        label: data.data.designation_name,
+        id: data.data.designation_id,
+      });
+      Department.map((dept) => {
+
+        if (data.data.department_id === dept.id) {
+          setSelectedDepartment(dept);
+        }
+        return dept;
+      });
+      console.log('manager', manager);
+      manager.map((mngr) => {
+       data.data.assigned_managers.map((assgnmgmr) => {
+          if (Number(mngr.id) === Number(assgnmgmr.report_head_id)) {
+            managerList.push({
+              id: mngr.id,
+              label: mngr.full_name,
+              value: mngr.full_name
+            });
+          }
+          return assgnmgmr;
         });
+        setSelectedManager(managerList);
+        return mngr;
+      });
+      setDate(customFunctions.getDate(data.data.joined_date));
 
     }
   }
@@ -59,15 +121,75 @@ function Profile() {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.designationUrl}?type=all`
     );
-    if (data) {
+    if (!customFunctions.checkIfEmpty(data && data.data,'A')) {
       setDesignation(data.data);
     }
   };
 
-useEffect(() => {
-   getProfile();
-   getDesignation();
-}, [])
+  const getDepartment = () => {
+    if (!Department) return [];
+    const depart = [];
+    Department.map((dep) => {
+      return depart.push({
+        label: dep.label,
+        id: dep.id,
+        value: dep.value,
+      });
+    });
+    return depart;
+  };
+
+  const getManager = async () => {
+    return  new Promise(async (resolve) =>  { // eslint-disable-line
+      const { data } = await AuthApi.getDataFromServer(
+        `${Api.employeeUrl}?role_id=${2}`
+      );
+      if (!customFunctions.checkIfEmpty(data && data.data)) {
+        console.log('managerData', data.data);
+        setManager(data.data);
+        
+        setTimeout(() => {resolve();}, 500)
+      }else{
+        resolve();
+        console.log('else block');
+      }
+
+    })
+  }
+
+
+
+  useEffect(() => {
+    
+    async function getData() {
+    await getManager();
+      getDesignation();
+      getDepartment();
+      getProfile();
+    }
+    getData();
+
+  }, [])
+
+  useEffect(() => {
+    if(userId) {
+      getProfile();
+
+    }
+  }, [userId])
+
+  const getManagerList = () => {
+    if (!manager) return [];
+    const options = [];
+    manager.map((data) => {
+      return options.push({
+        label: data.full_name,
+        id: data.id,
+        value: data.full_name,
+      });
+    });
+    return options;
+  };
 
   const onCancel = () => {
     setModalShow(false);
@@ -85,12 +207,44 @@ useEffect(() => {
     return options;
   };
 
-  const updateProfileData = async () => {
+  const handleImageFileUpload = (e) => {
+
+
+
+
+    // if (!e.target.files[0].name) return;
+    // const url = URL.createObjectURL(e.target.files[0]);
+    // setImageFile(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      setImageUrl(e.target.files[0]);
+    }
+
+
+  };
+
+  const uploadFile = async () => {
+
+    const formData = new FormData();
+    formData.append('file_name', imageUrl);
+    
+    const { data } = await AuthApi.postDataToServer(
+      `${Api.fileUploadUrl}`,
+      formData
+    );
+    if (data) {
+      updateProfileData(data.data.id);
+    }
+  }
+
+  const updateProfileData = async (imgId) => {
+
     const payload = {
       id: localStorage.getItem('userId'),
       full_name: name,
       companyEmail,
       mobile,
+      profile: imgId
+      
     };
     const { data } = await AuthApi.putDataToServer(
       `${Api.profileUrl}`,
@@ -101,6 +255,7 @@ useEffect(() => {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setModalShow(false);
+          getProfile();
           setName('');
           setEmail('');
           setMobile('');
@@ -114,7 +269,7 @@ useEffect(() => {
   const updateProfile = (e) => {
     e.preventDefault();
     if (validator.allValid()) {
-      updateProfileData();
+      uploadFile();
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
@@ -137,14 +292,14 @@ useEffect(() => {
               className="float-end"
               variant="primary"
               type="submit"
-              onClick={(e) =>{ 
+              onClick={(e) => {
                 e.preventDefault();
-                  e.stopPropagation();
-                  setModalShow(true);
-                  getProfile();
-                  // setCntClearFilter(cntClearFilter + 1);
-                
-                }}
+                e.stopPropagation();
+                setModalShow(true);
+                getProfile();
+                // setCntClearFilter(cntClearFilter + 1);
+
+              }}
             >
               Edit Profile
             </Button>
@@ -159,10 +314,10 @@ useEffect(() => {
                   className="edit-profile-image mb-4"
                   style={{ height: '70px' }}
                 >
-                  <img src="/images/edit-profile-img.png" alt="Edit Profile" />
-                  <div className="profile-edit">
+                  <img src= {imageProfile} alt="Edit Profile" />
+                  {/* <div className="profile-edit">
                     <img src="/images/edit-profile.svg" alt="" />
-                  </div>
+                  </div> */}
                 </div>
               </Row>
 
@@ -173,7 +328,7 @@ useEffect(() => {
                     src="/images/up-coming-birthday.svg"
                     className="svg me-3"
                   />
-                  {birthday}
+                  {birthDate}
                 </Form.Label>
               </Col>
               <Col sm={3}>
@@ -193,12 +348,13 @@ useEffect(() => {
               <h5>Job Information</h5>
               <Col sm={4}>
                 <TextInput
-                  onInputChange={(e) => setDate(e.target.value)}
+                  // onInputChange={(e) => setDate(e.target.value)}
                   label="Joining Date"
                   containerClass="form-group"
                   type="date"
                   name="date"
                   value={date}
+                  disabled
                 />
               </Col>
               <Col sm={4}>
@@ -209,6 +365,7 @@ useEffect(() => {
                   type="employeeId"
                   name="employeeId"
                   value={id}
+                  disabled
                 />
               </Col>
               <Col sm={4}>
@@ -219,45 +376,64 @@ useEffect(() => {
                   type="email"
                   name="email"
                   value={companyEmail}
+                  disabled
                 />
               </Col>
             </Row>
             <Row className="mb-4">
               <Col sm={6}>
-                <TextInput
-                  onInputChange={(e) => setDepartment(e.target.value)}
+                <DropdownInput
                   label="Department"
-                  containerClass="form-group"
-                  type="department"
-                  name="department"
-                  value={department}
-                />
-              </Col>
-              <Col sm={5}>
-              <DropdownInput
-                  label="Designation"
-                  asterisk="*"
-                  options={getDesignationList()}
+                  // asterisk="*"
+                  options={getDepartment()}
+                  placeholder="Select Department"
+                  defaultValue={selectedDepartment}
                   disabled
-                  placeholder="Select Subject"
-                   defaultValue={selectedDesignationOption}
-                  onSelectHandler={(select) =>
-                    setSelectedDesignationOption(select)
-                    
-                  }
-                
+                  onSelectHandler={(select) => setSelectedDepartment(select)}
+                  // errorMessage={
+                  //   selectedDepartment && selectedDepartment.length > 0
+                  //     ? validator.message(
+                  //         'Department',
+                  //         selectedDesignationOption,
+                  //         'required'
+                  //       )
+                  //     : ''
+                  // }
+                  isMulti={false}
                 />
               </Col>
               <Col sm={5}>
                 <DropdownInput
-                  label="Reporting To"
-                  asterisk="*"
-                  // options={getDesignationList()}
+                  label="Designation"
+                  options={getDesignationList()}
+                  disabled
                   placeholder="Select Subject"
-                  //  defaultValue={selectedDesignationOption}
-                  // onSelectHandler={(select) =>
-                  //   setSelectedDesignationOption(select)
-                  // }
+                  defaultValue={selectedDesignationOption}
+                  onSelectHandler={(select) =>
+                    setSelectedDesignationOption(select)
+
+                  }
+
+                />
+              </Col>
+              <Col sm={5}>
+                <DropdownInput
+                  label="Manager"
+                  // asterisk="*"
+                  options={getManagerList()}
+                  placeholder="Select Manager"
+                  defaultValue={selectedManager}
+                  isMulti
+                  onSelectHandler={(select) => setSelectedManager(select)}
+                // errorMessage={
+                //   selectedManager && selectedManager > 0
+                //     ? validator.message(
+                //         'Manager',
+                //         selectedDesignationOption,
+                //         'required'
+                //       )
+                //     : ''
+                // }
                 />
               </Col>
             </Row>
@@ -276,7 +452,12 @@ useEffect(() => {
             <Row>
               <Col sm={12}>
                 <TextInput
-                  onInputChange={(e) => setName(e.target.value)}
+                  onInputChange={(e) => {
+                      const re =  /^[a-zA-Z ]*$/;
+                      if (e.target.value === '' || re.test(e.target.value)) {
+                        setName(e.target.value);
+                      }
+                    }}
                   label="Full Name"
                   containerClass="form-group"
                   asterisk="*"
@@ -292,12 +473,17 @@ useEffect(() => {
                 />
               </Col>
             </Row>
-            
+
 
             <Row>
               <Col sm={12}>
                 <TextInput
-                    onInputChange={(e) => setMobile(e.target.value)}
+                  onInputChange={(e) => {
+                      const re = /^[0-9\b]+$/;
+                      if (e.target.value === '' || re.test(e.target.value)) {
+                        setMobile(e.target.value);
+                      }
+                    }}
                   name="mobile"
                   label="Contact Number"
                   asterisk="*"
@@ -305,21 +491,21 @@ useEffect(() => {
                   id="inlineFormInputGroup"
                   inputVarible="+91"
                   inputClass="form-control"
-                    value={mobile}
+                  value={mobile}
                   preValueClass="contact-number"
                   placeholder="9876576894"
-                    errorMessage={validator.message(
-                      'mobile',
-                      mobile,
-                      'required|phone|max:10'
-                    )}
+                  errorMessage={validator.message(
+                    'mobile',
+                    mobile,
+                    'required|phone|max:10'
+                  )}
                 />
               </Col>
             </Row>
             <Row>
-              <Col sm={12}>
+              {/* <Col sm={12}>
                 <TextInput
-                   onInputChange={(e) => setEmail(e.target.value)}
+                  onInputChange={(e) => setEmail(e.target.value)}
                   name="email"
                   type="email"
                   label="Personal Email"
@@ -328,28 +514,29 @@ useEffect(() => {
                   id="inlineFormInputGroup"
                   inputClass="form-control"
                   value={companyEmail}
-                    
+
                 />
-              </Col>
+              </Col> */}
             </Row>
             <Row>
               <Col sm={12}>
                 <TextInput
-                  //   onInputChange={(e) => handleInputChange(e)}
-                  name="mobile"
+                  onInputChange={(e) => {
+                    handleImageFileUpload(e);
+                  }}
                   label="Profile Picture"
-                  // asterisk="*"
+                  asterisk="*"
+                  accept=".xls,.txt,.pdf,.doc,image/jpeg,image/png,"
                   containerClass="form-group"
                   id="inlineFormInputGroup"
                   type="file"
                   inputClass="form-control"
-                  //   value={userData.mobile}
-                  placeholder="Enter your mobile"
-                  //   errorMessage={validator.message(
-                  //     'mobile',
-                  //     userData.mobile,
-                  //     'required|phone|max:10'
-                  //   )}
+                //   value={userData.mobile}
+                //   errorMessage={validator.message(
+                //     'mobile',
+                //     userData.mobile,
+                //     'required|phone|max:10'
+                //   )}
                 />
               </Col>
             </Row>

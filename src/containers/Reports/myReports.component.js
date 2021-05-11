@@ -54,13 +54,15 @@ function AllReports() {
     const endPoint = `${Api.timeSheetUrl}?limit=${pagination.itemsPerPage}&page=${page}`;
 
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data) {
+    if (data && data.data) {
+      if (data.paginator && Object.keys(data.paginator).length > 0) {
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
       });
+    }
       const row = [];
       data.data.map((report, i) => {
         console.log('report', report);
@@ -106,6 +108,7 @@ function AllReports() {
               <h5 className="m-0">My Report</h5>
             </Card.Title>
             <Row>
+            {pagination.totalItems > 0 ? (
               <Col className="mt-3">
                 <Table
                   tableClass="table table-striped"
@@ -122,6 +125,11 @@ function AllReports() {
                   dropdownContainerClass="mb-3"
                 />
               </Col>
+              ) : (
+                <Col>
+                  <p className="text-center mb-0">No record found</p>
+                </Col>
+              )}
             </Row>
           </Card.Body>
         </Card>

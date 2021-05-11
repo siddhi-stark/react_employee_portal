@@ -27,6 +27,8 @@ export default function Pagination(props) {
           }}
           itemClass="page-item"
           linkClass="page-link"
+          hideFirstLastPages
+          hideDisabled
         />
       </nav>
     </>

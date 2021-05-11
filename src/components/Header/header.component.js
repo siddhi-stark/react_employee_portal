@@ -13,6 +13,7 @@ function Header() {
   // });
   const history = useHistory();
   const dispatch = useDispatch();
+  const event = new Event('Login', { isLogin: false });
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -88,7 +89,7 @@ function Header() {
                         My Profile
                       </a>
                     </li>
-                    <li>
+                    {/* <li>
                       <a className="dropdown-item" href="#">
                         <img
                           src="/images/edit.svg"
@@ -97,9 +98,9 @@ function Header() {
                         />{' '}
                         Edit Profile
                       </a>
-                    </li>
+                    </li> */}
                     <li>
-                      <a className="dropdown-item" href="#">
+                      <a className="dropdown-item" href="/manage-password">
                         <img
                           src="/images/change-password.svg"
                           alt="Change"
@@ -109,7 +110,21 @@ function Header() {
                       </a>
                     </li>
                     <li>
-                      <a className="dropdown-item" href="#">
+                      <a 
+                      className="dropdown-item" 
+                      href="#"
+                      onClick={() => {
+                        localStorage.removeItem('access_token');
+                        localStorage.removeItem('checkbox');
+                        localStorage.removeItem('email');
+                        localStorage.removeItem('password');
+                        localStorage.removeItem('group');
+                        localStorage.removeItem('userId');                      
+                        document.dispatchEvent(event);
+                        dispatch({ type: 'LOGIN', value: false });
+                        history.push('/login');
+                      }}
+                      >
                         <img
                           src="/images/logout-profile.svg"
                           alt="Logout"
