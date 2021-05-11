@@ -211,7 +211,7 @@ function Employee() {
             managerList.push({
               id: mngr.id,
               label: mngr.full_name,
-              value: mngr.full_name
+              value: mngr.full_name,
             });
           }
           return assgnmgmr;
@@ -789,7 +789,9 @@ function Employee() {
                     placeholder="Select Manager"
                     defaultValue={selectedManager}
                     isMulti
-                    onSelectHandler={(select) => {setSelectedManager(select); console.log('select', select)}}
+                    onSelectHandler={(select) => {
+                      setSelectedManager(select);
+                    }}
                     // errorMessage={
                     //   selectedManager && selectedManager > 0
                     //     ? validator.message(

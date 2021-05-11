@@ -11,7 +11,7 @@ export default function DropdownComponent(props) {
     placeholder,
     multiple,
     className,
-    disabled
+    disabled,
   } = props;
 
   return (

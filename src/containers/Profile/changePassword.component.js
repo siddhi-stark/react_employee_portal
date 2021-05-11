@@ -26,11 +26,11 @@ function ManagePassword() {
   const [oldPassword, setOldPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [count, forceUpdate] = useState(0);
-  const [title,setTitle] = useState('');
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
     setTitle('Change Password');
-  },[]);
+  }, []);
 
   const setNewPassword = async () => {
     const payload = {
@@ -66,7 +66,7 @@ function ManagePassword() {
 
   return (
     <>
-     <Helmet title={title} />
+      <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Change Password</h2>

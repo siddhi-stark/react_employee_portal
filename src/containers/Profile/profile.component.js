@@ -34,17 +34,15 @@ function Profile() {
   const [id, setId] = useState(null);
   const [modalShow, setModalShow] = useState('');
   const [count, forceUpdate] = useState(0);
-  const [designation, setDesignation] = useState([]);
   const [selectedDesignationOption, setSelectedDesignationOption] = useState(
     null
   );
   const [selectedDepartment, setSelectedDepartment] = useState('');
-  const [manager, setManager] = useState([]);
   const [selectedManager, setSelectedManager] = useState([]);
   const [imageUrl, setImageUrl] = useState('');
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
-  // const [imageFile, setImageFile] = useState(''); 
+  // const [imageFile, setImageFile] = useState('');
   const Department = [
     {
       id: 1,
@@ -74,55 +72,27 @@ function Profile() {
   ];
 
   const getProfile = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.profileUrl}`
-    );
-    if (customFunctions.checkIfEmpty(data && data.data,'A')) {
-
-      const managerList = [];
+    const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
+    if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setEmail(data.data.email);
       setName(data.data.full_name);
       setMobile(data.data.mobile);
       setId(data.data.id);
       setBirthdate(data.data.dob);
       setImageProfile(data.data.profile_image_url);
-      setSelectedDesignationOption({
-        label: data.data.designation_name,
-        id: data.data.designation_id,
-      });
+      setSelectedDesignationOption(data.data.designation_name);
       Department.map((dept) => {
-
         if (data.data.department_id === dept.id) {
           setSelectedDepartment(dept);
         }
         return dept;
       });
-      console.log('manager', manager);
-      manager.map((mngr) => {
-       data.data.assigned_managers.map((assgnmgmr) => {
-          if (Number(mngr.id) === Number(assgnmgmr.report_head_id)) {
-            managerList.push({
-              id: mngr.id,
-              label: mngr.full_name,
-              value: mngr.full_name
-            });
-          }
-          return assgnmgmr;
-        });
-        setSelectedManager(managerList);
-        return mngr;
+
+      data.data.assigned_managers.map((assgnmgmr) => {
+        setSelectedManager(assgnmgmr.report_head__full_name);
+        return assgnmgmr;
       });
       setDate(customFunctions.getDate(data.data.joined_date));
-
-    }
-  }
-
-  const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.designationUrl}?type=all`
-    );
-    if (!customFunctions.checkIfEmpty(data && data.data,'A')) {
-      setDesignation(data.data);
     }
   };
 
@@ -139,94 +109,33 @@ function Profile() {
     return depart;
   };
 
-  const getManager = async () => {
-    return  new Promise(async (resolve) =>  { // eslint-disable-line
-      const { data } = await AuthApi.getDataFromServer(
-        `${Api.employeeUrl}?role_id=${2}`
-      );
-      if (!customFunctions.checkIfEmpty(data && data.data)) {
-        console.log('managerData', data.data);
-        setManager(data.data);
-        
-        setTimeout(() => {resolve();}, 500)
-      }else{
-        resolve();
-        console.log('else block');
-      }
-
-    })
-  }
-
-
-
   useEffect(() => {
-    
     async function getData() {
-    await getManager();
-      getDesignation();
       getDepartment();
       getProfile();
     }
     getData();
-
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if(userId) {
+    if (userId) {
       getProfile();
-
     }
-  }, [userId])
-
-  const getManagerList = () => {
-    if (!manager) return [];
-    const options = [];
-    manager.map((data) => {
-      return options.push({
-        label: data.full_name,
-        id: data.id,
-        value: data.full_name,
-      });
-    });
-    return options;
-  };
+  }, [userId]);
 
   const onCancel = () => {
     setModalShow(false);
   };
-
-  const getDesignationList = () => {
-    if (!designation) return [];
-    const options = [];
-    designation.map((desgn) => {
-      return options.push({
-        label: desgn.name,
-        id: desgn.id,
-      });
-    });
-    return options;
-  };
-
   const handleImageFileUpload = (e) => {
-
-
-
-
-    // if (!e.target.files[0].name) return;
-    // const url = URL.createObjectURL(e.target.files[0]);
-    // setImageFile(e.target.files[0]);
     if (e.target.files && e.target.files.length > 0) {
       setImageUrl(e.target.files[0]);
     }
-
-
   };
 
   const uploadFile = async () => {
-
     const formData = new FormData();
     formData.append('file_name', imageUrl);
-    
+
     const { data } = await AuthApi.postDataToServer(
       `${Api.fileUploadUrl}`,
       formData
@@ -234,24 +143,22 @@ function Profile() {
     if (data) {
       updateProfileData(data.data.id);
     }
-  }
+  };
 
   const updateProfileData = async (imgId) => {
-
     const payload = {
       id: localStorage.getItem('userId'),
       full_name: name,
       companyEmail,
       mobile,
-      profile: imgId
-      
+      profile: imgId,
     };
     const { data } = await AuthApi.putDataToServer(
       `${Api.profileUrl}`,
       payload
     );
     if (data) {
-      setModalShow(false)
+      setModalShow(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setModalShow(false);
@@ -298,7 +205,6 @@ function Profile() {
                 setModalShow(true);
                 getProfile();
                 // setCntClearFilter(cntClearFilter + 1);
-
               }}
             >
               Edit Profile
@@ -308,21 +214,23 @@ function Profile() {
         <Card.Body>
           <Form>
             <Row>
-              <h3 className="main-notification-title">{name}</h3>
-              <Row>
+              <Col sm={3}>
                 <div
                   className="edit-profile-image mb-4"
                   style={{ height: '70px' }}
                 >
-                  <img src= {imageProfile} alt="Edit Profile" />
+                  <img src={imageProfile} alt="Edit Profile" />
                   {/* <div className="profile-edit">
                     <img src="/images/edit-profile.svg" alt="" />
                   </div> */}
                 </div>
-              </Row>
+              </Col>
+              <Col sm={9}>
+                <h4 className="main-notification-title text-primary">
+                  <b>{name}</b>
+                </h4>
+                <h5 className="mt-5">Personal Information</h5>
 
-              <h5>Personal Information</h5>
-              <Col sm={3}>
                 <Form.Label>
                   <Image
                     src="/images/up-coming-birthday.svg"
@@ -330,111 +238,103 @@ function Profile() {
                   />
                   {birthDate}
                 </Form.Label>
-              </Col>
-              <Col sm={3}>
+
                 <Form.Label>
-                  <Image src="/images/Mobile-num.svg" className="svg me-3" />
+                  <Image
+                    src="/images/Mobile-num.svg"
+                    className="svg me-3 ms-3"
+                  />
                   {mobile}
                 </Form.Label>
-              </Col>
-              <Col sm={6}>
+
                 <Form.Label>
-                  <Image src="/images/mail.svg" className="svg me-3" />
+                  <Image src="/images/mail.svg" className="svg me-3 ms-3" />
                   {email}
                 </Form.Label>
-              </Col>
-            </Row>
-            <Row className="mb-4">
-              <h5>Job Information</h5>
-              <Col sm={4}>
-                <TextInput
-                  // onInputChange={(e) => setDate(e.target.value)}
-                  label="Joining Date"
-                  containerClass="form-group"
-                  type="date"
-                  name="date"
-                  value={date}
-                  disabled
-                />
-              </Col>
-              <Col sm={4}>
-                <TextInput
-                  // onInputChange={(e) => setEmployeeId(e.target.value)}
-                  label="Employee Id"
-                  containerClass="form-group"
-                  type="employeeId"
-                  name="employeeId"
-                  value={id}
-                  disabled
-                />
-              </Col>
-              <Col sm={4}>
-                <TextInput
-                  onInputChange={(e) => setEmail(e.target.value)}
-                  label="Company Email"
-                  containerClass="form-group"
-                  type="email"
-                  name="email"
-                  value={companyEmail}
-                  disabled
-                />
-              </Col>
-            </Row>
-            <Row className="mb-4">
-              <Col sm={6}>
-                <DropdownInput
-                  label="Department"
-                  // asterisk="*"
-                  options={getDepartment()}
-                  placeholder="Select Department"
-                  defaultValue={selectedDepartment}
-                  disabled
-                  onSelectHandler={(select) => setSelectedDepartment(select)}
-                  // errorMessage={
-                  //   selectedDepartment && selectedDepartment.length > 0
-                  //     ? validator.message(
-                  //         'Department',
-                  //         selectedDesignationOption,
-                  //         'required'
-                  //       )
-                  //     : ''
-                  // }
-                  isMulti={false}
-                />
-              </Col>
-              <Col sm={5}>
-                <DropdownInput
-                  label="Designation"
-                  options={getDesignationList()}
-                  disabled
-                  placeholder="Select Subject"
-                  defaultValue={selectedDesignationOption}
-                  onSelectHandler={(select) =>
-                    setSelectedDesignationOption(select)
 
-                  }
-
-                />
-              </Col>
-              <Col sm={5}>
-                <DropdownInput
-                  label="Manager"
-                  // asterisk="*"
-                  options={getManagerList()}
-                  placeholder="Select Manager"
-                  defaultValue={selectedManager}
-                  isMulti
-                  onSelectHandler={(select) => setSelectedManager(select)}
-                // errorMessage={
-                //   selectedManager && selectedManager > 0
-                //     ? validator.message(
-                //         'Manager',
-                //         selectedDesignationOption,
-                //         'required'
-                //       )
-                //     : ''
-                // }
-                />
+                <h5 className="mt-5">Job Information</h5>
+                <Row>
+                  <Col sm={4}>
+                    <TextInput
+                      // onInputChange={(e) => setDate(e.target.value)}
+                      label="Joining Date"
+                      containerClass="form-group"
+                      type="date"
+                      name="date"
+                      value={date}
+                      disabled
+                    />
+                  </Col>
+                  <Col sm={2}>
+                    <TextInput
+                      // onInputChange={(e) => setEmployeeId(e.target.value)}
+                      label="Employee Id"
+                      containerClass="form-group"
+                      type="employeeId"
+                      name="employeeId"
+                      value={id}
+                      disabled
+                    />
+                  </Col>
+                  <Col sm={4}>
+                    <TextInput
+                      onInputChange={(e) => setEmail(e.target.value)}
+                      label="Company Email"
+                      containerClass="form-group"
+                      type="email"
+                      name="email"
+                      value={companyEmail}
+                      disabled
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm={6}>
+                    <DropdownInput
+                      label="Department"
+                      // asterisk="*"
+                      options={getDepartment()}
+                      placeholder="Select Department"
+                      defaultValue={selectedDepartment}
+                      disabled
+                      onSelectHandler={(select) =>
+                        setSelectedDepartment(select)
+                      }
+                      // errorMessage={
+                      //   selectedDepartment && selectedDepartment.length > 0
+                      //     ? validator.message(
+                      //         'Department',
+                      //         selectedDesignationOption,
+                      //         'required'
+                      //       )
+                      //     : ''
+                      // }
+                      isMulti={false}
+                    />
+                  </Col>
+                  <Col sm={4}>
+                    <TextInput
+                      onInputChange={(e) =>
+                        setSelectedDesignationOption(e.target.value)
+                      }
+                      label="Designation"
+                      containerClass="form-group"
+                      name="selectedDesignationOption"
+                      value={selectedDesignationOption}
+                      disabled
+                    />
+                  </Col>
+                  <Col sm={6}>
+                    <TextInput
+                      onInputChange={(e) => setSelectedManager(e.target.value)}
+                      label="Reporting To"
+                      containerClass="form-group"
+                      name="selectedManager"
+                      value={selectedManager}
+                      disabled
+                    />
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Form>
@@ -453,11 +353,11 @@ function Profile() {
               <Col sm={12}>
                 <TextInput
                   onInputChange={(e) => {
-                      const re =  /^[a-zA-Z ]*$/;
-                      if (e.target.value === '' || re.test(e.target.value)) {
-                        setName(e.target.value);
-                      }
-                    }}
+                    const re = /^[a-zA-Z ]*$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      setName(e.target.value);
+                    }
+                  }}
                   label="Full Name"
                   containerClass="form-group"
                   asterisk="*"
@@ -473,17 +373,15 @@ function Profile() {
                 />
               </Col>
             </Row>
-
-
             <Row>
               <Col sm={12}>
                 <TextInput
                   onInputChange={(e) => {
-                      const re = /^[0-9\b]+$/;
-                      if (e.target.value === '' || re.test(e.target.value)) {
-                        setMobile(e.target.value);
-                      }
-                    }}
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      setMobile(e.target.value);
+                    }
+                  }}
                   name="mobile"
                   label="Contact Number"
                   asterisk="*"
@@ -502,22 +400,7 @@ function Profile() {
                 />
               </Col>
             </Row>
-            <Row>
-              {/* <Col sm={12}>
-                <TextInput
-                  onInputChange={(e) => setEmail(e.target.value)}
-                  name="email"
-                  type="email"
-                  label="Personal Email"
-                  asterisk="*"
-                  containerClass="form-group"
-                  id="inlineFormInputGroup"
-                  inputClass="form-control"
-                  value={companyEmail}
 
-                />
-              </Col> */}
-            </Row>
             <Row>
               <Col sm={12}>
                 <TextInput
@@ -531,12 +414,6 @@ function Profile() {
                   id="inlineFormInputGroup"
                   type="file"
                   inputClass="form-control"
-                //   value={userData.mobile}
-                //   errorMessage={validator.message(
-                //     'mobile',
-                //     userData.mobile,
-                //     'required|phone|max:10'
-                //   )}
                 />
               </Col>
             </Row>

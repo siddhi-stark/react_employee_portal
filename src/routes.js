@@ -16,6 +16,7 @@ import Employee from './containers/Employee/employee.component';
 import MyReports from './containers/Reports/myReports.component';
 import Profile from './containers/Profile/profile.component';
 import ManagePassword from './containers/Profile/changePassword.component';
+import TeamReport from './containers/Reports/teamReport.component';
 
 function Routes() {
   return (
@@ -35,6 +36,7 @@ function Routes() {
       <Route path="/report" exact component={MyReports} />
       <Route path="/profile" exact component={Profile} />
       <Route path="/manage-password" exact component={ManagePassword} />
+      <Route path="/team-report" exact component={TeamReport} />
     </Switch>
   );
 }

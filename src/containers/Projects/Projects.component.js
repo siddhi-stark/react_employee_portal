@@ -111,7 +111,6 @@ function Projects() {
     }
 
     const url = customFunctions.generateUrl(api, params);
-    console.log('url', url);
     // const endPoint = `${Api.getProjects}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(url);
     if (data && data.data) {

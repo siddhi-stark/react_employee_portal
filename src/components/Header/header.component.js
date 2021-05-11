@@ -55,12 +55,12 @@ function Header() {
                   ? localStorage.getItem('name')
                   : ''}
               </h6>
-            
-                {/* <a href="#">
+
+              {/* <a href="#">
                   <img src="/images/profile-img.png" alt="Profile" />
                 </a> */}
-                </div>
-                <div className="dropdown d-md-flex header-settings">
+            </div>
+            <div className="dropdown d-md-flex header-settings">
               <a
                 href="#"
                 className="nav-link icon"
@@ -69,14 +69,15 @@ function Header() {
               >
                 <img src="images/profile-setting.svg" alt="profile" />
               </a>
-            
-                <div className="main-header-menu-icon">
+
+              <div className="main-header-menu-icon">
                 <div className="dropdown-menu">
                   <div className="header-navheading text-center">
-                    <h5 className="main-notification-title">{localStorage.getItem('name')
-                  ? localStorage.getItem('name')
-                  : ''}</h5>
-                   
+                    <h5 className="main-notification-title">
+                      {localStorage.getItem('name')
+                        ? localStorage.getItem('name')
+                        : ''}
+                    </h5>
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>
@@ -110,20 +111,20 @@ function Header() {
                       </a>
                     </li>
                     <li>
-                      <a 
-                      className="dropdown-item" 
-                      href="#"
-                      onClick={() => {
-                        localStorage.removeItem('access_token');
-                        localStorage.removeItem('checkbox');
-                        localStorage.removeItem('email');
-                        localStorage.removeItem('password');
-                        localStorage.removeItem('group');
-                        localStorage.removeItem('userId');                      
-                        document.dispatchEvent(event);
-                        dispatch({ type: 'LOGIN', value: false });
-                        history.push('/login');
-                      }}
+                      <a
+                        className="dropdown-item"
+                        href="#"
+                        onClick={() => {
+                          localStorage.removeItem('access_token');
+                          localStorage.removeItem('checkbox');
+                          localStorage.removeItem('email');
+                          localStorage.removeItem('password');
+                          localStorage.removeItem('group');
+                          localStorage.removeItem('userId');
+                          document.dispatchEvent(event);
+                          dispatch({ type: 'LOGIN', value: false });
+                          history.push('/login');
+                        }}
                       >
                         <img
                           src="/images/logout-profile.svg"
@@ -137,12 +138,9 @@ function Header() {
                 </div>
               </div>
             </div>
-           
           </div>
-        
         </div>
-        </div>
-      
+      </div>
     </>
   );
 }
