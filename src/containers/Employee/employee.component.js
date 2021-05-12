@@ -134,7 +134,6 @@ function Employee() {
       });
 
       const row = [];
-
       data.data.map((emp, i) => {
         row.push({
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
@@ -565,19 +564,23 @@ function Employee() {
                   </div>
                 </Col>
                 <Col>
-                  <div className="pull-right">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      type="submit"
-                      onClick={() => {
-                        setModalShow(true);
-                        setEmployeeId();
-                      }}
-                    >
-                      Add Employee
-                    </Button>
-                  </div>
+                  {localStorage.getItem('group') === '1' ? (
+                    <div className="pull-right">
+                      <Button
+                        size="sm"
+                        variant="primary"
+                        type="submit"
+                        onClick={() => {
+                          setModalShow(true);
+                          setEmployeeId();
+                        }}
+                      >
+                        Add Employee
+                      </Button>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </Col>
               </div>
               <Form onSubmit={(e) => filterSearch(e)}>
