@@ -10463,7 +10463,9 @@ table tfoot {
   min-height: 160px;
   width: 100%;
   border-radius: 100%;
-  position: relative; }
+  position: relative;
+  overflow: hidden;
+}
   .edit-profile-image .profile-edit {
     background-color: #24CBD3;
     width: 25px;
