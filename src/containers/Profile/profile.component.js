@@ -377,6 +377,7 @@ function Profile() {
                   inputVarible="+91"
                   inputClass="form-control"
                   value={mobile}
+                  maxlength="10"
                   preValueClass="contact-number"
                   placeholder="9876576894"
                   errorMessage={validator.message(
