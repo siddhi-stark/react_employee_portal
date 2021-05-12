@@ -125,7 +125,7 @@ function TeamReport() {
       getReports(1);
       // const Id = localStorage.getItem('userId');
       // setUserId(Id);
-      setTitle('Reports');
+      setTitle('Team Report');
       getEmployee();
     }
     getData();

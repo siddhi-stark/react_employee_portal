@@ -13,8 +13,13 @@ function App() {
   const dispatch = useDispatch();
   const checkLoggedIn = () => {
     if (!token) {
-      const path = window.location.pathname;
-      if (path !== '/login') {
+      const path = window.location.pathname.split('/');
+      const extractedPath = path.length > 1 ? path[1].toString() : '';
+      if (
+        extractedPath !== 'login' &&
+        extractedPath !== 'forget-password' &&
+        extractedPath !== 'password'
+      ) {
         history.push('/login');
         setIsLoggedIn(true);
       } else {

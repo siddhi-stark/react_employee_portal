@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import { Form, Button, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
-import { TextInput } from '../../../components/FormInputs';
+import { TextInput, Helmet } from '../../../components/FormInputs';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
 
@@ -14,8 +14,11 @@ function ForgetPassword() {
   // const history = useHistory();
   const [userData, setUserData] = useState({ email: '' });
   const [count, forceUpdate] = useState(0);
+  const [title, setTitle] = useState('');
+
   const dispatch = useDispatch();
   useEffect(() => {
+    setTitle('Recover Password');
     dispatch({ type: 'LOGIN', value: false });
   }, [dispatch]);
 
@@ -55,6 +58,7 @@ function ForgetPassword() {
 
   return (
     <>
+      <Helmet title={title} />
       <div className="login-page recover-password">
         <div className="logo text-center">
           <a href="#">

@@ -155,7 +155,7 @@ function Employee() {
                   setCntClearFilter(cntClearFilter + 1);
                 }}
               >
-                <Image src="images/edit.png" />
+                <Image src="images/edit-button.svg" />
               </a>
               <a
                 href="/"

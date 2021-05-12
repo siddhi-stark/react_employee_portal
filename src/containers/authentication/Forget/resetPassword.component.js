@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import { Form } from 'react-bootstrap';
-import { TextInput } from '../../../components/FormInputs';
+import { TextInput, Helmet } from '../../../components/FormInputs';
 import Api from '../../../helper/api';
 import AuthApi from '../../../helper/authApi';
 
@@ -22,6 +22,7 @@ function ResetPassword(props) {
   const [token, setToken] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [count, forceUpdate] = useState(0);
+  const [title, setTitle] = useState('');
   const dispatch = useDispatch();
 
   const verifyToken = async (tkn) => {
@@ -29,7 +30,6 @@ function ResetPassword(props) {
       `${Api.verifyToken}?token=${tkn}`
     );
     if (data) {
-      console.log('data', data.data.email); //eslint-disable-line
       setEmail(data.data.email);
     }
     if (!data) {
@@ -39,6 +39,7 @@ function ResetPassword(props) {
   };
 
   useEffect(() => {
+    setTitle('Reset Password');
     dispatch({ type: 'LOGIN', value: false });
     const matchUrltoken = props.match.params.token;
     setToken(matchUrltoken);
@@ -81,6 +82,7 @@ function ResetPassword(props) {
 
   return (
     <>
+      <Helmet title={title} />
       <div className="login-page recover-password">
         <div className="logo text-center">
           <a href="#">

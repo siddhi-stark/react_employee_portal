@@ -143,7 +143,12 @@ function Login(props) {
             </Form.Label>
             <p className="lost_password">
               {' '}
-              <a href="/forget-password">Forgot password ?</a>
+              <a
+                href="#"
+                onClick={() => props.history.push('/forget-password')}
+              >
+                Forgot password ?
+              </a>
             </p>
           </div>
           <div className="text-center mt-3">

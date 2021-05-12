@@ -17,8 +17,17 @@ function Header() {
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
+
     if (!token) {
-      history.push('/login');
+      const path = window.location.pathname.split('/');
+      const extractedPath = path.length > 1 ? path[1].toString() : '';
+      if (
+        extractedPath !== 'login' &&
+        extractedPath !== 'forget-password' &&
+        extractedPath !== 'password'
+      ) {
+        history.push('/login');
+      }
       // return false;
     } else {
       dispatch({ type: 'LOGIN', value: true });

@@ -150,7 +150,7 @@ function ToDoList() {
                   className="pl-2"
                   target="_blank"
                 >
-                  <Image src="images/edit.png" />
+                  <Image src="images/edit-button.svg" />
                 </a>
               )}
               {task.task_type !== 'tw' && (
@@ -167,7 +167,7 @@ function ToDoList() {
                     localStorage.setItem('taskid', task.id);
                   }}
                 >
-                  <Image src="images/edit.png" />
+                  <Image src="images/edit-button.svg" />
                 </a>
               )}
               <a
