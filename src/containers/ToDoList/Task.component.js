@@ -165,6 +165,25 @@ function Task(props) {
                   )}
                 />
               </Col>
+              <Col sm={6}>
+                <TextInput
+                  onInputChange={(e) => setDescription(e.target.value)}
+                  label="Description"
+                  containerClass="form-group"
+                  asterisk="*"
+                  as="textarea"
+                  row="30"
+                  cols="50"
+                  style={{ resize: 'none' }}
+                  value={description}
+                  placeholder="Enter Description"
+                  errorMessage={validator.message(
+                    'description',
+                    description,
+                    'required'
+                  )}
+                />
+              </Col>
             </Row>
             <Row>
               <Col sm={2}>
@@ -281,24 +300,6 @@ function Task(props) {
                     </div>
                   </div>
                 </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={12}>
-                <TextInput
-                  onInputChange={(e) => setDescription(e.target.value)}
-                  label="Description"
-                  containerClass="form-group"
-                  asterisk="*"
-                  type="textarea"
-                  value={description}
-                  placeholder="Enter Description"
-                  errorMessage={validator.message(
-                    'description',
-                    description,
-                    'required'
-                  )}
-                />
               </Col>
             </Row>
           </Form>

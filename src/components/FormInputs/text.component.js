@@ -14,6 +14,7 @@ export default function InputComponent(props) {
     inputClass,
     inputIcon,
     type,
+    style,
     maxlength,
     containerClass,
     inputVarible,
@@ -21,6 +22,7 @@ export default function InputComponent(props) {
     disabled,
     multiple,
     rows,
+    cols,
     as,
     asterisk,
     accept,
@@ -57,7 +59,9 @@ export default function InputComponent(props) {
             maxlength={maxlength}
             multiple={multiple}
             accept={accept}
+            style={style}
             rows={rows}
+            cols={cols}
             as={as}
           />
         </InputGroup>
