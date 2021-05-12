@@ -76,7 +76,7 @@ function Header() {
                 data-toggle="sidebar-right"
                 data-target=".sidebar-right"
               >
-                <img src="images/profile-setting.svg" alt="profile" />
+                <img src="/images/profile-setting.svg" alt="profile" />
               </a>
 
               <div className="main-header-menu-icon">

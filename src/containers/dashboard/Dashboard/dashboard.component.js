@@ -162,6 +162,58 @@ function Dashboard() {
                 </div>
               </Card.Body>
             </Card>
+            <div className="table-projects time-sheet-table">
+              <div className="card">
+                <div className="table-title">
+                  <h5 className="card-title">Time Sheet</h5>
+                </div>
+                <br />
+                <div className="table-responsive">
+                  <table className="table table-striped m-0">
+                    <thead>
+                      <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Clock in</th>
+                        <th scope="col">Clock out</th>
+                        <th scope="col">Total working</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">15/06/2021</th>
+                        <td>10:30</td>
+                        <td>9:00</td>
+                        <td>8.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">16/06/2021</th>
+                        <td>10:30</td>
+                        <td>9:00</td>
+                        <td>8.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">17/06/2021</th>
+                        <td>10:30</td>
+                        <td>9:00</td>
+                        <td>8.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">18/06/2021</th>
+                        <td>10:30</td>
+                        <td>9:00</td>
+                        <td>8.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">19/06/2021</th>
+                        <td>10:30</td>
+                        <td>9:00</td>
+                        <td>8.00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
             <div className="holidays-applied">
               <div className="row">
                 <div className="col-xl-6">

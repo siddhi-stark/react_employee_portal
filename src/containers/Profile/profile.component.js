@@ -13,7 +13,7 @@ const validator = new SimpleReactValidator();
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/profile', label: 'Profile' },
+  { to: '/profile', label: 'My Profile' },
 ];
 
 function Profile() {
@@ -185,25 +185,35 @@ function Profile() {
         </div>
       </div>
       <Card body>
-        <Card.Header>
+        <div>
           <div className="mb-3">
-            My Profile
-            <Button
-              className="float-end"
-              variant="primary"
-              type="submit"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setModalShow(true);
-                getProfile();
-                // setCntClearFilter(cntClearFilter + 1);
-              }}
-            >
-              Edit Profile
-            </Button>
+            <div className="custom-header-wrapper">
+              <Col>
+                <div className="pull-left">
+                  <h4>My Profile</h4>
+                </div>
+              </Col>
+              <Col>
+                <div className="pull-right">
+                  <Button
+                    className="float-end"
+                    variant="primary"
+                    type="submit"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setModalShow(true);
+                      getProfile();
+                      // setCntClearFilter(cntClearFilter + 1);
+                    }}
+                  >
+                    Edit Profile
+                  </Button>
+                </div>
+              </Col>
+            </div>
           </div>
-        </Card.Header>
+        </div>
         <Card.Body>
           <Form>
             <Row>
@@ -219,9 +229,9 @@ function Profile() {
                 </div>
               </Col>
               <Col sm={9}>
-                <h4 className="main-notification-title text-primary">
+                <h3 className="main-notification-title text-primary">
                   <b>{name}</b>
-                </h4>
+                </h3>
                 <h5 className="mt-5">Personal Information</h5>
 
                 <Form.Label>
