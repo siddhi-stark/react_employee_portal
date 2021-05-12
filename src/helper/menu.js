@@ -23,7 +23,7 @@ const menu = [
   {
     title: 'Employee',
     path: '/employee',
-    icon: 'dashboard.svg',
+    icon: 'Employee.svg',
     submenu: [],
     roleaccess: [1, 3],
   },

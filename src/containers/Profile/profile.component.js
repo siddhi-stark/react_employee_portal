@@ -4,11 +4,7 @@ import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import {
-  TextInput,
-  DropdownInput,
-  ModalInput,
-} from '../../components/FormInputs';
+import { TextInput, ModalInput } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
@@ -22,10 +18,6 @@ const items = [
 
 function Profile() {
   const userId = localStorage.getItem('userId');
-
-  const email = 'mrunaliPatil04@gmail.com';
-  //   const mobile = '7757774289';
-  // const birthday = '30 Oct 1997';
   const [date, setDate] = useState('');
   // const [employeeId, setEmployeeId] = useState('');
   const [companyEmail, setEmail] = useState('');
@@ -73,20 +65,21 @@ function Profile() {
 
   const getProfile = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
-    if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
+    if (!customFunctions.checkIfEmpty(data.data, 'O')) {
       setEmail(data.data.email);
       setName(data.data.full_name);
       setMobile(data.data.mobile);
-      setId(data.data.id);
+      setId(data.data.emp_code);
       setBirthdate(data.data.dob);
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
-      Department.map((dept) => {
-        if (data.data.department_id === dept.id) {
-          setSelectedDepartment(dept);
-        }
-        return dept;
-      });
+      setSelectedDepartment(data.data.deparment_name);
+      // Department.map((dept) => {
+      //   if (data.data.department_id === dept.id) {
+      //     setSelectedDepartment(dept);
+      //   }
+      //   return dept;
+      // });
 
       data.data.assigned_managers.map((assgnmgmr) => {
         setSelectedManager(assgnmgmr.report_head__full_name);
@@ -247,11 +240,6 @@ function Profile() {
                   {mobile}
                 </Form.Label>
 
-                <Form.Label>
-                  <Image src="/images/mail.svg" className="svg me-3 ms-3" />
-                  {email}
-                </Form.Label>
-
                 <h5 className="mt-5">Job Information</h5>
                 <Row>
                   <Col sm={4}>
@@ -290,26 +278,15 @@ function Profile() {
                 </Row>
                 <Row>
                   <Col sm={6}>
-                    <DropdownInput
-                      label="Department"
-                      // asterisk="*"
-                      options={getDepartment()}
-                      placeholder="Select Department"
-                      defaultValue={selectedDepartment}
-                      disabled
-                      onSelectHandler={(select) =>
-                        setSelectedDepartment(select)
+                    <TextInput
+                      onInputChange={(e) =>
+                        setSelectedDepartment(e.target.value)
                       }
-                      // errorMessage={
-                      //   selectedDepartment && selectedDepartment.length > 0
-                      //     ? validator.message(
-                      //         'Department',
-                      //         selectedDesignationOption,
-                      //         'required'
-                      //       )
-                      //     : ''
-                      // }
-                      isMulti={false}
+                      label="Department"
+                      containerClass="form-group"
+                      name="selectedDepartment"
+                      value={selectedDepartment}
+                      disabled
                     />
                   </Col>
                   <Col sm={4}>

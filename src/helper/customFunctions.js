@@ -119,6 +119,15 @@ class CustomFunctions extends Component {
     }
   };
 
+  localStorageClear = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('checkbox');
+    localStorage.removeItem('email');
+    localStorage.removeItem('password');
+    localStorage.removeItem('group');
+    localStorage.removeItem('userId');
+  };
+
   cleanObject = (obj) => {
     const cleanedObject = Object.entries(obj).reduce(
       (a, [k, v]) => (v || v === false || v === 0 ? ((a[k] = v), a) : a), // eslint-disable-line

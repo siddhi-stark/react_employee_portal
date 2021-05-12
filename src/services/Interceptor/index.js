@@ -14,5 +14,21 @@ export default {
         Promise.reject(error);
       }
     );
+
+    // await axios.interceptors.response.use(
+    //   (response) => response,
+    //   async (error) => {
+    //     const data = await error.response;
+    //     if (
+    //       data &&
+    //       (data.status === 401 || data.statusText === 'Unauthorized')
+    //     ) {
+    //       await CustomFunctions.localStorageClear();
+    //       window.location.href = '/login';
+    //       return Promise.reject(error.response.data);
+    //     }
+    //     return Promise.reject(error.response);
+    //   }
+    // );
   },
 };

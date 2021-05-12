@@ -11,9 +11,9 @@ function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
   const [showClockButton, setShowClockButton] = useState(true);
   const [title, setTitle] = useState('');
-  // const [completed, setCompleted] = useState('');
-  // const [pending, setPending] = useState('');
-  // const [remaining, setRemaining] = useState('');
+  const [completed, setCompleted] = useState('');
+  const [pending, setPending] = useState('');
+  const [remaining, setRemaining] = useState('');
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
@@ -41,19 +41,19 @@ function Dashboard() {
     getDailyActivity();
   };
 
-  // const getWeeklyStatus = async () => {
-  //   const endPoint = `${Api.weeklyStatusUrl}?mode=this_week`;
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
-  //   if(data && data.data) {
-  //     setCompleted(data.data.completed);
-  //     setPending(data.data.pending);
-  //     setRemaining(data.data.upcoming);
-  //   }
-  // }
+  const getWeeklyStatus = async () => {
+    const endPoint = `${Api.weeklyStatusUrl}?mode=this_week`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data && data.data) {
+      setCompleted(data.data.completed);
+      setPending(data.data.pending);
+      setRemaining(data.data.upcoming);
+    }
+  };
 
   useEffect(() => {
     getDailyActivity();
-    // getWeeklyStatus();
+    getWeeklyStatus();
     setTitle('Dashboard');
   });
 
@@ -136,15 +136,15 @@ function Dashboard() {
                       <ul className="list-unstyled p-0">
                         <li>
                           <p className="status-label">Completed</p>
-                          <span className="bluebg">65%</span>
+                          <span className="bluebg">{completed}</span>
                         </li>
                         <li>
                           <p className="status-label">Pending</p>
-                          <span className="pinkbg">25%</span>
+                          <span className="pinkbg"> {pending} </span>
                         </li>
                         <li>
                           <p className="status-label">Remaining</p>
-                          <span className="yellowbg">0%</span>
+                          <span className="yellowbg">{remaining} </span>
                         </li>
                       </ul>
                     </div>

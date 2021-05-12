@@ -58,14 +58,14 @@ function AllReports() {
   const getReports = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
     let endPoint;
-    endPoint = `${Api.timeSheetUrl}?limit=${pagination.itemsPerPage}&page=${page}`;
+    endPoint = `${Api.reportListingUrl}?limit=${pagination.itemsPerPage}&page=${page}`;
 
     if (fromDate && toDate) {
       endPoint = `${endPoint}&start_date=${customFunctions.getDate(
         fromDate
       )}&end_date=${customFunctions.getDate(toDate)}`;
     }
-    const { data } = await AuthApi.getDataFromServer(endPoint);
+    const { data } = await AuthApi.postDataToServer(endPoint);
     if (data && data.data) {
       if (data.paginator && Object.keys(data.paginator).length > 0) {
         setPagination({
@@ -77,10 +77,10 @@ function AllReports() {
       }
       const row = [];
       data.data.map((report, i) => {
-        setEmployeeName(report.emp_name);
+        setEmployeeName(report.user);
         row.push({
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
-          name: report.emp_name,
+          name: report.user,
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
