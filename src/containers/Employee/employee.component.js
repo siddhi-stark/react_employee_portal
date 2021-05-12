@@ -677,7 +677,12 @@ function Employee() {
                 </Col>
                 <Col sm={6}>
                   <TextInput
-                    onInputChange={(e) => setFullName(e.target.value)}
+                    onInputChange={(e) => {
+                      const re = /^[a-zA-Z .]*$/;
+                      if (e.target.value === '' || re.test(e.target.value)) {
+                        setFullName(e.target.value);
+                      }
+                    }}
                     label="Full Name"
                     asterisk="*"
                     containerClass="form-group"
