@@ -33,6 +33,10 @@ const columns = [
     id: 'total',
     label: 'Total Working',
   },
+  {
+    id: 'report',
+    label: 'View Report',
+  },
 ];
 
 const items = [
@@ -78,6 +82,8 @@ function AllReports() {
       const row = [];
       data.data.map((report, i) => {
         setEmployeeName(report.user);
+        const date = customFunctions.getDate(report.created_at);
+        const dt = new Date(date).getTime();
         row.push({
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,
@@ -85,6 +91,11 @@ function AllReports() {
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: report.estimation,
+          report: (
+            <a href={`/daily-report/${dt}/${report.user_id}`}>
+              <span>View Report</span>
+            </a>
+          ),
         });
         return report;
       });
@@ -93,13 +104,8 @@ function AllReports() {
   };
 
   useEffect(() => {
-    async function getData() {
-      getReports(1);
-      // const Id = localStorage.getItem('userId');
-      // setUserId(Id);
+   
       setTitle('Reports');
-    }
-    getData();
   }, []);
 
   useEffect(() => {

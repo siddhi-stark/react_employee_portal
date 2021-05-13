@@ -131,8 +131,8 @@ function Projects() {
           allocated: `${proj.allocated} Hrs`,
           completed: proj.completed,
           remaining:
-            Math.sign(proj.remaining) === 1 ? (
-              `${proj.remaining} Hrs`
+            Math.sign(proj.remaining) === 1 || Math.sign(proj.remaining) === 0 ? (
+              <span className="text-primary">{proj.remaining} {Math.sign(proj.remaining)=== 0 ? 'Hr' : 'Hrs'}</span>
             ) : (
               <span className="text-danger">{proj.remaining} Hrs</span>
             ),
@@ -185,7 +185,6 @@ function Projects() {
   };
 
   useEffect(() => {
-    getTableData(1);
     setTitle('Projects');
   }, []);
 
@@ -211,8 +210,8 @@ function Projects() {
           title="Are you sure, do you want to update the project ?"
           error
           showCancel
-          confirmBtnBsStyle="success"
-          cancelBtnBsStyle="danger"
+          confirmBtnBsStyle="btn btn-primary btn-lg"
+          cancelBtnBsStyle="btn btn-lg btn-secondary"
           onConfirm={() => {
             onRtSupport(projectId, rtSupport);
           }}
@@ -220,9 +219,8 @@ function Projects() {
             setShowUpdate(false);
             setShowUpdate(null);
           }}
-        >
-          You wont be able to revert this!
-        </SweetAlert>
+       / >
+       
       )}
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Projects</h2>

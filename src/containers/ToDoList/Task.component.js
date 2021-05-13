@@ -21,7 +21,7 @@ function Task(props) {
   const [count, forceUpdate] = useState(0);
   const [taskModalShow, setTaskModalShow] = useState(false);
   // const [validateTime, setValidateTime] = useState([]);
-  const [progressValue, setProgressValue] = useState('');
+  const [progressValue, setProgressValue] = useState(0);
   const [id, setId] = useState(null);
   const [startHours, setStartHours] = useState(''); // eslint-disable-line
   const [startMinutes, setStartMinutes] = useState(''); // eslint-disable-line
@@ -56,7 +56,7 @@ function Task(props) {
 
       setTaskName(data.data.content);
       setDescription(data.data.description);
-      setProgressValue(data.data.progress);
+      setProgressValue(Number(data.data.progress));
     }
   };
 
@@ -96,7 +96,7 @@ function Task(props) {
 
     if (data) {
       props.handleModalCLose(false);
-      swal(data && data.message[0], '', 'success').then((result) => {
+      swal('Task Updated Successfully', '', 'success').then((result) => {
         if (result) {
           setTaskStartTime();
           setTaskEndTime();
@@ -136,12 +136,13 @@ function Task(props) {
     props.handleModalCLose(false);
     validator.hideMessages();
   };
-
+  
   return (
     <>
       <ModalInput
         size="lg"
         centered
+        onHide={onTaskCancel}
         show={taskModalShow}
         label="Add Task"
         id="contained-modal-title-vcenter"
@@ -189,7 +190,7 @@ function Task(props) {
               <Col sm={2}>
                 <Datepicker
                   className="form-control"
-                  label="StartTime"
+                  label="Start Time"
                   asterisk="*"
                   selected={taskStartTime}
                   onChange={(e) => {
@@ -211,7 +212,7 @@ function Task(props) {
               <Col sm={2}>
                 <Datepicker
                   className="form-control"
-                  label="EndTime"
+                  label="End Time"
                   asterisk="*"
                   format="HH:mm"
                   excludeOutOfBoundTimes
@@ -291,7 +292,7 @@ function Task(props) {
                           name="rangeInput"
                           min="0"
                           max="100"
-                          value={progressValue}
+                          value={Number(progressValue)}
                           onChange={(e) => {
                             setProgressValue(e.target.value);
                           }}

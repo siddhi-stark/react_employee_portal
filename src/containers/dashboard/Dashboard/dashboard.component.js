@@ -6,6 +6,28 @@ import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
 import ToDoList from '../../ToDoList/toDoList.component';
+import customFunctions from '../../../helper/customFunctions';
+import Table from '../../../components/Table/simpletable.component';
+
+const columns = [
+    {
+    id: 'date',
+    label: 'Date',
+  },
+  {
+    id: 'clockin',
+    label: 'Clock In',
+  },
+  {
+    id: 'clockout',
+    label: 'Clock out',
+  },
+  {
+    id: 'total',
+    label: 'Total Working',
+  },
+  
+];
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -14,6 +36,12 @@ function Dashboard() {
   const [completed, setCompleted] = useState('');
   const [pending, setPending] = useState('');
   const [remaining, setRemaining] = useState('');
+  const [rows, setRows] = useState([]);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    itemsPerPage: 10,
+    totalItems: 10,
+  });
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
@@ -29,6 +57,30 @@ function Dashboard() {
       } else {
         setShowClockButton(true);
       }
+    }
+  };
+
+  const getTimeSheetList = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}`);
+    if(data && data.data) {
+      setPagination({
+        current_page: Number(data.paginator.current_page),
+        activePage: data.paginator.current_page,
+        itemsPerPage: data.paginator.limit,
+        totalItems: data.paginator.total_count,
+      });
+      const row = [];
+
+      data.data.map((timesheet) => {
+        row.push({
+          date: customFunctions.getFormattedDate(timesheet.created_at),
+          clockin: timesheet.sign_in,
+          clockout: timesheet.sign_out,
+          total: timesheet.estimation,
+        });
+        return timesheet;
+      });
+      setRows(row);
     }
   };
 
@@ -54,6 +106,7 @@ function Dashboard() {
   useEffect(() => {
     getDailyActivity();
     getWeeklyStatus();
+    getTimeSheetList();
     setTitle('Dashboard');
   });
 
@@ -136,15 +189,15 @@ function Dashboard() {
                       <ul className="list-unstyled p-0">
                         <li>
                           <p className="status-label">Completed</p>
-                          <span className="bluebg">{completed}</span>
+                          <span className="bluebg">{completed}%</span>
                         </li>
                         <li>
                           <p className="status-label">Pending</p>
-                          <span className="pinkbg"> {pending} </span>
+                          <span className="pinkbg"> {pending}% </span>
                         </li>
                         <li>
                           <p className="status-label">Remaining</p>
-                          <span className="yellowbg">{remaining} </span>
+                          <span className="yellowbg">{remaining}% </span>
                         </li>
                       </ul>
                     </div>
@@ -169,48 +222,28 @@ function Dashboard() {
                 </div>
                 <br />
                 <div className="table-responsive">
-                  <table className="table table-striped m-0">
-                    <thead>
-                      <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Clock in</th>
-                        <th scope="col">Clock out</th>
-                        <th scope="col">Total working</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">15/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">16/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">17/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">18/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">19/06/2021</th>
-                        <td>10:30</td>
-                        <td>9:00</td>
-                        <td>8.00</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                {pagination.totalItems > 0 ? (
+                <Col className="mt-3">
+                <Table
+                      tableClass="table table-striped"
+                      columns={columns}
+                      rows={rows}
+                      showPagination
+                      paginationProps={{
+                        ...pagination,
+                        activePage: pagination.current_page,
+                        onPageChange: (pageNo) => {
+                          getTimeSheetList(pageNo);
+                        },
+                      }}
+                      dropdownContainerClass="mb-3"
+                    />
+                  </Col>
+                ) : (
+                  <Col>
+                    <p className="text-center mb-0">No record found</p>
+                  </Col>
+                )}
                 </div>
               </div>
             </div>

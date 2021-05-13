@@ -50,18 +50,18 @@ function Reports(props) {
     const dt = customFunctions.getDate(
       new Date(Number(props.match.params.date))
     );
-    setReportDate(dt);
+    setReportDate(customFunctions.getFormattedDate(dt));
     const endPoint = `${Api.dailyReportUrl}?date=${dt}&user_id=${props.match.params.id}&page=${page}&limit=${pagination.itemsPerPage}`;
 
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
-      if (data.paginator && Object.keys(data.paginator).length > 0) {
+     
         setPagination({
           activePage: data.paginator.current_page,
           itemsPerPage: pagination.itemsPerPage,
           totalItems: data.paginator.total_count,
         });
-      }
+      
       const row = [];
       const reportData = showButton
         ? data.data.morning_data
@@ -115,7 +115,7 @@ function Reports(props) {
                   Evening Report
                 </Button>
               </div>
-
+              {pagination.totalItems > 0 ? (
               <Col className="mt-3">
                 <Table
                   tableClass="table table-striped"
@@ -130,6 +130,11 @@ function Reports(props) {
                   }}
                 />
               </Col>
+              ) : (
+                  <Col>
+                    <p className="text-center mb-0">No record found</p>
+                  </Col>
+                )}
             </Row>
           </Card.Body>
         </Card>

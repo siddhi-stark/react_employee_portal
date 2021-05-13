@@ -70,12 +70,11 @@ function ToDoList() {
   // const [staticEndTime, setStaticEndTime] = useState(new Date());
   const [staticHrs, setStaticHours] = useState(''); // eslint-disable-line
   const [staticMin, setStaticMinutes] = useState(''); // eslint-disable-line
-  const [showScrum, setShowScrum] = useState(false);
-  const [showClockoutBtn, setShowClockoutBtn] = useState(false);
+  const [morningMail, setMorningMail] = useState(false);
+  const [signOutMail, setSignOutMail] = useState(false);
   const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [showErrorBlock, setShowErrorBlock] = useState(false);
   const [showSuccessBlock, setShowSuccessBlock] = useState(false);
-  const [type, setType] = useState('morning');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -213,7 +212,7 @@ function ToDoList() {
       getDailyActivity();
     }
     getData();
-    // setShowScrum(props.showScrum);
+    // setShowScrum(props.morningMail);
   }, []);
 
   useEffect(() => {
@@ -223,8 +222,8 @@ function ToDoList() {
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data && data.data) {
-      setShowScrum(data.data.morning_mail);
-      setShowClockoutBtn(data.data.morning_mail);
+      setMorningMail(data.data.morning_mail); 
+      setSignOutMail(data.data.signout_mail); 
     }
     if (data.data.clock_out_time) {
       localStorage.setItem('time', data.data.clock_out_time);
@@ -233,7 +232,7 @@ function ToDoList() {
 
   const onSendScrum = async () => {
     const postData = {
-      type,
+      type : morningMail && !signOutMail ? 'logout' : 'morning',
       tasks: selectedRowIndex,
     };
 
@@ -243,8 +242,6 @@ function ToDoList() {
       postData
     );
     if (data) {
-      setType('logout');
-      setShowScrum(false);
       setShowBreak(false);
       setShowErrorBlock(false);
       setShowSuccessBlock(true);
@@ -305,7 +302,6 @@ function ToDoList() {
         selectedRowIndex.push(e);
         return e;
       });
-      setType('logout');
       setSelectedRowIndex(selectedRowIndex);
       setHours();
       setMinutes();
@@ -373,6 +369,7 @@ function ToDoList() {
 
   return (
     <>
+
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -388,7 +385,7 @@ function ToDoList() {
             setShowDelete(null);
           }}
         >
-          You wont be able to revert this!
+          You will not be able to revert this!
         </SweetAlert>
       )}
 
@@ -455,7 +452,7 @@ function ToDoList() {
                 </Card.Title>
               </Col>
             </div>
-
+            {pagination.totalItems > 0 ? (
             <Col className="mt-3">
               <Table
                 tableClass="table table-striped"
@@ -493,9 +490,14 @@ function ToDoList() {
                 }}
               />
             </Col>
+            ) : (
+                  <Col>
+                    <p className="text-center mb-0">No record found</p>
+                  </Col>
+                )}
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            {!showScrum && (
+            {(!morningMail && !signOutMail && pagination.totalItems > 0) && ( 
               <Button
                 variant="primary"
                 className="mb-3"
@@ -506,7 +508,7 @@ function ToDoList() {
                 Send Scrum
               </Button>
             )}
-            {!showClockoutBtn && showScrum && (
+            {(!signOutMail && morningMail) && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -671,7 +673,7 @@ function ToDoList() {
                             onDeleteBreakHandler(i, e);
                           }}
                         >
-                          <img src="images/delete.png" alt="delete" />
+                          <img src="images/delete.png" className="ml-2" alt="delete" />
                         </a>
                       )}
                     </div>
@@ -819,7 +821,6 @@ function ToDoList() {
                   e.preventDefault();
                   e.stopPropagation();
                   setShowScrumPopup(false);
-                  // setType('morning')
                   onSubmit(e);
                 }}
               >

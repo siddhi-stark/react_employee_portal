@@ -74,7 +74,7 @@ function Employee() {
   );
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
-  const [selectedTeamLead, setSelectedTeamLead] = useState('');
+  const [selectedTeamLead, setSelectedTeamLead] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState('');
   // const [validationDate, setValidationDate] = useState('');
   const [twId, setTwId] = useState(null);
@@ -118,11 +118,6 @@ function Employee() {
     // let endPoint;
     // const hasSearch = (keyword !== '');
     const page = pageNo || pagination.current_page;
-    // endPoint = `${Api.employeeUrl}`;
-    //   if(keyword){
-    //   endPoint = hasSearch ? `${endPoint}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}` : `${endPoint}`;
-    // }
-
     const endPoint = `${Api.employeeUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}&sort_by=full_name&sort_direction=ascending`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
@@ -185,14 +180,13 @@ function Employee() {
     );
 
     if (data && data.data) {
-      const list = [];
       const managerList = [];
 
       teamLead.map((team) => {
         data.data.assigned_team_leads.map((assign) => {
           // (team.id === assign)? setSelectedTeamLead()
           if (team.id === assign) {
-            list.push({
+            setSelectedTeamLead({
               id: team.id,
               label: team.full_name,
             });
@@ -200,7 +194,6 @@ function Employee() {
 
           return assign;
         });
-        setSelectedTeamLead(list);
         return team;
       });
 
@@ -261,7 +254,7 @@ function Employee() {
   };
 
   const getTwEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.TwEmployeeUrl}`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`);
     if (data && data.data) {
       setTwEmployee(data.data);
     }
@@ -347,31 +340,35 @@ function Employee() {
   const onCancel = () => {
     setSelectedDesignationOption();
     validator.hideMessages();
-    setFullName();
-    setSelectedEmployee();
-    setEmail();
-    setMobile();
-    setPassword();
-    setSelectedDesignationOption();
-    setSelectedRole();
-    setSelectedManager();
-    setSelectedTeamLead();
-    setSelectedDepartment();
+    setFullName('');
+    setSelectedEmployee('');
+    setEmail('');
+    setMobile('');
+    setPassword('');
+    setSelectedDesignationOption('');
+    setSelectedRole('');
+    setSelectedManager('');
+    setSelectedTeamLead(null);
+    setSelectedDepartment('');
     setDate();
     setModalShow(false);
   };
 
   const addEmployee = async () => {
     const teamIdList = [];
-    if (Object.keys(selectedTeamLead).length > 0) {
+    // if (Object.keys(selectedTeamLead).length > 0) {
+    //   teamIdList.push(selectedTeamLead.id);
+    //   console.log('teamlead',selectedTeamLead.id);
+    //   // selectedTeamLead.map((team) => {
+    //   //     teamIdList.push(team.id);
+    //   //     return team;
+    //   //   });
+    // }
+    if (selectedTeamLead) {
       teamIdList.push(selectedTeamLead.id);
-      // selectedTeamLead.map((team) => {
-      //     teamIdList.push(team.id);
-      //     return team;
-      //   });
     }
-    const managerList = [];
 
+    const managerList = [];
     if (selectedManager.length > 0) {
       selectedManager.map((mngr) => {
         managerList.push(mngr.id);
@@ -579,8 +576,8 @@ function Employee() {
                       </Button>
                     </div>
                   ) : (
-                    ''
-                  )}
+                      ''
+                    )}
                 </Col>
               </div>
               <Form onSubmit={(e) => filterSearch(e)}>
@@ -598,7 +595,7 @@ function Employee() {
                       <Button
                         variant="primary"
                         type="submit"
-                        // onClick={() => getTableData(1)}
+                      // onClick={() => getTableData(1)}
                       >
                         <Image src="images/search.svg" className="svg" />
                       </Button>
@@ -637,10 +634,10 @@ function Employee() {
                   />
                 </Col>
               ) : (
-                <Col>
-                  <p className="text-center mb-0">No record found</p>
-                </Col>
-              )}
+                  <Col>
+                    <p className="text-center mb-0">No record found</p>
+                  </Col>
+                )}
             </Row>
           </Card.Body>
         </Card>
@@ -664,15 +661,15 @@ function Employee() {
                       setSelectedEmployee(select);
                       updateData(select);
                     }}
-                    // errorMessage={
-                    //   selectedEmployee && selectedEmployee > 0
-                    //     ? validator.message(
-                    //         'setSelectedEmployee',
-                    //         selectedDesignationOption,
-                    //         'required'
-                    //       )
-                    //     : ''
-                    // }
+                  // errorMessage={
+                  //   selectedEmployee && selectedEmployee > 0
+                  //     ? validator.message(
+                  //         'setSelectedEmployee',
+                  //         selectedDesignationOption,
+                  //         'required'
+                  //       )
+                  //     : ''
+                  // }
                   />
                 </Col>
                 <Col sm={6}>
@@ -722,11 +719,11 @@ function Employee() {
                       name="passwordTitle"
                       value={password}
                       placeholder="Enter Password"
-                      // errorMessage={validator.message(
-                      //   'password',
-                      //   password,
-                      //   'required'
-                      // )}
+                    // errorMessage={validator.message(
+                    //   'password',
+                    //   password,
+                    //   'required'
+                    // )}
                     />
                   </Col>
                 )}
@@ -800,15 +797,15 @@ function Employee() {
                     onSelectHandler={(select) => {
                       setSelectedManager(select);
                     }}
-                    // errorMessage={
-                    //   selectedManager && selectedManager > 0
-                    //     ? validator.message(
-                    //         'Manager',
-                    //         selectedDesignationOption,
-                    //         'required'
-                    //       )
-                    //     : ''
-                    // }
+                  // errorMessage={
+                  //   selectedManager && selectedManager > 0
+                  //     ? validator.message(
+                  //         'Manager',
+                  //         selectedDesignationOption,
+                  //         'required'
+                  //       )
+                  //     : ''
+                  // }
                   />
                 </Col>
               </Row>
@@ -821,15 +818,15 @@ function Employee() {
                     placeholder="Select TeamLead"
                     defaultValue={selectedTeamLead}
                     onSelectHandler={(select) => setSelectedTeamLead(select)}
-                    // errorMessage={
-                    //   selectedTeamLead && selectedTeamLead > 0
-                    //     ? validator.message(
-                    //         'TeamLead',
-                    //         selectedDesignationOption,
-                    //         'required'
-                    //       )
-                    //     : ''
-                    // }
+                  // errorMessage={
+                  //   selectedTeamLead && selectedTeamLead > 0
+                  //     ? validator.message(
+                  //         'TeamLead',
+                  //         selectedDesignationOption,
+                  //         'required'
+                  //       )
+                  //     : ''
+                  // }
                   />
                 </Col>
                 <Col sm={6}>

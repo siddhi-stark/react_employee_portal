@@ -17,7 +17,6 @@ const items = [
 ];
 
 function Profile() {
-  const userId = localStorage.getItem('userId');
   const [date, setDate] = useState('');
   // const [employeeId, setEmployeeId] = useState('');
   const [companyEmail, setEmail] = useState('');
@@ -34,6 +33,8 @@ function Profile() {
   const [imageUrl, setImageUrl] = useState('');
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
+  const [image, setImage] = useState('');
+  const [profileId, setProfileId] = useState('');
   // const [imageFile, setImageFile] = useState('');
   const Department = [
     {
@@ -74,6 +75,8 @@ function Profile() {
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
+      setImage(data.data.profile_image_url);
+      setProfileId(data.data.profile_id);
       // Department.map((dept) => {
       //   if (data.data.department_id === dept.id) {
       //     setSelectedDepartment(dept);
@@ -110,11 +113,11 @@ function Profile() {
     getData();
   }, []);
 
-  useEffect(() => {
-    if (userId) {
-      getProfile();
-    }
-  }, [userId]);
+  // useEffect(() => {
+  //   if (userId) {
+  //     getProfile();
+  //   }
+  // }, [userId]);
 
   const onCancel = () => {
     setModalShow(false);
@@ -122,10 +125,13 @@ function Profile() {
   const handleImageFileUpload = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       setImageUrl(e.target.files[0]);
+
     }
   };
 
   const uploadFile = async () => {
+    let imgId = ''; 
+
     const formData = new FormData();
     formData.append('file_name', imageUrl);
 
@@ -134,18 +140,25 @@ function Profile() {
       formData
     );
     if (data) {
-      updateProfileData(data.data.id);
+      imgId =  data.data.id;
     }
+    return imgId;
   };
 
-  const updateProfileData = async (imgId) => {
+  const updateProfileData = async () => {
+    
     const payload = {
       id: localStorage.getItem('userId'),
       full_name: name,
       companyEmail,
       mobile,
-      profile: imgId,
+      profile: profileId,
     };
+
+    if(imageUrl) {
+      payload.profile = await uploadFile();
+    }
+
     const { data } = await AuthApi.putDataToServer(
       `${Api.profileUrl}`,
       payload
@@ -169,11 +182,26 @@ function Profile() {
   const updateProfile = (e) => {
     e.preventDefault();
     if (validator.allValid()) {
-      uploadFile();
+      updateProfileData();
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
     }
+  };
+
+  const getImageName = (profileImage) => {
+  
+    const img = profileImage ? profileImage.split(
+      'https://empportal-serverless.s3.amazonaws.com/media/'
+    ) : imageUrl.split(
+      'https://empportal-serverless.s3.amazonaws.com/media/'
+    );
+    let img1 = '';
+
+    if(img.length > 1) {
+     img1 = (img[1].split('?').length > 1 ? img[1].split('?')[0] : img[0]);
+    };
+    return img1;
   };
 
   return (
@@ -372,7 +400,7 @@ function Profile() {
                   name="mobile"
                   label="Contact Number"
                   asterisk="*"
-                  containerClass="form-group"
+                  containerClass="form-group contact-number"
                   id="inlineFormInputGroup"
                   inputVarible="+91"
                   inputClass="form-control"
@@ -395,7 +423,7 @@ function Profile() {
                   onInputChange={(e) => {
                     handleImageFileUpload(e);
                   }}
-                  label="Profile Picture"
+                  label="Profile Picture(Allowed file : JPG, PNG)"
                   asterisk="*"
                   accept=".xls,.txt,.pdf,.doc,image/jpeg,image/png,"
                   containerClass="form-group"
@@ -403,6 +431,15 @@ function Profile() {
                   type="file"
                   inputClass="form-control"
                 />
+                 <Row>
+                        <Col>
+                         <span className="span-container">
+                                
+                                 {image && getImageName(image)}
+                                 
+                                </span>
+                         </Col>
+                      </Row>
               </Col>
             </Row>
           </Form>

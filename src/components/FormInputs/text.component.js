@@ -36,7 +36,7 @@ export default function InputComponent(props) {
           {label} <span style={{ color: 'red' }}>{asterisk}</span>{' '}
         </Form.Label>
       )}
-      <Form.Group className={containerClass}>
+      <Form.Group  className={containerClass}>
         <InputGroup>
           {inputVarible && (
             <InputGroup.Prepend>
