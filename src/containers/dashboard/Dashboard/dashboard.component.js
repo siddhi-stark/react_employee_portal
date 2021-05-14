@@ -10,7 +10,7 @@ import customFunctions from '../../../helper/customFunctions';
 import Table from '../../../components/Table/simpletable.component';
 
 const columns = [
-    {
+  {
     id: 'date',
     label: 'Date',
   },
@@ -26,7 +26,6 @@ const columns = [
     id: 'total',
     label: 'Total Working',
   },
-  
 ];
 
 function Dashboard() {
@@ -62,7 +61,7 @@ function Dashboard() {
 
   const getTimeSheetList = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}`);
-    if(data && data.data) {
+    if (data && data.data) {
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
@@ -222,28 +221,28 @@ function Dashboard() {
                 </div>
                 <br />
                 <div className="table-responsive">
-                {pagination.totalItems > 0 ? (
-                <Col className="mt-3">
-                <Table
-                      tableClass="table table-striped"
-                      columns={columns}
-                      rows={rows}
-                      showPagination
-                      paginationProps={{
-                        ...pagination,
-                        activePage: pagination.current_page,
-                        onPageChange: (pageNo) => {
-                          getTimeSheetList(pageNo);
-                        },
-                      }}
-                      dropdownContainerClass="mb-3"
-                    />
-                  </Col>
-                ) : (
-                  <Col>
-                    <p className="text-center mb-0">No record found</p>
-                  </Col>
-                )}
+                  {pagination.totalItems > 0 ? (
+                    <Col className="mt-3">
+                      <Table
+                        tableClass="table table-striped"
+                        columns={columns}
+                        rows={rows}
+                        showPagination
+                        paginationProps={{
+                          ...pagination,
+                          activePage: pagination.current_page,
+                          onPageChange: (pageNo) => {
+                            getTimeSheetList(pageNo);
+                          },
+                        }}
+                        dropdownContainerClass="mb-3"
+                      />
+                    </Col>
+                  ) : (
+                    <Col>
+                      <p className="text-center mb-0">No record found</p>
+                    </Col>
+                  )}
                 </div>
               </div>
             </div>

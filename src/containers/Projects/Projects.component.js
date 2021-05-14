@@ -8,55 +8,17 @@ import {
   ProgressBar,
   Button,
   Form,
+  Accordion,
 } from 'react-bootstrap';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { TextInput, Helmet } from '../../components/FormInputs';
-import Table from '../../components/Table/simpletable.component';
+import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constants';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
-
-const columns = [
-  {
-    id: 'no',
-    label: 'Sr. No',
-  },
-  {
-    id: 'name',
-    label: 'Project Name',
-  },
-  {
-    id: 'spend',
-    label: 'Spend',
-  },
-  {
-    id: 'allocated',
-    label: 'Allocated',
-  },
-  {
-    id: 'remaining',
-    label: 'Remaining/Extra',
-  },
-  {
-    id: 'completed',
-    label: 'Completed',
-  },
-  {
-    id: 'completion',
-    label: 'Completion',
-  },
-  {
-    id: 'support',
-    label: 'RT Support',
-  },
-  {
-    id: 'link',
-    label: 'TW Link',
-  },
-];
 
 const items = [
   { to: '/', label: 'Home' },
@@ -65,17 +27,66 @@ const items = [
 
 function Projects() {
   const [rows, setRows] = useState([]);
-  const [searchKeyword, setKeyword] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [showUpdate, setShowUpdate] = useState(false);
   const [projectId, setProjectId] = useState(null);
   const [rtSupport, setRtSupport] = useState('');
   const [title, setTitle] = useState('');
+  const [filterErr, setFilterErr] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
+
+  const columns = [
+    {
+      id: 'no',
+      label: 'Sr. No',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'name',
+      label: 'Project Name',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'spend',
+      label: 'Spend',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'allocated',
+      label: 'Allocated',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'remaining',
+      label: 'Remaining/Extra',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'completed',
+      label: 'Completed',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'completion',
+      label: 'Completion',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'support',
+      label: 'RT Support',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'link',
+      label: 'TW Link',
+      roleAccess: [1, 2, 3, 4],
+    },
+  ];
 
   const onRtSupport = async (id, Support) => {
     const payload = {
@@ -113,7 +124,7 @@ function Projects() {
     const url = customFunctions.generateUrl(api, params);
     // const endPoint = `${Api.getProjects}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(url);
-    if (data && data.data) {
+    if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
@@ -124,15 +135,19 @@ function Projects() {
       const row = [];
 
       data.data.map((proj, i) => {
-        row.push({
+        const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: proj.name,
           spend: `${proj.spend} Hrs`,
           allocated: `${proj.allocated} Hrs`,
           completed: proj.completed,
           remaining:
-            Math.sign(proj.remaining) === 1 || Math.sign(proj.remaining) === 0 ? (
-              <span className="text-primary">{proj.remaining} {Math.sign(proj.remaining)=== 0 ? 'Hr' : 'Hrs'}</span>
+            Math.sign(proj.remaining) === 1 ||
+            Math.sign(proj.remaining) === 0 ? (
+              <span className="text-primary">
+                {proj.remaining}{' '}
+                {Math.sign(proj.remaining) === 0 ? 'Hr' : 'Hrs'}
+              </span>
             ) : (
               <span className="text-danger">{proj.remaining} Hrs</span>
             ),
@@ -177,7 +192,9 @@ function Projects() {
               {/* {proj.tw_id} */}
             </a>
           ),
-        });
+        };
+        row.push(setRowData);
+
         return proj;
       });
       setRows(row);
@@ -193,13 +210,24 @@ function Projects() {
   }, [cntClearFilter]);
 
   const onClear = () => {
-    setKeyword('');
+    setFilterErr('');
+    setSearchKeyword('');
     setCntClearFilter(cntClearFilter + 1);
   };
-
   const filterSearch = (e) => {
     e.preventDefault();
-    getTableData(1);
+    let filterSearchErr = '';
+    let isValid = true;
+
+    if (searchKeyword === '') {
+      filterSearchErr = 'Please enter search keyword';
+      setFilterErr(filterSearchErr);
+      isValid = false;
+    }
+    if (isValid) {
+      setFilterErr('');
+      getTableData(1);
+    }
   };
 
   return (
@@ -219,14 +247,78 @@ function Projects() {
             setShowUpdate(false);
             setShowUpdate(null);
           }}
-       / >
-       
+        />
       )}
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Projects</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
+        <div className="mt-5">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary m-0">Filters</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      Expand
+                    </Accordion.Toggle>
+                  </div>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="1">
+                <Card.Body>
+                  <Card.Title>
+                    <Form onSubmit={(e) => filterSearch(e)}>
+                      {filterErr && (
+                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                          <div className="img-text">
+                            <img src="images/fail.svg" alt="Success" />{' '}
+                            {filterErr}
+                          </div>
+                        </div>
+                      )}
+                      <Row className="mt-3">
+                        <Col sm={3}>
+                          <div className="search-bar-input">
+                            <TextInput
+                              value={searchKeyword}
+                              placeholder="Search keyword"
+                              onInputChange={(e) => {
+                                setFilterErr('');
+                                setSearchKeyword(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </Col>
+                        <Col sm={3}>
+                          <div className="filter-btn">
+                            <Button
+                              variant="primary"
+                              type="submit"
+                              className="ms-4"
+                            >
+                              Submit
+                            </Button>
+                            <Button
+                              variant="primary"
+                              type="button"
+                              className="ms-4"
+                              onClick={() => onClear()}
+                            >
+                              Clear
+                            </Button>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Card.Title>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
         <div className="mt-3">
           <Card>
             <Card.Body>
@@ -238,64 +330,23 @@ function Projects() {
                     </div>
                   </Col>
                 </Row>
-                <Form onSubmit={(e) => filterSearch(e)}>
-                  <Row className="mt-3">
-                    <Col md={4}>
-                      <div className="search-bar-input">
-                        <TextInput
-                          inputClass="form-control"
-                          value={searchKeyword}
-                          placeholder="search.."
-                          onInputChange={(e) => {
-                            setKeyword(e.target.value);
-                          }}
-                        />
-                        <Button
-                          variant="primary"
-                          type="submit"
-                          // onClick={() => getTableData(1)}
-                        >
-                          <Image src="images/search.svg" className="svg" />
-                        </Button>
-                      </div>
-                    </Col>
-
-                    <Col md={4}>
-                      <div className="clear-btn">
-                        <Button
-                          size="sm"
-                          variant="primary"
-                          type="reset"
-                          onClick={() => onClear()}
-                        >
-                          Clear
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                </Form>
-                {pagination.totalItems > 0 ? (
-                  <Col className="mt-3">
-                    <Table
-                      tableClass="table table-striped"
-                      columns={columns}
-                      rows={rows}
-                      showPagination
-                      paginationProps={{
-                        ...pagination,
-                        activePage: pagination.current_page,
-                        onPageChange: (pageNo) => {
-                          getTableData(pageNo);
-                        },
-                      }}
-                      dropdownContainerClass="mb-3"
-                    />
-                  </Col>
-                ) : (
-                  <Col>
+                <Table
+                  columns={columns}
+                  rows={rows}
+                  showPagination
+                  paginationProps={{
+                    ...pagination,
+                    activePage: pagination.current_page,
+                    onPageChange: (pageNo) => {
+                      getTableData(pageNo);
+                    },
+                  }}
+                  tableClass="table-striped"
+                  dropdownContainerClass="mb-3"
+                  emptyRender={() => (
                     <p className="text-center mb-0">No record found</p>
-                  </Col>
-                )}
+                  )}
+                />
               </Row>
             </Card.Body>
           </Card>

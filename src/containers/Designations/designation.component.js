@@ -1,29 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Image, Button, Form } from 'react-bootstrap';
+import {
+  Card,
+  Row,
+  Col,
+  Button,
+  Form,
+  Image,
+  Accordion,
+} from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
-import SweetAlert from 'react-bootstrap-sweetalert';
-import { ModalInput, TextInput, Helmet } from '../../components/FormInputs';
-import Table from '../../components/Table/simpletable.component';
+import { TextInput, Helmet } from '../../components/FormInputs';
+// import Table from '../../components/Table/simpletable.component';
+import ReactTable from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-
-const columns = [
-  {
-    id: 'no',
-    label: 'Sr. No',
-  },
-  {
-    id: 'name',
-    label: 'Designation',
-  },
-  {
-    id: 'action',
-    label: 'Action',
-  },
-];
+import customFunctions from '../../helper/customFunctions';
 
 const validator = new SimpleReactValidator();
 
@@ -34,24 +28,78 @@ const items = [
 
 function Designation() {
   const [rows, setRows] = useState([]);
-  const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
-  const [keyword, setKeyword] = useState('');
   const [designationId, setDesignationId] = useState(null);
-  const [cntClearFilter, setCntClearFilter] = useState(0);
-  const [showDelete, setShowDelete] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [designation, setDesignation] = useState('');
-  const [searchErr, setSearchErr] = useState('');
   const [title, setTitle] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
+  const [filterErr, setFilterErr] = useState('');
+  const [disableButton, setDisableButton] = useState(false);
+  const [cntClearFilter, setCntClearFilter] = useState(0);
+  let timmer = null;
+  const columns = [
+    {
+      id: 'no',
+      label: 'Sr. No',
+      roleAccess: [1],
+    },
+    {
+      id: 'name',
+      label: 'Designation',
+      roleAccess: [1],
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      roleAccess: [1],
+      render: ({ no, name }) => {
+        return (
+          <>
+            <a
+              href="/"
+              className=""
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setDesignationId(no);
+                setDesignation(name);
+              }}
+            >
+              <Image src="/images/edit-button.svg" alt="Edit Designation" />
+            </a>
+            <a
+              href="/"
+              className="ml-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                removeDesignation(no);
+              }}
+            >
+              <Image src="images/delete.png" alt="Delete Designation" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
+  useEffect(() => {
+    async function getData() {
+      getTableData(1);
+      setTitle('Designation');
+    }
+    getData();
+  }, [cntClearFilter]);
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.designationUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
+    const endPoint = `${Api.designationUrl}?keyword=${searchKeyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
@@ -67,35 +115,6 @@ function Designation() {
         row.push({
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: desgn.name,
-          action: (
-            <>
-              <a
-                href="/"
-                className=""
-                onClick={(e) => {
-                  setModalShow(true);
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setDesignationId(desgn.id);
-                  setDesignation(desgn.name);
-                }}
-              >
-                <Image src="images/edit-button.svg" />
-              </a>
-              <a
-                href="/"
-                className="ml-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowDelete(true);
-                  setDesignationId(desgn.id);
-                }}
-              >
-                <Image src="images/delete.png" />
-              </a>
-            </>
-          ),
         });
         return desgn;
       });
@@ -103,39 +122,55 @@ function Designation() {
     }
   };
 
-  useEffect(() => {
-    async function getData() {
-      getTableData(1);
-      setTitle('Designation');
-    }
-    getData();
-  }, []);
-
-  useEffect(() => {
-    getTableData(1);
-  }, [cntClearFilter]);
-
-  const removeDesignation = async (id) => {
-    const { data } = await AuthApi.deleteDataFromServer(
-      `${Api.designationUrl}${id}/`
-    );
-    if (data) {
-      swal(data && data.message[0], '', 'success').then((result) => {
+  const removeDesignation = (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure, do you want to remove the designation ?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
         if (result) {
-          setShowDelete(false);
-          setDesignationId(null);
-          getTableData(1);
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.designationUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getTableData(1);
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
         }
       });
-    } else {
-      swal(data && data.message[0], '', 'error');
     }
   };
 
   const onCancel = () => {
     validator.hideMessages();
-    setDesignation();
-    setModalShow(false);
+    setDesignation('');
+    setDesignationId('');
+    if (disableButton) return;
+
+    setDisableButton(true);
+
+    if (timmer) clearTimeout(timmer);
+    timmer = setTimeout(() => {
+      getTableData(1);
+      setDisableButton(false);
+    }, 1000);
   };
 
   const addDesignation = async () => {
@@ -143,25 +178,34 @@ function Designation() {
       name: designation,
       is_deleted: 'false',
     };
+
+    const payload = customFunctions.cleanObject(postData);
+
     const callback = designationId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
     const endPoint = designationId
       ? `${Api.designationUrl}${designationId}/`
-      : Api.designationUrl;
-    const { data, message } = await callback(endPoint, postData);
+      : `${Api.designationUrl}`;
+
+    const { data, message } = await callback(endPoint, payload);
+
     if (data) {
-      setModalShow(false);
-      setDesignation();
-      swal('Designation Updated Successfully', '', 'success').then((result) => {
+      validator.hideMessages();
+      swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
+          setDisableButton(false);
           getTableData(1);
-          setModalShow(false);
+          setDesignation('');
+          setDesignationId('');
         }
       });
     } else {
+      setDisableButton(false);
       swal(message, '', 'error');
-      setModalShow(false);
+      getTableData(1);
+      setDesignation('');
+      setDesignationId('');
     }
   };
 
@@ -176,23 +220,37 @@ function Designation() {
   };
 
   const onClear = () => {
-    setKeyword('');
-    setSearchErr('');
+    setFilterErr('');
+    setSearchKeyword('');
     setCntClearFilter(cntClearFilter + 1);
+  };
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    if (disableButton) return;
+
+    setDisableButton(true);
+    if (validator.allValid()) {
+      addDesignation();
+    } else {
+      validator.showMessages();
+      forceUpdate(count + 1);
+      setDisableButton(false);
+    }
   };
 
   const filterSearch = (e) => {
     e.preventDefault();
-    let searchError = '';
+    let filterSearchErr = '';
     let isValid = true;
 
-    if (keyword === '') {
-      searchError = 'Please enter some keyword';
-      setSearchErr(searchError);
+    if (searchKeyword === '') {
+      filterSearchErr = 'Please enter keyword';
+      setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
-      setSearchErr('');
+      setFilterErr('');
       getTableData(1);
     }
   };
@@ -205,93 +263,128 @@ function Designation() {
         <Breadcrumb items={items} />
       </div>
 
-      {showDelete && (
-        <SweetAlert
-          title="Are you sure, do you want to remove the designation ?"
-          error
-          showCancel
-          confirmBtnBsStyle="btn btn-primary btn-lg"
-          cancelBtnBsStyle="btn btn-lg btn-secondary"
-          onConfirm={() => {
-            removeDesignation(designationId);
-          }}
-          onCancel={() => {
-            setShowDelete(false);
-            setShowDelete(null);
-          }}
-        >
-          You will not be able to revert this!
-        </SweetAlert>
-      )}
-
-      <div className="mt-3">
-        <Card>
-          <Card.Body>
-            <Row>
-              <div className="custom-header-wrapper">
-                <Col>
-                  <div className="pull-left">
-                    <h5>Designation</h5>
+      <section className="content-area">
+        <div className="mt-5">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary m-0">Filters</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      Expand
+                    </Accordion.Toggle>
                   </div>
-                </Col>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="1">
+                <Card.Body>
+                  <Card.Title>
+                    <Form onSubmit={(e) => filterSearch(e)}>
+                      {filterErr && (
+                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                          <div className="img-text">
+                            <img src="images/fail.svg" alt="Success" />{' '}
+                            {filterErr}
+                          </div>
+                        </div>
+                      )}
+                      <Row className="mt-3">
+                        <Col sm={3}>
+                          <div className="search-bar-input">
+                            <TextInput
+                              inputClass="form-control"
+                              value={searchKeyword}
+                              placeholder="search.."
+                              onInputChange={(e) => {
+                                setFilterErr('');
+                                setSearchKeyword(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </Col>
+                        <Col sm={3}>
+                          <div className="filter-btn">
+                            <Button
+                              variant="primary"
+                              type="submit"
+                              className="ms-4"
+                            >
+                              Submit
+                            </Button>
+                            <Button
+                              variant="primary"
+                              type="button"
+                              className="ms-4"
+                              onClick={() => onClear()}
+                            >
+                              Clear
+                            </Button>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Card.Title>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+          <Card>
+            <Card.Header>
+              <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary mt-2 mb-2">Designation</h4>
+              </div>
+            </Card.Header>
+            <Card.Body>
+              <Row className="mt-3">
                 <Col>
-                  <div className="pull-right">
+                  <Form autoComplete="off" onSubmit={(e) => submitForm(e)}>
+                    <TextInput
+                      // onInputChange={(e) => setDesignation(e.target.value)}
+                      onInputChange={(e) => {
+                        const re = /^[a-zA-Z .]*$/;
+                        if (e.target.value === '' || re.test(e.target.value)) {
+                          setDesignation(e.target.value);
+                        }
+                      }}
+                      label="Designation Name"
+                      containerClass="form-group"
+                      type="text"
+                      name="designationtitle"
+                      value={designation}
+                      placeholder="Enter designation"
+                      errorMessage={validator.message(
+                        'designation',
+                        designation,
+                        'required'
+                      )}
+                    />
                     <Button
-                      size="sm"
-                      variant="primary"
-                      type="submit"
-                      onClick={() => {
-                        setModalShow(true);
-                        setDesignationId();
+                      variant="secondary"
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onCancel();
                       }}
                     >
-                      Add Designation
+                      Cancel
                     </Button>
-                  </div>
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className="ms-4"
+                      onClick={(e) => onSubmit(e)}
+                    >
+                      {designationId ? 'Update' : 'Add'}
+                    </Button>
+                  </Form>
                 </Col>
-              </div>
-              <Form onSubmit={(e) => filterSearch(e)}>
-                <Row className="mt-3">
-                  <Col md={4}>
-                    <div className="search-bar-input">
-                      <TextInput
-                        inputClass="form-control"
-                        value={keyword}
-                        placeholder="search.."
-                        onInputChange={(e) => {
-                          setSearchErr('');
-                          setKeyword(e.target.value);
-                        }}
-                      />
-                      <div className="text-danger">{searchErr}</div>
-
-                      <Button variant="primary" type="submit">
-                        <Image src="images/search.svg" className="svg" />
-                      </Button>
-                    </div>
-                  </Col>
-
-                  <Col md={4}>
-                    <div className="clear-btn">
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        type="reset"
-                        onClick={() => onClear()}
-                      >
-                        Clear
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
-              </Form>
-              {pagination.totalItems > 0 ? (
-                <Col className="mt-3">
-                  <Table
-                    tableClass="table table-striped"
+                <Col>
+                  <ReactTable
                     columns={columns}
                     rows={rows}
-                    showPagination
+                    showPagination="true"
                     paginationProps={{
                       ...pagination,
                       activePage: pagination.current_page,
@@ -299,68 +392,18 @@ function Designation() {
                         getTableData(pageNo);
                       },
                     }}
+                    tableClass="table-striped"
                     dropdownContainerClass="mb-3"
-                  />
-                </Col>
-              ) : (
-                <Col>
-                  <p className="text-center mb-0">No record found</p>
-                </Col>
-              )}
-            </Row>
-          </Card.Body>
-        </Card>
-        <ModalInput
-          size="md"
-          centered
-          show={modalShow}
-          label={designationId ? 'Update Designation' : 'Add Designation'}
-          id="contained-modal-title-vcenter"
-          modalBody={
-            <Form>
-              <Row>
-                <Col sm={6}>
-                  <TextInput
-                    // onInputChange={(e) => setDesignation(e.target.value)}
-                    onInputChange={(e) => {
-                      const re = /^[a-zA-Z .]*$/;
-                      if (e.target.value === '' || re.test(e.target.value)) {
-                        setDesignation(e.target.value);
-                      }
-                    }}
-                    label="Designation Name"
-                    containerClass="form-group"
-                    type="text"
-                    name="designationtitle"
-                    value={designation}
-                    placeholder="Enter designation"
-                    errorMessage={validator.message(
-                      'designation',
-                      designation,
-                      'required'
+                    emptyRender={() => (
+                      <p className="text-center mb-0">No record found</p>
                     )}
                   />
                 </Col>
               </Row>
-            </Form>
-          }
-          modalFooter={
-            <div className="cancel-update-btn justify-content-between d-flex align-items-center w-100">
-              <Button variant="secondary" onClick={() => onCancel()}>
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                type="submit"
-                className="ms-4"
-                onClick={(e) => onSubmit(e)}
-              >
-                {designationId ? 'Update' : 'Add'}
-              </Button>
-            </div>
-          }
-        />
-      </div>
+            </Card.Body>
+          </Card>
+        </div>
+      </section>
     </>
   );
 }

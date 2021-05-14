@@ -222,8 +222,8 @@ function ToDoList() {
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data && data.data) {
-      setMorningMail(data.data.morning_mail); 
-      setSignOutMail(data.data.signout_mail); 
+      setMorningMail(data.data.morning_mail);
+      setSignOutMail(data.data.signout_mail);
     }
     if (data.data.clock_out_time) {
       localStorage.setItem('time', data.data.clock_out_time);
@@ -232,7 +232,7 @@ function ToDoList() {
 
   const onSendScrum = async () => {
     const postData = {
-      type : morningMail && !signOutMail ? 'logout' : 'morning',
+      type: morningMail && !signOutMail ? 'logout' : 'morning',
       tasks: selectedRowIndex,
     };
 
@@ -369,7 +369,6 @@ function ToDoList() {
 
   return (
     <>
-
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -453,51 +452,51 @@ function ToDoList() {
               </Col>
             </div>
             {pagination.totalItems > 1 ? (
-            <Col className="mt-3">
-              <Table
-                tableClass="table table-striped"
-                columns={columns}
-                rows={rows}
-                showPagination
-                showCheckbox
-                paginationProps={{
-                  ...pagination,
-                  activePage: pagination.current_page,
-                  onPageChange: (pageNo) => {
-                    getTableData(pageNo);
-                  },
-                }}
-                dropdownContainerClass="mb-3"
-                selectedRowItems={selectedId}
-                onSelectRowsIndexes={(rowIndex) => {
-                  const twId = [];
-                  taskList.map((task, ind) => {
-                    rowIndex.map((i) => {
-                      if (ind === i) {
-                        if (task.task_type === 'tw') {
-                          twId.push(task.tw_id);
-                        } else {
-                          twId.push(task.id);
+              <Col className="mt-3">
+                <Table
+                  tableClass="table table-striped"
+                  columns={columns}
+                  rows={rows}
+                  showPagination
+                  showCheckbox
+                  paginationProps={{
+                    ...pagination,
+                    activePage: pagination.current_page,
+                    onPageChange: (pageNo) => {
+                      getTableData(pageNo);
+                    },
+                  }}
+                  dropdownContainerClass="mb-3"
+                  selectedRowItems={selectedId}
+                  onSelectRowsIndexes={(rowIndex) => {
+                    const twId = [];
+                    taskList.map((task, ind) => {
+                      rowIndex.map((i) => {
+                        if (ind === i) {
+                          if (task.task_type === 'tw') {
+                            twId.push(task.tw_id);
+                          } else {
+                            twId.push(task.id);
+                          }
                         }
-                      }
-                      return i;
-                    });
+                        return i;
+                      });
 
-                    return ind;
-                  });
-                  setSelectedRowIndex(twId);
-                  setSelectedId(rowIndex);
-                }}
-              />
-            </Col>
+                      return ind;
+                    });
+                    setSelectedRowIndex(twId);
+                    setSelectedId(rowIndex);
+                  }}
+                />
+              </Col>
             ) : (
-                  <Col>
-                    <p className="text-center mb-0">No record found</p>
-                  </Col>
-                )}
+              <Col>
+                <p className="text-center mb-0">No record found</p>
+              </Col>
+            )}
           </Row>
           <div className="d-flex justify-content-end mr-3">
-            {(!morningMail && !signOutMail && pagination.totalItems > 0) && ( 
+            {!morningMail && !signOutMail && pagination.totalItems > 0 && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -508,7 +507,7 @@ function ToDoList() {
                 Send Scrum
               </Button>
             )}
-            {(!signOutMail && morningMail) && (
+            {!signOutMail && morningMail && (
               <Button
                 variant="primary"
                 className="mb-3"
@@ -673,7 +672,11 @@ function ToDoList() {
                             onDeleteBreakHandler(i, e);
                           }}
                         >
-                          <img src="images/delete.png" className="ml-2" alt="delete" />
+                          <img
+                            src="images/delete.png"
+                            className="ml-2"
+                            alt="delete"
+                          />
                         </a>
                       )}
                     </div>

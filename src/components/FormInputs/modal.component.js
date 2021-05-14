@@ -17,7 +17,6 @@ export default function ModalComponent(props) {
 
   return (
     <>
-
       <Modal
         className={className}
         size={size}

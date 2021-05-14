@@ -136,7 +136,7 @@ function Task(props) {
     props.handleModalCLose(false);
     validator.hideMessages();
   };
-  
+
   return (
     <>
       <ModalInput

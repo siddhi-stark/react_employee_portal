@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Image, Button, Form } from 'react-bootstrap';
+import {
+  Card,
+  Row,
+  Col,
+  Image,
+  Button,
+  Form,
+  Accordion,
+} from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
-import SweetAlert from 'react-bootstrap-sweetalert';
 import {
   ModalInput,
   TextInput,
@@ -11,34 +18,11 @@ import {
   Datepicker,
   Helmet,
 } from '../../components/FormInputs';
-import Table from '../../components/Table/simpletable.component';
+import Table from '../../components/ReactTable/simpletable.component';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-
-const columns = [
-  {
-    id: 'no',
-    label: 'Sr. No',
-  },
-  {
-    id: 'name',
-    label: 'Full Name',
-  },
-  {
-    id: 'email',
-    label: 'Email',
-  },
-  {
-    id: 'mobile',
-    label: 'Mobile',
-  },
-  {
-    id: 'action',
-    label: 'Action',
-  },
-];
 
 const validator = new SimpleReactValidator();
 
@@ -56,8 +40,7 @@ function Employee() {
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [employeeId, setEmployeeId] = useState(null);
-  const [ShowDelete, setShowDelete] = useState(false);
-  const [keyword, setKeyword] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
@@ -79,8 +62,10 @@ function Employee() {
   // const [validationDate, setValidationDate] = useState('');
   const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
-  const [empId, setEmpId] = useState('');
+  // const [empId, setEmpId] = useState('');
   const [title, setTitle] = useState('');
+  const [userRole, setUserRole] = useState('');
+  const [filterErr, setFilterErr] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -114,13 +99,91 @@ function Employee() {
     },
   ];
 
+  const columns = [
+    {
+      id: 'id',
+      label: 'Id',
+      roleAccess: [1],
+      isDisplay: false,
+    },
+    {
+      id: 'no',
+      label: 'Sr. No',
+      roleAccess: [1],
+    },
+    {
+      id: 'name',
+      label: 'Full Name',
+      roleAccess: [1, 3],
+    },
+    {
+      id: 'email',
+      label: 'Email',
+      roleAccess: [1, 3],
+    },
+    {
+      id: 'mobile',
+      label: 'Mobile',
+      roleAccess: [1, 3],
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      roleAccess: [1],
+      render: ({ id }) => {
+        return (
+          <>
+            <a
+              href="/"
+              className="pl-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setModalShow(true);
+                setEmployeeId(id);
+
+                // setEmpId(id);
+                getEmployeeById(id);
+                setCntClearFilter(cntClearFilter + 1);
+              }}
+            >
+              <Image src="images/edit-button.svg" />
+            </a>
+            <a
+              href="/"
+              className="ml-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setEmployeeId(id);
+                deleteEmployee(id);
+                // removeDesignation(desgn.id); //eslint-disable-line
+              }}
+            >
+              <Image src="images/delete.png" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
   const getTableData = async (pageNo = 0) => {
     // let endPoint;
     // const hasSearch = (keyword !== '');
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.employeeUrl}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}&sort_by=full_name&sort_direction=ascending`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
+    const endPoint = `${Api.employeeUrl}`;
+
+    const params = {
+      page,
+      limit: pagination.itemsPerPage,
+      keyword: searchKeyword,
+    };
+
+    const url = customFunctions.generateUrl(endPoint, params);
+
+    const { data } = await AuthApi.getDataFromServer(url);
+    if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
@@ -130,44 +193,14 @@ function Employee() {
 
       const row = [];
       data.data.map((emp, i) => {
-        row.push({
+        const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
+          id: emp.id,
           name: emp.full_name,
           email: emp.email,
           mobile: emp.mobile,
-          action: (
-            <>
-              <a
-                href="/"
-                className="pl-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setModalShow(true);
-                  setEmployeeId(emp.id);
-
-                  setEmpId(emp.id);
-                  setCntClearFilter(cntClearFilter + 1);
-                }}
-              >
-                <Image src="images/edit-button.svg" />
-              </a>
-              <a
-                href="/"
-                className="ml-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowDelete(true);
-                  setEmployeeId(emp.id);
-                  // removeDesignation(desgn.id); //eslint-disable-line
-                }}
-              >
-                <Image src="images/delete.png" />
-              </a>
-            </>
-          ),
-        });
+        };
+        row.push(setRowData);
         return emp;
       });
       setRows(row);
@@ -248,21 +281,23 @@ function Employee() {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.designationUrl}?type=all`
     );
-    if (data) {
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setDesignation(data.data);
     }
   };
 
   const getTwEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`);
-    if (data && data.data) {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
+    );
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setTwEmployee(data.data);
     }
   };
 
   const getRole = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.roleUrl}`);
-    if (data) {
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setRole(data.data);
     }
   };
@@ -271,7 +306,7 @@ function Employee() {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?role_id=${2}`
     );
-    if (data) {
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setManager(data.data);
     }
   };
@@ -280,7 +315,7 @@ function Employee() {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?role_id=${3}`
     );
-    if (data) {
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setTeamLead(data.data);
     }
   };
@@ -300,6 +335,8 @@ function Employee() {
 
   useEffect(() => {
     async function getData() {
+      const uRole = localStorage.getItem('group');
+      setUserRole(Number(uRole));
       getTableData(1);
       getDesignation();
       getTwEmployee();
@@ -314,26 +351,43 @@ function Employee() {
 
   useEffect(() => {
     getTableData(1);
-    if (empId) {
-      getEmployeeById(empId);
-    }
+    const uRole = localStorage.getItem('group');
+    setUserRole(Number(uRole));
   }, [cntClearFilter]);
 
-  const deleteEmployee = async (id) => {
-    const { data } = await AuthApi.deleteDataFromServer(
-      `${Api.employeeUrl}${id}/`
-    );
-    if (data) {
-      swal(data && data.message[0], '', 'success').then((result) => {
+  const deleteEmployee = (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to delete the employee?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
         if (result) {
-          setShowDelete(false);
-          setEmployeeId(null);
-          getTableData(1);
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.employeeUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getTableData(1);
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
         }
       });
-    } else {
-      swal(data && data.message[0], '', 'error');
-      setModalShow(false);
     }
   };
 
@@ -505,7 +559,8 @@ function Employee() {
   };
 
   const onClear = () => {
-    setKeyword('');
+    setFilterErr('');
+    setSearchKeyword('');
     setCntClearFilter(cntClearFilter + 1);
   };
 
@@ -519,10 +574,23 @@ function Employee() {
       return emp;
     });
   };
+
   const filterSearch = (e) => {
     e.preventDefault();
-    getTableData(1);
+    let filterSearchErr = '';
+    let isValid = true;
+
+    if (searchKeyword === '') {
+      filterSearchErr = 'Please enter search keyword';
+      setFilterErr(filterSearchErr);
+      isValid = false;
+    }
+    if (isValid) {
+      setFilterErr('');
+      getTableData(1);
+    }
   };
+
   return (
     <>
       <Helmet title={title} />
@@ -531,136 +599,135 @@ function Employee() {
         <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
         <Breadcrumb items={items} />
       </div>
-      {ShowDelete && (
-        <SweetAlert
-          title="Are you sure, do you want to delete the employee ?"
-          error
-          showCancel
-          confirmBtnBsStyle="btn btn-primary btn-lg ml-2"
-          cancelBtnBsStyle="btn btn-lg btn-secondary"
-          onConfirm={() => {
-            deleteEmployee(employeeId);
-          }}
-          onCancel={() => {
-            setShowDelete(false);
-            setShowDelete(null);
-          }}
-        >
-          You wont be able to revert this!
-        </SweetAlert>
-      )}
 
-      <div className="mt-3">
-        <Card>
-          <Card.Body>
-            <Row>
-              <div className="custom-header-wrapper">
-                <Col>
-                  <div className="pull-left">
-                    <h5>Employee</h5>
+      <section className="content-area">
+        <div className="mt-5">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary m-0">Filters</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      Expand
+                    </Accordion.Toggle>
                   </div>
-                </Col>
-                <Col>
-                  {localStorage.getItem('group') === '1' ? (
-                    <div className="pull-right">
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        type="submit"
-                        onClick={() => {
-                          setModalShow(true);
-                          setEmployeeId();
-                        }}
-                      >
-                        Add Employee
-                      </Button>
-                    </div>
-                  ) : (
-                      ''
-                    )}
-                </Col>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="1">
+                <Card.Body>
+                  <Card.Title>
+                    <Form onSubmit={(e) => filterSearch(e)}>
+                      {filterErr && (
+                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                          <div className="img-text">
+                            <img src="images/fail.svg" alt="Success" />{' '}
+                            {filterErr}
+                          </div>
+                        </div>
+                      )}
+                      <Row className="mt-3">
+                        <Col sm={3}>
+                          <div className="search-bar-input">
+                            <TextInput
+                              value={searchKeyword}
+                              placeholder="Search keyword"
+                              onInputChange={(e) => {
+                                setFilterErr('');
+                                setSearchKeyword(e.target.value);
+                              }}
+                            />
+                          </div>
+                        </Col>
+                        <Col sm={3}>
+                          <div className="filter-btn">
+                            <Button
+                              variant="primary"
+                              type="submit"
+                              className="ms-4"
+                            >
+                              Submit
+                            </Button>
+                            <Button
+                              variant="primary"
+                              type="button"
+                              className="ms-4"
+                              onClick={() => onClear()}
+                            >
+                              Clear
+                            </Button>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Card.Title>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+          <Card>
+            <Card.Header>
+              <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary mt-2 mb-2">Add Employee</h4>
+                <div className="d-flex align-items-center justify-content-end">
+                  <a
+                    href="#"
+                    onClick={() => {
+                      setModalShow(true);
+                      setEmployeeId();
+                    }}
+                    className="btn-link"
+                  >
+                    Add Employee
+                  </a>
+                </div>
               </div>
-              <Form onSubmit={(e) => filterSearch(e)}>
-                <Row className="mt-3">
-                  <Col md={4}>
-                    <div className="search-bar-input">
-                      <TextInput
-                        inputClass="form-control"
-                        value={keyword}
-                        placeholder="search.."
-                        onInputChange={(e) => {
-                          setKeyword(e.target.value);
-                        }}
-                      />
-                      <Button
-                        variant="primary"
-                        type="submit"
-                      // onClick={() => getTableData(1)}
-                      >
-                        <Image src="images/search.svg" className="svg" />
-                      </Button>
-                    </div>
-                  </Col>
-
-                  <Col md={4}>
-                    <div className="clear-btn">
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        type="reset"
-                        onClick={() => onClear()}
-                      >
-                        Clear
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
-              </Form>
-              {pagination.totalItems > 0 ? (
-                <Col className="mt-3">
-                  <Table
-                    tableClass="table table-striped"
-                    columns={columns}
-                    rows={rows}
-                    showPagination
-                    paginationProps={{
-                      ...pagination,
-                      activePage: pagination.current_page,
-                      onPageChange: (pageNo) => {
-                        getTableData(pageNo);
-                      },
-                    }}
-                    dropdownContainerClass="mb-3"
-                  />
-                </Col>
-              ) : (
-                  <Col>
-                    <p className="text-center mb-0">No record found</p>
-                  </Col>
-                )}
-            </Row>
-          </Card.Body>
-        </Card>
-        <ModalInput
-          size="lg"
-          centered
-          show={modalShow}
-          label={employeeId ? 'Update Employee' : 'Add Employee'}
-          id="contained-modal-title-vcenter"
-          modalBody={
-            <Form>
+            </Card.Header>
+            <Card.Body>
               <Row>
-                <Col sm={6}>
-                  <DropdownInput
-                    label="TW Employee"
-                    // asterisk="*"
-                    options={getEmployeeList()}
-                    placeholder="Select Employee"
-                    defaultValue={selectedEmployee}
-                    onSelectHandler={(select) => {
-                      setSelectedEmployee(select);
-                      updateData(select);
-                    }}
+                <Table
+                  role={Number(userRole)}
+                  columns={columns}
+                  rows={rows}
+                  showPagination
+                  paginationProps={{
+                    ...pagination,
+                    activePage: pagination.current_page,
+                    onPageChange: (pageNo) => {
+                      getTableData(pageNo);
+                    },
+                  }}
+                  tableClass="table-striped"
+                  dropdownContainerClass="mb-3"
+                  emptyRender={() => (
+                    <p className="text-center mb-0">No record found</p>
+                  )}
+                />
+              </Row>
+            </Card.Body>
+          </Card>
+        </div>
+      </section>
+      <ModalInput
+        size="lg"
+        centered
+        show={modalShow}
+        label={employeeId ? 'Update Employee' : 'Add Employee'}
+        id="contained-modal-title-vcenter"
+        modalBody={
+          <Form>
+            <Row>
+              <Col sm={6}>
+                <DropdownInput
+                  label="TW Employee"
+                  // asterisk="*"
+                  options={getEmployeeList()}
+                  placeholder="Select Employee"
+                  defaultValue={selectedEmployee}
+                  onSelectHandler={(select) => {
+                    setSelectedEmployee(select);
+                    updateData(select);
+                  }}
                   // errorMessage={
                   //   selectedEmployee && selectedEmployee > 0
                   //     ? validator.message(
@@ -670,133 +737,129 @@ function Employee() {
                   //       )
                   //     : ''
                   // }
-                  />
-                </Col>
+                />
+              </Col>
+              <Col sm={6}>
+                <TextInput
+                  onInputChange={(e) => {
+                    const re = /^[a-zA-Z .]*$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      setFullName(e.target.value);
+                    }
+                  }}
+                  label="Full Name"
+                  asterisk="*"
+                  containerClass="form-group"
+                  type="text"
+                  name="firstNameTitle"
+                  value={fullName}
+                  placeholder="Enter Full  Name"
+                  errorMessage={validator.message(
+                    'Full Name',
+                    fullName,
+                    'required'
+                  )}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <TextInput
+                  onInputChange={(e) => setEmail(e.target.value)}
+                  label="Email"
+                  asterisk="*"
+                  containerClass="form-group"
+                  type="text"
+                  // name="emailTitle"
+                  value={email}
+                  placeholder="Enter email"
+                  errorMessage={validator.message('email', email, 'required')}
+                />
+              </Col>
+              {!employeeId && (
                 <Col sm={6}>
                   <TextInput
-                    onInputChange={(e) => {
-                      const re = /^[a-zA-Z .]*$/;
-                      if (e.target.value === '' || re.test(e.target.value)) {
-                        setFullName(e.target.value);
-                      }
-                    }}
-                    label="Full Name"
-                    asterisk="*"
+                    onInputChange={(e) => setPassword(e.target.value)}
+                    label="Password"
                     containerClass="form-group"
-                    type="text"
-                    name="firstNameTitle"
-                    value={fullName}
-                    placeholder="Enter Full  Name"
-                    errorMessage={validator.message(
-                      'Full Name',
-                      fullName,
-                      'required'
-                    )}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={6}>
-                  <TextInput
-                    onInputChange={(e) => setEmail(e.target.value)}
-                    label="Email"
-                    asterisk="*"
-                    containerClass="form-group"
-                    type="text"
-                    // name="emailTitle"
-                    value={email}
-                    placeholder="Enter email"
-                    errorMessage={validator.message('email', email, 'required')}
-                  />
-                </Col>
-                {!employeeId && (
-                  <Col sm={6}>
-                    <TextInput
-                      onInputChange={(e) => setPassword(e.target.value)}
-                      label="Password"
-                      containerClass="form-group"
-                      type="password"
-                      name="passwordTitle"
-                      value={password}
-                      placeholder="Enter Password"
+                    type="password"
+                    name="passwordTitle"
+                    value={password}
+                    placeholder="Enter Password"
                     // errorMessage={validator.message(
                     //   'password',
                     //   password,
                     //   'required'
                     // )}
-                    />
-                  </Col>
-                )}
-              </Row>
-              <Row>
-                <Col sm={6}>
-                  <TextInput
-                    onInputChange={(e) => {
-                      const re = /^[0-9\b]+$/;
-                      if (e.target.value === '' || re.test(e.target.value)) {
-                        setMobile(e.target.value);
-                      }
-                    }}
-                    label="Mobile"
-                    asterisk="*"
-                    containerClass="form-group"
-                    type="text"
-                    name="mobileTitle"
-                    maxlength="10"
-                    value={mobile}
-                    placeholder="Enter Contact Number"
-                    errorMessage={validator.message(
-                      'mobile',
-                      mobile,
-                      'required'
-                    )}
                   />
                 </Col>
-                <Col sm={6}>
-                  <DropdownInput
-                    label="Designation"
-                    asterisk="*"
-                    options={getDesignationList()}
-                    placeholder="Select Designation"
-                    defaultValue={selectedDesignationOption}
-                    onSelectHandler={(select) =>
-                      setSelectedDesignationOption(select)
+              )}
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <TextInput
+                  onInputChange={(e) => {
+                    const re = /^[0-9\b]+$/;
+                    if (e.target.value === '' || re.test(e.target.value)) {
+                      setMobile(e.target.value);
                     }
-                    errorMessage={validator.message(
-                      'selectedDesignationOption',
-                      selectedDesignationOption,
-                      'required'
-                    )}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={6}>
-                  <DropdownInput
-                    label="Role Name"
-                    asterisk="*"
-                    options={getEmployeeRole()}
-                    placeholder="Select Role"
-                    defaultValue={selectedRole}
-                    onSelectHandler={(select) => setSelectedRole(select)}
-                    errorMessage={validator.message(
-                      'Role',
-                      selectedRole,
-                      'required'
-                    )}
-                  />
-                </Col>
-                <Col sm={6}>
-                  <DropdownInput
-                    label="Manager"
-                    // asterisk="*"
-                    options={getManagerList()}
-                    placeholder="Select Manager"
-                    defaultValue={selectedManager}
-                    isMulti
-                    onSelectHandler={(select) => {
-                      setSelectedManager(select);
-                    }}
+                  }}
+                  label="Mobile"
+                  asterisk="*"
+                  containerClass="form-group"
+                  type="text"
+                  name="mobileTitle"
+                  maxlength="10"
+                  value={mobile}
+                  placeholder="Enter Contact Number"
+                  errorMessage={validator.message('mobile', mobile, 'required')}
+                />
+              </Col>
+              <Col sm={6}>
+                <DropdownInput
+                  label="Designation"
+                  asterisk="*"
+                  options={getDesignationList()}
+                  placeholder="Select Designation"
+                  defaultValue={selectedDesignationOption}
+                  onSelectHandler={(select) =>
+                    setSelectedDesignationOption(select)
+                  }
+                  errorMessage={validator.message(
+                    'selectedDesignationOption',
+                    selectedDesignationOption,
+                    'required'
+                  )}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <DropdownInput
+                  label="Role Name"
+                  asterisk="*"
+                  options={getEmployeeRole()}
+                  placeholder="Select Role"
+                  defaultValue={selectedRole}
+                  onSelectHandler={(select) => setSelectedRole(select)}
+                  errorMessage={validator.message(
+                    'Role',
+                    selectedRole,
+                    'required'
+                  )}
+                />
+              </Col>
+              <Col sm={6}>
+                <DropdownInput
+                  label="Manager"
+                  // asterisk="*"
+                  options={getManagerList()}
+                  placeholder="Select Manager"
+                  defaultValue={selectedManager}
+                  isMulti
+                  onSelectHandler={(select) => {
+                    setSelectedManager(select);
+                  }}
                   // errorMessage={
                   //   selectedManager && selectedManager > 0
                   //     ? validator.message(
@@ -806,18 +869,18 @@ function Employee() {
                   //       )
                   //     : ''
                   // }
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={6}>
-                  <DropdownInput
-                    label="Teamlead"
-                    // asterisk="*"
-                    options={getTeamLeadList()}
-                    placeholder="Select TeamLead"
-                    defaultValue={selectedTeamLead}
-                    onSelectHandler={(select) => setSelectedTeamLead(select)}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <DropdownInput
+                  label="Teamlead"
+                  // asterisk="*"
+                  options={getTeamLeadList()}
+                  placeholder="Select TeamLead"
+                  defaultValue={selectedTeamLead}
+                  onSelectHandler={(select) => setSelectedTeamLead(select)}
                   // errorMessage={
                   //   selectedTeamLead && selectedTeamLead > 0
                   //     ? validator.message(
@@ -827,10 +890,10 @@ function Employee() {
                   //       )
                   //     : ''
                   // }
-                  />
-                </Col>
-                <Col sm={6}>
-                  {/* <TextInput
+                />
+              </Col>
+              <Col sm={6}>
+                {/* <TextInput
                     onInputChange={(e) => setDate(e.target.value)}
                     label="DOB"
                     // asterisk="*"
@@ -842,66 +905,65 @@ function Employee() {
                     // errorMessage={validator.message('DOB', mobile, 'required')}
                   /> */}
 
-                  <Datepicker
-                    label="DOB"
-                    className="form-control"
-                    selected={date}
-                    placeholder="MM-DD-YYYY"
-                    maxDate={maxdate}
-                    // minDate={new Date('2-10-2020')}
-                    onChange={(e) => {
-                      setDate(e);
-                    }}
-                    errorMessage={validator.message(
-                      'DOB',
-                      date,
-                      `required | before_or_equal:${maxdate}`
-                    )}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={6}>
-                  <DropdownInput
-                    label="Department"
-                    // asterisk="*"
-                    options={getDepartment()}
-                    placeholder="Select Department"
-                    defaultValue={selectedDepartment}
-                    onSelectHandler={(select) => setSelectedDepartment(select)}
-                    // errorMessage={
-                    //   selectedDepartment && selectedDepartment.length > 0
-                    //     ? validator.message(
-                    //         'Department',
-                    //         selectedDesignationOption,
-                    //         'required'
-                    //       )
-                    //     : ''
-                    // }
-                    isMulti={false}
-                  />
-                </Col>
-              </Row>
-            </Form>
-          }
-          modalFooter={
-            <div className="float-end">
-              <Button variant="secondary" onClick={() => onCancel()}>
-                Cancel
-              </Button>
+                <Datepicker
+                  label="DOB"
+                  className="form-control"
+                  selected={date}
+                  placeholder="MM-DD-YYYY"
+                  maxDate={maxdate}
+                  // minDate={new Date('2-10-2020')}
+                  onChange={(e) => {
+                    setDate(e);
+                  }}
+                  errorMessage={validator.message(
+                    'DOB',
+                    date,
+                    `required | before_or_equal:${maxdate}`
+                  )}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={6}>
+                <DropdownInput
+                  label="Department"
+                  // asterisk="*"
+                  options={getDepartment()}
+                  placeholder="Select Department"
+                  defaultValue={selectedDepartment}
+                  onSelectHandler={(select) => setSelectedDepartment(select)}
+                  // errorMessage={
+                  //   selectedDepartment && selectedDepartment.length > 0
+                  //     ? validator.message(
+                  //         'Department',
+                  //         selectedDesignationOption,
+                  //         'required'
+                  //       )
+                  //     : ''
+                  // }
+                  isMulti={false}
+                />
+              </Col>
+            </Row>
+          </Form>
+        }
+        modalFooter={
+          <div className="float-end">
+            <Button variant="secondary" onClick={() => onCancel()}>
+              Cancel
+            </Button>
 
-              <Button
-                variant="primary"
-                type="submit"
-                className="ms-4"
-                onClick={(e) => onSubmit(e)}
-              >
-                {employeeId ? 'Update' : 'Add'}
-              </Button>
-            </div>
-          }
-        />
-      </div>
+            <Button
+              variant="primary"
+              type="submit"
+              className="ms-4"
+              onClick={(e) => onSubmit(e)}
+            >
+              {employeeId ? 'Update' : 'Add'}
+            </Button>
+          </div>
+        }
+      />
     </>
   );
 }

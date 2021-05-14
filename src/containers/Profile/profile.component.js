@@ -125,12 +125,11 @@ function Profile() {
   const handleImageFileUpload = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       setImageUrl(e.target.files[0]);
-
     }
   };
 
   const uploadFile = async () => {
-    let imgId = ''; 
+    let imgId = '';
 
     const formData = new FormData();
     formData.append('file_name', imageUrl);
@@ -140,13 +139,12 @@ function Profile() {
       formData
     );
     if (data) {
-      imgId =  data.data.id;
+      imgId = data.data.id;
     }
     return imgId;
   };
 
   const updateProfileData = async () => {
-    
     const payload = {
       id: localStorage.getItem('userId'),
       full_name: name,
@@ -155,7 +153,7 @@ function Profile() {
       profile: profileId,
     };
 
-    if(imageUrl) {
+    if (imageUrl) {
       payload.profile = await uploadFile();
     }
 
@@ -190,17 +188,16 @@ function Profile() {
   };
 
   const getImageName = (profileImage) => {
-  
-    const img = profileImage ? profileImage.split(
-      'https://empportal-serverless.s3.amazonaws.com/media/'
-    ) : imageUrl.split(
-      'https://empportal-serverless.s3.amazonaws.com/media/'
-    );
+    const img = profileImage
+      ? profileImage.split(
+          'https://empportal-serverless.s3.amazonaws.com/media/'
+        )
+      : imageUrl.split('https://empportal-serverless.s3.amazonaws.com/media/');
     let img1 = '';
 
-    if(img.length > 1) {
-     img1 = (img[1].split('?').length > 1 ? img[1].split('?')[0] : img[0]);
-    };
+    if (img.length > 1) {
+      img1 = img[1].split('?').length > 1 ? img[1].split('?')[0] : img[0];
+    }
     return img1;
   };
 
@@ -431,15 +428,13 @@ function Profile() {
                   type="file"
                   inputClass="form-control"
                 />
-                 <Row>
-                        <Col>
-                         <span className="span-container">
-                                
-                                 {image && getImageName(image)}
-                                 
-                                </span>
-                         </Col>
-                      </Row>
+                <Row>
+                  <Col>
+                    <span className="span-container">
+                      {image && getImageName(image)}
+                    </span>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Form>

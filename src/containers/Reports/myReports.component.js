@@ -1,43 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Form, Button } from 'react-bootstrap';
+import { Card, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
 import { Helmet, TextInput, Datepicker } from '../../components/FormInputs';
-import Table from '../../components/Table/simpletable.component';
+import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-
-const columns = [
-  {
-    id: 'no',
-    label: 'Sr. No',
-  },
-  {
-    id: 'name',
-    label: 'Employee Name',
-  },
-  {
-    id: 'date',
-    label: 'Date',
-  },
-  {
-    id: 'clockin',
-    label: 'Clock in',
-  },
-  {
-    id: 'clockout',
-    label: 'Clock Out',
-  },
-  {
-    id: 'total',
-    label: 'Total Working',
-  },
-  {
-    id: 'report',
-    label: 'View Report',
-  },
-];
 
 const items = [
   { to: '/', label: 'Home' },
@@ -50,7 +19,6 @@ function AllReports() {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
-  const [showFilter, setShowFilter] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [employeeName, setEmployeeName] = useState('');
   const [pagination, setPagination] = useState({
@@ -59,26 +27,65 @@ function AllReports() {
     totalItems: 10,
   });
 
+  const columns = [
+    {
+      id: 'no',
+      label: 'Sr. No',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'name',
+      label: 'Employee Name',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'date',
+      label: 'Date',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'clockin',
+      label: 'Clock in',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'clockout',
+      label: 'Clock Out',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'total',
+      label: 'Total Working',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'report',
+      label: 'View Report',
+      roleAccess: [1, 2, 3, 4],
+    },
+  ];
+
   const getReports = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    let endPoint;
-    endPoint = `${Api.reportListingUrl}?limit=${pagination.itemsPerPage}&page=${page}`;
+    const endPoint = `${Api.reportListingUrl}`;
 
-    if (fromDate && toDate) {
-      endPoint = `${endPoint}&start_date=${customFunctions.getDate(
-        fromDate
-      )}&end_date=${customFunctions.getDate(toDate)}`;
-    }
-    const { data } = await AuthApi.postDataToServer(endPoint);
-    if (data && data.data) {
-      if (data.paginator && Object.keys(data.paginator).length > 0) {
-        setPagination({
-          current_page: Number(data.paginator.current_page),
-          activePage: data.paginator.current_page,
-          itemsPerPage: data.paginator.limit,
-          totalItems: data.paginator.total_count,
-        });
-      }
+    const params = {
+      page,
+      limit: pagination.itemsPerPage,
+      start_date: fromDate ? customFunctions.getDate(fromDate) : '',
+      end_date: toDate ? customFunctions.getDate(toDate) : '',
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+
+    const { data } = await AuthApi.postDataToServer(url);
+    if (!customFunctions.checkIfEmpty(data, 'O')) {
+      setPagination({
+        current_page: Number(data.paginator.current_page),
+        activePage: data.paginator.current_page,
+        itemsPerPage: data.paginator.limit,
+        totalItems: data.paginator.total_count,
+      });
+
       const row = [];
       data.data.map((report, i) => {
         setEmployeeName(report.user);
@@ -104,22 +111,21 @@ function AllReports() {
   };
 
   useEffect(() => {
-   
-      setTitle('Reports');
+    setTitle('Reports');
   }, []);
 
   useEffect(() => {
     getReports(1);
-  }, []);
+  }, [cntClearFilter]);
 
-  const onFilter = (e) => {
+  const filterSearch = (e) => {
     e.preventDefault();
-    let filterError = '';
+    let filterSearchErr = '';
     let isValid = true;
 
     if (fromDate === '' && toDate === '') {
-      filterError = 'Please select date';
-      setFilterErr(filterError);
+      filterSearchErr = 'Please enter search keyword';
+      setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
@@ -142,6 +148,100 @@ function AllReports() {
         <h2 className="main-content-title tx-24 mg-b-5">My Report</h2>
         <Breadcrumb items={items} />
       </div>
+
+      <section className="content-area">
+        <div className="mt-5">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary m-0">Filters</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      Expand
+                    </Accordion.Toggle>
+                  </div>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="1">
+                <Card.Body>
+                  <Card.Title>
+                    <Form onSubmit={(e) => filterSearch(e)}>
+                      {filterErr && (
+                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                          <div className="img-text">
+                            <img src="images/fail.svg" alt="Success" />{' '}
+                            {filterErr}
+                          </div>
+                        </div>
+                      )}
+                      <Row className="mt-3">
+                        <Col sm={3}>
+                          <div className="search-bar-input">
+                            <TextInput
+                              containerClass="form-group"
+                              type="name"
+                              name="text"
+                              value={employeeName}
+                              disabled
+                            />
+                          </div>
+                        </Col>
+
+                        <Col sm={3}>
+                          <Datepicker
+                            className="form-control"
+                            selected={fromDate}
+                            onChange={(e) => {
+                              setFromDate(e);
+                            }}
+                            autoComplete="off"
+                            name="startDate"
+                            placeholder="FromDate"
+                          />
+                        </Col>
+
+                        <Col sm={3}>
+                          <Datepicker
+                            className="form-control"
+                            selected={toDate}
+                            onChange={(e) => {
+                              setToDate(e);
+                            }}
+                            autoComplete="off"
+                            name="startDate"
+                            dateFormat="MM/dd/yyyy"
+                            placeholder="ToDate"
+                          />
+                        </Col>
+                        <Col sm={3}>
+                          <div className="filter-btn">
+                            <Button
+                              variant="primary"
+                              type="submit"
+                              className="ms-4"
+                            >
+                              Submit
+                            </Button>
+                            <Button
+                              variant="primary"
+                              type="button"
+                              className="ms-4"
+                              onClick={() => onClear()}
+                            >
+                              Clear
+                            </Button>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Card.Title>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
+      </section>
       <div className="mt-3">
         <Card>
           <Card.Body>
@@ -154,7 +254,6 @@ function AllReports() {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setShowFilter(true);
                   }}
                 >
                   <img src="images/filter.svg" alt="filter" />
@@ -162,95 +261,23 @@ function AllReports() {
               </div>
             </Card.Title>
             <Row>
-              {showFilter && (
-                <Form onSubmit={(e) => onFilter(e)}>
-                  <Row className="mt-3">
-                    <Col sm={4}>
-                      <div className="search-bar-input">
-                        <TextInput
-                          containerClass="form-group"
-                          type="name"
-                          name="text"
-                          value={employeeName}
-                          disabled
-                        />
-                      </div>
-                    </Col>
-
-                    <Col sm={4}>
-                      <Datepicker
-                        className="form-control"
-                        selected={fromDate}
-                        onChange={(e) => {
-                          setFromDate(e);
-                        }}
-                        autoComplete="off"
-                        name="startDate"
-                        placeholder="FromDate"
-                        errorMessage={filterErr}
-                      />
-                    </Col>
-
-                    <Col sm={4}>
-                      <Datepicker
-                        className="form-control"
-                        selected={toDate}
-                        onChange={(e) => {
-                          setToDate(e);
-                        }}
-                        autoComplete="off"
-                        name="startDate"
-                        dateFormat="MM/dd/yyyy"
-                        placeholder="ToDate"
-                        errorMessage={filterErr}
-                      />
-                    </Col>
-                  </Row>
-                  <Row className="d-flex justify-content-center">
-                    <Col sm={3}>
-                      <div className="form-group">
-                        <Button type="submit" className="btn btn-primary">
-                          Filter
-                        </Button>
-                      </div>
-                    </Col>
-
-                    <Col sm={3}>
-                      <div className="form-group">
-                        <Button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => onClear()}
-                        >
-                          Clear
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                </Form>
-              )}
-              {pagination.totalItems > 0 ? (
-                <Col className="mt-3">
-                  <Table
-                    tableClass="table table-striped"
-                    columns={columns}
-                    rows={rows}
-                    showPagination
-                    paginationProps={{
-                      ...pagination,
-                      activePage: pagination.current_page,
-                      onPageChange: (pageNo) => {
-                        getReports(pageNo);
-                      },
-                    }}
-                    dropdownContainerClass="mb-3"
-                  />
-                </Col>
-              ) : (
-                <Col>
+              <Table
+                columns={columns}
+                rows={rows}
+                showPagination
+                paginationProps={{
+                  ...pagination,
+                  activePage: pagination.current_page,
+                  onPageChange: (pageNo) => {
+                    getReports(pageNo);
+                  },
+                }}
+                tableClass="table-striped"
+                dropdownContainerClass="mb-3"
+                emptyRender={() => (
                   <p className="text-center mb-0">No record found</p>
-                </Col>
-              )}
+                )}
+              />
             </Row>
           </Card.Body>
         </Card>

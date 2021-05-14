@@ -1,38 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Button } from 'react-bootstrap';
+import { Card, Row, Button } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
-import Table from '../../components/Table/simpletable.component';
+import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
-
-const columns = [
-  {
-    id: 'no',
-    label: 'Sr. No',
-  },
-  {
-    id: 'task',
-    label: 'Todays Task',
-  },
-  {
-    id: 'project',
-    label: 'Project',
-  },
-  {
-    id: 'status',
-    label: 'Status',
-  },
-  {
-    id: 'eta',
-    label: 'ETA',
-  },
-  {
-    id: 'at',
-    label: 'AT',
-  },
-];
 
 function Reports(props) {
   const [rows, setRows] = useState([]);
@@ -45,36 +18,77 @@ function Reports(props) {
     totalItems: 10,
   });
 
+  const columns = [
+    {
+      id: 'no',
+      label: 'Sr. No',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'task',
+      label: 'Todays Task',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'project',
+      label: 'Project',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'eta',
+      label: 'ETA',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'at',
+      label: 'AT',
+      roleAccess: [1, 2, 3, 4],
+    },
+  ];
+
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
     const dt = customFunctions.getDate(
       new Date(Number(props.match.params.date))
     );
+    const userId = props.match.params.id;
     setReportDate(customFunctions.getFormattedDate(dt));
-    const endPoint = `${Api.dailyReportUrl}?date=${dt}&user_id=${props.match.params.id}&page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.dailyReportUrl}`;
+    const params = {
+      page,
+      limit: pagination.itemsPerPage,
+      date: dt,
+      user_id: userId,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
 
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
-     
-        setPagination({
-          activePage: data.paginator.current_page,
-          itemsPerPage: pagination.itemsPerPage,
-          totalItems: data.paginator.total_count,
-        });
-      
+    const { data } = await AuthApi.getDataFromServer(url);
+    if (!customFunctions.checkIfEmpty(data, 'O')) {
+      setPagination({
+        activePage: data.paginator.current_page,
+        itemsPerPage: pagination.itemsPerPage,
+        totalItems: data.paginator.total_count,
+      });
+
       const row = [];
       const reportData = showButton
         ? data.data.morning_data
         : data.data.evening_data;
       reportData.map((proj, i) => {
-        row.push({
+        const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           task: proj.activity,
           project: proj.project_name,
           status: proj.status,
           eta: proj.duration,
           at: proj.end_date,
-        });
+        };
+        row.push(setRowData);
         return proj;
       });
       setRows(row);
@@ -115,8 +129,7 @@ function Reports(props) {
                   Evening Report
                 </Button>
               </div>
-              {pagination.totalItems > 0 ? (
-              <Col className="mt-3">
+              <div className="mt-3">
                 <Table
                   tableClass="table table-striped"
                   columns={columns}
@@ -124,17 +137,14 @@ function Reports(props) {
                   showPagination
                   paginationProps={{
                     ...pagination,
+                    activePage: pagination.current_page,
                     onPageChange: (pageNo) => {
                       getTableData(pageNo);
                     },
                   }}
+                  dropdownContainerClass="mb-3"
                 />
-              </Col>
-              ) : (
-                  <Col>
-                    <p className="text-center mb-0">No record found</p>
-                  </Col>
-                )}
+              </div>
             </Row>
           </Card.Body>
         </Card>

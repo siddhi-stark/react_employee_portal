@@ -1,39 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Form, Button } from 'react-bootstrap';
+import { Card, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
 import { Helmet, Datepicker, DropdownInput } from '../../components/FormInputs';
-import Table from '../../components/Table/simpletable.component';
+import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-
-const columns = [
-  {
-    id: 'no',
-    label: 'Sr. No',
-  },
-  {
-    id: 'name',
-    label: 'Employee Name',
-  },
-  {
-    id: 'date',
-    label: 'Date',
-  },
-  {
-    id: 'clockin',
-    label: 'Clock in',
-  },
-  {
-    id: 'clockout',
-    label: 'Clock Out',
-  },
-  {
-    id: 'total',
-    label: 'Total Working',
-  },
-];
 
 const items = [
   { to: '/', label: 'Home' },
@@ -45,9 +18,8 @@ function TeamReport() {
   const [title, setTitle] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
-  const [keyword, setKeyword] = useState('');
+  const [searchKeyword, setKeyword] = useState('');
   const [filterErr, setFilterErr] = useState('');
-  const [showFilter, setShowFilter] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [team, setTeam] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
@@ -57,25 +29,51 @@ function TeamReport() {
     totalItems: 10,
   });
 
+  const columns = [
+    {
+      id: 'no',
+      label: 'Sr. No',
+      roleAccess: [3],
+    },
+    {
+      id: 'name',
+      label: 'Employee Name',
+      roleAccess: [3],
+    },
+    {
+      id: 'date',
+      label: 'Date',
+      roleAccess: [3],
+    },
+    {
+      id: 'clockin',
+      label: 'Clock in',
+      roleAccess: [3],
+    },
+    {
+      id: 'clockout',
+      label: 'Clock Out',
+      roleAccess: [3],
+    },
+    {
+      id: 'total',
+      label: 'Total Working',
+      roleAccess: [3],
+    },
+  ];
+
   const getReports = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    let endPoint;
-    const hasSearch = keyword !== '';
-    endPoint = `${Api.reportListingUrl}?my_team=true&limit=${pagination.itemsPerPage}&page=${page}`;
+    const endPoint = `${Api.reportListingUrl}?my_team=true`;
 
-    if (hasSearch) {
-      endPoint = `${endPoint}&keyword=${keyword}`;
-    }
-    if (fromDate && toDate) {
-      endPoint = `${endPoint}&start_date=${customFunctions.getDate(
-        fromDate
-      )}&end_date=${customFunctions.getDate(toDate)}`;
-    }
-    // if(selectedEmployee.id) {
-    //  const  postData = {
-    //     "users": [selectedEmployee.id]
-    //   }
-    // }
+    const params = {
+      page,
+      limit: pagination.itemsPerPage,
+      keyword: searchKeyword,
+      start_date: fromDate ? customFunctions.getDate(fromDate) : '',
+      end_date: toDate ? customFunctions.getDate(toDate) : '',
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
 
     let postData = {};
     if (selectedEmployee.id) {
@@ -84,9 +82,11 @@ function TeamReport() {
       };
     }
 
+    const payload = customFunctions.cleanObject(postData);
+
     const { data } = await AuthApi.postDataToServer(
-      endPoint,
-      selectedEmployee.id ? postData : null
+      url,
+      selectedEmployee.id ? payload : null
     );
     if (data && data.data) {
       if (data.paginator && Object.keys(data.paginator).length > 0) {
@@ -99,14 +99,15 @@ function TeamReport() {
       }
       const row = [];
       data.data.map((report, i) => {
-        row.push({
+        const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: report.estimation,
-        });
+        };
+        row.push(setRowData);
         return report;
       });
       setRows(row);
@@ -133,7 +134,7 @@ function TeamReport() {
 
   useEffect(() => {
     getReports(1);
-  }, []);
+  }, [cntClearFilter]);
 
   const getTeamList = () => {
     if (!team) return [];
@@ -147,28 +148,29 @@ function TeamReport() {
     return options;
   };
 
-  const onFilter = (e) => {
+  const onClear = () => {
+    setFilterErr('');
+    setKeyword('');
+    setFromDate('');
+    setToDate('');
+    setSelectedEmployee('');
+    setCntClearFilter(cntClearFilter + 1);
+  };
+
+  const filterSearch = (e) => {
     e.preventDefault();
-    let filterError = '';
+    let filterSearchErr = '';
     let isValid = true;
 
-    if (fromDate === '' && toDate === '' && keyword === '') {
-      filterError = 'Please select date';
-      setFilterErr(filterError);
+    if (fromDate === '' && toDate === '' && selectedEmployee === '') {
+      filterSearchErr = 'Please enter search keyword';
+      setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
       setFilterErr('');
       getReports(1);
     }
-  };
-
-  const onClear = () => {
-    setFilterErr('');
-    setKeyword('');
-    setFromDate('');
-    setToDate('');
-    setCntClearFilter(cntClearFilter + 1);
   };
 
   return (
@@ -178,116 +180,124 @@ function TeamReport() {
         <h2 className="main-content-title tx-24 mg-b-5">My Report</h2>
         <Breadcrumb items={items} />
       </div>
+
+      <section className="content-area">
+        <div className="mt-5">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary m-0">Filters</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      Expand
+                    </Accordion.Toggle>
+                  </div>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="1">
+                <Card.Body>
+                  <Card.Title>
+                    <Form onSubmit={(e) => filterSearch(e)}>
+                      {filterErr && (
+                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                          <div className="img-text">
+                            <img src="images/fail.svg" alt="Success" />{' '}
+                            {filterErr}
+                          </div>
+                        </div>
+                      )}
+                      <Row className="mt-3">
+                        <Col sm={3}>
+                          <div className="search-bar-input">
+                            <DropdownInput
+                              options={getTeamList()}
+                              placeholder="Select Employee"
+                              defaultValue={selectedEmployee}
+                              onSelectHandler={(select) => {
+                                setSelectedEmployee(select);
+                              }}
+                            />
+                          </div>
+                        </Col>
+
+                        <Col sm={3}>
+                          <Datepicker
+                            className="form-control"
+                            selected={fromDate}
+                            onChange={(e) => {
+                              setFromDate(e);
+                            }}
+                            autoComplete="off"
+                            name="startDate"
+                            placeholder="FromDate"
+                          />
+                        </Col>
+
+                        <Col sm={3}>
+                          <Datepicker
+                            className="form-control"
+                            selected={toDate}
+                            onChange={(e) => {
+                              setToDate(e);
+                            }}
+                            autoComplete="off"
+                            name="startDate"
+                            dateFormat="MM/dd/yyyy"
+                            placeholder="ToDate"
+                          />
+                        </Col>
+                        <Col sm={3}>
+                          <div className="filter-btn">
+                            <Button
+                              variant="primary"
+                              type="submit"
+                              className="ms-4"
+                            >
+                              Submit
+                            </Button>
+                            <Button
+                              variant="primary"
+                              type="button"
+                              className="ms-4"
+                              onClick={() => onClear()}
+                            >
+                              Clear
+                            </Button>
+                          </div>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </Card.Title>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
+      </section>
       <div className="mt-3">
         <Card>
           <Card.Body>
             <Card.Title className="d-flex align-items-center justify-content-between">
               <h5 className="m-0">Reports</h5>
-              <div className="pull-right">
-                <a
-                  href="/"
-                  className="btn btn-primary filter-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setShowFilter(true);
-                  }}
-                >
-                  <img src="images/filter.svg" alt="filter" />
-                </a>
-              </div>
             </Card.Title>
             <Row>
-              {showFilter && (
-                <Form onSubmit={(e) => onFilter(e)}>
-                  <Row className="mt-3">
-                    <Col sm={4}>
-                      <div className="search-bar-input">
-                        <DropdownInput
-                          options={getTeamList()}
-                          placeholder="Select Employee"
-                          defaultValue={selectedEmployee}
-                          onSelectHandler={(select) => {
-                            setSelectedEmployee(select);
-                          }}
-                        />
-                      </div>
-                    </Col>
-
-                    <Col sm={4}>
-                      <Datepicker
-                        className="form-control"
-                        selected={fromDate}
-                        onChange={(e) => {
-                          setFromDate(e);
-                        }}
-                        autoComplete="off"
-                        name="startDate"
-                        placeholder="FromDate"
-                        errorMessage={filterErr}
-                      />
-                    </Col>
-
-                    <Col sm={4}>
-                      <Datepicker
-                        className="form-control"
-                        selected={toDate}
-                        onChange={(e) => {
-                          setToDate(e);
-                        }}
-                        autoComplete="off"
-                        name="startDate"
-                        dateFormat="MM/dd/yyyy"
-                        placeholder="ToDate"
-                        errorMessage={filterErr}
-                      />
-                    </Col>
-                  </Row>
-                  <Row className="d-flex justify-content-center">
-                    <Col sm={3}>
-                      <div className="form-group">
-                        <Button type="submit" className="btn btn-primary">
-                          Filter
-                        </Button>
-                      </div>
-                    </Col>
-
-                    <Col sm={3}>
-                      <div className="form-group">
-                        <Button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={() => onClear()}
-                        >
-                          Clear
-                        </Button>
-                      </div>
-                    </Col>
-                  </Row>
-                </Form>
-              )}
-              {pagination.totalItems > 0 ? (
-                <Col className="mt-3">
-                  <Table
-                    tableClass="table table-striped"
-                    columns={columns}
-                    rows={rows}
-                    showPagination
-                    paginationProps={{
-                      ...pagination,
-                      activePage: pagination.current_page,
-                      onPageChange: (pageNo) => {
-                        getReports(pageNo);
-                      },
-                    }}
-                    dropdownContainerClass="mb-3"
-                  />
-                </Col>
-              ) : (
-                <Col>
-                  <p className="text-center mb-0">No record found</p>
-                </Col>
-              )}
+              <div className="mt-3">
+                <Table
+                  tableClass="table table-striped"
+                  columns={columns}
+                  rows={rows}
+                  showPagination
+                  paginationProps={{
+                    ...pagination,
+                    activePage: pagination.current_page,
+                    onPageChange: (pageNo) => {
+                      getReports(pageNo);
+                    },
+                  }}
+                  dropdownContainerClass="mb-3"
+                />
+              </div>
             </Row>
           </Card.Body>
         </Card>
