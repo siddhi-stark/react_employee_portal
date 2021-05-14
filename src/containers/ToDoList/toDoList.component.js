@@ -208,7 +208,7 @@ function ToDoList() {
       });
       setBreakData(selectedBreak);
 
-      getTableData(1);
+      // getTableData(1);
       getDailyActivity();
     }
     getData();
@@ -452,7 +452,7 @@ function ToDoList() {
                 </Card.Title>
               </Col>
             </div>
-            {pagination.totalItems > 0 ? (
+            {pagination.totalItems > 1 ? (
             <Col className="mt-3">
               <Table
                 tableClass="table table-striped"
