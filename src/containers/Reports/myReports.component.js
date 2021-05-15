@@ -247,18 +247,6 @@ function AllReports() {
           <Card.Body>
             <Card.Title className="d-flex align-items-center justify-content-between">
               <h5 className="m-0">Reports</h5>
-              <div className="pull-right">
-                <a
-                  href="/"
-                  className="btn btn-primary filter-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                >
-                  <img src="images/filter.svg" alt="filter" />
-                </a>
-              </div>
             </Card.Title>
             <Row>
               <Table

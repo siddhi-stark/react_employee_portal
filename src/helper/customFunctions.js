@@ -57,6 +57,15 @@ class CustomFunctions extends Component {
     return formattedate;
   };
 
+  localStorageClear = () => {
+    this.removeLocalStorage('access_token');
+    // this.removeLocalStorage('checkbox');
+    // this.removeLocalStorage('email');
+    // this.removeLocalStorage('password');
+    this.removeLocalStorage('group');
+    this.removeLocalStorage('userId');
+  };
+
   validateEmail = (email) => {
     var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
     return emailReg.test(email);

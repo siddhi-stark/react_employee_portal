@@ -9,7 +9,9 @@ const HelmetComponent = (props) => {
         <Helmet>
           <meta charSet="utf-8" />
           <title>
-            {title ? `${title} |Employee Portal` : `Employee Portal`}
+            {localStorage.getItem('group') === '1'
+              ? `${title} |Admin Portal`
+              : `${title} |Employee Portal`}
           </title>
           <meta name="description" content="" />
           <link rel="canonical" href="" />

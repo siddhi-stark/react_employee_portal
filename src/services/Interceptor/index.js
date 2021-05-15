@@ -1,4 +1,5 @@
 import axios from 'axios';
+// import customFucntions from '../../helper/customFunctions';
 
 export default {
   setupInterceptors: async () => {
@@ -23,7 +24,7 @@ export default {
     //       data &&
     //       (data.status === 401 || data.statusText === 'Unauthorized')
     //     ) {
-    //       await CustomFunctions.localStorageClear();
+    //       await customFucntions.localStorageClear();
     //       window.location.href = '/login';
     //       return Promise.reject(error.response.data);
     //     }

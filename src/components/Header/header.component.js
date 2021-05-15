@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
 
 function Header() {
   const date = new Date().toDateString().split(' ');
@@ -11,11 +13,33 @@ function Header() {
   //   year: 'numeric',
   //   month: 'long'
   // });
+  const [designation, setDesignation] = useState('');
+  const [empId, setEmpId] = useState('');
+  const [employeeName, setEmployeeName] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
 
+  const getProfile = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
+
+    if (data && data.data) {
+      setDesignation(data.data.designation_name);
+      setEmpId(data.data.emp_code);
+      setEmployeeName(data.data.full_name);
+      // } else {
+      //   swal(message, '', 'error');
+      // }
+    }
+  };
+
   useEffect(() => {
+    document.addEventListener('ProfileUpdate', () => {
+      getProfile();
+    });
+
+    getProfile();
+
     const token = localStorage.getItem('access_token');
 
     if (!token) {
@@ -59,12 +83,7 @@ function Header() {
             </div>
 
             <div className="profile-name-img d-flex align-items-center">
-              <h6>
-                {localStorage.getItem('name')
-                  ? localStorage.getItem('name')
-                  : ''}
-              </h6>
-
+              <h6>{employeeName}</h6>
               {/* <a href="#">
                   <img src="/images/profile-img.png" alt="Profile" />
                 </a> */}
@@ -82,11 +101,10 @@ function Header() {
               <div className="main-header-menu-icon">
                 <div className="dropdown-menu">
                   <div className="header-navheading text-center">
-                    <h5 className="main-notification-title">
-                      {localStorage.getItem('name')
-                        ? localStorage.getItem('name')
-                        : ''}
-                    </h5>
+                    <h5 className="main-notification-title">{employeeName}</h5>
+
+                    <p className="main-notification-text">{designation}</p>
+                    <small>{empId}</small>
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>

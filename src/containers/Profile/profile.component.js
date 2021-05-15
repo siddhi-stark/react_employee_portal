@@ -36,6 +36,7 @@ function Profile() {
   const [image, setImage] = useState('');
   const [profileId, setProfileId] = useState('');
   // const [imageFile, setImageFile] = useState('');
+
   const Department = [
     {
       id: 1,
@@ -64,6 +65,7 @@ function Profile() {
     },
   ];
 
+  const event = new Event('ProfileUpdate', { isUpdated: true });
   const getProfile = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
     if (!customFunctions.checkIfEmpty(data.data, 'O')) {
@@ -166,6 +168,7 @@ function Profile() {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setModalShow(false);
+          document.dispatchEvent(event);
           getProfile();
           setName('');
           setEmail('');

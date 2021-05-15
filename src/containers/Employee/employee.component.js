@@ -670,16 +670,20 @@ function Employee() {
               <div className="d-flex align-items-center justify-content-between">
                 <h4 className="text-primary mt-2 mb-2">Add Employee</h4>
                 <div className="d-flex align-items-center justify-content-end">
-                  <a
-                    href="#"
-                    onClick={() => {
-                      setModalShow(true);
-                      setEmployeeId();
-                    }}
-                    className="btn-link"
-                  >
-                    Add Employee
-                  </a>
+                  {userRole === 1 ? (
+                    <a
+                      href="#"
+                      onClick={() => {
+                        setModalShow(true);
+                        setEmployeeId();
+                      }}
+                      className="btn-link"
+                    >
+                      Add Employee
+                    </a>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
             </Card.Header>
