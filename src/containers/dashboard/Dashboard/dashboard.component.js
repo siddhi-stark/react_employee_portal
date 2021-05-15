@@ -112,7 +112,7 @@ function Dashboard() {
     getWeeklyStatus();
     getTimeSheetList();
     setTitle('Dashboard');
-  });
+  }, []);
 
   return (
     <>

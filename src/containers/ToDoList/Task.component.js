@@ -62,7 +62,7 @@ function Task(props) {
 
   useEffect(() => {
     setTaskModalShow(props.show);
-  });
+  }, []);
 
   useEffect(() => {
     const taskId = localStorage.getItem('taskid');

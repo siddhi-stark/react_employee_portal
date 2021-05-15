@@ -197,7 +197,7 @@ function AllReports() {
                             }}
                             autoComplete="off"
                             name="startDate"
-                            placeholder="FromDate"
+                            placeholder="From Date"
                           />
                         </Col>
 
@@ -211,7 +211,7 @@ function AllReports() {
                             autoComplete="off"
                             name="startDate"
                             dateFormat="MM/dd/yyyy"
-                            placeholder="ToDate"
+                            placeholder="To Date"
                           />
                         </Col>
                         <Col sm={3}>
