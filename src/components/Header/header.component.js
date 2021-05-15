@@ -104,7 +104,7 @@ function Header() {
                     <h5 className="main-notification-title">{employeeName}</h5>
 
                     <p className="main-notification-text">{designation}</p>
-                    <small>Employee Id {empId}</small>
+                    <small>Employee ID {empId}</small>
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>
