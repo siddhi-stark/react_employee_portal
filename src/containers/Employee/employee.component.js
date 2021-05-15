@@ -337,7 +337,7 @@ function Employee() {
     async function getData() {
       const uRole = localStorage.getItem('group');
       setUserRole(Number(uRole));
-      getTableData(1);
+      // getTableData(1);
       getDesignation();
       getTwEmployee();
       getRole();

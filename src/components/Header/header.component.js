@@ -63,9 +63,9 @@ function Header() {
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <div className="main-header-left">
-            {/* <a className="main-header-menu-icon" href="" id="mainSidebarToggle">
-              <span />
-            </a> */}
+            <div className="d-flex justify-content-end clock-in-time">
+              <h7>You are clocked out at {localStorage.getItem('time')} </h7>
+            </div>
           </div>
           {localStorage.getItem('clockinTime') ? (
             <div className="d-flex justify-content-end clock-in-time">
