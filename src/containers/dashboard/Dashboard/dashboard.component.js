@@ -7,26 +7,7 @@ import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
 import ToDoList from '../../ToDoList/toDoList.component';
 import customFunctions from '../../../helper/customFunctions';
-import Table from '../../../components/Table/simpletable.component';
-
-const columns = [
-  {
-    id: 'date',
-    label: 'Date',
-  },
-  {
-    id: 'clockin',
-    label: 'Clock In',
-  },
-  {
-    id: 'clockout',
-    label: 'Clock out',
-  },
-  {
-    id: 'total',
-    label: 'Total Working',
-  },
-];
+import Table from '../../../components/ReactTable/simpletable.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -41,6 +22,29 @@ function Dashboard() {
     itemsPerPage: 10,
     totalItems: 10,
   });
+
+  const columns = [
+    {
+      id: 'date',
+      label: 'Date',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'clockin',
+      label: 'Clock In',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'clockout',
+      label: 'Clock out',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'total',
+      label: 'Total Working',
+      roleAccess: [1, 2, 3, 4],
+    },
+  ];
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
@@ -71,12 +75,13 @@ function Dashboard() {
       const row = [];
 
       data.data.map((timesheet) => {
-        row.push({
+        const setRowData = {
           date: customFunctions.getFormattedDate(timesheet.created_at),
           clockin: timesheet.sign_in,
           clockout: timesheet.sign_out,
           total: timesheet.estimation,
-        });
+        };
+        row.push(setRowData);
         return timesheet;
       });
       setRows(row);
@@ -207,11 +212,11 @@ function Dashboard() {
                     </div>
                   </Col>
                 </Row>
-                <div className="last-week">
+                {/* <div className="last-week">
                   <a href="#">
                     <img src="/images/previous.svg" alt="" /> Last Week
                   </a>
-                </div>
+                </div> */}
               </Card.Body>
             </Card>
             <div className="table-projects time-sheet-table">
@@ -221,28 +226,23 @@ function Dashboard() {
                 </div>
                 <br />
                 <div className="table-responsive">
-                  {pagination.totalItems > 0 ? (
-                    <Col className="mt-3">
-                      <Table
-                        tableClass="table table-striped"
-                        columns={columns}
-                        rows={rows}
-                        showPagination
-                        paginationProps={{
-                          ...pagination,
-                          activePage: pagination.current_page,
-                          onPageChange: (pageNo) => {
-                            getTimeSheetList(pageNo);
-                          },
-                        }}
-                        dropdownContainerClass="mb-3"
-                      />
-                    </Col>
-                  ) : (
-                    <Col>
+                  <Table
+                    columns={columns}
+                    rows={rows}
+                    showPagination
+                    paginationProps={{
+                      ...pagination,
+                      activePage: pagination.current_page,
+                      onPageChange: (pageNo) => {
+                        getTimeSheetList(pageNo);
+                      },
+                    }}
+                    tableClass="table-striped"
+                    dropdownContainerClass="mb-3"
+                    emptyRender={() => (
                       <p className="text-center mb-0">No record found</p>
-                    </Col>
-                  )}
+                    )}
+                  />
                 </div>
               </div>
             </div>
