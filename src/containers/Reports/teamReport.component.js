@@ -76,18 +76,21 @@ function TeamReport() {
     const url = customFunctions.generateUrl(endPoint, params);
 
     let postData = {};
-    if (selectedEmployee.id) {
-      postData = {
-        users: [selectedEmployee.id],
-      };
+    const employeeList = [];
+    if (selectedEmployee && selectedEmployee.length > 0) {
+      selectedEmployee.map((emp) => {
+        employeeList.push(emp.id);
+        return emp;
+      });
     }
+
+    postData = {
+      users: employeeList,
+    };
 
     const payload = customFunctions.cleanObject(postData);
 
-    const { data } = await AuthApi.postDataToServer(
-      url,
-      selectedEmployee.id ? payload : null
-    );
+    const { data } = await AuthApi.postDataToServer(url, payload);
     if (data && data.data) {
       if (data.paginator && Object.keys(data.paginator).length > 0) {
         setPagination({
@@ -143,6 +146,7 @@ function TeamReport() {
       return options.push({
         label: tm.employee_name,
         id: tm.employee_id,
+        value: tm.employee_id,
       });
     });
     return options;
@@ -217,6 +221,7 @@ function TeamReport() {
                               onSelectHandler={(select) => {
                                 setSelectedEmployee(select);
                               }}
+                              isMulti
                             />
                           </div>
                         </Col>
