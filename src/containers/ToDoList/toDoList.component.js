@@ -427,100 +427,103 @@ function ToDoList() {
         </div>
       )}
 
-      <Card className="mt-3">
-        <Card.Body>
-          <Row>
-            <div className="custom-header-wrapper">
-              <Col>
-                <Card.Title className="card-title h5 d-flex align-items-center justify-content-between">
-                  To Do
-                  <div className="float-end">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      type="submit"
-                      onClick={() => {
-                        localStorage.removeItem('taskid');
-                        setModalShow(true);
-                        forceUpdate(count + 1);
-                      }}
-                    >
-                      Add Task
-                    </Button>
-                  </div>
-                </Card.Title>
-              </Col>
-            </div>
-            {pagination.totalItems > 1 ? (
-              <Col className="mt-3">
-                <Table
-                  tableClass="table table-striped"
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  showCheckbox
-                  paginationProps={{
-                    ...pagination,
-                    activePage: pagination.current_page,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                  dropdownContainerClass="mb-3"
-                  selectedRowItems={selectedId}
-                  onSelectRowsIndexes={(rowIndex) => {
-                    const twId = [];
-                    taskList.map((task, ind) => {
-                      rowIndex.map((i) => {
-                        if (ind === i) {
-                          if (task.task_type === 'tw') {
-                            twId.push(task.tw_id);
-                          } else {
-                            twId.push(task.id);
-                          }
-                        }
-                        return i;
-                      });
+      <section className="content-area">
+        <div className="mt-5">
+          <Card>
+            <Card.Header>
+              <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary mt-2 mb-2">Add Task</h4>
+                <div className="d-flex align-items-center justify-content-end">
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    type="submit"
+                    onClick={() => {
+                      localStorage.removeItem('taskid');
+                      setModalShow(true);
+                      forceUpdate(count + 1);
+                    }}
+                  >
+                    Add Task
+                  </Button>
+                </div>
+              </div>
+            </Card.Header>
 
-                      return ind;
-                    });
-                    setSelectedRowIndex(twId);
-                    setSelectedId(rowIndex);
-                  }}
-                />
-              </Col>
-            ) : (
-              <Col>
-                <p className="text-center mb-0">No record found</p>
-              </Col>
-            )}
-          </Row>
-          <div className="d-flex justify-content-end mr-3">
-            {!morningMail && !signOutMail && pagination.totalItems > 0 && (
-              <Button
-                variant="primary"
-                className="mb-3"
-                onClick={() => {
-                  setShowScrumPopup(true);
-                }}
-              >
-                Send Scrum
-              </Button>
-            )}
-            {!signOutMail && morningMail && (
-              <Button
-                variant="primary"
-                className="mb-3"
-                onClick={() => {
-                  setShowBreak(true);
-                }}
-              >
-                Clockout & Send Report
-              </Button>
-            )}
-          </div>
-        </Card.Body>
-      </Card>
+            <Card.Body>
+              <Row>
+                {pagination.totalItems > 1 ? (
+                  <Col className="mt-3">
+                    <Table
+                      tableClass="table table-striped"
+                      columns={columns}
+                      rows={rows}
+                      showPagination
+                      showCheckbox
+                      paginationProps={{
+                        ...pagination,
+                        activePage: pagination.current_page,
+                        onPageChange: (pageNo) => {
+                          getTableData(pageNo);
+                        },
+                      }}
+                      dropdownContainerClass="mb-3"
+                      selectedRowItems={selectedId}
+                      onSelectRowsIndexes={(rowIndex) => {
+                        const twId = [];
+                        taskList.map((task, ind) => {
+                          rowIndex.map((i) => {
+                            if (ind === i) {
+                              if (task.task_type === 'tw') {
+                                twId.push(task.tw_id);
+                              } else {
+                                twId.push(task.id);
+                              }
+                            }
+                            return i;
+                          });
+
+                          return ind;
+                        });
+                        setSelectedRowIndex(twId);
+                        setSelectedId(rowIndex);
+                      }}
+                    />
+                  </Col>
+                ) : (
+                  <Col>
+                    <p className="text-center mb-0">No record found</p>
+                  </Col>
+                )}
+              </Row>
+              <div className="d-flex justify-content-end mr-3">
+                {!morningMail && !signOutMail && pagination.totalItems > 0 && (
+                  <Button
+                    variant="primary"
+                    className="mb-3"
+                    onClick={() => {
+                      setShowScrumPopup(true);
+                    }}
+                  >
+                    Send Scrum
+                  </Button>
+                )}
+                {!signOutMail && morningMail && (
+                  <Button
+                    variant="primary"
+                    className="mb-3"
+                    onClick={() => {
+                      setShowBreak(true);
+                    }}
+                  >
+                    Clockout & Send Report
+                  </Button>
+                )}
+              </div>
+            </Card.Body>
+          </Card>
+        </div>
+      </section>
       {modalShow && (
         <Task
           show={modalShow}

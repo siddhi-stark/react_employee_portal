@@ -175,6 +175,7 @@ function Projects() {
           ),
           completion: (
             <ProgressBar
+              bsPrefix="progress pbar"
               variant="success"
               now={proj.completion}
               label={`${proj.completion}% completed`}

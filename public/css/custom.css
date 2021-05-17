@@ -4266,6 +4266,10 @@ textarea.form-control-lg {
   font-size: 0.75rem;
   background-color: #e9ecef;
   border-radius: 5px; }
+  
+  .progress.pbar {
+    height: 1.3rem !important;
+  }
 
 .progress-bar {
   display: -webkit-box;
