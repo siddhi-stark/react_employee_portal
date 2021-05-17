@@ -20,8 +20,12 @@ function Header() {
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
+  const token = localStorage.getItem('access_token');
 
   const getProfile = async () => {
+    const userToken = localStorage.getItem('access_token');
+    if (!userToken) return false;
+
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
 
     if (data && data.data) {
@@ -33,6 +37,7 @@ function Header() {
       //   swal(message, '', 'error');
       // }
     }
+    return true;
   };
 
   useEffect(() => {
@@ -41,8 +46,6 @@ function Header() {
     });
 
     getProfile();
-
-    const token = localStorage.getItem('access_token');
 
     if (!token) {
       const path = window.location.pathname.split('/');

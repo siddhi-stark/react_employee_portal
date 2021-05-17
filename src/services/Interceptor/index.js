@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import customFucntions from '../../helper/customFunctions';
+import customFucntions from '../../helper/customFunctions';
 
 export default {
   setupInterceptors: async () => {
@@ -16,20 +16,20 @@ export default {
       }
     );
 
-    // await axios.interceptors.response.use(
-    //   (response) => response,
-    //   async (error) => {
-    //     const data = await error.response;
-    //     if (
-    //       data &&
-    //       (data.status === 401 || data.statusText === 'Unauthorized')
-    //     ) {
-    //       await customFucntions.localStorageClear();
-    //       window.location.href = '/login';
-    //       return Promise.reject(error.response.data);
-    //     }
-    //     return Promise.reject(error.response);
-    //   }
-    // );
+    await axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const data = await error.response;
+        if (
+          data &&
+          (data.status === 401 || data.statusText === 'Unauthorized')
+        ) {
+          await customFucntions.localStorageClear();
+          window.location.href = '/login';
+          return Promise.reject(error.response.data);
+        }
+        return Promise.reject(error.response);
+      }
+    );
   },
 };
