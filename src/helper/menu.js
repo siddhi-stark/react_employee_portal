@@ -35,6 +35,13 @@ const menu = [
     roleaccess: [1],
   },
   {
+    title: 'Leaves',
+    path: '/leaves',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  {
     title: 'Reports',
     // path: '/reports',
     icon: 'report.svg',
