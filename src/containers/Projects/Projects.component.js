@@ -122,7 +122,6 @@ function Projects() {
     }
 
     const url = customFunctions.generateUrl(api, params);
-    // const endPoint = `${Api.getProjects}?keyword=${keyword}&limit=${pagination.itemsPerPage}&page=${page}`;
     const { data } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
@@ -151,32 +150,29 @@ function Projects() {
             ) : (
               <span className="text-danger">{proj.remaining} Hrs</span>
             ),
-          support:
-            proj.rt_support === true ? (
-              <Image
-                src="/images/success.svg"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setProjectId(proj.id);
-                  setRtSupport(proj.rt_support);
-                  setShowUpdate(true);
-                  // onRtSupport(proj.id, proj.rt_support);
-                }}
-              />
-            ) : (
-              <Image
-                src="/images/fail.svg"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setProjectId(proj.id);
-                  setRtSupport(proj.rt_support);
-                  setShowUpdate(true);
-                  // onRtSupport(proj.id, proj.rt_support);
-                }}
-              />
-            ),
+          support: proj.rt_support ? (
+            <Image
+              src="/images/success.svg"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setProjectId(proj.id);
+                setRtSupport(proj.rt_support);
+                setShowUpdate(true);
+              }}
+            />
+          ) : (
+            <Image
+              src="/images/fail.svg"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setProjectId(proj.id);
+                setRtSupport(proj.rt_support);
+                setShowUpdate(true);
+              }}
+            />
+          ),
           completion: (
             <ProgressBar
               variant="success"
@@ -189,7 +185,6 @@ function Projects() {
               <span>
                 <Image src="/images/redirect.png" />
               </span>
-              {/* {proj.tw_id} */}
             </a>
           ),
         };
@@ -245,7 +240,6 @@ function Projects() {
           }}
           onCancel={() => {
             setShowUpdate(false);
-            // setShowUpdate(null);
           }}
         />
       )}

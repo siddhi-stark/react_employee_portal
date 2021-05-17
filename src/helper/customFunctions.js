@@ -149,11 +149,10 @@ class CustomFunctions extends Component {
   };
 
   userRestrictions = (element, permittedUsers = [], isLink = false) => {
-    const roleId = 1;
     const hasPermissions =
       permittedUsers &&
       permittedUsers.length &&
-      permittedUsers.includes(roleId);
+      permittedUsers.includes(this.getLocalStorage('group'));
     if (!hasPermissions) return isLink ? 'javascript:void(0)' : '';
     return element;
   };

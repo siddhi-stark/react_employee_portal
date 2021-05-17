@@ -74,9 +74,6 @@ function AllReports() {
     };
     const url = customFunctions.generateUrl(endPoint, params);
 
-    // const postData = {
-    //   userId: [userId],
-    // };
     const { data } = await AuthApi.postDataToServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
@@ -111,8 +108,6 @@ function AllReports() {
   useEffect(() => {
     async function getData() {
       getReports(1);
-      // const Id = localStorage.getItem('userId');
-      // setUserId(Id);
       setTitle('Reports');
     }
     getData();
@@ -135,7 +130,7 @@ function AllReports() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (fromDate === '' && toDate === '' && searchKeyword === '') {
+    if (!fromDate && !toDate && !searchKeyword) {
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;
