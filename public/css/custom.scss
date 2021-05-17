@@ -1213,6 +1213,13 @@ p:empty {
                 border-radius: 100%;
             }
             .profile-img {
+                min-height: 51px;
+                max-width: 51px;
+                width: 100%;
+                img {
+                    width: 100%;
+                    min-height: 51px;
+                }
                 .dropdown-menu {
                     padding-top: 0px;
                     position: absolute;

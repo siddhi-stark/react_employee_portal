@@ -16,6 +16,7 @@ function Header() {
   const [designation, setDesignation] = useState('');
   const [empId, setEmpId] = useState('');
   const [employeeName, setEmployeeName] = useState('');
+  const [imageProfile, setImageProfile] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
@@ -27,6 +28,7 @@ function Header() {
       setDesignation(data.data.designation_name);
       setEmpId(data.data.emp_code);
       setEmployeeName(data.data.full_name);
+      setImageProfile(data.data.profile_image_url);
       // } else {
       //   swal(message, '', 'error');
       // }
@@ -88,9 +90,11 @@ function Header() {
 
             <div className="profile-name-img d-flex align-items-center">
               <h6>{employeeName}</h6>
-              {/* <a href="#">
-                  <img src="/images/profile-img.png" alt="Profile" />
-                </a> */}
+              <div className="profile-img">
+                <a href="#">
+                  <img src={imageProfile} alt="Profile" />
+                </a>
+              </div>
             </div>
             <div className="dropdown d-md-flex header-settings">
               <a

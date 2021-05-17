@@ -144,7 +144,7 @@ function Projects() {
           remaining:
             Math.sign(proj.remaining) === 1 ||
             Math.sign(proj.remaining) === 0 ? (
-              <span className="text-primary">
+              <span className="text-success">
                 {proj.remaining}{' '}
                 {Math.sign(proj.remaining) === 0 ? 'Hr' : 'Hrs'}
               </span>

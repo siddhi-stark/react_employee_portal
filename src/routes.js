@@ -38,7 +38,7 @@ function Routes() {
       <Route path="/profile" exact component={Profile} />
       <Route path="/manage-password" exact component={ManagePassword} />
       <Route path="/team-report" exact component={TeamReport} />
-      <Route component={NotFound}/>
+      <Route component={NotFound} />
     </Switch>
   );
 }
