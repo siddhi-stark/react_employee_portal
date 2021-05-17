@@ -60,6 +60,11 @@ function TeamReport() {
       label: 'Total Working',
       roleAccess: [3],
     },
+    {
+      id: 'report',
+      label: 'View Report',
+      roleAccess: [3],
+    },
   ];
 
   const getReports = async (pageNo = 0) => {
@@ -102,6 +107,8 @@ function TeamReport() {
       }
       const row = [];
       data.data.map((report, i) => {
+        const date = customFunctions.getDate(report.created_at);
+        const dt = new Date(date).getTime();
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,
@@ -109,6 +116,11 @@ function TeamReport() {
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: report.estimation,
+          report: (
+            <a href={`/daily-report/${dt}/${report.user_id}`}>
+              <span>View Report</span>
+            </a>
+          ),
         };
         row.push(setRowData);
         return report;

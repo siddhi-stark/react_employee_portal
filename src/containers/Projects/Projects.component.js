@@ -245,7 +245,7 @@ function Projects() {
           }}
           onCancel={() => {
             setShowUpdate(false);
-            setShowUpdate(null);
+            // setShowUpdate(null);
           }}
         />
       )}

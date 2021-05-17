@@ -20,11 +20,10 @@ function Task(props) {
   const [taskName, setTaskName] = useState('');
   const [count, forceUpdate] = useState(0);
   const [taskModalShow, setTaskModalShow] = useState(false);
-  // const [validateTime, setValidateTime] = useState([]);
   const [progressValue, setProgressValue] = useState(0);
   const [id, setId] = useState(null);
-  const [startHours, setStartHours] = useState(''); // eslint-disable-line
-  const [startMinutes, setStartMinutes] = useState(''); // eslint-disable-line
+  const [startHours, setStartHours] = useState('');
+  const [startMinutes, setStartMinutes] = useState('');
 
   const getTaskById = async (tid) => {
     const { data } = await AuthApi.getDataFromServer(`${Api.taskUrl}${tid}/`);
@@ -49,7 +48,6 @@ function Task(props) {
       const spent1 = spentNew[0] ? spentNew[0] : 0;
       const spentNewMins = spentNew[0].split('Mins');
 
-      // const spent3 = spentNew[1] ? spentNew[1] : 0;
       setTaskHours(spent1);
       const spent2 = spentNewMins[0] ? spentNewMins[0] : 0;
       setTaskMinutes(spent2);
@@ -279,14 +277,7 @@ function Task(props) {
                   </label>
                   <div className="progress-main">
                     <div className="progress">
-                      <div
-                        className="progress-bar bg-secondary w-100"
-                        // role="progressbar"
-                        // style={{'width': '5%;'}}
-                        // aria-valuenow="0"
-                        // aria-valuemin="0"
-                        //  aria-valuemax="100"
-                      >
+                      <div className="progress-bar bg-secondary w-100">
                         <input
                           type="range"
                           name="rangeInput"

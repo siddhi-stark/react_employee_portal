@@ -66,6 +66,47 @@ class CustomFunctions extends Component {
     this.removeLocalStorage('userId');
   };
 
+  clearLocalStorage = () => {
+    this.removeLocalStorage('access_token');
+    this.removeLocalStorage('userId');
+    this.removeLocalStorage('headerDate');
+    this.removeLocalStorage('name');
+    this.removeLocalStorage('clockinTime');
+    this.removeLocalStorage('time');
+  };
+
+  setLocalStorage = (key, value) => {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  getLocalStorage = (key) => {
+    try {
+      return localStorage.getItem(key);
+    } catch (error) {
+      return false;
+    }
+  };
+
+  removeLocalStorage = (key) => {
+    try {
+      if (typeof key === 'string') return localStorage.removeItem(key);
+
+      if (typeof key === 'object') {
+        key.map((item) => {
+          return this.removeLocalStorage(item);
+        });
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
   validateEmail = (email) => {
     var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
     return emailReg.test(email);

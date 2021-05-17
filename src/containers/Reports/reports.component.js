@@ -12,6 +12,7 @@ function Reports(props) {
   const [showButton, setShowButton] = useState(1);
   const [reportDate, setReportDate] = useState('');
   const [title, setTitle] = useState('');
+  const [cntClearFilter, setCntClearFilter] = useState(0);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -97,7 +98,7 @@ function Reports(props) {
   useEffect(() => {
     getTableData();
     setTitle('Detail Report');
-  }, []);
+  }, [cntClearFilter]);
 
   return (
     <>
@@ -112,7 +113,7 @@ function Reports(props) {
                   type="button"
                   onClick={() => {
                     setShowButton(1);
-                    getTableData(1);
+                    setCntClearFilter(cntClearFilter + 1);
                   }}
                   variant={showButton ? 'primary ml-1' : ''}
                 >
@@ -122,7 +123,7 @@ function Reports(props) {
                   type="button"
                   onClick={() => {
                     setShowButton(0);
-                    getTableData(1);
+                    setCntClearFilter(cntClearFilter + 1);
                   }}
                   variant={!showButton ? 'secondary ml-1' : ''}
                 >

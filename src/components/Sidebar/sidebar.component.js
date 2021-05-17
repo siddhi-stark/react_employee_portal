@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import menu from '../../helper/menu';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
+import customFunctions from '../../helper/customFunctions';
 
 function Sidebar() {
   const history = useHistory();
@@ -57,15 +58,7 @@ function Sidebar() {
                       to={menuItem.path}
                       onClick={() => {
                         if (menuItem.title === 'Logout') {
-                          localStorage.removeItem('access_token');
-                          localStorage.removeItem('userId');
-                          localStorage.removeItem('headerDate');
-                          localStorage.removeItem('name');
-                          localStorage.removeItem('clockinTime');
-                          localStorage.removeItem('time');
-                          // localStorage.removeItem('password');
-                          // localStorage.removeItem('email');
-                          // localStorage.removeItem('checkbox');
+                          customFunctions.clearLocalStorage();
                           document.dispatchEvent(event);
                           dispatch({ type: 'LOGIN', value: false });
                           history.push('/login');

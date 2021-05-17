@@ -91,7 +91,7 @@ function AllReports() {
         setEmployeeName(report.user);
         const date = customFunctions.getDate(report.created_at);
         const dt = new Date(date).getTime();
-        row.push({
+        const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,
           date: customFunctions.getFormattedDate(report.created_at),
@@ -103,7 +103,8 @@ function AllReports() {
               <span>View Report</span>
             </a>
           ),
-        });
+        };
+        row.push(setRowData);
         return report;
       });
       setRows(row);
@@ -123,7 +124,7 @@ function AllReports() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (fromDate === '' && toDate === '') {
+    if (!fromDate && !toDate) {
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;

@@ -50,7 +50,7 @@ function Dashboard() {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data) {
       if (data.data.clock_in_time) {
-        localStorage.setItem('clockinTime', data.data.clock_in_time);
+        customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
         const stime = data.data.clock_in_time.split(' ');
         const newtime = stime[0];
         setSignInTime(newtime);
@@ -133,8 +133,10 @@ function Dashboard() {
                     <h1>
                       Welcome{' '}
                       <strong>
-                        {localStorage.getItem('name').split(' ')[0]
-                          ? localStorage.getItem('name').split(' ')[0]
+                        {customFunctions.getLocalStorage('name').split(' ')[0]
+                          ? customFunctions
+                              .getLocalStorage('name')
+                              .split(' ')[0]
                           : ''}
                         ,
                       </strong>
@@ -155,15 +157,19 @@ function Dashboard() {
                       </div>
                     )}
 
-                    {localStorage.getItem('time') && (
+                    {customFunctions.getLocalStorage('time') && (
                       <div className="time-count text-center">
                         <span>
-                          {localStorage.getItem('time').split(' ')[0]}
+                          {
+                            customFunctions
+                              .getLocalStorage('time')
+                              .split(' ')[0]
+                          }
                         </span>
                       </div>
                     )}
 
-                    {showClockButton === true && (
+                    {showClockButton && (
                       <Button
                         type="button"
                         className="btn btn-primary"
@@ -181,7 +187,7 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            {showClockButton === false && <ToDoList />}
+            {!showClockButton && <ToDoList />}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
