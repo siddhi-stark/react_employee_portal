@@ -66,6 +66,13 @@ $form-check-input-width: 1em !default;
     background-color: $primary;
     border-color: $primary;
 }
+.btn-secondary{
+    &:focus, &:active , &:hover {
+        color: #000000;
+        background-color: #e7e7e7;
+        border-color: #e6e6e6;
+    }
+}
 .form-group {
     .text-danger {
         color: #f00000 !important;
@@ -201,8 +208,12 @@ $font-family-sans-serif: Poppins, sans-serif;
     background-color: $info-blue !important;
 }
 .progress {
-    height: 0.7rem;
+    height: 1rem;
     background-color: #FAFAFA;
+    padding-left: 3px;
+    padding-right: 3px;
+    min-height: inherit;
+    box-shadow: none;
     .progress-bar {
         font-size: 9px;
         min-height: inherit;
@@ -2657,7 +2668,43 @@ table {
 
 
 
+/*.buttons .btn {
+    margin-right: 0;
+    min-width: 155px;
+    width: auto;
+    font-size: 14px !important;
+    min-height: 33px;
+}*/
 
+
+.swal-modal .swal-button--danger, .swal-modal .swal-button--confirm {
+    color: #ffffff;
+    background-color: #303160 ;
+    border-color: #303160;
+}
+.swal-modal .swal-button--danger:hover, .swal-modal .swal-button--danger:focus, .swal-modal .swal-button--confirm:hover, .swal-modal .swal-button--confirm:focus {
+    /*background-color: #303160;
+    border-color: #303160;*/
+    background-color: #292a52;
+    border-color: #26274d;
+    color: #ffffff;
+}
+
+.swal-modal {
+    .swal-button--cancel {
+        background-color: #E3E3E3 !important;
+        border-color: #E3E3E3 !important;
+        color: #000000 !important;
+        &:hover {
+            color: #000000 !important;
+            background-color: #e7e7e7 !important;
+            border-color: #e6e6e6 !important;
+        }
+    }
+}
+.swal-modal .swal-button {
+    color: #000000;
+}
 
 
 @media (min-width: 576px){

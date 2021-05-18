@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
@@ -7,14 +7,14 @@ import swal from 'sweetalert';
 import { TextInput, Helmet } from '../../../components/FormInputs';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
-
-const validator = new SimpleReactValidator();
+import customFunctions from '../../../helper/customFunctions';
 
 function ForgetPassword() {
-  // const history = useHistory();
+  const validator = useRef(new SimpleReactValidator());
   const [userData, setUserData] = useState({ email: '' });
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
+  const [disableButton, setDisableButton] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -34,9 +34,10 @@ function ForgetPassword() {
       email: userData.email,
     };
 
+    const postData = customFunctions.cleanObject(payload, 'O');
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.forgetPasswordUrl}`,
-      payload
+      postData
     );
 
     if (data) {
@@ -46,13 +47,27 @@ function ForgetPassword() {
     }
   };
 
-  const submitForm = (e) => {
+  // const submitForm = (e) => {
+  //   e.preventDefault();
+  //   if (validator.allValid()) {
+  //     onResetPasswordEmail();
+  //   } else {
+  //     validator.showMessages();
+  //     forceUpdate(count + 1);
+  //   }
+  // };
+
+  const validateForm = (e) => {
     e.preventDefault();
-    if (validator.allValid()) {
+    if (disableButton) return;
+
+    setDisableButton(true);
+    if (validator.current.allValid()) {
       onResetPasswordEmail();
     } else {
-      validator.showMessages();
+      validator.current.showMessages();
       forceUpdate(count + 1);
+      setDisableButton(false);
     }
   };
 
@@ -65,7 +80,7 @@ function ForgetPassword() {
             <Image src="images/logo-black.svg" />
           </a>
         </div>
-        <Form className="login-form">
+        <Form className="login-form" onSubmit={(e) => validateForm(e)}>
           <div className="title text-center">
             <h1>Recover Password</h1>
           </div>
@@ -78,7 +93,7 @@ function ForgetPassword() {
             onInputChange={(e) => handleInputChange(e)}
             value={userData.email}
             placeholder="Enter your Email and instructions will be sent to you!"
-            errorMessage={validator.message(
+            errorMessage={validator.current.message(
               'email',
               userData.email,
               'required|email'
@@ -88,7 +103,7 @@ function ForgetPassword() {
             <Button
               type="submit"
               className="btn btn-lg btn-primary"
-              onClick={(e) => submitForm(e)}
+              disabled={disableButton}
             >
               Reset
             </Button>

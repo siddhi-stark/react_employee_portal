@@ -128,6 +128,8 @@ function Designation() {
         title: 'Are you sure?',
         text: 'Are you sure, do you want to remove the designation ?',
         icon: 'warning',
+        confirmBtnBsStyle: 'btn btn-primary btn-lg',
+        cancelBtnBsStyle: 'btn btn-lg btn-secondary',
         dangerMode: true,
         buttons: true,
         closeOnClickOutside: false,

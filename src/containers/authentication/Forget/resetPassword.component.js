@@ -7,6 +7,7 @@ import { Form } from 'react-bootstrap';
 import { TextInput, Helmet } from '../../../components/FormInputs';
 import Api from '../../../helper/api';
 import AuthApi from '../../../helper/authApi';
+import customFunctions from '../../../helper/customFunctions';
 
 function ResetPassword(props) {
   const validator = useRef(
@@ -23,6 +24,7 @@ function ResetPassword(props) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
+  const [disableButton, setDisableButton] = useState(false);
   const dispatch = useDispatch();
 
   const verifyToken = async (tkn) => {
@@ -57,26 +59,34 @@ function ResetPassword(props) {
       confirm_password: confirmPassword,
     };
 
+    const postData = customFunctions.cleanObject(payload);
+
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.resetPasswordUrl}`,
-      payload
+      postData
     );
 
     if (data && data.success) {
+      setDisableButton(false);
       swal('Password changed successfully', '', 'success');
       props.history.push('/login');
     } else {
+      setDisableButton(true);
       swal(message, '', 'error');
     }
   };
 
   const validateForm = async (e) => {
     e.preventDefault();
+    if (disableButton) return;
+
+    setDisableButton(true);
     if (validator.current.allValid()) {
       setNewPassword();
     } else {
       validator.current.showMessages();
       forceUpdate(count + 1);
+      setDisableButton(false);
     }
   };
 
@@ -90,7 +100,11 @@ function ResetPassword(props) {
             <img src="/images/logo-black.svg" alt="img" />
           </a>
         </div>
-        <Form className="login-form" id="resetPassword">
+        <Form
+          className="login-form"
+          id="resetPassword"
+          onSubmit={(e) => validateForm(e)}
+        >
           <div className="title text-center">
             <h1>Reset Password</h1>
           </div>
@@ -144,7 +158,7 @@ function ResetPassword(props) {
             <a
               href="dashboard-default.html"
               className="btn btn-lg btn-primary"
-              onClick={(e) => validateForm(e)}
+              disabled={disableButton}
             >
               Reset
             </a>

@@ -30,6 +30,11 @@
   background-color: #303160;
   border-color: #303160; }
 
+.btn-secondary:focus, .btn-secondary:active, .btn-secondary:hover {
+  color: #000000;
+  background-color: #e7e7e7;
+  border-color: #e6e6e6; }
+
 .form-group .text-danger {
   color: #f00000 !important; }
 
@@ -4266,10 +4271,6 @@ textarea.form-control-lg {
   font-size: 0.75rem;
   background-color: #e9ecef;
   border-radius: 5px; }
-  
-  .progress.pbar {
-    height: 1.3rem !important;
-  }
 
 .progress-bar {
   display: -webkit-box;
@@ -8798,8 +8799,13 @@ textarea.form-control-lg {
   background-color: #24CBD3 !important; }
 
 .progress {
-  height: 0.7rem;
-  background-color: #FAFAFA; }
+  height: 1rem;
+  background-color: #FAFAFA;
+  padding-left: 3px;
+  padding-right: 3px;
+  min-height: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none; }
   .progress .progress-bar {
     font-size: 9px;
     min-height: inherit; }
@@ -10937,6 +10943,37 @@ table tfoot {
     border-radius: 7px 7px 0px 0px; }
   .content-area nav.nav.card-header-tabs.nav-tabs .nav-link {
     border-color: transparent; }
+
+/*.buttons .btn {
+    margin-right: 0;
+    min-width: 155px;
+    width: auto;
+    font-size: 14px !important;
+    min-height: 33px;
+}*/
+.swal-modal .swal-button--danger, .swal-modal .swal-button--confirm {
+  color: #ffffff;
+  background-color: #303160;
+  border-color: #303160; }
+
+.swal-modal .swal-button--danger:hover, .swal-modal .swal-button--danger:focus, .swal-modal .swal-button--confirm:hover, .swal-modal .swal-button--confirm:focus {
+  /*background-color: #303160;
+    border-color: #303160;*/
+  background-color: #292a52;
+  border-color: #26274d;
+  color: #ffffff; }
+
+.swal-modal .swal-button--cancel {
+  background-color: #E3E3E3 !important;
+  border-color: #E3E3E3 !important;
+  color: #000000 !important; }
+  .swal-modal .swal-button--cancel:hover {
+    color: #000000 !important;
+    background-color: #e7e7e7 !important;
+    border-color: #e6e6e6 !important; }
+
+.swal-modal .swal-button {
+  color: #000000; }
 
 @media (min-width: 576px) {
   .bd-content .highlight {

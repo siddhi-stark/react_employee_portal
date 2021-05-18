@@ -538,7 +538,7 @@ function ToDoList() {
         size="md"
         centered
         show={showBreak}
-        label={<Button variant="primary">Add Break</Button>}
+        label={<h4 variant="primary">Add Break</h4>}
         id="contained-modal-title-vcenter"
         modalBody={
           <Form>
