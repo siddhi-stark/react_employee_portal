@@ -17,6 +17,8 @@ function Dashboard() {
   const [pending, setPending] = useState('');
   const [remaining, setRemaining] = useState('');
   const [rows, setRows] = useState([]);
+  const [employeeName, setEmployeeName] = useState('');
+  const [time, setTime] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -48,7 +50,7 @@ function Dashboard() {
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
-    if (data) {
+    if (!customFunctions.checkIfEmpty(data, 'O')) {
       if (data.data.clock_in_time) {
         customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
         const stime = data.data.clock_in_time.split(' ');
@@ -65,7 +67,7 @@ function Dashboard() {
 
   const getTimeSheetList = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}`);
-    if (data && data.data) {
+    if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
@@ -91,7 +93,7 @@ function Dashboard() {
   const getClockInTime = async () => {
     const endPoint = `${Api.clockInUrl}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setSignInTime(data.data.sign_in_time);
     }
     getDailyActivity();
@@ -100,7 +102,7 @@ function Dashboard() {
   const getWeeklyStatus = async () => {
     const endPoint = `${Api.weeklyStatusUrl}?mode=this_week`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
+    if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setCompleted(data.data.completed);
       setPending(data.data.pending);
       setRemaining(data.data.upcoming);
@@ -112,6 +114,10 @@ function Dashboard() {
     getWeeklyStatus();
     getTimeSheetList();
     setTitle('Dashboard');
+    const empName = customFunctions.getLocalStorage('name');
+    const localTime = customFunctions.getLocalStorage('time');
+    setEmployeeName(empName);
+    setTime(localTime);
   }, []);
 
   return (
@@ -133,10 +139,8 @@ function Dashboard() {
                     <h1>
                       Welcome{' '}
                       <strong>
-                        {customFunctions.getLocalStorage('name').split(' ')[0]
-                          ? customFunctions
-                              .getLocalStorage('name')
-                              .split(' ')[0]
+                        {employeeName.split(' ')[0]
+                          ? employeeName.split(' ')[0]
                           : ''}
                         ,
                       </strong>
@@ -157,15 +161,9 @@ function Dashboard() {
                       </div>
                     )}
 
-                    {customFunctions.getLocalStorage('time') && (
+                    {time && (
                       <div className="time-count text-center">
-                        <span>
-                          {
-                            customFunctions
-                              .getLocalStorage('time')
-                              .split(' ')[0]
-                          }
-                        </span>
+                        <span>{time.split(' ')[0]}</span>
                       </div>
                     )}
 
@@ -218,11 +216,6 @@ function Dashboard() {
                     </div>
                   </Col>
                 </Row>
-                {/* <div className="last-week">
-                  <a href="#">
-                    <img src="/images/previous.svg" alt="" /> Last Week
-                  </a>
-                </div> */}
               </Card.Body>
             </Card>
             <div className="table-projects time-sheet-table">

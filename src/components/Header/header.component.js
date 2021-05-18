@@ -3,16 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function Header() {
   const date = new Date().toDateString().split(' ');
   const formattedDate = `${date[0]}, ${date[1]} ${date[2]} ${date[3]} `;
-  // const formattedDate = date.toLocaleString('en-US', {
-  //   weekday: 'short',
-  //   day: 'numeric',
-  //   year: 'numeric',
-  //   month: 'long'
-  // });
   const [designation, setDesignation] = useState('');
   const [empId, setEmpId] = useState('');
   const [employeeName, setEmployeeName] = useState('');
@@ -33,9 +28,6 @@ function Header() {
       setEmpId(data.data.emp_code);
       setEmployeeName(data.data.full_name);
       setImageProfile(data.data.profile_image_url);
-      // } else {
-      //   swal(message, '', 'error');
-      // }
     }
     return true;
   };
@@ -57,7 +49,6 @@ function Header() {
       ) {
         history.push('/login');
       }
-      // return false;
     } else {
       dispatch({ type: 'LOGIN', value: true });
     }
@@ -70,7 +61,10 @@ function Header() {
           <div className="main-header-left">
             {localStorage.getItem('time') ? (
               <div className="d-flex justify-content-start clock-in-time">
-                <h7>You are clocked out at {localStorage.getItem('time')} </h7>
+                <h7>
+                  You are clocked out at{' '}
+                  {customFunctions.getLocalStorage('time')}{' '}
+                </h7>
               </div>
             ) : (
               ''
@@ -79,7 +73,8 @@ function Header() {
           {localStorage.getItem('clockinTime') ? (
             <div className="d-flex justify-content-end clock-in-time">
               <h7>
-                You are clocked in at {localStorage.getItem('clockinTime')}{' '}
+                You are clocked in at{' '}
+                {customFunctions.getLocalStorage('clockinTime')}{' '}
               </h7>
             </div>
           ) : (
@@ -128,16 +123,6 @@ function Header() {
                         My Profile
                       </a>
                     </li>
-                    {/* <li>
-                      <a className="dropdown-item" href="#">
-                        <img
-                          src="/images/edit.svg"
-                          alt="Edit"
-                          className="svg"
-                        />{' '}
-                        Edit Profile
-                      </a>
-                    </li> */}
                     <li>
                       <a className="dropdown-item" href="/manage-password">
                         <img
@@ -153,12 +138,7 @@ function Header() {
                         className="dropdown-item"
                         href="#"
                         onClick={() => {
-                          localStorage.removeItem('access_token');
-                          localStorage.removeItem('checkbox');
-                          localStorage.removeItem('email');
-                          localStorage.removeItem('password');
-                          localStorage.removeItem('group');
-                          localStorage.removeItem('userId');
+                          customFunctions.cleanStorage();
                           document.dispatchEvent(event);
                           dispatch({ type: 'LOGIN', value: false });
                           history.push('/login');

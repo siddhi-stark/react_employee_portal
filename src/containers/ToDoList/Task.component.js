@@ -63,7 +63,7 @@ function Task(props) {
   }, []);
 
   useEffect(() => {
-    const taskId = localStorage.getItem('taskid');
+    const taskId = customFunctions.getLocalStorage('taskid');
     setId(taskId);
     if (props.edit) {
       getTaskById(taskId);
@@ -88,9 +88,11 @@ function Task(props) {
       };
     }
 
+    const payload = customFunctions.cleanObject(postData);
+
     const callback = id ? AuthApi.putDataToServer : AuthApi.postDataToServer;
     const endPoint = id ? `${Api.taskUrl}${id}/` : Api.taskUrl;
-    const { data } = await callback(endPoint, id ? obj : postData);
+    const { data } = await callback(endPoint, id ? obj : payload);
 
     if (data) {
       props.handleModalCLose(false);
@@ -145,7 +147,11 @@ function Task(props) {
         label="Add Task"
         id="contained-modal-title-vcenter"
         modalBody={
-          <Form>
+          <Form
+            onSubmit={(e) => {
+              onSubmit(e);
+            }}
+          >
             <Row>
               <Col sm={6}>
                 <TextInput
@@ -239,15 +245,9 @@ function Task(props) {
                     differenceInTasksTime -= taskMinutes * 60;
                     let taskHourDifference = '';
                     let taskMinDifference = '';
-                    taskHourDifference +=
-                      taskHours === 0 || taskHours === 1
-                        ? `${taskHours} `
-                        : `${taskHours} `;
+                    taskHourDifference += `${taskHours} `;
 
-                    taskMinDifference +=
-                      taskMinutes === 0 || taskMinutes === 1
-                        ? `${taskMinutes}`
-                        : `${taskMinutes}`;
+                    taskMinDifference += `${taskMinutes}`;
                     setTaskHours(taskHourDifference);
                     setTaskMinutes(taskMinDifference);
                   }}
@@ -294,24 +294,15 @@ function Task(props) {
                 </div>
               </Col>
             </Row>
+            <div className="float-end">
+              <Button variant="secondary" onClick={() => onTaskCancel()}>
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit" className="ms-4">
+                {id ? 'Update' : 'Add'}
+              </Button>
+            </div>
           </Form>
-        }
-        modalFooter={
-          <div className="float-end">
-            <Button variant="secondary" onClick={() => onTaskCancel()}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              className="ms-4"
-              onClick={(e) => {
-                onSubmit(e);
-              }}
-            >
-              {id ? 'Update' : 'Add'}
-            </Button>
-          </div>
         }
       />
     </>

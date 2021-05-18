@@ -15,7 +15,6 @@ const items = [
 
 function AllReports() {
   const [rows, setRows] = useState([]);
-  // const [userId, setUserId] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
@@ -269,9 +268,6 @@ function AllReports() {
             </Card.Body>
           </Card>
         </div>
-        {/* { showDailyReport && (
-        <DashboardNew  dailyReport={(e) => setShowDailyReport(e)} />
-      ) } */}
       </section>
     </>
   );

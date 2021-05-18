@@ -12,7 +12,6 @@ import {
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import { TextInput, Helmet } from '../../components/FormInputs';
-// import Table from '../../components/Table/simpletable.component';
 import ReactTable from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -44,6 +43,12 @@ function Designation() {
   let timmer = null;
   const columns = [
     {
+      id: 'id',
+      label: 'Id',
+      roleAccess: [1],
+      isDisplay: false,
+    },
+    {
       id: 'no',
       label: 'Sr. No',
       roleAccess: [1],
@@ -57,7 +62,7 @@ function Designation() {
       id: 'action',
       label: 'Action',
       roleAccess: [1],
-      render: ({ no, name }) => {
+      render: ({ id, name }) => {
         return (
           <>
             <a
@@ -66,7 +71,7 @@ function Designation() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                setDesignationId(no);
+                setDesignationId(id);
                 setDesignation(name);
               }}
             >
@@ -78,7 +83,7 @@ function Designation() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                removeDesignation(no);
+                removeDesignation(id);
               }}
             >
               <Image src="images/delete.png" alt="Delete Designation" />
@@ -114,6 +119,7 @@ function Designation() {
       data.data.map((desgn, i) => {
         row.push({
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
+          id: desgn.id,
           name: desgn.name,
         });
         return desgn;
@@ -246,7 +252,7 @@ function Designation() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (searchKeyword === '') {
+    if (!searchKeyword) {
       filterSearchErr = 'Please enter keyword';
       setFilterErr(filterSearchErr);
       isValid = false;

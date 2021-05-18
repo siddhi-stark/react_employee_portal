@@ -18,7 +18,6 @@ const items = [
 
 function Profile() {
   const [date, setDate] = useState('');
-  // const [employeeId, setEmployeeId] = useState('');
   const [companyEmail, setEmail] = useState('');
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
@@ -35,7 +34,6 @@ function Profile() {
   const [imageProfile, setImageProfile] = useState('');
   const [image, setImage] = useState('');
   const [profileId, setProfileId] = useState('');
-  // const [imageFile, setImageFile] = useState('');
 
   const Department = [
     {
@@ -79,13 +77,6 @@ function Profile() {
       setSelectedDepartment(data.data.deparment_name);
       setImage(data.data.profile_image_url);
       setProfileId(data.data.profile_id);
-      // Department.map((dept) => {
-      //   if (data.data.department_id === dept.id) {
-      //     setSelectedDepartment(dept);
-      //   }
-      //   return dept;
-      // });
-
       data.data.assigned_managers.map((assgnmgmr) => {
         setSelectedManager(assgnmgmr.report_head__full_name);
         return assgnmgmr;
@@ -114,12 +105,6 @@ function Profile() {
     }
     getData();
   }, []);
-
-  // useEffect(() => {
-  //   if (userId) {
-  //     getProfile();
-  //   }
-  // }, [userId]);
 
   const onCancel = () => {
     setModalShow(false);
@@ -159,9 +144,11 @@ function Profile() {
       payload.profile = await uploadFile();
     }
 
+    const postData = customFunctions.cleanObject(payload);
+
     const { data } = await AuthApi.putDataToServer(
       `${Api.profileUrl}`,
-      payload
+      postData
     );
     if (data) {
       setModalShow(false);
@@ -232,7 +219,6 @@ function Profile() {
                       e.stopPropagation();
                       setModalShow(true);
                       getProfile();
-                      // setCntClearFilter(cntClearFilter + 1);
                     }}
                   >
                     Edit Profile
@@ -251,9 +237,6 @@ function Profile() {
                   style={{ height: '70px' }}
                 >
                   <img src={imageProfile} alt="Edit Profile" />
-                  {/* <div className="profile-edit">
-                    <img src="/images/edit-profile.svg" alt="" />
-                  </div> */}
                 </div>
               </Col>
               <Col sm={9}>
@@ -282,7 +265,6 @@ function Profile() {
                 <Row>
                   <Col sm={4}>
                     <TextInput
-                      // onInputChange={(e) => setDate(e.target.value)}
                       label="Joining Date"
                       containerClass="form-group"
                       type="date"
@@ -293,7 +275,6 @@ function Profile() {
                   </Col>
                   <Col sm={2}>
                     <TextInput
-                      // onInputChange={(e) => setEmployeeId(e.target.value)}
                       label="Employee Id"
                       containerClass="form-group"
                       type="employeeId"
@@ -358,12 +339,11 @@ function Profile() {
       <ModalInput
         size="md"
         centered
-        // className="small-popup"
         show={modalShow}
         label={<h4>Edit Profile</h4>}
         id="contained-modal-title-vcenter"
         modalBody={
-          <Form>
+          <Form onSubmit={(e) => updateProfile(e)}>
             <Row>
               <Col sm={12}>
                 <TextInput
@@ -440,22 +420,15 @@ function Profile() {
                 </Row>
               </Col>
             </Row>
+            <div className="float-end">
+              <Button variant="secondary" onClick={() => onCancel()}>
+                Cancel
+              </Button>
+              <Button variant="primary" type="submit" className="ms-4">
+                Update
+              </Button>
+            </div>
           </Form>
-        }
-        modalFooter={
-          <div className="float-end">
-            <Button variant="secondary" onClick={() => onCancel()}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              className="ms-4"
-              onClick={(e) => updateProfile(e)}
-            >
-              Update
-            </Button>
-          </div>
         }
       />
       <section className="content-area" />

@@ -106,9 +106,9 @@ function Projects() {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const id = localStorage.getItem('userId');
+    const id = customFunctions.getLocalStorage('userId');
     const api = `${Api.getProjects}`;
-    const group = localStorage.getItem('group');
+    const group = customFunctions.getLocalStorage('group');
 
     const params = {
       page,

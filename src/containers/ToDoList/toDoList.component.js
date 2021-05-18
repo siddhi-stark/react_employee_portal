@@ -66,8 +66,6 @@ function ToDoList() {
   const [min, setMinutes] = useState('');
 
   const [taskId, setTaskId] = useState(null);
-  // const [staticStartTime, setStaticStartTime] = useState(new Date());
-  // const [staticEndTime, setStaticEndTime] = useState(new Date());
   const [staticHrs, setStaticHours] = useState(''); // eslint-disable-line
   const [staticMin, setStaticMinutes] = useState(''); // eslint-disable-line
   const [morningMail, setMorningMail] = useState(false);
@@ -342,7 +340,6 @@ function ToDoList() {
   const onBreakSubmit = (e) => {
     e.preventDefault();
     if (startTime && endTime) {
-      // setShowBreak(false);
       onComfirm();
       setStartTime('');
       setEndTime('');
@@ -541,7 +538,11 @@ function ToDoList() {
         label={<h4 variant="primary">Add Break</h4>}
         id="contained-modal-title-vcenter"
         modalBody={
-          <Form>
+          <Form
+            onClick={(e) => {
+              onSendScrum(e);
+            }}
+          >
             <div className="add-break d-flex align-items-center justify-content-between">
               <h3 className="mb-1">Add Break</h3>
               <button
@@ -552,101 +553,6 @@ function ToDoList() {
                 Add Break
               </button>
             </div>
-            {/* <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
-              <label htmlFor="exampleFormControlSelect1">
-                Break Type <sup className="text-danger">*</sup>
-              </label>
-              <div className="skip-form">
-                <a
-                  href="/"
-                  className="pl-2"
-                  onClick={(e) => {
-                    setShowSkipBreak(true);
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
-                >
-                  <img src="images/skip.svg" alt="skip" />
-                </a>
-              </div>
-            </div> */}
-            {/* <Row>
-              <DropdownInput
-                options={getBreakTypes()}
-                asterisk="*"
-                value={selectedBreakOption}
-                onSelectHandler={(select) => {
-                  setSelectedBreakOption(select);
-                }}
-                errorMessage={validator.message(
-                  'selectedBreakOption',
-                  selectedBreakOption,
-                  'required'
-                )}
-              />
-            </Row> */}
-            {/* <Row>
-              <Col sm={4}>
-                <Datepicker
-                  className="form-control"
-                  label="StartTime"
-                  selected={staticStartTime}
-                  onChange={(e) => {
-                    setStaticStartTime(e);
-                  }}
-                  showTimeSelect="showTimeSelect"
-                  showTimeSelectOnly="showTimeSelectOnly"
-                  timeIntervals="1"
-                  dateFormat="h:mm aa"
-                />
-              </Col>
-              <Col md={4}>
-                <Datepicker
-                  className="form-control"
-                  label="EndTime"
-                  selected={staticEndTime}
-                  onChange={(e) => {
-                    setStaticEndTime(e);
-                    const endTimeNew = new Date(e);
-                    const startTimeNew = new Date(startTime);
-                    let differenceInTime =
-                      Math.abs(endTimeNew.getTime() - startTimeNew.getTime()) /
-                      1000;
-
-                    const hours = Math.floor(differenceInTime / 3600) % 24;
-                    differenceInTime -= hours * 3600;
-
-                    const minutes = Math.floor(differenceInTime / 60) % 60;
-                    differenceInTime -= minutes * 60;
-                    let hourDifference = '';
-                    let minDifference = '';
-                    hourDifference +=
-                      hours === 0 || hours === 1 ? `${hours} ` : `${hours} `;
-
-                    minDifference +=
-                      minutes === 0 || hours === 1
-                        ? `${minutes}`
-                        : `${minutes}`;
-                    setStaticHours(hourDifference);
-                    setStaticMinutes(minDifference);
-                  }}
-                  showTimeSelect="showTimeSelect"
-                  showTimeSelectOnly="showTimeSelectOnly"
-                  timeIntervals="1"
-                  dateFormat="h:mm aa"
-                />
-              </Col>
-              <Col md={4}>
-                <TextInput
-                  label="Time Spent"
-                  containerClass="form-group"
-                  type="text"
-                  disabled
-                  name="designationtitle"
-                  value={`${hrs} : ${min}`}
-                />
-              </Col>
-            </Row> */}
             {breakData &&
               breakData.length > 0 &&
               breakData.map((data, i) => (
@@ -773,24 +679,15 @@ function ToDoList() {
                   </Row>
                 </>
               ))}
+            <div className="float-end">
+              <Button variant="secondary" onClick={(e) => onBreakSubmit(e)}>
+                Confirm
+              </Button>
+              <Button variant="primary" type="submit" className="ms-4">
+                Send Report
+              </Button>
+            </div>
           </Form>
-        }
-        modalFooter={
-          <div className="float-end">
-            <Button variant="secondary" onClick={(e) => onBreakSubmit(e)}>
-              Confirm
-            </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              className="ms-4"
-              onClick={(e) => {
-                onSendScrum(e);
-              }}
-            >
-              Send Report
-            </Button>
-          </div>
         }
       />
       <ModalInput

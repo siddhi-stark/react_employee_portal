@@ -36,7 +36,7 @@ export default function ModalComponent(props) {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>{modalBody}</Modal.Body>
-          <Modal.Footer>{modalFooter}</Modal.Footer>
+          {modalFooter && <Modal.Footer>{modalFooter}</Modal.Footer>}
         </div>
       </Modal>
     </>

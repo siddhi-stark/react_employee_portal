@@ -139,8 +139,6 @@ function TeamReport() {
   useEffect(() => {
     async function getData() {
       getReports(1);
-      // const Id = localStorage.getItem('userId');
-      // setUserId(Id);
       setTitle('Team Report');
       getEmployee();
     }
@@ -178,7 +176,7 @@ function TeamReport() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (fromDate === '' && toDate === '' && selectedEmployee === '') {
+    if (!fromDate && !toDate && !selectedEmployee) {
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;

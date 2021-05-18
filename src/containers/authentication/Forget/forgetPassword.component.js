@@ -47,16 +47,6 @@ function ForgetPassword() {
     }
   };
 
-  // const submitForm = (e) => {
-  //   e.preventDefault();
-  //   if (validator.allValid()) {
-  //     onResetPasswordEmail();
-  //   } else {
-  //     validator.showMessages();
-  //     forceUpdate(count + 1);
-  //   }
-  // };
-
   const validateForm = (e) => {
     e.preventDefault();
     if (disableButton) return;
@@ -86,7 +76,6 @@ function ForgetPassword() {
           </div>
           <TextInput
             inputIcon="images/user.svg"
-            // containerClass="form-group"
             inputClass="form-control form-control-lg"
             type="email"
             name="email"

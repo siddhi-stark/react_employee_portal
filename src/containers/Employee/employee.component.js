@@ -32,7 +32,6 @@ const items = [
 ];
 
 const currentdate = new Date();
-// const currentYear = currentdate.getFullYear();
 const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
 
 function Employee() {
@@ -59,10 +58,8 @@ function Employee() {
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedTeamLead, setSelectedTeamLead] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState('');
-  // const [validationDate, setValidationDate] = useState('');
   const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
-  // const [empId, setEmpId] = useState('');
   const [title, setTitle] = useState('');
   const [userRole, setUserRole] = useState('');
   const [filterErr, setFilterErr] = useState('');
@@ -141,8 +138,6 @@ function Employee() {
                 e.stopPropagation();
                 setModalShow(true);
                 setEmployeeId(id);
-
-                // setEmpId(id);
                 getEmployeeById(id);
                 setCntClearFilter(cntClearFilter + 1);
               }}
@@ -157,7 +152,6 @@ function Employee() {
                 e.stopPropagation();
                 setEmployeeId(id);
                 deleteEmployee(id);
-                // removeDesignation(desgn.id); //eslint-disable-line
               }}
             >
               <Image src="images/delete.png" />
@@ -169,8 +163,6 @@ function Employee() {
   ];
 
   const getTableData = async (pageNo = 0) => {
-    // let endPoint;
-    // const hasSearch = (keyword !== '');
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`;
 
@@ -212,12 +204,11 @@ function Employee() {
       `${Api.employeeUrl}${id}/`
     );
 
-    if (data && data.data) {
+    if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
       const managerList = [];
 
       teamLead.map((team) => {
         data.data.assigned_team_leads.map((assign) => {
-          // (team.id === assign)? setSelectedTeamLead()
           if (team.id === assign) {
             setSelectedTeamLead({
               id: team.id,
@@ -271,7 +262,6 @@ function Employee() {
 
       setFullName(data.data.full_name);
       setEmail(data.data.email);
-      // setDate(data.data.dob ? data.data.dob : '');
       setPassword(data.data.password);
       setMobile(data.data.mobile);
     }
@@ -337,7 +327,6 @@ function Employee() {
     async function getData() {
       const uRole = localStorage.getItem('group');
       setUserRole(Number(uRole));
-      // getTableData(1);
       getDesignation();
       getTwEmployee();
       getRole();
@@ -410,14 +399,6 @@ function Employee() {
 
   const addEmployee = async () => {
     const teamIdList = [];
-    // if (Object.keys(selectedTeamLead).length > 0) {
-    //   teamIdList.push(selectedTeamLead.id);
-    //   console.log('teamlead',selectedTeamLead.id);
-    //   // selectedTeamLead.map((team) => {
-    //   //     teamIdList.push(team.id);
-    //   //     return team;
-    //   //   });
-    // }
     if (selectedTeamLead) {
       teamIdList.push(selectedTeamLead.id);
     }
@@ -434,7 +415,6 @@ function Employee() {
       full_name: fullName,
       email,
       mobile,
-      // designation_id: selectedDesignationOption.id,
       role: selectedRole.id,
       password,
       team_leads: teamIdList,
@@ -454,13 +434,17 @@ function Employee() {
       postData.tw_emp = isFind.tw_id;
       if (employeeId) postData.tw_emp = isFind.tw_id;
     }
+
+    const payload = customFunctions.cleanObject(postData);
+
     const callback = employeeId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
     const endPoint = employeeId
       ? `${Api.employeeUrl}${employeeId}/`
       : Api.employeeUrl;
-    const { data } = await callback(endPoint, postData);
+
+    const { data } = await callback(endPoint, payload);
     if (data) {
       setSelectedDesignationOption();
       setSelectedRole();
@@ -514,7 +498,6 @@ function Employee() {
     twEmployee.map((emp) => {
       return options.push({
         label: emp.full_name,
-        // id: desgn.id,
       });
     });
     return options;
@@ -594,7 +577,6 @@ function Employee() {
   return (
     <>
       <Helmet title={title} />
-      {/* {console.log('validationDate',validationDate)} */}
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
         <Breadcrumb items={items} />
@@ -719,12 +701,15 @@ function Employee() {
         label={employeeId ? 'Update Employee' : 'Add Employee'}
         id="contained-modal-title-vcenter"
         modalBody={
-          <Form>
+          <Form
+            onSubmit={(e) => {
+              onSubmit(e);
+            }}
+          >
             <Row>
               <Col sm={6}>
                 <DropdownInput
                   label="TW Employee"
-                  // asterisk="*"
                   options={getEmployeeList()}
                   placeholder="Select Employee"
                   defaultValue={selectedEmployee}
@@ -732,15 +717,6 @@ function Employee() {
                     setSelectedEmployee(select);
                     updateData(select);
                   }}
-                  // errorMessage={
-                  //   selectedEmployee && selectedEmployee > 0
-                  //     ? validator.message(
-                  //         'setSelectedEmployee',
-                  //         selectedDesignationOption,
-                  //         'required'
-                  //       )
-                  //     : ''
-                  // }
                 />
               </Col>
               <Col sm={6}>
@@ -774,7 +750,6 @@ function Employee() {
                   asterisk="*"
                   containerClass="form-group"
                   type="text"
-                  // name="emailTitle"
                   value={email}
                   placeholder="Enter email"
                   errorMessage={validator.message('email', email, 'required')}
@@ -790,11 +765,6 @@ function Employee() {
                     name="passwordTitle"
                     value={password}
                     placeholder="Enter Password"
-                    // errorMessage={validator.message(
-                    //   'password',
-                    //   password,
-                    //   'required'
-                    // )}
                   />
                 </Col>
               )}
@@ -856,7 +826,6 @@ function Employee() {
               <Col sm={6}>
                 <DropdownInput
                   label="Manager"
-                  // asterisk="*"
                   options={getManagerList()}
                   placeholder="Select Manager"
                   defaultValue={selectedManager}
@@ -864,15 +833,6 @@ function Employee() {
                   onSelectHandler={(select) => {
                     setSelectedManager(select);
                   }}
-                  // errorMessage={
-                  //   selectedManager && selectedManager > 0
-                  //     ? validator.message(
-                  //         'Manager',
-                  //         selectedDesignationOption,
-                  //         'required'
-                  //       )
-                  //     : ''
-                  // }
                 />
               </Col>
             </Row>
@@ -880,42 +840,19 @@ function Employee() {
               <Col sm={6}>
                 <DropdownInput
                   label="Teamlead"
-                  // asterisk="*"
                   options={getTeamLeadList()}
                   placeholder="Select TeamLead"
                   defaultValue={selectedTeamLead}
                   onSelectHandler={(select) => setSelectedTeamLead(select)}
-                  // errorMessage={
-                  //   selectedTeamLead && selectedTeamLead > 0
-                  //     ? validator.message(
-                  //         'TeamLead',
-                  //         selectedDesignationOption,
-                  //         'required'
-                  //       )
-                  //     : ''
-                  // }
                 />
               </Col>
               <Col sm={6}>
-                {/* <TextInput
-                    onInputChange={(e) => setDate(e.target.value)}
-                    label="DOB"
-                    // asterisk="*"
-                    containerClass="form-group"
-                    type="date"
-                    name="DOB"
-                    value={date}
-                    // placeholder="Enter Contact Number"
-                    // errorMessage={validator.message('DOB', mobile, 'required')}
-                  /> */}
-
                 <Datepicker
                   label="DOB"
                   className="form-control"
                   selected={date}
                   placeholder="MM-DD-YYYY"
                   maxDate={maxdate}
-                  // minDate={new Date('2-10-2020')}
                   onChange={(e) => {
                     setDate(e);
                   }}
@@ -931,41 +868,24 @@ function Employee() {
               <Col sm={6}>
                 <DropdownInput
                   label="Department"
-                  // asterisk="*"
                   options={getDepartment()}
                   placeholder="Select Department"
                   defaultValue={selectedDepartment}
                   onSelectHandler={(select) => setSelectedDepartment(select)}
-                  // errorMessage={
-                  //   selectedDepartment && selectedDepartment.length > 0
-                  //     ? validator.message(
-                  //         'Department',
-                  //         selectedDesignationOption,
-                  //         'required'
-                  //       )
-                  //     : ''
-                  // }
                   isMulti={false}
                 />
               </Col>
             </Row>
-          </Form>
-        }
-        modalFooter={
-          <div className="float-end">
-            <Button variant="secondary" onClick={() => onCancel()}>
-              Cancel
-            </Button>
+            <div className="float-end">
+              <Button variant="secondary" onClick={() => onCancel()}>
+                Cancel
+              </Button>
 
-            <Button
-              variant="primary"
-              type="submit"
-              className="ms-4"
-              onClick={(e) => onSubmit(e)}
-            >
-              {employeeId ? 'Update' : 'Add'}
-            </Button>
-          </div>
+              <Button variant="primary" type="submit" className="ms-4">
+                {employeeId ? 'Update' : 'Add'}
+              </Button>
+            </div>
+          </Form>
         }
       />
     </>

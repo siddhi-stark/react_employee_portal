@@ -2,37 +2,8 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Button, Row, Col, Card, Jumbotron } from 'react-bootstrap';
 import Breadcrumb from '../Breadcrumb/breadcrumb.component';
-// import Employee from '../../containers/Employee/employee.component';
 
 function DashboardNew() {
-  // const [showReport, setShowReport] = useState(false);
-
-  // function updateReport() {
-  //   const url = window.location.pathname;
-  //   if (url === '/reports') {
-  //     console.log('urlNew', url);
-  //     setShowReport(true);
-  //   }
-  //   else{
-  //     setShowReport(!showReport);
-  //   }
-  // }
-  // const history = useHistory();
-
-  // useEffect(() => {
-  //   return history.listen((location) => {
-  //     if (location.pathname === '/allreports') {
-  //       setShowReport(true);
-  //     } else {
-  //       setShowReport(false);
-  //     }
-  //   });
-  // }, [history]);
-
-  // useEffect(() => {
-  //   updateReport();
-  // }, [])
-
   return (
     <>
       <div className="page-header">
@@ -76,24 +47,6 @@ function DashboardNew() {
                 </Col>
               </Row>
             </Jumbotron>
-
-            {/* {showEmployee === true   ? (
-              <Employee />
-            ) : (
-              ''
-            )} */}
-            {/* {showProject === true &&
-            showDesignation === false &&
-            showEmployee === false ? (
-              <Projects />
-            ) : (
-              ''
-            )} */}
-
-            {/* {showDesignation === true ? <Designations /> : <Projects  />}
-            {(!showDesignation && showEmployee) && (
-              <Employee />
-            )} */}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">

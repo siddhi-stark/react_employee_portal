@@ -62,12 +62,15 @@ function Login(props) {
         'access_token',
         data.data.token.access_token
       );
-      await localStorage.setItem('access_token', data.data.token.access_token);
-      await localStorage.setItem('email', data.data.email);
-      await localStorage.setItem('userId', data.data.id);
-      await localStorage.setItem('password', password);
-      await localStorage.setItem('group', data.data.group);
-      await localStorage.setItem('name', data.data.full_name);
+      await CustomFunctions.setLocalStorage(
+        'access_token',
+        data.data.token.access_token
+      );
+      await CustomFunctions.setLocalStorage('email', data.data.email);
+      await CustomFunctions.setLocalStorage('userId', data.data.id);
+      await CustomFunctions.setLocalStorage('password', password);
+      await CustomFunctions.setLocalStorage('group', data.data.group);
+      await CustomFunctions.setLocalStorage('name', data.data.full_name);
       dispatch({ type: 'LOGIN', value: true });
 
       setTimeout(async () => {

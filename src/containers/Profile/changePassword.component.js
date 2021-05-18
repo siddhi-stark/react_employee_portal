@@ -7,6 +7,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { TextInput, Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import customFunctions from '../../helper/customFunctions';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -27,6 +28,7 @@ function ManagePassword() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
+  const [disableButton, setDisableButton] = useState(false);
 
   useEffect(() => {
     setTitle('Change Password');
@@ -38,9 +40,12 @@ function ManagePassword() {
       password,
       confirm_password: confirmPassword,
     };
+
+    const postData = customFunctions.cleanObject(payload);
+
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.changePasswordUrl}`,
-      payload
+      postData
     );
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
@@ -54,13 +59,17 @@ function ManagePassword() {
     }
   };
 
-  const validateForm = async (e) => {
+  const validateForm = (e) => {
     e.preventDefault();
+    if (disableButton) return;
+
+    setDisableButton(true);
     if (validator.current.allValid()) {
       setNewPassword();
     } else {
       validator.current.showMessages();
       forceUpdate(count + 1);
+      setDisableButton(false);
     }
   };
 
@@ -80,7 +89,7 @@ function ManagePassword() {
               <h4 className="text-primary mt-2 mb-2">Change Password</h4>
             </Card.Header>
             <Card.Body>
-              <Form autoComplete="off">
+              <Form autoComplete="off" onClick={(e) => validateForm(e)}>
                 <Row>
                   <Col className="col-md-4">
                     <TextInput
@@ -153,7 +162,7 @@ function ManagePassword() {
                     variant="primary"
                     type="submit"
                     className="ms-4"
-                    onClick={(e) => validateForm(e)}
+                    disabled={disableButton}
                   >
                     Save
                   </Button>

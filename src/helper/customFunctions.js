@@ -59,9 +59,6 @@ class CustomFunctions extends Component {
 
   localStorageClear = () => {
     this.removeLocalStorage('access_token');
-    // this.removeLocalStorage('checkbox');
-    // this.removeLocalStorage('email');
-    // this.removeLocalStorage('password');
     this.removeLocalStorage('group');
     this.removeLocalStorage('userId');
   };
@@ -73,6 +70,15 @@ class CustomFunctions extends Component {
     this.removeLocalStorage('name');
     this.removeLocalStorage('clockinTime');
     this.removeLocalStorage('time');
+  };
+
+  cleanStorage = () => {
+    this.removeLocalStorage('access_token');
+    this.removeLocalStorage('checkbox');
+    this.removeLocalStorage('email');
+    this.removeLocalStorage('password');
+    this.removeLocalStorage('group');
+    this.removeLocalStorage('userId');
   };
 
   setLocalStorage = (key, value) => {
@@ -132,9 +138,6 @@ class CustomFunctions extends Component {
     script.src = src;
     script.type = 'text/javascript';
     script.async = false;
-    // script.type = "text/babel";
-    // script.type = "text/jsx";
-    //  document.getElementsByClassName("wrapper")[0].appendChild(script);
     await document.body.appendChild(script);
   };
 
