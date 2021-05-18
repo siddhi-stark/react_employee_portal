@@ -141,7 +141,7 @@ function ToDoList() {
           at: task.actual_time,
           action: (
             <>
-              {task.task_type === 'tw' && (
+              {task.task_type === 'tw' ? (
                 <a
                   href={`${constants.link}${task.tw_id}`}
                   className="pl-2"
@@ -149,8 +149,8 @@ function ToDoList() {
                 >
                   <Image src="images/edit-button.svg" />
                 </a>
-              )}
-              {task.task_type !== 'tw' && (
+              ) :(
+              
                 <a
                   href="/"
                   className=""
