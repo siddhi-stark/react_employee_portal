@@ -278,6 +278,7 @@ function Task(props) {
                   <div className="progress-main">
                     <div className="progress">
                       <div className="progress-bar bg-secondary w-100">
+                      <h5 className="justify-content-start">Progress{progressValue} </h5>
                         <input
                           type="range"
                           name="rangeInput"

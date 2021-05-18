@@ -115,7 +115,11 @@ function Reports(props) {
                     setShowButton(1);
                     setCntClearFilter(cntClearFilter + 1);
                   }}
-                  variant={showButton ? 'primary ml-1' : ''}
+                  variant={`${
+                        showButton
+                                  ? 'primary ml-1'
+                                  : 'secondary ml-1'
+                              }`}
                 >
                   Morning Report
                 </Button>
@@ -125,7 +129,11 @@ function Reports(props) {
                     setShowButton(0);
                     setCntClearFilter(cntClearFilter + 1);
                   }}
-                  variant={!showButton ? 'secondary ml-1' : ''}
+                  variant={`${
+                        !showButton
+                                  ? 'primary ml-1'
+                                  : 'secondary ml-1'
+                              }`}
                 >
                   Evening Report
                 </Button>

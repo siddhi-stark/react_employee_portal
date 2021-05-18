@@ -11,38 +11,13 @@ import {
   DropdownInput,
   Datepicker,
 } from '../../components/FormInputs';
-import Table from '../../components/Table/simpletable.component';
+import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constant';
 import Task from './Task.component';
 
-const columns = [
-  {
-    id: 'todo',
-    label: 'To Do Tasks',
-  },
-  {
-    id: 'projects',
-    label: 'Projects',
-  },
-  {
-    id: 'status',
-    label: 'Status',
-  },
-  {
-    id: 'eta',
-    label: 'ETA',
-  },
-  {
-    id: 'at',
-    label: 'AT',
-  },
-  {
-    id: 'action',
-    label: 'Action',
-  },
-];
+
 
 const validator = new SimpleReactValidator();
 
@@ -78,6 +53,103 @@ function ToDoList() {
     itemsPerPage: 10,
     totalItems: 10,
   });
+
+  const columns = [
+    {
+      id: 'id',
+      label: 'Id',
+      roleAccess: [1,2,3,4],
+      isDisplay: false,
+    },
+    {
+      id: 'twId',
+      label: 'twId',
+      roleAccess: [1,2,3,4],
+      isDisplay: false,
+    },
+    {
+      id: 'taskType',
+      label: 'taskType',
+      roleAccess: [1,2,3,4],
+      isDisplay: false,
+    },
+      
+    {
+      id: 'todo',
+      label: 'To Do Tasks',
+      roleAccess: [1,2,3,4],
+    },
+    {
+      id: 'projects',
+      label: 'Projects',
+      roleAccess: [1,2,3,4],
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      roleAccess: [1,2,3,4],
+    },
+    {
+      id: 'eta',
+      label: 'ETA',
+      roleAccess: [1,2,3,4],
+    },
+    {
+      id: 'at',
+      label: 'AT',
+      roleAccess: [1,2,3,4],
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      roleAccess: [1,2,3,4],
+      render: ({ id, twId, taskType }) => {
+        return (
+          <>
+          {taskType === 'tw' ? (
+            <a
+              href={`${constants.link}${twId}`}
+              className="pl-2"
+              target="_blank"
+            >
+              <Image src="images/edit-button.svg" />
+            </a>
+          ) :(
+          
+            <a
+              href="/"
+              className=""
+              onClick={(e) => {
+                setModalShow(true);
+                setEditShow(true);
+                e.preventDefault();
+                e.stopPropagation();
+                setTaskId(id);
+                setCntClearFilter(cntClearFilter + 1);
+                customFunctions.setLocalStorage('taskid', id);
+              }}
+            >
+              <Image src="images/edit-button.svg" />
+            </a>
+          )}
+          <a
+            href="/"
+            className="ml-2"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowDelete(true);
+              setTaskId(id);
+            }}
+          >
+            {twId ? '' : <Image src="images/delete.png" />}
+          </a>
+        </>
+
+        )
+      }
+    },
+  ];
 
   const [breakData, setBreakData] = useState([]);
 
@@ -121,7 +193,7 @@ function ToDoList() {
       const row = [];
 
       data.data.map((task) => {
-        row.push({
+        const setRowData = {
           todo: (
             <>
               {task.content}
@@ -135,53 +207,15 @@ function ToDoList() {
               </div>
             </>
           ),
+          id: task.id,
+          twId: task.tw_id,
+          taskType: task.task_type,
           projects: task.project_name,
           status: task.status,
           eta: task.estimation,
           at: task.actual_time,
-          action: (
-            <>
-              {task.task_type === 'tw' ? (
-                <a
-                  href={`${constants.link}${task.tw_id}`}
-                  className="pl-2"
-                  target="_blank"
-                >
-                  <Image src="images/edit-button.svg" />
-                </a>
-              ) :(
-              
-                <a
-                  href="/"
-                  className=""
-                  onClick={(e) => {
-                    setModalShow(true);
-                    setEditShow(true);
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setTaskId(task.id);
-                    setCntClearFilter(cntClearFilter + 1);
-                    localStorage.setItem('taskid', task.id);
-                  }}
-                >
-                  <Image src="images/edit-button.svg" />
-                </a>
-              )}
-              <a
-                href="/"
-                className="ml-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setShowDelete(true);
-                  setTaskId(task.id);
-                }}
-              >
-                {task.tw_id ? '' : <Image src="images/delete.png" />}
-              </a>
-            </>
-          ),
-        });
+        }
+        row.push(setRowData);
         return task;
       });
       setRows(row);
@@ -449,22 +483,20 @@ function ToDoList() {
 
             <Card.Body>
               <Row>
-                {pagination.totalItems > 1 ? (
-                  <Col className="mt-3">
-                    <Table
-                      tableClass="table table-striped"
-                      columns={columns}
-                      rows={rows}
-                      showPagination
-                      showCheckbox
-                      paginationProps={{
-                        ...pagination,
-                        activePage: pagination.current_page,
-                        onPageChange: (pageNo) => {
-                          getTableData(pageNo);
-                        },
-                      }}
-                      dropdownContainerClass="mb-3"
+              <Table
+                  // role={Number(userRole)}
+                  columns={columns}
+                  rows={rows}
+                  showPagination
+                  showCheckbox
+                  paginationProps={{
+                    ...pagination,
+                    activePage: pagination.current_page,
+                    onPageChange: (pageNo) => {
+                      getTableData(pageNo);
+                    },
+                  }}
+                  dropdownContainerClass="mb-3"
                       selectedRowItems={selectedId}
                       onSelectRowsIndexes={(rowIndex) => {
                         const twId = [];
@@ -485,13 +517,11 @@ function ToDoList() {
                         setSelectedRowIndex(twId);
                         setSelectedId(rowIndex);
                       }}
-                    />
-                  </Col>
-                ) : (
-                  <Col>
+                  tableClass="table-striped"
+                  emptyRender={() => (
                     <p className="text-center mb-0">No record found</p>
-                  </Col>
-                )}
+                  )}
+                />
               </Row>
               <div className="d-flex justify-content-end mr-3">
                 {!morningMail && !signOutMail && pagination.totalItems > 0 && (
@@ -646,15 +676,9 @@ function ToDoList() {
                           differenceInTime -= minutes * 60;
                           let hourDifference = '';
                           let minDifference = '';
-                          hourDifference +=
-                            hours === 0 || hours === 1
-                              ? `${hours} `
-                              : `${hours} `;
+                          hourDifference += `${hours} `;
 
-                          minDifference +=
-                            minutes === 0 || hours === 1
-                              ? `${minutes}`
-                              : `${minutes}`;
+                          minDifference += `${minutes}`;
                           breakData[i].hrs = hourDifference;
                           breakData[i].min = minDifference;
                           setHours(hourDifference);
