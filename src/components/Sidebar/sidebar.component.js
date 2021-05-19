@@ -9,13 +9,6 @@ function Sidebar() {
   const history = useHistory();
   const [activeMenu, setActiveMenu] = useState(0);
 
-  // useEffect(() => {
-  //   const token = await localStorage.getItem('token');
-  //   if (token){
-  //   const roleId = await customFunctions.getUserData();
-  //   this.setState({roleId : JSON.stringify( roleId.role_id)});
-  // }
-
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
 
