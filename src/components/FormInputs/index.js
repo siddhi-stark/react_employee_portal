@@ -8,6 +8,7 @@ import DropdownInput from './selectDropdown.component';
 import ModalInput from './modal.component';
 import Datepicker from './datepicker.component';
 import Helmet from './helmet.component';
+import PasswordInput from './password.component';
 
 export {
   TextInput,
@@ -19,4 +20,5 @@ export {
   ModalInput,
   Datepicker,
   Helmet,
+  PasswordInput
 };

@@ -5,7 +5,7 @@ import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-import { TextInput, Helmet } from '../../components/FormInputs';
+import { PasswordInput, Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 
@@ -92,7 +92,7 @@ function ManagePassword() {
               <Form autoComplete="off" onSubmit={(e) => validateForm(e)}>
                 <Row>
                   <Col className="col-md-4">
-                    <TextInput
+                  <PasswordInput
                       onInputChange={(e) => setOldPassword(e.target.value)}
                       name="oldPassword"
                       containerClass="form-group"
@@ -109,10 +109,12 @@ function ManagePassword() {
                           className: 'text-danger',
                         }
                       )}
+                      switchElement="true"
                     />
+                    
                   </Col>
                   <Col className="col-md-4">
-                    <TextInput
+                  <PasswordInput
                       onInputChange={(e) => setPassword(e.target.value)}
                       name="password"
                       containerClass="form-group"
@@ -130,10 +132,11 @@ function ManagePassword() {
                           className: 'text-danger',
                         }
                       )}
+                      switchElement="true"
                     />
                   </Col>
                   <Col className="col-md-4">
-                    <TextInput
+                  <PasswordInput
                       onInputChange={(e) => setConfirmPassword(e.target.value)}
                       name="confirmPassword"
                       containerClass="form-group"
@@ -151,6 +154,7 @@ function ManagePassword() {
                           className: 'text-danger',
                         }
                       )}
+                      switchElement="true"
                     />
                   </Col>
                 </Row>

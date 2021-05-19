@@ -70,6 +70,7 @@ class CustomFunctions extends Component {
     this.removeLocalStorage('name');
     this.removeLocalStorage('clockinTime');
     this.removeLocalStorage('time');
+    this.removeLocalStorage('group');
   };
 
   cleanStorage = () => {

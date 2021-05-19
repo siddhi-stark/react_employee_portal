@@ -52,8 +52,8 @@ function Reports(props) {
     },
   ];
 
-  const getTableData = async (pageNo = 0) => {
-    const page = pageNo || pagination.current_page;
+  const getTableData = async (pageNo = 1) => {
+    const page = pagination.current_page || pageNo;
     const dt = customFunctions.getDate(
       new Date(Number(props.match.params.date))
     );
@@ -62,7 +62,7 @@ function Reports(props) {
     const endPoint = `${Api.dailyReportUrl}`;
     const params = {
       page,
-      limit: pagination.itemsPerPage,
+      limit: pagination.itemsPerPage || 10,
       date: dt,
       user_id: userId,
     };
@@ -72,17 +72,18 @@ function Reports(props) {
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         activePage: data.paginator.current_page,
-        itemsPerPage: pagination.itemsPerPage,
+        itemsPerPage: (pagination && pagination.itemsPerPage) || 10,
         totalItems: data.paginator.total_count,
       });
 
       const row = [];
+      console.log('page', page);
       const reportData = showButton
         ? data.data.morning_data
         : data.data.evening_data;
       reportData.map((proj, i) => {
         const setRowData = {
-          no: (page - 1) * pagination.itemsPerPage + (i + 1),
+          no: (page - 1) * (pagination && pagination.itemsPerPage || 10) + (i + 1),
           task: proj.activity,
           project: proj.project_name,
           status: proj.status,

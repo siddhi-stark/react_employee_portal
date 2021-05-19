@@ -7,36 +7,35 @@ export default function InputComponent(props) {
     label,
     placeholder,
     id,
-    image,
     value,
     onInputChange,
     name,
     inputClass,
     inputIcon,
     type,
-    style,
-    maxlength,
     containerClass,
     inputVarible,
     errorMessage,
     disabled,
     multiple,
     rows,
-    cols,
     as,
     asterisk,
     accept,
+    optionalLabel,
+    style,
   } = props;
 
   return (
     <>
-      {label && (
-        <Form.Label>
-          {' '}
-          {label} <span style={{ color: 'red' }}>{asterisk}</span>{' '}
-        </Form.Label>
-      )}
-      <Form.Group className={containerClass}>
+     
+        {label && (
+          <Form.Label>
+            {' '}
+            {label}<small>{optionalLabel}</small> <span style={{ color: 'red' }}>{asterisk}</span>{' '}
+          </Form.Label>
+        )}
+        <Form.Group className={containerClass}>
         <InputGroup>
           {inputVarible && (
             <InputGroup.Prepend>
@@ -47,7 +46,6 @@ export default function InputComponent(props) {
           <Form.Control
             id={id}
             value={value}
-            image={<Image src={image} rounded />}
             onChange={(e) => {
               if (onInputChange) onInputChange(e);
             }}
@@ -56,13 +54,11 @@ export default function InputComponent(props) {
             placeholder={placeholder}
             className={inputClass}
             disabled={disabled}
-            maxlength={maxlength}
             multiple={multiple}
             accept={accept}
-            style={style}
             rows={rows}
-            cols={cols}
             as={as}
+            style={style}
           />
         </InputGroup>
         <p style={{ color: 'red' }}> {errorMessage} </p>
