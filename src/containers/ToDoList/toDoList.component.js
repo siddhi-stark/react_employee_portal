@@ -242,7 +242,7 @@ function ToDoList() {
   }, []);
 
   useEffect(() => {
-    getTableData(1);
+    getTableData(pagination.current_page);
   }, [cntClearFilter]);
 
   const getDailyActivity = async () => {
@@ -342,9 +342,11 @@ function ToDoList() {
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
+          const tempPagination = rows.length < 2 ? pagination.current_page - 1 : pagination.current_page;
+          
           setShowDelete(false);
           setTaskId(null);
-          getTableData(1);
+          getTableData(tempPagination);
         }
       });
     } else {
@@ -353,7 +355,8 @@ function ToDoList() {
   };
 
   const onChangeInTask = () => {
-    getTableData(1);
+    console.log('pagination',pagination.current_page);
+    getTableData(pagination.current_page);
   };
 
   const onSubmit = (e) => {

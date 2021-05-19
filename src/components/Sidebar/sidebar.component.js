@@ -94,7 +94,7 @@ function Sidebar() {
             <div className="upcoming-bg">
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
-                  <img src="images/up-coming-event.svg" alt="Upcoming event" />
+                  <img src="/images/up-coming-event.svg" alt="Upcoming event" />
                   <p>Up Coming Events</p>
                 </div>
                 <div className="event-title">
@@ -109,7 +109,7 @@ function Sidebar() {
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
                   <img
-                    src="images/up-coming-birthday.svg"
+                    src="/images/up-coming-birthday.svg"
                     alt="Upcoming event"
                   />
                   <p>Up Coming Birthdays</p>
