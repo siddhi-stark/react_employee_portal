@@ -12,13 +12,15 @@ function Header() {
   const [empId, setEmpId] = useState('');
   const [employeeName, setEmployeeName] = useState('');
   const [imageProfile, setImageProfile] = useState('');
+  const [time, setTime] = useState('');
+  const [clockedInTime, setClockInTime] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
-  const token = localStorage.getItem('access_token');
+  const token = customFunctions.getLocalStorage('access_token');
 
   const getProfile = async () => {
-    const userToken = localStorage.getItem('access_token');
+    const userToken = customFunctions.getLocalStorage('access_token');
     if (!userToken) return false;
 
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
@@ -38,6 +40,11 @@ function Header() {
     });
 
     getProfile();
+    const localTime = customFunctions.getLocalStorage('time');
+    setTime(localTime);
+
+    const clockTime = customFunctions.getLocalStorage('clockinTime')
+    setClockInTime(clockTime);
 
     if (!token) {
       const path = window.location.pathname.split('/');
@@ -59,22 +66,22 @@ function Header() {
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <div className="main-header-left">
-            {localStorage.getItem('time') ? (
+            {time ? (
               <div className="d-flex justify-content-start clock-in-time">
                 <h7>
                   You are clocked out at{' '}
-                  {customFunctions.getLocalStorage('time')}{' '}
+                  {time}{' '}
                 </h7>
               </div>
             ) : (
               ''
             )}
           </div>
-          {localStorage.getItem('clockinTime') ? (
+          {clockedInTime ? (
             <div className="d-flex justify-content-end clock-in-time">
               <h7>
                 You are clocked in at{' '}
-                {customFunctions.getLocalStorage('clockinTime')}{' '}
+                {clockedInTime}{' '}
               </h7>
             </div>
           ) : (
