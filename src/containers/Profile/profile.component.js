@@ -133,7 +133,7 @@ function Profile() {
 
   const updateProfileData = async () => {
     const payload = {
-      id: localStorage.getItem('userId'),
+      id: customFunctions.getLocalStorage('userId'),
       full_name: name,
       companyEmail,
       mobile,
@@ -349,7 +349,10 @@ function Profile() {
                 <TextInput
                   onInputChange={(e) => {
                     const re = /^[a-zA-Z ]*$/;
-                    if (e.target.value === '' || re.test(e.target.value)) {
+                    if (
+                      customFunctions.checkIfEmpty(e.target.value) ||
+                      re.test(e.target.value)
+                    ) {
                       setName(e.target.value);
                     }
                   }}
@@ -373,7 +376,10 @@ function Profile() {
                 <TextInput
                   onInputChange={(e) => {
                     const re = /^[0-9\b]+$/;
-                    if (e.target.value === '' || re.test(e.target.value)) {
+                    if (
+                      customFunctions.checkIfEmpty(e.target.value) ||
+                      re.test(e.target.value)
+                    ) {
                       setMobile(e.target.value);
                     }
                   }}

@@ -108,18 +108,13 @@ function Projects() {
     const page = pageNo || pagination.current_page;
     const id = customFunctions.getLocalStorage('userId');
     const api = `${Api.getProjects}`;
-    const group = customFunctions.getLocalStorage('group');
 
     const params = {
       page,
       limit: pagination.itemsPerPage,
       keyword: searchKeyword,
-      employee: id,
+      employee: customFunctions.userRestrictions(id, [2, 3, 4]),
     };
-
-    if (group === '1') {
-      delete params.employee;
-    }
 
     const url = customFunctions.generateUrl(api, params);
     const { data } = await AuthApi.getDataFromServer(url);
@@ -215,7 +210,7 @@ function Projects() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (searchKeyword === '') {
+    if (customFunctions.checkIfEmpty(searchKeyword)) {
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;

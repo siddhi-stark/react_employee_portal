@@ -17,8 +17,6 @@ import Api from '../../helper/api';
 import constants from '../../helper/constant';
 import Task from './Task.component';
 
-
-
 const validator = new SimpleReactValidator();
 
 function ToDoList() {
@@ -58,96 +56,94 @@ function ToDoList() {
     {
       id: 'id',
       label: 'Id',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
       isDisplay: false,
     },
     {
       id: 'twId',
       label: 'twId',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
       isDisplay: false,
     },
     {
       id: 'taskType',
       label: 'taskType',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
       isDisplay: false,
     },
-      
+
     {
       id: 'todo',
       label: 'To Do Tasks',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
     },
     {
       id: 'projects',
       label: 'Projects',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
     },
     {
       id: 'status',
       label: 'Status',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
     },
     {
       id: 'eta',
       label: 'ETA',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
     },
     {
       id: 'at',
       label: 'AT',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
     },
     {
       id: 'action',
       label: 'Action',
-      roleAccess: [1,2,3,4],
+      roleAccess: [1, 2, 3, 4],
       render: ({ id, twId, taskType }) => {
         return (
           <>
-          {taskType === 'tw' ? (
-            <a
-              href={`${constants.link}${twId}`}
-              className="pl-2"
-              target="_blank"
-            >
-              <Image src="images/edit-button.svg" />
-            </a>
-          ) :(
-          
+            {taskType === 'tw' ? (
+              <a
+                href={`${constants.link}${twId}`}
+                className="pl-2"
+                target="_blank"
+              >
+                <Image src="images/edit-button.svg" />
+              </a>
+            ) : (
+              <a
+                href="/"
+                className=""
+                onClick={(e) => {
+                  setModalShow(true);
+                  setEditShow(true);
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setTaskId(id);
+                  setCntClearFilter(cntClearFilter + 1);
+                  customFunctions.setLocalStorage('taskid', id);
+                }}
+              >
+                <Image src="images/edit-button.svg" />
+              </a>
+            )}
             <a
               href="/"
-              className=""
+              className="ml-2"
               onClick={(e) => {
-                setModalShow(true);
-                setEditShow(true);
                 e.preventDefault();
                 e.stopPropagation();
+                setShowDelete(true);
                 setTaskId(id);
-                setCntClearFilter(cntClearFilter + 1);
-                customFunctions.setLocalStorage('taskid', id);
               }}
             >
-              <Image src="images/edit-button.svg" />
+              {twId ? '' : <Image src="images/delete.png" />}
             </a>
-          )}
-          <a
-            href="/"
-            className="ml-2"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowDelete(true);
-              setTaskId(id);
-            }}
-          >
-            {twId ? '' : <Image src="images/delete.png" />}
-          </a>
-        </>
-
-        )
-      }
+          </>
+        );
+      },
     },
   ];
 
@@ -214,7 +210,7 @@ function ToDoList() {
           status: task.status,
           eta: task.estimation,
           at: task.actual_time,
-        }
+        };
         row.push(setRowData);
         return task;
       });
@@ -240,11 +236,9 @@ function ToDoList() {
       });
       setBreakData(selectedBreak);
 
-      // getTableData(1);
       getDailyActivity();
     }
     getData();
-    // setShowScrum(props.morningMail);
   }, []);
 
   useEffect(() => {
@@ -258,7 +252,7 @@ function ToDoList() {
       setSignOutMail(data.data.signout_mail);
     }
     if (data.data.clock_out_time) {
-      localStorage.setItem('time', data.data.clock_out_time);
+      customFunctions.setLocalStorage('time', data.data.clock_out_time);
     }
   };
 
@@ -470,7 +464,7 @@ function ToDoList() {
                     variant="primary"
                     type="submit"
                     onClick={() => {
-                      localStorage.removeItem('taskid');
+                      customFunctions.removeLocalStorage('taskid');
                       setModalShow(true);
                       forceUpdate(count + 1);
                     }}
@@ -483,8 +477,7 @@ function ToDoList() {
 
             <Card.Body>
               <Row>
-              <Table
-                  // role={Number(userRole)}
+                <Table
                   columns={columns}
                   rows={rows}
                   showPagination
@@ -497,26 +490,26 @@ function ToDoList() {
                     },
                   }}
                   dropdownContainerClass="mb-3"
-                      selectedRowItems={selectedId}
-                      onSelectRowsIndexes={(rowIndex) => {
-                        const twId = [];
-                        taskList.map((task, ind) => {
-                          rowIndex.map((i) => {
-                            if (ind === i) {
-                              if (task.task_type === 'tw') {
-                                twId.push(task.tw_id);
-                              } else {
-                                twId.push(task.id);
-                              }
-                            }
-                            return i;
-                          });
+                  selectedRowItems={selectedId}
+                  onSelectRowsIndexes={(rowIndex) => {
+                    const twId = [];
+                    taskList.map((task, ind) => {
+                      rowIndex.map((i) => {
+                        if (ind === i) {
+                          if (task.task_type === 'tw') {
+                            twId.push(task.tw_id);
+                          } else {
+                            twId.push(task.id);
+                          }
+                        }
+                        return i;
+                      });
 
-                          return ind;
-                        });
-                        setSelectedRowIndex(twId);
-                        setSelectedId(rowIndex);
-                      }}
+                      return ind;
+                    });
+                    setSelectedRowIndex(twId);
+                    setSelectedId(rowIndex);
+                  }}
                   tableClass="table-striped"
                   emptyRender={() => (
                     <p className="text-center mb-0">No record found</p>

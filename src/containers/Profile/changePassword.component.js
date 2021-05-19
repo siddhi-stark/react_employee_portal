@@ -89,7 +89,7 @@ function ManagePassword() {
               <h4 className="text-primary mt-2 mb-2">Change Password</h4>
             </Card.Header>
             <Card.Body>
-              <Form autoComplete="off" onClick={(e) => validateForm(e)}>
+              <Form autoComplete="off" onSubmit={(e) => validateForm(e)}>
                 <Row>
                   <Col className="col-md-4">
                     <TextInput

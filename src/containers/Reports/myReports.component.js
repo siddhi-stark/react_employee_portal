@@ -124,7 +124,10 @@ function AllReports() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (!fromDate && !toDate) {
+    if (
+      customFunctions.checkIfEmpty(fromDate) &&
+      customFunctions.checkIfEmpty(toDate)
+    ) {
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;

@@ -176,7 +176,11 @@ function TeamReport() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (!fromDate && !toDate && !selectedEmployee) {
+    if (
+      customFunctions.checkIfEmpty(fromDate) &&
+      customFunctions.checkIfEmpty(toDate) &&
+      customFunctions.checkIfEmpty(selectedEmployee)
+    ) {
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;

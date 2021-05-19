@@ -325,7 +325,7 @@ function Employee() {
 
   useEffect(() => {
     async function getData() {
-      const uRole = localStorage.getItem('group');
+      const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
       getDesignation();
       getTwEmployee();
@@ -340,7 +340,7 @@ function Employee() {
 
   useEffect(() => {
     getTableData(1);
-    const uRole = localStorage.getItem('group');
+    const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
   }, [cntClearFilter]);
 
@@ -563,7 +563,7 @@ function Employee() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (searchKeyword === '') {
+    if (customFunctions.checkIfEmpty(searchKeyword)) {
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;
@@ -723,7 +723,10 @@ function Employee() {
                 <TextInput
                   onInputChange={(e) => {
                     const re = /^[a-zA-Z .]*$/;
-                    if (e.target.value === '' || re.test(e.target.value)) {
+                    if (
+                      customFunctions.checkIfEmpty(e.target.value) ||
+                      re.test(e.target.value)
+                    ) {
                       setFullName(e.target.value);
                     }
                   }}
@@ -774,7 +777,10 @@ function Employee() {
                 <TextInput
                   onInputChange={(e) => {
                     const re = /^[0-9\b]+$/;
-                    if (e.target.value === '' || re.test(e.target.value)) {
+                    if (
+                      customFunctions.checkIfEmpty(e.target.value) ||
+                      re.test(e.target.value)
+                    ) {
                       setMobile(e.target.value);
                     }
                   }}

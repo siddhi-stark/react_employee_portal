@@ -22,7 +22,7 @@ const validator = new SimpleReactValidator();
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/reports', label: 'Designation' },
+  { to: '/designation', label: 'Designation' },
 ];
 
 function Designation() {
@@ -104,9 +104,19 @@ function Designation() {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.designationUrl}?keyword=${searchKeyword}&limit=${pagination.itemsPerPage}&page=${page}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data && data.data) {
+
+    const endPoint = `${Api.designationUrl}`;
+
+    const params = {
+      page,
+      limit: pagination.itemsPerPage,
+      keyword: searchKeyword,
+    };
+
+    const url = customFunctions.generateUrl(endPoint, params);
+
+    const { data } = await AuthApi.getDataFromServer(url);
+    if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
@@ -217,16 +227,6 @@ function Designation() {
     }
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (validator.allValid()) {
-      addDesignation();
-    } else {
-      validator.showMessages();
-      forceUpdate(count + 1);
-    }
-  };
-
   const onClear = () => {
     setFilterErr('');
     setSearchKeyword('');
@@ -252,7 +252,7 @@ function Designation() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (!searchKeyword) {
+    if (customFunctions.checkIfEmpty(searchKeyword)) {
       filterSearchErr = 'Please enter keyword';
       setFilterErr(filterSearchErr);
       isValid = false;
@@ -348,10 +348,12 @@ function Designation() {
                 <Col>
                   <Form autoComplete="off" onSubmit={(e) => submitForm(e)}>
                     <TextInput
-                      // onInputChange={(e) => setDesignation(e.target.value)}
                       onInputChange={(e) => {
                         const re = /^[a-zA-Z .]*$/;
-                        if (e.target.value === '' || re.test(e.target.value)) {
+                        if (
+                          customFunctions.checkIfEmpty(e.target.value) ||
+                          re.test(e.target.value)
+                        ) {
                           setDesignation(e.target.value);
                         }
                       }}
@@ -378,12 +380,7 @@ function Designation() {
                     >
                       Cancel
                     </Button>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className="ms-4"
-                      onClick={(e) => onSubmit(e)}
-                    >
+                    <Button variant="primary" type="submit" className="ms-4">
                       {designationId ? 'Update' : 'Add'}
                     </Button>
                   </Form>
