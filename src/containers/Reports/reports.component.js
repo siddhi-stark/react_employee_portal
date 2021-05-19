@@ -69,6 +69,8 @@ function Reports(props) {
     const url = customFunctions.generateUrl(endPoint, params);
 
     const { data } = await AuthApi.getDataFromServer(url);
+    console.log('data',data);
+
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         activePage: data.paginator.current_page,
@@ -78,6 +80,8 @@ function Reports(props) {
 
       const row = [];
       console.log('page', page);
+      // console.log('data',reportData);
+
       const reportData = showButton
         ? data.data.morning_data
         : data.data.evening_data;

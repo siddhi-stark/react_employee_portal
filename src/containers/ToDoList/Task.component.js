@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Row, Col, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
@@ -9,9 +9,9 @@ import { ModalInput, TextInput, Datepicker } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
-const validator = new SimpleReactValidator();
 
 function Task(props) {
+  const validator = useRef(new SimpleReactValidator());
   const [taskHrs, setTaskHours] = useState('');
   const [taskMins, setTaskMinutes] = useState('');
   const [taskStartTime, setTaskStartTime] = useState('');
@@ -24,6 +24,7 @@ function Task(props) {
   const [id, setId] = useState(null);
   const [startHours, setStartHours] = useState('');
   const [startMinutes, setStartMinutes] = useState('');
+  const [disableButton, setDisableButton] = useState(false);
 
   const getTaskById = async (tid) => {
     const { data } = await AuthApi.getDataFromServer(`${Api.taskUrl}${tid}/`);
@@ -96,8 +97,9 @@ function Task(props) {
 
     if (data) {
       props.handleModalCLose(false);
-      swal('Task Updated Successfully', '', 'success').then((result) => {
+      swal('Task Created Successfully', '', 'success').then((result) => {
         if (result) {
+          setDisableButton(false);
           setTaskStartTime();
           setTaskEndTime();
           setTaskHours();
@@ -109,22 +111,29 @@ function Task(props) {
         }
       });
     } else {
+      setDisableButton(false);
       swal(data && data.message, '', 'error');
       props.handleModalCLose(false);
     }
   };
 
-  const onSubmit = (e) => {
+  const submitForm = (e) => {
     e.preventDefault();
-    if (validator.allValid()) {
+    if (disableButton) return;
+
+    setDisableButton(true);
+    if (validator.current.allValid()) {
       onAddTask();
     } else {
-      validator.showMessages();
+      validator.current.showMessages();
       forceUpdate(count + 1);
+      setDisableButton(false);
     }
   };
 
   const onTaskCancel = () => {
+    validator.current.hideMessages();
+
     setTaskStartTime();
     setTaskEndTime();
     setTaskHours();
@@ -134,7 +143,10 @@ function Task(props) {
     setId();
     setTaskModalShow(false);
     props.handleModalCLose(false);
-    validator.hideMessages();
+    if (disableButton) return;
+
+    setDisableButton(true);
+    
   };
 
   return (
@@ -149,7 +161,7 @@ function Task(props) {
         modalBody={
           <Form
             onSubmit={(e) => {
-              onSubmit(e);
+              submitForm(e);
             }}
           >
             <Row>
@@ -163,7 +175,7 @@ function Task(props) {
                   type="text"
                   value={taskName}
                   placeholder="Enter Task Name"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'taskName',
                     taskName,
                     'required'
@@ -182,7 +194,7 @@ function Task(props) {
                   style={{ resize: 'none' }}
                   value={description}
                   placeholder="Enter Description"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'description',
                     description,
                     'required'
@@ -206,7 +218,7 @@ function Task(props) {
                   showTimeSelectOnly="showTimeSelectOnly"
                   timeIntervals="1"
                   dateFormat="h:mm aa"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'Start Time',
                     taskStartTime,
                     'required'
@@ -255,7 +267,7 @@ function Task(props) {
                   showTimeSelectOnly="showTimeSelectOnly"
                   timeIntervals="1"
                   dateFormat="h:mm aa"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'End Time',
                     taskEndTime,
                     'required'
@@ -301,7 +313,7 @@ function Task(props) {
               <Button variant="secondary" onClick={() => onTaskCancel()}>
                 Cancel
               </Button>
-              <Button variant="primary" type="submit" className="ms-4">
+              <Button variant="primary" type="submit" className="ms-4" disabled={disableButton}>
                 {id ? 'Update' : 'Add'}
               </Button>
             </div>

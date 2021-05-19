@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import {
   Card,
@@ -18,7 +18,6 @@ import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 
-const validator = new SimpleReactValidator();
 
 const items = [
   { to: '/', label: 'Home' },
@@ -26,6 +25,7 @@ const items = [
 ];
 
 function Designation() {
+  const validator = useRef(new SimpleReactValidator());
   const [rows, setRows] = useState([]);
   const [count, forceUpdate] = useState(0);
   const [designationId, setDesignationId] = useState(null);
@@ -177,7 +177,7 @@ function Designation() {
   };
 
   const onCancel = () => {
-    validator.hideMessages();
+    validator.current.hideMessages();
     setDesignation('');
     setDesignationId('');
     if (disableButton) return;
@@ -209,7 +209,7 @@ function Designation() {
     const { data, message } = await callback(endPoint, payload);
 
     if (data) {
-      validator.hideMessages();
+      validator.current.hideMessages();
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
@@ -233,15 +233,17 @@ function Designation() {
     setCntClearFilter(cntClearFilter + 1);
   };
 
+  
+
   const submitForm = (e) => {
     e.preventDefault();
     if (disableButton) return;
 
     setDisableButton(true);
-    if (validator.allValid()) {
+    if (validator.current.allValid()) {
       addDesignation();
     } else {
-      validator.showMessages();
+      validator.current.showMessages();
       forceUpdate(count + 1);
       setDisableButton(false);
     }
@@ -363,7 +365,7 @@ function Designation() {
                       name="designationtitle"
                       value={designation}
                       placeholder="Enter designation"
-                      errorMessage={validator.message(
+                      errorMessage={validator.current.message(
                         'designation',
                         designation,
                         'required'
@@ -380,7 +382,7 @@ function Designation() {
                     >
                       Cancel
                     </Button>
-                    <Button variant="primary" type="submit" className="ms-4">
+                    <Button variant="primary" type="submit" className="ms-4" disabled={disableButton}>
                       {designationId ? 'Update' : 'Add'}
                     </Button>
                   </Form>

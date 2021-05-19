@@ -180,9 +180,9 @@ function Profile() {
   const getImageName = (profileImage) => {
     const img = profileImage
       ? profileImage.split(
-          'https://empportal-serverless.s3.amazonaws.com/media/'
+          Api.s3Url
         )
-      : imageUrl.split('https://empportal-serverless.s3.amazonaws.com/media/');
+      : imageUrl.split(Api.s3Url);
     let img1 = '';
 
     if (img.length > 1) {
@@ -213,7 +213,7 @@ function Profile() {
                   <Button
                     className="float-end"
                     variant="primary"
-                    type="submit"
+                    type="Button"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();

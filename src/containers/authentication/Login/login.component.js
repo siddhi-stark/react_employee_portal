@@ -20,33 +20,32 @@ function Login(props) {
   const history = useHistory();
   const [disableButton, setDisableButton] = useState(false);
 
+  const emailLocal = CustomFunctions.getLocalStorage('email');
+  const passwordLocal = CustomFunctions.getLocalStorage('password');
+  const checkbox = CustomFunctions.getLocalStorage('checkbox');
+
   useEffect(() => {
     setTitle('Login');
-    const emailLocal = CustomFunctions.getLocalStorage('email');
-    const passwordLocal = CustomFunctions.getLocalStorage('password');
-    if (localStorage.checkbox && localStorage.email !== '') {
+    ;
+    if (checkbox && !emailLocal) {
       setUsername(emailLocal);
       setRemember(true);
       setPassword(passwordLocal);
-    } else {
-      setUsername('');
-      setRemember('');
-      setPassword('');
     }
     const token = CustomFunctions.getLocalStorage('access_token');
     if (token) {
       dispatch({ type: 'LOGIN', value: true });
       history.push('/');
     }
-  }, [dispatch]);
+  }, []);
 
   const loginUser = async () => {
-    if (remember && username !== '') {
-      await CustomFunctions.setLocalStorage('checkbox', remember);
-      await CustomFunctions.setLocalStorage('email', username);
+    if (remember && !username) {
+            CustomFunctions.setLocalStorage('checkbox', remember);
+            CustomFunctions.setLocalStorage('email', username);
     } else {
-      localStorage.email = '';
-      localStorage.checkbox = '';
+      CustomFunctions.removeLocalStorage('email');
+      CustomFunctions.removeLocalStorage('checkbox');
     }
     const postData = {
       username,

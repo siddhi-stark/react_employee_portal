@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import {
   Card,
@@ -23,8 +23,8 @@ import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
-const validator = new SimpleReactValidator();
 
 const items = [
   { to: '/', label: 'Home' },
@@ -35,6 +35,8 @@ const currentdate = new Date();
 const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
 
 function Employee() {
+const validator = useRef(new SimpleReactValidator());
+
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
@@ -61,6 +63,7 @@ function Employee() {
   const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
   const [title, setTitle] = useState('');
+  const [disableButton, setDisableButton] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [filterErr, setFilterErr] = useState('');
   const [pagination, setPagination] = useState({
@@ -178,7 +181,7 @@ function Employee() {
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: Number(data.paginator.current_page),
-        activePage: data.paginator.current_page,
+        activePage: Number(data.paginator.current_page),
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
       });
@@ -382,7 +385,7 @@ function Employee() {
 
   const onCancel = () => {
     setSelectedDesignationOption();
-    validator.hideMessages();
+    validator.current.hideMessages();
     setFullName('');
     setSelectedEmployee('');
     setEmail('');
@@ -454,7 +457,7 @@ function Employee() {
           setEmployeeId();
           setSelectedDesignationOption();
           setSelectedRole();
-          validator.hideMessages();
+          validator.current.hideMessages();
           setFullName();
           setSelectedEmployee();
           setEmail();
@@ -472,13 +475,18 @@ function Employee() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (validator.allValid()) {
+    if (disableButton) return;
+
+    setDisableButton(true);
+    if (validator.current.allValid()) {
       addEmployee();
     } else {
-      validator.showMessages();
+      validator.current.showMessages();
       forceUpdate(count + 1);
+      setDisableButton(false);
     }
   };
+
 
   const getDesignationList = () => {
     if (!designation) return [];
@@ -652,8 +660,8 @@ function Employee() {
               <div className="d-flex align-items-center justify-content-between">
                 <h4 className="text-primary mt-2 mb-2">Add Employee</h4>
                 <div className="d-flex align-items-center justify-content-end">
-                  {userRole === 1 ? (
-                    <a
+                <UserRestrictions permittedUsers={[1]} roleId={userRole}>
+                <a
                       href="#"
                       onClick={() => {
                         setModalShow(true);
@@ -663,32 +671,31 @@ function Employee() {
                     >
                       Add Employee
                     </a>
-                  ) : (
-                    ''
-                  )}
+                </UserRestrictions>
+                   
                 </div>
               </div>
             </Card.Header>
             <Card.Body>
               <Row>
-                <Table
-                  role={Number(userRole)}
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  paginationProps={{
-                    ...pagination,
-                    activePage: pagination.current_page,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                  tableClass="table-striped"
-                  dropdownContainerClass="mb-3"
-                  emptyRender={() => (
-                    <p className="text-center mb-0">No record found</p>
-                  )}
-                />
+              <Table
+                  
+                    columns={columns}
+                    rows={rows}
+                    showPagination="true"
+                    paginationProps={{
+                      ...pagination,
+                      activePage: pagination.current_page,
+                      onPageChange: (pageNo) => {
+                        getTableData(pageNo);
+                      },
+                    }}
+                    tableClass="table-striped"
+                    dropdownContainerClass="mb-3"
+                    emptyRender={() => (
+                      <p className="text-center mb-0">No record found</p>
+                    )}
+                  />
               </Row>
             </Card.Body>
           </Card>
@@ -723,10 +730,7 @@ function Employee() {
                 <TextInput
                   onInputChange={(e) => {
                     const re = /^[a-zA-Z .]*$/;
-                    if (
-                      customFunctions.checkIfEmpty(e.target.value) ||
-                      re.test(e.target.value)
-                    ) {
+                    if (!e.target.value || re.test(e.target.value)) {
                       setFullName(e.target.value);
                     }
                   }}
@@ -736,8 +740,9 @@ function Employee() {
                   type="text"
                   name="firstNameTitle"
                   value={fullName}
+                  maxlength="10"
                   placeholder="Enter Full  Name"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'Full Name',
                     fullName,
                     'required'
@@ -755,7 +760,7 @@ function Employee() {
                   type="text"
                   value={email}
                   placeholder="Enter email"
-                  errorMessage={validator.message('email', email, 'required')}
+                  errorMessage={validator.current.message('email', email, 'required')}
                 />
               </Col>
               {!employeeId && (
@@ -777,10 +782,7 @@ function Employee() {
                 <TextInput
                   onInputChange={(e) => {
                     const re = /^[0-9\b]+$/;
-                    if (
-                      customFunctions.checkIfEmpty(e.target.value) ||
-                      re.test(e.target.value)
-                    ) {
+                    if (!e.target.value || re.test(e.target.value)) {
                       setMobile(e.target.value);
                     }
                   }}
@@ -792,7 +794,7 @@ function Employee() {
                   maxlength="10"
                   value={mobile}
                   placeholder="Enter Contact Number"
-                  errorMessage={validator.message('mobile', mobile, 'required')}
+                  errorMessage={validator.current.message('mobile', mobile, 'required')}
                 />
               </Col>
               <Col sm={6}>
@@ -805,7 +807,7 @@ function Employee() {
                   onSelectHandler={(select) =>
                     setSelectedDesignationOption(select)
                   }
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'selectedDesignationOption',
                     selectedDesignationOption,
                     'required'
@@ -822,7 +824,7 @@ function Employee() {
                   placeholder="Select Role"
                   defaultValue={selectedRole}
                   onSelectHandler={(select) => setSelectedRole(select)}
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'Role',
                     selectedRole,
                     'required'
@@ -862,7 +864,7 @@ function Employee() {
                   onChange={(e) => {
                     setDate(e);
                   }}
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'DOB',
                     date,
                     `required | before_or_equal:${maxdate}`
@@ -887,7 +889,7 @@ function Employee() {
                 Cancel
               </Button>
 
-              <Button variant="primary" type="submit" className="ms-4">
+              <Button variant="primary" type="submit" className="ms-4"  disabled={disableButton}>
                 {employeeId ? 'Update' : 'Add'}
               </Button>
             </div>

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { TextInput, Helmet } from '../../../components/FormInputs';
 import Api from '../../../helper/api';
 import AuthApi from '../../../helper/authApi';
@@ -155,13 +155,14 @@ function ResetPassword(props) {
           </div>
 
           <div className="text-center mt-3">
-            <a
-              href="dashboard-default.html"
+            <Button
+              
               className="btn btn-lg btn-primary"
+              type="submit"
               disabled={disableButton}
             >
               Reset
-            </a>
+            </Button>
           </div>
           <a href="/login" className="back-to-login">
             Back to Login

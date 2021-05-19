@@ -462,7 +462,7 @@ function ToDoList() {
                   <Button
                     size="sm"
                     variant="primary"
-                    type="submit"
+                    type="Button"
                     onClick={() => {
                       customFunctions.removeLocalStorage('taskid');
                       setModalShow(true);

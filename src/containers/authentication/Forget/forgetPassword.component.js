@@ -20,7 +20,7 @@ function ForgetPassword() {
   useEffect(() => {
     setTitle('Recover Password');
     dispatch({ type: 'LOGIN', value: false });
-  }, [dispatch]);
+  }, []);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -42,6 +42,7 @@ function ForgetPassword() {
 
     if (data) {
       swal('Email has been sent successfully.');
+      setDisableButton(false);
     } else {
       swal(message);
     }

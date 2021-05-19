@@ -42,6 +42,12 @@ function Projects() {
 
   const columns = [
     {
+      id: 'twID',
+      label: 'tw ID',
+      roleAccess: [1, 2, 3, 4],
+      isDisplay: false,
+    },
+    {
       id: 'no',
       label: 'Sr. No',
       roleAccess: [1, 2, 3, 4],
@@ -72,20 +78,85 @@ function Projects() {
       roleAccess: [1, 2, 3, 4],
     },
     {
+      id: 'complt',
+      label: 'completionData',
+      roleAccess: [1, 2, 3, 4],
+      isDisplay: false
+    },
+    {
       id: 'completion',
       label: 'Completion',
+      roleAccess: [1,2, 3,4],
+      render: ({complt}) => {
+        return (
+          <>
+          <ProgressBar
+            bsPrefix="progress pbar"
+            variant="success"
+            now={complt}
+            label={`${complt}% completed`}
+          />
+          
+          </>
+        );
+      },
+    },
+    {
+      id: 'support',
+      label: 'support',
       roleAccess: [1, 2, 3, 4],
+      isDisplay: false
+    },
+    {
+      id: 'ID',
+      label: 'ID',
+      roleAccess: [1, 2, 3, 4],
+      isDisplay: false
     },
     {
       id: 'support',
       label: 'RT Support',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1,2, 3,4],
+      render: ({support,ID }) => {
+        return (
+          <>
+             <Image
+          src={
+            support ? '/images/success.svg' : '/images/fail.svg'
+            }
+             
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setProjectId(ID);
+                setRtSupport(support);
+                setShowUpdate(true);
+              }}
+            />
+            
+          </>
+        );
+      },
     },
+  
     {
       id: 'link',
       label: 'TW Link',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1,2, 3,4],
+      render: ({twID}) => {
+        return (
+          <>
+             <a href={`${constants.project}${twID}`} target="_blank">
+              <span>
+                <Image src="/images/redirect.png" />
+              </span>
+            </a>
+            
+          </>
+        );
+      },
     },
+   
   ];
 
   const onRtSupport = async (id, Support) => {
@@ -145,44 +216,11 @@ function Projects() {
             ) : (
               <span className="text-danger">{proj.remaining} Hrs</span>
             ),
-          support: proj.rt_support ? (
-            <Image
-              src="/images/success.svg"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setProjectId(proj.id);
-                setRtSupport(proj.rt_support);
-                setShowUpdate(true);
-              }}
-            />
-          ) : (
-            <Image
-              src="/images/fail.svg"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setProjectId(proj.id);
-                setRtSupport(proj.rt_support);
-                setShowUpdate(true);
-              }}
-            />
-          ),
-          completion: (
-            <ProgressBar
-              bsPrefix="progress pbar"
-              variant="success"
-              now={proj.completion}
-              label={`${proj.completion}% completed`}
-            />
-          ),
-          link: (
-            <a href={`${constants.project}${proj.tw_id}`} target="_blank">
-              <span>
-                <Image src="/images/redirect.png" />
-              </span>
-            </a>
-          ),
+          ID: proj.id,
+          support: proj.rt_support,
+          twID: proj.tw_id,
+          complt: proj.completion,
+          
         };
         row.push(setRowData);
 

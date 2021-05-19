@@ -29,10 +29,23 @@ function AllReports() {
 
   const columns = [
     {
+      id: 'id',
+      label: 'userId',
+      roleAccess: [1, 2, 3, 4],
+      isDisplay: false,
+    },
+    {
+      id: 'createdDate',
+      label: 'date',
+      roleAccess: [1, 2, 3, 4],
+      isDisplay: false,
+    },
+    {
       id: 'no',
       label: 'Sr. No',
       roleAccess: [1, 2, 3, 4],
     },
+    
     {
       id: 'date',
       label: 'Date',
@@ -53,11 +66,25 @@ function AllReports() {
       label: 'Total Working',
       roleAccess: [1, 2, 3, 4],
     },
-    {
+   {
       id: 'report',
       label: 'View Report',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1,2, 3,4],
+      render: ({id, createdDate}) => {
+        const newDate = customFunctions.getDate(createdDate);
+        const dt = new Date(newDate).getTime();
+        console.log('userID', id);
+        return (
+          <>
+            <a href={`/daily-report/${dt}/${id}`}>
+              <span>View Report</span>
+            </a>
+            
+          </>
+        );
+      },
     },
+    
   ];
 
   const getReports = async (pageNo = 0) => {
@@ -82,20 +109,17 @@ function AllReports() {
         totalItems: data.paginator.total_count,
       });
       const row = [];
+      console.log('dataaa',data.data);
+
       data.data.map((report, i) => {
-        const date = customFunctions.getDate(report.created_at);
-        const dt = new Date(date).getTime();
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: report.estimation,
-          report: (
-            <a href={`/daily-report/${dt}/${report.user_id}`}>
-              <span>View Report</span>
-            </a>
-          ),
+          id: report.user_id,
+          createdDate: report.created_at,
         };
         row.push(setRowData);
         return report;

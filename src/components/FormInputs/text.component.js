@@ -21,6 +21,7 @@ export default function InputComponent(props) {
     rows,
     as,
     asterisk,
+    maxlength,
     accept,
     optionalLabel,
     style,
@@ -52,6 +53,7 @@ export default function InputComponent(props) {
             name={name}
             type={type}
             placeholder={placeholder}
+            maxlength={maxlength}
             className={inputClass}
             disabled={disabled}
             multiple={multiple}

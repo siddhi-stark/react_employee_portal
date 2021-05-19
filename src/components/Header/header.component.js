@@ -34,18 +34,27 @@ function Header() {
     return true;
   };
 
+  const getCLocTIme = () => {
+    const clockTime = customFunctions.getLocalStorage('clockinTime')
+    setClockInTime(clockTime);
+  }
+
   useEffect(() => {
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
 
+    document.addEventListener('TimeUpdate', () => {
+     getCLocTIme();
+  
+    });
+
     getProfile();
+    getCLocTIme();
     const localTime = customFunctions.getLocalStorage('time');
     setTime(localTime);
 
-    const clockTime = customFunctions.getLocalStorage('clockinTime')
-    setClockInTime(clockTime);
-
+    
     if (!token) {
       const path = window.location.pathname.split('/');
       const extractedPath = path.length > 1 ? path[1].toString() : '';
