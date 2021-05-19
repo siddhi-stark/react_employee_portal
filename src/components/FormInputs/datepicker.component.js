@@ -3,8 +3,6 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Form } from 'react-bootstrap';
 import 'react-datepicker/dist/react-datepicker.css';
-// import setHours from "date-fns/setHours";
-// import setMinutes from "date-fns/setMinutes";
 
 export default function DateTimePicker(props) {
   const {

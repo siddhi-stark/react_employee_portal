@@ -1,4 +1,3 @@
-// import React from 'react';
 
 import TextInput from './text.component';
 import EmailInput from './email.component';
