@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-// import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Sidebar from '../Sidebar/sidebar.component';
 import Header from '../Header/header.component';
+import customFunctions from '../../helper/customFunctions';
 
 function Layout(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -10,7 +10,6 @@ function Layout(props) {
   );
   const { children } = props;
   const dispatch = useDispatch();
-  // const history = useHistory();
   useEffect(() => {
     document.addEventListener('Login', () => {
       dispatch({ type: 'LOGIN', value: false });
@@ -18,7 +17,7 @@ function Layout(props) {
     });
   }, [isLoggedIn]);
 
-  const code = localStorage.getItem('access_token');
+  const code = customFunctions.getLocalStorage('access_token');
   useEffect(() => {
     if (code) {
       setIsLoggedIn(true);
