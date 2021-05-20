@@ -3,8 +3,9 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Routes from './routes';
 import Layout from './components/Layout/layout.component';
+import customFunctions from './helper/customFunctions';
 
-const token = localStorage.getItem('access_token');
+const token = customFunctions.getLocalStorage('access_token');
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(token ? true : false); // eslint-disable-line

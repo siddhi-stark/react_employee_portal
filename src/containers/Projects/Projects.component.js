@@ -83,23 +83,68 @@ function Projects() {
       roleAccess: [1, 2, 3, 4],
       isDisplay: false,
     },
-    {
-      id: 'completion',
-      label: 'Completion',
-      roleAccess: [1, 2, 3, 4],
-      render: ({ complt }) => {
-        return (
-          <>
-            <ProgressBar
-              bsPrefix="progress pbar"
-              variant="success"
-              now={complt}
-              label={`${complt}% completed`}
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   id: 'completion',
+    //   label: 'Completion',
+    //   roleAccess: [1, 2, 3, 4],
+    //   render: ({ complt }) => {
+    //     return (
+    //       <>
+    //         <ProgressBar
+    //           bsPrefix="progress pbar"
+    //           // { (complt < 50 || complt === 50)  && 'danger'}
+    //           // {(complt < 80 || complt === 80) && 'info'}
+    //           variant= { (complt < 50 || complt === 50) && 'danger'} 
+    //           // variant= { (complt <= 50) ? 'danger' : (complt <= 80) ? 'info' : 'success' } 
+    //           now={complt}
+    //           label={`${complt}% completed`}
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
+
+{
+  id: 'completion',
+  label: 'Completion',
+  roleAccess: [1, 2, 3, 4],
+  render: ({ complt }) => {
+  return (
+  <>
+  {
+  (complt <= 50) && (
+  <ProgressBar
+  bsPrefix="progress pbar"
+  variant="danger"
+  now={complt}
+  label={`${complt}% completed`}
+  />
+  )
+  }
+  {
+  (complt > 50 && complt <= 80) && (
+  <ProgressBar
+  bsPrefix="progress pbar"
+  variant="info"
+  now={complt}
+  label={`${complt}% completed`}
+  />
+  )
+  }
+  {
+  (complt > 80) && (
+  <ProgressBar
+  bsPrefix="progress pbar"
+  variant="success"
+  now={complt}
+  label={`${complt}% completed`}
+  />
+  )
+  }
+  </>
+  );
+  },
+  },
     {
       id: 'support',
       label: 'support',

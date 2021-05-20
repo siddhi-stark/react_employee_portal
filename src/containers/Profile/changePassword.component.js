@@ -50,12 +50,14 @@ function ManagePassword() {
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
+          setDisableButton(false);
           validator.current.hideMessages();
           history.push('/');
         }
       });
     } else {
       swal(message, '', 'error');
+      setDisableButton(false);
     }
   };
 

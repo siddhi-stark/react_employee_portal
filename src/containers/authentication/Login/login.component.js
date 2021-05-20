@@ -96,7 +96,7 @@ function Login(props) {
       setTimeout(async () => {
         setDisableButton(false);
         props.history.push('/');
-        await window.location.reload();
+        window.location.reload();
       }, 1000);
     } else {
       setDisableButton(false);

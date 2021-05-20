@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import customFunctions from '../../helper/customFunctions';
 
 const HelmetComponent = (props) => {
   const { title } = props;
@@ -9,7 +10,7 @@ const HelmetComponent = (props) => {
         <Helmet>
           <meta charSet="utf-8" />
           <title>
-            {localStorage.getItem('group') === '1'
+            {customFunctions.getLocalStorage('group') === '1'
               ? `${title} |Admin Portal`
               : `${title} |Employee Portal`}
           </title>

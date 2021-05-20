@@ -169,8 +169,8 @@ function Employee() {
     const endPoint = `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`;
 
     const params = {
-      page,
       limit: pagination.itemsPerPage,
+      page,
       keyword: searchKeyword,
     };
 
@@ -453,6 +453,7 @@ function Employee() {
       setModalShow(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
+          setDisableButton(false);
           setEmployeeId();
           setSelectedDesignationOption();
           setSelectedRole();
@@ -462,13 +463,30 @@ function Employee() {
           setEmail();
           setPassword();
           setMobile();
+          setSelectedManager();
+          setDate();
+          setSelectedTeamLead();
+          setSelectedDepartment();
           setModalShow(false);
           getTableData(1);
         }
       });
     } else {
       swal(data && data.message, '', 'error');
+      setDisableButton(false);
       setModalShow();
+      setEmployeeId();
+      setSelectedDesignationOption();
+      setSelectedRole();
+      setFullName();
+      setSelectedEmployee();
+      setEmail();
+      setPassword();
+      setMobile();
+      setSelectedManager();
+      setDate();
+      setSelectedTeamLead();
+      setSelectedDepartment();
     }
   };
 

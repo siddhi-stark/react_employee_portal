@@ -363,7 +363,7 @@ function ToDoList() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (selectedRowIndex.length > 0) {
+    if (selectedRowIndex.length >= 0) {
       onSendScrum();
     } else {
       swal('Please Select Task', '', 'error');
@@ -399,6 +399,7 @@ function ToDoList() {
 
   return (
     <>
+    {console.log('selectedRowIndex',selectedRowIndex)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -497,12 +498,15 @@ function ToDoList() {
                   dropdownContainerClass="mb-3"
                   selectedRowItems={selectedId}
                   onSelectRowsIndexes={(rowIndex) => {
+                    console.log('rowINdex', rowIndex);
                     const twId = [];
                     taskList.map((task, ind) => {
+                     
                       rowIndex.map((i) => {
-                        if (ind === i) {
+                        if (task.id === i) {
                           if (task.task_type === 'tw') {
                             twId.push(task.tw_id);
+                            
                           } else {
                             twId.push(task.id);
                           }
