@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import { Button } from 'react-bootstrap';
-import {AES, enc}from 'crypto-js';
+import { AES, enc } from 'crypto-js';
 import CustomFunctions from '../../../helper/customFunctions';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
@@ -21,33 +21,34 @@ function Login(props) {
   const history = useHistory();
   const [disableButton, setDisableButton] = useState(false);
 
-  let emailLocal = '';
-  if(CustomFunctions.getLocalStorage('email')) {
-    const decryptedEmailString = AES.decrypt(CustomFunctions.getLocalStorage('email'), 'employeePortal');
-    emailLocal = decryptedEmailString.toString(enc.Utf8);
-    console.log('emailLocal', emailLocal);
-  }
+  const checkRememberMe = () => {
+    let emailLocal = '';
+    if (CustomFunctions.getLocalStorage('email')) {
+      const decryptedEmailString = AES.decrypt(
+        CustomFunctions.getLocalStorage('email'),
+        'employeePortal'
+      );
+      emailLocal = decryptedEmailString.toString(enc.Utf8);
+    }
 
-  let passwordLocal = '';
-  if(CustomFunctions.getLocalStorage('password')) {
-  
-    const decryptedStringPasswordString = AES.decrypt(CustomFunctions.getLocalStorage('password'), 'employeePortal');
-    passwordLocal = decryptedStringPasswordString.toString(enc.Utf8);
-    console.log('passwordLocal', passwordLocal);
-  }
-  
-  // const emailLocal = CustomFunctions.getLocalStorage('email');
-  // const passwordLocal = CustomFunctions.getLocalStorage('password');
-  const checkbox = CustomFunctions.getLocalStorage('checkbox');
-
-  useEffect(() => {
-    setTitle('Login');
-    
-    if (checkbox && !emailLocal) {
+    let passwordLocal = '';
+    if (CustomFunctions.getLocalStorage('password')) {
+      const decryptedStringPasswordString = AES.decrypt(
+        CustomFunctions.getLocalStorage('password'),
+        'employeePortal'
+      );
+      passwordLocal = decryptedStringPasswordString.toString(enc.Utf8);
+    }
+    const checkboxLocal = CustomFunctions.getLocalStorage('checkbox');
+    if (checkboxLocal && !CustomFunctions.checkIfEmpty(emailLocal)) {
       setUsername(emailLocal);
       setRemember(true);
       setPassword(passwordLocal);
     }
+  };
+  useEffect(() => {
+    setTitle('Login');
+    checkRememberMe();
     const token = CustomFunctions.getLocalStorage('access_token');
     if (token) {
       dispatch({ type: 'LOGIN', value: true });
@@ -56,9 +57,9 @@ function Login(props) {
   }, []);
 
   const loginUser = async () => {
-    if (remember && !username) {
-            CustomFunctions.setLocalStorage('checkbox', remember);
-            CustomFunctions.setLocalStorage('email', username);
+    if (remember && !CustomFunctions.checkIfEmpty(username)) {
+      CustomFunctions.setLocalStorage('checkbox', remember);
+      CustomFunctions.setLocalStorage('email', username);
     } else {
       CustomFunctions.removeLocalStorage('email');
       CustomFunctions.removeLocalStorage('checkbox');
@@ -73,23 +74,23 @@ function Login(props) {
       postData
     );
     if (data && data.data && data.data.token && data.data.token.access_token) {
-       CustomFunctions.setLocalStorage(
+      CustomFunctions.setLocalStorage(
         'access_token',
         data.data.token.access_token
       );
-       CustomFunctions.setLocalStorage(
-        'access_token',
-        data.data.token.access_token
-      );
+
       const envryptedPassword = AES.encrypt(password, 'employeePortal');
       const envryptedUsername = AES.encrypt(data.data.email, 'employeePortal');
 
-       CustomFunctions.setLocalStorage('email', envryptedUsername.toString());
-       CustomFunctions.setLocalStorage('userId', data.data.id);
-      //  CustomFunctions.setLocalStorage('password', password);
-       CustomFunctions.setLocalStorage('password', envryptedPassword.toString());
-       CustomFunctions.setLocalStorage('group', data.data.group);
-       CustomFunctions.setLocalStorage('name', data.data.full_name);
+      CustomFunctions.setLocalStorage(
+        'access_token',
+        data.data.token.access_token
+      );
+      CustomFunctions.setLocalStorage('email', envryptedUsername.toString());
+      CustomFunctions.setLocalStorage('userId', data.data.id);
+      CustomFunctions.setLocalStorage('password', envryptedPassword.toString());
+      CustomFunctions.setLocalStorage('group', data.data.group);
+      CustomFunctions.setLocalStorage('name', data.data.full_name);
       dispatch({ type: 'LOGIN', value: true });
 
       setTimeout(async () => {

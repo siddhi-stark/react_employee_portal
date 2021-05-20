@@ -92,7 +92,7 @@ function ManagePassword() {
               <Form autoComplete="off" onSubmit={(e) => validateForm(e)}>
                 <Row>
                   <Col className="col-md-4">
-                  <PasswordInput
+                    <PasswordInput
                       onInputChange={(e) => setOldPassword(e.target.value)}
                       name="oldPassword"
                       containerClass="form-group"
@@ -111,10 +111,9 @@ function ManagePassword() {
                       )}
                       switchElement="true"
                     />
-                    
                   </Col>
                   <Col className="col-md-4">
-                  <PasswordInput
+                    <PasswordInput
                       onInputChange={(e) => setPassword(e.target.value)}
                       name="password"
                       containerClass="form-group"
@@ -136,7 +135,7 @@ function ManagePassword() {
                     />
                   </Col>
                   <Col className="col-md-4">
-                  <PasswordInput
+                    <PasswordInput
                       onInputChange={(e) => setConfirmPassword(e.target.value)}
                       name="confirmPassword"
                       containerClass="form-group"

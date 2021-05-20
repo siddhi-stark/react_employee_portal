@@ -38,11 +38,7 @@ function Layout(props) {
               <section className="content-area">
                 <div className="row">
                   <div className="col-xl-12" id="main-content">
-                    {/* <WelcomeScreen /> */}
                     {children}
-                  </div>
-                  <div className="col-xl-4" id="right-sidebar">
-                    {/* <RightContainer /> */}
                   </div>
                 </div>
               </section>

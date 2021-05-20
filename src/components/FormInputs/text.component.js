@@ -29,14 +29,15 @@ export default function InputComponent(props) {
 
   return (
     <>
-     
-        {label && (
-          <Form.Label>
-            {' '}
-            {label}<small>{optionalLabel}</small> <span style={{ color: 'red' }}>{asterisk}</span>{' '}
-          </Form.Label>
-        )}
-        <Form.Group className={containerClass}>
+      {label && (
+        <Form.Label>
+          {' '}
+          {label}
+          <small>{optionalLabel}</small>{' '}
+          <span style={{ color: 'red' }}>{asterisk}</span>{' '}
+        </Form.Label>
+      )}
+      <Form.Group className={containerClass}>
         <InputGroup>
           {inputVarible && (
             <InputGroup.Prepend>

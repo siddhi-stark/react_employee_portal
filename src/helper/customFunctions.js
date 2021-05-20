@@ -167,7 +167,7 @@ class CustomFunctions extends Component {
         return !value || (value && !value.length);
       case 'O':
         return value && !Object.keys(value).length;
-        
+
       default:
         return !value;
     }

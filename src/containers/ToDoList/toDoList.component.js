@@ -342,8 +342,11 @@ function ToDoList() {
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
-          const tempPagination = rows.length < 2 ? pagination.current_page - 1 : pagination.current_page;
-          
+          const tempPagination =
+            rows.length < 2
+              ? pagination.current_page - 1
+              : pagination.current_page;
+
           setShowDelete(false);
           setTaskId(null);
           getTableData(tempPagination);
@@ -355,7 +358,6 @@ function ToDoList() {
   };
 
   const onChangeInTask = () => {
-    console.log('pagination',pagination.current_page);
     getTableData(pagination.current_page);
   };
 

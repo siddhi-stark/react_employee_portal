@@ -52,7 +52,7 @@ function Dashboard() {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       if (data.data.clock_in_time && data.data.clocked_in) {
-         customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
+        customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
         const stime = data.data.clock_in_time.split(' ');
         const newtime = stime[0];
         setSignInTime(newtime);
@@ -89,7 +89,7 @@ function Dashboard() {
       setRows(row);
     }
   };
-  
+
   const getClockInTime = async () => {
     const event = new Event('TimeUpdate', { isUpdated: true });
     const endPoint = `${Api.clockInUrl}`;
@@ -141,7 +141,9 @@ function Dashboard() {
                     <h1>
                       Welcome{' '}
                       <strong>
-                        { employeeName.split(' ').length> 1 ? employeeName.split(' ')[0]: employeeName}
+                        {employeeName.split(' ').length > 1
+                          ? employeeName.split(' ')[0]
+                          : employeeName}
                         ,
                       </strong>
                     </h1>

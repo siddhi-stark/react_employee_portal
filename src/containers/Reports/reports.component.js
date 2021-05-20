@@ -69,7 +69,6 @@ function Reports(props) {
     const url = customFunctions.generateUrl(endPoint, params);
 
     const { data } = await AuthApi.getDataFromServer(url);
-    console.log('data',data);
 
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
@@ -79,15 +78,15 @@ function Reports(props) {
       });
 
       const row = [];
-      console.log('page', page);
-      // console.log('data',reportData);
 
       const reportData = showButton
         ? data.data.morning_data
         : data.data.evening_data;
       reportData.map((proj, i) => {
         const setRowData = {
-          no: (page - 1) * (pagination && pagination.itemsPerPage || 10) + (i + 1),
+          no:
+            (page - 1) * ((pagination && pagination.itemsPerPage) || 10) +
+            (i + 1),
           task: proj.activity,
           project: proj.project_name,
           status: proj.status,

@@ -25,7 +25,6 @@ import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
-
 const items = [
   { to: '/', label: 'Home' },
   { to: '/reports', label: 'Employee' },
@@ -35,7 +34,7 @@ const currentdate = new Date();
 const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
 
 function Employee() {
-const validator = useRef(new SimpleReactValidator());
+  const validator = useRef(new SimpleReactValidator());
 
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
@@ -487,7 +486,6 @@ const validator = useRef(new SimpleReactValidator());
     }
   };
 
-
   const getDesignationList = () => {
     if (!designation) return [];
     const options = [];
@@ -660,8 +658,8 @@ const validator = useRef(new SimpleReactValidator());
               <div className="d-flex align-items-center justify-content-between">
                 <h4 className="text-primary mt-2 mb-2">Add Employee</h4>
                 <div className="d-flex align-items-center justify-content-end">
-                <UserRestrictions permittedUsers={[1]} roleId={userRole}>
-                <a
+                  <UserRestrictions permittedUsers={[1]} roleId={userRole}>
+                    <a
                       href="#"
                       onClick={() => {
                         setModalShow(true);
@@ -671,31 +669,29 @@ const validator = useRef(new SimpleReactValidator());
                     >
                       Add Employee
                     </a>
-                </UserRestrictions>
-                   
+                  </UserRestrictions>
                 </div>
               </div>
             </Card.Header>
             <Card.Body>
               <Row>
-              <Table
-                  
-                    columns={columns}
-                    rows={rows}
-                    showPagination="true"
-                    paginationProps={{
-                      ...pagination,
-                      activePage: pagination.current_page,
-                      onPageChange: (pageNo) => {
-                        getTableData(pageNo);
-                      },
-                    }}
-                    tableClass="table-striped"
-                    dropdownContainerClass="mb-3"
-                    emptyRender={() => (
-                      <p className="text-center mb-0">No record found</p>
-                    )}
-                  />
+                <Table
+                  columns={columns}
+                  rows={rows}
+                  showPagination="true"
+                  paginationProps={{
+                    ...pagination,
+                    activePage: pagination.current_page,
+                    onPageChange: (pageNo) => {
+                      getTableData(pageNo);
+                    },
+                  }}
+                  tableClass="table-striped"
+                  dropdownContainerClass="mb-3"
+                  emptyRender={() => (
+                    <p className="text-center mb-0">No record found</p>
+                  )}
+                />
               </Row>
             </Card.Body>
           </Card>
@@ -760,7 +756,11 @@ const validator = useRef(new SimpleReactValidator());
                   type="text"
                   value={email}
                   placeholder="Enter email"
-                  errorMessage={validator.current.message('email', email, 'required')}
+                  errorMessage={validator.current.message(
+                    'email',
+                    email,
+                    'required'
+                  )}
                 />
               </Col>
               {!employeeId && (
@@ -794,7 +794,11 @@ const validator = useRef(new SimpleReactValidator());
                   maxlength="10"
                   value={mobile}
                   placeholder="Enter Contact Number"
-                  errorMessage={validator.current.message('mobile', mobile, 'required')}
+                  errorMessage={validator.current.message(
+                    'mobile',
+                    mobile,
+                    'required'
+                  )}
                 />
               </Col>
               <Col sm={6}>
@@ -889,7 +893,12 @@ const validator = useRef(new SimpleReactValidator());
                 Cancel
               </Button>
 
-              <Button variant="primary" type="submit" className="ms-4"  disabled={disableButton}>
+              <Button
+                variant="primary"
+                type="submit"
+                className="ms-4"
+                disabled={disableButton}
+              >
                 {employeeId ? 'Update' : 'Add'}
               </Button>
             </div>

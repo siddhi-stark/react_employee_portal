@@ -81,22 +81,21 @@ function Projects() {
       id: 'complt',
       label: 'completionData',
       roleAccess: [1, 2, 3, 4],
-      isDisplay: false
+      isDisplay: false,
     },
     {
       id: 'completion',
       label: 'Completion',
-      roleAccess: [1,2, 3,4],
-      render: ({complt}) => {
+      roleAccess: [1, 2, 3, 4],
+      render: ({ complt }) => {
         return (
           <>
-          <ProgressBar
-            bsPrefix="progress pbar"
-            variant="success"
-            now={complt}
-            label={`${complt}% completed`}
-          />
-          
+            <ProgressBar
+              bsPrefix="progress pbar"
+              variant="success"
+              now={complt}
+              label={`${complt}% completed`}
+            />
           </>
         );
       },
@@ -105,26 +104,23 @@ function Projects() {
       id: 'support',
       label: 'support',
       roleAccess: [1, 2, 3, 4],
-      isDisplay: false
+      isDisplay: false,
     },
     {
       id: 'ID',
       label: 'ID',
       roleAccess: [1, 2, 3, 4],
-      isDisplay: false
+      isDisplay: false,
     },
     {
       id: 'support',
       label: 'RT Support',
-      roleAccess: [1,2, 3,4],
-      render: ({support,ID }) => {
+      roleAccess: [1, 2, 3, 4],
+      render: ({ support, ID }) => {
         return (
           <>
-             <Image
-          src={
-            support ? '/images/success.svg' : '/images/fail.svg'
-            }
-             
+            <Image
+              src={support ? '/images/success.svg' : '/images/fail.svg'}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -133,30 +129,27 @@ function Projects() {
                 setShowUpdate(true);
               }}
             />
-            
           </>
         );
       },
     },
-  
+
     {
       id: 'link',
       label: 'TW Link',
-      roleAccess: [1,2, 3,4],
-      render: ({twID}) => {
+      roleAccess: [1, 2, 3, 4],
+      render: ({ twID }) => {
         return (
           <>
-             <a href={`${constants.project}${twID}`} target="_blank">
+            <a href={`${constants.project}${twID}`} target="_blank">
               <span>
                 <Image src="/images/redirect.png" />
               </span>
             </a>
-            
           </>
         );
       },
     },
-   
   ];
 
   const onRtSupport = async (id, Support) => {
@@ -220,7 +213,6 @@ function Projects() {
           support: proj.rt_support,
           twID: proj.tw_id,
           complt: proj.completion,
-          
         };
         row.push(setRowData);
 

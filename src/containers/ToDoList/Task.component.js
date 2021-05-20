@@ -9,7 +9,6 @@ import { ModalInput, TextInput, Datepicker } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
-
 function Task(props) {
   const validator = useRef(new SimpleReactValidator());
   const [taskHrs, setTaskHours] = useState('');
@@ -146,7 +145,6 @@ function Task(props) {
     if (disableButton) return;
 
     setDisableButton(true);
-    
   };
 
   return (
@@ -313,7 +311,12 @@ function Task(props) {
               <Button variant="secondary" onClick={() => onTaskCancel()}>
                 Cancel
               </Button>
-              <Button variant="primary" type="submit" className="ms-4" disabled={disableButton}>
+              <Button
+                variant="primary"
+                type="submit"
+                className="ms-4"
+                disabled={disableButton}
+              >
                 {id ? 'Update' : 'Add'}
               </Button>
             </div>

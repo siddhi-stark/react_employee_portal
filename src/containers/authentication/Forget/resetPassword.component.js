@@ -156,7 +156,6 @@ function ResetPassword(props) {
 
           <div className="text-center mt-3">
             <Button
-              
               className="btn btn-lg btn-primary"
               type="submit"
               disabled={disableButton}

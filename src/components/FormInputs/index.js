@@ -1,4 +1,3 @@
-
 import TextInput from './text.component';
 import EmailInput from './email.component';
 import FileInput from './file.component';
@@ -20,5 +19,5 @@ export {
   ModalInput,
   Datepicker,
   Helmet,
-  PasswordInput
+  PasswordInput,
 };

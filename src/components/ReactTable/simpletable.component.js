@@ -20,32 +20,6 @@ const defaults = {
   bulkActionsLabel: 'Apply',
 };
 
-// Columns structure
-// [{id: 'id', label: 'Id', roleAccess: [1], isDisplay: true, columnRender: (col => (<span style={{ fontWeight: 'bold' }}>{col.label}</span>)), render: (row) => { return (<b>{row.id}</b>) }},{id: 'name', label: 'Name'}{id: 'email', label: 'Email'}]
-
-// Rows structure
-// [{id: 1, name: 'Sample name', email: 'john.doe@example.com'}]
-
-// Bulk action structure
-// [
-//   {
-//     actionTitle: 'Delete',
-//     actionCallback: () => { } // return selected array of ids
-//   }
-// ]
-
-// Empty Row alter strcuture and data
-// emptyRender={() => 'Data not exist'}
-// emptyRender={() => <b>Data not exist</b>}
-
-// Role based Datatable
-// role = {1} i.e single role id
-
-// Role based column based on datatable main role
-// roleAccess: [1]
-// Add role access key to column to hide or show specific column based on role
-// Keep empty to show column to all user
-
 export default function SimpleTable(props) {
   const {
     columns,
@@ -226,7 +200,6 @@ export default function SimpleTable(props) {
                         id="chkAll"
                         name="chkAll"
                         type="checkbox"
-                        // className="form-check-input"
                         checked={allSelected}
                         onChange={(e) => {
                           onSelectHead(e.target.checked);
@@ -264,7 +237,6 @@ export default function SimpleTable(props) {
                   <th>
                     <div className="form-check">
                       <Form.Check
-                        // className="form-check-input"
                         id={`chk${row.id}`}
                         name={`chk${row.id}`}
                         value={row.id}

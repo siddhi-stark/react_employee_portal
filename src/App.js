@@ -25,7 +25,6 @@ function App() {
       } else {
         setIsLoggedIn(true);
       }
-
     } else {
       setIsLoggedIn(true);
       dispatch({ type: 'LOGIN', value: true });

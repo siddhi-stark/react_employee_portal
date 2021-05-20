@@ -15,21 +15,6 @@ const defaults = {
   selectedRowItems: [],
 };
 
-// Columns structure
-// [{id: 'id', label: 'Id'},{id: 'name', label: 'Name'}{id: 'email', label: 'Email'}]
-
-// Rows structure
-// [{id: 1, name: 'Sample name', email: 'john.doe@example.com'}]
-
-// Bulk action structure
-// [
-//   {
-//     id: 'delete',
-//     actionTitle: 'Delete',
-//     actionCallback: () => { }
-//   }
-// ]
-
 export default function SimpleTable(props) {
   const {
     columns,
@@ -53,7 +38,6 @@ export default function SimpleTable(props) {
   const [selectedAction, setSelectedAction] = useState('');
   const [selectedRows, setSelectedRows] = useState(
     rows.map((row, rowIndex) => {
-      // console.log('tablecomponent', row);
       return selectedRowItems.includes(rowIndex);
     })
   );

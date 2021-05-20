@@ -35,9 +35,9 @@ function Header() {
   };
 
   const getCLocTIme = () => {
-    const clockTime = customFunctions.getLocalStorage('clockinTime')
+    const clockTime = customFunctions.getLocalStorage('clockinTime');
     setClockInTime(clockTime);
-  }
+  };
 
   useEffect(() => {
     document.addEventListener('ProfileUpdate', () => {
@@ -45,8 +45,7 @@ function Header() {
     });
 
     document.addEventListener('TimeUpdate', () => {
-     getCLocTIme();
-  
+      getCLocTIme();
     });
 
     getProfile();
@@ -54,7 +53,6 @@ function Header() {
     const localTime = customFunctions.getLocalStorage('time');
     setTime(localTime);
 
-    
     if (!token) {
       const path = window.location.pathname.split('/');
       const extractedPath = path.length > 1 ? path[1].toString() : '';
@@ -77,10 +75,7 @@ function Header() {
           <div className="main-header-left">
             {time ? (
               <div className="d-flex justify-content-start clock-in-time">
-                <h7>
-                  You are clocked out at{' '}
-                  {time}{' '}
-                </h7>
+                <h7>You are clocked out at {time} </h7>
               </div>
             ) : (
               ''
@@ -88,10 +83,7 @@ function Header() {
           </div>
           {clockedInTime ? (
             <div className="d-flex justify-content-end clock-in-time">
-              <h7>
-                You are clocked in at{' '}
-                {clockedInTime}{' '}
-              </h7>
+              <h7>You are clocked in at {clockedInTime} </h7>
             </div>
           ) : (
             ''

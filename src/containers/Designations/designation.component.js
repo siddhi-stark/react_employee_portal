@@ -18,7 +18,6 @@ import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 
-
 const items = [
   { to: '/', label: 'Home' },
   { to: '/designation', label: 'Designation' },
@@ -233,8 +232,6 @@ function Designation() {
     setCntClearFilter(cntClearFilter + 1);
   };
 
-  
-
   const submitForm = (e) => {
     e.preventDefault();
     if (disableButton) return;
@@ -382,7 +379,12 @@ function Designation() {
                     >
                       Cancel
                     </Button>
-                    <Button variant="primary" type="submit" className="ms-4" disabled={disableButton}>
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      className="ms-4"
+                      disabled={disableButton}
+                    >
                       {designationId ? 'Update' : 'Add'}
                     </Button>
                   </Form>

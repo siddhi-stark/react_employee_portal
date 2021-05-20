@@ -179,9 +179,7 @@ function Profile() {
 
   const getImageName = (profileImage) => {
     const img = profileImage
-      ? profileImage.split(
-          Api.s3Url
-        )
+      ? profileImage.split(Api.s3Url)
       : imageUrl.split(Api.s3Url);
     let img1 = '';
 
