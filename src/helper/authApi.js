@@ -1,3 +1,4 @@
+/* eslint-disable */
 import httpService from '../services/HttpService';
 import httpResponse from '../services/HttpResponse';
 
