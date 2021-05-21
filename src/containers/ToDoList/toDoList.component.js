@@ -563,12 +563,13 @@ function ToDoList() {
         size="md"
         centered
         show={showBreak}
+        onHide={() => {setShowBreak(false);}}
         label={<h4 variant="primary">Add Break</h4>}
         id="contained-modal-title-vcenter"
         modalBody={
           <Form
             onClick={(e) => {
-              onSendScrum(e);
+              onSubmit(e);
             }}
           >
             <div className="add-break d-flex align-items-center justify-content-between">
@@ -717,6 +718,7 @@ function ToDoList() {
         centered
         className="send-report-confirm"
         show={showScrumPopup}
+        onHide={() => setShowScrumPopup(false)}
         id="contained-modal-title-vcenter"
         closeButton="closeButton"
         modalBody={

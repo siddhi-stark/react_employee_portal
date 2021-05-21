@@ -729,6 +729,7 @@ function Employee() {
         size="lg"
         centered
         show={modalShow}
+        onHide={onCancel}
         label={employeeId ? 'Update Employee' : 'Add Employee'}
         id="contained-modal-title-vcenter"
         modalBody={

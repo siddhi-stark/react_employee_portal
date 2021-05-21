@@ -338,6 +338,7 @@ function Profile() {
         size="md"
         centered
         show={modalShow}
+        onHide={onCancel}
         label={<h4>Edit Profile</h4>}
         id="contained-modal-title-vcenter"
         modalBody={
