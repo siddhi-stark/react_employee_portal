@@ -398,10 +398,6 @@ function Employee() {
     setSelectedDepartment('');
     setDate();
     setModalShow(false);
-    if (disableButton) return;
-
-    setDisableButton(true);
-
     if (timmer) clearTimeout(timmer);
     timmer = setTimeout(() => {
       getTableData(1);
