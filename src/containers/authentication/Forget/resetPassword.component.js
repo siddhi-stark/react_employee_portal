@@ -71,7 +71,7 @@ function ResetPassword(props) {
       swal('Password changed successfully', '', 'success');
       props.history.push('/login');
     } else {
-      setDisableButton(true);
+      setDisableButton(false);
       swal(message, '', 'error');
     }
   };
