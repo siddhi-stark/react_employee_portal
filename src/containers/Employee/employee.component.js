@@ -65,6 +65,7 @@ function Employee() {
   const [disableButton, setDisableButton] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [filterErr, setFilterErr] = useState('');
+  let timmer = null;
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -397,6 +398,15 @@ function Employee() {
     setSelectedDepartment('');
     setDate();
     setModalShow(false);
+    if (disableButton) return;
+
+    setDisableButton(true);
+
+    if (timmer) clearTimeout(timmer);
+    timmer = setTimeout(() => {
+      getTableData(1);
+      setDisableButton(false);
+    }, 1000);
   };
 
   const addEmployee = async () => {
