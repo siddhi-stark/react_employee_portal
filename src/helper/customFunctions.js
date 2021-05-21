@@ -1,5 +1,5 @@
 import React, { Component } from 'react'; // eslint-disable-line
-import { AES } from 'crypto-js'; 
+import { AES } from 'crypto-js';
 
 class CustomFunctions extends Component {
   getDate = (dateTime) => {
@@ -109,8 +109,6 @@ class CustomFunctions extends Component {
       return false;
     }
   };
-
-
 
   getLocalStorage = (key) => {
     try {
