@@ -20,15 +20,7 @@ class AuthApi {
         (err) => {
           httpResponse.data = null;
           httpResponse.success = false;
-          httpResponse.message =
-            err && err.data && err.data.message
-              ? err.data.message[0]
-              : err &&
-                err.response &&
-                err.response.data &&
-                err.response.data.message
-              ? err.response.data.message[0]
-              : 'Something went wrong! Please try again later'; // eslint-disable-line
+          httpResponse.message = err && err.data && err.data.message ? err.data.message[0] : err && err.response && err.response.data && err.response.data.message ? err.response.data.message[0] : 'Something went wrong! Please try again later'; // eslint-disable-line
           return httpResponse;
         }
       );
@@ -49,15 +41,7 @@ class AuthApi {
         (err) => {
           httpResponse.success = false;
           httpResponse.data = null;
-          httpResponse.message =
-            err && err.data && err.data.message
-              ? err.data.message[0]
-              : err &&
-                err.response &&
-                err.response.data &&
-                err.response.data.message
-              ? err.response.data.message[0]
-              : 'Something went wrong! Please try again later'; // eslint-disable-line
+          httpResponse.message = err && err.data && err.data.message  ? err.data.message[0] : err &&  err.response && err.response.data &&  err.response.data.message ? err.response.data.message[0] : 'Something went wrong! Please try again later'; // eslint-disable-line
           return httpResponse;
         }
       );
@@ -79,14 +63,7 @@ class AuthApi {
           httpResponse.success = false;
           httpResponse.data = null;
           httpResponse.message =
-            err && err.data && err.data.message
-              ? err.data.message[0]
-              : err &&
-                err.response &&
-                err.response.data &&
-                err.response.data.message
-              ? err.response.data.message[0]
-              : 'Something went wrong! Please try again later'; // eslint-disable-line
+            err && err.data && err.data.message ? err.data.message[0]: err &&  err.response && err.response.data && err.response.data.message ? err.response.data.message[0] : 'Something went wrong! Please try again later'; // eslint-disable-line
           return httpResponse;
         }
       );
@@ -107,14 +84,7 @@ class AuthApi {
         (err) => {
           httpResponse.success = false;
           httpResponse.message =
-            err && err.data && err.data.message
-              ? err.data.message[0]
-              : err &&
-                err.response &&
-                err.response.data &&
-                err.response.data.message
-              ? err.response.data.message[0]
-              : 'Something went wrong! Please try again later'; // eslint-disable-line
+            err && err.data && err.data.message ? err.data.message[0] : err && err.response && err.response.data && err.response.data.message ? err.response.data.message[0] : 'Something went wrong! Please try again later'; // eslint-disable-line
           return httpResponse;
         }
       );
