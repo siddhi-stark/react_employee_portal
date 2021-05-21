@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import { Button } from 'react-bootstrap';
-import { AES, enc } from 'crypto-js';
+import { enc } from 'crypto-js';
 import CustomFunctions from '../../../helper/customFunctions';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
@@ -24,18 +24,18 @@ function Login(props) {
   const checkRememberMe = () => {
     let emailLocal = '';
     if (CustomFunctions.getLocalStorage('email')) {
-      const decryptedEmailString = AES.decrypt(
+      const decryptedEmailString = CustomFunctions.decryptKey(
         CustomFunctions.getLocalStorage('email'),
-        'employeePortal'
+        CustomFunctions.getAESKey()
       );
       emailLocal = decryptedEmailString.toString(enc.Utf8);
     }
 
     let passwordLocal = '';
     if (CustomFunctions.getLocalStorage('password')) {
-      const decryptedStringPasswordString = AES.decrypt(
+      const decryptedStringPasswordString = CustomFunctions.decryptKey(
         CustomFunctions.getLocalStorage('password'),
-        'employeePortal'
+        CustomFunctions.getAESKey()
       );
       passwordLocal = decryptedStringPasswordString.toString(enc.Utf8);
     }
@@ -79,8 +79,8 @@ function Login(props) {
         data.data.token.access_token
       );
 
-      const envryptedPassword = AES.encrypt(password, 'employeePortal');
-      const envryptedUsername = AES.encrypt(data.data.email, 'employeePortal');
+      const envryptedPassword = CustomFunctions.encryptKey(password,  CustomFunctions.getAESKey());
+      const envryptedUsername = CustomFunctions.encryptKey(data.data.email,  CustomFunctions.getAESKey());
 
       CustomFunctions.setLocalStorage(
         'access_token',
@@ -91,12 +91,14 @@ function Login(props) {
       CustomFunctions.setLocalStorage('password', envryptedPassword.toString());
       CustomFunctions.setLocalStorage('group', data.data.group);
       CustomFunctions.setLocalStorage('name', data.data.full_name);
-      dispatch({ type: 'LOGIN', value: true });
+      setDisableButton(false);
 
       setTimeout(async () => {
-        setDisableButton(false);
-        props.history.push('/');
-        window.location.reload();
+      dispatch({ type: 'LOGIN', value: true });
+
+       
+        window.location.href= '/';
+        
       }, 1000);
     } else {
       setDisableButton(false);

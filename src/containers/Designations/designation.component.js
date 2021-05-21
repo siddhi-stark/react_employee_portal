@@ -383,7 +383,6 @@ function Designation() {
                       variant="primary"
                       type="submit"
                       className="ms-4"
-                      disabled={disableButton}
                     >
                       {designationId ? 'Update' : 'Add'}
                     </Button>

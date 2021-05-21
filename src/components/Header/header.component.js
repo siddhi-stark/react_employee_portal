@@ -98,7 +98,10 @@ function Header() {
               <h6>{employeeName}</h6>
               <div className="profile-img">
                 <a href="#">
-                  <img src={imageProfile} alt="Profile" />
+                
+                  <img  
+                    src={`${imageProfile}` ? `${imageProfile}` : '/images/fail.svg'}
+                  alt="Profile" />
                 </a>
               </div>
             </div>
