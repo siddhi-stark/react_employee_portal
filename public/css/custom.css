@@ -9009,9 +9009,28 @@ select {
     align-items: center; }
     .form-group .progress-main .progress {
       width: 100%;
-      background-color: #F5F5F5; }
+      /*background-color: #F5F5F5;*/ }
       .form-group .progress-main .progress .progress-bar {
-        color: #999EA3 !important; }
+        position: relative;
+        color: #999EA3 !important;
+        background-color: transparent !important;
+        /*h5 {
+                    position: absolute;
+                    color: #ffffff;
+                    font-size: 8px;
+                    top: 16px;
+                    left: 0;
+                    right: 20px;
+                    pointer-events: none;
+                }*/ }
+        .form-group .progress-main .progress .progress-bar h5, .form-group .progress-main .progress .progress-bar .h5 {
+          margin-bottom: 0;
+          color: #212529;
+          font-size: 14px; }
+        .form-group .progress-main .progress .progress-bar input:active, .form-group .progress-main .progress .progress-bar input:focus {
+          -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+          border: none !important; }
 
 hr {
   background-color: #E3E3E3;
@@ -10975,6 +10994,32 @@ table tfoot {
 .swal-modal .swal-button {
   color: #000000; }
 
+.change-password-type .form-group {
+  width: 100%; }
+
+.change-password-type .input-group {
+  width: 100%; }
+  .change-password-type .input-group .form-control {
+    padding-right: 35px;
+    width: 100%; }
+
+.change-password-type .input-group-append {
+  position: absolute;
+  z-index: 9;
+  left: auto;
+  right: 0;
+  top: 33px; }
+
+/*#myinput {
+    background: linear-gradient(to right, #51B773 0%, #51B773 50%, #F5F5F5 50%, #F5F5F5 100%);
+    border: solid 1px #F5F5F5;
+    border-radius: 8px;
+    outline: none;
+    transition: background 450ms ease-in;
+    -webkit-appearance: none;
+    height: 9px;
+    margin-top: 5px;
+}*/
 @media (min-width: 576px) {
   .bd-content .highlight {
     margin-right: 0;

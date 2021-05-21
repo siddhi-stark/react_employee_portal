@@ -96,7 +96,7 @@ function Task(props) {
 
     if (data) {
       props.handleModalCLose(false);
-      swal('Task Created Successfully', '', 'success').then((result) => {
+      swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
           setTaskStartTime();
@@ -111,7 +111,7 @@ function Task(props) {
       });
     } else {
       setDisableButton(false);
-      swal(data && data.message, '', 'error');
+      swal(data && data.message[0], '', 'error');
       props.handleModalCLose(false);
     }
   };
@@ -142,7 +142,6 @@ function Task(props) {
     setId();
     setTaskModalShow(false);
     props.handleModalCLose(false);
-    if (disableButton) return;
 
     setDisableButton(true);
   };
@@ -289,10 +288,11 @@ function Task(props) {
                     <div className="progress">
                       <div className="progress-bar bg-secondary w-100">
                         <h5 className="justify-content-start">
-                          Progress{progressValue}{' '}
+                          Set Progress: {progressValue}%{' '}
                         </h5>
                         <input
                           type="range"
+                          id="myinput"
                           name="rangeInput"
                           min="0"
                           max="100"

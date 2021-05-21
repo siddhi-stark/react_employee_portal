@@ -111,14 +111,31 @@ function Dashboard() {
     }
   };
 
+  const getProfile = async () => {
+    const userToken = customFunctions.getLocalStorage('access_token');
+    if (!userToken) return false;
+
+    const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
+
+    if (data && data.data) {
+      setEmployeeName(data.data.full_name);
+    }
+    return true;
+  };
+
   useEffect(() => {
+    document.addEventListener('ProfileUpdate', () => {
+      getProfile();
+    });
+
+    getProfile();
     getDailyActivity();
     getWeeklyStatus();
     getTimeSheetList();
     setTitle('Dashboard');
-    const empName = customFunctions.getLocalStorage('name');
+    // const empName = customFunctions.getLocalStorage('name');
     const localTime = customFunctions.getLocalStorage('time');
-    setEmployeeName(empName);
+    // setEmployeeName(empName);
     setTime(localTime);
   }, []);
 
@@ -141,7 +158,7 @@ function Dashboard() {
                     <h1>
                       Welcome{' '}
                       <strong>
-                        {employeeName.split(' ').length > 1
+                        {employeeName && employeeName.split(' ').length > 1
                           ? employeeName.split(' ')[0]
                           : employeeName}
                         ,

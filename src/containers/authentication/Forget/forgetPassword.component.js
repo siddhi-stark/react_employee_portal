@@ -45,6 +45,7 @@ function ForgetPassword() {
       setDisableButton(false);
     } else {
       swal(message);
+      setDisableButton(false);
     }
   };
 

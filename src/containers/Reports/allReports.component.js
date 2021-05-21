@@ -233,6 +233,7 @@ function AllReports() {
                               setToDate(e);
                             }}
                             autoComplete="off"
+                            minDate={fromDate}
                             name="startDate"
                             dateFormat="MM/dd/yyyy"
                             placeholder="To Date"

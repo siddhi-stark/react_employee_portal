@@ -363,7 +363,7 @@ function ToDoList() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (selectedRowIndex.length > 0) {
+    if (selectedRowIndex.length >= 0) {
       onSendScrum();
     } else {
       swal('Please Select Task', '', 'error');
@@ -500,7 +500,7 @@ function ToDoList() {
                     const twId = [];
                     taskList.map((task, ind) => {
                       rowIndex.map((i) => {
-                        if (ind === i) {
+                        if (task.id === i) {
                           if (task.task_type === 'tw') {
                             twId.push(task.tw_id);
                           } else {

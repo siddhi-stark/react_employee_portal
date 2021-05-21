@@ -7,7 +7,7 @@ export default {
       async (config) => {
         const requestConfig = config;
         requestConfig.headers['Content-Type'] = 'application/json';
-        const token = await localStorage.getItem('access_token');
+        const token = customFucntions.getLocalStorage('access_token');
         if (token) requestConfig.headers['Authorization'] = `Bearer ${token}`; // eslint-disable-line
         return requestConfig;
       },
@@ -24,7 +24,7 @@ export default {
           data &&
           (data.status === 401 || data.statusText === 'Unauthorized')
         ) {
-          await customFucntions.localStorageClear();
+          customFucntions.localStorageClear();
           window.location.href = '/login';
           return Promise.reject(error.response.data);
         }
