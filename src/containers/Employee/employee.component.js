@@ -452,7 +452,7 @@ function Employee() {
       ? `${Api.employeeUrl}${employeeId}/`
       : Api.employeeUrl;
 
-    const { data } = await callback(endPoint, payload);
+    const { data, message } = await callback(endPoint, payload);
     if (data) {
       setSelectedDesignationOption();
       setSelectedRole();
@@ -478,7 +478,8 @@ function Employee() {
         }
       });
     } else {
-      swal(data && data.message, '', 'error');
+      const errorData= message.split(':');
+      swal(errorData[1], '', 'error');
       setDisableButton(false);
       setModalShow();
       setEmployeeId();
