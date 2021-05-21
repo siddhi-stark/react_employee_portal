@@ -24,7 +24,7 @@ export default {
           data &&
           (data.status === 401 || data.statusText === 'Unauthorized')
         ) {
-          await customFucntions.localStorageClear();
+          customFucntions.localStorageClear();
           window.location.href = '/login';
           return Promise.reject(error.response.data);
         }

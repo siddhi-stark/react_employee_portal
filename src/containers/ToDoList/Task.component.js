@@ -96,7 +96,7 @@ function Task(props) {
 
     if (data) {
       props.handleModalCLose(false);
-      swal('Task Created Successfully', '', 'success').then((result) => {
+      swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
           setTaskStartTime();
@@ -111,7 +111,7 @@ function Task(props) {
       });
     } else {
       setDisableButton(false);
-      swal(data && data.message, '', 'error');
+      swal(data && data.message[0], '', 'error');
       props.handleModalCLose(false);
     }
   };
