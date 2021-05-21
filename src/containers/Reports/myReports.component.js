@@ -34,11 +34,6 @@ function AllReports() {
       roleAccess: [1, 2, 3, 4],
     },
     {
-      id: 'name',
-      label: 'Employee Name',
-      roleAccess: [1, 2, 3, 4],
-    },
-    {
       id: 'date',
       label: 'Date',
       roleAccess: [1, 2, 3, 4],
@@ -93,14 +88,13 @@ function AllReports() {
         const dt = new Date(date).getTime();
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
-          name: report.user,
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: report.estimation,
           report: (
             <a href={`/daily-report/${dt}/${report.user_id}`}>
-              <span>View Report</span>
+              <span className="text-info">View Report</span>
             </a>
           ),
         };

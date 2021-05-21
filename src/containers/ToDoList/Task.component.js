@@ -142,8 +142,6 @@ function Task(props) {
     setId();
     setTaskModalShow(false);
     props.handleModalCLose(false);
-
-    setDisableButton(true);
   };
 
   return (
