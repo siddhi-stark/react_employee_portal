@@ -100,7 +100,7 @@ function Header() {
                 <a href="#">
                 
                   <img  
-                    src={`${imageProfile}` ? `${imageProfile}` : '/images/fail.svg'}
+                    src={`${imageProfile}` ? `${imageProfile}` : '/images/profile-img.png'}
                   alt="Profile" />
                 </a>
               </div>
