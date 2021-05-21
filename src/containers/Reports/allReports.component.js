@@ -76,7 +76,7 @@ function AllReports() {
         return (
           <>
             <a href={`/daily-report/${dt}/${id}`}>
-              <span>View Report</span>
+              <span className="text-info">View Report</span>
             </a>
           </>
         );

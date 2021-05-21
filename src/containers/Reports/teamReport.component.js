@@ -118,7 +118,7 @@ function TeamReport() {
           total: report.estimation,
           report: (
             <a href={`/daily-report/${dt}/${report.user_id}`}>
-              <span>View Report</span>
+              <span className="text-info">View Report</span>
             </a>
           ),
         };
