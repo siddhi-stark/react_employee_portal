@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import UserRestrictions from '../UserRestrictions/userrestrictions.component';
 
 function Header() {
   const date = new Date().toDateString().split(' ');
@@ -14,6 +15,7 @@ function Header() {
   const [imageProfile, setImageProfile] = useState('');
   const [time, setTime] = useState('');
   const [clockedInTime, setClockInTime] = useState('');
+  const [userRole, setUserRole] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
@@ -53,6 +55,9 @@ function Header() {
     const localTime = customFunctions.getLocalStorage('time');
     setTime(localTime);
 
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
+
     if (!token) {
       const path = window.location.pathname.split('/');
       const extractedPath = path.length > 1 ? path[1].toString() : '';
@@ -72,6 +77,7 @@ function Header() {
     <>
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
+        <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>
           <div className="main-header-left">
             {time ? (
               <div className="d-flex justify-content-start clock-in-time">
@@ -88,6 +94,7 @@ function Header() {
           ) : (
             ''
           )}
+          </UserRestrictions>
 
           <div className="main-header-right">
             <div className="day-date">

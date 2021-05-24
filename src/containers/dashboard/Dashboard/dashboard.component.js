@@ -8,6 +8,7 @@ import Api from '../../../helper/api';
 import ToDoList from '../../ToDoList/toDoList.component';
 import customFunctions from '../../../helper/customFunctions';
 import Table from '../../../components/ReactTable/simpletable.component';
+import UserRestrictions from '../../../components/UserRestrictions/userrestrictions.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -20,6 +21,7 @@ function Dashboard() {
   const [employeeName, setEmployeeName] = useState('');
   const [time, setTime] = useState('');
   const [show, setShow] = useState(false);
+  const [userRole, setUserRole] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -135,6 +137,8 @@ function Dashboard() {
     getWeeklyStatus();
     getTimeSheetList();
     setTitle('Dashboard');
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
     // const empName = customFunctions.getLocalStorage('name');
     const localTime = customFunctions.getLocalStorage('time');
     // setEmployeeName(empName);
@@ -175,6 +179,8 @@ function Dashboard() {
                   </div>
                 </Col>
                 <Col md={2}>
+                <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>  
+
                   <div className="check-in">
                     {signInTime && (
                       <div className="time-count text-center">
@@ -198,6 +204,8 @@ function Dashboard() {
                       </Button>
                     )}
                   </div>
+                  </UserRestrictions>
+
                 </Col>
                 <Col md={5}>
                   <div className="welcome-img text-right">
@@ -262,6 +270,8 @@ function Dashboard() {
                 </Row>
               </Card.Body>
             </Card>
+            <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}> 
+
             <div className="table-projects time-sheet-table">
               <div className="card">
                 <div className="table-title">
@@ -289,6 +299,8 @@ function Dashboard() {
                 </div>
               </div>
             </div>
+            </UserRestrictions>
+
             <div className="holidays-applied">
               <div className="row">
                 <div className="col-xl-6">
