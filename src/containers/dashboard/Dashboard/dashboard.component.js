@@ -101,8 +101,9 @@ function Dashboard() {
     getDailyActivity();
   };
 
-  const getWeeklyStatus = async () => {
-    const endPoint = `${Api.weeklyStatusUrl}?mode=this_week`;
+  const getWeeklyStatus = async (key) => {
+    const typeNew = key ? 'last_week' : 'this_week';
+    const endPoint = `${Api.weeklyStatusUrl}?mode=${typeNew}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setCompleted(data.data.completed);
@@ -234,6 +235,20 @@ function Dashboard() {
                       <img src="/images/persentage-circle.svg" alt="img" />
                     </div>
                   </Col>
+                  <div className="last-week">
+                  <a href='javascript:void()'
+                   onClick={() =>  {
+                     
+                     getWeeklyStatus('last_week'); 
+                     }}
+                      >
+                    <img 
+                    src="/images/previous.svg" 
+                    alt="week" 
+
+                    /> Last Week
+                  </a>
+                </div>
                 </Row>
               </Card.Body>
             </Card>
