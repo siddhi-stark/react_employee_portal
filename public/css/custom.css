@@ -8805,7 +8805,8 @@ textarea.form-control-lg {
   padding-right: 3px;
   min-height: inherit;
   -webkit-box-shadow: none;
-  box-shadow: none; }
+  box-shadow: none;
+  color: #ffffff; }
   .progress .progress-bar {
     font-size: 9px;
     min-height: inherit; }

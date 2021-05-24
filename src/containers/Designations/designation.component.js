@@ -379,11 +379,7 @@ function Designation() {
                     >
                       Cancel
                     </Button>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className="ms-4"
-                    >
+                    <Button variant="primary" type="submit" className="ms-4">
                       {designationId ? 'Update' : 'Add'}
                     </Button>
                   </Form>

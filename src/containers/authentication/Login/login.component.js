@@ -79,8 +79,14 @@ function Login(props) {
         data.data.token.access_token
       );
 
-      const envryptedPassword = CustomFunctions.encryptKey(password,  CustomFunctions.getAESKey());
-      const envryptedUsername = CustomFunctions.encryptKey(data.data.email,  CustomFunctions.getAESKey());
+      const envryptedPassword = CustomFunctions.encryptKey(
+        password,
+        CustomFunctions.getAESKey()
+      );
+      const envryptedUsername = CustomFunctions.encryptKey(
+        data.data.email,
+        CustomFunctions.getAESKey()
+      );
 
       CustomFunctions.setLocalStorage(
         'access_token',
@@ -94,9 +100,8 @@ function Login(props) {
       setDisableButton(false);
 
       setTimeout(async () => {
-      dispatch({ type: 'LOGIN', value: true });
-       window.location.href= '/';
-        
+        dispatch({ type: 'LOGIN', value: true });
+        window.location.href = '/';
       }, 1000);
     } else {
       setDisableButton(false);
