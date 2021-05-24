@@ -19,6 +19,7 @@ function Dashboard() {
   const [rows, setRows] = useState([]);
   const [employeeName, setEmployeeName] = useState('');
   const [time, setTime] = useState('');
+  const [show, setShow] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -39,12 +40,12 @@ function Dashboard() {
     {
       id: 'clockout',
       label: 'Clock out',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [2, 3, 4],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [2, 3, 4],
     },
   ];
 
@@ -102,7 +103,7 @@ function Dashboard() {
   };
 
   const getWeeklyStatus = async (key) => {
-    const typeNew = key ? 'last_week' : 'this_week';
+    const typeNew = `${key}` ? `${key}` : 'this_week';
     const endPoint = `${Api.weeklyStatusUrl}?mode=${typeNew}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
@@ -236,19 +237,28 @@ function Dashboard() {
                     </div>
                   </Col>
                   <div className="last-week">
-                  <a href='javascript:void()'
-                   onClick={() =>  {
-                     
-                     getWeeklyStatus('last_week'); 
-                     }}
+                    {!show ? (
+                      <a
+                        href="javascript:void()"
+                        onClick={() => {
+                          setShow(true);
+                          getWeeklyStatus('last_week');
+                        }}
                       >
-                    <img 
-                    src="/images/previous.svg" 
-                    alt="week" 
-
-                    /> Last Week
-                  </a>
-                </div>
+                        <img src="/images/previous.svg" alt="week" /> Last Week
+                      </a>
+                    ) : (
+                      <a
+                        href="javascript:void()"
+                        onClick={() => {
+                          setShow(false);
+                          getWeeklyStatus('this_week');
+                        }}
+                      >
+                        <img src="/images/previous.svg" alt="week" /> Back
+                      </a>
+                    )}
+                  </div>
                 </Row>
               </Card.Body>
             </Card>

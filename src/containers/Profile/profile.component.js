@@ -242,25 +242,25 @@ function Profile() {
                   <b>{name}</b>
                 </h3>
                 <h5 className="mt-5">Personal Information</h5>
-                   <div className="personal-info-date-number">
-                   <Form.Label>
-                  <Image
-                    src="/images/up-coming-birthday.svg"
-                    className="svg me-3"
-                  />
-                 <span>{birthDate}</span> 
-                </Form.Label>
+                <div className="personal-info-date-number">
+                  <Form.Label>
+                    <Image
+                      src="/images/up-coming-birthday.svg"
+                      className="svg me-3"
+                    />
+                    <span>{birthDate}</span>
+                  </Form.Label>
 
-                <Form.Label>
-                  <Image
-                    src="/images/Mobile-num.svg"
-                    className="svg me-3 ms-3"
-                  />
-                 <span>{mobile}</span> 
-                </Form.Label>
-                   </div> 
-               
-                 <h5 className="mt-5">Job Information</h5>
+                  <Form.Label>
+                    <Image
+                      src="/images/Mobile-num.svg"
+                      className="svg me-3 ms-3"
+                    />
+                    <span>{mobile}</span>
+                  </Form.Label>
+                </div>
+
+                <h5 className="mt-5">Job Information</h5>
                 <Row>
                   <Col sm={3}>
                     <TextInput

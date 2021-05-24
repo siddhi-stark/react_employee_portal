@@ -94,7 +94,7 @@ class CustomFunctions extends Component {
 
   encryptKey = (value, key) => {
     try {
-     return AES.encrypt(value, key);
+      return AES.encrypt(value, key);
     } catch (error) {
       return false;
     }
@@ -102,11 +102,11 @@ class CustomFunctions extends Component {
 
   getAESKey = () => {
     return 'employeePortal';
-  }
+  };
 
   decryptKey = (value, key) => {
     try {
-    return  AES.decrypt(value, key);
+      return AES.decrypt(value, key);
     } catch (error) {
       return false;
     }

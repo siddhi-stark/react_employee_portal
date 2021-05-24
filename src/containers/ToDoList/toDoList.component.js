@@ -16,6 +16,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constant';
 import Task from './Task.component';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 const validator = new SimpleReactValidator();
 
@@ -37,6 +38,7 @@ function ToDoList() {
   const [endTime, setEndTime] = useState('');
   const [hrs, setHours] = useState('');
   const [min, setMinutes] = useState('');
+  const [userRole, setUserRole] = useState('');
 
   const [taskId, setTaskId] = useState(null);
   const [staticHrs, setStaticHours] = useState(''); // eslint-disable-line
@@ -237,6 +239,8 @@ function ToDoList() {
       setBreakData(selectedBreak);
 
       getDailyActivity();
+      const uRole = customFunctions.getLocalStorage('group');
+      setUserRole(Number(uRole));
     }
     getData();
   }, []);
@@ -459,94 +463,96 @@ function ToDoList() {
 
       <section className="content-area">
         <div className="mt-5">
-          <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Add Task</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    type="Button"
-                    onClick={() => {
-                      customFunctions.removeLocalStorage('taskid');
-                      setModalShow(true);
-                      forceUpdate(count + 1);
-                    }}
-                  >
-                    Add Task
-                  </Button>
+          <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary mt-2 mb-2">Add Task</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      type="Button"
+                      onClick={() => {
+                        customFunctions.removeLocalStorage('taskid');
+                        setModalShow(true);
+                        forceUpdate(count + 1);
+                      }}
+                    >
+                      Add Task
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </Card.Header>
+              </Card.Header>
 
-            <Card.Body>
-              <Row>
-                <Table
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  showCheckbox
-                  paginationProps={{
-                    ...pagination,
-                    activePage: pagination.current_page,
-                    onPageChange: (pageNo) => {
-                      getTableData(pageNo);
-                    },
-                  }}
-                  dropdownContainerClass="mb-3"
-                  selectedRowItems={selectedId}
-                  onSelectRowsIndexes={(rowIndex) => {
-                    const twId = [];
-                    taskList.map((task, ind) => {
-                      rowIndex.map((i) => {
-                        if (task.id === i) {
-                          if (task.task_type === 'tw') {
-                            twId.push(task.tw_id);
-                          } else {
-                            twId.push(task.id);
+              <Card.Body>
+                <Row>
+                  <Table
+                    columns={columns}
+                    rows={rows}
+                    showPagination
+                    showCheckbox
+                    paginationProps={{
+                      ...pagination,
+                      activePage: pagination.current_page,
+                      onPageChange: (pageNo) => {
+                        getTableData(pageNo);
+                      },
+                    }}
+                    dropdownContainerClass="mb-3"
+                    selectedRowItems={selectedId}
+                    onSelectRowsIndexes={(rowIndex) => {
+                      const twId = [];
+                      taskList.map((task, ind) => {
+                        rowIndex.map((i) => {
+                          if (task.id === i) {
+                            if (task.task_type === 'tw') {
+                              twId.push(task.tw_id);
+                            } else {
+                              twId.push(task.id);
+                            }
                           }
-                        }
-                        return i;
-                      });
+                          return i;
+                        });
 
-                      return ind;
-                    });
-                    setSelectedRowIndex(twId);
-                    setSelectedId(rowIndex);
-                  }}
-                  tableClass="table-striped"
-                  emptyRender={() => (
-                    <p className="text-center mb-0">No record found</p>
+                        return ind;
+                      });
+                      setSelectedRowIndex(twId);
+                      setSelectedId(rowIndex);
+                    }}
+                    tableClass="table-striped"
+                    emptyRender={() => (
+                      <p className="text-center mb-0">No record found</p>
+                    )}
+                  />
+                </Row>
+                <div className="d-flex justify-content-end mr-3">
+                  {!morningMail && !signOutMail && pagination.totalItems > 0 && (
+                    <Button
+                      variant="primary"
+                      className="mb-3"
+                      onClick={() => {
+                        setShowScrumPopup(true);
+                      }}
+                    >
+                      Send Scrum
+                    </Button>
                   )}
-                />
-              </Row>
-              <div className="d-flex justify-content-end mr-3">
-                {!morningMail && !signOutMail && pagination.totalItems > 0 && (
-                  <Button
-                    variant="primary"
-                    className="mb-3"
-                    onClick={() => {
-                      setShowScrumPopup(true);
-                    }}
-                  >
-                    Send Scrum
-                  </Button>
-                )}
-                {!signOutMail && morningMail && (
-                  <Button
-                    variant="primary"
-                    className="mb-3"
-                    onClick={() => {
-                      setShowBreak(true);
-                    }}
-                  >
-                    Clockout & Send Report
-                  </Button>
-                )}
-              </div>
-            </Card.Body>
-          </Card>
+                  {!signOutMail && morningMail && (
+                    <Button
+                      variant="primary"
+                      className="mb-3"
+                      onClick={() => {
+                        setShowBreak(true);
+                      }}
+                    >
+                      Clockout & Send Report
+                    </Button>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          </UserRestrictions>
         </div>
       </section>
       {modalShow && (
