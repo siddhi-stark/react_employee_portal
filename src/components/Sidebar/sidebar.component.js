@@ -16,7 +16,7 @@ function Sidebar() {
     <>
       <div className="main-sidebar main-sidebar-sticky side-menu ps">
         <div className="sidemenu-logo">
-          <a className="main-logo" href="index.html">
+          <a className="main-logo" href="/">
             <img
               src="/images/logo.svg"
               className="header-brand-img desktop-logo svg"
