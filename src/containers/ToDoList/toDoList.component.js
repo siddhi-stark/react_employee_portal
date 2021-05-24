@@ -568,7 +568,7 @@ function ToDoList() {
         modalBody={
           <Form
             onClick={(e) => {
-              onSendScrum(e);
+              onSubmit(e);
             }}
           >
             <div className="add-break d-flex align-items-center justify-content-between">

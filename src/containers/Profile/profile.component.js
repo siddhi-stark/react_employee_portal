@@ -242,13 +242,13 @@ function Profile() {
                   <b>{name}</b>
                 </h3>
                 <h5 className="mt-5">Personal Information</h5>
-
-                <Form.Label>
+                   <div className="personal-info-date-number">
+                   <Form.Label>
                   <Image
                     src="/images/up-coming-birthday.svg"
                     className="svg me-3"
                   />
-                  {birthDate}
+                 <span>{birthDate}</span> 
                 </Form.Label>
 
                 <Form.Label>
@@ -256,12 +256,13 @@ function Profile() {
                     src="/images/Mobile-num.svg"
                     className="svg me-3 ms-3"
                   />
-                  {mobile}
+                 <span>{mobile}</span> 
                 </Form.Label>
-
-                <h5 className="mt-5">Job Information</h5>
+                   </div> 
+               
+                 <h5 className="mt-5">Job Information</h5>
                 <Row>
-                  <Col sm={4}>
+                  <Col sm={3}>
                     <TextInput
                       label="Joining Date"
                       containerClass="form-group"
@@ -271,7 +272,7 @@ function Profile() {
                       disabled
                     />
                   </Col>
-                  <Col sm={2}>
+                  <Col sm={3}>
                     <TextInput
                       label="Employee Id"
                       containerClass="form-group"

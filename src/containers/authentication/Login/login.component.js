@@ -95,9 +95,7 @@ function Login(props) {
 
       setTimeout(async () => {
       dispatch({ type: 'LOGIN', value: true });
-
-       
-        window.location.href= '/';
+       window.location.href= '/';
         
       }, 1000);
     } else {
