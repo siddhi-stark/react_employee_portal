@@ -5,6 +5,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
+import SharedService from '../../services/SharedService/sharedServices';
 
 function Header() {
   const date = new Date().toDateString().split(' ');
@@ -42,12 +43,13 @@ function Header() {
   };
 
   useEffect(() => {
+    SharedService.clockIn.subscribe((value) => {
+      if (value) {
+        getCLocTIme();
+      }
+    });
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
-    });
-
-    document.addEventListener('TimeUpdate', () => {
-      getCLocTIme();
     });
 
     getProfile();

@@ -9,6 +9,7 @@ import ToDoList from '../../ToDoList/toDoList.component';
 import customFunctions from '../../../helper/customFunctions';
 import Table from '../../../components/ReactTable/simpletable.component';
 import UserRestrictions from '../../../components/UserRestrictions/userrestrictions.component';
+import SharedService from '../../../services/SharedService/sharedServices';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -94,14 +95,16 @@ function Dashboard() {
   };
 
   const getClockInTime = async () => {
-    const event = new Event('TimeUpdate', { isUpdated: true });
+    // const event = new Event('TimeUpdate', { isUpdated: true });
+    
     const endPoint = `${Api.clockInUrl}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setSignInTime(data.data.sign_in_time);
-      document.dispatchEvent(event);
+      // document.dispatchEvent(event);
     }
-    getDailyActivity();
+    await getDailyActivity();
+    SharedService.clockIn.next(true);
   };
 
   const getWeeklyStatus = async (key) => {
