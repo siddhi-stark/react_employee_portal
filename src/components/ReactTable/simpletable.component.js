@@ -42,8 +42,11 @@ export default function SimpleTable(props) {
   };
   const [allSelected, setAllSelected] = useState(false);
   const [selectedAction, setSelectedAction] = useState('');
+  
   const [selectedRows, setSelectedRows] = useState(
+    
     rows.filter((row) => {
+      
       return selectedRowItems.includes(Number(row.id));
     })
   );

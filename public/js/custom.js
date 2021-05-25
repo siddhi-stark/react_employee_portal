@@ -18,7 +18,6 @@ jQuery(document).ready(function () {
   // });
 
   $('body').on('click', '.header-settings', function (event) {
-    console.log('0001111111')
     $(this).toggleClass('open');
     /*$('.nav-item').toggleClass('open');*/
   });
@@ -26,7 +25,6 @@ jQuery(document).ready(function () {
   $('body').click(function (e) {
     if ($(e.target).closest('.header-settings').length)
       return;
-    console.log('0000000', e.target)
     $(".header-settings").removeClass('open');
   });
 

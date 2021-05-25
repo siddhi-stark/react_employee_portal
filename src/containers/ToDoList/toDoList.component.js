@@ -29,8 +29,8 @@ function ToDoList() {
   const [showSkipBreak, setShowSkipBreak] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [index, setIndex] = useState(null);
-  const [selectedRowIndex, setSelectedRowIndex] = useState([]);
-  const [taskList, setTaskList] = useState([]);
+  // const [selectedRowIndex, setSelectedRowIndex] = useState([]);
+  // const [taskList, setTaskList] = useState([]);
   const [ShowDelete, setShowDelete] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
@@ -176,7 +176,7 @@ function ToDoList() {
 
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.taskUrl}?page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.taskUrl}?sort_by=id&sort_direction=descending&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setPagination({
@@ -186,7 +186,7 @@ function ToDoList() {
         totalItems: data.paginator.total_count,
       });
 
-      setTaskList(data.data);
+      // setTaskList(data.data);
 
       const row = [];
 
@@ -222,6 +222,8 @@ function ToDoList() {
 
   useEffect(() => {
     async function getData() {
+      const taskIdS = await customFunctions.getLocalStorage('TaskId') ? JSON.parse(customFunctions.getLocalStorage('TaskId')) : [];
+      setSelectedId([...taskIdS]);
       const selectedBreak = [];
       BreakList.map((item) => {
         if (item.id === 3 || item.id === 2) {
@@ -263,7 +265,7 @@ function ToDoList() {
   const onSendScrum = async () => {
     const postData = {
       type: morningMail && !signOutMail ? 'logout' : 'morning',
-      tasks: selectedRowIndex,
+      tasks: selectedId,
     };
 
     const endPoint = `${Api.reportUrl}`;
@@ -275,6 +277,7 @@ function ToDoList() {
       setShowBreak(false);
       setShowErrorBlock(false);
       setShowSuccessBlock(true);
+      
     } else {
       setShowScrumPopup(false);
       setShowErrorBlock(true);
@@ -329,10 +332,11 @@ function ToDoList() {
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
       data.data.task_created_ids.map((e) => {
-        selectedRowIndex.push(e);
+        selectedId.push(e);
         return e;
       });
-      setSelectedRowIndex(selectedRowIndex);
+      setSelectedId([...selectedId]);
+      customFunctions.setLocalStorage('TaskId', JSON.stringify(selectedId));
       setHours();
       setMinutes();
       setSelectedBreakOption();
@@ -367,7 +371,7 @@ function ToDoList() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (selectedRowIndex.length >= 0) {
+    if (selectedId.length >= 0) {
       onSendScrum();
     } else {
       swal('Please Select Task', '', 'error');
@@ -500,25 +504,25 @@ function ToDoList() {
                       },
                     }}
                     dropdownContainerClass="mb-3"
-                    selectedRowItems={selectedId}
+                    selectedRowItems={[...selectedId]}
                     onSelectRowsIndexes={(rowIndex) => {
-                      const twId = [];
-                      taskList.map((task, ind) => {
-                        rowIndex.map((i) => {
-                          if (task.id === i) {
-                            if (task.task_type === 'tw') {
-                              twId.push(task.tw_id);
-                            } else {
-                              twId.push(task.id);
-                            }
-                          }
-                          return i;
-                        });
+                      // const twId = [];
+                      // taskList.map((task, ind) => {
+                      //   rowIndex.map((i) => {
+                      //     if (task.id === i) {
+                           
+                      //         twId.push(task.id);
+                            
+                      //     }
+                      //     return i;
+                      //   });
 
-                        return ind;
-                      });
-                      setSelectedRowIndex(twId);
-                      setSelectedId(rowIndex);
+                      //   return ind;
+                      // });
+                      // setSelectedRowIndex(rowIndex);
+                      setSelectedId([...rowIndex]);
+                      customFunctions.setLocalStorage('TaskId', JSON.stringify(rowIndex));
+
                     }}
                     tableClass="table-striped"
                     emptyRender={() => (
