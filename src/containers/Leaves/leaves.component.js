@@ -117,7 +117,6 @@ function Leaves() {
           <Card.Body>
             <Row>
             <div>
-              <div className="d-flex align-items-center justify-content-start">
               <Button
                   type="button"
                   onClick={() => {
@@ -128,6 +127,7 @@ function Leaves() {
                 >
                   Leaves
                 </Button>
+             
                 <Button
                   type="button"
                   onClick={() => {
@@ -136,23 +136,21 @@ function Leaves() {
                   }}
                   variant={!showButton ? 'primary ml-1' : ''}
                 >
+                
                   Holidays
                 </Button>
-                </div>
-
-                <div className="d-flex align-items-center justify-content-end">
-                 
-                <Button
+                  {/* <h5>09/18 Leaves</h5> */}
+               
+               <Button
                   type="button"
+                  className="pull-right align-items-center justify-content-end"
                   onClick={() => {setModalShow(true)}}
                  
                 >
                   Apply Leaves
                 </Button>
-                  
-                </div>
-                </div>
-
+               
+                  </div>
             </Row>
           </Card.Body>
         </Card>
