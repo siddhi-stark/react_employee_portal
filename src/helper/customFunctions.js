@@ -83,6 +83,15 @@ class CustomFunctions extends Component {
     this.removeLocalStorage('userId');
   };
 
+  cleanLogoutStorage = () => {
+    this.removeLocalStorage('access_token');
+    // this.removeLocalStorage('checkbox');
+    // this.removeLocalStorage('email');
+    // this.removeLocalStorage('password');
+    this.removeLocalStorage('group');
+    this.removeLocalStorage('userId');
+  };
+
   setLocalStorage = (key, value) => {
     try {
       localStorage.setItem(key, value);

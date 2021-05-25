@@ -162,7 +162,7 @@ function Header() {
                         className="dropdown-item"
                         href="#"
                         onClick={() => {
-                          customFunctions.cleanStorage();
+                          customFunctions.cleanLogoutStorage();
                           document.dispatchEvent(event);
                           dispatch({ type: 'LOGIN', value: false });
                           history.push('/login');
