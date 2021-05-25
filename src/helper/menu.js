@@ -54,13 +54,13 @@ const menu = [
     ],
     roleaccess: [3, 4],
   },
-  {
-    title: 'Events',
-    path: '/events',
-    icon: 'report.svg',
-    submenu: [],
-    roleaccess: [1],
-  },
+  // {
+  //   title: 'Events',
+  //   path: '/events',
+  //   icon: 'report.svg',
+  //   submenu: [],
+  //   roleaccess: [1],
+  // },
   {
     title: 'Logout',
     path: '#',
