@@ -574,9 +574,6 @@ function ToDoList() {
         id="contained-modal-title-vcenter"
         modalBody={
           <Form
-            onClick={(e) => {
-              onSubmit(e);
-            }}
           >
             <div className="add-break d-flex align-items-center justify-content-between">
               <h3 className="mb-1">Add Break</h3>
@@ -712,7 +709,10 @@ function ToDoList() {
               <Button variant="secondary" onClick={(e) => onBreakSubmit(e)}>
                 Confirm
               </Button>
-              <Button variant="primary" type="submit" className="ms-4">
+              <Button variant="primary" type="submit" className="ms-4" 
+            onClick={(e) => {
+              onSubmit(e);
+            }}>
                 Send Report
               </Button>
             </div>
@@ -740,9 +740,9 @@ function ToDoList() {
                 type="button"
                 className="btn btn-secondary mr-3"
                 onClick={(e) => {
-                  setShowScrumPopup(false);
                   e.preventDefault();
                   e.stopPropagation();
+                  setShowScrumPopup(false);
                 }}
               >
                 No
@@ -785,9 +785,9 @@ function ToDoList() {
                 type="button"
                 className="btn btn-secondary mr-3"
                 onClick={(e) => {
-                  setShowSkipBreak(false);
                   e.preventDefault();
                   e.stopPropagation();
+                  setShowSkipBreak(false);
                 }}
               >
                 No
