@@ -6,9 +6,11 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Table from '../../components/ReactTable/simpletable.component';
+import material from '../../helper/materialnew';
 
 function Events() {
     const [title, setTitle] = useState('');
+    const [rows, setRows] = useState([]);
     const [filterErr, setFilterErr] = useState('');
     const [searchKeyword, setSearchKeyword] = useState('');
     const [cntClearFilter, setCntClearFilter] = useState(0);
@@ -41,15 +43,32 @@ function Events() {
               roleAccess: [1],
           },
 
-    ]  
+    ]; 
+
+    const getTableData = async () => {
+  
+        const row = [];
+  
+        material((desgn) => {
+          row.push({
+           
+            date: desgn.date,
+            event: desgn.startime,
+
+          });
+          return desgn;
+        });
+        setRows(row);
+      
+    };
 
     useEffect(() => {
         setTitle('Events');
         const role = customFunctions.getLocalStorage('group');
         setUserRole(role);
+        // getTableData();
 
     });
-
 
     const filterSearch = (e) => {
         e.preventDefault();
@@ -63,7 +82,7 @@ function Events() {
         }
         if (isValid) {
           setFilterErr('');
-        //   getTableData(1);
+          getTableData(1);
         }
       };
 
@@ -169,7 +188,7 @@ function Events() {
       <Row>
                 <Table
                   columns={columns}
-                //   rows={rows}
+                  rows={rows}
                 //   showPagination="true"
                 //   paginationProps={{
                 //     ...pagination,
@@ -190,7 +209,7 @@ function Events() {
       </div>
       </section>
         </>
-    )
+    );
 }
 
 export default withRouter(Events);
