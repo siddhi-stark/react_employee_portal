@@ -16,6 +16,7 @@ import Profile from './containers/Profile/profile.component';
 import ManagePassword from './containers/Profile/changePassword.component';
 import TeamReport from './containers/Reports/teamReport.component';
 import NotFound from './containers/not-found/notFound.component';
+import Events from './containers/Events/events.component';
 
 function Routes() {
   return (
@@ -34,6 +35,7 @@ function Routes() {
       <Route path="/profile" exact component={Profile} />
       <Route path="/manage-password" exact component={ManagePassword} />
       <Route path="/team-report" exact component={TeamReport} />
+      <Route path="/events" exact component={Events} />
       <Route component={NotFound} />
     </Switch>
   );
