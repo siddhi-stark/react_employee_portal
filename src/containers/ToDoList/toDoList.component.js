@@ -338,16 +338,10 @@ function ToDoList() {
         selectedId.push(e);
         return e;
       });
-<<<<<<< HEAD
       setSelectedId([...selectedId]);
       customFunctions.setLocalStorage('TaskId', JSON.stringify(selectedId));
       setHours();
       setMinutes();
-=======
-      setSelectedRowIndex(selectedRowIndex);
-      setHrs();
-      setMin();
->>>>>>> code_review_17052021
       setSelectedBreakOption();
       setStartTime();
       setEndTime();
