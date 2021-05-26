@@ -76,10 +76,10 @@ function Dashboard() {
     const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}`);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
-        current_page: Number(data.paginator.current_page),
-        activePage: data.paginator.current_page,
-        itemsPerPage: data.paginator.limit,
-        totalItems: data.paginator.total_count,
+        current_page: data.paginator ? Number(data.paginator.current_page) : 0,
+        activePage: data.paginator ? data.paginator.current_page : 0,
+        itemsPerPage: data.paginator ? data.paginator.limit : 0,
+        totalItems: data.paginator ? data.paginator.total_count : 0,
       });
       const row = [];
 
@@ -97,9 +97,9 @@ function Dashboard() {
     }
   };
 
-  const getClockInTime = async (loadActivity=true) => {
+  const getClockInTime = async (loadActivity = true) => {
     // const event = new Event('TimeUpdate', { isUpdated: true });
-    
+
     const endPoint = `${Api.clockInUrl}`;
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(endPoint);
@@ -108,10 +108,10 @@ function Dashboard() {
       setSignInTime(data.data.sign_in_time);
       // document.dispatchEvent(event);
     }
-    if(loadActivity) {
+    if (loadActivity) {
       await getDailyActivity();
     }
-   
+
     SharedService.clockIn.next(true);
     setShowLoader(false);
   };
@@ -166,7 +166,7 @@ function Dashboard() {
           <Breadcrumb />
         </div>
       </div>
-      <Loader showLoader={isShowLoader} needFullPage={false}/>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Row>
           <Col xl={8} id="main-content">
@@ -192,31 +192,31 @@ function Dashboard() {
                   </div>
                 </Col>
                 <Col md={2}>
-                <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>  
+                  <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
 
-                  <div className="check-in">
-                    {signInTime && (
-                      <div className="time-count text-center">
-                        <span>{signInTime}</span>
-                      </div>
-                    )}
+                    <div className="check-in">
+                      {signInTime && (
+                        <div className="time-count text-center">
+                          <span>{signInTime}</span>
+                        </div>
+                      )}
 
-                    {time && (
-                      <div className="time-count text-center">
-                        <span>{time.split(' ')[0]}</span>
-                      </div>
-                    )}
+                      {time && (
+                        <div className="time-count text-center">
+                          <span>{time.split(' ')[0]}</span>
+                        </div>
+                      )}
 
-                    {showClockButton && (
-                      <Button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={() => getClockInTime()}
-                      >
-                        Clock In
-                      </Button>
-                    )}
-                  </div>
+                      {showClockButton && (
+                        <Button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => getClockInTime()}
+                        >
+                          Clock In
+                        </Button>
+                      )}
+                    </div>
                   </UserRestrictions>
 
                 </Col>
@@ -278,35 +278,35 @@ function Dashboard() {
                 </Row>
               </Card.Body>
             </Card>
-            <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}> 
+            <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
 
-            <div className="table-projects time-sheet-table">
-              <div className="card">
-                <div className="table-title">
-                  <h5 className="card-title">Time Sheet</h5>
-                </div>
-                <br />
-                <div className="table-responsive">
-                  <Table
-                    columns={columns}
-                    rows={rows}
-                    showPagination
-                    paginationProps={{
-                      ...pagination,
-                      activePage: pagination.current_page,
-                      onPageChange: (pageNo) => {
-                        getTimeSheetList(pageNo);
-                      },
-                    }}
-                    tableClass="table-striped"
-                    dropdownContainerClass="mb-3"
-                    emptyRender={() => (
-                      <p className="text-center mb-0">No record found</p>
-                    )}
-                  />
+              <div className="table-projects time-sheet-table">
+                <div className="card">
+                  <div className="table-title">
+                    <h5 className="card-title">Time Sheet</h5>
+                  </div>
+                  <br />
+                  <div className="table-responsive">
+                    <Table
+                      columns={columns}
+                      rows={rows}
+                      showPagination
+                      paginationProps={{
+                        ...pagination,
+                        activePage: pagination.current_page,
+                        onPageChange: (pageNo) => {
+                          getTimeSheetList(pageNo);
+                        },
+                      }}
+                      tableClass="table-striped"
+                      dropdownContainerClass="mb-3"
+                      emptyRender={() => (
+                        <p className="text-center mb-0">No record found</p>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
             </UserRestrictions>
 
             {/* <div className="holidays-applied">

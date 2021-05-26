@@ -103,9 +103,8 @@ function Login(props) {
       CustomFunctions.setLocalStorage('group', data.data.group);
       CustomFunctions.setLocalStorage('name', data.data.full_name);
       setDisableButton(false);
-
+      dispatch({ type: 'LOGIN', value: true });
       setTimeout(async () => {
-        dispatch({ type: 'LOGIN', value: true });
         window.location.href = '/';
       }, 1000);
     } else {

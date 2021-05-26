@@ -144,6 +144,7 @@ function Employee() {
                 setModalShow(true);
                 setEmployeeId(id);
                 getEmployeeById(id);
+                setAddButton(true);
                 setCntClearFilter(cntClearFilter + 1);
               }}
             >
@@ -257,7 +258,7 @@ function Employee() {
       });
       console.log('dataaa', data.data.designation_id);
       setSelectedDesignationOption(data.data.designation_id ? {
-        
+
         label: data.data.designation_name,
         id: data.data.designation_id,
       } : '');
@@ -271,25 +272,23 @@ function Employee() {
       setEmail(data.data.email);
       setPassword(data.data.password);
       setMobile(data.data.mobile);
-      setDate(data.data.dob !== null
-        ? new Date(data.data.dob)
-        : null); 
+      setDate(data.data.dob ? new Date(data.data.dob) : null);
       // setDate(new Date(data.data.dob) || '');
     }
   };
 
-  
-    const getDesignation = async () => {
-      const { data } = await AuthApi.getDataFromServer(
-        `${Api.designationUrl}?type=all`
-      );
-      if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-        setDesignation(data.data);
-      }
-    };
-  
-  
-  
+
+  const getDesignation = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.designationUrl}?type=all`
+    );
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      setDesignation(data.data);
+    }
+  };
+
+
+
   const getTwEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
@@ -336,9 +335,9 @@ function Employee() {
     });
     return depart;
   };
-  
 
- 
+
+
   useEffect(() => {
     async function getData() {
       const uRole = customFunctions.getLocalStorage('group');
@@ -354,18 +353,18 @@ function Employee() {
     getData();
   }, []);
 
-  
+
 
   useEffect(() => {
-    if(addButton) {
+    if (addButton) {
       getDesignation();
-         getTwEmployee();
-         getRole();
-         getManager();
-         getTeamLead();
-         getDepartment(); 
-     }
-  },[addButton]); 
+      getTwEmployee();
+      getRole();
+      getManager();
+      getTeamLead();
+      getDepartment();
+    }
+  }, [addButton]);
 
   useEffect(() => {
     getTableData(pagination.current_page);
@@ -463,7 +462,7 @@ function Employee() {
     }
 
     const isFind = twEmployee.find(
-      (item) => item.full_name === selectedEmployee.label
+      (item) => selectedEmployee && selectedEmployee.label && item.full_name === selectedEmployee.label
     );
     if (isFind) {
       postData.tw_emp = isFind.tw_id;
@@ -506,7 +505,7 @@ function Employee() {
         }
       });
     } else {
-      const errorData= message.split(':');
+      const errorData = message.split(':');
       swal(errorData[1], '', 'error');
       setDisableButton(false);
       setModalShow();
@@ -637,7 +636,7 @@ function Employee() {
 
   return (
     <>
-    {console.log('addButton',addButton)}
+      {console.log('addButton', addButton)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
@@ -804,7 +803,7 @@ function Employee() {
                   )}
                 />
               </Col>
-            
+
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => setEmail(e.target.value)}
@@ -832,10 +831,11 @@ function Employee() {
                     name="passwordTitle"
                     value={password}
                     placeholder="Enter Password"
+                    errorMessage={!employeeId && validator.message('password', password, 'required')}
                   />
                 </Col>
               )}
-           
+
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => {
@@ -861,14 +861,16 @@ function Employee() {
                 />
               </Col>
               <Col sm={6}>
-              <DropdownInput
+                <DropdownInput
                   label="Designation"
                   asterisk="*"
                   options={getDesignationList()}
                   placeholder="Select Desination"
                   defaultValue={selectedDesignationOption}
-                  onSelectHandler={(select) => {setSelectedDesignationOption(select);
-                   console.log('desi',select)}}
+                  onSelectHandler={(select) => {
+                    setSelectedDesignationOption(select);
+                    console.log('desi', select)
+                  }}
                   errorMessage={validator.message(
                     'Designation',
                     selectedDesignationOption,
@@ -876,7 +878,7 @@ function Employee() {
                   )}
                 />
               </Col>
-           
+
               <Col sm={6}>
                 <DropdownInput
                   label="Role Name"
@@ -904,7 +906,7 @@ function Employee() {
                   }}
                 />
               </Col>
-           
+
               <Col sm={6}>
                 <DropdownInput
                   label="Teamlead"
@@ -931,7 +933,7 @@ function Employee() {
                   )}
                 />
               </Col>
-           
+
               <Col sm={6}>
                 <DropdownInput
                   label="Department"

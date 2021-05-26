@@ -228,6 +228,8 @@ function ToDoList() {
             selectedBreakOption: { label: item.label, id: item.id },
             startTime: '',
             endTime: '',
+            sthrs: '',
+            stmins: '',
             hrs: '',
             min: '',
             isDefault: true,
@@ -274,7 +276,7 @@ function ToDoList() {
       setShowBreak(false);
       setShowErrorBlock(false);
       setShowSuccessBlock(true);
-      
+
     } else {
       setShowScrumPopup(false);
       setShowErrorBlock(true);
@@ -291,6 +293,8 @@ function ToDoList() {
         selectedBreakOption: '',
         startTime: '',
         endTime: '',
+        sthrs: '',
+        stmins: '',
         hrs: '',
         mins: '',
         isDefault: false,
@@ -318,7 +322,7 @@ function ToDoList() {
         start_time: customFunctions.getTime(dt.startTime),
         end_time: customFunctions.getTime(dt.endTime),
         hours: Number(dt.hrs),
-        minutes: Number(dt.min),
+        minutes: Number(dt.mins),
         task_type: 'Break',
       });
     });
@@ -330,14 +334,14 @@ function ToDoList() {
     if (data) {
       setShowBreak(false);
       swal({
-  title: 'Break added successfully, now you can send your logout report.',
-  icon: 'success',
-})
-.then(okAction => {
-  if (okAction) {
-    setShowBreak(true);
-  }
-});
+        title: 'Break added successfully, now you can send your logout report.',
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+            setShowBreak(true);
+          }
+        });
       data.data.task_created_ids.map((e) => {
         selectedId.push(e);
         return e;
@@ -387,7 +391,7 @@ function ToDoList() {
 
   const onBreakSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validator.allValid()) {
       onComfirm();
     } else {
@@ -528,9 +532,9 @@ function ToDoList() {
                       // taskList.map((task, ind) => {
                       //   rowIndex.map((i) => {
                       //     if (task.id === i) {
-                           
+
                       //         twId.push(task.id);
-                            
+
                       //     }
                       //     return i;
                       //   });
@@ -591,14 +595,14 @@ function ToDoList() {
         size="md"
         centered
         show={showBreak}
-        onHide={() => {setShowBreak(false);}}
+        onHide={() => { setShowBreak(false); }}
         label={<h4 variant="primary">Add Break</h4>}
         id="contained-modal-title-vcenter"
         modalBody={
           <Form
           >
             <div className="add-break d-flex align-items-center justify-content-between">
-              <h3 className="mb-1">Add Break</h3>
+              <h3 className="mb-1">{'  '}</h3>
               <button
                 type="button"
                 className="btn btn-primary"
@@ -653,7 +657,7 @@ function ToDoList() {
                         breakData[i].selectedBreakOption = select;
                         setSelectedBreakOption([...breakData]);
                       }}
-                      errorMessage= {validator.message(
+                      errorMessage={validator.message(
                         'selectedBreakOption',
                         data.selectedBreakOption,
                         'required'
@@ -669,41 +673,10 @@ function ToDoList() {
                         onChange={(e) => {
                           breakData[i].startTime = e;
                           // setStartTime(e);
-                          breakData[i].hrs = e.getHours();
-                          breakData[i].mins = e.getMinutes();
-                          setBreakData([...breakData]);
-                          // setStartHours(e.getHours());
-                          // setStartMinutes(e.getMinutes());
-                        }}
-                        showTimeSelect="showTimeSelect"
-                        showTimeSelectOnly="showTimeSelectOnly"
-                        timeIntervals="1"
-                        dateFormat="h:mm aa"
-                        errorMessage={validator.message(
-                        'Start Time',
-                        breakData[i].startTime,
-                        'required'
-                  )}
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <Datepicker
-                        className="form-control"
-                        label="EndTime"
-                        selected={data.endTime}
-                        minDate={new Date(data.startTime)}
-                        minTime={setHours(
-                        setMinutes(new Date(), data.mins),
-                        data.hrs
-                  )}
-                        maxTime={setHours(setMinutes(new Date(), 59), 23)}
-                        onChange={(e) => {
-                          breakData[i].endTime = e;
-                          // setStartTime(e);
-                          // breakData[i].hrs = e.getHours();
-                          // breakData[i].mins = e.getMinutes();
-                          const endTimeNew = new Date(e);
-                          const startTimeNew = new Date(data.startTime);
+                          breakData[i].sthrs = e.getHours();
+                          breakData[i].stmins = e.getMinutes();
+                          const endTimeNew = new Date(data.endTime);
+                          const startTimeNew = new Date(e);
                           let differenceInTime =
                             Math.abs(
                               endTimeNew.getTime() - startTimeNew.getTime()
@@ -722,7 +695,60 @@ function ToDoList() {
 
                           minDifference += `${minutes}`;
                           breakData[i].hrs = hourDifference;
-                          breakData[i].min = minDifference;
+                          breakData[i].mins = minDifference;
+                          setBreakData([...breakData]);
+                          // setStartHours(e.getHours());
+                          // setStartMinutes(e.getMinutes());
+                        }}
+                        showTimeSelect="showTimeSelect"
+                        showTimeSelectOnly="showTimeSelectOnly"
+                        timeIntervals="1"
+                        dateFormat="h:mm aa"
+                        errorMessage={validator.message(
+                          'Start Time',
+                          breakData[i].startTime,
+                          'required'
+                        )}
+                      />
+                    </Col>
+                    <Col md={4}>
+                      <Datepicker
+                        className="form-control"
+                        label="EndTime"
+                        selected={data.endTime}
+                        minDate={new Date(data.startTime)}
+                        minTime={setHours(
+                          setMinutes(new Date(), data.stmins),
+                          data.sthrs
+                        )}
+                        maxTime={setHours(setMinutes(new Date(), 59), 23)}
+                        disabled={data.startTime === ''}
+                        onChange={(e) => {
+                          breakData[i].endTime = e;
+                          // setStartTime(e);
+                          // breakData[i].hrs = e.getHours();
+                          // breakData[i].mins = e.getMinutes();
+                          const endTimeNew = new Date(e);
+                          const startTimeNew = new Date(data.startTime);
+                          let differenceInTime =
+                            Math.abs(
+                              endTimeNew.getTime() - startTimeNew.getTime()
+                            ) / 1000;
+                              
+                          const hours =
+                            Math.floor(differenceInTime / 3600) % 24;
+                          differenceInTime -= hours * 3600;
+
+                          const minutes =
+                            Math.floor(differenceInTime / 60) % 60;
+                          differenceInTime -= minutes * 60;
+                          let hourDifference = '';
+                          let minDifference = '';
+                          hourDifference += `${hours} `;
+
+                          minDifference += `${minutes}`;
+                          breakData[i].hrs = hourDifference;
+                          breakData[i].mins = minDifference;
                           setBreakData([...breakData]);
 
                           // setHrs(hourDifference);
@@ -733,10 +759,10 @@ function ToDoList() {
                         timeIntervals="1"
                         dateFormat="h:mm aa"
                         errorMessage={validator.message(
-                        'End Time',
-                        breakData[i].endTime,
-                        'required'
-                  )}
+                          'End Time',
+                          breakData[i].endTime,
+                          'required'
+                        )}
                       />
                     </Col>
                     <Col md={4}>
@@ -746,7 +772,7 @@ function ToDoList() {
                         type="text"
                         disabled
                         name="designationtitle"
-                        value={`${data.hrs}: ${data.min}`}
+                        value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs}: ${data.mins}` : ''}
                       />
                     </Col>
                   </Row>
@@ -756,10 +782,10 @@ function ToDoList() {
               <Button variant="secondary" onClick={(e) => onBreakSubmit(e)}>
                 Confirm
               </Button>
-              <Button variant="primary" type="submit" className="ms-4" 
-            onClick={(e) => {
-              onSubmit(e);
-            }}>
+              <Button variant="primary" type="submit" className="ms-4"
+                onClick={(e) => {
+                  onSubmit(e);
+                }}>
                 Send Report
               </Button>
             </div>
