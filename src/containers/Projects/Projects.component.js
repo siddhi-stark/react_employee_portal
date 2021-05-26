@@ -159,7 +159,7 @@ function Projects() {
         return (
           <>
             <Image
-              style={{'cursor':'default'}}
+              className="rt-support-link"
               src={support ? '/images/success.svg' : '/images/fail.svg'}
               onClick={(e) => {
                 e.preventDefault();
@@ -181,7 +181,7 @@ function Projects() {
       render: ({ twID }) => {
         return (
           <>
-            <a className="tw-link" href={`${constants.project}${twID}`} target="_blank" >
+            <a href={`${constants.project}${twID}`} target="_blank" >
               <span>
                 <Image src="/images/redirect.png" />
               </span>
