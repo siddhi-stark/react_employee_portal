@@ -4,6 +4,7 @@ import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
+import { setHours, setMinutes } from 'date-fns';
 import customFunctions from '../../helper/customFunctions';
 import {
   ModalInput,
@@ -36,8 +37,8 @@ function ToDoList() {
   const [selectedBreakOption, setSelectedBreakOption] = useState(null);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const [hrs, setHours] = useState('');
-  const [min, setMinutes] = useState('');
+  const [hrs, setHrs] = useState('');
+  const [min, setMin] = useState('');
   const [userRole, setUserRole] = useState('');
 
   const [taskId, setTaskId] = useState(null);
@@ -48,6 +49,8 @@ function ToDoList() {
   const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [showErrorBlock, setShowErrorBlock] = useState(false);
   const [showSuccessBlock, setShowSuccessBlock] = useState(false);
+  const [startHours, setStartHours] = useState('');
+  const [startMinutes, setStartMinutes] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -333,8 +336,8 @@ function ToDoList() {
         return e;
       });
       setSelectedRowIndex(selectedRowIndex);
-      setHours();
-      setMinutes();
+      setHrs();
+      setMin();
       setSelectedBreakOption();
       setStartTime();
       setEndTime();
@@ -380,16 +383,16 @@ function ToDoList() {
       onComfirm();
       setStartTime('');
       setEndTime('');
-      setHours('');
-      setMinutes('');
+      setHrs('');
+      setMin('');
     } else {
       setShowBreak(false);
       swal('Please Select Break', '', 'error');
       onComfirm();
       setStartTime('');
       setEndTime('');
-      setHours('');
-      setMinutes('');
+      setHrs('');
+      setMin('');
     }
   };
 
@@ -646,6 +649,8 @@ function ToDoList() {
                         onChange={(e) => {
                           breakData[i].startTime = e;
                           setStartTime(e);
+                          setStartHours(e.getHours());
+                          setStartMinutes(e.getMinutes());
                         }}
                         showTimeSelect="showTimeSelect"
                         showTimeSelectOnly="showTimeSelectOnly"
@@ -658,6 +663,12 @@ function ToDoList() {
                         className="form-control"
                         label="EndTime"
                         selected={endTime}
+                        minDate={new Date(startTime)}
+                        minTime={setHours(
+                        setMinutes(new Date(), startMinutes),
+                        startHours
+                  )}
+                        maxTime={setHours(setMinutes(new Date(), 59), 23)}
                         onChange={(e) => {
                           breakData[i].endTime = e;
                           setEndTime(e);
@@ -682,8 +693,8 @@ function ToDoList() {
                           minDifference += `${minutes}`;
                           breakData[i].hrs = hourDifference;
                           breakData[i].min = minDifference;
-                          setHours(hourDifference);
-                          setMinutes(minDifference);
+                          setHrs(hourDifference);
+                          setMin(minDifference);
                         }}
                         showTimeSelect="showTimeSelect"
                         showTimeSelectOnly="showTimeSelectOnly"

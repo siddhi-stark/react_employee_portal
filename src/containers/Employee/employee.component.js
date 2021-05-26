@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import {
   Card,
@@ -33,9 +33,10 @@ const items = [
 const currentdate = new Date();
 const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
 
-function Employee() {
-  const validator = useRef(new SimpleReactValidator());
+const validator = new SimpleReactValidator();
 
+function Employee() {
+  // const validator = useRef(new SimpleReactValidator());
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
@@ -267,6 +268,7 @@ function Employee() {
       setEmail(data.data.email);
       setPassword(data.data.password);
       setMobile(data.data.mobile);
+      setDate(new Date(data.data.dob));
     }
   };
 
@@ -385,7 +387,7 @@ function Employee() {
 
   const onCancel = () => {
     setSelectedDesignationOption();
-    validator.current.hideMessages();
+    validator.hideMessages();
     setFullName('');
     setSelectedEmployee('');
     setEmail('');
@@ -458,6 +460,8 @@ function Employee() {
 
     const { data } = await callback(endPoint, payload);
     if (data) {
+      validator.hideMessages();
+
       setSelectedDesignationOption();
       setSelectedRole();
       setModalShow(false);
@@ -467,7 +471,6 @@ function Employee() {
           setEmployeeId();
           setSelectedDesignationOption();
           setSelectedRole();
-          validator.current.hideMessages();
           setFullName();
           setSelectedEmployee();
           setEmail();
@@ -505,10 +508,12 @@ function Employee() {
     if (disableButton) return;
 
     setDisableButton(true);
-    if (validator.current.allValid()) {
+    console.log('allValid')
+    if (validator.allValid()) {
+      console.log('valid')
       addEmployee();
     } else {
-      validator.current.showMessages();
+      validator.showMessages();
       forceUpdate(count + 1);
       setDisableButton(false);
     }
@@ -684,7 +689,7 @@ function Employee() {
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Add Employee</h4>
+                <h4 className="text-primary mt-2 mb-2">Employee</h4>
                 <div className="d-flex align-items-center justify-content-end">
                   <UserRestrictions permittedUsers={[1]} roleId={userRole}>
                     <a
@@ -766,7 +771,7 @@ function Employee() {
                   value={fullName}
                   maxlength="10"
                   placeholder="Enter Full  Name"
-                  errorMessage={validator.current.message(
+                  errorMessage={validator.message(
                     'Full Name',
                     fullName,
                     'required'
@@ -784,7 +789,7 @@ function Employee() {
                   type="text"
                   value={email}
                   placeholder="Enter email"
-                  errorMessage={validator.current.message(
+                  errorMessage={validator.message(
                     'email',
                     email,
                     'required'
@@ -822,10 +827,10 @@ function Employee() {
                   maxlength="10"
                   value={mobile}
                   placeholder="Enter Contact Number"
-                  errorMessage={validator.current.message(
+                  errorMessage={validator.message(
                     'mobile',
                     mobile,
-                    'required'
+                    'required|phone'
                   )}
                 />
               </Col>
@@ -836,14 +841,15 @@ function Employee() {
                   options={getDesignationList()}
                   placeholder="Select Designation"
                   defaultValue={selectedDesignationOption}
-                  onSelectHandler={(select) =>
+                  onSelectHandler={(select) =>{
                     setSelectedDesignationOption(select)
-                  }
-                  errorMessage={validator.current.message(
-                    'selectedDesignationOption',
-                    selectedDesignationOption,
-                    'required'
-                  )}
+                    console.log('gfhgf',selectedDesignationOption)
+                  }}
+                  errorMessage={validator.message(
+                        'selectedDesignationOption',
+                        selectedDesignationOption,
+                        'required'
+                      )}
                 />
               </Col>
             </Row>
@@ -856,7 +862,7 @@ function Employee() {
                   placeholder="Select Role"
                   defaultValue={selectedRole}
                   onSelectHandler={(select) => setSelectedRole(select)}
-                  errorMessage={validator.current.message(
+                  errorMessage={validator.message(
                     'Role',
                     selectedRole,
                     'required'
@@ -896,7 +902,7 @@ function Employee() {
                   onChange={(e) => {
                     setDate(e);
                   }}
-                  errorMessage={validator.current.message(
+                  errorMessage={validator.message(
                     'DOB',
                     date,
                     `required | before_or_equal:${maxdate}`

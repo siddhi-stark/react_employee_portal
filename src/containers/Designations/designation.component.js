@@ -104,7 +104,7 @@ function Designation() {
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
 
-    const endPoint = `${Api.designationUrl}`;
+    const endPoint = `${Api.designationUrl}?sort_by=name&sort_direction=ascending`;
 
     const params = {
       page,

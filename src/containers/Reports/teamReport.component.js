@@ -37,7 +37,7 @@ function TeamReport() {
     },
     {
       id: 'name',
-      label: 'Employee Name',
+      label: 'Name',
       roleAccess: [3],
     },
     {
@@ -230,7 +230,7 @@ function TeamReport() {
                           <div className="search-bar-input">
                             <DropdownInput
                               options={getTeamList()}
-                              placeholder="Select Employee"
+                              placeholder="Select team member"
                               defaultValue={selectedEmployee}
                               onSelectHandler={(select) => {
                                 setSelectedEmployee(select);
