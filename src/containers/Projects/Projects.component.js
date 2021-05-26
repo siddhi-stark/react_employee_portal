@@ -214,8 +214,8 @@ function Projects() {
     const api = `${Api.getProjects}?sort_by=name&sort_direction=ascending`;
 
     const params = {
-      page,
       limit: pagination.itemsPerPage,
+      page,
       keyword: searchKeyword,
       employee: customFunctions.userRestrictions(id, [2, 3, 4]),
     };

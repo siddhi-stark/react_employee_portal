@@ -107,8 +107,8 @@ function Designation() {
     const endPoint = `${Api.designationUrl}?sort_by=name&sort_direction=ascending`;
 
     const params = {
-      page,
       limit: pagination.itemsPerPage,
+      page,
       keyword: searchKeyword,
     };
 
