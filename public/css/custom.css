@@ -11035,6 +11035,9 @@ table tfoot {
   min-width: 100px;
   display: inline-block; }
 
+a.tw-link {
+  cursor: inherit; }
+
 @media (min-width: 576px) {
   .bd-content .highlight {
     margin-right: 0;

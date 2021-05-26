@@ -181,7 +181,7 @@ function Projects() {
       render: ({ twID }) => {
         return (
           <>
-            <a href={`${constants.project}${twID}`} target="_blank">
+            <a className="tw-link" href={`${constants.project}${twID}`} target="_blank" >
               <span>
                 <Image src="/images/redirect.png" />
               </span>

@@ -243,9 +243,9 @@ function Dashboard() {
                     </div>
                   </Col>
                   <Col md={6}>
-                    <div className="persentage-circle">
+                    {/* <div className="persentage-circle">
                       <img src="/images/persentage-circle.svg" alt="img" />
-                    </div>
+                    </div> */}
                   </Col>
                   <div className="last-week">
                     {!show ? (

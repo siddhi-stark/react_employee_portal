@@ -2777,6 +2777,11 @@ table {
     }
 }
 
+a.tw-link {
+    cursor: inherit;
+}
+
+
 @media (min-width: 576px){
     .bd-content .highlight {
         margin-right: 0;
