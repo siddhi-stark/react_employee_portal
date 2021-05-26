@@ -10,6 +10,7 @@ import customFunctions from '../../../helper/customFunctions';
 import Table from '../../../components/ReactTable/simpletable.component';
 import UserRestrictions from '../../../components/UserRestrictions/userrestrictions.component';
 import SharedService from '../../../services/SharedService/sharedServices';
+import Loader from '../../../components/Loader/index';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -20,6 +21,7 @@ function Dashboard() {
   const [remaining, setRemaining] = useState('');
   const [rows, setRows] = useState([]);
   const [employeeName, setEmployeeName] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
   const [time, setTime] = useState('');
   const [show, setShow] = useState(false);
   const [userRole, setUserRole] = useState('');
@@ -62,7 +64,7 @@ function Dashboard() {
         setSignInTime(newtime);
         if (data.data.clock_in_time) {
           setShowClockButton(false);
-          getClockInTime();
+          getClockInTime(false);
         }
       } else {
         setShowClockButton(true);
@@ -95,16 +97,21 @@ function Dashboard() {
     }
   };
 
-  const getClockInTime = async () => {
+  const getClockInTime = async (loadActivity=true) => {
     // const event = new Event('TimeUpdate', { isUpdated: true });
     
     const endPoint = `${Api.clockInUrl}`;
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      setShowLoader(false);
       setSignInTime(data.data.sign_in_time);
       // document.dispatchEvent(event);
     }
-    await getDailyActivity();
+    if(loadActivity) {
+      await getDailyActivity();
+    }
+   
     SharedService.clockIn.next(true);
   };
 
@@ -158,6 +165,7 @@ function Dashboard() {
           <Breadcrumb />
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false}/>
       <section className="content-area">
         <Row>
           <Col xl={8} id="main-content">

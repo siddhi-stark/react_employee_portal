@@ -126,10 +126,10 @@ function AllReports() {
     let isValid = true;
 
     if (
-      customFunctions.checkIfEmpty(fromDate) &&
-      customFunctions.checkIfEmpty(toDate)
+      !fromDate &&
+      !toDate
     ) {
-      filterSearchErr = 'Please enter search keyword';
+      filterSearchErr = 'Please select dates';
       setFilterErr(filterSearchErr);
       isValid = false;
     }

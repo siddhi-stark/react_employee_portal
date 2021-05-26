@@ -36,18 +36,8 @@ function Reports(props) {
       roleAccess: [1, 2, 3, 4],
     },
     {
-      id: 'status',
-      label: 'Status',
-      roleAccess: [1, 2, 3, 4],
-    },
-    {
       id: 'eta',
       label: 'ETA',
-      roleAccess: [1, 2, 3, 4],
-    },
-    {
-      id: 'at',
-      label: 'AT',
       roleAccess: [1, 2, 3, 4],
     },
   ];
@@ -89,9 +79,7 @@ function Reports(props) {
             (i + 1),
           task: proj.activity,
           project: proj.project_name,
-          status: proj.status,
           eta: proj.duration,
-          at: proj.end_date,
         };
         row.push(setRowData);
         return proj;

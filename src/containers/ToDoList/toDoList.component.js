@@ -98,11 +98,6 @@ function ToDoList() {
       roleAccess: [1, 2, 3, 4],
     },
     {
-      id: 'at',
-      label: 'AT',
-      roleAccess: [1, 2, 3, 4],
-    },
-    {
       id: 'action',
       label: 'Action',
       roleAccess: [1, 2, 3, 4],
@@ -214,7 +209,6 @@ function ToDoList() {
           projects: task.project_name,
           status: task.status,
           eta: task.estimation,
-          at: task.actual_time,
         };
         row.push(setRowData);
         return task;
@@ -389,7 +383,7 @@ function ToDoList() {
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
-      swal('Please Select Break', '', 'error');
+      // swal('Please Select Break', '', 'error');
     }
   };
 

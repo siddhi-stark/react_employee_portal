@@ -254,15 +254,17 @@ function Employee() {
         }
         return dept;
       });
-
-      setSelectedDesignationOption({
+      console.log('dataaa', data.data.designation_id);
+      setSelectedDesignationOption(data.data.designation_id ? {
+        
         label: data.data.designation_name,
         id: data.data.designation_id,
-      });
-      setSelectedRole({
+      } : '');
+
+      setSelectedRole(data.data.role_id ? {
         label: data.data.role_name,
         id: data.data.role_id,
-      });
+      } : '');
 
       setFullName(data.data.full_name);
       setEmail(data.data.email);
@@ -843,31 +845,14 @@ function Employee() {
                   options={getDesignationList()}
                   placeholder="Select Desination"
                   defaultValue={selectedDesignationOption}
-                  onSelectHandler={(select) => setSelectedDesignationOption(select)}
+                  onSelectHandler={(select) => {setSelectedDesignationOption(select);
+                   console.log('desi',select)}}
                   errorMessage={validator.message(
                     'Designation',
                     selectedDesignationOption,
                     'required'
                   )}
                 />
-                {/* <DropdownInput
-                  label="Designation"
-                  asterisk="*"
-                  options={getDesignationList()}
-                  placeholder="Select Designation"
-                  defaultValue={selectedDesignationOption}
-                  onSelectHandler={(select) =>{
-                    setSelectedDesignationOption(select)
-                    console.log('gfhgf',selectedDesignationOption)
-                  }}
-                  errorMessage={
-                             validator.message(
-                                'Designation',
-                                selectedDesignationOption,
-                                'required'
-                             
-                             )}
-                /> */}
               </Col>
             </Row>
             <Row>

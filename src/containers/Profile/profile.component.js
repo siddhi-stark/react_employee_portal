@@ -238,7 +238,7 @@ function Profile() {
                   className="edit-profile-image mb-4"
                   style={{ height: '70px' }}
                 >
-                  <img src={imageProfile} alt="Edit Profile" />
+                  <img src={imageProfile} alt="Edit Profile" style={{'height': '100%'}} />
                 </div>
               </Col>
               <Col sm={9}>
