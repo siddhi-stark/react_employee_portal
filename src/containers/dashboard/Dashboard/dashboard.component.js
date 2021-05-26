@@ -304,7 +304,7 @@ function Dashboard() {
             </div>
             </UserRestrictions>
 
-            <div className="holidays-applied">
+            {/* <div className="holidays-applied">
               <div className="row">
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
@@ -345,8 +345,8 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="social-media">
+            </div> */}
+            {/* <div className="social-media">
               <div className="card flex-fill w-100">
                 <div className="card-body">
                   <div className="table-title">
@@ -378,7 +378,7 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </Col>
         </Row>
       </section>

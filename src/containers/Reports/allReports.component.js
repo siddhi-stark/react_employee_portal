@@ -34,6 +34,8 @@ function AllReports() {
       roleAccess: [1, 2, 3, 4],
       isDisplay: false,
     },
+  
+    
     {
       id: 'createdDate',
       label: 'date',
@@ -43,6 +45,11 @@ function AllReports() {
     {
       id: 'no',
       label: 'Sr. No',
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: 'name',
+      label: 'Name',
       roleAccess: [1, 2, 3, 4],
     },
 
@@ -110,6 +117,7 @@ function AllReports() {
       data.data.map((report, i) => {
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
+          name: report.user,
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
@@ -202,7 +210,7 @@ function AllReports() {
                           <div className="search-bar-input">
                             <TextInput
                               value={searchKeyword}
-                              placeholder="Search keyword"
+                              placeholder="Search Employee"
                               onInputChange={(e) => {
                                 setFilterErr('');
                                 setSearchKeyword(e.target.value);
@@ -265,16 +273,15 @@ function AllReports() {
               </Accordion.Collapse>
             </Card>
           </Accordion>
-        </div>
-        <div className="mt-3">
           <Card>
-            <Card.Body>
-              <Card.Title className="d-flex align-items-center justify-content-between">
-                <h5 className="m-0">Reports</h5>
-              </Card.Title>
-              <Row>
-                <Col className="mt-3">
-                  <Table
+          <Card.Header>
+          <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary mt-2 mb-2">Reports</h4>
+              </div>
+          </Card.Header>
+          <Card.Body>
+            <Row>
+            <Table
                     tableClass="table table-striped"
                     columns={columns}
                     rows={rows}
@@ -288,9 +295,8 @@ function AllReports() {
                     }}
                     dropdownContainerClass="mb-3"
                   />
-                </Col>
-              </Row>
-            </Card.Body>
+            </Row>
+          </Card.Body>
           </Card>
         </div>
       </section>

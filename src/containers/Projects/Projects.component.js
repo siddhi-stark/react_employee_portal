@@ -159,6 +159,7 @@ function Projects() {
         return (
           <>
             <Image
+              style={{'cursor':'default'}}
               src={support ? '/images/success.svg' : '/images/fail.svg'}
               onClick={(e) => {
                 e.preventDefault();
@@ -210,7 +211,7 @@ function Projects() {
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
     const id = customFunctions.getLocalStorage('userId');
-    const api = `${Api.getProjects}`;
+    const api = `${Api.getProjects}?sort_by=name&sort_direction=ascending`;
 
     const params = {
       page,
@@ -377,19 +378,15 @@ function Projects() {
               </Accordion.Collapse>
             </Card>
           </Accordion>
-        </div>
-        <div className="mt-3">
           <Card>
-            <Card.Body>
-              <Row>
-                <Row>
-                  <Col>
-                    <div className="pull-left">
-                      <h5>Projects</h5>
-                    </div>
-                  </Col>
-                </Row>
-                <Table
+          <Card.Header>
+          <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary mt-2 mb-2">Projects</h4>
+              </div>
+          </Card.Header>
+          <Card.Body>
+            <Row>
+            <Table
                   columns={columns}
                   rows={rows}
                   showPagination
@@ -406,8 +403,8 @@ function Projects() {
                     <p className="text-center mb-0">No record found</p>
                   )}
                 />
-              </Row>
-            </Card.Body>
+            </Row>
+          </Card.Body>
           </Card>
         </div>
       </section>

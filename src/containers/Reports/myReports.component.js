@@ -34,6 +34,12 @@ function AllReports() {
       roleAccess: [1, 2, 3, 4],
     },
     {
+      id: 'name',
+      label: 'Name',
+      roleAccess: [1, 2, 3, 4],
+      isDisplay: false,
+    },
+    {
       id: 'date',
       label: 'Date',
       roleAccess: [1, 2, 3, 4],
@@ -88,6 +94,7 @@ function AllReports() {
         const dt = new Date(date).getTime();
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
+          name: report.user,
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
@@ -239,16 +246,15 @@ function AllReports() {
               </Accordion.Collapse>
             </Card>
           </Accordion>
-        </div>
-      </section>
-      <div className="mt-3">
-        <Card>
+          <Card>
+          <Card.Header>
+          <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary mt-2 mb-2">Reports</h4>
+              </div>
+          </Card.Header>
           <Card.Body>
-            <Card.Title className="d-flex align-items-center justify-content-between">
-              <h5 className="m-0">Reports</h5>
-            </Card.Title>
             <Row>
-              <Table
+            <Table
                 columns={columns}
                 rows={rows}
                 showPagination
@@ -267,8 +273,9 @@ function AllReports() {
               />
             </Row>
           </Card.Body>
-        </Card>
-      </div>
+          </Card>
+        </div>
+      </section>
     </>
   );
 }
