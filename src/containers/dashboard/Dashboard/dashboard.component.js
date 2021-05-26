@@ -62,6 +62,7 @@ function Dashboard() {
         setSignInTime(newtime);
         if (data.data.clock_in_time) {
           setShowClockButton(false);
+          getClockInTime();
         }
       } else {
         setShowClockButton(true);

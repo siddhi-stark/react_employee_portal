@@ -268,7 +268,10 @@ function Employee() {
       setEmail(data.data.email);
       setPassword(data.data.password);
       setMobile(data.data.mobile);
-      setDate(new Date(data.data.dob));
+      setDate(data.data.dob !== null
+        ? new Date(data.data.dob)
+        : null); 
+      // setDate(new Date(data.data.dob) || '');
     }
   };
 
@@ -344,7 +347,7 @@ function Employee() {
   }, []);
 
   useEffect(() => {
-    getTableData(1);
+    getTableData(pagination.current_page);
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
   }, [cntClearFilter]);
@@ -386,7 +389,7 @@ function Employee() {
   };
 
   const onCancel = () => {
-    setSelectedDesignationOption();
+    // setSelectedDesignationOption();
     validator.hideMessages();
     setFullName('');
     setSelectedEmployee('');
@@ -459,7 +462,7 @@ function Employee() {
       validator.hideMessages();
 
       setSelectedDesignationOption();
-      setSelectedRole();
+      // setSelectedRole();
       setModalShow(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
@@ -477,7 +480,7 @@ function Employee() {
           setSelectedTeamLead();
           setSelectedDepartment();
           setModalShow(false);
-          getTableData(1);
+          getTableData(pagination.current_page);
         }
       });
     } else {
@@ -505,9 +508,7 @@ function Employee() {
     if (disableButton) return;
 
     setDisableButton(true);
-    console.log('allValid')
     if (validator.allValid()) {
-      console.log('valid')
       addEmployee();
     } else {
       validator.showMessages();
@@ -609,6 +610,8 @@ function Employee() {
       getTableData(1);
     }
   };
+
+  validator.purgeFields();
 
   return (
     <>
@@ -799,6 +802,7 @@ function Employee() {
                   <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
                     label="Password"
+                    asterisk="*"
                     containerClass="form-group"
                     type="password"
                     name="passwordTitle"
@@ -833,7 +837,20 @@ function Employee() {
                 />
               </Col>
               <Col sm={6}>
-                <DropdownInput
+              <DropdownInput
+                  label="Designation"
+                  asterisk="*"
+                  options={getDesignationList()}
+                  placeholder="Select Desination"
+                  defaultValue={selectedDesignationOption}
+                  onSelectHandler={(select) => setSelectedDesignationOption(select)}
+                  errorMessage={validator.message(
+                    'Designation',
+                    selectedDesignationOption,
+                    'required'
+                  )}
+                />
+                {/* <DropdownInput
                   label="Designation"
                   asterisk="*"
                   options={getDesignationList()}
@@ -843,12 +860,14 @@ function Employee() {
                     setSelectedDesignationOption(select)
                     console.log('gfhgf',selectedDesignationOption)
                   }}
-                  errorMessage={validator.message(
-                        'selectedDesignationOption',
-                        selectedDesignationOption,
-                        'required'
-                      )}
-                />
+                  errorMessage={
+                             validator.message(
+                                'Designation',
+                                selectedDesignationOption,
+                                'required'
+                             
+                             )}
+                /> */}
               </Col>
             </Row>
             <Row>

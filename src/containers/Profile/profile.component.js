@@ -346,10 +346,7 @@ function Profile() {
                   </Col>
                 </Row>
                 </UserRestrictions>  
-               
-              
-                
-              </Col>
+               </Col>
             </Row>
           </Form>
         </Card.Body>

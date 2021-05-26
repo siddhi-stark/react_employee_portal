@@ -34,9 +34,7 @@ function AllReports() {
       roleAccess: [1, 2, 3, 4],
       isDisplay: false,
     },
-  
-    
-    {
+   {
       id: 'createdDate',
       label: 'date',
       roleAccess: [1, 2, 3, 4],
