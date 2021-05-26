@@ -8,6 +8,7 @@ import { TextInput, ModalInput } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 const validator = new SimpleReactValidator();
 
@@ -20,6 +21,7 @@ function Profile() {
   const [date, setDate] = useState('');
   const [companyEmail, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [role, setRole] = useState([]);
   const [mobile, setMobile] = useState('');
   const [id, setId] = useState(null);
   const [modalShow, setModalShow] = useState('');
@@ -100,6 +102,8 @@ function Profile() {
 
   useEffect(() => {
     async function getData() {
+      const uRole = customFunctions.getLocalStorage('group');
+      setRole(Number(uRole));
       getDepartment();
       getProfile();
     }
@@ -244,11 +248,21 @@ function Profile() {
                 <h5 className="mt-5">Personal Information</h5>
                 <div className="personal-info-date-number">
                   <Form.Label>
+                  <UserRestrictions permittedUsers={[2,3,4]} roleId={role}>
                     <Image
                       src="/images/up-coming-birthday.svg"
                       className="svg me-3"
                     />
                     <span>{birthDate}</span>
+                    </UserRestrictions>
+                    <UserRestrictions permittedUsers={[1]} roleId={role}>
+                    <Image
+                      src="/images/mail.svg"
+                      className="svg me-3"
+                    />
+                    <span> {companyEmail} </span>
+                    </UserRestrictions>
+                   
                   </Form.Label>
 
                   <Form.Label>
@@ -259,7 +273,8 @@ function Profile() {
                     <span>{mobile}</span>
                   </Form.Label>
                 </div>
-
+                  
+                <UserRestrictions permittedUsers={[2,3,4]} roleId={role}>
                 <h5 className="mt-5">Job Information</h5>
                 <Row>
                   <Col sm={3}>
@@ -330,6 +345,10 @@ function Profile() {
                     />
                   </Col>
                 </Row>
+                </UserRestrictions>  
+               
+              
+                
               </Col>
             </Row>
           </Form>

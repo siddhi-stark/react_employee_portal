@@ -36,14 +36,21 @@ const menu = [
   },
   {
     title: 'Reports',
-    // path: '/reports',
+    path: '/report',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [4],
+  },
+  {
+    title: 'Reports',
+    path: '/report',
     icon: 'report.svg',
     submenu: [
       {
         title: 'My Report',
         path: '/report',
         icon: 'report.svg',
-        roleaccess: [3, 4],
+        roleaccess: [3],
       },
       {
         title: 'Team Report',
@@ -52,7 +59,7 @@ const menu = [
         roleaccess: [3],
       },
     ],
-    roleaccess: [3, 4],
+    roleaccess: [3],
   },
   // {
   //   title: 'Events',
