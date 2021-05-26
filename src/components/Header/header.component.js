@@ -7,6 +7,8 @@ import customFunctions from '../../helper/customFunctions';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
 import SharedService from '../../services/SharedService/sharedServices';
 
+const BlankProfile =  '/images/noProfile.jpeg';
+
 function Header() {
   const date = new Date().toDateString().split(' ');
   const formattedDate = `${date[0]}, ${date[1]} ${date[2]} ${date[3]} `;
@@ -108,11 +110,7 @@ function Header() {
               <div className="profile-img">
                 <a href="#">
                   <img
-                    src={
-                      `${imageProfile}`
-                        ? `${imageProfile}`
-                        : '/images/profile-img.png'
-                    }
+                    src={`${imageProfile}` ? `${imageProfile}` : BlankProfile }
                     alt="Profile"
                   />
                 </a>
@@ -133,8 +131,14 @@ function Header() {
                   <div className="header-navheading text-center">
                     <h5 className="main-notification-title">{employeeName}</h5>
 
-                    <p className="main-notification-text">{designation}</p>
+                  {
+                    designation && (
+                      <p className="main-notification-text">({designation})</p>
+                    )
+                  }  
+                    <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>
                     <small>Employee ID {empId}</small>
+                    </UserRestrictions> 
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>

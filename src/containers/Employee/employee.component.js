@@ -48,6 +48,7 @@ function Employee() {
   const [password, setPassword] = useState('');
   const [designation, setDesignation] = useState([]);
   const [twEmployee, setTwEmployee] = useState([]);
+  const [addButton, setAddButton] = useState(false);
   const [role, setRole] = useState([]);
   const [manager, setManager] = useState([]);
   const [selectedManager, setSelectedManager] = useState([]);
@@ -277,15 +278,18 @@ function Employee() {
     }
   };
 
-  const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.designationUrl}?type=all`
-    );
-    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      setDesignation(data.data);
-    }
-  };
-
+  
+    const getDesignation = async () => {
+      const { data } = await AuthApi.getDataFromServer(
+        `${Api.designationUrl}?type=all`
+      );
+      if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+        setDesignation(data.data);
+      }
+    };
+  
+  
+  
   const getTwEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
@@ -332,21 +336,36 @@ function Employee() {
     });
     return depart;
   };
+  
 
+ 
   useEffect(() => {
     async function getData() {
       const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
-      getDesignation();
-      getTwEmployee();
-      getRole();
-      getManager();
-      getTeamLead();
-      getDepartment();
+      // getDesignation();
+      // getTwEmployee();
+      // getRole();
+      // getManager();
+      // getTeamLead();
+      // getDepartment();
       setTitle('Employee');
     }
     getData();
   }, []);
+
+  
+
+  useEffect(() => {
+    if(addButton) {
+      getDesignation();
+         getTwEmployee();
+         getRole();
+         getManager();
+         getTeamLead();
+         getDepartment(); 
+     }
+  },[addButton]); 
 
   useEffect(() => {
     getTableData(pagination.current_page);
@@ -393,6 +412,7 @@ function Employee() {
   const onCancel = () => {
     // setSelectedDesignationOption();
     validator.hideMessages();
+    setAddButton(false);
     setFullName('');
     setSelectedEmployee('');
     setEmail('');
@@ -462,7 +482,7 @@ function Employee() {
     const { data, message } = await callback(endPoint, payload);
     if (data) {
       validator.hideMessages();
-
+      setAddButton(false);
       setSelectedDesignationOption();
       // setSelectedRole();
       setModalShow(false);
@@ -617,6 +637,7 @@ function Employee() {
 
   return (
     <>
+    {console.log('addButton',addButton)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
@@ -699,6 +720,7 @@ function Employee() {
                       onClick={() => {
                         setModalShow(true);
                         setEmployeeId();
+                        setAddButton(true);
                       }}
                       className="btn-link"
                     >
@@ -744,6 +766,7 @@ function Employee() {
             onSubmit={(e) => {
               onSubmit(e);
             }}
+            autocomplete="off"
           >
             <Row>
               <Col sm={6}>
@@ -781,8 +804,7 @@ function Employee() {
                   )}
                 />
               </Col>
-            </Row>
-            <Row>
+            
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => setEmail(e.target.value)}
@@ -813,8 +835,7 @@ function Employee() {
                   />
                 </Col>
               )}
-            </Row>
-            <Row>
+           
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => {
@@ -823,6 +844,7 @@ function Employee() {
                       setMobile(e.target.value);
                     }
                   }}
+                  autocomplete="false"
                   label="Mobile"
                   asterisk="*"
                   containerClass="form-group"
@@ -854,8 +876,7 @@ function Employee() {
                   )}
                 />
               </Col>
-            </Row>
-            <Row>
+           
               <Col sm={6}>
                 <DropdownInput
                   label="Role Name"
@@ -883,8 +904,7 @@ function Employee() {
                   }}
                 />
               </Col>
-            </Row>
-            <Row>
+           
               <Col sm={6}>
                 <DropdownInput
                   label="Teamlead"
@@ -911,8 +931,7 @@ function Employee() {
                   )}
                 />
               </Col>
-            </Row>
-            <Row>
+           
               <Col sm={6}>
                 <DropdownInput
                   label="Department"

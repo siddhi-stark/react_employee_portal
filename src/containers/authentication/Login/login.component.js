@@ -19,7 +19,7 @@ function Login(props) {
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
   const [title, setTitle] = useState('');
-  const [isShowLoader, setShowLoader] = useState(false);
+  const [loader, setLoader] = useState(false);
   const history = useHistory();
   const [disableButton, setDisableButton] = useState(false);
 
@@ -71,14 +71,14 @@ function Login(props) {
       password,
     };
 
-    setShowLoader(true);
+    setLoader(true);
 
     const { data, message } = await AuthApi.postDataToServer(
       Api.loginUrl,
       postData
     );
     if (data && data.data && data.data.token && data.data.token.access_token) {
-      setShowLoader(false);
+      setLoader(false);
       CustomFunctions.setLocalStorage(
         'access_token',
         data.data.token.access_token
@@ -109,7 +109,7 @@ function Login(props) {
         window.location.href = '/';
       }, 1000);
     } else {
-      setShowLoader(false);
+      setLoader(false);
       setDisableButton(false);
       swal(message, '', 'error');
     }
@@ -132,7 +132,7 @@ function Login(props) {
   return (
     <>
       <Helmet title={title} />
-      <Loader showLoader={isShowLoader} needFullPage={false}/>
+      <Loader showLoader={loader} needFullPage={false}/>
       <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">

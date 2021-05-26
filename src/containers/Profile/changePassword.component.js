@@ -19,7 +19,7 @@ function ManagePassword() {
   const validator = useRef(
     new SimpleReactValidator({
       messages: {
-        in: 'Passwords need to match!',
+        in: 'Passwords and Confirm Password need to match!',
       },
     })
   );

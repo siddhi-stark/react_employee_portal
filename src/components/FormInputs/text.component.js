@@ -25,6 +25,7 @@ export default function InputComponent(props) {
     accept,
     optionalLabel,
     style,
+    autocomplete
   } = props;
 
   return (
@@ -62,6 +63,7 @@ export default function InputComponent(props) {
             rows={rows}
             as={as}
             style={style}
+            autocomplete={autocomplete}
           />
         </InputGroup>
         <p style={{ color: 'red' }}> {errorMessage} </p>

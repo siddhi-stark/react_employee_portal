@@ -328,14 +328,24 @@ function ToDoList() {
     const endPoint = `${Api.taskUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
+      setShowBreak(false);
+      swal({
+  title: 'Break added successfully, now you can send your logout report.',
+  icon: 'success',
+})
+.then(okAction => {
+  if (okAction) {
+    setShowBreak(true);
+  }
+});
       data.data.task_created_ids.map((e) => {
         selectedId.push(e);
         return e;
       });
       setSelectedId([...selectedId]);
       customFunctions.setLocalStorage('TaskId', JSON.stringify(selectedId));
-      setHours();
-      setMinutes();
+      // setHours();
+      // setMinutes();
       setSelectedBreakOption();
       // setStartTime();
       // setEndTime();

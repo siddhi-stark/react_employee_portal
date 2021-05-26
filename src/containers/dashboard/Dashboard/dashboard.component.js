@@ -104,7 +104,7 @@ function Dashboard() {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      setShowLoader(false);
+      // setShowLoader(false);
       setSignInTime(data.data.sign_in_time);
       // document.dispatchEvent(event);
     }
@@ -113,6 +113,7 @@ function Dashboard() {
     }
    
     SharedService.clockIn.next(true);
+    setShowLoader(false);
   };
 
   const getWeeklyStatus = async (key) => {
@@ -250,11 +251,6 @@ function Dashboard() {
                         </li>
                       </ul>
                     </div>
-                  </Col>
-                  <Col md={6}>
-                    {/* <div className="persentage-circle">
-                      <img src="/images/persentage-circle.svg" alt="img" />
-                    </div> */}
                   </Col>
                   <div className="last-week">
                     {!show ? (
