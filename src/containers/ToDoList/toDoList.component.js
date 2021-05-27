@@ -351,6 +351,7 @@ function ToDoList() {
             setShowBreak(true);
           }
         });
+        getTableData(1);
       data.data.task_created_ids.map((e) => {
         selectedId.push(e);
         return e;
