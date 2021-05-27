@@ -502,7 +502,7 @@ function Employee() {
       // swal(errorData[1], '', 'error');
       swal({
         title: errorData[1],
-        icon: 'success',
+        icon: 'error',
       })
         .then(okAction => {
           if (okAction) {

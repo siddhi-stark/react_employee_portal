@@ -55,6 +55,7 @@ function Dashboard() {
   ];
 
   const getDailyActivity = async () => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       if (data.data.clock_in_time && data.data.clocked_in) {
@@ -68,6 +69,7 @@ function Dashboard() {
         }
       } else {
         setShowClockButton(true);
+        setShowLoader(false);
       }
     }
   };

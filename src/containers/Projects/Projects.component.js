@@ -26,7 +26,9 @@ const items = [
 ];
 
 function Projects() {
+  let disableButton = false;
   const [rows, setRows] = useState([]);
+  // const [disableButton, setDisableButton] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [showUpdate, setShowUpdate] = useState(false);
@@ -201,11 +203,14 @@ function Projects() {
     const { data } = await AuthApi.putDataToServer(endPoint, payload);
 
     if (data) {
+      disableButton = false;
       swal(data.message && data.message[0], '', 'success');
       setShowUpdate(false);
       setProjectId(null);
       setRtSupport('');
       getTableData(1); // eslint-disable-line
+    }else{
+      disableButton = false;
     }
   };
 
@@ -303,11 +308,15 @@ function Projects() {
           confirmBtnBsStyle="btn btn-primary btn-lg"
           cancelBtnBsStyle="btn btn-lg btn-secondary"
           onConfirm={() => {
+            if(disableButton) return;
+            disableButton = true;
             onRtSupport(projectId, rtSupport);
+            // disableButton = false;
             
           }}
           onCancel={() => {
             setShowUpdate(false);
+            
           }}
         />
       )}

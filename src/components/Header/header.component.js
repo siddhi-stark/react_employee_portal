@@ -121,6 +121,7 @@ function Header() {
               <div className="profile-img">
                 <a href="#">
                   <img
+                    // onError={(e) => e.target.src = BlankProfile}
                     src={`${imageProfile}` ? `${imageProfile}` : BlankProfile }
                     alt="Profile"
                   />
