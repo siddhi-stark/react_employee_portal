@@ -18,6 +18,7 @@ import Api from '../../helper/api';
 import constants from '../../helper/constant';
 import Task from './Task.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import Loader from '../../components/Loader/index';
 
 const validator = new SimpleReactValidator();
 
@@ -27,6 +28,7 @@ function ToDoList() {
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
   const [editShow, setEditShow] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [showSkipBreak, setShowSkipBreak] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [index, setIndex] = useState(null);
@@ -267,17 +269,21 @@ function ToDoList() {
       tasks: selectedId,
     };
 
+    setLoader(true);
+
     const endPoint = `${Api.reportUrl}`;
     const { data, message } = await AuthApi.postDataToServer(
       endPoint,
       postData
     );
     if (data) {
+      setLoader(false);
       setShowBreak(false);
       setShowErrorBlock(false);
       setShowSuccessBlock(true);
 
     } else {
+      setLoader(false);
       setShowScrumPopup(false);
       setShowErrorBlock(true);
       setShowSuccessBlock(false);
@@ -486,7 +492,7 @@ function ToDoList() {
           </div>
         </div>
       )}
-
+      <Loader showLoader={loader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>

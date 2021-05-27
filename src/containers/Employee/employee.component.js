@@ -922,7 +922,7 @@ function Employee() {
                   label="DOB"
                   className="form-control"
                   selected={date}
-                  placeholder="MM-DD-YYYY"
+                  placeholder="dd/mm/yyyy"
                   maxDate={maxdate}
                   onChange={(e) => {
                     setDate(e);

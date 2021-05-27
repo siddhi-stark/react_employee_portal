@@ -34,7 +34,7 @@ function Profile() {
   const [imageUrl, setImageUrl] = useState('');
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
-  const [image, setImage] = useState('');
+  // const [image, setImage] = useState('');
   const [profileId, setProfileId] = useState('');
 
   const Department = [
@@ -73,11 +73,11 @@ function Profile() {
       setName(data.data.full_name);
       setMobile(data.data.mobile);
       setId(data.data.emp_code);
-      setBirthdate(data.data.dob);
+      setBirthdate(customFunctions.getFormattedDate(data.data.dob));
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
-      setImage(data.data.profile_image_url);
+      // setImage(data.data.profile_image_url);
       setProfileId(data.data.profile_id);
       data.data.assigned_managers.map((assgnmgmr) => {
         setSelectedManager(assgnmgmr.report_head__full_name);
@@ -181,17 +181,17 @@ function Profile() {
     }
   };
 
-  const getImageName = (profileImage) => {
-    const img = profileImage
-      ? profileImage.split(Api.s3Url)
-      : imageUrl.split(Api.s3Url);
-    let img1 = '';
+  // const getImageName = (profileImage) => {
+  //   const img = profileImage
+  //     ? profileImage.split(Api.s3Url)
+  //     : imageUrl.split(Api.s3Url);
+  //   let img1 = '';
 
-    if (img.length > 1) {
-      img1 = img[1].split('?').length > 1 ? img[1].split('?')[0] : img[0];
-    }
-    return img1;
-  };
+  //   if (img.length > 1) {
+  //     img1 = img[1].split('?').length > 1 ? img[1].split('?')[0] : img[0];
+  //   }
+  //   return img1;
+  // };
 
   return (
     <>
@@ -436,7 +436,7 @@ function Profile() {
                 <Row>
                   <Col>
                     <span className="span-container">
-                      {image && getImageName(image)}
+                     <img src={imageProfile} alt="Profile" style={{'height':'40px'}} /> 
                     </span>
                   </Col>
                 </Row>

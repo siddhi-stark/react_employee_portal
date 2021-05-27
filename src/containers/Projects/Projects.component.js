@@ -34,6 +34,7 @@ function Projects() {
   const [rtSupport, setRtSupport] = useState('');
   const [title, setTitle] = useState('');
   const [filterErr, setFilterErr] = useState('');
+  const [disableButton, setDisableButton] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -200,10 +201,12 @@ function Projects() {
     const { data } = await AuthApi.putDataToServer(endPoint, payload);
 
     if (data) {
+      if(disableButton) return;
       swal(data.message && data.message[0], '', 'success');
       setShowUpdate(false);
       setProjectId(null);
       setRtSupport('');
+      setDisableButton(false);
       getTableData(1); // eslint-disable-line
     }
   };
@@ -296,12 +299,14 @@ function Projects() {
       <Helmet title={title} />
       {showUpdate && (
         <SweetAlert
-          title="Are you sure, do you want to update the project ?"
+          title="Are you sure you want to change RT support?"
           error
           showCancel
           confirmBtnBsStyle="btn btn-primary btn-lg"
           cancelBtnBsStyle="btn btn-lg btn-secondary"
           onConfirm={() => {
+            setDisableButton(true);
+
             onRtSupport(projectId, rtSupport);
           }}
           onCancel={() => {
