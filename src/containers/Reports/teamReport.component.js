@@ -72,8 +72,8 @@ function TeamReport() {
     const endPoint = `${Api.reportListingUrl}?my_team=true`;
 
     const params = {
-      page,
       limit: pagination.itemsPerPage,
+      page,
       keyword: searchKeyword,
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',

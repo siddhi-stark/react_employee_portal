@@ -91,12 +91,11 @@ function AllReports() {
 
   const getReports = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.reportListingUrl}?sort_by=user&sort_direction=ascending`;
+    const endPoint = `${Api.reportListingUrl}`;
 
     const params = {
-      limit: pagination.itemsPerPage,
-
       page,
+      limit: pagination.itemsPerPage,
       keyword: searchKeyword,
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',
