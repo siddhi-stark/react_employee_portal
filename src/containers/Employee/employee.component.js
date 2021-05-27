@@ -808,9 +808,10 @@ function Employee() {
                 <TextInput
                   onInputChange={(e) => setEmail(e.target.value)}
                   label="Email"
+                  autocomplete="false"
                   asterisk="*"
                   containerClass="form-group"
-                  type="text"
+                  type="email"
                   value={email}
                   placeholder="Enter email"
                   errorMessage={validator.message(
@@ -844,7 +845,7 @@ function Employee() {
                       setMobile(e.target.value);
                     }
                   }}
-                  autocomplete="false"
+                  autocomplete="off"
                   label="Mobile"
                   asterisk="*"
                   containerClass="form-group"

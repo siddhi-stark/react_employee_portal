@@ -95,7 +95,7 @@ function Designation() {
 
   useEffect(() => {
     async function getData() {
-      getTableData(1);
+      getTableData(pagination.current_page);
       setTitle('Designation');
     }
     getData();
@@ -212,7 +212,7 @@ function Designation() {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
-          getTableData(1);
+          getTableData(pagination.current_page);
           setDesignation('');
           setDesignationId('');
         }

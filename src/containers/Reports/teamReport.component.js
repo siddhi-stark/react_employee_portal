@@ -10,7 +10,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/reports', label: 'Reports' },
+  { to: '/team-report', label: 'Team Report' },
 ];
 
 function TeamReport() {
@@ -195,7 +195,7 @@ function TeamReport() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">My Report</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Team Report</h2>
         <Breadcrumb items={items} />
       </div>
 
@@ -298,9 +298,11 @@ function TeamReport() {
       <div className="mt-3">
         <Card>
           <Card.Body>
-            <Card.Title className="d-flex align-items-center justify-content-between">
-              <h5 className="m-0">Reports</h5>
-            </Card.Title>
+          <Card.Header>
+          <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary mt-2 mb-2">Team Reports</h4>
+              </div>
+          </Card.Header>
             <Row>
               <div className="mt-3">
                 <Table

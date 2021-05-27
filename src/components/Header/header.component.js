@@ -133,7 +133,7 @@ function Header() {
 
                   {
                     designation && (
-                      <p className="main-notification-text">({designation})</p>
+                      <p className="main-notification-text" style={{'font-size':'13px'}}>({designation})</p>
                     )
                   }  
                     <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>

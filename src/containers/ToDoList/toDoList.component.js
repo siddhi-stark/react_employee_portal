@@ -668,7 +668,7 @@ function ToDoList() {
                     <Col sm={4}>
                       <Datepicker
                         className="form-control"
-                        label="StartTime"
+                        label="Start Time"
                         selected={data.startTime}
                         onChange={(e) => {
                           breakData[i].startTime = e;
@@ -714,7 +714,7 @@ function ToDoList() {
                     <Col md={4}>
                       <Datepicker
                         className="form-control"
-                        label="EndTime"
+                        label="End Time"
                         selected={data.endTime}
                         minDate={new Date(data.startTime)}
                         minTime={setHours(
