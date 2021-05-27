@@ -284,6 +284,7 @@ function ToDoList() {
       setShowBreak(false);
       setShowErrorBlock(false);
       setShowSuccessBlock(true);
+      getTableData(1);
     } else {
       setLoader(false);
       setShowScrumPopup(false);

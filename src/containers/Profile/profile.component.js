@@ -75,7 +75,8 @@ function Profile() {
       setName(data.data.full_name);
       setMobile(data.data.mobile);
       setId(data.data.emp_code);
-      setBirthdate(customFunctions.getFormattedDate(data.data.dob));
+      setBirthdate(data.data.dob ? customFunctions.getFormattedDate(data.data.dob)  : null);
+      // setBirthdate(customFunctions.getFormattedDate(data.data.dob));
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
