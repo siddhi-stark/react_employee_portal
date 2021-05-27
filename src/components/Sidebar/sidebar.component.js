@@ -8,6 +8,11 @@ import customFunctions from '../../helper/customFunctions';
 function Sidebar() {
   const history = useHistory();
   const [activeMenu, setActiveMenu] = useState(0);
+  const [activeSubPath, setActiveSubPath] = useState(0);
+  const onSubActiveClass = () => {
+    if (activeSubPath !== window.location.pathname)
+      setActiveSubPath(window.location.pathname);
+  };
 
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
@@ -48,7 +53,13 @@ function Sidebar() {
                   <li className={`${parentLiCls} ${parentActiveCls}`}>
                     <Link
                       className={parentLinkCls}
-                      to={menuItem.path}
+                      to={
+                        menuItem.redirect !== 'undefined' &&
+                        menuItem.redirect === false
+                          ? false
+                          : menuItem.path
+                      }
+                      // to={menuItem.path}
                       onClick={() => {
                         if (menuItem.title === 'Logout') {
                           customFunctions.clearLocalStorage();
@@ -67,13 +78,43 @@ function Sidebar() {
                       <span className="sidemenu-label">{menuItem.title}</span>
                     </Link>
 
+                    {/* {hasSubMenu && (
+                      <ul className="nav-sub list-unstyled">
+                        {menuItem.submenu.map((submenuItem) => {
+                          return (
+                            <li onClick={() => { onSubActiveClass(); }} // eslint-disable-line
+                              className={`nav-sub-item ${
+                                submenuItem.path === window.location.pathname
+                                  ? 'active'
+                                  : ''
+                              }`}
+                            >
+                              <Link
+                                className="nav-sub-link"
+                                to={submenuItem.path}
+                              >
+                                {submenuItem.title}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}   */}
                     {hasSubMenu && (
                       <ul className="nav-sub list-unstyled">
-                        {menuItem.submenu.map((submenuItem) => (
+                        {menuItem.submenu.map((submenuItem) => {
+                          return (
                           <UserRestrictions
                             permittedUsers={submenuItem.roleaccess}
                           >
-                            <li className="nav-sub-item">
+
+                           <li onClick={() => { onSubActiveClass(); }} // eslint-disable-line
+                              className={`nav-sub-item ${
+                                submenuItem.path === window.location.pathname
+                                  ? 'show active'
+                                  : ''
+                              }`}
+                            >
                               <Link
                                 className="nav-sub-link"
                                 to={submenuItem.path}
@@ -82,7 +123,8 @@ function Sidebar() {
                               </Link>
                             </li>
                           </UserRestrictions>
-                        ))}
+                          );
+                        })}
                       </ul>
                     )}
                   </li>

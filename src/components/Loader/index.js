@@ -2,13 +2,15 @@ import React from 'react';
 
 function Loader(props) {
 
-  const { showLoader, needFullPage } = props;
+  const { showLoader } = props;
   
   return (
     (showLoader) ? (
-      <div className={(needFullPage) ? 'loader-overlay full-loader' : 'loader-overlay'}>
-        <div className="loader" />
+      <div className="preloader">
+       <img src="images/loader.gif" alt=""/>
+         <h4 className='loader-texts'>Loading...</h4>
       </div>
+      
     ) : null
   );
 }

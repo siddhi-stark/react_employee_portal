@@ -233,7 +233,7 @@ function Dashboard() {
             <Card className="flex-fill w-100 weekly-status-box">
               <Card.Body>
                 <Row>
-                  <Col md={6}>
+                  <Col md>
                     <h5 className="card-title mb-0">Weekly Status</h5>
                     <div className="weekly-status">
                       <ul className="list-unstyled p-0">

@@ -131,7 +131,8 @@ function Login(props) {
   return (
     <>
       <Helmet title={title} />
-      <Loader showLoader={loader} needFullPage={false}/>
+      <Loader showLoader={loader} needFullPage={false} />
+     
       <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">
