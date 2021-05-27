@@ -157,7 +157,7 @@ function Header() {
                       )
                     }
                     <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
-                      <small>Employee ID {empId}</small>
+                      <small>Employee ID {`SDMS${empId}`}</small>
                     </UserRestrictions>
                   </div>
                   <ul className="m-0 list-unstyled p-0">
