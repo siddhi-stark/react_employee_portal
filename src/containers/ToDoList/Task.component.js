@@ -208,6 +208,17 @@ function Task(props) {
                     setTaskStartTime(e);
                     setStartHours(e.getHours());
                     setStartMinutes(e.getMinutes());
+                    setTaskHours('');
+                    setTaskMinutes('');
+                    if (e && taskEndTime) {
+                      const tStartTime = new Date(e);
+                      const tEndTime = new Date(taskEndTime);
+                      const diffMs = (tEndTime - tStartTime); // milliseconds between now & Christmas
+                      const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+                      const diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000);
+                      setTaskHours(`${diffHrs}`);
+                      setTaskMinutes(`${diffMins}`);
+                    }
                   }}
                   showTimeSelect="showTimeSelect"
                   showTimeSelectOnly="showTimeSelectOnly"
@@ -236,27 +247,33 @@ function Task(props) {
                   maxTime={setHours(setMinutes(new Date(), 59), 23)}
                   onChange={(e) => {
                     setTaskEndTime(e);
-                    const taskStrtTime = new Date(e);
+                    // let differenceInTasksTime =
+                    //   Math.abs(taskEnTime.getTime() - taskStrtTime.getTime()) /
+                    //   1000;
 
-                    const taskEnTime = new Date(taskStartTime);
-                    let differenceInTasksTime =
-                      Math.abs(taskEnTime.getTime() - taskStrtTime.getTime()) /
-                      1000;
+                    // const taskHours =
+                    //   Math.floor(differenceInTasksTime / 3600) % 24;
+                    // differenceInTasksTime -= taskHours * 3600;
 
-                    const taskHours =
-                      Math.floor(differenceInTasksTime / 3600) % 24;
-                    differenceInTasksTime -= taskHours * 3600;
+                    // const taskMinutes =
+                    //   Math.floor(differenceInTasksTime / 60) % 60;
+                    // differenceInTasksTime -= taskMinutes * 60;
+                    // let taskHourDifference = '';
+                    // let taskMinDifference = '';
+                    // taskHourDifference += `${taskHours} `;
 
-                    const taskMinutes =
-                      Math.floor(differenceInTasksTime / 60) % 60;
-                    differenceInTasksTime -= taskMinutes * 60;
-                    let taskHourDifference = '';
-                    let taskMinDifference = '';
-                    taskHourDifference += `${taskHours} `;
-
-                    taskMinDifference += `${taskMinutes}`;
-                    setTaskHours(taskHourDifference);
-                    setTaskMinutes(taskMinDifference);
+                    // taskMinDifference += `${taskMinutes}`;
+                    setTaskHours('');
+                    setTaskMinutes('');
+                    if (e && taskStartTime) {
+                      const tEndTime = new Date(e);
+                      const tStartTime = new Date(taskStartTime);
+                      const diffMs = (tEndTime - tStartTime); // milliseconds between now & Christmas
+                      const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+                      const diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000);
+                      setTaskHours(`${diffHrs}`);
+                      setTaskMinutes(`${diffMins}`);
+                    }
                   }}
                   showTimeSelect="showTimeSelect"
                   showTimeSelectOnly="showTimeSelectOnly"

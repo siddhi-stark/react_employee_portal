@@ -52,6 +52,7 @@ function ToDoList() {
   const [showScrumPopup, setShowScrumPopup] = useState(false);
   const [showErrorBlock, setShowErrorBlock] = useState(false);
   const [showSuccessBlock, setShowSuccessBlock] = useState(false);
+  const [disableButton, setDisableButton] = useState(false);
   // const [startHours, setStartHours] = useState('');
   // const [startMinutes, setStartMinutes] = useState('');
   const [pagination, setPagination] = useState({
@@ -279,6 +280,7 @@ function ToDoList() {
       endPoint,
       postData
     );
+    setDisableButton(false);
     if (data) {
       setLoader(false);
       setShowBreak(false);
@@ -324,9 +326,11 @@ function ToDoList() {
 
   const onComfirm = async () => {
     const BreakPostData = [];
+    setLoader(true);
     breakData.map((dt) => {
       return BreakPostData.push({
         description: dt.selectedBreakOption.label,
+        content:`Break - ${dt.selectedBreakOption.label}`,
         start_time: customFunctions.getTime(dt.startTime),
         end_time: customFunctions.getTime(dt.endTime),
         hours: Number(dt.hrs),
@@ -339,6 +343,8 @@ function ToDoList() {
     };
     const endPoint = `${Api.taskUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
+    setDisableButton(false);
+    setLoader(false);
     if (data) {
       setShowBreak(false);
       swal({
@@ -390,19 +396,25 @@ function ToDoList() {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (disableButton) return;
+
+    setDisableButton(true);
     if (selectedId.length >= 0) {
       onSendScrum();
     } else {
+      setDisableButton(false);
       swal('Please Select Task', '', 'error');
     }
   };
 
   const onBreakSubmit = (e) => {
     e.preventDefault();
-
+    if (disableButton) return;
+    setDisableButton(true);
     if (validator.allValid()) {
       onComfirm();
     } else {
+      setDisableButton(false);
       validator.showMessages();
       forceUpdate(count + 1);
       // swal('Please Select Break', '', 'error');
@@ -603,7 +615,7 @@ function ToDoList() {
         size="md"
         centered
         show={showBreak}
-        onHide={() => { setShowBreak(false); }}
+        onHide={() => { setShowBreak(false); getTableData(1); }}
         label={<h4 variant="primary">Add Break</h4>}
         id="contained-modal-title-vcenter"
         modalBody={
@@ -683,27 +695,35 @@ function ToDoList() {
                           // setStartTime(e);
                           breakData[i].sthrs = e.getHours();
                           breakData[i].stmins = e.getMinutes();
-                          const endTimeNew = new Date(data.endTime);
-                          const startTimeNew = new Date(e);
-                          let differenceInTime =
-                            Math.abs(
-                              endTimeNew.getTime() - startTimeNew.getTime()
-                            ) / 1000;
+                          // let differenceInTime =
+                          //   Math.abs(
+                          //     endTimeNew.getTime() - startTimeNew.getTime()
+                          //   ) / 1000;
 
-                          const hours =
-                            Math.floor(differenceInTime / 3600) % 24;
-                          differenceInTime -= hours * 3600;
+                          // const hours =
+                          //   Math.floor(differenceInTime / 3600) % 24;
+                          // differenceInTime -= hours * 3600;
 
-                          const minutes =
-                            Math.floor(differenceInTime / 60) % 60;
-                          differenceInTime -= minutes * 60;
-                          let hourDifference = '';
-                          let minDifference = '';
-                          hourDifference += `${hours} `;
+                          // const minutes =
+                          //   Math.floor(differenceInTime / 60) % 60;
+                          // differenceInTime -= minutes * 60;
+                          // let hourDifference = '';
+                          // let minDifference = '';
+                          // hourDifference += `${hours} `;
 
-                          minDifference += `${minutes}`;
-                          breakData[i].hrs = hourDifference;
-                          breakData[i].mins = minDifference;
+                          // minDifference += `${minutes}`;
+                          breakData[i].hrs = 0;
+                          breakData[i].mins = 0;
+                          if (e && data.endTime) {
+                            const endTimeNew = new Date(data.endTime);
+                            const startTimeNew = new Date(e);
+                            const diffMs = (endTimeNew - startTimeNew); // milliseconds between now & Christmas
+                            const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+                            const diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000);
+                            breakData[i].hrs = diffHrs;
+                            breakData[i].mins = diffMins;
+
+                          }
                           setBreakData([...breakData]);
                           // setStartHours(e.getHours());
                           // setStartMinutes(e.getMinutes());
@@ -736,27 +756,39 @@ function ToDoList() {
                           // setStartTime(e);
                           // breakData[i].hrs = e.getHours();
                           // breakData[i].mins = e.getMinutes();
-                          const endTimeNew = new Date(e);
-                          const startTimeNew = new Date(data.startTime);
-                          let differenceInTime =
-                            Math.abs(
-                              endTimeNew.getTime() - startTimeNew.getTime()
-                            ) / 1000;
-                              
-                          const hours =
-                            Math.floor(differenceInTime / 3600) % 24;
-                          differenceInTime -= hours * 3600;
+                          // const endTimeNew = new Date(e);
+                          // const startTimeNew = new Date(data.startTime);
+                          // let differenceInTime =
+                          //   Math.abs(
+                          //     endTimeNew.getTime() - startTimeNew.getTime()
+                          //   ) / 1000;
 
-                          const minutes =
-                            Math.floor(differenceInTime / 60) % 60;
-                          differenceInTime -= minutes * 60;
-                          let hourDifference = '';
-                          let minDifference = '';
-                          hourDifference += `${hours} `;
+                          // const hours =
+                          //   Math.floor(differenceInTime / 3600) % 24;
+                          // differenceInTime -= hours * 3600;
 
-                          minDifference += `${minutes}`;
-                          breakData[i].hrs = hourDifference;
-                          breakData[i].mins = minDifference;
+                          // const minutes =
+                          //   Math.floor(differenceInTime / 60) % 60;
+                          // differenceInTime -= minutes * 60;
+                          // let hourDifference = '';
+                          // let minDifference = '';
+                          // hourDifference += `${hours} `;
+
+                          // minDifference += `${minutes}`;
+                          // breakData[i].hrs = hourDifference;
+                          // breakData[i].mins = minDifference;
+                          breakData[i].hrs = 0;
+                          breakData[i].mins = 0;
+                          if (e && data.startTime) {
+                            const endTimeNew = new Date(e);
+                            const startTimeNew = new Date(data.startTime);
+                            const diffMs = (endTimeNew - startTimeNew); // milliseconds between now & Christmas
+                            const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+                            const diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000);
+                            breakData[i].hrs = diffHrs;
+                            breakData[i].mins = diffMins;
+
+                          }
                           setBreakData([...breakData]);
 
                           // setHrs(hourDifference);
@@ -780,17 +812,17 @@ function ToDoList() {
                         type="text"
                         disabled
                         name="designationtitle"
-                        value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs}: ${data.mins}` : ''}
+                        value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs} hrs: ${data.mins} mins` : ''}
                       />
                     </Col>
                   </Row>
                 </>
               ))}
             <div className="float-end">
-              <Button variant="secondary" onClick={(e) => onBreakSubmit(e)}>
+              <Button disabled={disableButton} variant="secondary" onClick={(e) => onBreakSubmit(e)}>
                 Confirm
               </Button>
-              <Button variant="primary" type="submit" className="ms-4"
+              <Button disabled={disableButton} variant="primary" type="submit" className="ms-4"
                 onClick={(e) => {
                   onSubmit(e);
                 }}>

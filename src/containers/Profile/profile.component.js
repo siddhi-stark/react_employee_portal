@@ -75,16 +75,16 @@ function Profile() {
       setName(data.data.full_name);
       setMobile(data.data.mobile);
       setId(data.data.emp_code);
-      setBirthdate(customFunctions.getFormattedDate(data.data.dob));
+      setBirthdate(data.data.dob ? customFunctions.getFormattedDate(data.data.dob):'-');
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
       // setImage(data.data.profile_image_url);
       setProfileId(data.data.profile_id);
-      data.data.assigned_managers.map((assgnmgmr) => {
-        setSelectedManager(assgnmgmr.report_head__full_name);
-        return assgnmgmr;
+      const managerList = data.data.assigned_managers.map((assgnmgmr) => {
+        return assgnmgmr.report_head__full_name;
       });
+      setSelectedManager(managerList.length > 0 ? managerList.join(', ') : '');
       setDate(customFunctions.getDate(data.data.joined_date));
     }
   };
@@ -249,10 +249,10 @@ function Profile() {
                       alt="Edit Profile"
                       style={{ 'height': '100%' }} />
                   ) : <img
-                      src='/images/noProfile.jpeg'
-                      alt="Edit Profile"
-                      style={{ 'height': '100%' }}
-                    />}
+                    src='/images/noProfile.jpeg'
+                    alt="Edit Profile"
+                    style={{ 'height': '100%' }}
+                  />}
 
                 </div>
               </Col>
@@ -451,7 +451,7 @@ function Profile() {
                 <Row>
                   <Col>
                     <span className="span-container">
-                      <img src={imageProfile} alt="Profile" style={{ 'height': '40px' }} />
+                      <img src={imageProfile || '/images/noProfile.jpeg'} alt="Profile" style={{ 'height': '40px' }} />
                     </span>
                   </Col>
                 </Row>
