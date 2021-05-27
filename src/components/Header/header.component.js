@@ -7,7 +7,6 @@ import customFunctions from '../../helper/customFunctions';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
 import SharedService from '../../services/SharedService/sharedServices';
 
-const BlankProfile =  '/images/noProfile.jpeg';
 
 function Header() {
   const date = new Date().toDateString().split(' ');
@@ -69,7 +68,7 @@ function Header() {
     getProfile();
     getCLocTIme();
     getClockOutTime();
-   
+
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
 
@@ -92,23 +91,23 @@ function Header() {
     <>
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
-        <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>
-          <div className="main-header-left">
-            {time ? (
-              <div className="d-flex justify-content-start clock-in-time">
-                <h7>You are clocked out at {time} </h7>
+          <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+            <div className="main-header-left">
+              {time ? (
+                <div className="d-flex justify-content-start clock-in-time">
+                  <h7>You are clocked out at {time} </h7>
+                </div>
+              ) : (
+                  ''
+                )}
+            </div>
+            {clockedInTime ? (
+              <div className="d-flex justify-content-end clock-in-time">
+                <h7>You are clocked in at {clockedInTime} </h7>
               </div>
             ) : (
-              ''
-            )}
-          </div>
-          {clockedInTime ? (
-            <div className="d-flex justify-content-end clock-in-time">
-              <h7>You are clocked in at {clockedInTime} </h7>
-            </div>
-          ) : (
-            ''
-          )}
+                ''
+              )}
           </UserRestrictions>
 
           <div className="main-header-right">
@@ -120,11 +119,20 @@ function Header() {
               <h6>{employeeName}</h6>
               <div className="profile-img">
                 <a href="#">
-                  <img
-                    // onError={(e) => e.target.src = BlankProfile}
-                    src={`${imageProfile}` ? `${imageProfile}` : BlankProfile }
-                    alt="Profile"
-                  />
+
+                  {imageProfile ? (
+
+                    <img
+                      src={imageProfile}
+                      // src={imageProfile} 
+                      alt="Profile" />
+                  ) : <img
+                      src='/images/noProfile.jpeg'
+                      alt="Edit Profile"
+                    />}
+
+                  
+
                 </a>
               </div>
             </div>
@@ -143,14 +151,14 @@ function Header() {
                   <div className="header-navheading text-center">
                     <h5 className="main-notification-title">{employeeName}</h5>
 
-                  {
-                    designation && (
-                      <p className="main-notification-text" style={{'font-size':'13px'}}>({designation})</p>
-                    )
-                  }  
-                    <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>
-                    <small>Employee ID {empId}</small>
-                    </UserRestrictions> 
+                    {
+                      designation && (
+                        <p className="main-notification-text" style={{ 'font-size': '13px' }}>({designation})</p>
+                      )
+                    }
+                    <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+                      <small>Employee ID {empId}</small>
+                    </UserRestrictions>
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>

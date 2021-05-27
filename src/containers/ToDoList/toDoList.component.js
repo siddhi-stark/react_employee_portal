@@ -259,7 +259,7 @@ function ToDoList() {
       setMorningMail(data.data.morning_mail);
       setSignOutMail(data.data.signout_mail);
     }
-    if (data.data.clock_out_time) {
+    if (data && data.data.clock_out_time) {
       customFunctions.setLocalStorage('time', data.data.clock_out_time);
       SharedService.clockOut.next(true);
     }

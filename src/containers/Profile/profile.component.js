@@ -17,6 +17,8 @@ const items = [
   { to: '/profile', label: 'My Profile' },
 ];
 
+// const BlankProfile =  '/images/noProfile.jpeg';
+
 function Profile() {
   const [date, setDate] = useState('');
   const [companyEmail, setEmail] = useState('');
@@ -238,7 +240,20 @@ function Profile() {
                   className="edit-profile-image mb-4"
                   style={{ height: '70px' }}
                 >
-                  <img src={imageProfile} alt="Edit Profile" style={{'height': '100%'}} />
+
+                  {imageProfile ? (
+
+                    <img
+                      src={`${imageProfile}` ? `${imageProfile}` : '/images/noProfile.jpeg'}
+                      // src={imageProfile} 
+                      alt="Edit Profile"
+                      style={{ 'height': '100%' }} />
+                  ) : <img
+                      src='/images/noProfile.jpeg'
+                      alt="Edit Profile"
+                      style={{ 'height': '100%' }}
+                    />}
+
                 </div>
               </Col>
               <Col sm={9}>
@@ -248,21 +263,21 @@ function Profile() {
                 <h5 className="mt-5">Personal Information</h5>
                 <div className="personal-info-date-number">
                   <Form.Label>
-                  <UserRestrictions permittedUsers={[2,3,4]} roleId={role}>
-                    <Image
-                      src="/images/up-coming-birthday.svg"
-                      className="svg me-3"
-                    />
-                    <span>{birthDate}</span>
+                    <UserRestrictions permittedUsers={[2, 3, 4]} roleId={role}>
+                      <Image
+                        src="/images/up-coming-birthday.svg"
+                        className="svg me-3"
+                      />
+                      <span>{birthDate}</span>
                     </UserRestrictions>
                     <UserRestrictions permittedUsers={[1]} roleId={role}>
-                    <Image
-                      src="/images/mail.svg"
-                      className="svg me-3"
-                    />
-                    <span> {companyEmail} </span>
+                      <Image
+                        src="/images/mail.svg"
+                        className="svg me-3"
+                      />
+                      <span> {companyEmail} </span>
                     </UserRestrictions>
-                   
+
                   </Form.Label>
 
                   <Form.Label>
@@ -273,80 +288,80 @@ function Profile() {
                     <span>{mobile}</span>
                   </Form.Label>
                 </div>
-                  
-                <UserRestrictions permittedUsers={[2,3,4]} roleId={role}>
-                <h5 className="mt-5">Job Information</h5>
-                <Row>
-                  <Col sm={3}>
-                    <TextInput
-                      label="Joining Date"
-                      containerClass="form-group"
-                      type="date"
-                      name="date"
-                      value={date}
-                      disabled
-                    />
-                  </Col>
-                  <Col sm={3}>
-                    <TextInput
-                      label="Employee Id"
-                      containerClass="form-group"
-                      type="employeeId"
-                      name="employeeId"
-                      value={id}
-                      disabled
-                    />
-                  </Col>
-                  <Col sm={4}>
-                    <TextInput
-                      onInputChange={(e) => setEmail(e.target.value)}
-                      label="Company Email"
-                      containerClass="form-group"
-                      type="email"
-                      name="email"
-                      value={companyEmail}
-                      disabled
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col sm={6}>
-                    <TextInput
-                      onInputChange={(e) =>
-                        setSelectedDepartment(e.target.value)
-                      }
-                      label="Department"
-                      containerClass="form-group"
-                      name="selectedDepartment"
-                      value={selectedDepartment}
-                      disabled
-                    />
-                  </Col>
-                  <Col sm={4}>
-                    <TextInput
-                      onInputChange={(e) =>
-                        setSelectedDesignationOption(e.target.value)
-                      }
-                      label="Designation"
-                      containerClass="form-group"
-                      name="selectedDesignationOption"
-                      value={selectedDesignationOption}
-                      disabled
-                    />
-                  </Col>
-                  <Col sm={6}>
-                    <TextInput
-                      onInputChange={(e) => setSelectedManager(e.target.value)}
-                      label="Reporting To"
-                      containerClass="form-group"
-                      name="selectedManager"
-                      value={selectedManager}
-                      disabled
-                    />
-                  </Col>
-                </Row>
-                </UserRestrictions>  
-               </Col>
+
+                <UserRestrictions permittedUsers={[2, 3, 4]} roleId={role}>
+                  <h5 className="mt-5">Job Information</h5>
+                  <Row>
+                    <Col sm={3}>
+                      <TextInput
+                        label="Joining Date"
+                        containerClass="form-group"
+                        type="date"
+                        name="date"
+                        value={date}
+                        disabled
+                      />
+                    </Col>
+                    <Col sm={3}>
+                      <TextInput
+                        label="Employee Id"
+                        containerClass="form-group"
+                        type="employeeId"
+                        name="employeeId"
+                        value={id}
+                        disabled
+                      />
+                    </Col>
+                    <Col sm={4}>
+                      <TextInput
+                        onInputChange={(e) => setEmail(e.target.value)}
+                        label="Company Email"
+                        containerClass="form-group"
+                        type="email"
+                        name="email"
+                        value={companyEmail}
+                        disabled
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col sm={6}>
+                      <TextInput
+                        onInputChange={(e) =>
+                          setSelectedDepartment(e.target.value)
+                        }
+                        label="Department"
+                        containerClass="form-group"
+                        name="selectedDepartment"
+                        value={selectedDepartment}
+                        disabled
+                      />
+                    </Col>
+                    <Col sm={4}>
+                      <TextInput
+                        onInputChange={(e) =>
+                          setSelectedDesignationOption(e.target.value)
+                        }
+                        label="Designation"
+                        containerClass="form-group"
+                        name="selectedDesignationOption"
+                        value={selectedDesignationOption}
+                        disabled
+                      />
+                    </Col>
+                    <Col sm={6}>
+                      <TextInput
+                        onInputChange={(e) => setSelectedManager(e.target.value)}
+                        label="Reporting To"
+                        containerClass="form-group"
+                        name="selectedManager"
+                        value={selectedManager}
+                        disabled
+                      />
+                    </Col>
+                  </Row>
+                </UserRestrictions>
+              </Col>
             </Row>
           </Form>
         </Card.Body>
@@ -436,7 +451,7 @@ function Profile() {
                 <Row>
                   <Col>
                     <span className="span-container">
-                     <img src={imageProfile} alt="Profile" style={{'height':'40px'}} /> 
+                      <img src={imageProfile} alt="Profile" style={{ 'height': '40px' }} />
                     </span>
                   </Col>
                 </Row>
