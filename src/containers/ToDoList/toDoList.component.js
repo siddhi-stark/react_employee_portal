@@ -286,6 +286,7 @@ function ToDoList() {
       setShowBreak(false);
       setShowErrorBlock(false);
       setShowSuccessBlock(true);
+      getTableData(1);
     } else {
       setLoader(false);
       setShowScrumPopup(false);
@@ -356,6 +357,7 @@ function ToDoList() {
             setShowBreak(true);
           }
         });
+        getTableData(1);
       data.data.task_created_ids.map((e) => {
         selectedId.push(e);
         return e;
