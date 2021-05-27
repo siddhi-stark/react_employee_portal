@@ -44,21 +44,32 @@ function Header() {
     setClockInTime(clockTime);
   };
 
+  const getClockOutTime = () => {
+    const localTime = customFunctions.getLocalStorage('time');
+    setTime(localTime);
+  };
+
   useEffect(() => {
     SharedService.clockIn.subscribe((value) => {
       if (value) {
         getCLocTIme();
       }
     });
+
+    SharedService.clockOut.subscribe((value) => {
+      if (value) {
+        getClockOutTime();
+      }
+    });
+
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
 
     getProfile();
     getCLocTIme();
-    const localTime = customFunctions.getLocalStorage('time');
-    setTime(localTime);
-
+    getClockOutTime();
+   
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
 

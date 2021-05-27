@@ -167,6 +167,7 @@ function Projects() {
                 e.stopPropagation();
                 setProjectId(ID);
                 setRtSupport(support);
+                setDisableButton(true);
                 setShowUpdate(true);
               }}
             />
@@ -194,21 +195,24 @@ function Projects() {
   ];
 
   const onRtSupport = async (id, Support) => {
+    if(disableButton) return;
     const payload = {
       rt_support: Number(!Support),
     };
+    setDisableButton(true);
     const endPoint = `${Api.getProjects}${id}/`;
     const { data } = await AuthApi.putDataToServer(endPoint, payload);
 
     if (data) {
-      if(disableButton) return;
+     
       swal(data.message && data.message[0], '', 'success');
       setShowUpdate(false);
       setProjectId(null);
       setRtSupport('');
-      setDisableButton(false);
+      
       getTableData(1); // eslint-disable-line
     }
+    setDisableButton(false);
   };
 
   const getTableData = async (pageNo = 0) => {
@@ -305,12 +309,13 @@ function Projects() {
           confirmBtnBsStyle="btn btn-primary btn-lg"
           cancelBtnBsStyle="btn btn-lg btn-secondary"
           onConfirm={() => {
-            setDisableButton(true);
+            setDisableButton(false);
 
             onRtSupport(projectId, rtSupport);
           }}
           onCancel={() => {
             setShowUpdate(false);
+            setDisableButton(false);
           }}
         />
       )}

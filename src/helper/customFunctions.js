@@ -84,7 +84,6 @@ class CustomFunctions extends Component {
     this.removeLocalStorage('userId');
   };
 
-  
   setLocalStorage = (key, value) => {
     try {
       localStorage.setItem(key, value);

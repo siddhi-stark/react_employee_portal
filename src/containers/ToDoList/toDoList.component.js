@@ -19,6 +19,7 @@ import constants from '../../helper/constant';
 import Task from './Task.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
+import SharedService from '../../services/SharedService/sharedServices';
 
 const validator = new SimpleReactValidator();
 
@@ -260,7 +261,9 @@ function ToDoList() {
     }
     if (data.data.clock_out_time) {
       customFunctions.setLocalStorage('time', data.data.clock_out_time);
+      SharedService.clockOut.next(true);
     }
+    // SharedService.clockIn.next(true);
   };
 
   const onSendScrum = async () => {
@@ -281,7 +284,6 @@ function ToDoList() {
       setShowBreak(false);
       setShowErrorBlock(false);
       setShowSuccessBlock(true);
-
     } else {
       setLoader(false);
       setShowScrumPopup(false);

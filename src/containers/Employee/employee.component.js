@@ -256,7 +256,6 @@ function Employee() {
         }
         return dept;
       });
-      console.log('dataaa', data.data.designation_id);
       setSelectedDesignationOption(data.data.designation_id ? {
 
         label: data.data.designation_name,
@@ -277,8 +276,7 @@ function Employee() {
     }
   };
 
-
-  const getDesignation = async () => {
+ const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.designationUrl}?type=all`
     );
@@ -286,8 +284,6 @@ function Employee() {
       setDesignation(data.data);
     }
   };
-
-
 
   const getTwEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -336,8 +332,6 @@ function Employee() {
     return depart;
   };
 
-
-
   useEffect(() => {
     async function getData() {
       const uRole = customFunctions.getLocalStorage('group');
@@ -352,8 +346,6 @@ function Employee() {
     }
     getData();
   }, []);
-
-
 
   useEffect(() => {
     if (addButton) {
@@ -505,22 +497,33 @@ function Employee() {
         }
       });
     } else {
+      setModalShow(false);
       const errorData = message.split(':');
-      swal(errorData[1], '', 'error');
+      // swal(errorData[1], '', 'error');
+      swal({
+        title: errorData[1],
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+           setModalShow(true);
+           setMobile('');
+          }
+        });
       setDisableButton(false);
-      setModalShow();
-      setEmployeeId();
-      setSelectedDesignationOption();
-      setSelectedRole();
-      setFullName();
-      setSelectedEmployee();
-      setEmail();
-      setPassword();
-      setMobile();
-      setSelectedManager();
-      setDate();
-      setSelectedTeamLead();
-      setSelectedDepartment();
+      // setModalShow(true);
+      // setEmployeeId();
+      // setSelectedDesignationOption();
+      // setSelectedRole();
+      // setFullName();
+      // setSelectedEmployee();
+      // setEmail();
+      // setPassword();
+      // setMobile();
+      // setSelectedManager();
+      // setDate();
+      // setSelectedTeamLead();
+      // setSelectedDepartment();
     }
   };
 
@@ -636,7 +639,6 @@ function Employee() {
 
   return (
     <>
-      {console.log('addButton', addButton)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
@@ -870,7 +872,6 @@ function Employee() {
                   defaultValue={selectedDesignationOption}
                   onSelectHandler={(select) => {
                     setSelectedDesignationOption(select);
-                    console.log('desi', select)
                   }}
                   errorMessage={validator.message(
                     'Designation',
@@ -924,6 +925,7 @@ function Employee() {
                   selected={date}
                   placeholder="dd/mm/yyyy"
                   maxDate={maxdate}
+                  dateFormat="dd/MM/yyyy"
                   onChange={(e) => {
                     setDate(e);
                   }}
