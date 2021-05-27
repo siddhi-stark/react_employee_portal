@@ -119,8 +119,8 @@ function Dashboard() {
   };
 
   const getWeeklyStatus = async (key) => {
-    const typeNew = `${key}` ? `${key}` : 'this_week';
-    const endPoint = `${Api.weeklyStatusUrl}?mode=${typeNew}`;
+    console.log('keyy', key);
+    const endPoint = `${Api.weeklyStatusUrl}?mode=${key}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setCompleted(data.data.completed);
@@ -148,7 +148,7 @@ function Dashboard() {
 
     getProfile();
     getDailyActivity();
-    getWeeklyStatus();
+    getWeeklyStatus('this_week');
     getTimeSheetList();
     setTitle('Dashboard');
     const uRole = customFunctions.getLocalStorage('group');

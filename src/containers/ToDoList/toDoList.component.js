@@ -331,7 +331,7 @@ function ToDoList() {
         end_time: customFunctions.getTime(dt.endTime),
         hours: Number(dt.hrs),
         minutes: Number(dt.mins),
-        task_type: 'Break',
+        task_type: 'break',
       });
     });
     const postData = {
