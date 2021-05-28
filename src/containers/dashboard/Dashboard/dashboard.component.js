@@ -140,11 +140,23 @@ function Dashboard() {
     return true;
   };
 
+  const getClockOutTime = () => {
+    const localTime = customFunctions.getLocalStorage('time');
+    setTime(localTime);
+  };
+
   useEffect(() => {
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
 
+    SharedService.clockOut.subscribe((value) => {
+      if (value) {
+        getClockOutTime();
+      }
+    });
+
+    getClockOutTime();
     getProfile();
     getDailyActivity();
     getWeeklyStatus('this_week');
@@ -153,9 +165,7 @@ function Dashboard() {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
     // const empName = customFunctions.getLocalStorage('name');
-    const localTime = customFunctions.getLocalStorage('time');
-    // setEmployeeName(empName);
-    setTime(localTime);
+   
   }, []);
 
   return (
