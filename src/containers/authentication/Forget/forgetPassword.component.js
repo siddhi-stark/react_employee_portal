@@ -8,6 +8,7 @@ import { TextInput, Helmet } from '../../../components/FormInputs';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
 import customFunctions from '../../../helper/customFunctions';
+import Loader from '../../../components/Loader/index';
 
 function ForgetPassword() {
   const validator = useRef(new SimpleReactValidator());
@@ -15,6 +16,7 @@ function ForgetPassword() {
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
   const [disableButton, setDisableButton] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -34,6 +36,8 @@ function ForgetPassword() {
       email: userData.email,
     };
 
+ setLoader(true);
+
     const postData = customFunctions.cleanObject(payload, 'O');
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.forgetPasswordUrl}`,
@@ -41,9 +45,11 @@ function ForgetPassword() {
     );
 
     if (data) {
+      setLoader(false);
       swal('Email has been sent successfully.');
       setDisableButton(false);
     } else {
+      setLoader(false);
       swal(message);
       setDisableButton(false);
     }
@@ -66,6 +72,7 @@ function ForgetPassword() {
   return (
     <>
       <Helmet title={title} />
+      <Loader showLoader={loader} needFullPage={false} />
       <div className="login-page recover-password">
         <div className="logo text-center">
           <a href="#">

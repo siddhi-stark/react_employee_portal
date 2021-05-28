@@ -208,7 +208,7 @@ function Projects() {
       setShowUpdate(false);
       setProjectId(null);
       setRtSupport('');
-      getTableData(1); // eslint-disable-line
+      getTableData(pagination.current_page); // eslint-disable-line
     }else{
       disableButton = false;
     }

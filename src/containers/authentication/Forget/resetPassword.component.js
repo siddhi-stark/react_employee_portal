@@ -8,6 +8,7 @@ import { TextInput, Helmet } from '../../../components/FormInputs';
 import Api from '../../../helper/api';
 import AuthApi from '../../../helper/authApi';
 import customFunctions from '../../../helper/customFunctions';
+import Loader from '../../../components/Loader/index';
 
 function ResetPassword(props) {
   const validator = useRef(
@@ -25,6 +26,7 @@ function ResetPassword(props) {
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
   const [disableButton, setDisableButton] = useState(false);
+  const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
 
   const verifyToken = async (tkn) => {
@@ -59,6 +61,8 @@ function ResetPassword(props) {
       confirm_password: confirmPassword,
     };
 
+    setLoader(true);
+
     const postData = customFunctions.cleanObject(payload);
 
     const { data, message } = await AuthApi.postDataToServer(
@@ -67,10 +71,12 @@ function ResetPassword(props) {
     );
 
     if (data && data.success) {
+      setLoader(false);
       setDisableButton(false);
       swal('Password changed successfully', '', 'success');
       props.history.push('/login');
     } else {
+      setLoader(false);
       setDisableButton(false);
       swal(message, '', 'error');
     }
@@ -93,6 +99,7 @@ function ResetPassword(props) {
   return (
     <>
       <Helmet title={title} />
+      <Loader showLoader={loader} needFullPage={false} />
       <div className="login-page recover-password">
         <div className="logo text-center">
           <a href="#">
@@ -128,7 +135,7 @@ function ResetPassword(props) {
               className="form-control form-control-lg"
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder="New Password"
               onInputChange={(e) => setPassword(e.target.value)}
             />
             {validator.current.message('Password', password, 'required', {

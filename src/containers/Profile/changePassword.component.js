@@ -102,7 +102,7 @@ function ManagePassword() {
                       value={oldPassword}
                       type="password"
                       asterisk="*"
-                      placeholder="Old Password"
+                      placeholder="Please enter Old Password"
                       errorMessage={validator.current.message(
                         'oldPassword',
                         oldPassword,
@@ -120,11 +120,11 @@ function ManagePassword() {
                       name="password"
                       containerClass="form-group"
                       inputClass="form-control"
-                      label="Password"
+                      label="New Password"
                       asterisk="*"
                       value={password}
                       type="password"
-                      placeholder="Password"
+                      placeholder="Please enter new  Password"
                       errorMessage={validator.current.message(
                         'Password',
                         password,
@@ -146,7 +146,7 @@ function ManagePassword() {
                       asterisk="*"
                       value={confirmPassword}
                       type="password"
-                      placeholder="Confirm Password"
+                      placeholder="Please enter Confirm Password"
                       errorMessage={validator.current.message(
                         'confirmPassword',
                         confirmPassword,
