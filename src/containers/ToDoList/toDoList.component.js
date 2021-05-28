@@ -331,7 +331,7 @@ function ToDoList() {
     breakData.map((dt) => {
       return BreakPostData.push({
         description: dt.selectedBreakOption.label,
-        content:`Break - ${dt.selectedBreakOption.label}`,
+        content: `Break - ${dt.selectedBreakOption.label}`,
         start_time: customFunctions.getTime(dt.startTime),
         end_time: customFunctions.getTime(dt.endTime),
         hours: Number(dt.hrs),
@@ -357,7 +357,7 @@ function ToDoList() {
             setShowBreak(true);
           }
         });
-        getTableData(1);
+      getTableData(1);
       data.data.task_created_ids.map((e) => {
         selectedId.push(e);
         return e;
@@ -694,41 +694,21 @@ function ToDoList() {
                         selected={data.startTime}
                         onChange={(e) => {
                           breakData[i].startTime = e;
-                          // setStartTime(e);
                           breakData[i].sthrs = e.getHours();
                           breakData[i].stmins = e.getMinutes();
-                          // let differenceInTime =
-                          //   Math.abs(
-                          //     endTimeNew.getTime() - startTimeNew.getTime()
-                          //   ) / 1000;
-
-                          // const hours =
-                          //   Math.floor(differenceInTime / 3600) % 24;
-                          // differenceInTime -= hours * 3600;
-
-                          // const minutes =
-                          //   Math.floor(differenceInTime / 60) % 60;
-                          // differenceInTime -= minutes * 60;
-                          // let hourDifference = '';
-                          // let minDifference = '';
-                          // hourDifference += `${hours} `;
-
-                          // minDifference += `${minutes}`;
                           breakData[i].hrs = 0;
                           breakData[i].mins = 0;
                           if (e && data.endTime) {
                             const endTimeNew = new Date(data.endTime);
                             const startTimeNew = new Date(e);
-                            const diffMs = (endTimeNew - startTimeNew); // milliseconds between now & Christmas
-                            const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-                            const diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000);
+                            const diffMs = (endTimeNew.getTime() - startTimeNew.getTime()); // milliseconds between now & Christmas
+                            console.log('dt', e, data.endTime, diffMs)
+                            const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
                             breakData[i].hrs = diffHrs;
                             breakData[i].mins = diffMins;
 
                           }
                           setBreakData([...breakData]);
-                          // setStartHours(e.getHours());
-                          // setStartMinutes(e.getMinutes());
                         }}
                         showTimeSelect="showTimeSelect"
                         showTimeSelectOnly="showTimeSelectOnly"
@@ -748,53 +728,27 @@ function ToDoList() {
                         selected={data.endTime}
                         minDate={new Date(data.startTime)}
                         minTime={setHours(
-                          setMinutes(new Date(), data.stmins),
-                          data.sthrs
+                          setMinutes(new Date(), parseInt(data.stmins,10)+1),
+                          parseInt(data.stmins,10)>58 ? parseInt(data.sthrs,10)+1:data.sthrs
                         )}
                         maxTime={setHours(setMinutes(new Date(), 59), 23)}
                         disabled={data.startTime === ''}
                         onChange={(e) => {
                           breakData[i].endTime = e;
-                          // setStartTime(e);
-                          // breakData[i].hrs = e.getHours();
-                          // breakData[i].mins = e.getMinutes();
-                          // const endTimeNew = new Date(e);
-                          // const startTimeNew = new Date(data.startTime);
-                          // let differenceInTime =
-                          //   Math.abs(
-                          //     endTimeNew.getTime() - startTimeNew.getTime()
-                          //   ) / 1000;
-
-                          // const hours =
-                          //   Math.floor(differenceInTime / 3600) % 24;
-                          // differenceInTime -= hours * 3600;
-
-                          // const minutes =
-                          //   Math.floor(differenceInTime / 60) % 60;
-                          // differenceInTime -= minutes * 60;
-                          // let hourDifference = '';
-                          // let minDifference = '';
-                          // hourDifference += `${hours} `;
-
-                          // minDifference += `${minutes}`;
-                          // breakData[i].hrs = hourDifference;
-                          // breakData[i].mins = minDifference;
                           breakData[i].hrs = 0;
                           breakData[i].mins = 0;
                           if (e && data.startTime) {
                             const endTimeNew = new Date(e);
                             const startTimeNew = new Date(data.startTime);
-                            const diffMs = (endTimeNew - startTimeNew); // milliseconds between now & Christmas
-                            const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-                            const diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000);
+                            const diffMs = (endTimeNew.getTime() - startTimeNew.getTime());
+                            console.log('dte',e,data.startTime, diffMs)
+                            const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
                             breakData[i].hrs = diffHrs;
                             breakData[i].mins = diffMins;
 
                           }
                           setBreakData([...breakData]);
 
-                          // setHrs(hourDifference);
-                          // setMin(minDifference);
                         }}
                         showTimeSelect="showTimeSelect"
                         showTimeSelectOnly="showTimeSelectOnly"

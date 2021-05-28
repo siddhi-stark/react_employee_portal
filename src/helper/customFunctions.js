@@ -226,6 +226,19 @@ class CustomFunctions extends Component {
     const amountFormat = /^[1-9]\d{0,8}(((,\d{3}){1})?(\.\d{0,2})?)$/;
     return amountFormat.test(amount);
   };
+
+  msToTime = (duration) => {
+    const milliseconds = parseInt((duration % 1000) / 100,10);
+    let seconds = Math.floor((duration / 1000) % 60);
+    let minutes = Math.floor((duration / (1000 * 60)) % 60);
+    let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+    hours = (hours < 10) ? `${hours}` : hours;
+    minutes = (minutes < 10) ? `${minutes}` : minutes;
+    seconds = (seconds < 10) ? `${seconds}` : seconds;
+
+    return { hours, minutes, seconds, milliseconds };
+  }
 }
 
 export default new CustomFunctions();
