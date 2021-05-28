@@ -213,9 +213,8 @@ function Task(props) {
                     if (e && taskEndTime) {
                       const tStartTime = new Date(e);
                       const tEndTime = new Date(taskEndTime);
-                      const diffMs = (tEndTime - tStartTime); // milliseconds between now & Christmas
-                      const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-                      const diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000);
+                      const diffMs = (tEndTime - tStartTime);
+                      const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
                       setTaskHours(`${diffHrs}`);
                       setTaskMinutes(`${diffMins}`);
                     }
@@ -241,36 +240,19 @@ function Task(props) {
                   selected={taskEndTime}
                   minDate={new Date(taskStartTime)}
                   minTime={setHours(
-                    setMinutes(new Date(), startMinutes),
-                    startHours
+                    setMinutes(new Date(), parseInt(startMinutes,10)+1),
+                    parseInt(startMinutes,10)>58 ? parseInt(startHours,10)+1:startHours
                   )}
                   maxTime={setHours(setMinutes(new Date(), 59), 23)}
                   onChange={(e) => {
                     setTaskEndTime(e);
-                    // let differenceInTasksTime =
-                    //   Math.abs(taskEnTime.getTime() - taskStrtTime.getTime()) /
-                    //   1000;
-
-                    // const taskHours =
-                    //   Math.floor(differenceInTasksTime / 3600) % 24;
-                    // differenceInTasksTime -= taskHours * 3600;
-
-                    // const taskMinutes =
-                    //   Math.floor(differenceInTasksTime / 60) % 60;
-                    // differenceInTasksTime -= taskMinutes * 60;
-                    // let taskHourDifference = '';
-                    // let taskMinDifference = '';
-                    // taskHourDifference += `${taskHours} `;
-
-                    // taskMinDifference += `${taskMinutes}`;
                     setTaskHours('');
                     setTaskMinutes('');
                     if (e && taskStartTime) {
                       const tEndTime = new Date(e);
                       const tStartTime = new Date(taskStartTime);
-                      const diffMs = (tEndTime - tStartTime); // milliseconds between now & Christmas
-                      const diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-                      const diffMins = Math.floor(((diffMs % 86400000) % 3600000) / 60000);
+                      const diffMs = (tEndTime - tStartTime); 
+                      const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
                       setTaskHours(`${diffHrs}`);
                       setTaskMinutes(`${diffMins}`);
                     }

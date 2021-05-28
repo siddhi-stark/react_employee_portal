@@ -247,12 +247,12 @@ function Profile() {
                   {imageProfile ? (
 
                     <img
-                      src={`${imageProfile}` ? `${imageProfile}` : '/images/noProfile.jpeg'}
+                      src={`${imageProfile}` ? `${imageProfile}` : `${Api.s3UrlnoProfile}`}
                       // src={imageProfile} 
                       alt="Edit Profile"
                       style={{ 'height': '100%' }} />
                   ) : <img
-                    src='/images/noProfile.jpeg'
+                    src={Api.s3UrlnoProfile}
                     alt="Edit Profile"
                     style={{ 'height': '100%' }}
                   />}
@@ -454,7 +454,7 @@ function Profile() {
                 <Row>
                   <Col>
                     <span className="span-container">
-                      <img src={imageProfile || '/images/noProfile.jpeg'} alt="Profile" style={{ 'height': '40px' }} />
+                      <img src={imageProfile || Api.s3UrlnoProfile} alt="Profile" style={{ 'height': '40px' }} />
                     </span>
                   </Col>
                 </Row>

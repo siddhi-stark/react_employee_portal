@@ -126,7 +126,7 @@ function Header() {
                       // src={imageProfile} 
                       alt="Profile" />
                   ) : <img
-                      src='/images/noProfile.jpeg'
+                      src={Api.s3UrlnoProfile}
                       alt="Edit Profile"
                     />}
                  </a>
