@@ -4,7 +4,7 @@ import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import { TextInput, ModalInput } from '../../components/FormInputs';
+import { TextInput, ModalInput, Helmet } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
@@ -28,6 +28,7 @@ function Profile() {
   const [id, setId] = useState(null);
   const [modalShow, setModalShow] = useState('');
   const [count, forceUpdate] = useState(0);
+  const [title, setTitle] = useState('');
   const [selectedDesignationOption, setSelectedDesignationOption] = useState(
     null
   );
@@ -105,6 +106,7 @@ function Profile() {
   useEffect(() => {
     async function getData() {
       const uRole = customFunctions.getLocalStorage('group');
+      setTitle('My Profile');
       setRole(Number(uRole));
       getDepartment();
       getProfile();
@@ -197,6 +199,7 @@ function Profile() {
 
   return (
     <>
+     <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">My Profile</h2>
