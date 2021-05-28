@@ -388,7 +388,7 @@ function Employee() {
               timer: 2000,
             }).then(() => {
               swal.close();
-              getTableData(1);
+              getTableData(pagination.current_page);
             });
           } else {
             swal(message, '', 'error', {
