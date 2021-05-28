@@ -872,7 +872,7 @@ function Employee() {
                   label="Designation"
                   asterisk="*"
                   options={getDesignationList()}
-                  placeholder="Select Desination"
+                  placeholder="Select Designation"
                   defaultValue={selectedDesignationOption}
                   onSelectHandler={(select) => {
                     setSelectedDesignationOption(select);
