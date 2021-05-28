@@ -206,18 +206,11 @@ function Task(props) {
                   selected={taskStartTime}
                   onChange={(e) => {
                     setTaskStartTime(e);
+                    setTaskEndTime('')
                     setStartHours(e.getHours());
                     setStartMinutes(e.getMinutes());
                     setTaskHours('');
                     setTaskMinutes('');
-                    if (e && taskEndTime) {
-                      const tStartTime = new Date(e);
-                      const tEndTime = new Date(taskEndTime);
-                      const diffMs = (tEndTime - tStartTime);
-                      const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
-                      setTaskHours(`${diffHrs}`);
-                      setTaskMinutes(`${diffMins}`);
-                    }
                   }}
                   showTimeSelect="showTimeSelect"
                   showTimeSelectOnly="showTimeSelectOnly"

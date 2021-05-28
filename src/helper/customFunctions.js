@@ -236,7 +236,16 @@ class CustomFunctions extends Component {
     hours = (hours < 10) ? `${hours}` : hours;
     minutes = (minutes < 10) ? `${minutes}` : minutes;
     seconds = (seconds < 10) ? `${seconds}` : seconds;
-
+    
+    if(seconds >= 59 && milliseconds) {
+      minutes = Number(minutes) + 1;
+      seconds = 0;
+    }
+    if(Number(minutes) > 59 && (seconds || milliseconds)) {
+      hours = Number(hours) + 1;
+      minutes = 0;
+    }
+   
     return { hours, minutes, seconds, milliseconds };
   }
 }
