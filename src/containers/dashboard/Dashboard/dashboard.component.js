@@ -119,7 +119,6 @@ function Dashboard() {
   };
 
   const getWeeklyStatus = async (key) => {
-    console.log('keyy', key);
     const endPoint = `${Api.weeklyStatusUrl}?mode=${key}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
