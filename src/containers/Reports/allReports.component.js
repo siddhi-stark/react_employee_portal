@@ -14,6 +14,7 @@ const items = [
 ];
 
 function AllReports() {
+  let searchFormSubmit = false;
   const [rows, setRows] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [fromDate, setFromDate] = useState('');
@@ -96,7 +97,7 @@ function AllReports() {
     const params = {
       page,
       limit: pagination.itemsPerPage,
-      keyword: searchKeyword,
+      keyword: searchFormSubmit ? searchKeyword : '',
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',
     };
@@ -132,7 +133,7 @@ function AllReports() {
 
   useEffect(() => {
     async function getData() {
-      getReports(1);
+      // getReports(1);
       setTitle('Reports');
     }
     getData();
@@ -143,6 +144,7 @@ function AllReports() {
   }, [cntClearFilter]);
 
   const onClear = () => {
+    searchFormSubmit= false;
     setFilterErr('');
     setSearchKeyword('');
     setFromDate('');
@@ -160,11 +162,13 @@ function AllReports() {
       customFunctions.checkIfEmpty(toDate) &&
       customFunctions.checkIfEmpty(searchKeyword)
     ) {
+      searchFormSubmit= false;
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
+      searchFormSubmit= true;
       setFilterErr('');
       getReports(1);
     }

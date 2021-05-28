@@ -24,6 +24,7 @@ const items = [
 ];
 
 function Designation() {
+  let searchFormSubmit = false;
   const validator = useRef(new SimpleReactValidator());
   const [rows, setRows] = useState([]);
   const [count, forceUpdate] = useState(0);
@@ -109,7 +110,7 @@ function Designation() {
     const params = {
       limit: pagination.itemsPerPage,
       page,
-      keyword: searchKeyword,
+      keyword: searchFormSubmit ? searchKeyword : '',
     };
 
     const url = customFunctions.generateUrl(endPoint, params);
@@ -162,7 +163,7 @@ function Designation() {
               timer: 2000,
             }).then(() => {
               swal.close();
-              getTableData(1);
+              getTableData(pagination.current_page);
             });
           } else {
             swal(message, '', 'error', {
@@ -227,6 +228,7 @@ function Designation() {
   };
 
   const onClear = () => {
+    searchFormSubmit= false;
     setFilterErr('');
     setSearchKeyword('');
     setCntClearFilter(cntClearFilter + 1);
@@ -252,11 +254,13 @@ function Designation() {
     let isValid = true;
 
     if (customFunctions.checkIfEmpty(searchKeyword)) {
+      searchFormSubmit = false;
       filterSearchErr = 'Please enter keyword';
       setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
+      searchFormSubmit=true;
       setFilterErr('');
       getTableData(1);
     }

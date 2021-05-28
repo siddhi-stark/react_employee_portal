@@ -7,7 +7,6 @@ import customFunctions from '../../helper/customFunctions';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
 import SharedService from '../../services/SharedService/sharedServices';
 
-
 function Header() {
   const date = new Date().toDateString().split(' ');
   const formattedDate = `${date[0]}, ${date[1]} ${date[2]} ${date[3]} `;
@@ -130,10 +129,7 @@ function Header() {
                       src={Api.s3UrlnoProfile}
                       alt="Edit Profile"
                     />}
-
-                  
-
-                </a>
+                 </a>
               </div>
             </div>
             <div className="dropdown d-md-flex header-settings">

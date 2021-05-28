@@ -37,6 +37,7 @@ const validator = new SimpleReactValidator();
 
 function Employee() {
   // const validator = useRef(new SimpleReactValidator());
+  let searchFormSubmit = false;
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
@@ -175,7 +176,7 @@ function Employee() {
     const params = {
       limit: pagination.itemsPerPage,
       page,
-      keyword: searchKeyword,
+      keyword: searchFormSubmit ? searchKeyword : '',
     };
 
     const url = customFunctions.generateUrl(endPoint, params);
@@ -387,7 +388,7 @@ function Employee() {
               timer: 2000,
             }).then(() => {
               swal.close();
-              getTableData(1);
+              getTableData(pagination.current_page);
             });
           } else {
             swal(message, '', 'error', {
@@ -603,6 +604,7 @@ function Employee() {
   };
 
   const onClear = () => {
+    searchFormSubmit= false;
     setFilterErr('');
     setSearchKeyword('');
     setCntClearFilter(cntClearFilter + 1);
@@ -625,11 +627,13 @@ function Employee() {
     let isValid = true;
 
     if (customFunctions.checkIfEmpty(searchKeyword)) {
+      searchFormSubmit = false;
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
+      searchFormSubmit=true;
       setFilterErr('');
       getTableData(1);
     }
@@ -868,7 +872,7 @@ function Employee() {
                   label="Designation"
                   asterisk="*"
                   options={getDesignationList()}
-                  placeholder="Select Desination"
+                  placeholder="Select Designation"
                   defaultValue={selectedDesignationOption}
                   onSelectHandler={(select) => {
                     setSelectedDesignationOption(select);

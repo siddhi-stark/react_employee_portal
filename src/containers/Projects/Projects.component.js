@@ -27,14 +27,17 @@ const items = [
 
 function Projects() {
   let disableButton = false;
+  let searchFormSubmit = false;
   const [rows, setRows] = useState([]);
   // const [disableButton, setDisableButton] = useState(false);
+
   const [searchKeyword, setSearchKeyword] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [showUpdate, setShowUpdate] = useState(false);
   const [projectId, setProjectId] = useState(null);
   const [rtSupport, setRtSupport] = useState('');
   const [title, setTitle] = useState('');
+  // const [searchFormSubmit, setSearchFormSubmit] = useState(false);
   const [filterErr, setFilterErr] = useState('');
   
   const [pagination, setPagination] = useState({
@@ -222,7 +225,7 @@ function Projects() {
     const params = {
       limit: pagination.itemsPerPage,
       page,
-      keyword: searchKeyword,
+      keyword: searchFormSubmit ? searchKeyword : '',
       employee: customFunctions.userRestrictions(id, [2, 3, 4]),
     };
 
@@ -277,21 +280,25 @@ function Projects() {
   }, [cntClearFilter]);
 
   const onClear = () => {
+    searchFormSubmit= false;
     setFilterErr('');
     setSearchKeyword('');
     setCntClearFilter(cntClearFilter + 1);
   };
+
   const filterSearch = (e) => {
     e.preventDefault();
     let filterSearchErr = '';
     let isValid = true;
 
     if (customFunctions.checkIfEmpty(searchKeyword)) {
+      searchFormSubmit = false;
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
+      searchFormSubmit=true;
       setFilterErr('');
       getTableData(1);
     }
