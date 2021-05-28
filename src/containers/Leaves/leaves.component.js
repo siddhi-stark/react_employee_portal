@@ -19,6 +19,25 @@ function Leaves() {
   const [title, setTitle] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [modalShow, setModalShow] = useState(false);
+  const [selectedLeave, setSelectedLeave] = useState('');
+
+  const LeaveList = [
+    {
+      id: 1,
+      value: 'Management',
+      label: 'Casual Leave(CL)',
+    },
+    {
+      id: 2,
+      value: 'Development',
+      label: 'Sick Leave(SL)',
+    },
+    {
+      id: 3,
+      value: 'Design',
+      label: 'Loss of Pay(LOP)',
+    }
+  ];
 //   const [pagination, setPagination] = useState({
 //     current_page: 1,
 //     itemsPerPage: 10,
@@ -100,8 +119,24 @@ function Leaves() {
 //       setRows(row);
 //     }
 //   };
+
+const getLeaves = () => {
+  if (!LeaveList) return [];
+  const leaves = [];
+  LeaveList.map((leave) => {
+    return leaves.push({
+      label: leave.label,
+      id: leave.id,
+      value: leave.value,
+    });
+  });
+  return leaves;
+};
+
+
   useEffect(() => {
     // getTableData();
+    getLeaves();
     setTitle('Projects');
   }, []);
 
@@ -139,8 +174,10 @@ function Leaves() {
                 
                   Holidays
                 </Button>
-                  {/* <h5>09/18 Leaves</h5> */}
-               
+               <div>
+               <h5>09/18 Leaves</h5>
+
+               </div>
                <Button
                   type="button"
                   className="pull-right align-items-center justify-content-end"
@@ -166,10 +203,22 @@ function Leaves() {
             <Row>
               <Col sm={4}>
                 <DropdownInput
-                  label="TW Employee"
+                  label="Leave Type"
+                  asterisk="*"
+                  options={getLeaves()}
+                  placeholder="Select Leave"
+                  defaultValue={selectedLeave}
+                  onSelectHandler={(select) => {
+                    setSelectedLeave(select);
+                  }}
+                />
+              </Col>
+              <Col sm={4}>
+              <DropdownInput
+                  label="Reason"
                   // asterisk="*"
                 //   options={getEmployeeList()}
-                  placeholder="Select Employee"
+                  placeholder="Select Reason"
                 //   defaultValue={selectedEmployee}
                 //   onSelectHandler={(select) => {
                 //     setSelectedEmployee(select);
@@ -179,23 +228,10 @@ function Leaves() {
               </Col>
               <Col sm={4}>
               <DropdownInput
-                  label="TW Employee"
+                  label="Type"
                   // asterisk="*"
                 //   options={getEmployeeList()}
-                  placeholder="Select Employee"
-                //   defaultValue={selectedEmployee}
-                //   onSelectHandler={(select) => {
-                //     setSelectedEmployee(select);
-                //     updateData(select);
-                //   }}
-                />
-              </Col>
-              <Col sm={4}>
-              <DropdownInput
-                  label="TW Employee"
-                  // asterisk="*"
-                //   options={getEmployeeList()}
-                  placeholder="Select Employee"
+                  placeholder="Select Type"
                 //   defaultValue={selectedEmployee}
                 //   onSelectHandler={(select) => {
                 //     setSelectedEmployee(select);
