@@ -946,7 +946,7 @@ function Employee() {
                   errorMessage={validator.message(
                     'email',
                     email,
-                    'required|regex:^[\w.+-]+@starkdigital.net$' // eslint-disable-line
+                    'required' // eslint-disable-line
                   )}
                 />
               </Col>
@@ -958,6 +958,7 @@ function Employee() {
                     asterisk="*"
                     containerClass="form-group"
                     type="password"
+                    minlength="6"
                     name="passwordTitle"
                     value={password}
                     placeholder="Enter Password"

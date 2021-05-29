@@ -16,6 +16,7 @@ export default function PasswordComponent(props) {
     type,
     containerClass,
     errorMessage,
+    minlength,
     asterisk,
     switchElement,
   } = props;
@@ -34,6 +35,7 @@ export default function PasswordComponent(props) {
           containerClass={containerClass}
           label={label}
           value={value}
+          minlength={minlength}
           type={switchItem ? 'text' : type}
           asterisk={asterisk}
           placeholder={placeholder}
