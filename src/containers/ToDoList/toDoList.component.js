@@ -189,19 +189,15 @@ function ToDoList() {
         totalItems: data.paginator.total_count,
       });
 
-      
+
       const row = [];
 
       data.data.map((task) => {
         const morningSelected = task.morning_selected;
-        // setMorningFlag(morningSelected);
-        console.log('morningSelected', morningSelected);
-        if(morningSelected) {
-          console.log('true', task.id);
+        if (morningSelected && !selectedId.includes(Number(task.id))) {
           selectedId.push(task.id);
-        // setSelectedId(task.id);
-
         }
+
         const setRowData = {
           todo: (
             <>
@@ -222,36 +218,87 @@ function ToDoList() {
           projects: task.project_name,
           status: task.status,
           eta: task.estimation,
+          rowClass: morningSelected ? 'morning-mail-sent' : ''
         };
         row.push(setRowData);
         return task;
       });
+      setSelectedId([...selectedId]);
       setRows(row);
     }
   };
+
+  const getBreakList = async () => {
+    const endPoint = `${Api.taskUrl}?show_only_breaks=true&page=1&limit=100`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+
+    if (data && data.data && data.data.length) {
+      const selectedBreak = [];
+      data.data.map((task, i) => {
+        const dt = new Date();
+        const startTm = task.start_time;
+        const hrmin = startTm.split(':');
+        dt.setHours(hrmin[0]);
+        dt.setMinutes(hrmin[1]);
+
+        const dt1 = new Date();
+        const endTm = task.end_time;
+        const hrminNew = endTm.split(':');
+        dt1.setHours(hrminNew[0]);
+        dt1.setMinutes(hrminNew[1]);
+
+        const spent = task.estimation;
+        const spentNew = spent.split('Hrs');
+
+        const spent1 = spentNew.length > 1 ? spentNew[0].trim() : 0;
+        const spentNewMins = spentNew.length > 1 ? spentNew[1].split('Mins') : spentNew[0].split('Mins');
+        const spent2 = spentNewMins.length > 0 ? spentNewMins[0].trim() : 0;
+        const filterBreak = BreakList.filter((breakObj) => breakObj.label.toLowerCase() === task.content.toLowerCase())
+        selectedBreak.push({
+          id: task.id,
+          selectedBreakOption: filterBreak.length ? filterBreak[0] : '',
+          startTime: dt,
+          endTime: dt1,
+          sthrs: dt.getHours(),
+          stmins: dt.getMinutes(),
+          hrs: spent1 || 0,
+          mins: spent2 || 0,
+          isDefault: i < 2 ? 'true' : 'false',
+        });
+        return task;
+      });
+      setBreakData(selectedBreak);
+    } else {
+      setInitialBreakData();
+    }
+  };
+
+  const setInitialBreakData = () => {
+    const selectedBreak = [];
+    BreakList.map((item) => {
+      if (item.id === 3 || item.id === 2) {
+        selectedBreak.push({
+          id: '',
+          selectedBreakOption: { label: item.label, id: item.id },
+          startTime: '',
+          endTime: '',
+          sthrs: '',
+          stmins: '',
+          hrs: '',
+          mins: '',
+          isDefault: true,
+        });
+      }
+      return selectedBreak;
+    });
+    setBreakData(selectedBreak);
+  }
 
   useEffect(() => {
     async function getData() {
       // const taskIdS = await customFunctions.getLocalStorage('TaskId') ? JSON.parse(customFunctions.getLocalStorage('TaskId')) : [];
       // setSelectedId([...taskIdS]);
-      const selectedBreak = [];
-      BreakList.map((item) => {
-        if (item.id === 3 || item.id === 2) {
-          selectedBreak.push({
-            selectedBreakOption: { label: item.label, id: item.id },
-            startTime: '',
-            endTime: '',
-            sthrs: '',
-            stmins: '',
-            hrs: '',
-            min: '',
-            isDefault: true,
-          });
-        }
-        return selectedBreak;
-      });
-      setBreakData(selectedBreak);
-
+      setInitialBreakData();
       getDailyActivity();
       const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
@@ -262,6 +309,12 @@ function ToDoList() {
   useEffect(() => {
     getTableData(pagination.current_page);
   }, [cntClearFilter]);
+
+  useEffect(() => {
+    if (showBreak)
+      getBreakList();
+
+  }, [showBreak])
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
@@ -277,12 +330,24 @@ function ToDoList() {
   };
 
   const onSendScrum = async () => {
+
+    setLoader(true);
+
+    breakData.map((e) => {
+      console.log('assf',e);
+      if (e.id)
+        selectedId.push(Number(e.id));
+
+      return e;
+    });
+
+    setSelectedId([...selectedId]);
+    // customFunctions.setLocalStorage('TaskId', JSON.stringify(selectedId));
+
     const postData = {
       type: morningMail && !signOutMail ? 'logout' : 'morning',
       tasks: selectedId,
     };
-
-    setLoader(true);
 
     const endPoint = `${Api.reportUrl}`;
     const { data, message } = await AuthApi.postDataToServer(
@@ -290,7 +355,12 @@ function ToDoList() {
       postData
     );
     setDisableButton(false);
-    if (data) {
+    if (data && data.success) {
+      if (morningMail && !signOutMail) {
+        setSelectedId([]);
+        // customFunctions.removeLocalStorage('TaskId')
+      }
+
       setLoader(false);
       setShowBreak(false);
       setShowErrorBlock(false);
@@ -301,7 +371,13 @@ function ToDoList() {
       setShowScrumPopup(false);
       setShowErrorBlock(true);
       setShowSuccessBlock(false);
-      swal(message, '', 'error');
+      // swal(message, '', 'error');
+      setShowBreak(false);
+      swal(message, '', 'error').then((result) => {
+        if (result) {
+          setShowBreak(true);
+        }
+      });
     }
     getDailyActivity();
   };
@@ -310,6 +386,7 @@ function ToDoList() {
     return setBreakData([
       ...breakData,
       {
+        id: '',
         selectedBreakOption: '',
         startTime: '',
         endTime: '',
@@ -339,8 +416,9 @@ function ToDoList() {
     setLoader(true);
     breakData.map((dt) => {
       return BreakPostData.push({
-        description: dt.selectedBreakOption.label,
-        content: `Break - ${dt.selectedBreakOption.label}`,
+        id: dt.id,
+        // description: dt.selectedBreakOption.label,
+        content: `${dt.selectedBreakOption.label}`,
         start_time: customFunctions.getTime(dt.startTime),
         end_time: customFunctions.getTime(dt.endTime),
         hours: Number(dt.hrs),
@@ -363,21 +441,25 @@ function ToDoList() {
       })
         .then(okAction => {
           if (okAction) {
+            getBreakList();
             setShowBreak(true);
           }
         });
+
       getTableData(1);
-      data.data.task_created_ids.map((e) => {
-        selectedId.push(e);
-        return e;
-      });
-      setSelectedId([...selectedId]);
-      customFunctions.setLocalStorage('TaskId', JSON.stringify(selectedId));
+
       // setHours();
       // setMinutes();
-      setSelectedBreakOption();
+      // setSelectedBreakOption();
       // setStartTime();
       // setEndTime();
+    } else {
+      setShowBreak(false);
+      swal(data && data.message[0], '', 'error').then((result) => {
+        if (result) {
+          setShowBreak(true);
+        }
+      });
     }
   };
 
@@ -421,6 +503,7 @@ function ToDoList() {
   const onBreakSubmit = (e) => {
     e.preventDefault();
     if (disableButton) return;
+
     setDisableButton(true);
     if (validator.allValid()) {
       onComfirm();
@@ -460,7 +543,6 @@ function ToDoList() {
 
   return (
     <>
-    { console.log('selectedId', selectedId)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -558,8 +640,8 @@ function ToDoList() {
                       },
                     }}
                     dropdownContainerClass="mb-3"
-                    // selectedRowItems={[...selectedId]}
-                    selectedRowItems={[30260, 30249, 30136]}
+                    selectedRowItems={selectedId}
+                    // selectedRowItems={[25763, 25250]}
                     onSelectRowsIndexes={(rowIndex) => {
                       // const twId = [];
                       // taskList.map((task, ind) => {
@@ -576,7 +658,7 @@ function ToDoList() {
                       // });
                       // setSelectedRowIndex(rowIndex);
                       setSelectedId([...rowIndex]);
-                      // customFunctions.setLocalStorage('TaskId', JSON.stringify(rowIndex));
+                      // customFunctions.setLocalStorage('TaskId', JSON.stringify([...rowIndex]));
 
                     }}
                     tableClass="table-striped"
@@ -624,171 +706,179 @@ function ToDoList() {
           }}
         />
       )}
-      <ModalInput
-        size="md"
-        centered
-        show={showBreak}
-        onHide={() => { setShowBreak(false); getTableData(1); }}
-        label={<h4 variant="primary">Add Break</h4>}
-        id="contained-modal-title-vcenter"
-        modalBody={
-          <Form
-          >
-            <div className="add-break d-flex align-items-center justify-content-between">
-              <h3 className="mb-1">{'  '}</h3>
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => addBreak()}
+      {
+        showBreak && (
+          <ModalInput
+            size="md"
+            centered
+            show={showBreak}
+            onHide={() => { setShowBreak(false); getTableData(1); }}
+            label={<h4 variant="primary">Add Break</h4>}
+            id="contained-modal-title-vcenter"
+            modalBody={
+              <Form onSubmit={onBreakSubmit}
               >
-                Add Break
+                <div className="add-break d-flex align-items-center justify-content-between">
+                  <h3 className="mb-1">{'  '}</h3>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => addBreak()}
+                  >
+                    Add Break
               </button>
-            </div>
-            {breakData &&
-              breakData.length > 0 &&
-              breakData.map((data, i) => (
-                <>
-                  <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
-                    <label htmlFor="exampleFormControlSelect1">
-                      Break Type <sup className="text-danger">*</sup>
-                    </label>
-                    <div className="skip-form">
-                      <a
-                        href="/"
-                        className="pl-2"
-                        onClick={(e) => {
-                          setIndex(i);
-                          setShowSkipBreak(true);
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                      >
-                        <img src="images/skip.svg" alt="skip" />
-                      </a>
-                      {breakData.length > 1 && (
-                        <a
-                          href="/"
-                          onClick={(e) => {
-                            onDeleteBreakHandler(i, e);
+                </div>
+                {breakData &&
+                  breakData.length > 0 &&
+                  breakData.map((data, i) => (
+                    <>
+                      <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
+                        <label htmlFor="exampleFormControlSelect1">
+                          Break Type <sup className="text-danger">*</sup>
+                        </label>
+                        <div className="skip-form">
+                          <a
+                            href="/"
+                            className="pl-2"
+                            onClick={(e) => {
+                              setIndex(i);
+                              setShowSkipBreak(true);
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                          >
+                            <img src="images/skip.svg" alt="skip" />
+                          </a>
+                          {breakData.length > 1 && (
+                            <a
+                              href="/"
+                              onClick={(e) => {
+                                onDeleteBreakHandler(i, e);
+                              }}
+                            >
+                              <img
+                                src="images/delete.png"
+                                className="ml-2"
+                                alt="delete"
+                              />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      <Row>
+                        <DropdownInput
+                          options={getBreakTypes()}
+                          asterisk="*"
+                          defaultValue={data.selectedBreakOption}
+                          onSelectHandler={(select) => {
+                            breakData[i].selectedBreakOption = select;
+                            setSelectedBreakOption([...breakData]);
                           }}
-                        >
-                          <img
-                            src="images/delete.png"
-                            className="ml-2"
-                            alt="delete"
+                          errorMessage={validator.message(
+                            'selectedBreakOption',
+                            data.selectedBreakOption,
+                            'required'
+                          )}
+                        />
+                      </Row>
+                      <Row>
+                        <Col sm={4}>
+                          <Datepicker
+                            className="form-control"
+                            label="Start Time"
+                            selected={data.startTime}
+                            onChange={(e) => {
+                              breakData[i].startTime = e;
+                              breakData[i].sthrs = e.getHours();
+                              breakData[i].stmins = e.getMinutes();
+                              breakData[i].hrs = 0;
+                              breakData[i].mins = 0;
+                              breakData[i].endTime = null;
+                              setBreakData([...breakData]);
+                            }}
+                            showTimeSelect="showTimeSelect"
+                            showTimeSelectOnly="showTimeSelectOnly"
+                            timeIntervals="1"
+                            dateFormat="h:mm aa"
+                            errorMessage={validator.message(
+                              'Start Time',
+                              breakData[i].startTime,
+                              'required'
+                            )}
                           />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                  <Row>
-                    <DropdownInput
-                      options={getBreakTypes()}
-                      asterisk="*"
-                      defaultValue={data.selectedBreakOption}
-                      onSelectHandler={(select) => {
-                        breakData[i].selectedBreakOption = select;
-                        setSelectedBreakOption([...breakData]);
-                      }}
-                      errorMessage={validator.message(
-                        'selectedBreakOption',
-                        data.selectedBreakOption,
-                        'required'
-                      )}
-                    />
-                  </Row>
-                  <Row>
-                    <Col sm={4}>
-                      <Datepicker
-                        className="form-control"
-                        label="Start Time"
-                        selected={data.startTime}
-                        onChange={(e) => {
-                          breakData[i].startTime = e;
-                          breakData[i].sthrs = e.getHours();
-                          breakData[i].stmins = e.getMinutes();
-                          breakData[i].hrs = 0;
-                          breakData[i].mins = 0;
-                          breakData[i].endTime = null;
-                          setBreakData([...breakData]);
-                        }}
-                        showTimeSelect="showTimeSelect"
-                        showTimeSelectOnly="showTimeSelectOnly"
-                        timeIntervals="1"
-                        dateFormat="h:mm aa"
-                        errorMessage={validator.message(
-                          'Start Time',
-                          breakData[i].startTime,
-                          'required'
-                        )}
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <Datepicker
-                        className="form-control"
-                        label="End Time"
-                        selected={data.endTime}
-                        minDate={new Date(data.startTime)}
-                        minTime={setHours(
-                          setMinutes(new Date(), parseInt(data.stmins, 10) + 1),
-                          parseInt(data.stmins, 10) > 58 ? parseInt(data.sthrs, 10) + 1 : data.sthrs
-                        )}
-                        maxTime={setHours(setMinutes(new Date(), 59), 23)}
-                        disabled={data.startTime === ''}
-                        onChange={(e) => {
-                          breakData[i].endTime = e;
-                          breakData[i].hrs = 0;
-                          breakData[i].mins = 0;
-                          if (e && data.startTime) {
-                            const endTimeNew = new Date(e);
-                            const startTimeNew = new Date(data.startTime);
-                            const diffMs = (endTimeNew - startTimeNew);
-                            const { hours: diffHrs, minutes: diffMins } = customFunctions.msToTime(diffMs);
-                            breakData[i].hrs = diffHrs;
-                            breakData[i].mins = diffMins;
+                        </Col>
+                        <Col md={4}>
+                          <Datepicker
+                            className="form-control"
+                            label="End Time"
+                            selected={data.endTime}
+                            minDate={new Date(data.startTime)}
+                            minTime={setHours(
+                              setMinutes(new Date(), parseInt(data.stmins, 10) + 1),
+                              parseInt(data.stmins, 10) > 58 ? parseInt(data.sthrs, 10) + 1 : data.sthrs
+                            )}
+                            maxTime={setHours(setMinutes(new Date(), 59), 23)}
+                            disabled={data.startTime === ''}
+                            onChange={(e) => {
+                              breakData[i].endTime = e;
+                              breakData[i].hrs = 0;
+                              breakData[i].mins = 0;
+                              if (e && data.startTime) {
+                                const endTimeNew = new Date(e);
+                                const startTimeNew = new Date(data.startTime);
+                                const diffMs = (endTimeNew - startTimeNew);
+                                const { hours: diffHrs, minutes: diffMins } = customFunctions.msToTime(diffMs);
+                                breakData[i].hrs = diffHrs;
+                                breakData[i].mins = diffMins;
 
-                          }
-                          setBreakData([...breakData]);
+                              }
+                              setBreakData([...breakData]);
 
-                        }}
-                        showTimeSelect="showTimeSelect"
-                        showTimeSelectOnly="showTimeSelectOnly"
-                        timeIntervals="1"
-                        dateFormat="h:mm aa"
-                        errorMessage={validator.message(
-                          'End Time',
-                          breakData[i].endTime,
-                          'required'
-                        )}
-                      />
-                    </Col>
-                    <Col md={4}>
-                      <TextInput
-                        label="Time Spent"
-                        containerClass="form-group"
-                        type="text"
-                        disabled
-                        name="designationtitle"
-                        value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs} hrs: ${data.mins} mins` : ''}
-                      />
-                    </Col>
-                  </Row>
-                </>
-              ))}
-            <div className="float-end">
-              <Button disabled={disableButton} variant="secondary" onClick={(e) => onBreakSubmit(e)}>
-                Confirm
+                            }}
+                            showTimeSelect="showTimeSelect"
+                            showTimeSelectOnly="showTimeSelectOnly"
+                            timeIntervals="1"
+                            dateFormat="h:mm aa"
+                            errorMessage={validator.message(
+                              'End Time',
+                              breakData[i].endTime,
+                              'required'
+                            )}
+                          />
+                        </Col>
+                        <Col md={4}>
+                          <TextInput
+                            label="Time Spent"
+                            containerClass="form-group"
+                            type="text"
+                            disabled
+                            name="designationtitle"
+                            value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs} hrs: ${data.mins} mins` : ''}
+                          />
+                        </Col>
+                      </Row>
+                    </>
+                  ))}
+                <div className="float-end">
+                  <Button type="submit" disabled={disableButton} variant="secondary"
+                  // onClick={(e) => onBreakSubmit(e)}
+                  >
+                    Confirm
               </Button>
-              <Button disabled={disableButton} variant="primary" type="submit" className="ms-4"
-                onClick={(e) => {
-                  onSubmit(e);
-                }}>
-                Send Report
+                  <Button disabled={disableButton} variant="primary" className="ms-4"
+                    onClick={(e) => {
+                      onSubmit(e);
+                    }}
+                  >
+                    Send Report
               </Button>
-            </div>
-          </Form>
-        }
-      />
+                </div>
+              </Form>
+            }
+          />
+        )
+      }
+
       <ModalInput
         size="sm"
         centered

@@ -40,7 +40,6 @@ export default function SimpleTable(props) {
     ...defaults,
     ...props,
   };
-  console.log('selectedRowItems', selectedRowItems);
   const [allSelected, setAllSelected] = useState(false);
   const [selectedAction, setSelectedAction] = useState('');
   
@@ -141,7 +140,7 @@ export default function SimpleTable(props) {
       );
     }
   };
-
+ 
   return (
     <>
       <div className={`table-projects table-responsive ${tableContainerClass}`}>
@@ -236,7 +235,7 @@ export default function SimpleTable(props) {
           )}
           <tbody>
             {rows.map((row, rowIndex) => (
-              <tr key={`row-${rowIndex}`}>
+              <tr key={`row-${rowIndex}`} className={`${row.rowClass || ''}`}>
                 {showCheckbox && (
                   <th>
                     <div className="form-check">
@@ -245,7 +244,7 @@ export default function SimpleTable(props) {
                         name={`chk${row.id}`}
                         value={row.id}
                         type="checkbox"
-                        checked={selectedRowIndexes.includes(row.id)}
+                        checked={selectedRowItems.includes(Number(row.id))}
                         onChange={(e) => {
                           onSelectRow(e.target.checked, rowIndex);
                         }}
