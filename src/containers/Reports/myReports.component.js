@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
-import { Helmet, TextInput, Datepicker } from '../../components/FormInputs';
+import { Helmet, Datepicker } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -20,7 +20,6 @@ function AllReports() {
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
-  const [employeeName, setEmployeeName] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -89,7 +88,6 @@ function AllReports() {
 
       const row = [];
       data.data.map((report, i) => {
-        setEmployeeName(report.user);
         const date = customFunctions.getDate(report.created_at);
         const dt = new Date(date).getTime();
         const setRowData = {
@@ -181,17 +179,6 @@ function AllReports() {
                         </div>
                       )}
                       <Row className="mt-3">
-                        <Col sm={3}>
-                          <div className="search-bar-input">
-                            <TextInput
-                              containerClass="form-group"
-                              type="name"
-                              name="text"
-                              value={employeeName}
-                              disabled
-                            />
-                          </div>
-                        </Col>
 
                         <Col sm={3}>
                           <Datepicker

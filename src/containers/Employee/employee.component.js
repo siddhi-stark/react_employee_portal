@@ -27,7 +27,7 @@ import UserRestrictions from '../../components/UserRestrictions/userrestrictions
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/reports', label: 'Employee' },
+  { to: '/reports', label: 'Employees' },
 ];
 
 const currentdate = new Date();
@@ -37,12 +37,10 @@ const validator = new SimpleReactValidator();
 
 function Employee() {
   // const validator = useRef(new SimpleReactValidator());
-  let searchFormSubmit = false;
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [employeeId, setEmployeeId] = useState(null);
-  const [searchKeyword, setSearchKeyword] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
@@ -67,7 +65,10 @@ function Employee() {
   const [title, setTitle] = useState('');
   const [disableButton, setDisableButton] = useState(false);
   const [userRole, setUserRole] = useState('');
+  const [empCode, setEmpCode] = useState('');
   const [filterErr, setFilterErr] = useState('');
+  const [employeeData, setEmployeeData] = useState([]);
+  const [employeetwId, setEmployeeTwId] = useState('');
   let timmer = null;
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -173,14 +174,31 @@ function Employee() {
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`;
 
+
+    const empIds = [];
     const params = {
       limit: pagination.itemsPerPage,
       page,
-      keyword: searchFormSubmit ? searchKeyword : '',
+      // users: selectedEmployee.length > 0 ? selectedEmployee.join(', ') : ''
     };
 
-    const url = customFunctions.generateUrl(endPoint, params);
 
+      if(selectedEmployee) {
+        selectedEmployee && selectedEmployee.map((emp) => { // eslint-disable-line
+          console.log('emp', emp);
+          empIds.push(emp.id)
+          return emp;
+        })
+        console.log('empIds',empIds);
+        console.log('empIds.join(',')',empIds.join(','));
+        params.users = empIds.join(',')
+      }
+      
+    
+   
+
+    const url = customFunctions.generateUrl(endPoint, params);
+    console.log('url', url);
     const { data } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
@@ -273,11 +291,12 @@ function Employee() {
       setPassword(data.data.password);
       setMobile(data.data.mobile);
       setDate(data.data.dob ? new Date(data.data.dob) : null);
+      setEmpCode(data.data.emp_code);
       // setDate(new Date(data.data.dob) || '');
     }
   };
 
- const getDesignation = async () => {
+  const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.designationUrl}?type=all`
     );
@@ -333,10 +352,18 @@ function Employee() {
     return depart;
   };
 
+  const getEmployee = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      setEmployeeData(data.data);
+    }
+  };
+
   useEffect(() => {
     async function getData() {
       const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
+      getEmployee();
       // getDesignation();
       // getTwEmployee();
       // getRole();
@@ -444,6 +471,7 @@ function Employee() {
       mobile,
       role: selectedRole.id,
       password,
+      emp_code: empCode,
       team_leads: teamIdList,
       managers: managerList,
       dob: date ? customFunctions.getDate(date) : null,
@@ -507,8 +535,8 @@ function Employee() {
       })
         .then(okAction => {
           if (okAction) {
-           setModalShow(true);
-           setMobile('');
+            setModalShow(true);
+            setMobile('');
           }
         });
       setDisableButton(false);
@@ -560,10 +588,26 @@ function Employee() {
     twEmployee.map((emp) => {
       return options.push({
         label: emp.full_name,
+        id: emp.tw_id,
+
       });
     });
     return options;
   };
+
+  const getEmp = () => {
+    if (!employeeData) return [];
+    const options = [];
+    employeeData.map((tm) => {
+      return options.push({
+        label: tm.full_name,
+        id: tm.id,
+        value: tm.id,
+      });
+    });
+    return options;
+  };
+
 
   const getEmployeeRole = () => {
     if (!role) return [];
@@ -604,14 +648,14 @@ function Employee() {
   };
 
   const onClear = () => {
-    searchFormSubmit= false;
     setFilterErr('');
-    setSearchKeyword('');
+    setSelectedEmployee('');
     setCntClearFilter(cntClearFilter + 1);
   };
 
   const updateData = (e) => {
     twEmployee.map((emp) => {
+      console.log('emppp',emp);
       if (emp.full_name === e.label) {
         const name = e.label;
         setEmail(emp.email);
@@ -626,26 +670,76 @@ function Employee() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (customFunctions.checkIfEmpty(searchKeyword)) {
-      searchFormSubmit = false;
-      filterSearchErr = 'Please enter search keyword';
+    if (customFunctions.checkIfEmpty(selectedEmployee)) {
+      filterSearchErr = 'Please select employee';
       setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
-      searchFormSubmit=true;
       setFilterErr('');
       getTableData(1);
     }
   };
 
+  const bulkActions = [
+    {
+      id: 'delete',
+      actionTitle: 'Delete',
+      actionCallback: (selectedIndexes) => {
+        const endPoint = `${Api.bulkEmployee}`;
+        if (!customFunctions.checkIfEmpty(selectedIndexes, 'A')) {
+          const params = { employees: selectedIndexes};
+          swal({
+            title: 'Are you sure?',
+            text: 'Are you sure that you want to delete this record?',
+            icon: 'warning',
+            dangerMode: true,
+            buttons: true,
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          }).then(async (result) => {
+            if (result) {
+              const successHandle = (e) => {
+                swal(e && e.message[0], '', 'success', {
+                  closeOnClickOutside: false,
+                  allowOutsideClick: false,
+                  buttons: false,
+                  timer: 2000,
+                }).then(() => {
+                  swal.close();
+                  getTableData(1);
+                });
+              };
+              const errorHandle = (e) => {
+                swal(e, '', 'error', {
+                  closeOnClickOutside: false,
+                  allowOutsideClick: false,
+                });
+              };
+              await customFunctions.changeStatus(
+                endPoint,
+                params,
+                'POST',
+                successHandle,
+                errorHandle
+              );
+            }
+          });
+        }
+      },
+    }
+  ]
+
   validator.purgeFields();
+
+  
 
   return (
     <>
+
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Employee</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Employees</h2>
         <Breadcrumb items={items} />
       </div>
 
@@ -678,13 +772,24 @@ function Employee() {
                       <Row className="mt-3">
                         <Col sm={3}>
                           <div className="search-bar-input">
-                            <TextInput
+                            {/* <TextInput
                               value={searchKeyword}
-                              placeholder="Search keyword"
+                              placeholder="Search Employee"
                               onInputChange={(e) => {
                                 setFilterErr('');
                                 setSearchKeyword(e.target.value);
                               }}
+                            /> */}
+                            <DropdownInput
+                              options={getEmp()}
+                              placeholder="Select employee"
+                              defaultValue={selectedEmployee}
+                              onSelectHandler={(select) => {
+                                setFilterErr('');
+                                setSelectedEmployee(select);
+                                console.log('select', select);
+                              }}
+                              isMulti
                             />
                           </div>
                         </Col>
@@ -717,7 +822,7 @@ function Employee() {
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Employee</h4>
+                <h4 className="text-primary mt-2 mb-2">Employees</h4>
                 <div className="d-flex align-items-center justify-content-end">
                   <UserRestrictions permittedUsers={[1]} roleId={userRole}>
                     <a
@@ -741,6 +846,7 @@ function Employee() {
                   columns={columns}
                   rows={rows}
                   showPagination="true"
+                  showCheckbox
                   paginationProps={{
                     ...pagination,
                     activePage: pagination.current_page,
@@ -748,6 +854,8 @@ function Employee() {
                       getTableData(pageNo);
                     },
                   }}
+                  bulkActionsLabel="Apply"
+                  bulkActions={Number(userRole) === 1 ? bulkActions : ''}
                   tableClass="table-striped"
                   dropdownContainerClass="mb-3"
                   emptyRender={() => (
@@ -773,6 +881,8 @@ function Employee() {
             }}
             autocomplete="off"
           >
+            {/* [a-z0-9!#$%&'*+/=?^_`{|}~-]+(?
+          :\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+net */}
             <Row>
               <Col sm={6}>
                 <DropdownInput
@@ -781,9 +891,12 @@ function Employee() {
                   placeholder="Select Employee"
                   defaultValue={selectedEmployee}
                   onSelectHandler={(select) => {
+                    console.log('select', select.id);
                     setSelectedEmployee(select);
                     updateData(select);
+                    setEmployeeTwId(select.id);
                   }}
+                  disabled={employeeId && 'disabled'}
                 />
               </Col>
               <Col sm={6}>
@@ -801,6 +914,7 @@ function Employee() {
                   name="firstNameTitle"
                   value={fullName}
                   maxlength="10"
+                  disabled={(employeeId || employeetwId) && 'disabled'}
                   placeholder="Enter Full  Name"
                   errorMessage={validator.message(
                     'Full Name',
@@ -813,17 +927,26 @@ function Employee() {
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => setEmail(e.target.value)}
+                  // onInputChange={(e) => {
+                  //   const re = /^[\w.+-]+@starkdigital.net$/;
+                  //   if (!e.target.value || re.test(e.target.value)) {
+                  //     console.log('target',e.target.value);
+                  //     setEmail(e.target.value);
+                  //   }
+                  // }}
                   label="Email"
                   autocomplete="false"
                   asterisk="*"
                   containerClass="form-group"
-                  type="email"
+                  type="text"
+                  disabled={(employeeId || employeetwId) && 'disabled'}
+
                   value={email}
                   placeholder="Enter email"
                   errorMessage={validator.message(
                     'email',
                     email,
-                    'required'
+                    'required|regex:^[\w.+-]+@starkdigital.net$' // eslint-disable-line
                   )}
                 />
               </Col>
@@ -842,6 +965,31 @@ function Employee() {
                   />
                 </Col>
               )}
+
+              <Col sm={6}>
+                <TextInput
+                  onInputChange={(e) => {
+                    const re = /^[0-9\b]+$/;
+                    if (!e.target.value || re.test(e.target.value)) {
+                      setEmpCode(e.target.value);
+                    }
+                  }}
+                  autocomplete="off"
+                  label="Employee Code"
+                  asterisk="*"
+                  containerClass="form-group"
+                  type="text"
+                  name="codeTitle"
+                  maxlength="6"
+                  value={empCode}
+                  placeholder="Enter Employee Code"
+                  errorMessage={validator.message(
+                    'Employee Code',
+                    empCode,
+                    'required|'
+                  )}
+                />
+              </Col>
 
               <Col sm={6}>
                 <TextInput
@@ -944,11 +1092,17 @@ function Employee() {
               <Col sm={6}>
                 <DropdownInput
                   label="Department"
+                  asterisk="*"
                   options={getDepartment()}
                   placeholder="Select Department"
                   defaultValue={selectedDepartment}
                   onSelectHandler={(select) => setSelectedDepartment(select)}
                   isMulti={false}
+                  errorMessage={validator.message(
+                    'Department',
+                    selectedDepartment,
+                    'required'
+                  )}
                 />
               </Col>
             </Row>

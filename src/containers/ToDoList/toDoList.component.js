@@ -26,6 +26,7 @@ const validator = new SimpleReactValidator();
 function ToDoList() {
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
+  // const [morningFlag, setMorningFlag] = useState('');
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
   const [editShow, setEditShow] = useState(false);
@@ -188,11 +189,19 @@ function ToDoList() {
         totalItems: data.paginator.total_count,
       });
 
-      // setTaskList(data.data);
-
+      
       const row = [];
 
       data.data.map((task) => {
+        const morningSelected = task.morning_selected;
+        // setMorningFlag(morningSelected);
+        console.log('morningSelected', morningSelected);
+        if(morningSelected) {
+          console.log('true', task.id);
+          selectedId.push(task.id);
+        // setSelectedId(task.id);
+
+        }
         const setRowData = {
           todo: (
             <>
@@ -223,8 +232,8 @@ function ToDoList() {
 
   useEffect(() => {
     async function getData() {
-      const taskIdS = await customFunctions.getLocalStorage('TaskId') ? JSON.parse(customFunctions.getLocalStorage('TaskId')) : [];
-      setSelectedId([...taskIdS]);
+      // const taskIdS = await customFunctions.getLocalStorage('TaskId') ? JSON.parse(customFunctions.getLocalStorage('TaskId')) : [];
+      // setSelectedId([...taskIdS]);
       const selectedBreak = [];
       BreakList.map((item) => {
         if (item.id === 3 || item.id === 2) {
@@ -451,6 +460,7 @@ function ToDoList() {
 
   return (
     <>
+    { console.log('selectedId', selectedId)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -548,7 +558,8 @@ function ToDoList() {
                       },
                     }}
                     dropdownContainerClass="mb-3"
-                    selectedRowItems={[...selectedId]}
+                    // selectedRowItems={[...selectedId]}
+                    selectedRowItems={[30260, 30249, 30136]}
                     onSelectRowsIndexes={(rowIndex) => {
                       // const twId = [];
                       // taskList.map((task, ind) => {
@@ -565,7 +576,7 @@ function ToDoList() {
                       // });
                       // setSelectedRowIndex(rowIndex);
                       setSelectedId([...rowIndex]);
-                      customFunctions.setLocalStorage('TaskId', JSON.stringify(rowIndex));
+                      // customFunctions.setLocalStorage('TaskId', JSON.stringify(rowIndex));
 
                     }}
                     tableClass="table-striped"

@@ -21,11 +21,11 @@ const menu = [
     roleaccess: [1],
   },
   {
-    title: 'Employee',
+    title: 'Employees',
     path: '/employee',
     icon: 'Employee.svg',
     submenu: [],
-    roleaccess: [1, 3],
+    roleaccess: [1,2,3],
   },
   {
     title: 'Reports',

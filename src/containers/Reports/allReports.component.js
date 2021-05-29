@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
-import { TextInput, Datepicker, Helmet } from '../../components/FormInputs';
+import { Datepicker, Helmet, DropdownInput } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -14,14 +14,16 @@ const items = [
 ];
 
 function AllReports() {
-  let searchFormSubmit = false;
+  // let searchFormSubmit = false;
   const [rows, setRows] = useState([]);
-  const [searchKeyword, setSearchKeyword] = useState('');
+  // const [searchKeyword, setSearchKeyword] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [title, setTitle] = useState('');
+  const [employeeList, setEmployeeList] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -97,13 +99,27 @@ function AllReports() {
     const params = {
       page,
       limit: pagination.itemsPerPage,
-      keyword: searchFormSubmit ? searchKeyword : '',
+      // keyword: searchFormSubmit ? searchKeyword : '',
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',
     };
     const url = customFunctions.generateUrl(endPoint, params);
 
-    const { data } = await AuthApi.postDataToServer(url);
+    let postData = {};
+    const employee = [];
+    if (selectedEmployee && selectedEmployee.length > 0) {
+      selectedEmployee.map((emp) => {
+        console.log('emp', emp);
+        employee.push(emp.id);
+        return emp;
+      });
+    }
+
+    postData = {
+      users: employee,
+    };
+
+    const { data } = await AuthApi.postDataToServer(url, postData);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: Number(data.paginator.current_page),
@@ -131,9 +147,17 @@ function AllReports() {
     }
   };
 
+  const getEmployee = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      setEmployeeList(data.data);
+    }
+  };
+
   useEffect(() => {
     async function getData() {
       // getReports(1);
+      getEmployee();
       setTitle('Reports');
     }
     getData();
@@ -143,12 +167,27 @@ function AllReports() {
     getReports(1);
   }, [cntClearFilter]);
 
+  const getEmployeeList = () => {
+    if (!employeeList) return [];
+    const options = [];
+    employeeList.map((tm) => {
+      console.log('tm',tm.id);
+      return options.push({
+        label: tm.full_name,
+        id: tm.id,
+        value: tm.id,
+      });
+    });
+    return options;
+  };
+
   const onClear = () => {
-    searchFormSubmit= false;
+    // searchFormSubmit= false;
     setFilterErr('');
-    setSearchKeyword('');
+    // setSearchKeyword('');
     setFromDate('');
     setToDate('');
+    setSelectedEmployee('');
     setCntClearFilter(cntClearFilter + 1);
   };
 
@@ -159,16 +198,16 @@ function AllReports() {
 
     if (
       customFunctions.checkIfEmpty(fromDate) &&
-      customFunctions.checkIfEmpty(toDate) &&
-      customFunctions.checkIfEmpty(searchKeyword)
+      customFunctions.checkIfEmpty(toDate) 
+      // customFunctions.checkIfEmpty(searchKeyword)
     ) {
-      searchFormSubmit= false;
+      // searchFormSubmit= false;
       filterSearchErr = 'Please enter search keyword';
       setFilterErr(filterSearchErr);
       isValid = false;
     }
     if (isValid) {
-      searchFormSubmit= true;
+      // searchFormSubmit= true;
       setFilterErr('');
       getReports(1);
     }
@@ -210,13 +249,16 @@ function AllReports() {
                       <Row className="mt-3">
                         <Col sm={3}>
                           <div className="search-bar-input">
-                            <TextInput
-                              value={searchKeyword}
-                              placeholder="Search Employee"
-                              onInputChange={(e) => {
+                             <DropdownInput
+                              options={getEmployeeList()}
+                              placeholder="Select employee"
+                              defaultValue={selectedEmployee}
+                              onSelectHandler={(select) => {
                                 setFilterErr('');
-                                setSearchKeyword(e.target.value);
+                                setSelectedEmployee(select);
+                                console.log('select',select);
                               }}
+                              isMulti
                             />
                           </div>
                         </Col>
@@ -231,6 +273,7 @@ function AllReports() {
                             autoComplete="off"
                             name="startDate"
                             placeholder="From Date"
+                            maxDate={new Date()}
                           />
                         </Col>
 
@@ -247,6 +290,7 @@ function AllReports() {
                             name="startDate"
                             dateFormat="MM/dd/yyyy"
                             placeholder="To Date"
+                            maxDate={new Date()}
                           />
                         </Col>
                         <Col sm={3}>

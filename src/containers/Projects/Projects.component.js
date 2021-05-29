@@ -19,6 +19,7 @@ import Api from '../../helper/api';
 import constants from '../../helper/constants';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -39,7 +40,7 @@ function Projects() {
   const [title, setTitle] = useState('');
   // const [searchFormSubmit, setSearchFormSubmit] = useState(false);
   const [filterErr, setFilterErr] = useState('');
-  
+  const [userRole, setUserRole] = useState('');
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -273,6 +274,8 @@ function Projects() {
 
   useEffect(() => {
     setTitle('Projects');
+    const uRole = customFunctions.getLocalStorage('group');
+      setUserRole(Number(uRole));
   }, []);
 
   useEffect(() => {
@@ -307,7 +310,8 @@ function Projects() {
   return (
     <>
       <Helmet title={title} />
-      {showUpdate && (
+      <UserRestrictions permittedUsers={[2]} roleId={userRole}>
+      {(showUpdate) &&  (
         <SweetAlert
           title="Are you sure you want to change RT support?"
           error
@@ -327,6 +331,7 @@ function Projects() {
           }}
         />
       )}
+      </UserRestrictions>
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Projects</h2>
         <Breadcrumb items={items} />

@@ -250,6 +250,7 @@ function TeamReport() {
                             autoComplete="off"
                             name="startDate"
                             placeholder="From Date"
+                            maxDate={new Date()}
                           />
                         </Col>
 
@@ -265,6 +266,7 @@ function TeamReport() {
                             name="startDate"
                             dateFormat="MM/dd/yyyy"
                             placeholder="To Date"
+                            maxDate={new Date()}
                           />
                         </Col>
                         <Col sm={3}>

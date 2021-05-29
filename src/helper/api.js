@@ -49,6 +49,8 @@ export default class Api extends Component {
 
   static teamUrl = `${Api.baseUrl}my-team/`;
 
+  static bulkEmployee = `${Api.baseUrl}employee-bulk/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

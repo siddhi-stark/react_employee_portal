@@ -306,7 +306,7 @@ function Designation() {
                             <TextInput
                               inputClass="form-control"
                               value={searchKeyword}
-                              placeholder="search.."
+                              placeholder="search designation"
                               onInputChange={(e) => {
                                 setFilterErr('');
                                 setSearchKeyword(e.target.value);

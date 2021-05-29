@@ -1,5 +1,6 @@
 import React, { Component } from 'react'; // eslint-disable-line
 import { AES } from 'crypto-js';
+import AuthApi from './authApi';
 
 class CustomFunctions extends Component {
   getDate = (dateTime) => {
@@ -194,6 +195,29 @@ class CustomFunctions extends Component {
         return !value;
     }
   };
+
+  changeStatus = async (url, urlParams = {}, type = 'put', successCallback = null, errorCallback = null) => {
+    try {
+      if (this.checkIfEmpty(urlParams, 'O'))
+        return false;
+
+      const apiCall = (type.toLowerCase() === 'put') ? AuthApi.putDataToServer : AuthApi.postDataToServer
+      const params = this.cleanObject(urlParams);
+      const { data, message } = await apiCall(url, params);
+      if (data && !data.success) {
+        if (errorCallback) errorCallback(message);
+        return data;
+      }
+      if (successCallback) successCallback(data);
+
+      return data;
+    } catch (e) {
+      if (errorCallback) errorCallback(e);
+
+      return e;
+    }
+  }
+
 
   localStorageClear = () => {
     localStorage.removeItem('access_token');
