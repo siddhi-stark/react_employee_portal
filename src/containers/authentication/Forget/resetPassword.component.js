@@ -135,6 +135,7 @@ function ResetPassword(props) {
               className="form-control form-control-lg"
               type="password"
               name="password"
+              minlength="6"
               placeholder="New Password"
               onInputChange={(e) => setPassword(e.target.value)}
             />
@@ -148,6 +149,7 @@ function ResetPassword(props) {
               className="form-control form-control-lg"
               type="password"
               name="confirmPassword"
+              minlength="6"
               placeholder="Confirm Password"
               onInputChange={(e) => setConfirmPassword(e.target.value)}
             />

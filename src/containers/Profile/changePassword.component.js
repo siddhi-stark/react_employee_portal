@@ -99,6 +99,7 @@ function ManagePassword() {
                       name="oldPassword"
                       containerClass="form-group"
                       label="Old Password"
+                      minlength="6"
                       value={oldPassword}
                       type="password"
                       asterisk="*"
@@ -124,6 +125,7 @@ function ManagePassword() {
                       asterisk="*"
                       value={password}
                       type="password"
+                      minlength="6"
                       placeholder="Please enter new  Password"
                       errorMessage={validator.current.message(
                         'Password',
@@ -146,6 +148,7 @@ function ManagePassword() {
                       asterisk="*"
                       value={confirmPassword}
                       type="password"
+                      minlength="6"
                       placeholder="Please enter Confirm Password"
                       errorMessage={validator.current.message(
                         'confirmPassword',

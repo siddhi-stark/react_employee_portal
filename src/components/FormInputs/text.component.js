@@ -22,6 +22,7 @@ export default function InputComponent(props) {
     as,
     asterisk,
     maxlength,
+    minlength,
     accept,
     optionalLabel,
     style,
@@ -63,6 +64,7 @@ export default function InputComponent(props) {
             rows={rows}
             as={as}
             style={style}
+            minlength={minlength}
             autocomplete={autocomplete}
           />
         </InputGroup>
