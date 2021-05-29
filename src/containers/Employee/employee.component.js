@@ -846,7 +846,7 @@ function Employee() {
                   columns={columns}
                   rows={rows}
                   showPagination="true"
-                  showCheckbox
+                  showCheckbox={ Number(userRole) === 1 ? 'showCheckbox' : '' }
                   paginationProps={{
                     ...pagination,
                     activePage: pagination.current_page,
