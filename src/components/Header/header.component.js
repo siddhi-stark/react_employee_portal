@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
@@ -20,7 +20,7 @@ function Header() {
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
-  const token = customFunctions.getLocalStorage('access_token');
+  let token = customFunctions.getLocalStorage('access_token');
 
   const getProfile = async () => {
     const userToken = customFunctions.getLocalStorage('access_token');
@@ -70,7 +70,7 @@ function Header() {
 
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-
+    token = customFunctions.getLocalStorage('access_token');
     if (!token) {
       const path = window.location.pathname.split('/');
       const extractedPath = path.length > 1 ? path[1].toString() : '';
@@ -97,16 +97,16 @@ function Header() {
                   <h7>You are clocked out at {time} </h7>
                 </div>
               ) : (
-                  ''
-                )}
+                ''
+              )}
             </div>
             {clockedInTime ? (
               <div className="d-flex justify-content-end clock-in-time">
                 <h7>You are clocked in at {clockedInTime} </h7>
               </div>
             ) : (
-                ''
-              )}
+              ''
+            )}
           </UserRestrictions>
 
           <div className="main-header-right">
@@ -126,10 +126,10 @@ function Header() {
                       // src={imageProfile} 
                       alt="Profile" />
                   ) : <img
-                      src={Api.s3UrlnoProfile}
-                      alt="Edit Profile"
-                    />}
-                 </a>
+                    src={Api.s3UrlnoProfile}
+                    alt="Edit Profile"
+                  />}
+                </a>
               </div>
             </div>
             <div className="dropdown d-md-flex header-settings">
@@ -145,37 +145,41 @@ function Header() {
               <div className="main-header-menu-icon">
                 <div className="dropdown-menu">
                   <div className="header-navheading text-center">
-                    <h5 className="main-notification-title">{employeeName}</h5>
+                    <h5 className="main-notification-title">{employeeName || ''}</h5>
 
                     {
                       designation && (
                         <p className="main-notification-text" style={{ 'font-size': '13px' }}>({designation})</p>
                       )
                     }
-                    <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
-                      <small>Employee ID {`SDMS${empId}`}</small>
-                    </UserRestrictions>
+                    {
+                      empId && (
+                        <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+                          <small>Employee ID {`SDMS${empId}`}</small>
+                        </UserRestrictions>
+                      )
+                    }
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>
-                      <a className="dropdown-item border-top" href="/profile">
+                      <Link className="dropdown-item border-top" to="/profile">
                         <img
                           src="/images/user.svg"
                           alt="User"
                           className="svg"
                         />{' '}
                         My Profile
-                      </a>
+                      </Link>
                     </li>
                     <li>
-                      <a className="dropdown-item" href="/manage-password">
+                      <Link className="dropdown-item" to="/manage-password">
                         <img
                           src="/images/change-password.svg"
                           alt="Change"
                           className="svg"
                         />{' '}
                         Change Password
-                      </a>
+                      </Link>
                     </li>
                     <li>
                       <a
