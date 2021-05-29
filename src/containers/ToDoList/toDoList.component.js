@@ -709,16 +709,7 @@ function ToDoList() {
                           breakData[i].stmins = e.getMinutes();
                           breakData[i].hrs = 0;
                           breakData[i].mins = 0;
-                          if (e && data.endTime) {
-                            const endTimeNew = new Date(data.endTime);
-                            const startTimeNew = new Date(e);
-                            const diffMs = (endTimeNew.getTime() - startTimeNew.getTime()); // milliseconds between now & Christmas
-                            console.log('dt', e, data.endTime, diffMs)
-                            const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
-                            breakData[i].hrs = diffHrs;
-                            breakData[i].mins = diffMins;
-
-                          }
+                          breakData[i].endTime = null;
                           setBreakData([...breakData]);
                         }}
                         showTimeSelect="showTimeSelect"
@@ -739,8 +730,8 @@ function ToDoList() {
                         selected={data.endTime}
                         minDate={new Date(data.startTime)}
                         minTime={setHours(
-                          setMinutes(new Date(), parseInt(data.stmins,10)+1),
-                          parseInt(data.stmins,10)>58 ? parseInt(data.sthrs,10)+1:data.sthrs
+                          setMinutes(new Date(), parseInt(data.stmins, 10) + 1),
+                          parseInt(data.stmins, 10) > 58 ? parseInt(data.sthrs, 10) + 1 : data.sthrs
                         )}
                         maxTime={setHours(setMinutes(new Date(), 59), 23)}
                         disabled={data.startTime === ''}
@@ -751,9 +742,8 @@ function ToDoList() {
                           if (e && data.startTime) {
                             const endTimeNew = new Date(e);
                             const startTimeNew = new Date(data.startTime);
-                            const diffMs = (endTimeNew.getTime() - startTimeNew.getTime());
-                            console.log('dte',e,data.startTime, diffMs)
-                            const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
+                            const diffMs = (endTimeNew - startTimeNew);
+                            const { hours: diffHrs, minutes: diffMins } = customFunctions.msToTime(diffMs);
                             breakData[i].hrs = diffHrs;
                             breakData[i].mins = diffMins;
 
