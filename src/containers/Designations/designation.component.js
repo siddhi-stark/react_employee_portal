@@ -27,6 +27,7 @@ function Designation() {
   let searchFormSubmit = false;
   const validator = useRef(new SimpleReactValidator());
   const [rows, setRows] = useState([]);
+  const [userRole, setUserRole] = useState('');
   const [count, forceUpdate] = useState(0);
   const [designationId, setDesignationId] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -98,6 +99,8 @@ function Designation() {
     async function getData() {
       getTableData(pagination.current_page);
       setTitle('Designation');
+      const uRole = customFunctions.getLocalStorage('group');
+      setUserRole(Number(uRole));
     }
     getData();
   }, [cntClearFilter]);
@@ -266,6 +269,55 @@ function Designation() {
     }
   };
 
+  const bulkActions = [
+    {
+      id: 'delete',
+      actionTitle: 'Delete',
+      actionCallback: (selectedIndexes) => {
+        const endPoint = `${Api.bullkDesignation}`;
+        if (!customFunctions.checkIfEmpty(selectedIndexes, 'A')) {
+          const params = { designations: selectedIndexes};
+          swal({
+            title: 'Are you sure?',
+            text: 'Are you sure that you want to delete this record?',
+            icon: 'warning',
+            dangerMode: true,
+            buttons: true,
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          }).then(async (result) => {
+            if (result) {
+              const successHandle = (e) => {
+                swal(e && e.message[0], '', 'success', {
+                  closeOnClickOutside: false,
+                  allowOutsideClick: false,
+                  buttons: false,
+                  timer: 2000,
+                }).then(() => {
+                  swal.close();
+                  getTableData(1);
+                });
+              };
+              const errorHandle = (e) => {
+                swal(e, '', 'error', {
+                  closeOnClickOutside: false,
+                  allowOutsideClick: false,
+                });
+              };
+              await customFunctions.changeStatus(
+                endPoint,
+                params,
+                'POST',
+                successHandle,
+                errorHandle
+              );
+            }
+          });
+        }
+      },
+    }
+  ]
+
   return (
     <>
       <Helmet title={title} />
@@ -393,6 +445,7 @@ function Designation() {
                     columns={columns}
                     rows={rows}
                     showPagination="true"
+                    showCheckbox
                     paginationProps={{
                       ...pagination,
                       activePage: pagination.current_page,
@@ -400,6 +453,8 @@ function Designation() {
                         getTableData(pageNo);
                       },
                     }}
+                    bulkActionsLabel="Apply"
+                    bulkActions={Number(userRole) === 1 ? bulkActions : ''}
                     tableClass="table-striped"
                     dropdownContainerClass="mb-3"
                     emptyRender={() => (
