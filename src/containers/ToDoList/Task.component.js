@@ -11,19 +11,36 @@ import Api from '../../helper/api';
 
 function Task(props) {
   const validator = useRef(new SimpleReactValidator());
-  const [taskHrs, setTaskHours] = useState('');
-  const [taskMins, setTaskMinutes] = useState('');
-  const [taskStartTime, setTaskStartTime] = useState('');
-  const [taskEndTime, setTaskEndTime] = useState('');
-  const [description, setDescription] = useState('');
-  const [taskName, setTaskName] = useState('');
+  // const [taskHrs, setTaskHours] = useState('');
+  // const [taskMins, setTaskMinutes] = useState('');
+  // const [taskStartTime, setTaskStartTime] = useState('');
+  // const [taskEndTime, setTaskEndTime] = useState('');
+  // const [description, setDescription] = useState('');
+  // const [taskName, setTaskName] = useState('');
   const [count, forceUpdate] = useState(0);
   const [taskModalShow, setTaskModalShow] = useState(false);
-  const [progressValue, setProgressValue] = useState(0);
+  // const [progressValue, setProgressValue] = useState(0);
   const [id, setId] = useState(null);
-  const [startHours, setStartHours] = useState('');
-  const [startMinutes, setStartMinutes] = useState('');
+  // const [startHours, setStartHours] = useState('');
+  // const [startMinutes, setStartMinutes] = useState('');
   const [disableButton, setDisableButton] = useState(false);
+
+  const [taskList, setTaskList] = useState([]);
+
+  const defaultTask = {
+    
+      id: '',
+      taskStartTime: '',
+      taskEndTime: '',
+      description: '',
+      taskName: '',
+      progressValue: '',
+      startHours: '',
+      startMinutes: '',
+      taskHrs: '',
+      taskMins: '',
+    
+  };
 
   const getTaskById = async (tid) => {
     const { data } = await AuthApi.getDataFromServer(`${Api.taskUrl}${tid}/`);
@@ -33,14 +50,14 @@ function Task(props) {
       const hrmin = startTm.split(':');
       dt.setHours(hrmin[0]);
       dt.setMinutes(hrmin[1]);
-      setTaskStartTime(dt);
+      taskList[0].taskStartTime = dt;
 
       const dt1 = new Date();
       const endTm = data.data.end_time;
       const hrminNew = endTm.split(':');
       dt1.setHours(hrminNew[0]);
       dt1.setMinutes(hrminNew[1]);
-      setTaskEndTime(dt1);
+      taskList[0].taskEndTime = dt1;
 
       const spent = data.data.estimation;
       const spentNew = spent.split('Hrs');
@@ -48,18 +65,23 @@ function Task(props) {
       const spent1 = spentNew[0] ? spentNew[0] : 0;
       const spentNewMins = spentNew[0].split('Mins');
 
-      setTaskHours(spent1);
+      taskList[0].taskHours = spent1;
       const spent2 = spentNewMins[0] ? spentNewMins[0] : 0;
-      setTaskMinutes(spent2);
+      taskList[0].taskMinutes =spent2;
 
-      setTaskName(data.data.content);
-      setDescription(data.data.description);
-      setProgressValue(Number(data.data.progress));
+      taskList[0].taskName = data.data.content;
+      taskList[0].description = data.data.description;
+      taskList[0].progressValue = Number(data.data.progress);
     }
   };
 
   useEffect(() => {
     setTaskModalShow(props.show);
+    setTaskList([
+      defaultTask
+    ])
+
+   
   }, []);
 
   useEffect(() => {
@@ -71,20 +93,29 @@ function Task(props) {
   }, []);
 
   const onAddTask = async () => {
-    const obj = {
-      start_time: customFunctions.getTime(taskStartTime),
-      end_time: customFunctions.getTime(taskEndTime),
-      hours: Number(taskHrs),
-      minutes: Number(taskMins),
-      description,
-      content: taskName,
-      progress: Number(progressValue),
-      task_type: 'other',
-    };
+    const selectedTask = [];
+
+    taskList.map((task)=> {
+      
+      const obj = {
+        start_time: customFunctions.getTime(task.taskStartTime),
+        end_time: customFunctions.getTime(task.taskEndTime),
+        hours: Number(task.taskHrs),
+        minutes: Number(task.taskMins),
+        description: task.description,
+        content: task.taskName,
+        progress: Number(task.progressValue),
+        task_type: 'other',
+      };
+      selectedTask.push(obj);
+      return obj;
+    })
+    
     let postData = {};
+
     if (!id) {
       postData = {
-        tasks: [{ ...obj }],
+        tasks: selectedTask,
       };
     }
 
@@ -92,19 +123,20 @@ function Task(props) {
 
     const callback = id ? AuthApi.putDataToServer : AuthApi.postDataToServer;
     const endPoint = id ? `${Api.taskUrl}${id}/` : Api.taskUrl;
-    const { data } = await callback(endPoint, id ? obj : payload);
+    const { data } = await callback(endPoint, id ? selectedTask[0] : payload);
 
     if (data) {
       props.handleModalCLose(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
-          setTaskStartTime();
-          setTaskEndTime();
-          setTaskHours();
-          setTaskMinutes();
-          setDescription();
-          setTaskName();
+          // setTaskStartTime();
+          // setTaskEndTime();
+          // setTaskHours();
+          // setTaskMinutes();
+          // setDescription();
+          // setTaskName();
+          setTaskList([]);
           props.handleModalCLose(false);
           props.onChanges();
         }
@@ -133,15 +165,28 @@ function Task(props) {
   const onTaskCancel = () => {
     validator.current.hideMessages();
 
-    setTaskStartTime();
-    setTaskEndTime();
-    setTaskHours();
-    setTaskMinutes();
-    setDescription();
-    setTaskName();
-    setId();
+    // setTaskStartTime();
+    // setTaskEndTime();
+    // setTaskHours();
+    // setTaskMinutes();
+    // setDescription();
+    // setTaskName();
+    // setId();
+    setTaskList([]);
     setTaskModalShow(false);
     props.handleModalCLose(false);
+  };
+
+  const addMoreTask = () => {
+    setTaskList([...taskList, defaultTask]);
+  }
+
+  const onDeleteTask = (idx, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const data = [...taskList];
+    data.splice(idx, 1);
+    setTaskList([...data]);
   };
 
   return (
@@ -159,39 +204,63 @@ function Task(props) {
               submitForm(e);
             }}
           >
-            <Row>
+          <div className="add-break d-flex align-items-center justify-content-between">
+              <h3 className="mb-1">{'  '}</h3>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => addMoreTask()}
+              >
+                Add Task
+              </button>
+            </div>
+          { taskList.map((data,i) => (
+            <>
+              <Row>
               <Col sm={6}>
                 <TextInput
-                  onInputChange={(e) => setTaskName(e.target.value)}
+                  onInputChange={(e) => {
+                    taskList[i].taskName=e.target.value;
+                    setTaskList([...taskList])
+                    }}
+
                   label="Add Task Name"
                   asterisk="*"
+                  id={`taskName${i+1}`}
                   labelIcon="images/add-task.svg"
                   containerClass="form-group"
                   type="text"
-                  value={taskName}
+                  value={data.taskName}
                   placeholder="Enter Task Name"
                   errorMessage={validator.current.message(
-                    'taskName',
-                    taskName,
+                    `taskName${i+1}`,
+                    data.taskName,
                     'required'
                   )}
                 />
+                
               </Col>
               <Col sm={6}>
                 <TextInput
-                  onInputChange={(e) => setDescription(e.target.value)}
+                  // onInputChange={(e) => setDescription(e.target.value)}
+                  onInputChange={(e) => {
+                    taskList[i].description=e.target.value;
+                    setTaskList([...taskList])
+                    }}
+                    
                   label="Description"
                   containerClass="form-group"
                   asterisk="*"
                   as="textarea"
+                  id={`description${i+1}`}
                   row="30"
                   cols="50"
                   style={{ resize: 'none' }}
-                  value={description}
+                  value={data.description}
                   placeholder="Enter Description"
                   errorMessage={validator.current.message(
-                    'description',
-                    description,
+                    `description${i+1}`,
+                    data.description,
                     'required'
                   )}
                 />
@@ -203,22 +272,34 @@ function Task(props) {
                   className="form-control"
                   label="Start Time"
                   asterisk="*"
-                  selected={taskStartTime}
-                  onChange={(e) => {
-                    setTaskStartTime(e);
-                    setTaskEndTime('')
-                    setStartHours(e.getHours());
-                    setStartMinutes(e.getMinutes());
-                    setTaskHours('');
-                    setTaskMinutes('');
-                  }}
+                  id={`taskStartTime${i+1}`}
+                  selected={data.taskStartTime}
+                  onInputChange={(e) => {
+                    console.log('timee', e.target.value);
+                    taskList[i].taskStartTime=e.target.value;
+                    taskList[i].taskEndTime='';
+                    taskList[i].taskHrs='';
+                    taskList[i].taskMins='';
+                    taskList[i].startHours=e.getHours();
+                    taskList[i].startMinutes=e.getMinutes();
+                    setTaskList([...taskList])
+                    }}
+                  // onChange={(e) => {
+                  //   setTaskStartTime(e);
+                  //   setTaskEndTime('')
+                  //   setStartHours(e.getHours());
+                  //   setStartMinutes(e.getMinutes());
+                  //   setTaskHours('');
+                  //   setTaskMinutes('');
+                  // }}
+
                   showTimeSelect="showTimeSelect"
                   showTimeSelectOnly="showTimeSelectOnly"
                   timeIntervals="1"
                   dateFormat="h:mm aa"
                   errorMessage={validator.current.message(
-                    'Start Time',
-                    taskStartTime,
+                    `taskStartTime${i+1}`,
+                    data.taskStartTime,
                     'required'
                   )}
                 />
@@ -228,26 +309,27 @@ function Task(props) {
                   className="form-control"
                   label="End Time"
                   asterisk="*"
+                  id={`taskEndTime${i+1}`}
                   format="HH:mm"
                   excludeOutOfBoundTimes
-                  selected={taskEndTime}
-                  minDate={new Date(taskStartTime)}
+                  selected={data.taskEndTime}
+                  minDate={new Date(data.taskStartTime)}
                   minTime={setHours(
-                    setMinutes(new Date(), parseInt(startMinutes,10)+1),
-                    parseInt(startMinutes,10)>58 ? parseInt(startHours,10)+1:startHours
+                    setMinutes(new Date(), parseInt(data.startMinutes,10)+1),
+                    parseInt(data.startMinutes,10)>58 ? parseInt(data.startHours,10)+1:data.startHours
                   )}
                   maxTime={setHours(setMinutes(new Date(), 59), 23)}
                   onChange={(e) => {
-                    setTaskEndTime(e);
-                    setTaskHours('');
-                    setTaskMinutes('');
-                    if (e && taskStartTime) {
+                    taskList[i].taskEndTime=e.target.value;
+                    taskList[i].taskHours='';
+                    taskList[i].taskMinutes='';
+                    if (e && data.taskStartTime) {
                       const tEndTime = new Date(e);
-                      const tStartTime = new Date(taskStartTime);
+                      const tStartTime = new Date(data.taskStartTime);
                       const diffMs = (tEndTime - tStartTime); 
                       const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
-                      setTaskHours(`${diffHrs}`);
-                      setTaskMinutes(`${diffMins}`);
+                      taskList[i].taskHours=`${diffHrs}`;
+                      taskList[i].taskMinutes=`${diffMins}`;
                     }
                   }}
                   showTimeSelect="showTimeSelect"
@@ -255,8 +337,8 @@ function Task(props) {
                   timeIntervals="1"
                   dateFormat="h:mm aa"
                   errorMessage={validator.current.message(
-                    'End Time',
-                    taskEndTime,
+                    `taskEndTime${i+1}`,
+                    data.taskEndTime,
                     'required'
                   )}
                 />
@@ -266,7 +348,8 @@ function Task(props) {
                   label="Time Spent"
                   containerClass="form-group"
                   type="text"
-                  value={`${taskHrs} Hrs ${taskMins} Mins`}
+                  id={`timeSpent${i+1}`}
+                  value={`${data.taskHrs} Hrs ${data.taskMins} Mins`}
                 />
               </Col>
               <Col sm={6}>
@@ -278,25 +361,50 @@ function Task(props) {
                     <div className="progress">
                       <div className="progress-bar bg-secondary w-100">
                         <h5 className="justify-content-start">
-                          Set Progress: {progressValue}%{' '}
+                          Set Progress: {data.progressValue}%{' '}
                         </h5>
                         <input
                           type="range"
-                          id="myinput"
+                          id={`progress${i+1}`}
                           name="rangeInput"
                           min="0"
                           max="100"
-                          value={Number(progressValue)}
-                          onChange={(e) => {
-                            setProgressValue(e.target.value);
+                          value={Number(data.progressValue)}
+                          onInputChange={(e) => {
+                          taskList[i].progressValue=e.target.value;
+                          setTaskList([...taskList])
                           }}
                         />
                       </div>
                     </div>
                   </div>
                 </div>
+                <div className="skip-form float-end">
+                      {taskList.length > 1 && (
+                        <>
+                        <a
+                          href="/"
+                          onClick={(e) => {
+                            onDeleteTask(i, e);
+                          }}
+                        >
+                          <img
+                            src="images/delete.png"
+                            className="ml-2"
+                            alt="delete"
+                          />
+                        </a>
+                        <hr />
+                        </>
+                      )}
+                    </div>
               </Col>
             </Row>
+           
+            </>
+
+          )) 
+          }
             <div className="float-end">
               <Button variant="secondary" onClick={() => onTaskCancel()}>
                 Cancel
