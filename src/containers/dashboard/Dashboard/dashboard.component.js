@@ -124,7 +124,7 @@ function Dashboard() {
     const endPoint = `${Api.weeklyStatusUrl}?mode=${key}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
 
-    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+    if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
       setCompleted(data.data.completed);
       setPending(data.data.pending);
       setRemaining(data.data.upcoming);
