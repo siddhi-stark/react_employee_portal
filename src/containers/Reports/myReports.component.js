@@ -189,6 +189,7 @@ function AllReports() {
                             }}
                             autoComplete="off"
                             name="startDate"
+                            maxDate={new Date()}
                             placeholder="From Date"
                           />
                         </Col>
@@ -202,6 +203,7 @@ function AllReports() {
                             }}
                             autoComplete="off"
                             minDate={fromDate}
+                            maxDate={new Date()}
                             name="startDate"
                             dateFormat="MM/dd/yyyy"
                             placeholder="To Date"

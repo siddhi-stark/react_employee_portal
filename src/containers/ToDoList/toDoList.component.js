@@ -188,16 +188,13 @@ function ToDoList() {
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
       });
-
-      
+ 
       const row = [];
 
       data.data.map((task) => {
         const morningSelected = task.morning_selected;
         // setMorningFlag(morningSelected);
-        console.log('morningSelected', morningSelected);
         if(morningSelected) {
-          console.log('true', task.id);
           selectedId.push(task.id);
         // setSelectedId(task.id);
 
@@ -460,7 +457,6 @@ function ToDoList() {
 
   return (
     <>
-    { console.log('selectedId', selectedId)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"

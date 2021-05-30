@@ -206,7 +206,7 @@ function Task(props) {
                   selected={taskStartTime}
                   onChange={(e) => {
                     setTaskStartTime(e);
-                    setTaskEndTime('')
+                    setTaskEndTime('');
                     setStartHours(e.getHours());
                     setStartMinutes(e.getMinutes());
                     setTaskHours('');

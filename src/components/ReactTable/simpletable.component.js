@@ -40,7 +40,6 @@ export default function SimpleTable(props) {
     ...defaults,
     ...props,
   };
-  console.log('selectedRowItems', selectedRowItems);
   const [allSelected, setAllSelected] = useState(false);
   const [selectedAction, setSelectedAction] = useState('');
   

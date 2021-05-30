@@ -109,7 +109,6 @@ function AllReports() {
     const employee = [];
     if (selectedEmployee && selectedEmployee.length > 0) {
       selectedEmployee.map((emp) => {
-        console.log('emp', emp);
         employee.push(emp.id);
         return emp;
       });
@@ -171,7 +170,6 @@ function AllReports() {
     if (!employeeList) return [];
     const options = [];
     employeeList.map((tm) => {
-      console.log('tm',tm.id);
       return options.push({
         label: tm.full_name,
         id: tm.id,
@@ -256,7 +254,6 @@ function AllReports() {
                               onSelectHandler={(select) => {
                                 setFilterErr('');
                                 setSelectedEmployee(select);
-                                console.log('select',select);
                               }}
                               isMulti
                             />

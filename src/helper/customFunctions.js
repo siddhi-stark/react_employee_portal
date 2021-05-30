@@ -201,7 +201,7 @@ class CustomFunctions extends Component {
       if (this.checkIfEmpty(urlParams, 'O'))
         return false;
 
-      const apiCall = (type.toLowerCase() === 'put') ? AuthApi.putDataToServer : AuthApi.postDataToServer
+      const apiCall = (type.toLowerCase() === 'put') ? AuthApi.putDataToServer : AuthApi.postDataToServer;
       const params = this.cleanObject(urlParams);
       const { data, message } = await apiCall(url, params);
       if (data && !data.success) {
@@ -217,7 +217,6 @@ class CustomFunctions extends Component {
       return e;
     }
   }
-
 
   localStorageClear = () => {
     localStorage.removeItem('access_token');

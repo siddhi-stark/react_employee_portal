@@ -173,8 +173,7 @@ function Employee() {
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`;
-
-
+    
     const empIds = [];
     const params = {
       limit: pagination.itemsPerPage,
@@ -182,23 +181,23 @@ function Employee() {
       // users: selectedEmployee.length > 0 ? selectedEmployee.join(', ') : ''
     };
 
+    const managerList = [];
+    if (selectedManager.length > 0) {
+      selectedManager.map((mngr) => {
+        managerList.push(mngr.id);
+        return mngr;
+      });
+    }
 
-      if(selectedEmployee) {
-        selectedEmployee && selectedEmployee.map((emp) => { // eslint-disable-line
-          console.log('emp', emp);
-          empIds.push(emp.id)
+    if(selectedEmployee.length > 0) {
+        selectedEmployee.map((emp) => { // eslint-disable-line
+          empIds.push(emp.id);
           return emp;
-        })
-        console.log('empIds',empIds);
-        console.log('empIds.join(',')',empIds.join(','));
-        params.users = empIds.join(',')
+        });
+        params.users = empIds.join(',');
       }
-      
     
-   
-
-    const url = customFunctions.generateUrl(endPoint, params);
-    console.log('url', url);
+      const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
@@ -433,6 +432,7 @@ function Employee() {
     validator.hideMessages();
     setAddButton(false);
     setFullName('');
+    setEmpCode('');
     setSelectedEmployee('');
     setEmail('');
     setMobile('');
@@ -608,7 +608,6 @@ function Employee() {
     return options;
   };
 
-
   const getEmployeeRole = () => {
     if (!role) return [];
     const options = [];
@@ -655,7 +654,6 @@ function Employee() {
 
   const updateData = (e) => {
     twEmployee.map((emp) => {
-      console.log('emppp',emp);
       if (emp.full_name === e.label) {
         const name = e.label;
         setEmail(emp.email);
@@ -728,11 +726,9 @@ function Employee() {
         }
       },
     }
-  ]
+  ];
 
   validator.purgeFields();
-
-  
 
   return (
     <>
@@ -787,7 +783,6 @@ function Employee() {
                               onSelectHandler={(select) => {
                                 setFilterErr('');
                                 setSelectedEmployee(select);
-                                console.log('select', select);
                               }}
                               isMulti
                             />
@@ -891,7 +886,6 @@ function Employee() {
                   placeholder="Select Employee"
                   defaultValue={selectedEmployee}
                   onSelectHandler={(select) => {
-                    console.log('select', select.id);
                     setSelectedEmployee(select);
                     updateData(select);
                     setEmployeeTwId(select.id);
@@ -902,7 +896,7 @@ function Employee() {
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => {
-                    const re = /^[a-zA-Z .]*$/;
+                    const re = /^[a-zA-Z ]*$/;
                     if (!e.target.value || re.test(e.target.value)) {
                       setFullName(e.target.value);
                     }
@@ -913,7 +907,6 @@ function Employee() {
                   type="text"
                   name="firstNameTitle"
                   value={fullName}
-                  maxlength="10"
                   disabled={(employeeId || employeetwId) && 'disabled'}
                   placeholder="Enter Full  Name"
                   errorMessage={validator.message(
@@ -946,7 +939,7 @@ function Employee() {
                   errorMessage={validator.message(
                     'email',
                     email,
-                    'required' // eslint-disable-line
+                    'required|regex:^[\w.+-]+@starkdigital.net$' // eslint-disable-line
                   )}
                 />
               </Col>

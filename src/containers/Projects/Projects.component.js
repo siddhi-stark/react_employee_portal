@@ -367,7 +367,7 @@ function Projects() {
                           <div className="search-bar-input">
                             <TextInput
                               value={searchKeyword}
-                              placeholder="Search keyword"
+                              placeholder="Search project name"
                               onInputChange={(e) => {
                                 setFilterErr('');
                                 setSearchKeyword(e.target.value);

@@ -316,7 +316,7 @@ function Designation() {
         }
       },
     }
-  ]
+  ];
 
   return (
     <>
