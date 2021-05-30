@@ -213,122 +213,6 @@ function Task(props) {
               submitForm(e);
             }}
           >
-<<<<<<< HEAD
-            <Row>
-              <Col sm={6}>
-                <TextInput
-                  onInputChange={(e) => setTaskName(e.target.value)}
-                  label="Add Task Name"
-                  asterisk="*"
-                  labelIcon="images/add-task.svg"
-                  containerClass="form-group"
-                  type="text"
-                  value={taskName}
-                  placeholder="Enter Task Name"
-                  errorMessage={validator.current.message(
-                    'taskName',
-                    taskName,
-                    'required'
-                  )}
-                />
-              </Col>
-              <Col sm={6}>
-                <TextInput
-                  onInputChange={(e) => setDescription(e.target.value)}
-                  label="Description"
-                  containerClass="form-group"
-                  asterisk="*"
-                  as="textarea"
-                  row="30"
-                  cols="50"
-                  style={{ resize: 'none' }}
-                  value={description}
-                  placeholder="Enter Description"
-                  errorMessage={validator.current.message(
-                    'description',
-                    description,
-                    'required'
-                  )}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={2}>
-                <Datepicker
-                  className="form-control"
-                  label="Start Time"
-                  asterisk="*"
-                  selected={taskStartTime}
-                  onChange={(e) => {
-                    setTaskStartTime(e);
-                    setTaskEndTime('');
-                    setStartHours(e.getHours());
-                    setStartMinutes(e.getMinutes());
-                    setTaskHours('');
-                    setTaskMinutes('');
-                  }}
-                  showTimeSelect="showTimeSelect"
-                  showTimeSelectOnly="showTimeSelectOnly"
-                  timeIntervals="1"
-                  dateFormat="h:mm aa"
-                  errorMessage={validator.current.message(
-                    'Start Time',
-                    taskStartTime,
-                    'required'
-                  )}
-                />
-              </Col>
-              <Col sm={2}>
-                <Datepicker
-                  className="form-control"
-                  label="End Time"
-                  asterisk="*"
-                  format="HH:mm"
-                  excludeOutOfBoundTimes
-                  selected={taskEndTime}
-                  minDate={new Date(taskStartTime)}
-                  minTime={setHours(
-                    setMinutes(new Date(), parseInt(startMinutes,10)+1),
-                    parseInt(startMinutes,10)>58 ? parseInt(startHours,10)+1:startHours
-                  )}
-                  maxTime={setHours(setMinutes(new Date(), 59), 23)}
-                  onChange={(e) => {
-                    setTaskEndTime(e);
-                    setTaskHours('');
-                    setTaskMinutes('');
-                    if (e && taskStartTime) {
-                      const tEndTime = new Date(e);
-                      const tStartTime = new Date(taskStartTime);
-                      const diffMs = (tEndTime - tStartTime); 
-                      const { hours:diffHrs, minutes:diffMins } = customFunctions.msToTime(diffMs);
-                      setTaskHours(`${diffHrs}`);
-                      setTaskMinutes(`${diffMins}`);
-                    }
-                  }}
-                  showTimeSelect="showTimeSelect"
-                  showTimeSelectOnly="showTimeSelectOnly"
-                  timeIntervals="1"
-                  dateFormat="h:mm aa"
-                  errorMessage={validator.current.message(
-                    'End Time',
-                    taskEndTime,
-                    'required'
-                  )}
-                />
-              </Col>
-              <Col sm={2}>
-                <TextInput
-                  label="Time Spent"
-                  containerClass="form-group"
-                  type="text"
-                  value={`${taskHrs} Hrs ${taskMins} Mins`}
-                />
-              </Col>
-              <Col sm={6}>
-                <div className="form-group">
-                  <label htmlFor="" className="col-form-label">
-                    Progress
-=======
             {
               !id && (
                 <div className="add-break d-flex align-items-center justify-content-between">
@@ -485,7 +369,6 @@ function Task(props) {
                     <div className="form-group">
                       <label htmlFor="" className="col-form-label">
                         Progress
->>>>>>> bf0ed0b1ee35f1ab1e138f5a8e16405fbd0f65b3
                   </label>
                       <div className="progress-main">
                         <div className="progress">
