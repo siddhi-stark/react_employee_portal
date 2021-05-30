@@ -11147,3 +11147,7 @@ table tfoot {
 @media (max-width: 1100px) {
   .modal-dialog.modal-lg.modal-dialog-centered {
     margin-left: auto; } }
+
+body .morning-mail-sent {
+  background-color: #fde7be;
+}

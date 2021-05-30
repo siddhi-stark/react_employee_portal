@@ -104,8 +104,12 @@ function Login(props) {
       CustomFunctions.setLocalStorage('name', data.data.full_name);
       setDisableButton(false);
       dispatch({ type: 'LOGIN', value: true });
-      setTimeout(async () => {
-        window.location.href = '/';
+      const timer = setInterval(async () => {
+        const token = CustomFunctions.getLocalStorage('access_token');
+        if(token){
+          clearInterval(timer);
+          window.location.href = '/';
+        }
       }, 1000);
     } else {
       setLoader(false);

@@ -5,7 +5,7 @@ import Routes from './routes';
 import Layout from './components/Layout/layout.component';
 import customFunctions from './helper/customFunctions';
 
-const token = customFunctions.getLocalStorage('access_token');
+let token = customFunctions.getLocalStorage('access_token');
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(token ? true : false); // eslint-disable-line
@@ -13,6 +13,7 @@ function App() {
   const history = useHistory();
   const dispatch = useDispatch();
   const checkLoggedIn = () => {
+    token = customFunctions.getLocalStorage('access_token');
     if (!token) {
       const path = window.location.pathname.split('/');
       const extractedPath = path.length > 1 ? path[1].toString() : '';
