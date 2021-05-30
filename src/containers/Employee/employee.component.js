@@ -33,7 +33,19 @@ const items = [
 const currentdate = new Date();
 const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
 
-const validator = new SimpleReactValidator();
+const validator = new SimpleReactValidator (
+  {
+    validators: {
+      emailValidate: { // name the rule
+        message: 'The :attribute must be a valid Email address.', // give a message that will display when there is an error. :attribute will be replaced by the name you supply in calling it.
+        rule: (val, params, valid) => { // return true if it is succeeds and false it if fails validation. the testRegex method is available to give back a true/false for the regex and given value
+          // check that it is a valid IP address and is not blacklisted
+          return valid.helpers.testRegex(val,/^[\w.+-]+@starkdigital.net$/i) && params.indexOf(val) === -1
+        }
+      }
+    }
+  }
+);
 
 function Employee() {
   // const validator = useRef(new SimpleReactValidator());
@@ -939,7 +951,7 @@ function Employee() {
                   errorMessage={validator.message(
                     'email',
                     email,
-                    'required|regex:^[\w.+-]+@starkdigital.net$' // eslint-disable-line
+                    'required|emailValidate|email' // eslint-disable-line
                   )}
                 />
               </Col>
