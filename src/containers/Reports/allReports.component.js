@@ -200,7 +200,7 @@ function AllReports() {
       // customFunctions.checkIfEmpty(searchKeyword)
     ) {
       // searchFormSubmit= false;
-      filterSearchErr = 'Please enter search keyword';
+      filterSearchErr = 'Please enter dates';
       setFilterErr(filterSearchErr);
       isValid = false;
     }
