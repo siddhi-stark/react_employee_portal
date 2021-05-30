@@ -355,9 +355,9 @@ function ToDoList(props) {
     );
     setDisableButton(false);
     if (data && data.success) {
+      if(props.onMorningSendScrum) props.onMorningSendScrum()
       if (morningMail && !signOutMail) {
         setSelectedId([]);
-        if(props.onMorningSendScrum) props.onMorningSendScrum()
         // customFunctions.removeLocalStorage('TaskId')
       }
 

@@ -63,15 +63,11 @@ function Dashboard() {
       setMorningMail(data.data.morning_mail)
       if (data.data.clock_in_time && data.data.clocked_in) {
         customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
-        const stime = data.data.clock_in_time.split(' ');
-        const newtime = stime[0];
-        setSignInTime(newtime);
-        if (data.data.clock_in_time) {
-          setShowClockIn(true);
-          setSignInTime(data.data.sign_in_time);
-          SharedService.clockIn.next(true);
-          // getClockInTime(false);
-        }
+        customFunctions.setLocalStorage('userclockedin',true);
+        setSignInTime(data.data.clock_in_time);
+        setShowClockIn(true);
+        SharedService.clockIn.next(true);
+        // getClockInTime(false);
         setShowLoader(false);
       } else {
         // setShowClockIn(false);
@@ -216,7 +212,7 @@ function Dashboard() {
                     </blockquote>
                   </div>
                 </Col>
-                <Col md={2}>
+                <Col md={3}>
                   <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
 
                     <div className="check-in">
@@ -230,7 +226,7 @@ function Dashboard() {
 
                       {time && (
                         <div className="time-count text-center">
-                          <span>{time.split(' ')[0]}</span>
+                          <span>{time || '00:00'}</span>
                         </div>
                       )}
 
@@ -250,7 +246,7 @@ function Dashboard() {
                   </UserRestrictions>
 
                 </Col>
-                <Col md={5}>
+                <Col md={4}>
                   <div className="welcome-img text-right">
                     <img src="/images/welcome-img.svg" alt="img" />
                   </div>
