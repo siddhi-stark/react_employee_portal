@@ -92,7 +92,7 @@ function Dashboard() {
           date: customFunctions.getFormattedDate(timesheet.created_at),
           clockin: timesheet.sign_in,
           clockout: timesheet.sign_out,
-          total: timesheet.estimation,
+          total: `${timesheet.estimation} Hrs`,
         };
         row.push(setRowData);
         return timesheet;
@@ -307,7 +307,7 @@ function Dashboard() {
                           getWeeklyStatus('this_week');
                         }}
                       >
-                        <img src="/images/previous.svg" alt="week" /> Back
+                        <img src="/images/previous.svg" alt="week" /> This Week
                       </a>
                     )}
                   </div>

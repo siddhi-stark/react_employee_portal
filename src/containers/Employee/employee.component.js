@@ -550,7 +550,11 @@ function Employee() {
         .then(okAction => {
           if (okAction) {
             setModalShow(true);
-            setMobile('');
+            if(errorData[1]==='user with this email address already exists.'){
+              setEmail('');
+            }else{
+              setMobile('');
+            }
           }
         });
       setDisableButton(false);
