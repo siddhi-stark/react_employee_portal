@@ -244,7 +244,8 @@ export default function SimpleTable(props) {
                         name={`chk${row.id}`}
                         value={row.id}
                         type="checkbox"
-                        checked={selectedRowItems.includes(Number(row.id))}
+                        // checked={selectedRowIndexes.includes(row.id)}
+                        checked={selectedRowItems.includes(Number(row.id))|| selectedRowIndexes.includes(row.id)}
                         onChange={(e) => {
                           onSelectRow(e.target.checked, rowIndex);
                         }}
