@@ -23,7 +23,7 @@ import SharedService from '../../services/SharedService/sharedServices';
 
 const validator = new SimpleReactValidator();
 
-function ToDoList() {
+function ToDoList(props) {
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
   // const [morningFlag, setMorningFlag] = useState('');
@@ -334,7 +334,6 @@ function ToDoList() {
     setLoader(true);
 
     breakData.map((e) => {
-      console.log('assf',e);
       if (e.id)
         selectedId.push(Number(e.id));
 
@@ -358,6 +357,7 @@ function ToDoList() {
     if (data && data.success) {
       if (morningMail && !signOutMail) {
         setSelectedId([]);
+        if(props.onMorningSendScrum) props.onMorningSendScrum()
         // customFunctions.removeLocalStorage('TaskId')
       }
 
@@ -676,7 +676,7 @@ function ToDoList() {
                         setShowScrumPopup(true);
                       }}
                     >
-                      Send Scrum
+                      Clock In & Send Scrum
                     </Button>
                   )}
                   {!signOutMail && morningMail && (

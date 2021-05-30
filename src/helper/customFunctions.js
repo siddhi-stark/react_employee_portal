@@ -74,6 +74,7 @@ class CustomFunctions extends Component {
     this.removeLocalStorage('time');
     this.removeLocalStorage('group');
     this.removeLocalStorage('TaskId');
+    this.removeLocalStorage('userclockedin');
   };
 
   cleanStorage = () => {

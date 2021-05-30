@@ -14,7 +14,7 @@ import Loader from '../../../components/Loader/index';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
-  const [showClockButton, setShowClockButton] = useState(true);
+  const [showClockIn, setShowClockIn] = useState(false);
   const [title, setTitle] = useState('');
   const [completed, setCompleted] = useState('');
   const [pending, setPending] = useState('');
@@ -25,6 +25,8 @@ function Dashboard() {
   const [time, setTime] = useState('');
   const [show, setShow] = useState(false);
   const [userRole, setUserRole] = useState('');
+  const [morningMail, setMorningMail] = useState(false);
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -57,18 +59,22 @@ function Dashboard() {
   const getDailyActivity = async () => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
-    if (!customFunctions.checkIfEmpty(data, 'O')) {
+    if (!customFunctions.checkIfEmpty(data, 'O') && data.success) {
+      setMorningMail(data.data.morning_mail)
       if (data.data.clock_in_time && data.data.clocked_in) {
         customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
         const stime = data.data.clock_in_time.split(' ');
         const newtime = stime[0];
         setSignInTime(newtime);
         if (data.data.clock_in_time) {
-          setShowClockButton(false);
-          getClockInTime(false);
+          setShowClockIn(true);
+          setSignInTime(data.data.sign_in_time);
+          SharedService.clockIn.next(true);
+          // getClockInTime(false);
         }
+        setShowLoader(false);
       } else {
-        setShowClockButton(true);
+        // setShowClockIn(false);
         setShowLoader(false);
       }
     }
@@ -99,24 +105,24 @@ function Dashboard() {
     }
   };
 
-  const getClockInTime = async (loadActivity = true) => {
-    // const event = new Event('TimeUpdate', { isUpdated: true });
+  // const getClockInTime = async (loadActivity = true) => {
+  //   // const event = new Event('TimeUpdate', { isUpdated: true });
 
-    const endPoint = `${Api.clockInUrl}`;
-    setShowLoader(true);
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      // setShowLoader(false);
-      setSignInTime(data.data.sign_in_time);
-      // document.dispatchEvent(event);
-    }
-    if (loadActivity) {
-      await getDailyActivity();
-    }
+  //   const endPoint = `${Api.clockInUrl}`;
+  //   setShowLoader(true);
+  //   const { data } = await AuthApi.getDataFromServer(endPoint);
+  //   if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+  //     // setShowLoader(false);
+  //     setSignInTime(data.data.sign_in_time);
+  //     // document.dispatchEvent(event);
+  //   }
+  //   if (loadActivity) {
+  //     await getDailyActivity();
+  //   }
 
-    SharedService.clockIn.next(true);
-    setShowLoader(false);
-  };
+  //   SharedService.clockIn.next(true);
+  //   setShowLoader(false);
+  // };
 
   const getWeeklyStatus = async (key) => {
     const endPoint = `${Api.weeklyStatusUrl}?mode=${key}`;
@@ -147,6 +153,7 @@ function Dashboard() {
   };
 
   useEffect(() => {
+
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
@@ -165,8 +172,14 @@ function Dashboard() {
     setTitle('Dashboard');
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
+
+    const userclockedin = customFunctions.getLocalStorage('userclockedin');
+    console.log('userclockedin', userclockedin)
+    if (userclockedin)
+      setShowClockIn(userclockedin);
+
     // const empName = customFunctions.getLocalStorage('name');
-   
+
   }, []);
 
   return (
@@ -207,11 +220,13 @@ function Dashboard() {
                   <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
 
                     <div className="check-in">
-                      {signInTime && (
-                        <div className="time-count text-center">
-                          <span>{signInTime}</span>
-                        </div>
-                      )}
+                      {
+                        showClockIn && (
+                          <div className="time-count text-center">
+                            <span>{signInTime || '00:00'}</span>
+                          </div>
+                        )
+                      }
 
                       {time && (
                         <div className="time-count text-center">
@@ -219,11 +234,14 @@ function Dashboard() {
                         </div>
                       )}
 
-                      {showClockButton && (
+                      {!showClockIn && (
                         <Button
                           type="button"
                           className="btn btn-primary"
-                          onClick={() => getClockInTime()}
+                          onClick={() => {
+                            setShowClockIn(true);
+                            customFunctions.setLocalStorage('userclockedin', true)
+                          }}
                         >
                           Clock In
                         </Button>
@@ -239,7 +257,17 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            {!showClockButton && <ToDoList />}
+            {
+              showClockIn && !morningMail && (
+                <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
+                  <div className="img-text">
+                    <img src="images/fail.svg" alt="Success" /> Please select below task and send morning scrum.
+                </div>
+                </div>
+              )
+            }
+
+            {showClockIn && <ToDoList onMorningSendScrum={getDailyActivity} />}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
