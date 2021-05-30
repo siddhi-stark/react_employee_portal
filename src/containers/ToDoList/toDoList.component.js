@@ -188,22 +188,13 @@ function ToDoList() {
         itemsPerPage: data.paginator.limit,
         totalItems: data.paginator.total_count,
       });
-<<<<<<< HEAD
- 
-=======
 
 
->>>>>>> bf0ed0b1ee35f1ab1e138f5a8e16405fbd0f65b3
       const row = [];
 
       data.data.map((task) => {
         const morningSelected = task.morning_selected;
-<<<<<<< HEAD
-        // setMorningFlag(morningSelected);
-        if(morningSelected) {
-=======
         if (morningSelected && !selectedId.includes(Number(task.id))) {
->>>>>>> bf0ed0b1ee35f1ab1e138f5a8e16405fbd0f65b3
           selectedId.push(task.id);
         }
 
