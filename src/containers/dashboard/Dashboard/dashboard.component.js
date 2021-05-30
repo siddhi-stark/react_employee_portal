@@ -263,7 +263,7 @@ function Dashboard() {
               )
             }
 
-            {showClockIn && <ToDoList onMorningSendScrum={getDailyActivity} />}
+            {showClockIn && <ToDoList onMorningSendScrum={getDailyActivity} onClockoutReport={getTimeSheetList} />}
           </Col>
           <Col xl={4} id="right-sidebar">
             <Card className="flex-fill w-100 weekly-status-box">
