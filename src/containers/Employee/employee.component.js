@@ -37,7 +37,7 @@ const validator = new SimpleReactValidator (
   {
     validators: {
       emailValidate: { // name the rule
-        message: 'The :attribute must be a valid Email address.', // give a message that will display when there is an error. :attribute will be replaced by the name you supply in calling it.
+        message: 'The :attribute domain name should be starkdigital.net.', // give a message that will display when there is an error. :attribute will be replaced by the name you supply in calling it.
         rule: (val, params, valid) => { // return true if it is succeeds and false it if fails validation. the testRegex method is available to give back a true/false for the regex and given value
           // check that it is a valid IP address and is not blacklisted
           return valid.helpers.testRegex(val,/^[\w.+-]+@starkdigital.net$/i) && params.indexOf(val) === -1
@@ -442,6 +442,7 @@ function Employee() {
   const onCancel = () => {
     // setSelectedDesignationOption();
     validator.hideMessages();
+    setEmployeeTwId('');
     setAddButton(false);
     setFullName('');
     setEmpCode('');
@@ -521,6 +522,7 @@ function Employee() {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
+          setEmployeeTwId('');
           setEmployeeId();
           setSelectedDesignationOption();
           setSelectedRole();
@@ -891,6 +893,8 @@ function Employee() {
             {/* [a-z0-9!#$%&'*+/=?^_`{|}~-]+(?
           :\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+net */}
             <Row>
+            { !employeeId && (
+
               <Col sm={6}>
                 <DropdownInput
                   label="TW Employee"
@@ -905,6 +909,7 @@ function Employee() {
                   disabled={employeeId && 'disabled'}
                 />
               </Col>
+            ) }
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => {
@@ -987,6 +992,7 @@ function Employee() {
                   type="text"
                   name="codeTitle"
                   maxlength="6"
+                  disabled={ employeeId ? 'disabled' : '' }
                   value={empCode}
                   placeholder="Enter Employee Code"
                   errorMessage={validator.message(
