@@ -294,11 +294,13 @@ function Profile() {
 
                 <UserRestrictions permittedUsers={[2, 3, 4]} roleId={role}>
                   <h5 className="mt-5">Job Information</h5>
+                  {console.log(date)}
                   <Row>
                     <Col sm={3}>
                       <TextInput
                         label="Joining Date"
                         containerClass="form-group"
+                        placeholder="DD/MM/YYYY"
                         type="date"
                         name="date"
                         value={date}
