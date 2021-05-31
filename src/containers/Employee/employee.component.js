@@ -511,7 +511,6 @@ function Employee() {
     const endPoint = employeeId
       ? `${Api.employeeUrl}${employeeId}/`
       : Api.employeeUrl;
-      console.log('/outside ifconsition');
     const { data, message } = await callback(endPoint, payload);
     if (data) {
       validator.hideMessages();
@@ -519,10 +518,8 @@ function Employee() {
       setSelectedDesignationOption();
       // setSelectedRole();
       setModalShow(false);
-      console.log('/inside ifconsition');
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
-          console.log('inside result');
           setEmpCode('');
           setDisableButton(false);
           setEmployeeTwId('');
