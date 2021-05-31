@@ -492,7 +492,7 @@ function ToDoList(props) {
     if (disableButton) return;
 
     setDisableButton(true);
-    if (selectedId.length >= 0) {
+    if (selectedId.length > 0) {
       onSendScrum();
     } else {
       setDisableButton(false);
