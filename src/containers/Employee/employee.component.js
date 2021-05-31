@@ -973,11 +973,11 @@ function Employee() {
                     asterisk="*"
                     containerClass="form-group"
                     type="password"
-                    minlength="6"
+                    // minlength="6"
                     name="passwordTitle"
                     value={password}
                     placeholder="Enter Password"
-                    errorMessage={!employeeId && validator.message('password', password, 'required')}
+                    errorMessage={!employeeId && validator.message('password', password, 'required|min:6')}
                   />
                 </Col>
               )}
@@ -1028,7 +1028,7 @@ function Employee() {
                   errorMessage={validator.message(
                     'mobile',
                     mobile,
-                    'required|phone'
+                    'required|phone|min:10'
                   )}
                 />
               </Col>
