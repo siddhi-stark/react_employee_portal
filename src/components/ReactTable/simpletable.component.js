@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
 import Pagination from '../Pagination/pagination.component';
@@ -54,6 +54,20 @@ export default function SimpleTable(props) {
     ...selectedRowItems,
   ]);
   const allColumnIds = columns.map((column) => column.id);
+
+  
+  useEffect(() => {
+    setSelectedRows(  rows.filter((row) => {
+      
+      return selectedRowItems.includes(Number(row.id));
+    })
+  )
+  }, [rows])
+
+  useEffect(() => {
+    setSelectedRowIndexes([...selectedRowItems])
+  }, [selectedRowItems])
+  console.log('selectedindex', selectedRowIndexes, selectedRowItems);
 
   const onSelectHead = (isChecked) => {
     const selectedIndexes = [];
@@ -245,7 +259,7 @@ export default function SimpleTable(props) {
                         value={row.id}
                         type="checkbox"
                         // checked={selectedRowIndexes.includes(row.id)}
-                        checked={selectedRowItems.includes(Number(row.id))|| selectedRowIndexes.includes(row.id)}
+                        checked={selectedRowItems.includes(Number(row.id)) || selectedRowIndexes.includes(row.id)}
                         onChange={(e) => {
                           onSelectRow(e.target.checked, rowIndex);
                         }}

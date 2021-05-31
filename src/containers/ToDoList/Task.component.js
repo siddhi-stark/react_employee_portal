@@ -24,8 +24,11 @@ function Task(props) {
   // const [startHours, setStartHours] = useState('');
   // const [startMinutes, setStartMinutes] = useState('');
   const [disableButton, setDisableButton] = useState(false);
-
+  const [clockInTime,setClockInTime] = useState('');
+  const [timeHour, setTimeHour] = useState('');
+  const [timeMinutes, setTimeMinutes] = useState('');
   const [taskList, setTaskList] = useState([]);
+  const [clockInDate, setClockInDate] = useState('');
 
   const defaultTask = {
 
@@ -85,6 +88,21 @@ function Task(props) {
       defaultTask
     ]);
 
+    const clockIn = customFunctions.getLocalStorage('clockinTime');
+    const date = customFunctions.getLocalStorage('clockInDate');
+
+    setClockInDate(date);
+    const test1 = clockIn.split(':');
+    // console.log('testtt', test1);
+    const hr = test1[0];
+    setTimeHour(Number(hr));
+    // console.log('hr', hr);
+    const min = test1[1].split(' ');
+    const minNEw = min[0];
+    setTimeMinutes(Number(minNEw));
+    // console.log('min', minNEw);
+    setClockInTime(clockIn);
+    // console.log('time', clockInTime);
     const taskId = customFunctions.getLocalStorage('taskid');
     if (taskId)
       setId(taskId);
@@ -200,6 +218,11 @@ function Task(props) {
 
   return (
     <>
+    { console.log('clockInTime',clockInTime) }
+    { console.log('Hours',timeHour) }
+    { console.log('clockInTime',clockInDate) }
+    { console.log('Minutes',timeMinutes) }
+    { console.log('array',taskList) }
       <ModalInput
         size="lg"
         centered
@@ -280,19 +303,39 @@ function Task(props) {
                   </Col>
                 </Row>
                 <Row>
+                {console.log('condition',setHours(
+                        setMinutes(new Date(), parseInt(timeMinutes, 10) + 1),
+                        parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
+                      ))}
+                      {
+                        console.log(setMinutes(new Date(), parseInt(timeMinutes, 10) + 1),
+                        parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour)
+                      }
                   <Col sm={2}>
                     <Datepicker
                       className="form-control"
                       label="Start Time"
                       asterisk="*"
+                      format="HH:mm"
                       id={`taskStartTime${i + 1}`}
                       selected={data.taskStartTime}
+                      minDate={clockInDate}
+                      // // minTime={setMinutes((clockInDate), 0)}
+                      // minTime={setHours(
+                      //   setMinutes(new Date(), parseInt(data.startMinutes, 10) + 1),
+                      //   parseInt(data.startMinutes, 10) > 58 ? parseInt(data.startHours, 10) + 1 : data.startHours
+                      // )}
+                      minTime={setHours(
+                        setMinutes(new Date(), parseInt(timeMinutes, 10) + 1),
+                        parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
+                      )}
+                      maxTime={setHours(setMinutes(clockInDate, 0), 0)}
                       onChange={(e) => {
                         taskList[i].taskStartTime = e;
                         taskList[i].taskEndTime = '';
                         taskList[i].taskHrs = '';
                         taskList[i].taskMins = '';
-                        taskList[i].startHours = e.getHours();
+                        taskList[i].startHours =  e.getHours();
                         taskList[i].startMinutes = e.getMinutes();
                         setTaskList([...taskList]);
                       }}
@@ -316,6 +359,12 @@ function Task(props) {
                       )}
                     />
                   </Col>
+                  {
+                    console.log('--0-8790--',
+                      setMinutes(new Date(), parseInt(data.startMinutes, 10) + 1),
+                      parseInt(data.startMinutes, 10) > 58 ? parseInt(data.startHours, 10) + 1 : data.startHours
+            )
+                  }
                   <Col sm={2}>
                     <Datepicker
                       className="form-control"

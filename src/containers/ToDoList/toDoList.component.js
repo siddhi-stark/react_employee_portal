@@ -207,8 +207,13 @@ function ToDoList(props) {
                   task.is_overdue ? 'badge badge-danger' : 'badge badge-warning'
                 }
               >
+              {/* {task.is_overdue ? '5' : ''} */}
                 {task.is_overdue ? 'Overdue' : 'Today'}
               </div>
+              {task.is_overdue ? 
+              <div>{task.days} Day</div> :
+              ''
+              }
             </>
           ),
           id: task.id,
@@ -658,6 +663,7 @@ function ToDoList(props) {
                       // });
                       // setSelectedRowIndex(rowIndex);
                       setSelectedId([...rowIndex]);
+                      console.log('rowindex in todo', rowIndex);
                       // customFunctions.setLocalStorage('TaskId', JSON.stringify([...rowIndex]));
 
                     }}
