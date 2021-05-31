@@ -96,7 +96,7 @@ function AllReports() {
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
-          total: report.estimation,
+          total: `${report.estimation} Hrs`,
           report: (
             <a href={`/daily-report/${dt}/${report.user_id}`}>
               <span className="text-info">View Report</span>

@@ -75,7 +75,7 @@ function Task(props) {
       taskList[0].taskName = data.data.content;
       taskList[0].description = data.data.description;
       taskList[0].progressValue = Number(data.data.progress);
-      setTaskList([...taskList])
+      setTaskList([...taskList]);
     }
   };
 
@@ -83,14 +83,14 @@ function Task(props) {
     setTaskModalShow(props.show);
     setTaskList([
       defaultTask
-    ])
+    ]);
 
     const taskId = customFunctions.getLocalStorage('taskid');
     if (taskId)
       setId(taskId);
 
     return (() => {
-      setId('')
+      setId('');
     });
 
   }, []);
@@ -118,7 +118,7 @@ function Task(props) {
       };
       selectedTask.push(obj);
       return obj;
-    })
+    });
 
     let postData = {};
 
@@ -188,7 +188,7 @@ function Task(props) {
 
   const addMoreTask = () => {
     setTaskList([...taskList, defaultTask]);
-  }
+  };
 
   const onDeleteTask = (idx, e) => {
     e.preventDefault();
@@ -234,7 +234,7 @@ function Task(props) {
                     <TextInput
                       onInputChange={(e) => {
                         taskList[i].taskName = e.target.value;
-                        setTaskList([...taskList])
+                        setTaskList([...taskList]);
                       }}
 
                       label="Add Task Name"
@@ -258,7 +258,7 @@ function Task(props) {
                       // onInputChange={(e) => setDescription(e.target.value)}
                       onInputChange={(e) => {
                         taskList[i].description = e.target.value;
-                        setTaskList([...taskList])
+                        setTaskList([...taskList]);
                       }}
 
                       label="Description"
@@ -294,7 +294,7 @@ function Task(props) {
                         taskList[i].taskMins = '';
                         taskList[i].startHours = e.getHours();
                         taskList[i].startMinutes = e.getMinutes();
-                        setTaskList([...taskList])
+                        setTaskList([...taskList]);
                       }}
                       // onChange={(e) => {
                       //   setTaskStartTime(e);
@@ -385,7 +385,7 @@ function Task(props) {
                               value={Number(data.progressValue)}
                               onChange={(e) => {
                                 taskList[i].progressValue = e.target.value;
-                                setTaskList([...taskList])
+                                setTaskList([...taskList]);
                               }}
                             />
                           </div>

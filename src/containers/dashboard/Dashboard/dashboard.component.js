@@ -60,7 +60,7 @@ function Dashboard() {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (!customFunctions.checkIfEmpty(data, 'O') && data.success) {
-      setMorningMail(data.data.morning_mail)
+      setMorningMail(data.data.morning_mail);
       if (data.data.clock_in_time && data.data.clocked_in) {
         customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
         customFunctions.setLocalStorage('userclockedin',true);
@@ -170,12 +170,8 @@ function Dashboard() {
     setUserRole(Number(uRole));
 
     const userclockedin = customFunctions.getLocalStorage('userclockedin');
-    console.log('userclockedin', userclockedin)
     if (userclockedin)
       setShowClockIn(userclockedin);
-
-    // const empName = customFunctions.getLocalStorage('name');
-
   }, []);
 
   return (
@@ -236,7 +232,7 @@ function Dashboard() {
                           className="btn btn-primary"
                           onClick={() => {
                             setShowClockIn(true);
-                            customFunctions.setLocalStorage('userclockedin', true)
+                            customFunctions.setLocalStorage('userclockedin', true);
                           }}
                         >
                           Clock In

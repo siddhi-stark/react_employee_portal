@@ -40,7 +40,7 @@ const validator = new SimpleReactValidator (
         message: 'The :attribute domain name should be starkdigital.net.', // give a message that will display when there is an error. :attribute will be replaced by the name you supply in calling it.
         rule: (val, params, valid) => { // return true if it is succeeds and false it if fails validation. the testRegex method is available to give back a true/false for the regex and given value
           // check that it is a valid IP address and is not blacklisted
-          return valid.helpers.testRegex(val,/^[\w.+-]+@starkdigital.net$/i) && params.indexOf(val) === -1
+          return valid.helpers.testRegex(val,/^[\w.+-]+@starkdigital.net$/i) && params.indexOf(val) === -1;
         }
       }
     }
@@ -194,15 +194,15 @@ function Employee() {
     };
 
     const managerList = [];
-    if (selectedManager.length > 0) {
-      selectedManager.map((mngr) => {
+    if (selectedManager &&  selectedManager.length > 0) {
+      selectedManager.map((mngr) => { 
         managerList.push(mngr.id);
         return mngr;
       });
     }
 
-    if(selectedEmployee.length > 0) {
-        selectedEmployee.map((emp) => { // eslint-disable-line
+    if(selectedEmployee && selectedEmployee.length > 0) {
+      selectedEmployee &&  selectedEmployee.map((emp) => { // eslint-disable-line
           empIds.push(emp.id);
           return emp;
         });
@@ -484,7 +484,7 @@ function Employee() {
       mobile,
       role: selectedRole.id,
       password,
-      emp_code: empCode,
+      emp_code: Number(empCode),
       team_leads: teamIdList,
       managers: managerList,
       dob: date ? customFunctions.getDate(date) : null,
@@ -521,6 +521,7 @@ function Employee() {
       setModalShow(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
+          setEmpCode('');
           setDisableButton(false);
           setEmployeeTwId('');
           setEmployeeId();
@@ -549,14 +550,21 @@ function Employee() {
       })
         .then(okAction => {
           if (okAction) {
-            setModalShow(true);
-            if(errorData[1]==='user with this email address already exists.'){
-              setEmail('');
-            }else{
+            setModalShow(true); 
+            const str1 = String(' user with this mobiles already exists.');
+            const str3 = String(' user with this email address already exists.');
+            const str4 = String(' This field must be unique.');
+            const str2 = String(`${errorData[1]}`);
+            if(str1 === str2){
               setMobile('');
+            }else if(str3 === str2) {
+              setEmail('');
+            }
+            else if(str4 === str2){
+              setEmpCode('');
             }
           }
-        });
+        }); 
       setDisableButton(false);
       // setModalShow(true);
       // setEmployeeId();
@@ -941,13 +949,6 @@ function Employee() {
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => setEmail(e.target.value)}
-                  // onInputChange={(e) => {
-                  //   const re = /^[\w.+-]+@starkdigital.net$/;
-                  //   if (!e.target.value || re.test(e.target.value)) {
-                  //     console.log('target',e.target.value);
-                  //     setEmail(e.target.value);
-                  //   }
-                  // }}
                   label="Email"
                   autocomplete="false"
                   asterisk="*"

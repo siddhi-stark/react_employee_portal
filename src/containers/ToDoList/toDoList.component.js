@@ -189,7 +189,6 @@ function ToDoList(props) {
         totalItems: data.paginator.total_count,
       });
 
-
       const row = [];
 
       data.data.map((task) => {
@@ -253,7 +252,7 @@ function ToDoList(props) {
         const spent1 = spentNew.length > 1 ? spentNew[0].trim() : 0;
         const spentNewMins = spentNew.length > 1 ? spentNew[1].split('Mins') : spentNew[0].split('Mins');
         const spent2 = spentNewMins.length > 0 ? spentNewMins[0].trim() : 0;
-        const filterBreak = BreakList.filter((breakObj) => breakObj.label.toLowerCase() === task.content.toLowerCase())
+        const filterBreak = BreakList.filter((breakObj) => breakObj.label.toLowerCase() === task.content.toLowerCase());
         selectedBreak.push({
           id: task.id,
           selectedBreakOption: filterBreak.length ? filterBreak[0] : '',
@@ -292,7 +291,7 @@ function ToDoList(props) {
       return selectedBreak;
     });
     setBreakData(selectedBreak);
-  }
+  };
 
   useEffect(() => {
     async function getData() {
@@ -314,7 +313,7 @@ function ToDoList(props) {
     if (showBreak)
       getBreakList();
 
-  }, [showBreak])
+  }, [showBreak]);
 
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
@@ -355,8 +354,8 @@ function ToDoList(props) {
     );
     setDisableButton(false);
     if (data && data.success) {
-      if(props.onMorningSendScrum) props.onMorningSendScrum()
-      if(props.onClockoutReport) props.onClockoutReport()
+      if(props.onMorningSendScrum) props.onMorningSendScrum();
+      if(props.onClockoutReport) props.onClockoutReport();
       if (morningMail && !signOutMail) {
         setSelectedId([]);
         // customFunctions.removeLocalStorage('TaskId')

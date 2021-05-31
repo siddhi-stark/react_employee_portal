@@ -135,7 +135,7 @@ function AllReports() {
           date: customFunctions.getFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
-          total: report.estimation,
+          total: `${report.estimation} Hrs`,
           id: report.user_id,
           createdDate: report.created_at,
         };
