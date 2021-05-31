@@ -553,7 +553,7 @@ function Employee() {
             setModalShow(true); 
             const str1 = String(' user with this mobiles already exists.');
             const str3 = String(' user with this email address already exists.');
-            const str4 = String(' This field must be unique.');
+            const str4 = String(' user with this emp code already exists.');
             const str2 = String(`${errorData[1]}`);
             if(str1 === str2){
               setMobile('');
