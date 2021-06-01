@@ -129,17 +129,17 @@ function Employee() {
     {
       id: 'name',
       label: 'Full Name',
-      roleAccess: [1, 3],
+      roleAccess: [1,2, 3],
     },
     {
       id: 'email',
       label: 'Email',
-      roleAccess: [1, 3],
+      roleAccess: [1,2, 3],
     },
     {
       id: 'mobile',
       label: 'Mobile',
-      roleAccess: [1, 3],
+      roleAccess: [1,2, 3],
     },
     {
       id: 'action',
@@ -509,6 +509,7 @@ function Employee() {
       setModalShow(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
+          getEmployee();
           setEmpCode('');
           setDisableButton(false);
           setEmployeeTwId('');
