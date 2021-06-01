@@ -59,7 +59,6 @@ function Sidebar() {
                           ? false
                           : menuItem.path
                       }
-                      // to={menuItem.path}
                       onClick={() => {
                         if (menuItem.title === 'Logout') {
                           customFunctions.clearLocalStorage();
@@ -77,29 +76,7 @@ function Sidebar() {
                       />
                       <span className="sidemenu-label">{menuItem.title}</span>
                     </Link>
-
-                    {/* {hasSubMenu && (
-                      <ul className="nav-sub list-unstyled">
-                        {menuItem.submenu.map((submenuItem) => {
-                          return (
-                            <li onClick={() => { onSubActiveClass(); }} // eslint-disable-line
-                              className={`nav-sub-item ${
-                                submenuItem.path === window.location.pathname
-                                  ? 'active'
-                                  : ''
-                              }`}
-                            >
-                              <Link
-                                className="nav-sub-link"
-                                to={submenuItem.path}
-                              >
-                                {submenuItem.title}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}   */}
+                    
                     {hasSubMenu && (
                       <ul className="nav-sub list-unstyled">
                         {menuItem.submenu.map((submenuItem) => {

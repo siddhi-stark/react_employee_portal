@@ -4,7 +4,7 @@ import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import { TextInput, ModalInput, Helmet } from '../../components/FormInputs';
+import { TextInput, ModalInput, Helmet, Datepicker } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
@@ -86,7 +86,8 @@ function Profile() {
         return assgnmgmr.report_head__full_name;
       });
       setSelectedManager(managerList.length > 0 ? managerList.join(', ') : '');
-      setDate(customFunctions.getDate(data.data.joined_date));
+      // setDate(data.data.dob ? new Date(data.data.dob) : null);
+      setDate(data.data.joined_date ? new Date(data.data.joined_date) : '');
     }
   };
 
@@ -297,7 +298,16 @@ function Profile() {
                   {console.log(date)}
                   <Row>
                     <Col sm={3}>
-                      <TextInput
+                    <Datepicker
+                  label="Joining Date"
+                  disabled
+                  className="form-control"
+                  selected={date}
+                  placeholder="dd/mm/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                 
+                />
+                      {/* <TextInput
                         label="Joining Date"
                         containerClass="form-group"
                         placeholder="DD/MM/YYYY"
@@ -305,7 +315,7 @@ function Profile() {
                         name="date"
                         value={date}
                         disabled
-                      />
+                      /> */}
                     </Col>
                     <Col sm={3}>
                       <TextInput

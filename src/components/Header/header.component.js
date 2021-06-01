@@ -123,7 +123,6 @@ function Header() {
 
                     <img
                       src={imageProfile}
-                      // src={imageProfile} 
                       alt="Profile" />
                   ) : <img
                     src={Api.s3UrlnoProfile}
