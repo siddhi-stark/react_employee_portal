@@ -35,13 +35,13 @@ const menu = [
     roleaccess: [1],
   },
 
-  {
-    title: 'Reports',
-    path: '/report',
-    icon: 'report.svg',
-    submenu: [],
-    roleaccess: [2],
-  },
+  // {
+  //   title: 'Reports',
+  //   path: '/report',
+  //   icon: 'report.svg',
+  //   submenu: [],
+  //   roleaccess: [2],
+  // },
 
   {
     title: 'Reports',
@@ -60,16 +60,16 @@ const menu = [
         title: 'My Report',
         path: '/report',
         icon: 'report.svg',
-        roleaccess: [3],
+        roleaccess: [2,3],
       },
       {
         title: 'Team Report',
         path: '/team-report',
         icon: 'report.svg',
-        roleaccess: [3],
+        roleaccess: [2,3],
       },
     ],
-    roleaccess: [3],
+    roleaccess: [2,3],
   },
   {
     title: 'Logout',
