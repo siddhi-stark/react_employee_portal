@@ -56,6 +56,11 @@ function ToDoList(props) {
   const [disableButton, setDisableButton] = useState(false);
   // const [startHours, setStartHours] = useState('');
   // const [startMinutes, setStartMinutes] = useState('');
+  const [clockInDate, setClockInDate] = useState('');
+  // const [clockInTime, setClockInTime] = useState('');
+  const [timeHour, setTimeHour] = useState('');
+  const [timeMinutes, setTimeMinutes] = useState('');
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -118,22 +123,22 @@ function ToDoList(props) {
                 <Image src="images/edit-button.svg" />
               </a>
             ) : (
-              <a
-                href="/"
-                className=""
-                onClick={(e) => {
-                  setModalShow(true);
-                  setEditShow(true);
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setTaskId(id);
-                  setCntClearFilter(cntClearFilter + 1);
-                  customFunctions.setLocalStorage('taskid', id);
-                }}
-              >
-                <Image src="images/edit-button.svg" />
-              </a>
-            )}
+                <a
+                  href="/"
+                  className=""
+                  onClick={(e) => {
+                    setModalShow(true);
+                    setEditShow(true);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setTaskId(id);
+                    setCntClearFilter(cntClearFilter + 1);
+                    customFunctions.setLocalStorage('taskid', id);
+                  }}
+                >
+                  <Image src="images/edit-button.svg" />
+                </a>
+              )}
             <a
               href="/"
               className="ml-2"
@@ -207,12 +212,12 @@ function ToDoList(props) {
                   task.is_overdue ? 'badge badge-danger' : 'badge badge-warning'
                 }
               >
-              {/* {task.is_overdue ? '5' : ''} */}
+                {/* {task.is_overdue ? '5' : ''} */}
                 {task.is_overdue ? 'Overdue' : 'Today'}
               </div>
-              {task.is_overdue ? 
-              <div>{task.days} Day</div> :
-              ''
+              {task.is_overdue ?
+                <div>{task.days} Day</div> :
+                ''
               }
             </>
           ),
@@ -302,6 +307,27 @@ function ToDoList(props) {
     async function getData() {
       // const taskIdS = await customFunctions.getLocalStorage('TaskId') ? JSON.parse(customFunctions.getLocalStorage('TaskId')) : [];
       // setSelectedId([...taskIdS]);
+      const clockIn = customFunctions.getLocalStorage('clockinTime');
+      const date = customFunctions.getLocalStorage('clockInDate');
+      if (clockIn) {
+      const dt = new Date(date);
+      console.log('dt',dt);
+
+        setClockInDate(dt);
+
+        // const test1 = clockIn.split(':');
+        
+        const hr = dt.getHours();
+        setTimeHour(hr);
+
+        // const min = test1[1].split(' ');
+        const min = dt.getMinutes();
+        setTimeMinutes(min);
+        // setClockInTime(clockIn);
+
+      }
+
+
       setInitialBreakData();
       getDailyActivity();
       const uRole = customFunctions.getLocalStorage('group');
@@ -359,8 +385,8 @@ function ToDoList(props) {
     );
     setDisableButton(false);
     if (data && data.success) {
-      if(props.onMorningSendScrum) props.onMorningSendScrum();
-      if(props.onClockoutReport) props.onClockoutReport();
+      if (props.onMorningSendScrum) props.onMorningSendScrum();
+      if (props.onClockoutReport) props.onClockoutReport();
       if (morningMail && !signOutMail) {
         setSelectedId([]);
         // customFunctions.removeLocalStorage('TaskId')
@@ -548,6 +574,10 @@ function ToDoList(props) {
 
   return (
     <>
+      {/* {console.log('clockInTime', clockInTime)} */}
+     { console.log('TimeHour',timeHour) }
+     { console.log('TimeMinutes',timeMinutes) }
+      {console.log('clockInDate', clockInDate)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -663,7 +693,7 @@ function ToDoList(props) {
                       // });
                       // setSelectedRowIndex(rowIndex);
                       setSelectedId([...rowIndex]);
-                      console.log('rowindex in todo', rowIndex);
+                      // console.log('rowindex in todo', rowIndex);
                       // customFunctions.setLocalStorage('TaskId', JSON.stringify([...rowIndex]));
 
                     }}
@@ -787,12 +817,34 @@ function ToDoList(props) {
                           )}
                         />
                       </Row>
+                      {console.log('condition', timeHour, setHours(
+                        setMinutes(new Date(clockInDate), parseInt(timeHour, 5)),
+                        parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 5) : timeHour
+                      ))}
                       <Row>
+                        {console.log('data.startTime', clockInDate)}
                         <Col sm={4}>
                           <Datepicker
                             className="form-control"
                             label="Start Time"
                             selected={data.startTime}
+                            minDate={clockInDate}
+                            
+                            // minTime={setHours(
+                            //   setMinutes(new Date(), parseInt(data.stmins, 10) + 1),
+                            //   parseInt(data.stmins, 10) > 58 ? parseInt(data.sthrs, 10) + 1 : data.sthrs
+                            // )}
+
+                            minTime={setHours(
+                              setMinutes(clockInDate, parseInt(timeMinutes, 10) + 1),
+                              parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
+                            )}
+
+                            // minTime={setHours(
+                            //   setMinutes(new Date(), parseInt(43, 10) + 1),
+                            //   parseInt(43, 10) > 58 ? parseInt(13, 10) + 1 : 13
+                            // )}
+                            maxTime={setHours(setMinutes(clockInDate, 59), 23)}
                             onChange={(e) => {
                               breakData[i].startTime = e;
                               breakData[i].sthrs = e.getHours();
@@ -800,6 +852,8 @@ function ToDoList(props) {
                               breakData[i].hrs = 0;
                               breakData[i].mins = 0;
                               breakData[i].endTime = null;
+
+                              console.log('breakdata', breakData[i]);
                               setBreakData([...breakData]);
                             }}
                             showTimeSelect="showTimeSelect"

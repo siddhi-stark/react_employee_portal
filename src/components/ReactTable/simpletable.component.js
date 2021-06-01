@@ -67,7 +67,7 @@ export default function SimpleTable(props) {
   useEffect(() => {
     setSelectedRowIndexes([...selectedRowItems])
   }, [selectedRowItems])
-  console.log('selectedindex', selectedRowIndexes, selectedRowItems);
+  // console.log('selectedindex', selectedRowIndexes, selectedRowItems);
 
   const onSelectHead = (isChecked) => {
     const selectedIndexes = [];

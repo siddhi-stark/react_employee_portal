@@ -329,7 +329,7 @@ function Task(props) {
                         setMinutes(new Date(), parseInt(timeMinutes, 10) + 1),
                         parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
                       )}
-                      maxTime={setHours(setMinutes(clockInDate, 0), 0)}
+                      // maxTime={setHours(setMinutes(clockInDate, 0), 0)}
                       onChange={(e) => {
                         taskList[i].taskStartTime = e;
                         taskList[i].taskEndTime = '';
