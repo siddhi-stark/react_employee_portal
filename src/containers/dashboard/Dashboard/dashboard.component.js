@@ -69,10 +69,8 @@ function Dashboard() {
         customFunctions.setLocalStorage('clockInDate',data.data.clock_in_date);
         setShowClockIn(true);
         SharedService.clockIn.next(true);
-        // getClockInTime(false);
         setShowLoader(false);
       } else {
-        // setShowClockIn(false);
         setShowLoader(false);
       }
     }
@@ -102,25 +100,6 @@ function Dashboard() {
       setRows(row);
     }
   };
-
-  // const getClockInTime = async (loadActivity = true) => {
-  //   // const event = new Event('TimeUpdate', { isUpdated: true });
-
-  //   const endPoint = `${Api.clockInUrl}`;
-  //   setShowLoader(true);
-  //   const { data } = await AuthApi.getDataFromServer(endPoint);
-  //   if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-  //     // setShowLoader(false);
-  //     setSignInTime(data.data.sign_in_time);
-  //     // document.dispatchEvent(event);
-  //   }
-  //   if (loadActivity) {
-  //     await getDailyActivity();
-  //   }
-
-  //   SharedService.clockIn.next(true);
-  //   setShowLoader(false);
-  // };
 
   const getWeeklyStatus = async (key) => {
     const endPoint = `${Api.weeklyStatusUrl}?mode=${key}`;

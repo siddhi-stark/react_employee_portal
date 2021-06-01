@@ -36,10 +36,10 @@ const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
 const validator = new SimpleReactValidator (
   {
     validators: {
-      emailValidate: { // name the rule
-        message: 'The :attribute domain name should be starkdigital.net.', // give a message that will display when there is an error. :attribute will be replaced by the name you supply in calling it.
-        rule: (val, params, valid) => { // return true if it is succeeds and false it if fails validation. the testRegex method is available to give back a true/false for the regex and given value
-          // check that it is a valid IP address and is not blacklisted
+      emailValidate: { 
+        message: 'The :attribute domain name should be starkdigital.net.', 
+        rule: (val, params, valid) => { 
+          
           return valid.helpers.testRegex(val,/^[\w.+-]+@starkdigital.net$/i) && params.indexOf(val) === -1;
         }
       }
@@ -48,7 +48,6 @@ const validator = new SimpleReactValidator (
 );
 
 function Employee() {
-  // const validator = useRef(new SimpleReactValidator());
   const [rows, setRows] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
@@ -190,7 +189,6 @@ function Employee() {
     const params = {
       limit: pagination.itemsPerPage,
       page,
-      // users: selectedEmployee.length > 0 ? selectedEmployee.join(', ') : ''
     };
 
     const managerList = [];
@@ -303,7 +301,6 @@ function Employee() {
       setMobile(data.data.mobile);
       setDate(data.data.dob ? new Date(data.data.dob) : null);
       setEmpCode(data.data.emp_code);
-      // setDate(new Date(data.data.dob) || '');
     }
   };
 
@@ -375,12 +372,6 @@ function Employee() {
       const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
       getEmployee();
-      // getDesignation();
-      // getTwEmployee();
-      // getRole();
-      // getManager();
-      // getTeamLead();
-      // getDepartment();
       setTitle('Employee');
     }
     getData();
@@ -440,7 +431,6 @@ function Employee() {
   };
 
   const onCancel = () => {
-    // setSelectedDesignationOption();
     validator.hideMessages();
     setEmployeeTwId('');
     setAddButton(false);
@@ -516,7 +506,6 @@ function Employee() {
       validator.hideMessages();
       setAddButton(false);
       setSelectedDesignationOption();
-      // setSelectedRole();
       setModalShow(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
@@ -542,42 +531,16 @@ function Employee() {
     } else {
       setModalShow(false);
       const errorData = message.split(':');
-      // swal(errorData[1], '', 'error');
       swal({
         title: errorData[1],
         icon: 'error',
       })
         .then(okAction => {
           if (okAction) {
-            setModalShow(true); 
-            // const str1 = String(' user with this mobiles already exists.');
-            // const str3 = String(' user with this email address already exists.');
-            // const str4 = String(' user with this emp code already exists.');
-            // const str2 = String(`${errorData[1]}`);
-            // if(str1 === str2){
-            //   setMobile('');
-            // }else if(str3 === str2) {
-            //   setEmail('');
-            // }
-            // else if(str4 === str2){
-            //   setEmpCode('');
-            // }
+            setModalShow(true);
           }
         }); 
       setDisableButton(false);
-      // setModalShow(true);
-      // setEmployeeId();
-      // setSelectedDesignationOption();
-      // setSelectedRole();
-      // setFullName();
-      // setSelectedEmployee();
-      // setEmail();
-      // setPassword();
-      // setMobile();
-      // setSelectedManager();
-      // setDate();
-      // setSelectedTeamLead();
-      // setSelectedDepartment();
     }
   };
 
