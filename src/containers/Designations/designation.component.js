@@ -87,7 +87,7 @@ function Designation() {
                 removeDesignation(id);
               }}
             >
-              <Image src="images/delete.png" alt="Delete Designation" />
+              <Image src="/images/delete.png" alt="Delete Designation" />
             </a>
           </>
         );
@@ -347,7 +347,7 @@ function Designation() {
                       {filterErr && (
                         <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
                           <div className="img-text">
-                            <img src="images/fail.svg" alt="Success" />{' '}
+                            <img src="/images/fail.svg" alt="Success" />{' '}
                             {filterErr}
                           </div>
                         </div>

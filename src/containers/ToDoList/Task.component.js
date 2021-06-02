@@ -263,7 +263,7 @@ function Task(props) {
                       label="Add Task Name"
                       asterisk="*"
                       id={`taskName${i + 1}`}
-                      labelIcon="images/add-task.svg"
+                      labelIcon="/images/add-task.svg"
                       containerClass="form-group"
                       type="text"
                       value={data.taskName}
@@ -451,7 +451,7 @@ function Task(props) {
                             }}
                           >
                             <img
-                              src="images/delete.png"
+                              src="/images/delete.png"
                               className="ml-2"
                               alt="delete"
                             />

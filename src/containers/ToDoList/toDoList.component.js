@@ -120,7 +120,7 @@ function ToDoList(props) {
                 className="pl-2"
                 target="_blank"
               >
-                <Image src="images/edit-button.svg" />
+                <Image src="/images/edit-button.svg" />
               </a>
             ) : (
                 <a
@@ -136,7 +136,7 @@ function ToDoList(props) {
                     customFunctions.setLocalStorage('taskid', id);
                   }}
                 >
-                  <Image src="images/edit-button.svg" />
+                  <Image src="/images/edit-button.svg" />
                 </a>
               )}
             <a
@@ -149,7 +149,7 @@ function ToDoList(props) {
                 setTaskId(id);
               }}
             >
-              {twId ? '' : <Image src="images/delete.png" />}
+              {twId ? '' : <Image src="/images/delete.png" />}
             </a>
           </>
         );
@@ -600,7 +600,7 @@ function ToDoList(props) {
       {showErrorBlock && (
         <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
           <div className="img-text">
-            <img src="images/fail.svg" alt="Success" /> Report Sent Failed !!
+            <img src="/images/fail.svg" alt="Success" /> Report Sent Failed !!
           </div>
           <div className="close">
             <button
@@ -619,7 +619,7 @@ function ToDoList(props) {
       {showSuccessBlock && (
         <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
           <div className="img-text">
-            <img src="images/success.svg" alt="Success" /> Report Sent
+            <img src="/images/success.svg" alt="Success" /> Report Sent
             Successfully
           </div>
           <div className="close">
@@ -783,7 +783,7 @@ function ToDoList(props) {
                               e.stopPropagation();
                             }}
                           >
-                            <img src="images/skip.svg" alt="skip" />
+                            <img src="/images/skip.svg" alt="skip" />
                           </a>
                           {breakData.length > 1 && (
                             <a
@@ -793,7 +793,7 @@ function ToDoList(props) {
                               }}
                             >
                               <img
-                                src="images/delete.png"
+                                src="/images/delete.png"
                                 className="ml-2"
                                 alt="delete"
                               />
@@ -950,7 +950,7 @@ function ToDoList(props) {
         modalBody={
           <>
             <img
-              src="images/send-report.svg"
+              src="/images/send-report.svg"
               style={{ height: '40px', textAlign: 'center' }}
               alt="Send Report"
             />
@@ -993,7 +993,7 @@ function ToDoList(props) {
         modalBody={
           <>
             <img
-              src="images/skip-image.svg"
+              src="/images/skip-image.svg"
               style={{ height: '40px', textAlign: 'center' }}
               alt="Send Report"
             />

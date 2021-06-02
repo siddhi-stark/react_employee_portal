@@ -76,7 +76,7 @@ function ForgetPassword() {
       <div className="login-page recover-password">
         <div className="logo text-center">
           <a href="#">
-            <Image src="images/logo-black.svg" />
+            <Image src="/images/logo-black.svg" />
           </a>
         </div>
         <Form className="login-form" onSubmit={(e) => validateForm(e)}>
@@ -84,7 +84,7 @@ function ForgetPassword() {
             <h1>Recover Password</h1>
           </div>
           <TextInput
-            inputIcon="images/user.svg"
+            inputIcon="/images/user.svg"
             inputClass="form-control form-control-lg"
             type="email"
             name="email"

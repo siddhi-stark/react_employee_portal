@@ -26,13 +26,13 @@ function RightContainer() {
             </Col>
             <Col md={6}>
               <div className="persentage-circle">
-                <img src="images/persentage-circle.svg" alt="img" />
+                <img src="/images/persentage-circle.svg" alt="img" />
               </div>
             </Col>
           </Row>
           <div className="last-week">
             <a href="#">
-              <img src="images/previous.svg" alt="" /> Last Week
+              <img src="/images/previous.svg" alt="" /> Last Week
             </a>
           </div>
         </Card.Body>

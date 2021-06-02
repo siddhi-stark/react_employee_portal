@@ -141,7 +141,7 @@ function Login(props) {
         <div className="logo text-center">
           <a href="#">
             <img
-              src="images/logo-black.svg"
+              src="/images/logo-black.svg"
               className="header-brand-img desktop-logo svg"
               alt="img"
             />
@@ -156,7 +156,7 @@ function Login(props) {
             <h1>Welcome!</h1>
           </div>
           <div className="form-group">
-            <img src="images/user.svg" alt="Username" />
+            <img src="/images/user.svg" alt="Username" />
             <input
               className="form-control form-control-lg"
               type="email"
@@ -172,7 +172,7 @@ function Login(props) {
           </div>
 
           <div className="form-group m-0">
-            <img src="images/password.svg" alt="Username" />
+            <img src="/images/password.svg" alt="Username" />
             <input
               className="form-control form-control-lg"
               type="password"

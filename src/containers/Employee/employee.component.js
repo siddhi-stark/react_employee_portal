@@ -161,7 +161,7 @@ function Employee() {
                 setCntClearFilter(cntClearFilter + 1);
               }}
             >
-              <Image src="images/edit-button.svg" />
+              <Image src="/images/edit-button.svg" />
             </a>
             <a
               href="/"
@@ -173,7 +173,7 @@ function Employee() {
                 deleteEmployee(id);
               }}
             >
-              <Image src="images/delete.png" />
+              <Image src="/images/delete.png" />
             </a>
           </>
         );
@@ -749,7 +749,7 @@ function Employee() {
                       {filterErr && (
                         <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
                           <div className="img-text">
-                            <img src="images/fail.svg" alt="Success" />{' '}
+                            <img src="/images/fail.svg" alt="Success" />{' '}
                             {filterErr}
                           </div>
                         </div>

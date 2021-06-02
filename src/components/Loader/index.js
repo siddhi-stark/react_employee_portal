@@ -7,7 +7,7 @@ function Loader(props) {
   return (
     (showLoader) ? (
       <div className="preloader">
-       <img src="images/loader.gif" alt=""/>
+       <img src="/images/loader.gif" alt=""/>
          <h4 className='loader-texts'>Loading...</h4>
       </div>
       

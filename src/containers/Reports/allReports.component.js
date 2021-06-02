@@ -239,7 +239,7 @@ function AllReports() {
                       {filterErr && (
                         <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
                           <div className="img-text">
-                            <img src="images/fail.svg" alt="Success" />{' '}
+                            <img src="/images/fail.svg" alt="Success" />{' '}
                             {filterErr}
                           </div>
                         </div>
