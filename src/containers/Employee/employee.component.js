@@ -33,14 +33,14 @@ const items = [
 const currentdate = new Date();
 const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
 
-const validator = new SimpleReactValidator (
+const validator = new SimpleReactValidator(
   {
     validators: {
-      emailValidate: { 
-        message: 'The :attribute domain name should be starkdigital.net.', 
-        rule: (val, params, valid) => { 
-          
-          return valid.helpers.testRegex(val,/^[\w.+-]+@starkdigital.net$/i) && params.indexOf(val) === -1;
+      emailValidate: {
+        message: 'The :attribute domain name should be starkdigital.net.',
+        rule: (val, params, valid) => {
+
+          return valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) && params.indexOf(val) === -1;
         }
       }
     }
@@ -80,6 +80,7 @@ function Employee() {
   const [filterErr, setFilterErr] = useState('');
   const [employeeData, setEmployeeData] = useState([]);
   const [employeetwId, setEmployeeTwId] = useState('');
+  const [joiningDate, setJoiningDate] = useState('');
   let timmer = null;
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -129,17 +130,17 @@ function Employee() {
     {
       id: 'name',
       label: 'Full Name',
-      roleAccess: [1,2, 3],
+      roleAccess: [1, 2, 3],
     },
     {
       id: 'email',
       label: 'Email',
-      roleAccess: [1,2, 3],
+      roleAccess: [1, 2, 3],
     },
     {
       id: 'mobile',
       label: 'Mobile',
-      roleAccess: [1,2, 3],
+      roleAccess: [1, 2, 3],
     },
     {
       id: 'action',
@@ -184,7 +185,7 @@ function Employee() {
   const getTableData = async (pageNo = 0) => {
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`;
-    
+
     const empIds = [];
     const params = {
       limit: pagination.itemsPerPage,
@@ -192,22 +193,22 @@ function Employee() {
     };
 
     const managerList = [];
-    if (selectedManager &&  selectedManager.length > 0) {
-      selectedManager.map((mngr) => { 
+    if (selectedManager && selectedManager.length > 0) {
+      selectedManager.map((mngr) => {
         managerList.push(mngr.id);
         return mngr;
       });
     }
 
-    if(selectedEmployee && selectedEmployee.length > 0) {
-      selectedEmployee &&  selectedEmployee.map((emp) => { // eslint-disable-line
-          empIds.push(emp.id);
-          return emp;
-        });
-        params.users = empIds.join(',');
-      }
-    
-      const url = customFunctions.generateUrl(endPoint, params);
+    if (selectedEmployee && selectedEmployee.length > 0) {
+      selectedEmployee && selectedEmployee.map((emp) => { // eslint-disable-line
+        empIds.push(emp.id);
+        return emp;
+      });
+      params.users = empIds.join(',');
+    }
+
+    const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
@@ -300,6 +301,7 @@ function Employee() {
       setPassword(data.data.password);
       setMobile(data.data.mobile);
       setDate(data.data.dob ? new Date(data.data.dob) : null);
+      setJoiningDate(data.data.date_joined ? new Date(data.data.date_joined) : null);
       setEmpCode(data.data.emp_code);
     }
   };
@@ -307,6 +309,7 @@ function Employee() {
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.designationUrl}?type=all`
+      
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setDesignation(data.data);
@@ -436,6 +439,7 @@ function Employee() {
     setAddButton(false);
     setFullName('');
     setEmpCode('');
+    setJoiningDate('');
     setSelectedEmployee('');
     setEmail('');
     setMobile('');
@@ -474,10 +478,11 @@ function Employee() {
       mobile,
       role: selectedRole.id,
       password,
-      emp_code: Number(empCode),
+      emp_code: empCode ? Number(empCode.split('-')[1]) : '',
       team_leads: teamIdList,
       managers: managerList,
       dob: date ? customFunctions.getDate(date) : null,
+      date_joined: joiningDate ? customFunctions.getDate(joiningDate) : null,
       tw_emp: twId,
       department: selectedDepartment.id,
     };
@@ -523,6 +528,7 @@ function Employee() {
           setMobile();
           setSelectedManager();
           setDate();
+          setJoiningDate();
           setSelectedTeamLead();
           setSelectedDepartment();
           setModalShow(false);
@@ -540,7 +546,7 @@ function Employee() {
           if (okAction) {
             setModalShow(true);
           }
-        }); 
+        });
       setDisableButton(false);
     }
   };
@@ -675,7 +681,7 @@ function Employee() {
       actionCallback: (selectedIndexes) => {
         const endPoint = `${Api.bulkEmployee}`;
         if (!customFunctions.checkIfEmpty(selectedIndexes, 'A')) {
-          const params = { employees: selectedIndexes};
+          const params = { employees: selectedIndexes };
           swal({
             title: 'Are you sure?',
             text: 'Are you sure that you want to delete this record?',
@@ -716,6 +722,18 @@ function Employee() {
       },
     }
   ];
+
+  const getMobile = (value) => {
+    console.log('value', value);
+    let event = value.replace(/\D/g, '');
+    if (event.length === 0) {
+      event = '';
+    } else if (event.length > 6) {
+      event = event.substring(0, 5);
+    }
+    return event !== '' ? 'SDMS-' + event : ''; // eslint-disable-line
+
+  };
 
   validator.purgeFields();
 
@@ -830,7 +848,7 @@ function Employee() {
                   columns={columns}
                   rows={rows}
                   showPagination="true"
-                  showCheckbox={ Number(userRole) === 1 ? 'showCheckbox' : '' }
+                  showCheckbox={Number(userRole) === 1 ? 'showCheckbox' : ''}
                   paginationProps={{
                     ...pagination,
                     activePage: pagination.current_page,
@@ -868,23 +886,23 @@ function Employee() {
             {/* [a-z0-9!#$%&'*+/=?^_`{|}~-]+(?
           :\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+net */}
             <Row>
-            { !employeeId && (
+              {!employeeId && (
 
-              <Col sm={6}>
-                <DropdownInput
-                  label="TW Employee"
-                  options={getEmployeeList()}
-                  placeholder="Select Employee"
-                  defaultValue={selectedEmployee}
-                  onSelectHandler={(select) => {
-                    setSelectedEmployee(select);
-                    updateData(select);
-                    setEmployeeTwId(select.id);
-                  }}
-                  disabled={employeeId && 'disabled'}
-                />
-              </Col>
-            ) }
+                <Col sm={6}>
+                  <DropdownInput
+                    label="TW Employee"
+                    options={getEmployeeList()}
+                    placeholder="Select Employee"
+                    defaultValue={selectedEmployee}
+                    onSelectHandler={(select) => {
+                      setSelectedEmployee(select);
+                      updateData(select);
+                      setEmployeeTwId(select.id);
+                    }}
+                    disabled={employeeId && 'disabled'}
+                  />
+                </Col>
+              )}
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => {
@@ -947,26 +965,48 @@ function Employee() {
 
               <Col sm={6}>
                 <TextInput
-                  onInputChange={(e) => {
-                    const re = /^[0-9\b]+$/;
-                    if (!e.target.value || re.test(e.target.value)) {
-                      setEmpCode(e.target.value);
-                    }
-                  }}
+                  // onInputChange={(e) => {
+                  //   const re = /^[0-9\b]+$/;
+                  //   if (!e.target.value || re.test(e.target.value)) {
+                  //     setEmpCode(getMobile(e.target.value));
+                  //   }
+                  // }}
+                  onInputChange={(e) => { setEmpCode(getMobile(e.target.value)); }}
                   autocomplete="off"
                   label="Employee Code"
                   asterisk="*"
                   containerClass="form-group"
                   type="text"
                   name="codeTitle"
-                  maxlength="6"
-                  disabled={ employeeId ? 'disabled' : '' }
+                  maxlength="11"
+                  disabled={employeeId ? 'disabled' : ''}
                   value={empCode}
                   placeholder="Enter Employee Code"
                   errorMessage={validator.message(
                     'Employee Code',
                     empCode,
                     'required|'
+                  )}
+                />
+              </Col>
+
+              <Col sm={6}>
+                <Datepicker
+                  label="Joining Date"
+                  asterisk="*"
+                  className="form-control"
+                  selected={joiningDate}
+                  placeholder="dd/mm/yyyy"
+                  // maxDate={maxdate}
+                  dateFormat="dd/MM/yyyy"
+                  maxDate={new Date()}
+                  onChange={(e) => {
+                    setJoiningDate(e);
+                  }}
+                  errorMessage={validator.message(
+                    'Joining Date',
+                    joiningDate,
+                    'required'
                   )}
                 />
               </Col>

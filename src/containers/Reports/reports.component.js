@@ -40,6 +40,16 @@ function Reports(props) {
       label: 'ETA',
       roleAccess: [1, 2, 3, 4],
     },
+    {
+      id: showButton ? '' : 'at',
+      label: showButton ? '' : 'AT' ,
+      roleAccess: [1, 2, 3, 4],
+    },
+    {
+      id: showButton ? '' : 'status',
+      label: showButton ? '' : 'status',
+      roleAccess: [1, 2, 3, 4],
+    },
   ];
 
   const getTableData = async (pageNo = 1) => {
@@ -80,6 +90,7 @@ function Reports(props) {
           task: proj.activity,
           project: proj.project_name,
           eta: proj.duration,
+          status: proj.status,
         };
         row.push(setRowData);
         return proj;

@@ -26,6 +26,9 @@ const validator = new SimpleReactValidator();
 function ToDoList(props) {
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
+  const [showMsg, setShowMsg] = useState(false);
+  const [showButton, setShowButton] = useState(1);
+  const [showConfirmButton, setShowConfirmButton] = useState(false);
   // const [morningFlag, setMorningFlag] = useState('');
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
@@ -34,8 +37,6 @@ function ToDoList(props) {
   const [showSkipBreak, setShowSkipBreak] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [index, setIndex] = useState(null);
-  // const [selectedRowIndex, setSelectedRowIndex] = useState([]);
-  // const [taskList, setTaskList] = useState([]);
   const [ShowDelete, setShowDelete] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedBreakOption, setSelectedBreakOption] = useState(null); // eslint-disable-line
@@ -305,25 +306,19 @@ function ToDoList(props) {
 
   useEffect(() => {
     async function getData() {
-      // const taskIdS = await customFunctions.getLocalStorage('TaskId') ? JSON.parse(customFunctions.getLocalStorage('TaskId')) : [];
-      // setSelectedId([...taskIdS]);
       const clockIn = customFunctions.getLocalStorage('clockinTime');
       const date = customFunctions.getLocalStorage('clockInDate');
       if (clockIn) {
       const dt = new Date(date);
-      console.log('dt',dt);
 
         setClockInDate(dt);
 
-        // const test1 = clockIn.split(':');
         
         const hr = dt.getHours();
         setTimeHour(hr);
 
-        // const min = test1[1].split(' ');
         const min = dt.getMinutes();
         setTimeMinutes(min);
-        // setClockInTime(clockIn);
 
       }
 
@@ -356,7 +351,6 @@ function ToDoList(props) {
       customFunctions.setLocalStorage('time', data.data.clock_out_time);
       SharedService.clockOut.next(true);
     }
-    // SharedService.clockIn.next(true);
   };
 
   const onSendScrum = async () => {
@@ -371,7 +365,6 @@ function ToDoList(props) {
     });
 
     setSelectedId([...selectedId]);
-    // customFunctions.setLocalStorage('TaskId', JSON.stringify(selectedId));
 
     const postData = {
       type: morningMail && !signOutMail ? 'logout' : 'morning',
@@ -389,7 +382,6 @@ function ToDoList(props) {
       if (props.onClockoutReport) props.onClockoutReport();
       if (morningMail && !signOutMail) {
         setSelectedId([]);
-        // customFunctions.removeLocalStorage('TaskId')
       }
 
       setLoader(false);
@@ -478,12 +470,6 @@ function ToDoList(props) {
         });
 
       getTableData(1);
-
-      // setHours();
-      // setMinutes();
-      // setSelectedBreakOption();
-      // setStartTime();
-      // setEndTime();
     } else {
       setShowBreak(false);
       swal(data && data.message[0], '', 'error').then((result) => {
@@ -532,6 +518,7 @@ function ToDoList(props) {
   };
 
   const onBreakSubmit = (e) => {
+    setShowButton(0);
     e.preventDefault();
     if (disableButton) return;
 
@@ -542,27 +529,8 @@ function ToDoList(props) {
       setDisableButton(false);
       validator.showMessages();
       forceUpdate(count + 1);
-      // swal('Please Select Break', '', 'error');
     }
   };
-
-  // const onBreakSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (startTime && endTime) {
-  //     onComfirm();
-  //     // setStartTime('');
-  //     // setEndTime('');
-  //     // setHrs('');
-  //     // setMin('');
-  //   } else {
-  //     setShowBreak(false);
-  //     swal('Please Select Break', '', 'error');
-  //     // setStartTime('');
-  //     // setEndTime('');
-  //     // setHrs('');
-  //     // setMin('');
-  //   }
-  // };
 
   const onDeleteBreakHandler = (idx, e) => {
     e.preventDefault();
@@ -572,12 +540,18 @@ function ToDoList(props) {
     setBreakData([...data]);
   };
 
+  const onSkipBreak = () => {
+    console.log('breakData', breakData);
+    if(breakData.length < 1) {
+      console.log('lengthhh');
+      setShowMsg(true);
+      setShowConfirmButton(true);
+      setShowButton(0);
+    }
+  }
+
   return (
     <>
-      {/* {console.log('clockInTime', clockInTime)} */}
-     { console.log('TimeHour',timeHour) }
-     { console.log('TimeMinutes',timeMinutes) }
-      {console.log('clockInDate', clockInDate)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -676,25 +650,8 @@ function ToDoList(props) {
                     }}
                     dropdownContainerClass="mb-3"
                     selectedRowItems={selectedId}
-                    // selectedRowItems={[25763, 25250]}
                     onSelectRowsIndexes={(rowIndex) => {
-                      // const twId = [];
-                      // taskList.map((task, ind) => {
-                      //   rowIndex.map((i) => {
-                      //     if (task.id === i) {
-
-                      //         twId.push(task.id);
-
-                      //     }
-                      //     return i;
-                      //   });
-
-                      //   return ind;
-                      // });
-                      // setSelectedRowIndex(rowIndex);
                       setSelectedId([...rowIndex]);
-                      // console.log('rowindex in todo', rowIndex);
-                      // customFunctions.setLocalStorage('TaskId', JSON.stringify([...rowIndex]));
 
                     }}
                     tableClass="table-striped"
@@ -758,12 +715,30 @@ function ToDoList(props) {
                   <h3 className="mb-1">{'  '}</h3>
                   <button
                     type="button"
-                    className="btn btn-primary"
-                    onClick={() => addBreak()}
+                    className="btn btn-primary mb-3"
+                    onClick={() => {addBreak(); setShowConfirmButton(false); setShowButton(1); }}
                   >
                     Add Break
               </button>
                 </div>
+                {showMsg && (
+        <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
+          <div className="img-text">
+            <img src="/images/success.svg" alt="Success" /> You have skipped all the breaks !
+          </div>
+          <div className="close">
+            <button
+              type="button"
+              className="close"
+              onClick={() => setShowMsg(false)}
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      )}
                 {breakData &&
                   breakData.length > 0 &&
                   breakData.map((data, i) => (
@@ -817,34 +792,19 @@ function ToDoList(props) {
                           )}
                         />
                       </Row>
-                      {console.log('condition', timeHour, setHours(
-                        setMinutes(new Date(clockInDate), parseInt(timeHour, 5)),
-                        parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 5) : timeHour
-                      ))}
                       <Row>
-                        {console.log('data.startTime', clockInDate)}
                         <Col sm={4}>
                           <Datepicker
                             className="form-control"
                             label="Start Time"
                             selected={data.startTime}
                             minDate={clockInDate}
-                            
-                            // minTime={setHours(
-                            //   setMinutes(new Date(), parseInt(data.stmins, 10) + 1),
-                            //   parseInt(data.stmins, 10) > 58 ? parseInt(data.sthrs, 10) + 1 : data.sthrs
-                            // )}
 
                             minTime={setHours(
                               setMinutes(clockInDate, parseInt(timeMinutes, 10) + 1),
                               parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
                             )}
-
-                            // minTime={setHours(
-                            //   setMinutes(new Date(), parseInt(43, 10) + 1),
-                            //   parseInt(43, 10) > 58 ? parseInt(13, 10) + 1 : 13
-                            // )}
-                            maxTime={setHours(setMinutes(clockInDate, 59), 23)}
+                            maxTime={setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours())}
                             onChange={(e) => {
                               breakData[i].startTime = e;
                               breakData[i].sthrs = e.getHours();
@@ -853,7 +813,7 @@ function ToDoList(props) {
                               breakData[i].mins = 0;
                               breakData[i].endTime = null;
 
-                              console.log('breakdata', breakData[i]);
+                              // console.log('breakdata', breakData[i]);
                               setBreakData([...breakData]);
                             }}
                             showTimeSelect="showTimeSelect"
@@ -920,15 +880,22 @@ function ToDoList(props) {
                     </>
                   ))}
                 <div className="float-end">
-                  <Button type="submit" disabled={disableButton} variant="secondary"
+                { !showConfirmButton && (
+
+                  <Button type="submit" disabled={disableButton}
                   // onClick={(e) => onBreakSubmit(e)}
+                  onClick={() => { setShowButton(1)}}
+                  variant={`${showButton ? 'primary ml-1' : 'secondary ml-1'}`}
                   >
                     Confirm
               </Button>
-                  <Button disabled={disableButton} variant="primary" className="ms-4"
+                ) }
+                  <Button disabled={disableButton} className="ms-4"
                     onClick={(e) => {
+                      setShowButton(0);
                       onSubmit(e);
                     }}
+                    variant={`${!showButton ? 'primary ml-1' : 'secondary ml-1'}`}
                   >
                     Send Report
               </Button>
@@ -1019,6 +986,8 @@ function ToDoList(props) {
                   setShowSkipBreak(false);
                   breakData.splice(index, 1);
                   setBreakData([...breakData]);
+                  onSkipBreak();
+
                 }}
               >
                 Yes
