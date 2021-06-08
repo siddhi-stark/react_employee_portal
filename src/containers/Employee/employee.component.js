@@ -965,12 +965,6 @@ function Employee() {
 
               <Col sm={6}>
                 <TextInput
-                  // onInputChange={(e) => {
-                  //   const re = /^[0-9\b]+$/;
-                  //   if (!e.target.value || re.test(e.target.value)) {
-                  //     setEmpCode(getMobile(e.target.value));
-                  //   }
-                  // }}
                   onInputChange={(e) => { setEmpCode(getMobile(e.target.value)); }}
                   autocomplete="off"
                   label="Employee Code"
