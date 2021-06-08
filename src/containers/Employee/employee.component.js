@@ -931,7 +931,7 @@ function Employee() {
                 <TextInput
                   onInputChange={(e) => setEmail(e.target.value)}
                   label="Email"
-                  autocomplete="false"
+                  autocomplete="off"
                   asterisk="*"
                   containerClass="form-group"
                   type="text"
@@ -951,6 +951,7 @@ function Employee() {
                   <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
                     label="Password"
+                    autocomplete="off"
                     asterisk="*"
                     containerClass="form-group"
                     type="password"
