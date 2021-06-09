@@ -90,7 +90,8 @@ function Reports(props) {
           task: proj.activity,
           project: proj.project_name,
           eta: proj.duration,
-          status: proj.status,
+          status: proj.task_status,
+          at: proj.actual_estimation
         };
         row.push(setRowData);
         return proj;
