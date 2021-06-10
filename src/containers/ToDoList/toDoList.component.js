@@ -797,8 +797,7 @@ function ToDoList(props) {
                 {showMsg && (
         <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
           <div className="img-text">
-            <img src="/images/success.svg" alt="Success" /> Report Sent
-            Successfully
+            <img src="/images/success.svg" alt="Success" /> You have skipped add the breaks !
           </div>
           <div className="close">
             <button

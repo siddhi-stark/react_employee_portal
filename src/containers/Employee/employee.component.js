@@ -421,6 +421,7 @@ function Employee() {
             }).then(() => {
               swal.close();
               getTableData(pagination.current_page);
+              getEmployee();
             });
           } else {
             swal(message, '', 'error', {
