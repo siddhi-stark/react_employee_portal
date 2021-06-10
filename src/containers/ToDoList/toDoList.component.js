@@ -323,7 +323,7 @@ function ToDoList(props) {
 
   useEffect(() => {
     async function getData() {
-     setInitialBreakData();
+      setInitialBreakData();
       getDailyActivity();
       const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
@@ -343,7 +343,7 @@ function ToDoList(props) {
 
   useEffect(() => {
     setClockinClockoutStorage();
-  },[showBreak, showScrumPopup, loader])
+  }, [showBreak, showScrumPopup, loader])
 
   const setClockinClockoutStorage = () => {
     const clockIn = customFunctions.getLocalStorage('clockinTime');
@@ -572,60 +572,62 @@ function ToDoList(props) {
     setBreakData([...data]);
   };
 
- const onSkipBreak = () => {
-   if(breakData.length < 1 ) {
+  const onSkipBreak = () => {
+    if (breakData.length < 1) {
+      setShowSendReport(true);
 
-   setShowMsg(true);
-   }else {
-    setShowMsg(false);
-   }
- }
+      setShowMsg(true);
+    } else {
+      setShowMsg(false);
 
- const onChangeEndTime = (e, i) => {
-  breakData[i].endTime = e;
-  breakData[i].hrs = 0;
-  breakData[i].mins = 0;
-  if (e && breakData[i].startTime) {
-    const endTimeNew = new Date(e);
-    const startTimeNew = new Date(breakData[i].startTime);
-    const diffMs = (endTimeNew - startTimeNew);
-    const { hours: diffHrs, minutes: diffMins } = customFunctions.msToTime(diffMs);
-    breakData[i].hrs = diffHrs;
-    breakData[i].mins = diffMins;
-    // setTimeSpentHours(diffHrs);
-    breakData[i].timeHours = diffHrs;
-    // setTimeSpentMinutes(diffMins);
-    breakData[i].timeMins = diffMins;
+    }
   }
-  setBreakData([...breakData]);
- }
 
- const setHoursSpendTime = async (e, i, fromFunc = true) => {
-  // setTimeSpentHours(e.target.value);
-  breakData[i].timeHours = e.target.value;
-  const startTime = new Date(breakData[i].startTime);
-  const getHours = startTime.getHours();
-  const newHours = getHours + Number(e.target.value);
-  breakData[i].endTime = new Date(startTime.setHours(newHours));
-  await setBreakData([...breakData]);
-  if (fromFunc) {
-    await setMinSpendTime({target : {value: breakData[i].timeMins}}, i, false);
+  const onChangeEndTime = (e, i) => {
+    breakData[i].endTime = e;
+    breakData[i].hrs = 0;
+    breakData[i].mins = 0;
+    if (e && breakData[i].startTime) {
+      const endTimeNew = new Date(e);
+      const startTimeNew = new Date(breakData[i].startTime);
+      const diffMs = (endTimeNew - startTimeNew);
+      const { hours: diffHrs, minutes: diffMins } = customFunctions.msToTime(diffMs);
+      breakData[i].hrs = diffHrs;
+      breakData[i].mins = diffMins;
+      // setTimeSpentHours(diffHrs);
+      breakData[i].timeHours = diffHrs;
+      // setTimeSpentMinutes(diffMins);
+      breakData[i].timeMins = diffMins;
+    }
+    setBreakData([...breakData]);
   }
- }
 
- const setMinSpendTime = async (e, i, fromFunc = true) => {
-  
-  
-  breakData[i].timeMins = e.target.value;
-  if (fromFunc) {
-    await setHoursSpendTime({target : {value: breakData[i].timeHours}}, i, false);
+  const setHoursSpendTime = async (e, i, fromFunc = true) => {
+    // setTimeSpentHours(e.target.value);
+    breakData[i].timeHours = e.target.value;
+    const startTime = new Date(breakData[i].startTime);
+    const getHours = startTime.getHours();
+    const newHours = getHours + Number(e.target.value);
+    breakData[i].endTime = new Date(startTime.setHours(newHours));
+    await setBreakData([...breakData]);
+    if (fromFunc) {
+      await setMinSpendTime({ target: { value: breakData[i].timeMins } }, i, false);
+    }
   }
-  const endTime = new Date(breakData[i].endTime);
-  const getMinutes = endTime.getMinutes();
-  const newMins = getMinutes + Number(e.target.value);
-  breakData[i].endTime = new Date(endTime.setMinutes(newMins));
-  setBreakData([...breakData]);
-}
+
+  const setMinSpendTime = async (e, i, fromFunc = true) => {
+
+
+    breakData[i].timeMins = e.target.value;
+    if (fromFunc) {
+      await setHoursSpendTime({ target: { value: breakData[i].timeHours } }, i, false);
+    }
+    const endTime = new Date(breakData[i].endTime);
+    const getMinutes = endTime.getMinutes();
+    const newMins = getMinutes + Number(e.target.value);
+    breakData[i].endTime = new Date(endTime.setMinutes(newMins));
+    setBreakData([...breakData]);
+  }
   return (
     <>
 
@@ -800,23 +802,23 @@ function ToDoList(props) {
               </button>
                 </div>
                 {showMsg && (
-        <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
-          <div className="img-text">
-            <img src="/images/success.svg" alt="Success" /> You have skipped all the breaks !
+                  <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
+                    <div className="img-text">
+                      <img src="/images/success.svg" alt="Success" /> You have skipped all the breaks !
           </div>
-          <div className="close">
-            <button
-              type="button"
-              className="close"
-              onClick={() => setShowMsg(false)}
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        </div>
-      )}
+                    <div className="close">
+                      <button
+                        type="button"
+                        className="close"
+                        onClick={() => setShowMsg(false)}
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {breakData &&
                   breakData.length > 0 &&
@@ -933,8 +935,8 @@ function ToDoList(props) {
                         <Col md={2}>
                           <TextInput
                             onInputChange={(e) => {
-                                setHoursSpendTime(e, i);
-                              }
+                              setHoursSpendTime(e, i);
+                            }
                             }
                             label="Time"
                             containerClass="form-group"
@@ -948,8 +950,8 @@ function ToDoList(props) {
                         </Col>
                         <Col md={2}>
                           <TextInput
-                           onInputChange={(e) => {
-                            setMinSpendTime(e, i);
+                            onInputChange={(e) => {
+                              setMinSpendTime(e, i);
                               // const re = /^[a-zA-Z ]*$/;
                               // if (!e.target.value || re.test(e.target.value)) {
                               //   setTimeSpentMinutes(e.target.value);
@@ -965,7 +967,7 @@ function ToDoList(props) {
 
                           />
                           <p className='mb-2'>minutes</p>
-                        
+
                         </Col>
                       </Row>
                     </>
@@ -982,8 +984,8 @@ function ToDoList(props) {
                       </Button>
                     ) : ''
                   }
-                  
-                  <Button disabled={disableButton && !showSendReport} className="ms-4"
+
+                  <Button disabled={disableButton || !showSendReport} className="ms-4"
                     onClick={(e) => {
                       onSubmit(e);
                     }}
