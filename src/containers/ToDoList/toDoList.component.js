@@ -939,12 +939,7 @@ function ToDoList(props) {
                           )}
                         />
                       </Row>
-                      {/* {console.log('condition', timeHour, setHours(
-                        setMinutes(new Date(clockInDate), parseInt(timeHour, 5)),
-                        parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 5) : timeHour
-                      ))} */}
                       <Row>
-                        {/* {console.log('data.startTime', clockInDate)} */}
                         <Col sm={4}>
                           <Datepicker
                             className="form-control"
@@ -952,20 +947,10 @@ function ToDoList(props) {
                             selected={data.startTime}
                             minDate={clockInDate}
 
-                            // minTime={setHours(
-                            //   setMinutes(new Date(), parseInt(data.stmins, 10) + 1),
-                            //   parseInt(data.stmins, 10) > 58 ? parseInt(data.sthrs, 10) + 1 : data.sthrs
-                            // )}
-
                             minTime={setHours(
                               setMinutes(clockInDate, parseInt(timeMinutes, 10) + 1),
                               parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
                             )}
-
-                            // minTime={setHours(
-                            //   setMinutes(new Date(), parseInt(43, 10) + 1),
-                            //   parseInt(43, 10) > 58 ? parseInt(13, 10) + 1 : 13
-                            // )}
                             maxTime={setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours())}
                             onChange={(e) => {
                               breakData[i].startTime = e;

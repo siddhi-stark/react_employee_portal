@@ -113,6 +113,7 @@ function Dashboard() {
   };
 
   const getProfile = async () => {
+    console.log('ocsole in dashboard');
     const userToken = customFunctions.getLocalStorage('access_token');
     if (!userToken) return false;
 

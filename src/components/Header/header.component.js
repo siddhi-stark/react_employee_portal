@@ -22,7 +22,10 @@ function Header() {
   const event = new Event('Login', { isLogin: false });
   let token = customFunctions.getLocalStorage('access_token');
 
+  const eventMenu = new Event('MenuChange', { isUpdated: true });
+
   const getProfile = async () => {
+    console.log('gggggggggggggggggggggg');
     const userToken = customFunctions.getLocalStorage('access_token');
     if (!userToken) return false;
 
@@ -85,6 +88,12 @@ function Header() {
       dispatch({ type: 'LOGIN', value: true });
     }
   }, []);
+
+  const onMenuChange = () => {
+    
+    document.dispatchEvent(eventMenu);
+    return true;
+  }
 
   return (
     <>
@@ -161,7 +170,7 @@ function Header() {
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>
-                      <Link className="dropdown-item border-top" to="/profile">
+                      <Link className="dropdown-item border-top" to="/profile" onClick={onMenuChange}>
                         <img
                           src="/images/user.svg"
                           alt="User"
@@ -171,7 +180,7 @@ function Header() {
                       </Link>
                     </li>
                     <li>
-                      <Link className="dropdown-item" to="/manage-password">
+                      <Link className="dropdown-item" to="/manage-password" onClick={onMenuChange}>
                         <img
                           src="/images/change-password.svg"
                           alt="Change"

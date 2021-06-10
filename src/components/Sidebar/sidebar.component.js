@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import menu from '../../helper/menu';
@@ -13,6 +13,17 @@ function Sidebar() {
     if (activeSubPath !== window.location.pathname)
       setActiveSubPath(window.location.pathname);
   };
+
+  useEffect(()=>{
+
+    document.addEventListener('MenuChange', () => {
+      console.log('menuchange event');
+      onSubActiveClass();
+    });
+
+  //  const path = window.location.pathname;
+  //  console.log('path',path) 
+  },[])
 
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });

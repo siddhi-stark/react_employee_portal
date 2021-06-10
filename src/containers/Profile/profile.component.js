@@ -295,7 +295,6 @@ function Profile() {
 
                 <UserRestrictions permittedUsers={[2, 3, 4]} roleId={role}>
                   <h5 className="mt-5">Job Information</h5>
-                  {console.log(date)}
                   <Row>
                     <Col sm={3}>
                     <Datepicker
