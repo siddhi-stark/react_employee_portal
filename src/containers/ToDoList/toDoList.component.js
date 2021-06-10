@@ -201,6 +201,7 @@ function ToDoList(props) {
     const endPoint = `${Api.taskUrl}?sort_by=id&sort_direction=descending&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
+      setClockinClockoutStorage();
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
@@ -250,29 +251,6 @@ function ToDoList(props) {
       setRows(row);
     }
   };
-
-  // const getYearList = async () => {
-  //   const options = [];
-
-  //   for (let i = minOffset; i <= maxOffset; i++) { // eslint-disable-line
-  //     const year = thisYear - i;
-  //     options.push(<option value={year}>{year}</option>);
-  //   }
-  //   console.log('options', options);
-  //   setYearList(options);
-  // }
-
-//  const getDropList = () => {
-//     const arr = [];
-//     for (let m=0; m<=60; m+=5) {
-//       arr.push({
-//         value: m,
-//       });
-//     }
-
-//     setMinutesList(arr);
-//       // console.log('arr', arr);
-// }
 
   const getBreakList = async () => {
     const endPoint = `${Api.taskUrl}?show_only_breaks=true&page=1&limit=100`;
@@ -345,32 +323,7 @@ function ToDoList(props) {
 
   useEffect(() => {
     async function getData() {
-      // const taskIdS = await customFunctions.getLocalStorage('TaskId') ? JSON.parse(customFunctions.getLocalStorage('TaskId')) : [];
-      // setSelectedId([...taskIdS]);
-      // getDropList();
-      // const clockIn = customFunctions.getLocalStorage('clockinTime');
-      // const date = customFunctions.getLocalStorage('clockInDate');
-      // if (clockIn) {
-      //   const dt = new Date(date);
-      //   // console.log('dt', dt);
-
-      //   setClockInDate(dt);
-
-      //   // const test1 = clockIn.split(':');
-
-      //   const hr = dt.getHours();
-      //   setTimeHour(hr);
-
-      //   // const min = test1[1].split(' ');
-      //   const min = dt.getMinutes();
-      //   setTimeMinutes(min);
-      //   // setClockInTime(clockIn);
-
-      // }
-      
-
-
-      setInitialBreakData();
+     setInitialBreakData();
       getDailyActivity();
       const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
@@ -389,45 +342,26 @@ function ToDoList(props) {
   }, [showBreak]);
 
   useEffect(() => {
-    console.log('clockinstorage useeffect call');
     setClockinClockoutStorage();
-  },[showBreak, showScrumPopup])
+  },[showBreak, showScrumPopup, loader])
 
   const setClockinClockoutStorage = () => {
-    console.log('clockinstorage function call');
     const clockIn = customFunctions.getLocalStorage('clockinTime');
     const date = customFunctions.getLocalStorage('clockInDate');
     if (clockIn) {
       const dt = new Date(date);
-      // console.log('dt', dt);
 
       setClockInDate(dt);
 
-      // const test1 = clockIn.split(':');
 
       const hr = dt.getHours();
       setTimeHour(hr);
 
-      // const min = test1[1].split(' ');
       const min = dt.getMinutes();
       setTimeMinutes(min);
-      // setClockInTime(clockIn);
 
     }
   }
-  // const getList = () => {
-  //   if (!minuteList) return [];
-  //   const options = [];
-  //   minuteList.map((tm) => {
-  //     return options.push({
-  //       label: `${tm.value} Min`,
-  //       // id: tm.id,
-  //       value: tm.value,
-  //     });
-  //   });
-  //   return options;
-  // };
-
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data && data.data) {
@@ -438,7 +372,6 @@ function ToDoList(props) {
       customFunctions.setLocalStorage('time', data.data.clock_out_time);
       SharedService.clockOut.next(true);
     }
-    // SharedService.clockIn.next(true);
   };
 
   const onSendScrum = async () => {
@@ -453,7 +386,6 @@ function ToDoList(props) {
     });
 
     setSelectedId([...selectedId]);
-    // customFunctions.setLocalStorage('TaskId', JSON.stringify(selectedId));
 
     const postData = {
       type: morningMail && !signOutMail ? 'logout' : 'morning',
@@ -472,7 +404,6 @@ function ToDoList(props) {
       setClockinClockoutStorage();
       if (morningMail && !signOutMail) {
         setSelectedId([]);
-        // customFunctions.removeLocalStorage('TaskId')
       }
 
       setLoader(false);
@@ -564,11 +495,6 @@ function ToDoList(props) {
 
       getTableData(1);
 
-      // setHours();
-      // setMinutes();
-      // setSelectedBreakOption();
-      // setStartTime();
-      // setEndTime();
     } else {
       setShowSendReport(false);
       setShowBreak(false);
@@ -651,7 +577,6 @@ function ToDoList(props) {
  }
 
  const onChangeEndTime = (e, i) => {
-   console.log('e', e, breakData[i]);
   breakData[i].endTime = e;
   breakData[i].hrs = 0;
   breakData[i].mins = 0;
@@ -671,17 +596,12 @@ function ToDoList(props) {
  }
 
  const setHoursSpendTime = async (e, i, fromFunc = true) => {
-  console.log('e', e,i);
   // setTimeSpentHours(e.target.value);
   breakData[i].timeHours = e.target.value;
   const startTime = new Date(breakData[i].startTime);
-  console.log('startTime', startTime);
   const getHours = startTime.getHours();
-  console.log('getHours', getHours);
   const newHours = getHours + Number(e.target.value);
-  console.log('newHours', newHours);
   breakData[i].endTime = new Date(startTime.setHours(newHours));
-  console.log('breakData[i].endTime', breakData[i].endTime);
   await setBreakData([...breakData]);
   if (fromFunc) {
     await setMinSpendTime({target : {value: breakData[i].timeMins}}, i, false);
@@ -689,27 +609,20 @@ function ToDoList(props) {
  }
 
  const setMinSpendTime = async (e, i, fromFunc = true) => {
-  console.log('e', e,i);
-  // setTimeSpentMinutes(e.target.value);
+  
+  
   breakData[i].timeMins = e.target.value;
   if (fromFunc) {
     await setHoursSpendTime({target : {value: breakData[i].timeHours}}, i, false);
   }
   const endTime = new Date(breakData[i].endTime);
-  console.log('endTime', endTime);
   const getMinutes = endTime.getMinutes();
-  console.log('getMinutes', getMinutes);
   const newMins = getMinutes + Number(e.target.value);
-  console.log('newMins', newMins);
   breakData[i].endTime = new Date(endTime.setMinutes(newMins));
-  console.log('breakData[i].endTime', breakData[i].endTime);
   setBreakData([...breakData]);
 }
   return (
     <>
-    {console.log('clockinDate', clockInDate)}
-    {console.log('Hours', timeHour)}
-    {console.log('minutes', timeMinutes)}
 
       {ShowDelete && (
         <SweetAlert
@@ -811,23 +724,7 @@ function ToDoList(props) {
                     selectedRowItems={selectedId}
                     // selectedRowItems={[25763, 25250]}
                     onSelectRowsIndexes={(rowIndex) => {
-                      // const twId = [];
-                      // taskList.map((task, ind) => {
-                      //   rowIndex.map((i) => {
-                      //     if (task.id === i) {
-
-                      //         twId.push(task.id);
-
-                      //     }
-                      //     return i;
-                      //   });
-
-                      //   return ind;
-                      // });
-                      // setSelectedRowIndex(rowIndex);
                       setSelectedId([...rowIndex]);
-                      // console.log('rowindex in todo', rowIndex);
-                      // customFunctions.setLocalStorage('TaskId', JSON.stringify([...rowIndex]));
 
                     }}
                     tableClass="table-striped"
@@ -971,12 +868,13 @@ function ToDoList(props) {
                         />
                       </Row>
                       <Row>
+
                         <Col sm={4}>
                           <Datepicker
                             className="form-control"
                             label="Start Time"
                             selected={data.startTime}
-                            minDate={clockInDate}
+                            minDate={new Date(clockInDate)}
 
                             minTime={setHours(
                               setMinutes(clockInDate, parseInt(timeMinutes, 10) + 1),
@@ -991,7 +889,6 @@ function ToDoList(props) {
                               breakData[i].mins = 0;
                               breakData[i].endTime = null;
 
-                              console.log('breakdata', breakData[i]);
                               setBreakData([...breakData]);
                             }}
                             showTimeSelect="showTimeSelect"
@@ -1033,7 +930,6 @@ function ToDoList(props) {
                           <TextInput
                             onInputChange={(e) => {
                                 setHoursSpendTime(e, i);
-                                console.log('....',breakData[i].endTime && breakData[i].startTime)
                               }
                             }
                             label="Time"
