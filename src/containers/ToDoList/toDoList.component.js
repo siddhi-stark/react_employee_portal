@@ -573,7 +573,12 @@ function ToDoList(props) {
   };
 
  const onSkipBreak = () => {
+   if(breakData.length < 1 ) {
+
    setShowMsg(true);
+   }else {
+    setShowMsg(false);
+   }
  }
 
  const onChangeEndTime = (e, i) => {
@@ -797,7 +802,7 @@ function ToDoList(props) {
                 {showMsg && (
         <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
           <div className="img-text">
-            <img src="/images/success.svg" alt="Success" /> You have skipped add the breaks !
+            <img src="/images/success.svg" alt="Success" /> You have skipped all the breaks !
           </div>
           <div className="close">
             <button
@@ -977,7 +982,8 @@ function ToDoList(props) {
                       </Button>
                     ) : ''
                   }
-                  <Button disabled={disableButton || !showSendReport} className="ms-4"
+                  
+                  <Button disabled={disableButton && !showSendReport} className="ms-4"
                     onClick={(e) => {
                       onSubmit(e);
                     }}
