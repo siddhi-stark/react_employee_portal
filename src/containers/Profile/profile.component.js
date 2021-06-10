@@ -87,7 +87,7 @@ function Profile() {
       });
       setSelectedManager(managerList.length > 0 ? managerList.join(', ') : '');
       // setDate(data.data.dob ? new Date(data.data.dob) : null);
-      setDate(data.data.joined_date ? new Date(data.data.joined_date) : '');
+      setDate(data.data.date_joined ? new Date(data.data.date_joined) : '');
     }
   };
 

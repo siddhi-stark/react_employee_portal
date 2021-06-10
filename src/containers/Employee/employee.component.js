@@ -478,7 +478,7 @@ function Employee() {
       mobile,
       role: selectedRole.id,
       password,
-      emp_code: empCode ? Number(empCode.split('-')[1]) : '',
+      emp_code: empCode && !employeeId  ? Number(empCode.split('-')[1]) : '',
       team_leads: teamIdList,
       managers: managerList,
       dob: date ? customFunctions.getDate(date) : null,

@@ -348,25 +348,25 @@ function ToDoList(props) {
       // const taskIdS = await customFunctions.getLocalStorage('TaskId') ? JSON.parse(customFunctions.getLocalStorage('TaskId')) : [];
       // setSelectedId([...taskIdS]);
       // getDropList();
-      const clockIn = customFunctions.getLocalStorage('clockinTime');
-      const date = customFunctions.getLocalStorage('clockInDate');
-      if (clockIn) {
-        const dt = new Date(date);
-        // console.log('dt', dt);
+      // const clockIn = customFunctions.getLocalStorage('clockinTime');
+      // const date = customFunctions.getLocalStorage('clockInDate');
+      // if (clockIn) {
+      //   const dt = new Date(date);
+      //   // console.log('dt', dt);
 
-        setClockInDate(dt);
+      //   setClockInDate(dt);
 
-        // const test1 = clockIn.split(':');
+      //   // const test1 = clockIn.split(':');
 
-        const hr = dt.getHours();
-        setTimeHour(hr);
+      //   const hr = dt.getHours();
+      //   setTimeHour(hr);
 
-        // const min = test1[1].split(' ');
-        const min = dt.getMinutes();
-        setTimeMinutes(min);
-        // setClockInTime(clockIn);
+      //   // const min = test1[1].split(' ');
+      //   const min = dt.getMinutes();
+      //   setTimeMinutes(min);
+      //   // setClockInTime(clockIn);
 
-      }
+      // }
       
 
 
@@ -388,6 +388,33 @@ function ToDoList(props) {
 
   }, [showBreak]);
 
+  useEffect(() => {
+    console.log('clockinstorage useeffect call');
+    setClockinClockoutStorage();
+  },[showBreak, showScrumPopup])
+
+  const setClockinClockoutStorage = () => {
+    console.log('clockinstorage function call');
+    const clockIn = customFunctions.getLocalStorage('clockinTime');
+    const date = customFunctions.getLocalStorage('clockInDate');
+    if (clockIn) {
+      const dt = new Date(date);
+      // console.log('dt', dt);
+
+      setClockInDate(dt);
+
+      // const test1 = clockIn.split(':');
+
+      const hr = dt.getHours();
+      setTimeHour(hr);
+
+      // const min = test1[1].split(' ');
+      const min = dt.getMinutes();
+      setTimeMinutes(min);
+      // setClockInTime(clockIn);
+
+    }
+  }
   // const getList = () => {
   //   if (!minuteList) return [];
   //   const options = [];
@@ -442,6 +469,7 @@ function ToDoList(props) {
     if (data && data.success) {
       if (props.onMorningSendScrum) props.onMorningSendScrum();
       if (props.onClockoutReport) props.onClockoutReport();
+      setClockinClockoutStorage();
       if (morningMail && !signOutMail) {
         setSelectedId([]);
         // customFunctions.removeLocalStorage('TaskId')
@@ -679,6 +707,9 @@ function ToDoList(props) {
 }
   return (
     <>
+    {console.log('clockinDate', clockInDate)}
+    {console.log('Hours', timeHour)}
+    {console.log('minutes', timeMinutes)}
 
       {ShowDelete && (
         <SweetAlert
