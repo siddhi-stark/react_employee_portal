@@ -1079,7 +1079,7 @@ function Employee() {
 
               <Col sm={6}>
                 <DropdownInput
-                  label="Teamlead"
+                  label="Team Lead"
                   options={getTeamLeadList()}
                   placeholder="Select TeamLead"
                   defaultValue={selectedTeamLead}
