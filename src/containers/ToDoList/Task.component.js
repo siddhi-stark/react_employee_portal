@@ -11,24 +11,11 @@ import Api from '../../helper/api';
 
 function Task(props) {
   const validator = useRef(new SimpleReactValidator());
-  // const [taskHrs, setTaskHours] = useState('');
-  // const [taskMins, setTaskMinutes] = useState('');
-  // const [taskStartTime, setTaskStartTime] = useState('');
-  // const [taskEndTime, setTaskEndTime] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [taskName, setTaskName] = useState('');
   const [count, forceUpdate] = useState(0);
   const [taskModalShow, setTaskModalShow] = useState(false);
-  // const [progressValue, setProgressValue] = useState(0);
   const [id, setId] = useState(null);
-  // const [startHours, setStartHours] = useState('');
-  // const [startMinutes, setStartMinutes] = useState('');
   const [disableButton, setDisableButton] = useState(false);
-  // const [clockInTime,setClockInTime] = useState('');
-  // const [timeHour, setTimeHour] = useState('');
-  // const [timeMinutes, setTimeMinutes] = useState('');
   const [taskList, setTaskList] = useState([]);
-  // const [clockInDate, setClockInDate] = useState('');
 
   const defaultTask = {
 
@@ -88,21 +75,6 @@ function Task(props) {
       defaultTask
     ]);
 
-    // const clockIn = customFunctions.getLocalStorage('clockinTime');
-    // const date = customFunctions.getLocalStorage('clockInDate');
-
-    // setClockInDate(date);
-    // const test1 = clockIn.split(':');
-    // // console.log('testtt', test1);
-    // const hr = test1[0];
-    // setTimeHour(Number(hr));
-    // // console.log('hr', hr);
-    // const min = test1[1].split(' ');
-    // const minNEw = min[0];
-    // setTimeMinutes(Number(minNEw));
-    // // console.log('min', minNEw);
-    // setClockInTime(clockIn);
-    // // console.log('time', clockInTime);
     const taskId = customFunctions.getLocalStorage('taskid');
     if (taskId)
       setId(taskId);
@@ -157,12 +129,6 @@ function Task(props) {
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
-          // setTaskStartTime();
-          // setTaskEndTime();
-          // setTaskHours();
-          // setTaskMinutes();
-          // setDescription();
-          // setTaskName();
           setTaskList([]);
           props.handleModalCLose(false);
           props.onChanges();
@@ -191,14 +157,6 @@ function Task(props) {
 
   const onTaskCancel = () => {
     validator.current.hideMessages();
-
-    // setTaskStartTime();
-    // setTaskEndTime();
-    // setTaskHours();
-    // setTaskMinutes();
-    // setDescription();
-    // setTaskName();
-    // setId();
     setTaskList([]);
     setTaskModalShow(false);
     props.handleModalCLose(false);
@@ -218,11 +176,6 @@ function Task(props) {
 
   return (
     <>
-    {/* { console.log('clockInTime',clockInTime) }
-    { console.log('Hours',timeHour) }
-    { console.log('clockInTime',clockInDate) }
-    { console.log('Minutes',timeMinutes) }
-    { console.log('array',taskList) } */}
       <ModalInput
         size="lg"
         centered
@@ -278,7 +231,6 @@ function Task(props) {
                   </Col>
                   <Col sm={6}>
                     <TextInput
-                      // onInputChange={(e) => setDescription(e.target.value)}
                       onInputChange={(e) => {
                         taskList[i].description = e.target.value;
                         setTaskList([...taskList]);
@@ -303,14 +255,6 @@ function Task(props) {
                   </Col>
                 </Row>
                 <Row>
-                {/* {console.log('condition',setHours(
-                        setMinutes(new Date(), parseInt(timeMinutes, 10) + 1),
-                        parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
-                      ))}
-                      {
-                        console.log(setMinutes(new Date(), parseInt(timeMinutes, 10) + 1),
-                        parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour)
-                      } */}
                   <Col sm={2}>
                     <Datepicker
                       className="form-control"
@@ -319,34 +263,15 @@ function Task(props) {
                       format="HH:mm"
                       id={`taskStartTime${i + 1}`}
                       selected={data.taskStartTime}
-                      // minDate={clockInDate}
-                      // // minTime={setMinutes((clockInDate), 0)}
-                      // minTime={setHours(
-                      //   setMinutes(new Date(), parseInt(data.startMinutes, 10) + 1),
-                      //   parseInt(data.startMinutes, 10) > 58 ? parseInt(data.startHours, 10) + 1 : data.startHours
-                      // )}
-                      // minTime={setHours(
-                      //   setMinutes(new Date(), parseInt(timeMinutes, 10) + 1),
-                      //   parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
-                      // )}
-                      // maxTime={setHours(setMinutes(clockInDate, 0), 0)}
                       onChange={(e) => {
                         taskList[i].taskStartTime = e;
                         taskList[i].taskEndTime = '';
                         taskList[i].taskHrs = '';
                         taskList[i].taskMins = '';
-                        taskList[i].startHours =  e.getHours();
+                        taskList[i].startHours = e.getHours();
                         taskList[i].startMinutes = e.getMinutes();
                         setTaskList([...taskList]);
                       }}
-                      // onChange={(e) => {
-                      //   setTaskStartTime(e);
-                      //   setTaskEndTime('')
-                      //   setStartHours(e.getHours());
-                      //   setStartMinutes(e.getMinutes());
-                      //   setTaskHours('');
-                      //   setTaskMinutes('');
-                      // }}
 
                       showTimeSelect="showTimeSelect"
                       showTimeSelectOnly="showTimeSelectOnly"
@@ -359,12 +284,7 @@ function Task(props) {
                       )}
                     />
                   </Col>
-                  {
-                    console.log('--0-8790--',
-                      setMinutes(new Date(), parseInt(data.startMinutes, 10) + 1),
-                      parseInt(data.startMinutes, 10) > 58 ? parseInt(data.startHours, 10) + 1 : data.startHours
-            )
-                  }
+                  
                   <Col sm={2}>
                     <Datepicker
                       className="form-control"

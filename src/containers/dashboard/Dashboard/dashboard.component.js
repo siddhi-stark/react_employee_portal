@@ -65,7 +65,6 @@ function Dashboard() {
         customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
         customFunctions.setLocalStorage('userclockedin',true);
         setSignInTime(data.data.clock_in_time);
-        console.log('signintimeeee', data.data.clock_in_time);
         customFunctions.setLocalStorage('clockInDate',data.data.clock_in_date);
         setShowClockIn(true);
         SharedService.clockIn.next(true);
@@ -113,7 +112,6 @@ function Dashboard() {
   };
 
   const getProfile = async () => {
-    console.log('ocsole in dashboard');
     const userToken = customFunctions.getLocalStorage('access_token');
     if (!userToken) return false;
 

@@ -22,19 +22,11 @@ import Loader from '../../components/Loader/index';
 import SharedService from '../../services/SharedService/sharedServices';
 
 const validator = new SimpleReactValidator();
-// const minOffset = 0;
-// const maxOffset = 60;
-
 
 function ToDoList(props) {
-  // const thisYearr = (new Date()).getFullYear();
-  // const [thisYear, setThisYear] = useState(thisYearr); // eslint-disable-line
-  // const [selectedYear, setSelectedYear] = useState(thisYearr);
   const [rows, setRows] = useState([]);
-  // const [minuteList, setMinutesList] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
   const [showMsg, setShowMsg] = useState(false);
-  // const [morningFlag, setMorningFlag] = useState('');
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
   const [editShow, setEditShow] = useState(false);
@@ -42,16 +34,9 @@ function ToDoList(props) {
   const [showSkipBreak, setShowSkipBreak] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [index, setIndex] = useState(null);
-
-  // const [selectedRowIndex, setSelectedRowIndex] = useState([]);
-  // const [taskList, setTaskList] = useState([]);
   const [ShowDelete, setShowDelete] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedBreakOption, setSelectedBreakOption] = useState(null); // eslint-disable-line
-  // const [startTime, setStartTime] = useState('');
-  // const [endTime, setEndTime] = useState('');
-  // const [hrs, setHrs] = useState('');
-  // const [min, setMin] = useState('');
   const [userRole, setUserRole] = useState('');
 
   const [taskId, setTaskId] = useState(null);
@@ -63,18 +48,12 @@ function ToDoList(props) {
   const [showErrorBlock, setShowErrorBlock] = useState(false);
   const [showSuccessBlock, setShowSuccessBlock] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
-  // const [startHours, setStartHours] = useState('');
-  // const [startMinutes, setStartMinutes] = useState('');
   const [clockInDate, setClockInDate] = useState('');
-  // const [clockInTime, setClockInTime] = useState('');
   const [timeHour, setTimeHour] = useState('');
   const [timeMinutes, setTimeMinutes] = useState('');
 
   const [showSendReport, setShowSendReport] = useState(false);
-  // const [timeSpentHours, setTimeSpentHours] = useState('');
-  // const [timeSpentMinutes, setTimeSpentMinutes] = useState('');
 
-  // const [yearList, setYearList] = useState([]);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -343,7 +322,7 @@ function ToDoList(props) {
 
   useEffect(() => {
     setClockinClockoutStorage();
-  }, [showBreak, showScrumPopup, loader])
+  }, [showBreak, showScrumPopup, loader]);
 
   const setClockinClockoutStorage = () => {
     const clockIn = customFunctions.getLocalStorage('clockinTime');
@@ -353,7 +332,6 @@ function ToDoList(props) {
 
       setClockInDate(dt);
 
-
       const hr = dt.getHours();
       setTimeHour(hr);
 
@@ -361,7 +339,8 @@ function ToDoList(props) {
       setTimeMinutes(min);
 
     }
-  }
+  };
+
   const getDailyActivity = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (data && data.data) {
@@ -559,7 +538,6 @@ function ToDoList(props) {
     }
   };
 
-
   const onDeleteBreakHandler = (idx, e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -581,7 +559,7 @@ function ToDoList(props) {
       setShowMsg(false);
 
     }
-  }
+  };
 
   const onChangeEndTime = (e, i) => {
     breakData[i].endTime = e;
@@ -600,7 +578,7 @@ function ToDoList(props) {
       breakData[i].timeMins = diffMins;
     }
     setBreakData([...breakData]);
-  }
+  };
 
   const setHoursSpendTime = async (e, i, fromFunc = true) => {
     // setTimeSpentHours(e.target.value);
@@ -613,10 +591,9 @@ function ToDoList(props) {
     if (fromFunc) {
       await setMinSpendTime({ target: { value: breakData[i].timeMins } }, i, false);
     }
-  }
+  };
 
   const setMinSpendTime = async (e, i, fromFunc = true) => {
-
 
     breakData[i].timeMins = e.target.value;
     if (fromFunc) {
@@ -627,7 +604,8 @@ function ToDoList(props) {
     const newMins = getMinutes + Number(e.target.value);
     breakData[i].endTime = new Date(endTime.setMinutes(newMins));
     setBreakData([...breakData]);
-  }
+  };
+
   return (
     <>
 

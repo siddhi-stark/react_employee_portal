@@ -725,7 +725,6 @@ function Employee() {
   ];
 
   const getMobile = (value) => {
-    console.log('value', value);
     let event = value.replace(/\D/g, '');
     if (event.length === 0) {
       event = '';

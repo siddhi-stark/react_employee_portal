@@ -17,13 +17,9 @@ function Sidebar() {
   useEffect(()=>{
 
     document.addEventListener('MenuChange', () => {
-      console.log('menuchange event');
       onSubActiveClass();
     });
-
-  //  const path = window.location.pathname;
-  //  console.log('path',path) 
-  },[])
+  },[]);
 
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });

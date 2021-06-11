@@ -25,7 +25,6 @@ function Header() {
   const eventMenu = new Event('MenuChange', { isUpdated: true });
 
   const getProfile = async () => {
-    console.log('gggggggggggggggggggggg');
     const userToken = customFunctions.getLocalStorage('access_token');
     if (!userToken) return false;
 
@@ -93,7 +92,7 @@ function Header() {
     
     document.dispatchEvent(eventMenu);
     return true;
-  }
+  };
 
   return (
     <>

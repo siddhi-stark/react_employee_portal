@@ -55,19 +55,17 @@ export default function SimpleTable(props) {
   ]);
   const allColumnIds = columns.map((column) => column.id);
 
-  
   useEffect(() => {
     setSelectedRows(  rows.filter((row) => {
       
       return selectedRowItems.includes(Number(row.id));
     })
-  )
-  }, [rows])
+  );
+  }, [rows]);
 
   useEffect(() => {
-    setSelectedRowIndexes([...selectedRowItems])
-  }, [selectedRowItems])
-  // console.log('selectedindex', selectedRowIndexes, selectedRowItems);
+    setSelectedRowIndexes([...selectedRowItems]);
+  }, [selectedRowItems]);
 
   const onSelectHead = (isChecked) => {
     const selectedIndexes = [];
