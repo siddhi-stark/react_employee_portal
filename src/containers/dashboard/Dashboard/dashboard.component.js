@@ -229,6 +229,7 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
+            <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>
             {
               showClockIn && !morningMail && (
                 <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
@@ -238,6 +239,7 @@ function Dashboard() {
                 </div>
               )
             }
+            </UserRestrictions>
 
             {showClockIn && <ToDoList onMorningSendScrum={getDailyActivity} onClockoutReport={getTimeSheetList} />}
           </Col>
