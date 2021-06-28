@@ -189,7 +189,7 @@ function Dashboard() {
                   </div>
                 </Col>
                 <Col md={3}>
-                  <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[2, 3, 4,5]} roleId={userRole}>
 
                     <div className="check-in">
                       {
