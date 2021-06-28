@@ -4,25 +4,25 @@ const menu = [
     path: '/',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4],
+    roleaccess: [1, 2, 3, 4, 5],
   },
   {
     title: 'Employee Timesheet',
-    path: '/',
+    path: '/employee-timesheet',
     icon: 'dashboard.svg',
     submenu: [],
     roleaccess: [5],
   },
   {
     title: 'Employees',
-    path: '/',
+    path: '/employees',
     icon: 'dashboard.svg',
     submenu: [],
     roleaccess: [5],
   },
   {
     title: 'Recruitment',
-    path: '/',
+    path: '',
     icon: 'dashboard.svg',
     submenu: [
       {
@@ -66,7 +66,7 @@ const menu = [
     path: '/reports',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1],
+    roleaccess: [1, 5],
   },
 
   // {
@@ -110,7 +110,7 @@ const menu = [
     path: '#',
     icon: 'logout.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4],
+    roleaccess: [1, 2, 3, 4, 5],
   },
 ];
 

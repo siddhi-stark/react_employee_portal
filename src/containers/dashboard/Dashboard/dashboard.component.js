@@ -189,7 +189,7 @@ function Dashboard() {
                   </div>
                 </Col>
                 <Col md={3}>
-                  <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
 
                     <div className="check-in">
                       {
@@ -244,6 +244,7 @@ function Dashboard() {
             {showClockIn && <ToDoList onMorningSendScrum={getDailyActivity} onClockoutReport={getTimeSheetList} />}
           </Col>
           <Col xl={4} id="right-sidebar">
+          <UserRestrictions permittedUsers={[1, 2, 3, 4]} roleId={userRole}>
             <Card className="flex-fill w-100 weekly-status-box">
               <Card.Body>
                 <Row>
@@ -292,7 +293,8 @@ function Dashboard() {
                 </Row>
               </Card.Body>
             </Card>
-            <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+            </UserRestrictions>
+            <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
 
               <div className="table-projects time-sheet-table">
                 <div className="card">
