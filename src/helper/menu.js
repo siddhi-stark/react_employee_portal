@@ -7,6 +7,40 @@ const menu = [
     roleaccess: [1, 2, 3, 4],
   },
   {
+    title: 'Employee Timesheet',
+    path: '/',
+    icon: 'dashboard.svg',
+    submenu: [],
+    roleaccess: [5],
+  },
+  {
+    title: 'Employees',
+    path: '/',
+    icon: 'dashboard.svg',
+    submenu: [],
+    roleaccess: [5],
+  },
+  {
+    title: 'Recruitment',
+    path: '/',
+    icon: 'dashboard.svg',
+    submenu: [
+      {
+        title: 'Batch Upload',
+        path: '/batch-upload',
+        icon: 'report.svg',
+        roleaccess: [5],
+      },
+      {
+        title: 'Applications',
+        path: '/applications',
+        icon: 'report.svg',
+        roleaccess: [5],
+      },
+    ],
+    roleaccess: [5],
+  },
+  {
     title: 'Projects',
     path: '/projects',
     icon: 'project.svg',
