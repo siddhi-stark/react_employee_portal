@@ -80,8 +80,8 @@ useEffect(()=>{
           <CustomTable
             columns={columns}
             rows={rowData}
-            role={5}
-            showPagination={true} 
+            role={5} 
+            showPagination={true}
             paginationProps={{
               totalItems: totalCount,
               itemsPerPage: limit,
