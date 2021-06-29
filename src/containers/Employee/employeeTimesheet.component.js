@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card,  Accordion, Button } from 'react-bootstrap';
-// import StarkFormBuilder from 'stark-form-builder';
 import CustomTable from 'stark-custom-datatable';
 // import swal from 'sweetalert';
-// import FormSections from './formschema (4).json';
+import StarkFormBuilder from 'stark-form-builder';
+import FormSections from './employeeListformschema.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -18,6 +18,11 @@ function EmployeeTimesheet() {
  const [itemsPerPage, setItemsPerPage] = useState(5);
  const [currentPage, setCurrentPage] = useState(1);
  const [filterData, setFilterData] = useState({}); // eslint-disable-line
+
+// Variable declarations
+const [defaultValues, updateDefaultValues] = useState({});
+const [options, updateOptions] = useState({});
+const [currentUser, updateCurrentUser] = useState(0);
 
  const title = 'Employees List';
  const limit = 10;
@@ -122,6 +127,46 @@ function EmployeeTimesheet() {
   getRowData(1);
  }, [filterData]);
 
+// Get user role
+const getUserRole = async() => {
+  const roleId = await localStorage.getItem('role');
+  updateCurrentUser(Number(roleId));
+};
+
+useEffect(() => {
+  getUserRole();
+}, []);
+
+// Submit Form
+const submitForm = async (formValues) => {
+  console.log(formValues,updateDefaultValues);
+  setFilterData(formValues);
+};
+  
+const getEmployeeName = async () => {
+  const {data} = await AuthApi.getDataFromServer(Api.employeeUrl);
+  if(!data) {
+    // show error
+    return;
+  }
+  
+  const dpOptions = [];
+  data.data.map((op) => {
+    // Change appropriate keys
+    dpOptions.push({label: op.full_name, value: op.id});
+    return op;
+  });
+  const allOptions = {
+    ...options,
+    full_name: dpOptions
+  };
+  updateOptions(allOptions);
+}
+
+useEffect(() => {
+  getEmployeeName();
+}, []);
+    
  return (
   <>
    <Helmet title={title} />
@@ -147,27 +192,26 @@ function EmployeeTimesheet() {
             <Accordion.Collapse eventKey='1'>
               <Card.Body>
                 <Card.Title>
-                  {/* <StarkFormBuilder
+                  <StarkFormBuilder
                     containerClass=''
                     formHeaderClass=''
                     formSections={FormSections}
                     formHeading=""
-                    onFormSubmit={(formValues) => { submitForm(formValues); }}
+                    onFormSubmit={(formValues) => {submitForm(formValues);}}
                     options={options}
                     callbacks={{}}
                     defaultFormValues={defaultValues}
                     currentUser={currentUser}
                     submitBtnText="Submit"
-                    showResetBtn={true} // eslint-disable-line
+                    showResetBtn={true}
                     resetBtnText="Clear"
                     btnContainerClass="form-submit-buttons"
                     isStepForm={false}
-
+                    
                     onFormReset={() => {
-                      onResetForm();
+                      console.log('form reset callback')
                     }}
-                  /> */}
-
+                  />
                 </Card.Title>
               </Card.Body>
             </Accordion.Collapse>
