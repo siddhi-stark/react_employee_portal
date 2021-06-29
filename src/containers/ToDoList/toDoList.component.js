@@ -609,7 +609,6 @@ function ToDoList(props) {
 
   return (
     <>
-      {console.log('pagination',pagination)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"

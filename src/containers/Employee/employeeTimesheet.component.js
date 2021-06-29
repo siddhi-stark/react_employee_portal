@@ -13,11 +13,11 @@ import { Helmet } from '../../components/FormInputs';
 
 function EmployeeTimesheet() {
 
- const [rowData, setRowData] = useState([])
+ const [rowData, setRowData] = useState([]);
  const [totalCount, setTotalCount] = useState(10);
  const [itemsPerPage, setItemsPerPage] = useState(5);
  const [currentPage, setCurrentPage] = useState(1);
- const [filterData, setFilterData] = useState({}) // eslint-disable-line
+ const [filterData, setFilterData] = useState({}); // eslint-disable-line
 
  const title = 'Employees List';
  const limit = 10;
@@ -88,7 +88,6 @@ function EmployeeTimesheet() {
  },
  ];
 
-
  // Declare methods
  const getRowData = async (pageNo = 1) => {
   const page = pageNo || currentPage;
@@ -97,7 +96,7 @@ function EmployeeTimesheet() {
    limit,
    page,
    // ...filterList
-  }
+  };
   const url = customFunctions.generateUrl(endPoint, params);
   const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -115,14 +114,13 @@ function EmployeeTimesheet() {
 
    setRowData(data && data.data || []);
   } else {
-   console.log('error', message)
+   console.log('error', message);
   }
- }
-
+ };
 
  useEffect(() => {
-  getRowData(1)
- }, [filterData])
+  getRowData(1);
+ }, [filterData]);
 
  return (
   <>
@@ -190,16 +188,13 @@ function EmployeeTimesheet() {
         getRowData(pageNo);
        }
       }}
-      emptyRender={() => { return ('No record found.') }}
+      emptyRender={() => { return ('No record found.'); }}
      />
 
     </Card.Header>
    </Card>
    </div>
   </>
- )
-
-
-
+ );
 }
 export default withRouter(EmployeeTimesheet);
