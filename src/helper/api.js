@@ -59,7 +59,7 @@ export default class Api extends Component {
     let url = '';
     switch (env) {
       case 'production':
-        url = '';
+        url = 'https://fj67fd3njj.execute-api.ap-south-1.amazonaws.com/production/api/v1/';
         break;
       // Default: development server
       default:
