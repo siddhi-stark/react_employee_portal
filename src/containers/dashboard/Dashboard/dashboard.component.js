@@ -320,6 +320,7 @@ function Dashboard() {
                       )}
                     />
                   </div>
+                  <Button>View All</Button>
                 </div>
               </div>
             </UserRestrictions>

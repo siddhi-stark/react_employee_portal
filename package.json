@@ -25,6 +25,7 @@
     "redux": "^4.0.5",
     "rxjs": "^7.1.0",
     "simple-react-validator": "^1.6.0",
+    "stark-custom-datatable": "^0.1.7",
     "sweetalert": "^2.1.2",
     "web-vitals": "^1.0.1"
   },
