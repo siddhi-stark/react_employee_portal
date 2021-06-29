@@ -7,7 +7,7 @@ import Api from '../../helper/api';
 
 // Declare columns
 const columns = [{
-    'id':'id',
+    'id':'index',
     'label': 'Sr.No',
   },
   {
@@ -62,6 +62,13 @@ const getRowData = async (pageNo=1) =>{
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
+
+      const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.index = ((page - 1) * limit) + (i + 1);
+        return newItem;
+      });
       setRowData(data && data.data || []);
     }else{
       console.log('error', message);
