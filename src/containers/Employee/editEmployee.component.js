@@ -56,9 +56,9 @@ function EditEmployee() {
 
   return (
     <>
-      <div className="d-flex justify-content-left">
-        <p>Employee Name</p>
-        <p className='mr-5'>Employee Date</p>
+      <div className="d-flex justify-content-left mt-4">
+        <p>Employee Name- Mrunali Patil</p>
+        <p className='ms-4'>Employee Date- 20/02/2021</p>
       </div>
       <StarkFormBuilder
         containerClass=''

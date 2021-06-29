@@ -1,8 +1,8 @@
 [
     {
         "layout": {
-            "label": "4 Column",
-            "value": "4column"
+            "label": "1 Column",
+            "value": "1column"
         },
         "containerClass": "",
         "displaySection": true,
@@ -15,7 +15,7 @@
                 "id": "",
                 "placeholder": "",
                 "inputClass": "",
-                "containerClass": "",
+                "containerClass": "col-md-4",
                 "validations": [
                     {
                         "type": "required",
@@ -50,7 +50,7 @@
                 "id": "",
                 "placeholder": "",
                 "inputClass": "",
-                "containerClass": "",
+                "containerClass": "col-md-4",
                 "validations": [
                     {
                         "type": "required",
@@ -85,7 +85,7 @@
                 "id": "",
                 "placeholder": "",
                 "inputClass": "",
-                "containerClass": "",
+                "containerClass": "col-md-4",
                 "validations": [],
                 "displayWhen": {},
                 "haveValidations": "false",
@@ -114,7 +114,7 @@
                 "id": "",
                 "placeholder": "",
                 "inputClass": "",
-                "containerClass": "",
+                "containerClass": "col-md-4",
                 "validations": [
                     {
                         "type": "required",
