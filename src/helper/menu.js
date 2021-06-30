@@ -21,11 +21,18 @@ const menu = [
     roleaccess: [1],
   },
   {
+    title: 'Technology',
+    path: '/technology',
+    icon: 'Designation.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  {
     title: 'Employees',
     path: '/employee',
     icon: 'Employee.svg',
     submenu: [],
-    roleaccess: [1,2,3],
+    roleaccess: [1, 2, 3],
   },
   {
     title: 'Reports',
@@ -50,7 +57,7 @@ const menu = [
     submenu: [],
     roleaccess: [4],
   },
-{
+  {
     title: 'Reports',
     path: '#',
     redirect: false,
@@ -60,16 +67,16 @@ const menu = [
         title: 'My Report',
         path: '/report',
         icon: 'report.svg',
-        roleaccess: [2,3],
+        roleaccess: [2, 3],
       },
       {
         title: 'Team Report',
         path: '/team-report',
         icon: 'report.svg',
-        roleaccess: [2,3],
+        roleaccess: [2, 3],
       },
     ],
-    roleaccess: [2,3],
+    roleaccess: [2, 3],
   },
   {
     title: 'Logout',
