@@ -26,6 +26,7 @@ function EmployeeTimesheet() {
 
   const title = 'Employees List';
   const limit = 10;
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const history = useHistory();
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
@@ -34,6 +35,23 @@ function EmployeeTimesheet() {
     { to: '/', label: 'Home' },
     { label: 'Employee' },
   ];
+
+  useEffect(() => {
+
+    const formSchema = [...FormSections];
+    const updatedSchema = formSchema.map((section) => {
+      const s = { ...section };
+      console.log('s', s.fields);
+      s.fields = section.fields.map((item) => {
+        const itemData = item;
+        console.log('itemData', itemData, item.name === 'fromDate');
+        if(item.name === 'fromDate') itemData.minDateSelector = new Date();
+        return itemData;
+      })
+      return s;
+    })
+    updateJsonSchema([...updatedSchema]);
+  }, [updateJsonSchema]);
 
   const handleActionCallback = () => {
     return (
@@ -140,7 +158,7 @@ function EmployeeTimesheet() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, updateDefaultValues);
+    console.log(formValues, updateDefaultValues,formValues);
     setFilterData(formValues);
   };
 
@@ -170,6 +188,7 @@ function EmployeeTimesheet() {
 
   return (
     <>
+    {/* {console.log('jsonschema', jsonSchema)} */}
       <Helmet title={title} />
       <div className='page-header'>
         <div className='title-breadcrumb-section'>
@@ -196,7 +215,7 @@ function EmployeeTimesheet() {
                   <StarkFormBuilder
                     containerClass=''
                     formHeaderClass=''
-                    formSections={FormSections}
+                    formSections={jsonSchema}
                     formHeading=""
                     onFormSubmit={(formValues) => { submitForm(formValues); }}
                     options={options}
@@ -219,10 +238,10 @@ function EmployeeTimesheet() {
           </Card>
         </Accordion>
         <Card>
-        <Card.Header>
-          <div className="d-flex align-items-center justify-content-between">
-            <h4 className="text-primary mt-2 mb-2">Employees List</h4>
-          </div>
+          <Card.Header>
+            <div className="d-flex align-items-center justify-content-between">
+              <h4 className="text-primary mt-2 mb-2">Employees List</h4>
+            </div>
           </Card.Header>
           <Card.Body>
             <CustomTable
