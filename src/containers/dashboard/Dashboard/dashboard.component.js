@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import { Helmet } from '../../../components/FormInputs';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
@@ -26,6 +26,7 @@ function Dashboard() {
   const [show, setShow] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [morningMail, setMorningMail] = useState(false);
+  const history = useHistory();
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -320,7 +321,9 @@ function Dashboard() {
                       )}
                     />
                   </div>
-                  <Button>View All</Button>
+                  <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+                    <Button onClick={()=> history.push('/emp-timesheet')}>View All</Button>
+                  </UserRestrictions>
                 </div>
               </div>
             </UserRestrictions>
