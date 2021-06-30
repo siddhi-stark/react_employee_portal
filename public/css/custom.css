@@ -11154,6 +11154,7 @@ body .morning-mail-sent {
 .mini-stat {
   border: 1px solid rgba(112, 112, 112, 0.12);
   padding: 20px;
+  width: 30%;
   border-radius: 3px;
   margin-bottom: 20px;
 }
