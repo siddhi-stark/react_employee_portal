@@ -219,7 +219,12 @@ function EmployeeTimesheet() {
           </Card>
         </Accordion>
         <Card>
-          <Card.Header>
+        <Card.Header>
+          <div className="d-flex align-items-center justify-content-between">
+            <h4 className="text-primary mt-2 mb-2">Employees List</h4>
+          </div>
+          </Card.Header>
+          <Card.Body>
             <CustomTable
               columns={columns}
               rows={rowData}
@@ -236,7 +241,7 @@ function EmployeeTimesheet() {
               emptyRender={() => { return ('No record found.'); }}
             />
 
-          </Card.Header>
+          </Card.Body>
         </Card>
       </div>
     </>
