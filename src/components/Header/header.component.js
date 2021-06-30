@@ -98,7 +98,7 @@ function Header() {
     <>
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
-          <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+          <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
             <div className="main-header-left">
               {time ? (
                 <div className="d-flex justify-content-start clock-in-time">
