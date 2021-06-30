@@ -4,6 +4,31 @@ import { Tabs, Tab, Card } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
+const Employee =[{
+  'name':' Employee 1',
+  'designation':'developer',
+  'date':'20/05/2021',
+  'id':'123'
+},
+{
+  'name':' Employee 2',
+  'designation':'developer',
+  'date':'20/05/2021',
+  'id':'123'
+},
+{
+  'name':' Employee 3',
+  'designation':'developer',
+  'date':'20/05/2021',
+  'id':'123'
+},
+{
+  'name':' Employee 4',
+  'designation':'developer',
+  'date':'20/05/2021',
+  'id':'123'
+}
+]
 function Employees() {
   const title = 'Employees List';
 
@@ -29,12 +54,17 @@ function Employees() {
 
               >
                 <Tab eventKey="currentEmployee" title="Current Employee">
+                { Employee && Employee.map((emp)=>(
+                  <div key={emp.id}>
                   <Card className="mt-3" style={{ 'width': '26rem', 'marginRight': '18px' }}>
                     <Card.Body>
-                      <Card.Title>Total Number of Customers</Card.Title>
-                      <p>26</p>
+                      {/* <Card.Title>Total Number of Customers</Card.Title> */}
+                      <p>emp.name</p>
+
                     </Card.Body>
                   </Card>
+                  </div>
+                ))}
                 </Tab>
 
                 <Tab eventKey='noticePeriod' title='Serving Notice Period'>
