@@ -10,19 +10,41 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
+function Technology() {
 
-const handleActionCallback = () => {
+  // Declare variable 
+  const [rowData, setRowData] = useState([])
+  const [totalCount, setTotalCount] = useState(10);
+  const [limit, setLimit] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterData, setFilterData] = useState({}) // eslint-disable-line
+  const [technologyId, setTechnologyId] = useState('');
+
+  // Variable declarations
+  const [defaultValues, updateDefaultValues] = useState({});
+  const [options, updateOptions] = useState({}); // eslint-disable-line
+  const [currentUser, updateCurrentUser] = useState(0);
+
+  const title = 'Employees List';
+
+  const items = [
+    { to: '/', label: 'Home' },
+    { label: 'Employee' },
+  ];
+
+const handleActionCallback = (row) => {
+  console.log('row',row);
   return (
     <>
       <a
         href="/"
         className=""
-      // onClick={(e) => {
-      //   e.preventDefault();
-      //   e.stopPropagation();
-      //   setDesignationId(id);
-      //   setDesignation(name);
-      // }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setTechnologyId(row.id);
+          // setTechnologyName(name);
+        }}
       >
         <Image src="/images/edit-button.svg" alt="Edit Technology" />
       </a>
@@ -56,32 +78,6 @@ const columns = [{
 },
 ];
 
-
-function Technology() {
-
-  // Declare variable 
-  const [rowData, setRowData] = useState([])
-  const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}) // eslint-disable-line
-
-  const title = 'Employees List';
-
-  const items = [
-    { to: '/', label: 'Home' },
-    { label: 'Employee' },
-  ];
-
-
-  // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({}); // eslint-disable-line
-  const [currentUser, updateCurrentUser] = useState(0);
-
-
-
-
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
@@ -104,11 +100,9 @@ function Technology() {
     }
   }
 
-
   useEffect(() => {
-    getRowData(1)
+    getRowData(1);
   }, [filterData])
-
 
   // Get user role
   const getUserRole = async () => {
@@ -130,9 +124,7 @@ function Technology() {
       return; // eslint-disable-line
     }
     // Perform success actions
-
   };
-
 
   // Get data for form
   const getData = async () => {
@@ -141,18 +133,21 @@ function Technology() {
       // show error
       return;
     }
-    updateDefaultValues(data);
+
+    console.log('dtaa',data);
+    console.log('technologyId',technologyId);
+    data.data.map((dt)=>{
+      if(technologyId){
+        updateDefaultValues({name:dt.name});
+      }
+      return dt;
+    })
   };
 
   // Call get data method on load
   useEffect(() => {
     getData();
   }, []);
-
-
-
-
-
 
   return (
     <>
@@ -255,8 +250,6 @@ function Technology() {
                       console.log('form reset callback')
                     }}
                   />
-
-
                 </Col>
                 <Col>
                   <CustomTable
@@ -273,7 +266,6 @@ function Technology() {
                     }}
                     emptyRender={() => { return ('No record found.') }}
                   />
-
                 </Col>
               </Row>
             </Card.Body>
