@@ -2,9 +2,9 @@ import { Component } from 'react';
 
 export default class Api extends Component {
   static baseUrl = Api.getBaseUrl();
-  
+
   static s3UrlnoProfile = 'https://empportal-serverless.s3.ap-south-1.amazonaws.com/noProfile.jpeg';
-  
+
   static s3Url = 'https://empportal-serverless.s3.amazonaws.com/media/';
 
   static loginUrl = `${Api.baseUrl}login/`;
@@ -64,7 +64,7 @@ export default class Api extends Component {
       // Default: development server
       default:
         url =
-          'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/';
+          'https://fj67fd3njj.execute-api.ap-south-1.amazonaws.com/production/api/v1/';
         break;
     }
     return url;
