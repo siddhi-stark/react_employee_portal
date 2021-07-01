@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Row, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import customFunctions from '../../helper/customFunctions';
@@ -9,84 +9,85 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 
-const handleActionCallback = () => {
-  return (
-    <>
-      <a
-        href="/"
-        className="pl-2"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          // history.push('/edit-employee');
-          // setModalShow(true);
-          // setEmployeeId(id);
-          // getRowData(1,index);
-          // setAddButton(true);
-          // setCntClearFilter(cntClearFilter + 1);
-        }}
-      >
-        <Image src="/images/edit-button.svg" alt="Edit Designation" />
-      </a>
-
-      <a
-        href="/"
-        className="pl-2"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          // history.push('/edit-employee');
-          // setModalShow(true);
-          // setEmployeeId(id);
-          // getRowData(1,index);
-          // setAddButton(true);
-          // setCntClearFilter(cntClearFilter + 1);
-        }}
-      >
-        <Image src="/images/delete.png" alt="Delete Designation" />
-      </a>
-    </>
-  );
-};
-
-const columns = [{
-  'id': 'id',
-  'label': 'Sr.No',
-},
-{
-  'id': 'full_name',
-  'label': 'EmployeeName',
-},
-{
-  'id': 'Technology',
-  'label': 'Technology',
-},
-{
-  'id': 'action',
-  'label': 'Action',
-  render: handleActionCallback
-},
-];
 
 
 function EmployeeTechListing() {
-
-
+  
+  
   // Declare variable 
   const [rowData, setRowData] = useState([])
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}) // eslint-disable-line
-
-
+  
+  
   const title = 'Employees List';
-
+  
+  const history = useHistory();
   const items = [
     { to: '/', label: 'Home' },
     { label: 'Employee Technology Stack' },
   ];
-
+  
+  const handleActionCallback = () => {
+    return (
+      <>
+        <a
+          href="#"
+          className="pl-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // history.push('/add-technology-stack');
+            // setModalShow(true);
+            // setEmployeeId(id);
+            // getRowData(1,index);
+            // setAddButton(true);
+            // setCntClearFilter(cntClearFilter + 1);
+          }}
+        >
+          <Image src="/images/edit-button.svg" alt="Edit Designation" />
+        </a>
+  
+        <a
+          href="/"
+          className="pl-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // history.push('/edit-employee');
+            // setModalShow(true);
+            // setEmployeeId(id);
+            // getRowData(1,index);
+            // setAddButton(true);
+            // setCntClearFilter(cntClearFilter + 1);
+          }}
+        >
+          <Image src="/images/delete.png" alt="Delete Designation" />
+        </a>
+      </>
+    );
+  };
+  
+  const columns = [{
+    'id': 'id',
+    'label': 'Sr.No',
+  },
+  {
+    'id': 'full_name',
+    'label': 'EmployeeName',
+  },
+  {
+    'id': 'Technology',
+    'label': 'Technology',
+  },
+  {
+    'id': 'action',
+    'label': 'Action',
+    render: handleActionCallback
+  },
+  ];
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
@@ -173,11 +174,9 @@ function EmployeeTechListing() {
                 <div className="d-flex align-items-center justify-content-end">
                   <a
                     href="#"
-                    // onClick={() => {
-                    //   setModalShow(true);
-                    //   setEmployeeId();
-                    //   setAddButton(true);
-                    // }}
+                    onClick={() => {
+                      history.push('/add-technology-stack');
+                    }}
                     className="btn-link"
                   >
                     Add Technology

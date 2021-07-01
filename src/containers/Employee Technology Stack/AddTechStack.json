@@ -1,0 +1,133 @@
+[
+    {
+        "sectionName": "technologystack",
+        "sectionTitle": "Technology Stack",
+        "layout": {
+            "label": "1 Column",
+            "value": "1column"
+        },
+        "containerClass": "",
+        "displaySection": true,
+        "displaySectionTitle": false,
+        "fields": [
+            {
+                "name": "employee",
+                "type": "select",
+                "label": "Employee",
+                "id": "",
+                "placeholder": "",
+                "inputClass": "col-md-4",
+                "containerClass": "",
+                "validations": [
+                    {
+                        "type": "required",
+                        "applyWhen": [],
+                        "applyWhenRelation": "OR"
+                    }
+                ],
+                "displayWhen": {},
+                "haveValidations": "true",
+                "haveDisplayOptions": "false",
+                "callback": "",
+                "callbackUrl": "",
+                "inputToChange": "",
+                "minDateSelector": "",
+                "maxDateSelector": "",
+                "disabled": false,
+                "isMulti": false,
+                "allowedUsers": [],
+                "fieldsToReset": [],
+                "fieldLayout": {
+                    "label": "1 Column",
+                    "value": "1column"
+                },
+                "fields": [],
+                "optionCallback": "getEmployee",
+                "optionsCallbackUrl": "employeeUrl",
+                "options": []
+            },
+            {
+                "name": "technology",
+                "type": "select",
+                "label": "Technology",
+                "id": "",
+                "placeholder": "",
+                "inputClass": "col-md-4",
+                "containerClass": "",
+                "validations": [
+                    {
+                        "type": "required",
+                        "applyWhen": [],
+                        "applyWhenRelation": "OR"
+                    }
+                ],
+                "displayWhen": {},
+                "haveValidations": "true",
+                "haveDisplayOptions": "false",
+                "callback": "",
+                "callbackUrl": "",
+                "inputToChange": "",
+                "minDateSelector": "",
+                "maxDateSelector": "",
+                "disabled": false,
+                "isMulti": true,
+                "allowedUsers": [],
+                "fieldsToReset": [],
+                "fieldLayout": {
+                    "label": "1 Column",
+                    "value": "1column"
+                },
+                "fields": [],
+                "optionCallback": "getTechnology",
+                "optionsCallbackUrl": "designationUrl",
+                "options": []
+            },
+            {
+                "name": "isINterviewer",
+                "type": "checkbox",
+                "label": "IsINterviewer",
+                "id": "",
+                "placeholder": "",
+                "inputClass": "col-md-4",
+                "containerClass": "",
+                "validations": [
+                    {
+                        "type": "required",
+                        "applyWhen": [],
+                        "applyWhenRelation": "OR"
+                    }
+                ],
+                "displayWhen": {},
+                "haveValidations": "true",
+                "haveDisplayOptions": "false",
+                "callback": "",
+                "callbackUrl": "",
+                "inputToChange": "",
+                "minDateSelector": "",
+                "maxDateSelector": "",
+                "disabled": false,
+                "isMulti": false,
+                "allowedUsers": [],
+                "fieldsToReset": [],
+                "fieldLayout": {
+                    "label": "1 Column",
+                    "value": "1column"
+                },
+                "fields": [],
+                "optionCallback": "",
+                "options": [
+                    {
+                        "label": "yes",
+                        "value": "Yes"
+                    },
+                    {
+                        "label": "no",
+                        "value": "No"
+                    }
+                ]
+            }
+        ],
+        "allowedUsers": [],
+        "sectionLayout": "1column"
+    }
+]
