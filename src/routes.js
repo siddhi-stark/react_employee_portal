@@ -17,6 +17,9 @@ import ManagePassword from './containers/Profile/changePassword.component';
 import TeamReport from './containers/Reports/teamReport.component';
 import NotFound from './containers/not-found/notFound.component';
 import Events from './containers/Events/events.component';
+import EmployeeList from './containers/Employee/employeeList.component';
+import EmployeeTimesheet from './containers/Employee/employeeTimesheet.component';
+import EditEmployee from './containers/Employee/editEmployee.component';
 
 function Routes() {
   return (
@@ -36,6 +39,9 @@ function Routes() {
       <Route path="/manage-password" exact component={ManagePassword} />
       <Route path="/team-report" exact component={TeamReport} />
       <Route path="/events" exact component={Events} />
+      <Route path="/employee-list" exact component={EmployeeList} />
+      <Route path="/emp-timesheet" exact component={EmployeeTimesheet} />
+      <Route path="/edit-employee" exact component={EditEmployee} />
       <Route component={NotFound} />
     </Switch>
   );

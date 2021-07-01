@@ -93,6 +93,8 @@
     "react/no-array-index-key": "off",
     "react-hooks/exhaustive-deps": "off",
     "react/jsx-no-target-blank": "off",
-    "react/no-unescaped-entities":"off"
+    "react/no-unescaped-entities":"off",
+    "react/jsx-boolean-value":"off",
+    "jsx-a11y/aria-role":"off",
   }
 }
