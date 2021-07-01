@@ -22,6 +22,10 @@ import EmployeeTechListing from './containers/Employee Technology Stack/Employee
 import EmployeeList from './containers/Employee/employeeList.component';
 import EmployeeTimesheet from './containers/Employee/employeeTimesheet.component';
 import EditEmployee from './containers/Employee/editEmployee.component';
+import EmployeeList from './containers/Employee/employeeList.component';
+import EmployeeTimesheet from './containers/Employee/employeeTimesheet.component';
+import EditEmployee from './containers/Employee/editEmployee.component';
+import Employees from './containers/Employees/Employees.component';
 
 function Routes() {
   return (
@@ -46,6 +50,10 @@ function Routes() {
       <Route path="/employee-list" exact component={EmployeeList} />
       <Route path="/emp-timesheet" exact component={EmployeeTimesheet} />
       <Route path="/edit-employee" exact component={EditEmployee} />
+      <Route path="/employee-list" exact component={EmployeeList} />
+      <Route path="/emp-timesheet" exact component={EmployeeTimesheet} />
+      <Route path="/edit-employee" exact component={EditEmployee} />
+      <Route path="/employees" exact component={Employees} />
       <Route component={NotFound} />
     </Switch>
   );
