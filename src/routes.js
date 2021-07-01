@@ -22,9 +22,6 @@ import EmployeeTechListing from './containers/Employee Technology Stack/Employee
 import EmployeeList from './containers/Employee/employeeList.component';
 import EmployeeTimesheet from './containers/Employee/employeeTimesheet.component';
 import EditEmployee from './containers/Employee/editEmployee.component';
-import EmployeeList from './containers/Employee/employeeList.component';
-import EmployeeTimesheet from './containers/Employee/employeeTimesheet.component';
-import EditEmployee from './containers/Employee/editEmployee.component';
 import Employees from './containers/Employees/Employees.component';
 
 function Routes() {
@@ -47,9 +44,6 @@ function Routes() {
       <Route path="/events" exact component={Events} />
       <Route path="/technology" exact component={Technology} />
       <Route path="/emp-stack" exact component={EmployeeTechListing} />
-      <Route path="/employee-list" exact component={EmployeeList} />
-      <Route path="/emp-timesheet" exact component={EmployeeTimesheet} />
-      <Route path="/edit-employee" exact component={EditEmployee} />
       <Route path="/employee-list" exact component={EmployeeList} />
       <Route path="/emp-timesheet" exact component={EmployeeTimesheet} />
       <Route path="/edit-employee" exact component={EditEmployee} />
