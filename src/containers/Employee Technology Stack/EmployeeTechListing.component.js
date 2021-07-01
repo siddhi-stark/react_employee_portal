@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Accordion, Button, Row } from 'react-bootstrap';
+import { Card, Accordion, Button, Row, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
@@ -9,7 +9,46 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 
-// Declare columns
+const handleActionCallback = () => {
+  return (
+    <>
+      <a
+        href="/"
+        className="pl-2"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          // history.push('/edit-employee');
+          // setModalShow(true);
+          // setEmployeeId(id);
+          // getRowData(1,index);
+          // setAddButton(true);
+          // setCntClearFilter(cntClearFilter + 1);
+        }}
+      >
+        <Image src="/images/edit-button.svg" alt="Edit Designation" />
+      </a>
+
+      <a
+        href="/"
+        className="pl-2"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          // history.push('/edit-employee');
+          // setModalShow(true);
+          // setEmployeeId(id);
+          // getRowData(1,index);
+          // setAddButton(true);
+          // setCntClearFilter(cntClearFilter + 1);
+        }}
+      >
+        <Image src="/images/delete.png" alt="Delete Designation" />
+      </a>
+    </>
+  );
+};
+
 const columns = [{
   'id': 'id',
   'label': 'Sr.No',
@@ -25,6 +64,7 @@ const columns = [{
 {
   'id': 'action',
   'label': 'Action',
+  render: handleActionCallback
 },
 ];
 
@@ -140,7 +180,7 @@ function EmployeeTechListing() {
                     // }}
                     className="btn-link"
                   >
-                    Add Employee
+                    Add Technology
                     </a>
                 </div>
               </div>
