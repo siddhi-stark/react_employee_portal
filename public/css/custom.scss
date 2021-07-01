@@ -2807,6 +2807,54 @@ table {
     transform: translate(-50%);
 }
 
+body .morning-mail-sent {
+  background-color: #fde7be;
+}
+.mini-stat {
+  border: 1px solid rgba(112, 112, 112, 0.12);
+  padding: 20px;
+  width: 30%;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.mini-stat-icon {
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  line-height: 60px;
+  text-align: center;
+  font-size: 30px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 10px;
+  color: #ffffff;
+}
+
+.mini-stat-info {
+  font-size: 14px;
+  padding-top: 2px;
+}
+
+.mini-stat-info span {
+  display: block;
+  font-size: 22px;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif;
+}
+.address-content {
+    margin-left: 20px;
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.date-edit-option {
+    h6 {
+        margin-right: 15px;
+        margin-bottom: 0;
+    }
+}
 
 @media (min-width: 576px){
     .bd-content .highlight {
