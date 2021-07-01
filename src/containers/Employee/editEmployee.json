@@ -11,7 +11,7 @@
             {
                 "name": "login",
                 "type": "text",
-                "label": "Login",
+                "label": "Start Time",
                 "id": "",
                 "placeholder": "",
                 "inputClass": "",
@@ -46,7 +46,7 @@
             {
                 "name": "logout",
                 "type": "text",
-                "label": "Logout",
+                "label": "End Time",
                 "id": "",
                 "placeholder": "",
                 "inputClass": "",
@@ -95,7 +95,7 @@
                 "inputToChange": "",
                 "minDateSelector": "",
                 "maxDateSelector": "",
-                "disabled": false,
+                "disabled": true,
                 "isMulti": false,
                 "allowedUsers": [],
                 "fieldsToReset": [],

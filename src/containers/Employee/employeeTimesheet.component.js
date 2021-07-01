@@ -26,7 +26,6 @@ function EmployeeTimesheet() {
 
   const title = 'Employees List';
   const limit = 10;
-  const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const history = useHistory();
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
@@ -35,23 +34,15 @@ function EmployeeTimesheet() {
     { to: '/', label: 'Home' },
     { label: 'Employee' },
   ];
-
-  useEffect(() => {
-
-    const formSchema = [...FormSections];
-    const updatedSchema = formSchema.map((section) => {
-      const s = { ...section };
-      console.log('s', s.fields);
-      s.fields = section.fields.map((item) => {
-        const itemData = item;
-        console.log('itemData', itemData, item.name === 'fromDate');
-        if(item.name === 'fromDate') itemData.minDateSelector = new Date();
-        return itemData;
-      })
-      return s;
-    })
-    updateJsonSchema([...updatedSchema]);
-  }, [updateJsonSchema]);
+  const formSchema = [...FormSections];
+    formSchema[0].fields.map((section)=>{
+    const sectionData = section;
+    if(sectionData.name === 'fromDate'){
+    const date = new Date();
+    sectionData.minDate = date;
+    }
+    return sectionData;
+  });
 
   const handleActionCallback = () => {
     return (
@@ -63,11 +54,6 @@ function EmployeeTimesheet() {
             e.preventDefault();
             e.stopPropagation();
             history.push('/edit-employee');
-            // setModalShow(true);
-            // setEmployeeId(id);
-            // getRowData(1,index);
-            // setAddButton(true);
-            // setCntClearFilter(cntClearFilter + 1);
           }}
         >
           Edit
@@ -187,7 +173,7 @@ function EmployeeTimesheet() {
       full_name: dpOptions
     };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getEmployeeName();
@@ -195,7 +181,6 @@ function EmployeeTimesheet() {
 
   return (
     <>
-    {/* {console.log('jsonschema', jsonSchema)} */}
       <Helmet title={title} />
       <div className='page-header'>
         <div className='title-breadcrumb-section'>
@@ -212,7 +197,7 @@ function EmployeeTimesheet() {
                 <div className='d-flex align-items-center justify-content-end'>
                   <Accordion.Toggle as={Button} variant='link' eventKey='1'>
                     Expand
-                    </Accordion.Toggle>
+                  </Accordion.Toggle>
                 </div>
               </div>
             </Card.Header>
@@ -222,7 +207,7 @@ function EmployeeTimesheet() {
                   <StarkFormBuilder
                     containerClass=''
                     formHeaderClass=''
-                    formSections={jsonSchema}
+                    formSections={FormSections}
                     formHeading=""
                     onFormSubmit={(formValues) => { submitForm(formValues); }}
                     options={options}
@@ -236,7 +221,7 @@ function EmployeeTimesheet() {
                     isStepForm={false}
 
                     onFormReset={() => {
-                      console.log('form reset callback')
+                      console.log('form reset callback');
                     }}
                   />
                 </Card.Title>

@@ -17,11 +17,18 @@
         "id": "",
         "placeholder": "From Date",
         "inputClass": "",
+        "dateFormat": "dd/MM/yyyy",
         "containerClass": "",
         "validations": [
           {
             "type": "required",
-            "applyWhen": [],
+            "applyWhen": [
+              {
+                "name": "toDate",
+                "value": "toDate",
+                "condition": "!empty"
+              }
+            ],
             "applyWhenRelation": "AND"
           }
         ],
@@ -50,13 +57,20 @@
         "type": "date",
         "label": "",
         "id": "",
+        "dateFormat": "dd/MM/yyyy",
         "placeholder": "To Date",
         "inputClass": "",
         "containerClass": "",
         "validations": [
           {
             "type": "required",
-            "applyWhen": [],
+            "applyWhen": [
+              {
+                "name": "fromDate",
+                "value": "fromDate",
+                "condition": "!empty"
+              }
+            ],
             "applyWhenRelation": "AND"
           }
         ],
@@ -66,7 +80,6 @@
         "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
-        "minDateSelector": "fromDate",
         "maxDateSelector": "",
         "disabled": false,
         "isMulti": false,
@@ -88,15 +101,9 @@
         "placeholder": "Select Employee",
         "inputClass": "",
         "containerClass": "",
-        "validations": [
-          {
-            "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          }
-        ],
+        "validations": [],
         "displayWhen": {},
-        "haveValidations": "true",
+        "haveValidations": "false",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
