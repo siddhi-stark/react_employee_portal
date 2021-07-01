@@ -113,7 +113,9 @@ useEffect(()=>{
             emptyRender={()=>{ return ('No record found.');}} 
           />
           <UserRestrictions permittedUsers={[5]} roleId={userRole}>
-            <Button onClick={()=> history.push('/emp-timesheet')}>View All</Button>
+            <div className="d-flex justify-content-end mr-3">
+              <Button onClick={()=> history.push('/emp-timesheet')}>View All</Button>
+            </div>
           </UserRestrictions>
 	      </Card.Body>
 	    </Card>
