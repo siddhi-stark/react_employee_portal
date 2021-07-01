@@ -1,0 +1,151 @@
+[
+    {
+        "layout": {
+            "label": "1 Column",
+            "value": "1column"
+        },
+        "containerClass": "",
+        "displaySection": true,
+        "displaySectionTitle": true,
+        "fields": [
+            {
+                "name": "login",
+                "type": "text",
+                "label": "Login",
+                "id": "",
+                "placeholder": "",
+                "inputClass": "",
+                "containerClass": "col-md-4",
+                "validations": [
+                    {
+                        "type": "required",
+                        "applyWhen": [],
+                        "applyWhenRelation": "OR"
+                    }
+                ],
+                "displayWhen": {},
+                "haveValidations": "true",
+                "haveDisplayOptions": "false",
+                "callback": "",
+                "callbackUrl": "",
+                "inputToChange": "",
+                "minDateSelector": "",
+                "maxDateSelector": "",
+                "disabled": false,
+                "isMulti": false,
+                "allowedUsers": [],
+                "fieldsToReset": [],
+                "fieldLayout": {
+                    "label": "1 Column",
+                    "value": "1column"
+                },
+                "fields": [],
+                "optionCallback": "",
+                "options": []
+            },
+            {
+                "name": "logout",
+                "type": "text",
+                "label": "Logout",
+                "id": "",
+                "placeholder": "",
+                "inputClass": "",
+                "containerClass": "col-md-4",
+                "validations": [
+                    {
+                        "type": "required",
+                        "applyWhen": [],
+                        "applyWhenRelation": "OR"
+                    }
+                ],
+                "displayWhen": {},
+                "haveValidations": "true",
+                "haveDisplayOptions": "false",
+                "callback": "",
+                "callbackUrl": "",
+                "inputToChange": "",
+                "minDateSelector": "",
+                "maxDateSelector": "",
+                "disabled": false,
+                "isMulti": false,
+                "allowedUsers": [],
+                "fieldsToReset": [],
+                "fieldLayout": {
+                    "label": "1 Column",
+                    "value": "1column"
+                },
+                "fields": [],
+                "optionCallback": "",
+                "options": []
+            },
+            {
+                "name": "duration",
+                "type": "text",
+                "label": "Duration",
+                "id": "",
+                "placeholder": "",
+                "inputClass": "",
+                "containerClass": "col-md-4",
+                "validations": [],
+                "displayWhen": {},
+                "haveValidations": "false",
+                "haveDisplayOptions": "false",
+                "callback": "",
+                "callbackUrl": "",
+                "inputToChange": "",
+                "minDateSelector": "",
+                "maxDateSelector": "",
+                "disabled": false,
+                "isMulti": false,
+                "allowedUsers": [],
+                "fieldsToReset": [],
+                "fieldLayout": {
+                    "label": "1 Column",
+                    "value": "1column"
+                },
+                "fields": [],
+                "optionCallback": "",
+                "options": []
+            },
+            {
+                "name": "description",
+                "type": "text",
+                "label": "Description",
+                "id": "",
+                "placeholder": "",
+                "inputClass": "",
+                "containerClass": "col-md-4",
+                "validations": [
+                    {
+                        "type": "required",
+                        "applyWhen": [],
+                        "applyWhenRelation": "OR"
+                    }
+                ],
+                "displayWhen": {},
+                "haveValidations": "true",
+                "haveDisplayOptions": "false",
+                "callback": "",
+                "callbackUrl": "",
+                "inputToChange": "",
+                "minDateSelector": "",
+                "maxDateSelector": "",
+                "disabled": false,
+                "isMulti": false,
+                "allowedUsers": [],
+                "fieldsToReset": [],
+                "fieldLayout": {
+                    "label": "1 Column",
+                    "value": "1column"
+                },
+                "fields": [],
+                "optionCallback": "",
+                "options": []
+            }
+        ],
+        "allowedUsers": [
+            5
+        ],
+        "sectionLayout": "1column"
+    }
+]

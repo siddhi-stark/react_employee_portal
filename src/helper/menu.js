@@ -4,7 +4,41 @@ const menu = [
     path: '/',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4],
+    roleaccess: [1, 2, 3, 4, 5],
+  },
+  {
+    title: 'Employee Timesheet',
+    path: '/emp-timesheet',
+    icon: 'dashboard.svg',
+    submenu: [],
+    roleaccess: [5],
+  },
+  {
+    title: 'Employees',
+    path: '/employees',
+    icon: 'dashboard.svg',
+    submenu: [],
+    roleaccess: [5],
+  },
+  {
+    title: 'Recruitment',
+    path: '',
+    icon: 'dashboard.svg',
+    submenu: [
+      {
+        title: 'Batch Upload',
+        path: '/batch-upload',
+        icon: 'report.svg',
+        roleaccess: [5],
+      },
+      {
+        title: 'Applications',
+        path: '/applications',
+        icon: 'report.svg',
+        roleaccess: [5],
+      },
+    ],
+    roleaccess: [5],
   },
   {
     title: 'Projects',
@@ -46,7 +80,7 @@ const menu = [
     path: '/reports',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1],
+    roleaccess: [1, 5],
   },
 
   // {
@@ -90,7 +124,7 @@ const menu = [
     path: '#',
     icon: 'logout.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4],
+    roleaccess: [1, 2, 3, 4, 5],
   },
 ];
 
