@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 // Declare columns
 const columns = [{
@@ -23,16 +25,23 @@ const columns = [{
     'label': 'Designation',
   },
   {
-    'id':'clockIn',
+    'id':'sign_in',
     'label': 'Clock-In',
   },
   {
-    'id':'clockout',
+    'id':'sign_out',
     'label': 'Clock-Out',
   },
   {
-    'id':'total',
+    'id':'estimation',
     'label': 'Total Working Hours',
+    render: ({ estimation }) => {
+        return (
+          <>
+            <span>{estimation} Hrs</span>
+          </>
+        );
+      },
   },
 ];
 
@@ -44,11 +53,13 @@ const [totalCount, setTotalCount] = useState(10);
 const [limit, setLimit] = useState(5);
 const [currentPage, setCurrentPage] = useState(1);
 const [filterData, setFilterData] = useState({});
+const history = useHistory();
+const [userRole, setUserRole] = useState('');
 
 // Declare methods
 const getRowData = async (pageNo=1) =>{
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeUrl}`;
+    const endPoint = `${Api.timeSheetUrl}`;
     const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
     const params = {
       page,
@@ -76,13 +87,15 @@ const getRowData = async (pageNo=1) =>{
 };
 console.log(setFilterData);
 useEffect(()=>{
+   const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
   getRowData(1);
 },[filterData]);
 
  return (
 	  <>
 	    <Card>
-	      <Card.Header>Employee List</Card.Header>
+	      <Card.Header> <h4 className="text-primary mt-2 mb-2">Employee List</h4></Card.Header>
 	      <Card.Body>
           <CustomTable
             columns={columns}
@@ -99,6 +112,9 @@ useEffect(()=>{
             }} 
             emptyRender={()=>{ return ('No record found.');}} 
           />
+          <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+            <Button onClick={()=> history.push('/emp-timesheet')}>View All</Button>
+          </UserRestrictions>
 	      </Card.Body>
 	    </Card>
 	  </>

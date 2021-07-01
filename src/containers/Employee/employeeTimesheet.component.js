@@ -94,16 +94,23 @@ function EmployeeTimesheet() {
     'label': 'Designation ',
   },
   {
-    'id': 'clockIn',
+    'id': 'sign_in',
     'label': 'Clock-In',
   },
   {
-    'id': 'clockout',
+    'id': 'sign_out',
     'label': 'Clock-Out',
   },
   {
-    'id': 'total',
+    'id': 'estimation',
     'label': 'Total Working Hours',
+     render: ({ estimation }) => {
+        return (
+          <>
+            <span>{estimation} Hrs</span>
+          </>
+        );
+      },
   },
   {
     'id': 'action',
@@ -115,7 +122,7 @@ function EmployeeTimesheet() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeUrl}`;
+    const endPoint = `${Api.timeSheetUrl}`;
     const params = {
       limit,
       page,
