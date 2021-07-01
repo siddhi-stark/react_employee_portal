@@ -78,7 +78,6 @@ function Employees() {
                 </Tab>
 
                 <Tab eventKey='noticePeriod' title='Serving Notice Period'>
-                  <h6>second Tab</h6>
                    <div className="row ml-2">
                     {Employee && Employee.map((emp) => (
                       <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
@@ -103,7 +102,6 @@ function Employees() {
                 </Tab>
 
                 <Tab eventKey='oldEmployee' title='Old Employee'>
-                  <h6>Third Tab</h6>
                    <div className="row ml-2">
                     {Employee && Employee.map((emp) => (
                       <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
