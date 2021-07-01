@@ -28,6 +28,13 @@ const menu = [
     roleaccess: [1],
   },
   {
+    title: 'Employee Technology Stack',
+    path: '/emp-stack',
+    icon: 'Designation.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  {
     title: 'Employees',
     path: '/employee',
     icon: 'Employee.svg',
