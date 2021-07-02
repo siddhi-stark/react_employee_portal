@@ -12,7 +12,6 @@ function AddHistory(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
 
-
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -26,16 +25,13 @@ function AddHistory(props) {
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
-
     const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
     if (!data) {
       // show error
       return; // eslint-disable-line
     }
     // Perform success actions
-
   };
-
 
   // Get data for form
   const getData = async () => {
@@ -65,19 +61,17 @@ function AddHistory(props) {
     options.designation = dpOptions;
     const allOptions = options;
     await updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getDesignation();
   }, []);
 
   const onClear = () => {
-    props.handleModalCLose(false)
-  }
+    props.handleModalCLose(false);
+  };
 
   return (
-
-    // Usage
     <StarkFormBuilder
       containerClass='mb-3'
       formHeaderClass=''
@@ -94,11 +88,11 @@ function AddHistory(props) {
       isStepForm={false}
 
       onFormReset={() => {
-        console.log('form reset callback')
+        console.log('form reset callback');
         onClear();
       }}
     />
-  )
+  );
 }
 
 export default withRouter(AddHistory);

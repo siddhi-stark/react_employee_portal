@@ -5,14 +5,12 @@ import FormSections from './AddTechStack.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
-
 function AddTechnologyStack() {
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-
 
   // Get user role
   const getUserRole = async () => {
@@ -27,16 +25,13 @@ function AddTechnologyStack() {
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
-
     const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
     if (!data) {
       // show error
       return; // eslint-disable-line
     }
     // Perform success actions
-
   };
-
 
   // Get data for form
   const getData = async () => {
@@ -71,7 +66,7 @@ function AddTechnologyStack() {
       employee: dpOptions
     };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getEmployee();
@@ -95,12 +90,11 @@ function AddTechnologyStack() {
       technology: dpOptions
     };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getTechnology();
   }, []);
-
 
   return (
     <>
@@ -120,14 +114,11 @@ function AddTechnologyStack() {
         isStepForm={false}
 
         onFormReset={() => {
-          console.log('form reset callback')
+          console.log('form reset callback');
         }}
       />
-
-
-
     </>
-  )
+  );
 }
 
 export default withRouter(AddTechnologyStack);

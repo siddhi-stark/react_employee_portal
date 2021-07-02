@@ -215,7 +215,6 @@ const getRowData = async (pageNo=1) =>{
         // show error
       }
       // Perform success actions
-      
   };
     
   const getUpload = async () => {
@@ -285,7 +284,7 @@ const getRowData = async (pageNo=1) =>{
                       isStepForm={false}
                       
                       onFormReset={() => {
-                        console.log('form reset callback')
+                        console.log('form reset callback');
                       }}
                     />
                   </Card.Title>

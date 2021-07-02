@@ -18,7 +18,7 @@ function Applications() {
         <Breadcrumb items={items} />
       </div>
     </>
-  )
+  );
 }
 
 export default withRouter(Applications);

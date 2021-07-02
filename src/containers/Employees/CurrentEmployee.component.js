@@ -26,7 +26,7 @@ const Employee = [{
   'date': '21/05/2021',
   'id': 'SDMS3'
 }
-]
+];
 
 function CurrentEmployee() {
   const history = useHistory();
@@ -52,7 +52,7 @@ function CurrentEmployee() {
         </div>
       ))}
     </>
-  )
+  );
 }
 
 export default withRouter(CurrentEmployee);

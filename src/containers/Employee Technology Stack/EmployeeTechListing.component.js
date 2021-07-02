@@ -8,20 +8,15 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
-
-
-
 function EmployeeTechListing() {
-  
-  
+
   // Declare variable 
-  const [rowData, setRowData] = useState([])
+  const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}) // eslint-disable-line
-  
-  
+
   const title = 'Employees List';
   
   const history = useHistory();
@@ -49,7 +44,6 @@ function EmployeeTechListing() {
         >
           <Image src="/images/edit-button.svg" alt="Edit Designation" />
         </a>
-  
         <a
           href="/"
           className="pl-2"
@@ -96,7 +90,7 @@ function EmployeeTechListing() {
     const params = {
       page,
       limit,
-    }
+    };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -106,18 +100,13 @@ function EmployeeTechListing() {
       setCurrentPage(Number(data.paginator.current_page));
       setRowData(data && data.data || []);
     } else {
-      console.log('error', message)
+      console.log('error', message);
     }
-  }
-
+  };
 
   useEffect(() => {
-    getRowData(1)
-  }, [filterData])
-
-
-
-
+    getRowData(1);
+  }, [filterData]);
 
   return (
     <>
@@ -199,7 +188,7 @@ function EmployeeTechListing() {
                       getRowData(pageNo);
                     }
                   }}
-                  emptyRender={() => { return ('No record found.') }}
+                  emptyRender={() => { return ('No record found.'); }}
                 />
 
               </Row>
@@ -208,6 +197,6 @@ function EmployeeTechListing() {
         </div>
       </section>
     </>
-  )
+  );
 }
 export default withRouter(EmployeeTechListing);

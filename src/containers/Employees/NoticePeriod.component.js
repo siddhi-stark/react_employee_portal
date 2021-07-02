@@ -26,33 +26,33 @@ const Employee = [{
     'date': '21/05/2021',
     'id': 'SDMS3'
 }
-]
+];
 
 function NoticePeriodComponent() {
-    const history = useHistory();
-    return (
-        <>
-            {Employee && Employee.map((emp) => (
-                <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
-                    <span className="mini-stat-icon bg-purple mr-0 float-right">
-                        <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
-                    </span>
-                    <div className="mini-stat-info">
-                        <span className="counter text-purple">{emp.name}</span>
-                        {emp.designation} <br />
-                        <br />
-                        <p className="text-primary"> confirmation Date-{emp.date}</p> <br />
-                    </div>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h4 className="text-primary">{emp.id}</h4>
-                        <div className="d-flex align-items-center justify-content-end">
-                            <Button size="sm" onClick={() => history.push('/employee-profile')}>View</Button>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </>
-    )
+  const history = useHistory();
+  return (
+      <>
+          {Employee && Employee.map((emp) => (
+              <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
+                  <span className="mini-stat-icon bg-purple mr-0 float-right">
+                      <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
+                  </span>
+                  <div className="mini-stat-info">
+                      <span className="counter text-purple">{emp.name}</span>
+                      {emp.designation} <br />
+                      <br />
+                      <p className="text-primary"> confirmation Date-{emp.date}</p> <br />
+                  </div>
+                  <div className="d-flex align-items-center justify-content-between">
+                      <h4 className="text-primary">{emp.id}</h4>
+                      <div className="d-flex align-items-center justify-content-end">
+                          <Button size="sm" onClick={() => history.push('/employee-profile')}>View</Button>
+                      </div>
+                  </div>
+              </div>
+          ))}
+      </>
+  );
 }
 
 export default withRouter(NoticePeriodComponent);

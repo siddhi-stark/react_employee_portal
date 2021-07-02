@@ -18,14 +18,13 @@ function Technology() {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}) // eslint-disable-line
+  const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [technologyId, setTechnologyId] = useState('');
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-
 
   const title = 'Employees List';
 
@@ -34,13 +33,7 @@ function Technology() {
     { label: 'Employee' },
   ];
 
-  // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({}); // eslint-disable-line
-  const [currentUser, updateCurrentUser] = useState(0);
-
   const handleActionCallback = (row) => {
-    console.log('row', row);
     return (
       <>
         <a
@@ -140,15 +133,12 @@ function Technology() {
       // show error
       return;
     }
-
-    console.log('dtaa', data);
-    console.log('technologyId', technologyId);
     data.data.map((dt) => {
       if (technologyId) {
         updateDefaultValues({ name: dt.name });
       }
       return dt;
-    })
+    });
   };
 
   // Call get data method on load
@@ -202,7 +192,7 @@ function Technology() {
                       isStepForm={false}
 
                       onFormReset={() => {
-                        console.log('form reset callback')
+                        console.log('form reset callback');
                       }}
                     />
                   </Card.Title>

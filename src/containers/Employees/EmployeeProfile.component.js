@@ -107,7 +107,7 @@ function EmployeeProfile() {
         </div>
       </card>
     </>
-  )
+  );
 }
 
 export default withRouter(EmployeeProfile);
