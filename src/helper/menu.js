@@ -22,7 +22,8 @@ const menu = [
   },
   {
     title: 'Recruitment',
-    path: '',
+    path: '#',
+    redirect: false,
     icon: 'dashboard.svg',
     submenu: [
       {
