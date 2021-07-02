@@ -56,20 +56,15 @@ function AddHistory(props) {
     const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
     if (!data) {
       // show error
-      return; // eslint-disable-line
+      return;
     }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
+    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => { // eslint-disable-line
+      return { label: op.name, value: op.id };
     });
-    const allOptions = {
-      ...options,
-      designation: dpOptions
-    };
-    updateOptions(allOptions);
+
+    options.designation = dpOptions;
+    const allOptions = options;
+    await updateOptions(allOptions);
   }
 
   useEffect(() => {
@@ -77,7 +72,7 @@ function AddHistory(props) {
   }, []);
 
   const onClear = () => {
-   props.handleModalCLose(false)
+    props.handleModalCLose(false)
   }
 
   return (

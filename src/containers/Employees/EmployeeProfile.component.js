@@ -64,9 +64,9 @@ function EmployeeProfile() {
       {showEmployee && (
         <Card className="mt-4">
 
-         <AddHistory 
-          handleModalCLose={(e) => setShowEMployee(e)}
-           />
+          <AddHistory
+            handleModalCLose={(e) => setShowEMployee(e)}
+          />
         </Card>
       )}
       <card className="mt-4">
@@ -80,31 +80,31 @@ function EmployeeProfile() {
         </div>
 
         <div className="d-flex align-items-start justify-content-between">
-
-          <p>Software Engineer</p>
+          <div className="address-content">
+            <p><strong>Software Engineer</strong> </p>
+            <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
+            <p>Pune, India</p><hr />
+          </div>
           <Image src="/images/edit-button.svg" alt="Edit Profile" />
         </div>
-        <p>Kelloton Software Tech Pvt Ltd</p>
-        <p>Mar | 2021</p>
-        <p>Pune, India</p><hr />
 
         <div className="d-flex align-items-start justify-content-between">
-
-          <p>Software Developer</p>
+          <div className="address-content">
+            <p><strong>Software Developer</strong> </p>
+            <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
+            <p>Pune, India</p><hr />
+          </div>
           <Image src="/images/edit-button.svg" alt="Edit Profile" />
         </div>
-        <p>Kelloton Software Tech Pvt Ltd</p>
-        <p>Mar | 2021</p>
-        <p>Pune, India</p><hr />
 
         <div className="d-flex align-items-start justify-content-between">
-
-          <p>Android Developer</p>
+          <div className="address-content">
+            <p><strong>Android Developer</strong> </p>
+            <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
+            <p>Pune, India</p><hr />
+          </div>
           <Image src="/images/edit-button.svg" alt="Edit Profile" />
         </div>
-        <p>Kelloton Software Tech Pvt Ltd</p>
-        <p>Mar | 2021</p>
-        <p>Pune, India</p>
       </card>
     </>
   )
