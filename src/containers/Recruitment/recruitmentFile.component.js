@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { withRouter } from 'react-router-dom';
-import { Card, Accordion, Button, Row, Col } from 'react-bootstrap';
+import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
 import FormSections from './formschema.json';
 import SelectFileFormSections from './selectFileformschema.json';
 import RecruitmentFilterFormSections from './recruitmentFilterformschema.json';
@@ -42,6 +42,42 @@ function RecruitmentFileComponent() {
   const [defaultSelectValues, updateDefaultSelectValues] = useState({});
   const [selectOptions, updateSelectedOptions] = useState({});
 
+const handleActionCallback = () => {
+    return (
+      <>
+        <a
+          href="/"
+          className="pl-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // history.push('/edit-employee');
+          }}
+        >
+         <Image src="/images/edit-button.svg" alt="Edit File" />
+    </a>
+      </>
+    );
+  };
+
+  const handleResumeCallback = () => {
+    return (
+      <>
+        <a
+          href="/"
+          className="pl-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // history.push('/edit-employee');
+          }}
+        >
+         <Image src="/images/dropdown-select.svg" alt="Edit File" />
+    </a>
+      </>
+    );
+  };
+
   // Declare columns
   const columns = [{
     'id':'id',
@@ -49,7 +85,7 @@ function RecruitmentFileComponent() {
     'isDisplay':false
   },
   {
-    'id':'name',
+    'id':'full_name',
     'label': 'Applicant Name',
   },
   {
@@ -79,10 +115,12 @@ function RecruitmentFileComponent() {
   {
     'id':'resume',
     'label': 'Download Resume',
+    render: handleResumeCallback
   },
   {
     'id':'action',
     'label': 'Action',
+    render: handleActionCallback
   },
   ];
 
