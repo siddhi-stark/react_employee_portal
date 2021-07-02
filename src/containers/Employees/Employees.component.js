@@ -28,7 +28,7 @@ const Employee = [{
   'date': '21/05/2021',
   'id': 'SDMS3'
 }
-]
+];
 function Employees() {
   const title = 'Employees List';
 
@@ -130,7 +130,7 @@ function Employees() {
         </Card>
       </section>
     </>
-  )
+  );
 }
 
 export default withRouter(Employees);

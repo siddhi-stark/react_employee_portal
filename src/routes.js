@@ -23,6 +23,7 @@ import EmployeeTimesheet from './containers/Employee/employeeTimesheet.component
 import EditEmployee from './containers/Employee/editEmployee.component';
 import Employees from './containers/Employees/Employees.component';
 import Applications from './containers/Applications/applications.component';
+import RecruitmentFileComponent from './containers/Recruitment/recruitmentFile.component';
 
 function Routes() {
   return (
@@ -48,6 +49,7 @@ function Routes() {
       <Route path="/edit-employee" exact component={EditEmployee} />
       <Route path="/employees" exact component={Employees} />
       <Route path="/applications" exact component={Applications} />
+      <Route path="/batch-upload" exact component={RecruitmentFileComponent} />
       <Route component={NotFound} />
     </Switch>
   );

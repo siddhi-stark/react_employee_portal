@@ -6,7 +6,7 @@
         },
         "containerClass": "",
         "displaySection": true,
-        "displaySectionTitle": true,
+        "displaySectionTitle": false,
         "fields": [
             {
                 "name": "login",

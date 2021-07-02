@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Card, Accordion, Button } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 // import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './employeeListformschema.json';
+import ModalFormSections from './editEmployee.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, ModalInput } from '../../components/FormInputs';
 
 function EmployeeTimesheet() {
 
@@ -18,6 +19,8 @@ function EmployeeTimesheet() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [modalShow, setModalShow] = useState(false);
+  // const history = useHistory();
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
@@ -26,7 +29,6 @@ function EmployeeTimesheet() {
 
   const title = 'Employees List';
   const limit = 10;
-  const history = useHistory();
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
@@ -44,7 +46,14 @@ function EmployeeTimesheet() {
     return sectionData;
   });
 
-  const handleActionCallback = () => {
+   // modal
+     // Variable declarations
+  const [defaultModalValues, updateDefaultModalValues] = useState({});
+  const [modalOptions, updateModalOptions] = useState({}); // eslint-disable-line
+  const [employeeId, setEmployeeId] = useState({});
+
+  const handleActionCallback = (row) => {
+    console.log('row',row.id);
     return (
       <>
         <a
@@ -53,7 +62,9 @@ function EmployeeTimesheet() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push('/edit-employee');
+            setModalShow(true);
+            setEmployeeId(row.id);
+            // history.push('/edit-employee');
           }}
         >
           Edit
@@ -179,6 +190,45 @@ function EmployeeTimesheet() {
     getEmployeeName();
   }, []);
 
+  // Edit form popup
+  //   // Get user role
+  // const getUserRole = async () => {
+  //   const roleId = await localStorage.getItem('role');
+  //   updateCurrentUser(Number(roleId));
+  // };
+
+  // useEffect(() => {
+  //   getUserRole();
+  // }, []);
+
+  // Submit Form
+  const submitModalForm = async (formValues) => {
+    console.log('formValues',formValues);
+    const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
+    if (!data) {
+      // show error
+      return; // eslint-disable-line
+    }
+    // Perform success actions
+  };
+
+  // Get data for form
+  const getData = async () => {
+    const endPoint = `${Api.employeeUrl}?id=${employeeId}`;
+
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (!data) {
+      // show error
+      return;
+    }
+    updateDefaultModalValues(data);
+  };
+
+  // Call get data method on load
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <>
       <Helmet title={title} />
@@ -217,7 +267,7 @@ function EmployeeTimesheet() {
                     submitBtnText="Submit"
                     showResetBtn={true}
                     resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
+                    btnContainerClass="form-submit-buttons pull-right"
                     isStepForm={false}
 
                     onFormReset={() => {
@@ -251,10 +301,48 @@ function EmployeeTimesheet() {
               }}
               emptyRender={() => { return ('No record found.'); }}
             />
-
           </Card.Body>
         </Card>
-      </div>
+        {console.log('modalShow',modalShow)}
+          { modalShow && (
+          <ModalInput
+                size="lg"
+                centered
+                show={modalShow}
+                onHide={()=>setModalShow(false)}
+                label='Edit Time log of Employee'
+                id="contained-modal-title-vcenter"
+                modalBody={
+                  <div className="mt-4 edit-timelog">
+                    <div className="d-flex justify-content-center mt-4">
+                      <p>Employee Name- Shubham Bhise</p>
+                      <p className='ms-4'>Employee Date- 20/02/2021</p>
+                    </div>
+                    <StarkFormBuilder
+                      containerClass=''
+                      formHeaderClass=''
+                      formSections={ModalFormSections}
+                      onFormSubmit={(formValues) => { submitModalForm(formValues); }}
+                      options={modalOptions}
+                      callbacks={{}}
+                      defaultFormValues={defaultModalValues}
+                      currentUser={currentUser}
+                      submitBtnText="Submit"
+                      showResetBtn={false}
+                      // resetBtnText="Clear"
+                      btnContainerClass="form-submit-buttons mt-0"
+                      isStepForm={false}
+
+                      // onFormReset={() => {
+                      //   console.log('form reset callback');
+                      // }}
+                    />
+                  </div>
+                }
+              />
+            )
+          }
+          </div>
     </>
   );
 }

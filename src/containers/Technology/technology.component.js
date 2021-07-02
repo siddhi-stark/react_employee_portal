@@ -10,7 +10,6 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
-
 const handleActionCallback = () => {
   return (
     <>
@@ -56,15 +55,14 @@ const columns = [{
 },
 ];
 
-
 function Technology() {
 
   // Declare variable 
-  const [rowData, setRowData] = useState([])
+  const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}) // eslint-disable-line
+  const [filterData, setFilterData] = useState({}); // eslint-disable-line
 
   const title = 'Employees List';
 
@@ -73,14 +71,10 @@ function Technology() {
     { label: 'Employee' },
   ];
 
-
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-
-
-
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
@@ -90,7 +84,7 @@ function Technology() {
     const params = {
       page,
       limit,
-    }
+    };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -100,15 +94,13 @@ function Technology() {
       setCurrentPage(Number(data.paginator.current_page));
       setRowData(data && data.data || []);
     } else {
-      console.log('error', message)
+      console.log('error', message);
     }
-  }
-
+  };
 
   useEffect(() => {
-    getRowData(1)
-  }, [filterData])
-
+    getRowData(1);
+  }, [filterData]);
 
   // Get user role
   const getUserRole = async () => {
@@ -130,9 +122,7 @@ function Technology() {
       return; // eslint-disable-line
     }
     // Perform success actions
-
   };
-
 
   // Get data for form
   const getData = async () => {
@@ -148,11 +138,6 @@ function Technology() {
   useEffect(() => {
     getData();
   }, []);
-
-
-
-
-
 
   return (
     <>
@@ -252,11 +237,9 @@ function Technology() {
                     isStepForm={false}
 
                     onFormReset={() => {
-                      console.log('form reset callback')
+                      console.log('form reset callback');
                     }}
                   />
-
-
                 </Col>
                 <Col>
                   <CustomTable
@@ -271,7 +254,7 @@ function Technology() {
                         getRowData(pageNo);
                       }
                     }}
-                    emptyRender={() => { return ('No record found.') }}
+                    emptyRender={() => { return ('No record found.'); }}
                   />
 
                 </Col>
@@ -281,7 +264,7 @@ function Technology() {
         </div>
       </section>
     </>
-  )
+  );
 }
 
 export default withRouter(Technology);

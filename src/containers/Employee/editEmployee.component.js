@@ -61,7 +61,7 @@ function EditEmployee() {
   }, []);
 
   return (
-    <div className="mt-">
+    <div className="mt-4 edit-timelog">
     <Card body>
       <div className="d-flex justify-content-left mt-4">
         <p>Employee Name- Shubham Bhise</p>
@@ -79,7 +79,7 @@ function EditEmployee() {
         submitBtnText="Submit"
         showResetBtn={false}
         // resetBtnText="Clear"
-        btnContainerClass="form-submit-buttons"
+        btnContainerClass="form-submit-buttons mt-0"
         isStepForm={false}
 
         // onFormReset={() => {
