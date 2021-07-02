@@ -18,12 +18,15 @@ import TeamReport from './containers/Reports/teamReport.component';
 import NotFound from './containers/not-found/notFound.component';
 import Events from './containers/Events/events.component';
 import Technology from './containers/Technology/technology.component';
+import EmployeeTechListing from './containers/Employee Technology Stack/EmployeeTechListing.component';
 import EmployeeList from './containers/Employee/employeeList.component';
 import EmployeeTimesheet from './containers/Employee/employeeTimesheet.component';
 import EditEmployee from './containers/Employee/editEmployee.component';
 import Employees from './containers/Employees/Employees.component';
 import Applications from './containers/Applications/applications.component';
 import RecruitmentFileComponent from './containers/Recruitment/recruitmentFile.component';
+import AddTechnologyStack from './containers/Employee Technology Stack/AddTechnologyStack.component';
+import EmployeeProfile from './containers/Employees/EmployeeProfile.component';
 
 function Routes() {
   return (
@@ -44,12 +47,15 @@ function Routes() {
       <Route path="/team-report" exact component={TeamReport} />
       <Route path="/events" exact component={Events} />
       <Route path="/technology" exact component={Technology} />
+      <Route path="/emp-stack" exact component={EmployeeTechListing} />
       <Route path="/employee-list" exact component={EmployeeList} />
       <Route path="/emp-timesheet" exact component={EmployeeTimesheet} />
       <Route path="/edit-employee" exact component={EditEmployee} />
       <Route path="/employees" exact component={Employees} />
       <Route path="/applications" exact component={Applications} />
       <Route path="/batch-upload" exact component={RecruitmentFileComponent} />
+      <Route path="/add-technology-stack" exact component={AddTechnologyStack} />
+      <Route path="/employee-profile" exact component={EmployeeProfile} />
       <Route component={NotFound} />
     </Switch>
   );
