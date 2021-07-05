@@ -5,14 +5,11 @@ import FormSections from './InterviewRounds.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
-
 function InterviewRounds() {
-
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-
 
   // Get user role
   const getUserRole = async () => {
@@ -28,13 +25,15 @@ function InterviewRounds() {
   const submitForm = async (formValues) => {
     console.log(formValues);
 
-    const { data } = await AuthApi.postDataToServer(Api.employeeUrl, formValues);
+    const { data } = await AuthApi.postDataToServer(
+      Api.employeeUrl,
+      formValues
+    );
     if (!data) {
       // show error
       return; // eslint-disable-line
     }
     // Perform success actions
-
   };
 
   const getInterviewer = async () => {
@@ -52,25 +51,25 @@ function InterviewRounds() {
     });
     const allOptions = {
       ...options,
-      interviewer: dpOptions
+      interviewer: dpOptions,
     };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getInterviewer();
   }, []);
 
-
   return (
-
     // Usage
     <StarkFormBuilder
-      containerClass='mt-3'
-      formHeaderClass=''
+      containerClass="mt-3"
+      formHeaderClass=""
       formSections={FormSections}
       formHeading="Interviewer "
-      onFormSubmit={(formValues) => { submitForm(formValues); }}
+      onFormSubmit={(formValues) => {
+        submitForm(formValues);
+      }}
       options={options}
       callbacks={{}}
       defaultFormValues={defaultValues}
@@ -80,13 +79,10 @@ function InterviewRounds() {
       resetBtnText="Clear"
       btnContainerClass="form-submit-buttons"
       isStepForm={false}
-
       onFormReset={() => {
-        console.log('form reset callback')
+        console.log('form reset callback');
       }}
     />
-
-
-  )
+  );
 }
 export default withRouter(InterviewRounds);

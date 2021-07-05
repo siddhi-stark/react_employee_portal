@@ -210,7 +210,6 @@ function EmployeeTimesheet() {
               </div>
             </Card.Header>
             <Accordion.Collapse eventKey="1">
-              <Card.Body>
                 <Card.Title>
                   <StarkFormBuilder
                     containerClass=""
@@ -227,14 +226,13 @@ function EmployeeTimesheet() {
                     submitBtnText="Submit"
                     showResetBtn={true}
                     resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons pull-right"
+                    btnContainerClass="form-submit-buttons pull-right mb-3"
                     isStepForm={false}
                     onFormReset={() => {
                       setDataShow(false);
                     }}
                   />
                 </Card.Title>
-              </Card.Body>
             </Accordion.Collapse>
           </Card>
         </Accordion>

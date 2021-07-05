@@ -9484,13 +9484,14 @@ p:empty {
   margin-bottom: 0;
   list-style: none; }
 
-.accordion .card {
-  border-radius: 0 !important;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important; }
-
-.accordion .card-body {
-  overflow: hidden; }
+.accordion {
+  /*.card-body {
+        overflow: hidden;
+    }*/ }
+  .accordion .card {
+    border-radius: 0 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important; }
 
 .create_form .accordion > .card:first-of-type {
   border: 1px solid rgba(0, 0, 0, 0.125); }
@@ -10603,6 +10604,9 @@ table tfoot {
     right: 20px;
     -webkit-box-shadow: 0px 3px 6px #00000029;
     box-shadow: 0px 3px 6px #00000029; }
+  .edit-profile-image img {
+    width: 100%;
+    height: auto !important; }
 
 .info-img-text .svg {
   margin-right: 14px; }
@@ -11125,6 +11129,9 @@ body .morning-mail-sent {
   color: #ffffff;
   background-color: #292a52;
   border-color: #dee2e6 #dee2e6 #ffffff; }
+
+.select-options .form-group {
+  color: #212529; }
 
 @media (min-width: 576px) {
   .bd-content .highlight {

@@ -6,12 +6,10 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
 function ProfessionalDetails() {
-
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-
 
   // Get user role
   const getUserRole = async () => {
@@ -27,13 +25,15 @@ function ProfessionalDetails() {
   const submitForm = async (formValues) => {
     console.log(formValues);
 
-    const { data } = await AuthApi.postDataToServer(Api.employeeUrl, formValues);
+    const { data } = await AuthApi.postDataToServer(
+      Api.employeeUrl,
+      formValues
+    );
     if (!data) {
       // show error
       return; // eslint-disable-line
     }
     // Perform success actions
-
   };
 
   const getResume = async () => {
@@ -51,26 +51,25 @@ function ProfessionalDetails() {
     });
     const allOptions = {
       ...options,
-      resume: dpOptions
+      resume: dpOptions,
     };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getResume();
   }, []);
 
-
-
   return (
-
     // Usage
     <StarkFormBuilder
-      containerClass='mt-3'
-      formHeaderClass=''
+      containerClass="mt-3"
+      formHeaderClass=""
       formSections={FormSections}
       formHeading="Professional Details"
-      onFormSubmit={(formValues) => { submitForm(formValues); }}
+      onFormSubmit={(formValues) => {
+        submitForm(formValues);
+      }}
       options={options}
       callbacks={{}}
       defaultFormValues={defaultValues}
@@ -80,14 +79,11 @@ function ProfessionalDetails() {
       resetBtnText="Clear"
       btnContainerClass="form-submit-buttons"
       isStepForm={false}
-
       onFormReset={() => {
-        console.log('form reset callback')
+        console.log('form reset callback');
       }}
     />
-
-
-  )
+  );
 }
 
 export default withRouter(ProfessionalDetails);

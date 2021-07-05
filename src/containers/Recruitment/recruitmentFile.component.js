@@ -303,7 +303,6 @@ const getRowData = async (pageNo=1) =>{
                 </div>
               </Card.Header>
               <Accordion.Collapse eventKey='1'>
-                <Card.Body>
                   <Card.Title>
                     <StarkFormBuilder
                       containerClass=''
@@ -318,7 +317,7 @@ const getRowData = async (pageNo=1) =>{
                       submitBtnText='Submit'
                       showResetBtn={true}
                       resetBtnText='Clear'
-                      btnContainerClass='form-submit-buttons pull-right'
+                      btnContainerClass='form-submit-buttons pull-right mb-4'
                       isStepForm={false}
                       
                       onFormReset={() => {
@@ -326,7 +325,6 @@ const getRowData = async (pageNo=1) =>{
                       }}
                     />
                   </Card.Title>
-                </Card.Body>
               </Accordion.Collapse>
             </Card>
           </Accordion>

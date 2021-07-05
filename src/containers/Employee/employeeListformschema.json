@@ -6,7 +6,7 @@
       "label": "3 Column",
       "value": "3column"
     },
-    "containerClass": "mt-3",
+    "containerClass": "mt-3 select-options",
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [

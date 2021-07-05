@@ -26,7 +26,7 @@
     "rxjs": "^7.1.0",
     "simple-react-validator": "^1.6.0",
     "stark-custom-datatable": "^0.1.7",
-    "stark-form-builder": "^0.2.5",
+    "stark-form-builder": "^0.2.6",
     "sweetalert": "^2.1.2",
     "web-vitals": "^1.0.1"
   },

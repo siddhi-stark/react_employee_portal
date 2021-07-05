@@ -946,9 +946,9 @@ p:empty {
         border-radius: 0 !important;
         box-shadow: none !important;
     }
-    .card-body {
+    /*.card-body {
         overflow: hidden;
-    }
+    }*/
 }
 .create_form .accordion>.card:first-of-type {
     border:1px solid rgba(0, 0, 0, 0.125);
@@ -2250,6 +2250,10 @@ table {
         right: 20px;
         box-shadow: 0px 3px 6px #00000029;
     }    
+    img {
+        width: 100%;
+        height: auto !important;
+    }
 }
 .info-img-text {
     .svg {
@@ -2889,6 +2893,11 @@ body .morning-mail-sent {
     border-color: #dee2e6 #dee2e6 #ffffff;
 }
 
+.select-options {
+    .form-group {
+        color: #212529;
+    }
+}
 
 @media (min-width: 576px){
     .bd-content .highlight {

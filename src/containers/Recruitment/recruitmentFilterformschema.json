@@ -6,7 +6,7 @@
       "label": "4 Column",
       "value": "4column"
     },
-    "containerClass": "",
+    "containerClass": "select-options",
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
