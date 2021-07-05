@@ -763,7 +763,7 @@ function ToDoList(props) {
             size="md"
             centered
             show={showBreak}
-            onHide={() => { setShowBreak(false); getTableData(1); }}
+            onHide={() => { setShowBreak(false); getTableData(1); setShowMsg(false); }}
             label={<h4 variant="primary">Add Break</h4>}
             id="contained-modal-title-vcenter"
             modalBody={
