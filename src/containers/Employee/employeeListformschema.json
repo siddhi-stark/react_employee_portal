@@ -124,9 +124,7 @@
         "options": []
       }
     ],
-    "allowedUsers": [
-      5
-    ],
+    "allowedUsers": [5],
     "sectionLayout": "3column"
   }
 ]
