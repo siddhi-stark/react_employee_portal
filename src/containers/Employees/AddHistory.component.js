@@ -6,7 +6,6 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
 function AddHistory(props) {
-
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
@@ -54,9 +53,13 @@ function AddHistory(props) {
       // show error
       return;
     }
-    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => { // eslint-disable-line
-      return { label: op.name, value: op.id };
-    });
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        // eslint-disable-line
+        return { label: op.name, value: op.id };
+      });
 
     options.designation = dpOptions;
     const allOptions = options;
@@ -73,10 +76,12 @@ function AddHistory(props) {
 
   return (
     <StarkFormBuilder
-      containerClass='mb-3'
-      formHeaderClass=''
+      containerClass="mb-3"
+      formHeaderClass=""
       formSections={FormSections}
-      onFormSubmit={(formValues) => { submitForm(formValues); }}
+      onFormSubmit={(formValues) => {
+        submitForm(formValues);
+      }}
       options={options}
       callbacks={{}}
       defaultFormValues={defaultValues}
@@ -86,7 +91,6 @@ function AddHistory(props) {
       resetBtnText="Clear"
       btnContainerClass="form-submit-buttons"
       isStepForm={false}
-
       onFormReset={() => {
         console.log('form reset callback');
         onClear();
