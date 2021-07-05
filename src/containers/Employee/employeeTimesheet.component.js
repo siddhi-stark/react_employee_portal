@@ -215,7 +215,7 @@ function EmployeeTimesheet() {
                     defaultFormValues={defaultValues}
                     currentUser={currentUser}
                     submitBtnText="Submit"
-                    showResetBtn={true}
+                    showResetBtn={true} // eslint-disable-line
                     resetBtnText="Clear"
                     btnContainerClass="form-submit-buttons"
                     isStepForm={false}
@@ -239,8 +239,7 @@ function EmployeeTimesheet() {
             <CustomTable
               columns={columns}
               rows={rowData}
-              role={5}
-              showPagination={true}
+              showPagination={true} // eslint-disable-line
               paginationProps={{
                 totalItems: totalCount,
                 itemsPerPage: limit,
