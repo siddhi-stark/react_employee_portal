@@ -9489,6 +9489,9 @@ p:empty {
   -webkit-box-shadow: none !important;
   box-shadow: none !important; }
 
+.accordion .card-body {
+  overflow: hidden; }
+
 .create_form .accordion > .card:first-of-type {
   border: 1px solid rgba(0, 0, 0, 0.125); }
 
@@ -10497,7 +10500,8 @@ table tfoot {
       color: #D80F0F;
       font-size: 14px;
       top: 0;
-      right: 3px; }
+      /*right: 3px;*/
+      right: 0px; }
   .add-task-popup .form-group input:focus, .add-task-popup .form-group input:active {
     -webkit-box-shadow: 0px 0px 6px #00000029 !important;
     box-shadow: 0px 0px 6px #00000029 !important;
@@ -10599,6 +10603,9 @@ table tfoot {
     right: 20px;
     -webkit-box-shadow: 0px 3px 6px #00000029;
     box-shadow: 0px 3px 6px #00000029; }
+  .edit-profile-image img {
+    width: 100%;
+    height: auto !important; }
 
 .info-img-text .svg {
   margin-right: 14px; }
@@ -11060,6 +11067,68 @@ table tfoot {
   -ms-transform: translate(-50%);
   transform: translate(-50%); }
 
+body .morning-mail-sent {
+  background-color: #fde7be; }
+
+.mini-stat {
+  border: 1px solid rgba(112, 112, 112, 0.12);
+  padding: 20px;
+  width: 30%;
+  border-radius: 3px;
+  margin-bottom: 20px; }
+  .mini-stat h4, .mini-stat .h4 {
+    margin-bottom: 0; }
+  .mini-stat .btn {
+    min-width: 100px; }
+
+.mini-stat-icon {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  line-height: 60px;
+  text-align: center;
+  font-size: 30px;
+  border-radius: 50%;
+  float: left;
+  margin-right: 10px;
+  color: #ffffff; }
+
+.mini-stat-info {
+  font-size: 14px;
+  padding-top: 2px; }
+
+.mini-stat-info span {
+  display: block;
+  font-size: 22px;
+  font-weight: 400;
+  font-family: "Roboto", sans-serif; }
+
+.address-content {
+  margin-left: 20px; }
+  .address-content p {
+    margin-bottom: 0; }
+
+.date-edit-option h6, .date-edit-option .h6 {
+  margin-right: 15px;
+  margin-bottom: 0; }
+
+.edit-timelog .card {
+  /*max-width: 550px;
+        width: 100%;
+        margin: 0 auto;*/ }
+
+.edit-timelog .col-md-12 .col-md-4 {
+  width: 100%; }
+
+.edit-timelog .form-submit-buttons {
+  margin-top: 0 !important; }
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  color: #ffffff;
+  background-color: #292a52;
+  border-color: #dee2e6 #dee2e6 #ffffff; }
+
 @media (min-width: 576px) {
   .bd-content .highlight {
     margin-right: 0;
@@ -11147,7 +11216,3 @@ table tfoot {
 @media (max-width: 1100px) {
   .modal-dialog.modal-lg.modal-dialog-centered {
     margin-left: auto; } }
-
-body .morning-mail-sent {
-  background-color: #fde7be;
-}

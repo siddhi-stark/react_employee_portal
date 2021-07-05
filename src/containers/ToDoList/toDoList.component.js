@@ -911,42 +911,46 @@ function ToDoList(props) {
                           />
                         </Col>
 
-                        <Col md={2}>
-                          <TextInput
-                            onInputChange={(e) => {
-                              setHoursSpendTime(e, i);
-                            }
-                            }
-                            label="Time"
-                            containerClass="form-group"
-                            type="text"
-                            disabled={data.startTime === '' || data.endTime === null}
-                            name="designationtitle"
-                            // value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs}` : timeSpentHours}
-                            value={data.timeHours}
-                          />
-                          <h7 className='mb-1'>hours</h7>
-                        </Col>
-                        <Col md={2}>
-                          <TextInput
-                            onInputChange={(e) => {
-                              setMinSpendTime(e, i);
-                              // const re = /^[a-zA-Z ]*$/;
-                              // if (!e.target.value || re.test(e.target.value)) {
-                              //   setTimeSpentMinutes(e.target.value);
-                              // }
-                            }}
-                            label="Spent"
-                            containerClass="form-group"
-                            type="text"
-                            disabled={data.startTime === '' || data.endTime === null}
-                            name="designationtitle"
-                            // value={breakData[i].endTime && breakData[i].startTime ? `${data.mins}` : timeSpentMinutes}
-                            value={data.timeMins}
+                        <Col md={4}>
+                          <Row>
+                          
+                            <Col md={6}>
+                              <TextInput
+                                onInputChange={(e) => {
+                                  setHoursSpendTime(e, i);
+                                }
+                                }
+                                label="Time"
+                                containerClass="form-group"
+                                type="text"
+                                disabled={data.startTime === '' || data.endTime === null}
+                                name="designationtitle"
+                                // value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs}` : timeSpentHours}
+                                value={data.timeHours}
+                              />
+                              <h7 className='mb-1'>hours</h7>
+                            </Col>
+                            <Col md={6}>
+                              <TextInput
+                                onInputChange={(e) => {
+                                  setMinSpendTime(e, i);
+                                  // const re = /^[a-zA-Z ]*$/;
+                                  // if (!e.target.value || re.test(e.target.value)) {
+                                  //   setTimeSpentMinutes(e.target.value);
+                                  // }
+                                }}
+                                label="Spent"
+                                containerClass="form-group"
+                                type="text"
+                                disabled={data.startTime === '' || data.endTime === null}
+                                name="designationtitle"
+                                // value={breakData[i].endTime && breakData[i].startTime ? `${data.mins}` : timeSpentMinutes}
+                                value={data.timeMins}
 
-                          />
-                          <p className='mb-2'>minutes</p>
-
+                              />
+                              <p className='mb-2'>minutes</p>
+                            </Col>
+                          </Row>
                         </Col>
                       </Row>
                     </>
