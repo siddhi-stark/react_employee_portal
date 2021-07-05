@@ -8,6 +8,7 @@ function EmployeeProfile() {
 
   const [showEmployee, setShowEMployee] = useState(false);
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
+  const [editEmployee, updateEditEmployee] = useState(false);
   const history = useHistory();
   
 
@@ -96,23 +97,52 @@ function EmployeeProfile() {
         </Card>
       )}
       <card className="mt-4">
+      {editEmployee ? (
+
+          <AddHistory />
+
+        ) : (
         <div className="d-flex align-items-start justify-content-between">
           <div className="address-content">
             <p><strong>Senior Engineer</strong> </p>
             <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
             <p>Pune, India</p><hr />
           </div>
-          <Image src="/images/edit-button.svg" alt="Edit Profile" />
+            <a
+                        href="javascript:void()"
+                        onClick={() => {
+                         updateEditEmployee(true)
+                        }}
+                      >
+                        <img src="/images/edit-button.svg" alt="Edit Profile" />
+                      </a>
         </div>
 
+        )}
+
+          {editEmployee ? (
+
+          <AddHistory />
+
+        ) : (
         <div className="d-flex align-items-start justify-content-between">
           <div className="address-content">
             <p><strong>Software Engineer</strong> </p>
             <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
             <p>Pune, India</p><hr />
           </div>
-          <Image src="/images/edit-button.svg" alt="Edit Profile" />
+          <a
+                        href="javascript:void()"
+                        onClick={() => {
+                         updateEditEmployee(true)
+                        }}
+                      >
+                        <img src="/images/edit-button.svg" alt="Edit Profile" />
+                      </a>
         </div>
+
+        )}
+       
 
         <div className="d-flex align-items-start justify-content-between">
           <div className="address-content">
@@ -120,7 +150,14 @@ function EmployeeProfile() {
             <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
             <p>Pune, India</p><hr />
           </div>
-          <Image src="/images/edit-button.svg" alt="Edit Profile" />
+          <a
+                        href="javascript:void()"
+                        onClick={() => {
+                         updateEditEmployee(true)
+                        }}
+                      >
+                        <img src="/images/edit-button.svg" alt="Edit Profile" />
+                      </a>
         </div>
 
         <div className="d-flex align-items-start justify-content-between">
@@ -129,7 +166,14 @@ function EmployeeProfile() {
             <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
             <p>Pune, India</p><hr />
           </div>
-          <Image src="/images/edit-button.svg" alt="Edit Profile" />
+          <a
+                        href="javascript:void()"
+                        onClick={() => {
+                         updateEditEmployee(true)
+                        }}
+                      >
+                        <img src="/images/edit-button.svg" alt="Edit Profile" />
+                      </a>
         </div>
       </card>
     </>
