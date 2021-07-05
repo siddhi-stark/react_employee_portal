@@ -100,7 +100,13 @@
         "placeholder": "Select Technology",
         "inputClass": "",
         "containerClass": "mt-3",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",
@@ -130,7 +136,13 @@
         "placeholder": "Select Position ",
         "inputClass": "",
         "containerClass": "mt-3",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",
