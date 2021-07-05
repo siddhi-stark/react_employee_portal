@@ -316,7 +316,7 @@ const getRowData = async (pageNo=1) =>{
                       defaultFormValues={defaultFilterValues}
                       currentUser={currentUser}
                       submitBtnText='Submit'
-                      showResetBtn={true}
+                      showResetBtn={true} // eslint-disable-line
                       resetBtnText='Clear'
                       btnContainerClass='form-submit-buttons pull-right'
                       isStepForm={false}
@@ -389,7 +389,7 @@ const getRowData = async (pageNo=1) =>{
                   <CustomTable
                     columns={columns}
                     rows={rowData}
-                    showPagination={true} 
+                    showPagination={true} // eslint-disable-line
                     paginationProps={{
                       totalItems: totalCount,
                       itemsPerPage: limit,
