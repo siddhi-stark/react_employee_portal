@@ -20,6 +20,7 @@ function EmployeeTimesheet() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [modalShow, setModalShow] = useState(false);
+  const [dataShow, setDataShow] = useState(false);
   // const history = useHistory();
 
   // Variable declarations
@@ -80,7 +81,15 @@ function EmployeeTimesheet() {
   },
   {
     'id': 'emp_code',
-    'label': 'Employee ID',
+    'label':  dataShow ? '' : 'Employee ID',
+  }, 
+  {
+    'id': 'day',
+    'label': dataShow ? 'Day' :'',
+  }, 
+  {
+    'id': 'date',
+    'label': dataShow ? 'Date' :'',
   },
   {
     'id': 'full_name',
@@ -88,7 +97,7 @@ function EmployeeTimesheet() {
   },
   {
     'id': 'designation_name',
-    'label': 'Designation ',
+    'label': dataShow ? '' : 'Designation ',
   },
   {
     'id': 'sign_in',
@@ -162,7 +171,8 @@ function EmployeeTimesheet() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, updateDefaultValues,formValues);
+    console.log(formValues, updateDefaultValues);
+    setDataShow(true);
     setFilterData(formValues);
   };
 
@@ -271,7 +281,7 @@ function EmployeeTimesheet() {
                     isStepForm={false}
 
                     onFormReset={() => {
-                      console.log('form reset callback');
+                      setDataShow(false);
                     }}
                   />
                 </Card.Title>
