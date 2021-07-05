@@ -87,7 +87,7 @@ function AddHistory(props) {
       defaultFormValues={defaultValues}
       currentUser={currentUser}
       submitBtnText="Submit"
-      showResetBtn={true}
+      showResetBtn={true} // eslint-disable-line
       resetBtnText="Clear"
       btnContainerClass="form-submit-buttons"
       isStepForm={false}
