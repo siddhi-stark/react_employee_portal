@@ -100,8 +100,7 @@ useEffect(()=>{
           <CustomTable
             columns={columns}
             rows={rowData}
-            role={5} 
-            showPagination={true}
+            showPagination={true} // eslint-disable-line
             paginationProps={{
               totalItems: totalCount,
               itemsPerPage: limit,

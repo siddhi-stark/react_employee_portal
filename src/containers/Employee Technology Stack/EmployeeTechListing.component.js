@@ -189,8 +189,7 @@ function EmployeeTechListing() {
                 <CustomTable
                   columns={columns}
                   rows={rowData}
-                  role={1}
-                  showPagination={true}
+                  showPagination={true} // eslint-disable-line
                   paginationProps={{
                     totalItems: totalCount,
                     itemsPerPage: limit,
