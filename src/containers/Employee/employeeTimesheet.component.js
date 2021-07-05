@@ -210,29 +210,29 @@ function EmployeeTimesheet() {
               </div>
             </Card.Header>
             <Accordion.Collapse eventKey="1">
-                <Card.Title>
-                  <StarkFormBuilder
-                    containerClass=""
-                    formHeaderClass=""
-                    formSections={FormSections}
-                    formHeading=""
-                    onFormSubmit={(formValues) => {
-                      submitForm(formValues);
-                    }}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    currentUser={currentUser}
-                    submitBtnText="Submit"
-                    showResetBtn={true}  // eslint-disable-line
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons pull-right mb-3"
-                    isStepForm={false}
-                    onFormReset={() => {
-                      setDataShow(false);
-                    }}
-                  />
-                </Card.Title>
+              <Card.Title>
+                <StarkFormBuilder
+                  containerClass=""
+                  formHeaderClass=""
+                  formSections={FormSections}
+                  formHeading=""
+                  onFormSubmit={(formValues) => {
+                    submitForm(formValues);
+                  }}
+                  options={options}
+                  callbacks={{}}
+                  defaultFormValues={defaultValues}
+                  currentUser={currentUser}
+                  submitBtnText="Submit"
+                  showResetBtn={true} // eslint-disable-line
+                  resetBtnText="Clear"
+                  btnContainerClass="form-submit-buttons pull-right mb-3"
+                  isStepForm={false}
+                  onFormReset={() => {
+                    setDataShow(false);
+                  }}
+                />
+              </Card.Title>
             </Accordion.Collapse>
           </Card>
         </Accordion>

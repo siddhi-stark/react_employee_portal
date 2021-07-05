@@ -27,6 +27,7 @@ import Applications from './containers/Applications/applications.component';
 import RecruitmentFileComponent from './containers/Recruitment/recruitmentFile.component';
 import AddTechnologyStack from './containers/Employee Technology Stack/AddTechnologyStack.component';
 import EmployeeProfile from './containers/Employees/EmployeeProfile.component';
+import Confirmation from './containers/Employees/confirmation.component';
 
 function Routes() {
   return (
@@ -56,6 +57,7 @@ function Routes() {
       <Route path="/batch-upload" exact component={RecruitmentFileComponent} />
       <Route path="/add-technology-stack" exact component={AddTechnologyStack} />
       <Route path="/employee-profile" exact component={EmployeeProfile} />
+      <Route path="/confirmation" exact component={Confirmation} />
       <Route component={NotFound} />
     </Switch>
   );
