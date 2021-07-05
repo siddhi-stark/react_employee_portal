@@ -23,6 +23,7 @@ const menu = [
   {
     title: 'Recruitment',
     path: '#',
+    redirect: false,
     icon: 'dashboard.svg',
     submenu: [
       {
