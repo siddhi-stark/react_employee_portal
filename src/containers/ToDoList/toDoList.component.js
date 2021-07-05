@@ -910,6 +910,7 @@ function ToDoList(props) {
                             )}
                           />
                         </Col>
+
                         <Col md={2}>
                           <TextInput
                             onInputChange={(e) => {
@@ -919,7 +920,7 @@ function ToDoList(props) {
                             label="Time"
                             containerClass="form-group"
                             type="text"
-                            disabled={data.startTime === ''}
+                            disabled={data.startTime === '' || data.endTime === null}
                             name="designationtitle"
                             // value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs}` : timeSpentHours}
                             value={data.timeHours}
@@ -938,7 +939,7 @@ function ToDoList(props) {
                             label="Spent"
                             containerClass="form-group"
                             type="text"
-                            disabled={data.startTime === ''}
+                            disabled={data.startTime === '' || data.endTime === null}
                             name="designationtitle"
                             // value={breakData[i].endTime && breakData[i].startTime ? `${data.mins}` : timeSpentMinutes}
                             value={data.timeMins}
