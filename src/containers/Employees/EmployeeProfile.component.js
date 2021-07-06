@@ -4,9 +4,34 @@ import { Image, Card, Row, Col, Button } from 'react-bootstrap';
 import AddHistory from './AddHistory.component';
 import EditEmployee from './EditPersonalDetails.component';
 
+
+const companyList =[{
+  id:1,
+  designation:'Senior Engineer',
+  cname:'Stark Digital Media Services Pvt Ltd',
+  date:'Mar | 2021',
+  country:'Pune, India'
+},
+{
+  id:2,
+  designation:'Android Developer',
+  cname:'Stark Digital Media Services Pvt Ltd',
+  date:'Mar | 2021',
+  country:'Pune, India'
+},
+{
+  id:3,
+  designation:'Senior Developer',
+  cname:'Stark Digital Media Services Pvt Ltd',
+  date:'Mar | 2021',
+  country:'Pune, India'
+},
+]
+
 function EmployeeProfile() {
 
   const [showEmployee, setShowEMployee] = useState(false);
+  const [data, setData] = useState({});
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
   const history = useHistory();
   
@@ -91,46 +116,28 @@ function EmployeeProfile() {
         <Card className="mt-4">
 
           <AddHistory
+            optionsData={data}
             handleModalCLose={(e) => setShowEMployee(e)}
           />
         </Card>
       )}
-      <card className="mt-4">
+      <card className="mt-4">{
+      companyList && companyList.map((comp)=>(
         <div className="d-flex align-items-start justify-content-between">
           <div className="address-content">
-            <p><strong>Senior Engineer</strong> </p>
-            <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
-            <p>Pune, India</p><hr />
+            <p><strong>{comp.designation}</strong> </p>
+            <p>{comp.cname} <br /> {comp.date}</p>
+            <p>{comp.country}</p><hr />
           </div>
-          <Image src="/images/edit-button.svg" alt="Edit Profile" />
+          <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
+            setData(comp);
+            setShowEMployee(true);
+            // history.push(`/profile-history/id=${comp.id}`)
+          }}/>
         </div>
-
-        <div className="d-flex align-items-start justify-content-between">
-          <div className="address-content">
-            <p><strong>Software Engineer</strong> </p>
-            <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
-            <p>Pune, India</p><hr />
-          </div>
-          <Image src="/images/edit-button.svg" alt="Edit Profile" />
-        </div>
-
-        <div className="d-flex align-items-start justify-content-between">
-          <div className="address-content">
-            <p><strong>Software Developer</strong> </p>
-            <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
-            <p>Pune, India</p><hr />
-          </div>
-          <Image src="/images/edit-button.svg" alt="Edit Profile" />
-        </div>
-
-        <div className="d-flex align-items-start justify-content-between">
-          <div className="address-content">
-            <p><strong>Android Developer</strong> </p>
-            <p>Stark Digital Media Services Pvt Ltd <br /> Mar | 2021</p>
-            <p>Pune, India</p><hr />
-          </div>
-          <Image src="/images/edit-button.svg" alt="Edit Profile" />
-        </div>
+        ))
+      }
+       
       </card>
     </>
   );

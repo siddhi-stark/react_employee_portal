@@ -45,7 +45,9 @@ function AddHistory(props) {
   // Call get data method on load
   useEffect(() => {
     getData();
-  }, []);
+    const {optionsData} = props;
+    updateDefaultValues(optionsData);
+    }, []);
 
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
