@@ -27,6 +27,7 @@ import AddTechnologyStack from './containers/Employee Technology Stack/AddTechno
 import EmployeeProfile from './containers/Employees/EmployeeProfile.component';
 import Confirmation from './containers/Employees/confirmation.component';
 import SelectedCandidate from './containers/Confirmation/SelectedCandidate.component';
+import SelectedCandidateListing from './containers/Confirmation/SelectedCandidateListing.component';
 
 function Routes() {
   return (
@@ -56,6 +57,7 @@ function Routes() {
       <Route path="/employee-profile" exact component={EmployeeProfile} />
       <Route path="/confirmation" exact component={Confirmation} />
       <Route path="/selected" exact component={SelectedCandidate} />
+      <Route path="/candidate-listing" exact component={SelectedCandidateListing} />
       <Route component={NotFound} />
     </Switch>
   );
