@@ -4,7 +4,6 @@ import { Image, Card, Row, Col, Button } from 'react-bootstrap';
 import AddHistory from './AddHistory.component';
 import EditEmployee from './EditPersonalDetails.component';
 
-
 const companyList =[{
   id:1,
   designation:'Senior Engineer',
