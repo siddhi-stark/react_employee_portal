@@ -2898,6 +2898,11 @@ body .morning-mail-sent {
         color: #212529;
     }
 }
+.address-edit-delete {
+    img {
+        margin-left: 10px;
+    }
+}
 
 @media (min-width: 576px){
     .bd-content .highlight {
