@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
+// import { setHours, setMinutes } from 'date-fns';
 import StarkFormBuilder from 'stark-form-builder';
 import CustomTable from 'stark-custom-datatable';
 import customFunctions from '../../helper/customFunctions';
@@ -20,6 +21,22 @@ function EditEmployee() {
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
+
+
+ useEffect(() => {
+  const formSchema = [...FormSections];
+  formSchema[0].fields.map((section) => {
+   console.log('section',section);
+    const sectionData = section;
+    if (sectionData.name === 'login') {
+      // const date = new Date();
+      // sectionData.minDate = date;
+      // sectionData.minTime = setHours(setMinutes(date, parseInt(timeMinutes, 10) + 1), parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour);
+      // sectionData.maxTime = setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours());
+  };
+    return section;
+  });
+  }, []);
 
   // Declare columns
   const columns = [
@@ -56,17 +73,6 @@ function EditEmployee() {
       label: 'Note',
     },
   ];
-
-  const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
-    console.log('section', section);
-    // const sectionData = section;
-    // if(sectionData.name === 'fromDate'){
-    // const date = new Date();
-    // sectionData.minDate = date;
-    // }
-    return section;
-  });
 
   // Get user role
   const getUserRole = async () => {

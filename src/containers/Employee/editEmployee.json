@@ -45,10 +45,13 @@
       },
       {
         "name": "login",
-        "type": "text",
+        "type": "date",
         "label": "Start Time",
         "id": "",
         "placeholder": "",
+        "dateFormat":"h:mm aa",
+        "showTimeSelect":"showTimeSelect",
+        "showTimeSelectOnly":"showTimeSelectOnly",
         "inputClass": "",
         "containerClass": "",
         "validations": [
@@ -80,10 +83,13 @@
       },
       {
         "name": "logout",
-        "type": "text",
+        "type": "date",
         "label": "End Time",
         "id": "",
         "placeholder": "",
+        "dateFormat":"h:mm aa",
+        "showTimeSelect":"showTimeSelect",
+        "showTimeSelectOnly":"showTimeSelectOnly",
         "inputClass": "",
         "containerClass": "",
         "validations": [
