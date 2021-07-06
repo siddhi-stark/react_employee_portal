@@ -28,6 +28,7 @@ import RecruitmentFileComponent from './containers/Recruitment/recruitmentFile.c
 import AddTechnologyStack from './containers/Employee Technology Stack/AddTechnologyStack.component';
 import EmployeeProfile from './containers/Employees/EmployeeProfile.component';
 import Confirmation from './containers/Employees/confirmation.component';
+import InterviewerRoundStatus from './containers/Applications/InterviewerRoundsStatus.component';
 
 function Routes() {
   return (
@@ -58,6 +59,7 @@ function Routes() {
       <Route path="/add-technology-stack" exact component={AddTechnologyStack} />
       <Route path="/employee-profile" exact component={EmployeeProfile} />
       <Route path="/confirmation" exact component={Confirmation} />
+      <Route path="/interviewer-round" exact component={InterviewerRoundStatus} />
       <Route component={NotFound} />
     </Switch>
   );

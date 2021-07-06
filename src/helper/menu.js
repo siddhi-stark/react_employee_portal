@@ -36,10 +36,10 @@ const menu = [
         title: 'Applications',
         path: '/applications',
         icon: 'report.svg',
-        roleaccess: [5],
+        roleaccess: [4, 5],
       },
     ],
-    roleaccess: [5],
+    roleaccess: [4, 5],
   },
   {
     title: 'Projects',

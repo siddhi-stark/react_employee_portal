@@ -10,16 +10,35 @@ function ProfessionalDetails() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   // Get user role
   const getUserRole = async () => {
-    const roleId = await localStorage.getItem('role');
+    const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
 
   useEffect(() => {
     getUserRole();
-  }, []);
+  }, [currentUser]);
+
+  useEffect(() => {
+    if(Number(currentUser) !== 4) return; 
+    if(Number(currentUser) === 4){
+      const formSchema = [...FormSections];
+    const updatedSchema = formSchema.map((section)=>{
+
+      const s = {...section};
+      s.fields = section.fields.map((item) => {
+        const itemData = item;
+         if(item.name === 'total' || item.name === 'relevant' || item.name === 'current' || item.name === 'expected' || item.name === 'resume' || item.name === 'reference' || item.name === 'upload') itemData.disabled = true;
+         return itemData;
+      })
+      return s;
+    })
+  updateJsonSchema([...updatedSchema]);        
+  } 
+  }, [currentUser]);
 
   // Submit Form
   const submitForm = async (formValues) => {
@@ -65,7 +84,7 @@ function ProfessionalDetails() {
     <StarkFormBuilder
       containerClass="mt-3"
       formHeaderClass=""
-      formSections={FormSections}
+      formSections={FormSections || jsonSchema}
       formHeading="Professional Details"
       onFormSubmit={(formValues) => {
         submitForm(formValues);
@@ -77,7 +96,7 @@ function ProfessionalDetails() {
       submitBtnText="Save"
       showResetBtn={false}
       resetBtnText="Clear"
-      btnContainerClass="form-submit-buttons"
+      btnContainerClass={`form-submit-buttons ${Number(currentUser) === 4 ? 'd-none' : ''}`}
       isStepForm={false}
       onFormReset={() => {
         console.log('form reset callback');

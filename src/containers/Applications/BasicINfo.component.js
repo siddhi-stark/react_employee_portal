@@ -12,16 +12,36 @@ function BasicInformation() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   // Get user role
   const getUserRole = async () => {
-    const roleId = await localStorage.getItem('role');
+    const roleId = await localStorage.getItem('group');
+    console.log('roleId ',roleId );
     updateCurrentUser(Number(roleId));
   };
 
   useEffect(() => {
     getUserRole();
-  }, []);
+  }, [currentUser]);
+
+  useEffect(() => {
+    if(Number(currentUser) !== 4) return; 
+    if(Number(currentUser) === 4){
+    const formSchema = [...FormSections];
+    const updatedSchema = formSchema.map((section)=>{
+
+      const s = {...section};
+      s.fields = section.fields.map((item) => {
+        const itemData = item;
+         if(item.name === 'name' || item.name === 'position' || item.name === 'technology' || item.name === 'education' || item.name === 'email' || item.name === 'mobile') itemData.disabled = true;
+         return itemData;
+      })
+      return s;
+    })
+  updateJsonSchema([...updatedSchema]);        
+  } 
+  }, [currentUser]);
 
   // Submit Form
   const submitForm = async (formValues) => {
@@ -30,7 +50,7 @@ function BasicInformation() {
     const { data } = await AuthApi.postDataToServer(
       Api.employeeUrl,
       formValues
-    );
+      );
     if (!data) {
       // show error
       return; // eslint-disable-line
@@ -65,27 +85,27 @@ function BasicInformation() {
   return (
     // Usage
     <StarkFormBuilder
-      containerClass="mt-3"
-      formHeaderClass=""
-      formSections={FormSections}
-      formHeading="Basic Information"
-      onFormSubmit={(formValues) => {
-        submitForm(formValues);
-      }}
-      options={options}
-      callbacks={{}}
-      defaultFormValues={defaultValues}
-      currentUser={currentUser}
-      submitBtnText="Save"
-      showResetBtn={false}
-      resetBtnText="Clear"
-      btnContainerClass="form-submit-buttons"
-      isStepForm={false}
-      onFormReset={() => {
-        console.log('form reset callback');
-      }}
+    containerClass="mt-3"
+    formHeaderClass=""
+    formSections={FormSections || jsonSchema}
+    formHeading="Basic Information"
+    onFormSubmit={(formValues) => {
+      submitForm(formValues);
+    }}
+    options={options}
+    callbacks={{}}
+    defaultFormValues={defaultValues}
+    currentUser={currentUser}
+    submitBtnText={Number(currentUser) === 4 ? '' : 'Save'}
+    btnContainerClass={`form-submit-buttons ${Number(currentUser) === 4 ? 'd-none' : ''}`}
+    showResetBtn={false}
+    resetBtnText="Clear"
+    isStepForm={false}
+    onFormReset={() => {
+      console.log('form reset callback');
+    }}
     />
-  );
+    );
 }
 
 export default withRouter(BasicInformation);
