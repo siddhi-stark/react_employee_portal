@@ -16,10 +16,11 @@ function Technology() {
   // Declare variable 
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
+  // const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [technologyId, setTechnologyId] = useState('');
+   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
@@ -27,7 +28,7 @@ function Technology() {
   const [currentUser, updateCurrentUser] = useState(0);
 
   const title = 'Employees List';
-
+  const limit = 5;
   const items = [
     { to: '/', label: 'Home' },
     { label: 'Employee' },
@@ -64,7 +65,7 @@ function Technology() {
   };
 
   const columns = [{
-    'id': 'id',
+    'id': 'index',
     'label': 'Sr.No',
   },
   {
@@ -81,7 +82,7 @@ function Technology() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.designationUrl}`;
+    const endPoint = `${Api.employeeStackUrl}`;
     // const filterList = filterData && !customFunctions.checkIfEmpty(filterData, 'O') ? customFunctions.jsonParse(filterData) : {};
     const params = {
       page,
@@ -92,8 +93,18 @@ function Technology() {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
+      // setLimit(data.paginator.limit);
+        setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
+
+      const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.index = (page - 1) * itemsPerPage + (i + 1);
+        return newItem;
+      });
+
+
       setRowData(data && data.data || []);
     } else {
       console.log('error', message);
@@ -118,7 +129,21 @@ function Technology() {
   const submitForm = async (formValues) => {
     console.log(formValues);
 
-    const { data } = await AuthApi.putDataToServer(Api.designationUrl, formValues);
+    const postData = {
+      name: formValues.name
+    }
+
+    console.log('postData',postData);
+
+    const payload = customFunctions.cleanObject(postData);
+    const callback = idd
+      ? AuthApi.putDataToServer
+      : AuthApi.postDataToServer;
+    const endPoint = idd
+      ? `${Api.employeeStackUrl}${idd}/`
+      : Api.employeeStackUrl;
+
+    const { data } = await AuthApi.postDataToServer(Api.employeeStackUrl, formValues);
     if (!data) {
       // show error
       return; // eslint-disable-line

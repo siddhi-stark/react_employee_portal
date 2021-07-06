@@ -128,11 +128,15 @@ function EmployeeProfile() {
             <p>{comp.cname} <br /> {comp.date}</p>
             <p>{comp.country}</p><hr />
           </div>
+          <div className="address-edit-delete">
           <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
             setData(comp);
             setShowEMployee(true);
             // history.push(`/profile-history/id=${comp.id}`)
           }}/>
+
+          <Image src="/images/delete.png" alt="Edit Profile" />
+</div>
         </div>
         ))
       }

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Row, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
+import StarkFormBuilder from 'stark-form-builder';
+import FormSections from './EmployeeTechFilter.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -13,9 +15,17 @@ function EmployeeTechListing() {
   // Declare variable 
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
+  // const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}) // eslint-disable-line
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
+  // Variable declarations
+  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
+  const [options, updateOptions] = useState({});
+  const [currentUser, updateCurrentUser] = useState(0);
+    
+   const limit = 10;
 
   const title = 'Employees List';
   
@@ -65,7 +75,7 @@ function EmployeeTechListing() {
   };
   
   const columns = [{
-    'id': 'id',
+    'id': 'index',
     'label': 'Sr.No',
   },
   {
@@ -96,8 +106,16 @@ function EmployeeTechListing() {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
+      setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
+
+       const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.index = (page - 1) * itemsPerPage + (i + 1);
+        return newItem;
+      });
+
       setRowData(data && data.data || []);
     } else {
       console.log('error', message);
@@ -107,6 +125,75 @@ function EmployeeTechListing() {
   useEffect(() => {
     getRowData(1);
   }, [filterData]);
+
+
+  // Get user role
+  const getUserRole = async() => {
+    const roleId = await localStorage.getItem('role');
+    updateCurrentUser(Number(roleId));
+  };
+
+  useEffect(() => {
+    getUserRole();
+  }, []);
+
+  // Submit Form
+  const submitForm = async (formValues) => {
+    console.log(formValues);
+    
+    setFilterData(formValues);
+      
+  };
+    
+  const getEmployee = async () => {
+    const {data} = await AuthApi.getDataFromServer(Api.employeeUrl);
+    if(!data) {
+      // show error
+      return;
+    }
+    
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({label: op.title, value: op.id});
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      employee: dpOptions
+    };
+    updateOptions(allOptions);
+  }
+
+  useEffect(() => {
+    getEmployee();
+  }, []);
+      
+  const getTechnology = async () => {
+    const {data} = await AuthApi.getDataFromServer(Api.designationUrl);
+    if(!data) {
+      // show error
+      return;
+    }
+    
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({label: op.title, value: op.id});
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      technology: dpOptions
+    };
+    updateOptions(allOptions);
+  }
+
+  useEffect(() => {
+    getTechnology();
+  }, []);
+      
+
 
   return (
     <>
@@ -132,25 +219,27 @@ function EmployeeTechListing() {
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
                   <Card.Title>
-                    {/* <StarkFormBuilder
-                      containerClass=''
-                      formHeaderClass=''
-                      formSections={FilterFormSections}
-                      onFormSubmit={(formValues) => { submitFilterForm(formValues); }}
-                      options={options}
-                      callbacks={{}}
-                      defaultFormValues={defaultValues}
-                      currentUser={currentUser}
-                      submitBtnText="Submit"
-                      showResetBtn={true} // eslint-disable-line
-                      resetBtnText="Clear"
-                      btnContainerClass="form-submit-buttons"
-                      isStepForm={false}
+  <StarkFormBuilder
+    containerClass=''
+    formHeaderClass=''
+    formSections={FormSections}
+    onFormSubmit={(formValues) => {submitForm(formValues);}}
+    options={options}
+    callbacks={{}}
+    defaultFormValues={defaultValues}
+    currentUser={currentUser}
+    submitBtnText="Submit"
+    showResetBtn={true}
+    resetBtnText="Clear"
+    btnContainerClass="form-submit-buttons"
+    isStepForm={false}
+    
+    onFormReset={() => {
+      console.log('form reset callback')
+    }}
+  />
+    
 
-                      onFormReset={() => {
-                        console.log('form reset callback')
-                      }}
-                    /> */}
                   </Card.Title>
                 </Card.Body>
               </Accordion.Collapse>
