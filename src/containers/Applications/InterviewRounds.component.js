@@ -15,16 +15,18 @@ function InterviewRounds() {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState([]);
+  // const [toggle, setToggle] = useState(false);
 
   // Get user role
-  const getUserRole = async () => {
+  const getUserRole = async() => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
 
-  useEffect(() => {
+  useEffect(() => {  
+    console.log('currentUser',currentUser);
     getUserRole();
-  }, [currentUser]);
+  }, []);
 
   useEffect(() => {
     updatedJsonSchema();
@@ -40,79 +42,85 @@ function InterviewRounds() {
     if (Number(currentUser) === 4) {
       const formSchema = [...FormSections];
       const updatedSchema = await formSchema.map((section) => {
-        const s = { ...section };
-        s.fields = section.fields.filter((item) => {
-          return !['interviewer'].includes(item.name);
+        
+        console.log('section',section);
+        const allitem =  section.fields.map((item) => {
+        console.log('item',item);
+          // if(item.type=='addmore') item.type=''; // eslint-disable-line
+
+          item.fields =  item.fields.filter((itm)=>{ // eslint-disable-line
+            console.log('itm',itm);
+            return !['interviewer','round','status','feedback'].includes(itm.name);
+          });
+          console.log('s.fields--',item.fields);
+          return item;
         });
-        return s;
+        section.fields = allitem; // eslint-disable-line
+        return section;
       });
+      console.log('updatedSchema',updatedSchema);
       updateJsonSchema([...updatedSchema]);
     }
   };
+
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
-
-    const { data } = await AuthApi.postDataToServer(
-      Api.employeeUrl,
-      formValues
-    );
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
-    }
-    // Perform success actions
+      const { data } = await AuthApi.postDataToServer(Api.getEmployeeUrl, formValues);
+      if(!data) {
+        // show error
+      }
+      // Perform success actions
   };
-
+    
   const getInterviewer = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
+    const {data} = await AuthApi.getDataFromServer(Api.employeeUrl);
+    if(!data) {
       // show error
       return;
     }
-
+    
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
+      dpOptions.push({label: op.title, value: op.id});
       return op;
     });
     const allOptions = {
       ...options,
-      interviewer: dpOptions,
+      interviewer: dpOptions
     };
     updateOptions(allOptions);
-  };
+  }
 
   useEffect(() => {
     getInterviewer();
   }, []);
-
-  console.log('jsonSchema', jsonSchema);
+      
+console.log('jsonSchema',jsonSchema);
   return (
     <>
     {  jsonSchema && (jsonSchema.length > 0) && (
-      <StarkFormBuilder
-        containerClass="mt-3"
-        formHeaderClass=""
-        formSections={jsonSchema}
-        formHeading="Interviewer "
-        onFormSubmit={(formValues) => {
-          submitForm(formValues);
-        }}
-        options={options}
-        callbacks={{}}
-        defaultFormValues={defaultValues}
-        currentUser={currentUser}
-        submitBtnText={Number(currentUser) === 4 ? 'Reschedule' :'Schedule Interview'}
-        showResetBtn={false}
-        resetBtnText="Clear"
-        btnContainerClass="form-submit-buttons"
-        isStepForm={false}
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
-      />
+        <StarkFormBuilder
+          containerClass=''
+          formHeaderClass=''
+          formSections={jsonSchema}
+          formHeading=""
+          onFormSubmit={(formValues) => {submitForm(formValues);}}
+          options={options}
+          callbacks={{}}
+          defaultFormValues={defaultValues}
+          currentUser={currentUser}
+          submitBtnText="Submit"
+          showResetBtn={false}
+          resetBtnText="Clear"
+          btnContainerClass="form-submit-buttons"
+          isStepForm={false}
+          
+          onFormReset={() => {
+            console.log('form reset callback')
+          }}
+        />
       )}
       <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
         <div className="mt-3">
