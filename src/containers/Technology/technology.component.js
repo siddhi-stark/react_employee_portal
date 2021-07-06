@@ -129,6 +129,20 @@ function Technology() {
   const submitForm = async (formValues) => {
     console.log(formValues);
 
+    const postData = {
+      name: formValues.name
+    }
+
+    console.log('postData',postData);
+
+    const payload = customFunctions.cleanObject(postData);
+    const callback = idd
+      ? AuthApi.putDataToServer
+      : AuthApi.postDataToServer;
+    const endPoint = idd
+      ? `${Api.employeeStackUrl}${idd}/`
+      : Api.employeeStackUrl;
+
     const { data } = await AuthApi.postDataToServer(Api.employeeStackUrl, formValues);
     if (!data) {
       // show error
