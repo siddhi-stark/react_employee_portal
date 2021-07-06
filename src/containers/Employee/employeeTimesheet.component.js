@@ -31,16 +31,7 @@ function EmployeeTimesheet() {
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
-  const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
-    const sectionData = section;
-    if (sectionData.name === 'fromDate') {
-      const date = new Date();
-      sectionData.minDate = date;
-    }
-    return sectionData;
-  });
-
+  
   const handleActionCallback = (row) => {
     console.log('row', row.id);
     return (
@@ -79,7 +70,7 @@ function EmployeeTimesheet() {
       label: dataShow ? 'Date' : '',
     },
     {
-      id: 'full_name',
+      id: 'emp_name',
       label: 'Employee Name',
     },
     {

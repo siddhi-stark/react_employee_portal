@@ -29,7 +29,7 @@
                 "condition": "!empty"
               }
             ],
-            "applyWhenRelation": "AND"
+            "applyWhenRelation": "OR"
           }
         ],
         "displayWhen": {},
@@ -62,7 +62,7 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          {
+           {
             "type": "required",
             "applyWhen": [
               {
@@ -71,7 +71,7 @@
                 "condition": "!empty"
               }
             ],
-            "applyWhenRelation": "AND"
+            "applyWhenRelation": "OR"
           }
         ],
         "displayWhen": {},
@@ -80,6 +80,7 @@
         "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
+        "minDateSelector": "fromDate",
         "maxDateSelector": "",
         "disabled": false,
         "isMulti": false,
