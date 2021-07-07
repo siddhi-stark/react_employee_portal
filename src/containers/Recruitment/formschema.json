@@ -1,26 +1,25 @@
 [
   {
-    "sectionName": "uploadbatch",
-    "sectionTitle": "Upload Batch",
-    "layout": {
-      "label": "1 Column",
-      "value": "1column"
-    },
-    "containerClass": "",
+    "sectionName": "uploadform",
+    "sectionTitle": "Upload Form",
+    "layout": { "label": "2 Column", "value": "2column" },
+    "containerClass": "mt-3",
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
       {
-        "name": "attachements",
-        "type": "file",
-        "label": "Upload New Batch",
+        "name": "tecchnology",
+        "type": "select",
+        "label": "Tecchnology",
         "id": "",
-        "placeholder": "Upload Batch",
+        "placeholder": "Select Technology",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          { "type": "", "applyWhen": [], "applyWhenRelation": "OR" }
+        ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -31,17 +30,42 @@
         "isMulti": false,
         "allowedUsers": [],
         "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
+        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fields": [],
+        "optionCallback": "getTecchnology",
+        "optionsCallbackUrl": "employeeUrl",
+        "options": []
+      },
+      {
+        "name": "attachments",
+        "type": "file",
+        "label": "Attachments",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          { "type": "", "applyWhen": [], "applyWhenRelation": "OR" }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": { "label": "1 Column", "value": "1column" },
         "fields": [],
         "optionCallback": "",
-        "accept": ".xlsx, .xls, .csv",
         "options": []
       }
     ],
     "allowedUsers": [],
-    "sectionLayout": "1column"
+    "sectionLayout": "2column"
   }
 ]

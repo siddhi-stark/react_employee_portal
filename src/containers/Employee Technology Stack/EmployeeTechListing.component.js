@@ -19,6 +19,7 @@ function EmployeeTechListing() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}) // eslint-disable-line
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [toggle, setToggle] = useState(false);
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -96,8 +97,14 @@ function EmployeeTechListing() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
+    let id;
+    console.log('filterData',filterData.employee);
+    if(toggle && filterData && filterData.employee && filterData.employee.value){
+      id = filterData.employee.value;
+    }
     const endPoint = `${Api.employeeUrl}`;
     const params = {
+      id,
       page,
       limit,
     };
@@ -139,8 +146,8 @@ function EmployeeTechListing() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
-    
+    console.log('formValues',formValues);
+    setToggle(true);
     setFilterData(formValues);
       
   };
@@ -155,7 +162,7 @@ function EmployeeTechListing() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
+      dpOptions.push({label: op.full_name, value: op.id});
       return op;
     });
     const allOptions = {

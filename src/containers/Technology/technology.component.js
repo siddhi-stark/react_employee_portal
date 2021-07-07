@@ -26,6 +26,7 @@ function Technology() {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
+  const [count, forceUpdate] = useState(0);
 
   const title = 'Employees List';
   const limit = 5;
@@ -44,6 +45,8 @@ function Technology() {
             e.preventDefault();
             e.stopPropagation();
             setTechnologyId(row.id);
+            forceUpdate(count+1);
+            
             // setTechnologyName(name);
           }}
         >
@@ -136,14 +139,14 @@ function Technology() {
     console.log('postData',postData);
 
     const payload = customFunctions.cleanObject(postData);
-    const callback = idd
+    const callback = technologyId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
-    const endPoint = idd
-      ? `${Api.employeeStackUrl}${idd}/`
+    const endPoint = technologyId
+      ? `${Api.employeeStackUrl}${technologyId}/`
       : Api.employeeStackUrl;
 
-    const { data } = await AuthApi.postDataToServer(Api.employeeStackUrl, formValues);
+    const { data } = await callback(endPoint, payload);
     if (!data) {
       // show error
       return; // eslint-disable-line
@@ -153,23 +156,21 @@ function Technology() {
 
   // Get data for form
   const getData = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
+    if(!technologyId) return;
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}${technologyId}/`);
+    console.log('data',data);
     if (!data) {
       // show error
       return;
     }
-    data.data.map((dt) => {
-      if (technologyId) {
-        updateDefaultValues({ name: dt.name });
-      }
-      return dt;
-    });
+    updateDefaultValues({ name: data.data.name });
   };
 
   // Call get data method on load
   useEffect(() => {
     getData();
-  }, []);
+    console.log('count',count);
+  }, [technologyId,count]);
 
   // Submit Form
   const submitFilterForm = async (formValues) => {

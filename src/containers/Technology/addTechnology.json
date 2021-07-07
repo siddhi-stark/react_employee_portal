@@ -1,50 +1,50 @@
 [
-    {
-        "layout": {
-            "label": "1 Column",
-            "value": "1column"
-        },
-        "containerClass": "col-md-12",
-        "displaySection": true,
-        "displaySectionTitle": true,
-        "fields": [
-            {
-                "name": "name",
-                "type": "text",
-                "label": "Technology Name",
-                "id": "",
-                "placeholder": "",
-                "inputClass": "",
-                "containerClass": "",
-                "validations": [
-                    {
-                        "type": "required",
-                        "applyWhen": [],
-                        "applyWhenRelation": "OR"
-                    }
-                ],
-                "displayWhen": {},
-                "haveValidations": "true",
-                "haveDisplayOptions": "false",
-                "callback": "",
-                "callbackUrl": "",
-                "inputToChange": "",
-                "minDateSelector": "",
-                "maxDateSelector": "",
-                "disabled": false,
-                "isMulti": false,
-                "allowedUsers": [],
-                "fieldsToReset": [],
-                "fieldLayout": {
-                    "label": "1 Column",
-                    "value": "1column"
-                },
-                "fields": [],
-                "optionCallback": "",
-                "options": []
-            }
+  {
+    "layout": {
+      "label": "1 Column",
+      "value": "1column"
+    },
+    "containerClass": "col-md-12",
+    "displaySection": true,
+    "displaySectionTitle": true,
+    "fields": [
+      {
+        "name": "name",
+        "type": "text",
+        "label": "Technology Name",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
         ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
         "allowedUsers": [],
-        "sectionLayout": "1column"
-    }
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "1column"
+  }
 ]
