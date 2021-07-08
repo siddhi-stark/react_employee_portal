@@ -11,6 +11,7 @@ import Table from '../../../components/ReactTable/simpletable.component';
 import UserRestrictions from '../../../components/UserRestrictions/userrestrictions.component';
 import SharedService from '../../../services/SharedService/sharedServices';
 import Loader from '../../../components/Loader/index';
+import EmployeeListComponent from '../../Employee/employeeList.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -229,6 +230,12 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
+            <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+            <div className="mt-4">
+              <EmployeeListComponent />
+            </div>
+            </UserRestrictions>
+
             <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>
             {
               showClockIn && !morningMail && (

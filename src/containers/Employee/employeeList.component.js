@@ -66,7 +66,7 @@ function EmployeeListComponent() {
         : {};
     const params = {
       page,
-      limit,
+      limit:5,
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
