@@ -65,7 +65,7 @@ function RecruitmentFileComponent() {
             // history.push('/edit-employee');
           }}
         >
-          <Image src="/images/download.svg" alt="Download File" />
+          <Image src="/images/download-file.svg" alt="Download File" />
         </a>
       </>
     );
