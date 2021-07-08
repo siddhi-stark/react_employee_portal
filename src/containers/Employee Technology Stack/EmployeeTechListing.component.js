@@ -11,13 +11,12 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 function EmployeeTechListing() {
-
-  // Declare variable 
+  // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   // const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}) // eslint-disable-line
+  const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [toggle, setToggle] = useState(false);
 
@@ -25,17 +24,17 @@ function EmployeeTechListing() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-    
-   const limit = 10;
+
+  const limit = 10;
 
   const title = 'Employees List';
-  
+
   const history = useHistory();
   const items = [
     { to: '/', label: 'Home' },
     { label: 'Employee Technology Stack' },
   ];
-  
+
   const handleActionCallback = () => {
     return (
       <>
@@ -74,35 +73,41 @@ function EmployeeTechListing() {
       </>
     );
   };
-  
-  const columns = [{
-    'id': 'index',
-    'label': 'Sr.No',
-  },
-  {
-    'id': 'full_name',
-    'label': 'EmployeeName',
-  },
-  {
-    'id': 'Technology',
-    'label': 'Technology',
-  },
-  {
-    'id': 'action',
-    'label': 'Action',
-    render: handleActionCallback
-  },
+
+  const columns = [
+    {
+      id: 'index',
+      label: 'Sr.No',
+    },
+    {
+      id: 'full_name',
+      label: 'EmployeeName',
+    },
+    {
+      id: 'Technology',
+      label: 'Technology',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: handleActionCallback,
+    },
   ];
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     let id;
-    console.log('filterData',filterData.employee);
-    if(toggle && filterData && filterData.employee && filterData.employee.value){
+    console.log('filterData', filterData.employee);
+    if (
+      toggle &&
+      filterData &&
+      filterData.employee &&
+      filterData.employee.value
+    ) {
       id = filterData.employee.value;
     }
-    const endPoint = `${Api.employeeUrl}`;
+    const endPoint = `${Api.employeeStack}`;
     const params = {
       id,
       page,
@@ -116,14 +121,14 @@ function EmployeeTechListing() {
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
 
-       const newData = [...data.data];
+      const newData = [...data.data];
       newData.map((item, i) => {
         const newItem = item;
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
         return newItem;
       });
 
-      setRowData(data && data.data || []);
+      setRowData((data && data.data) || []);
     } else {
       console.log('error', message);
     }
@@ -133,9 +138,8 @@ function EmployeeTechListing() {
     getRowData(1);
   }, [filterData]);
 
-
   // Get user role
-  const getUserRole = async() => {
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
@@ -146,67 +150,62 @@ function EmployeeTechListing() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
+    console.log('formValues', formValues);
     setToggle(true);
     setFilterData(formValues);
-      
   };
-    
+
   const getEmployee = async () => {
-    const {data} = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if(!data) {
+    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    if (!data) {
       // show error
       return;
     }
-    
+
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({label: op.full_name, value: op.id});
+      dpOptions.push({ label: op.full_name, value: op.id });
       return op;
     });
     const allOptions = {
       ...options,
-      employee: dpOptions
+      employee: dpOptions,
     };
     updateOptions(allOptions);
-  }
+  };
+
+  const getTechnology = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
+
+    options.technology = dpOptions;
+    const allOptions = options;
+    await updateOptions(allOptions);
+  };
 
   useEffect(() => {
     getEmployee();
-  }, []);
-      
-  const getTechnology = async () => {
-    const {data} = await AuthApi.getDataFromServer(Api.designationUrl);
-    if(!data) {
-      // show error
-      return;
-    }
-    
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      technology: dpOptions
-    };
-    updateOptions(allOptions);
-  }
-
-  useEffect(() => {
     getTechnology();
   }, []);
-      
-
 
   return (
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Employee Technology Stack</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">
+          Employee Technology Stack
+        </h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
@@ -226,27 +225,26 @@ function EmployeeTechListing() {
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
                   <Card.Title>
-  <StarkFormBuilder
-    containerClass=''
-    formHeaderClass=''
-    formSections={FormSections}
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true}
-    resetBtnText="Clear"
-    btnContainerClass="form-submit-buttons"
-    isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-    }}
-  />
-    
-
+                    <StarkFormBuilder
+                      containerClass=""
+                      formHeaderClass=""
+                      formSections={FormSections}
+                      onFormSubmit={(formValues) => {
+                        submitForm(formValues);
+                      }}
+                      options={options}
+                      callbacks={{}}
+                      defaultFormValues={defaultValues}
+                      currentUser={currentUser}
+                      submitBtnText="Submit"
+                      showResetBtn={true}
+                      resetBtnText="Clear"
+                      btnContainerClass="form-submit-buttons"
+                      isStepForm={false}
+                      onFormReset={() => {
+                        console.log('form reset callback');
+                      }}
+                    />
                   </Card.Title>
                 </Card.Body>
               </Accordion.Collapse>
@@ -265,7 +263,7 @@ function EmployeeTechListing() {
                     className="btn-link"
                   >
                     Add Technology
-                    </a>
+                  </a>
                 </div>
               </div>
             </Card.Header>
@@ -281,11 +279,12 @@ function EmployeeTechListing() {
                     activePage: currentPage,
                     onPageChange: (pageNo) => {
                       getRowData(pageNo);
-                    }
+                    },
                   }}
-                  emptyRender={() => { return ('No record found.'); }}
+                  emptyRender={() => {
+                    return 'No record found.';
+                  }}
                 />
-
               </Row>
             </Card.Body>
           </Card>

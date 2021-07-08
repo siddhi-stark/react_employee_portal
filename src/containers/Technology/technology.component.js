@@ -1,41 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
-import StarkFormBuilder from 'stark-form-builder';
 import { withRouter } from 'react-router-dom';
-import { Card, Accordion, Button,Row, Col, Image } from 'react-bootstrap';
-import FormSections from './addTechnology.json';
+import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
+import StarkFormBuilder from 'stark-form-builder';
 import FilterFormSections from './FilterTechnology.json';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import AddTechnology from './AddTechnology.component';
 
 function Technology() {
-
-  // Declare variable 
+  // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   // const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [technologyId, setTechnologyId] = useState('');
-   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [count, forceUpdate] = useState(0);
+  const [technology, setTechnologyName] = useState('');
 
   const title = 'Employees List';
   const limit = 5;
-  const items = [
-    { to: '/', label: 'Home' },
-    { label: 'Employee' },
-  ];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
-  const handleActionCallback = (row) => {
+  const handleActionCallback = ({ index, name }) => {
     return (
       <>
         <a
@@ -45,9 +42,11 @@ function Technology() {
             e.preventDefault();
             e.stopPropagation();
             setTechnologyId(row.id);
-            forceUpdate(count+1);
-            
+            forceUpdate(count + 1);
+
             // setTechnologyName(name);
+            setTechnologyId(index);
+            setTechnologyName(name);
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Technology" />
@@ -55,11 +54,11 @@ function Technology() {
         <a
           href="/"
           className="ml-2"
-        // onClick={(e) => {
-        //   e.preventDefault();
-        //   e.stopPropagation();
-        //   removeDesignation(id);
-        // }}
+          // onClick={(e) => {
+          //   e.preventDefault();
+          //   e.stopPropagation();
+          //   removeDesignation(id);
+          // }}
         >
           <Image src="/images/delete.png" alt="Delete Technology" />
         </a>
@@ -67,19 +66,20 @@ function Technology() {
     );
   };
 
-  const columns = [{
-    'id': 'index',
-    'label': 'Sr.No',
-  },
-  {
-    'id': 'name',
-    'label': 'Technology',
-  },
-  {
-    'id': 'action',
-    'label': 'Action',
-    render: handleActionCallback
-  },
+  const columns = [
+    {
+      id: 'index',
+      label: 'Sr.No',
+    },
+    {
+      id: 'name',
+      label: 'Technology',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: handleActionCallback,
+    },
   ];
 
   // Declare methods
@@ -97,7 +97,7 @@ function Technology() {
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
-        setItemsPerPage(data.paginator.limit);
+      setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
 
       const newData = [...data.data];
@@ -107,8 +107,7 @@ function Technology() {
         return newItem;
       });
 
-
-      setRowData(data && data.data || []);
+      setRowData((data && data.data) || []);
     } else {
       console.log('error', message);
     }
@@ -133,19 +132,15 @@ function Technology() {
     console.log(formValues);
 
     const postData = {
-      name: formValues.name
-    }
+      name: formValues.name,
+    };
 
-    console.log('postData',postData);
+    console.log('postData', postData);
 
     const payload = customFunctions.cleanObject(postData);
 
-    const callback = 2
-      ? AuthApi.putDataToServer
-      : AuthApi.postDataToServer;
-    const endPoint = 2
-      ? `${Api.employeeStackUrl}${2}/`
-      : Api.employeeStackUrl;
+    const callback = 2 ? AuthApi.putDataToServer : AuthApi.postDataToServer;
+    const endPoint = 2 ? `${Api.employeeStackUrl}${2}/` : Api.employeeStackUrl;
     const { data } = await callback(endPoint, payload);
     if (!data) {
       // show error
@@ -156,9 +151,11 @@ function Technology() {
 
   // Get data for form
   const getData = async () => {
-    if(!technologyId) return;
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}${technologyId}/`);
-    console.log('data',data);
+    if (!technologyId) return;
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeStackUrl}${technologyId}/`
+    );
+    console.log('data', data);
     if (!data) {
       // show error
       return;
@@ -169,8 +166,8 @@ function Technology() {
   // Call get data method on load
   useEffect(() => {
     getData();
-    console.log('count',count);
-  }, [technologyId,count]);
+    console.log('count', count);
+  }, [technologyId, count]);
 
   // Submit Form
   const submitFilterForm = async (formValues) => {
@@ -180,6 +177,7 @@ function Technology() {
 
   return (
     <>
+      {console.log('technology', technology)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Technology</h2>
@@ -203,10 +201,12 @@ function Technology() {
                 <Card.Body>
                   <Card.Title>
                     <StarkFormBuilder
-                      containerClass=''
-                      formHeaderClass=''
+                      containerClass=""
+                      formHeaderClass=""
                       formSections={FilterFormSections}
-                      onFormSubmit={(formValues) => { submitFilterForm(formValues); }}
+                      onFormSubmit={(formValues) => {
+                        submitFilterForm(formValues);
+                      }}
                       options={options}
                       callbacks={{}}
                       defaultFormValues={defaultValues}
@@ -216,7 +216,6 @@ function Technology() {
                       resetBtnText="Clear"
                       btnContainerClass="form-submit-buttons"
                       isStepForm={false}
-
                       onFormReset={() => {
                         console.log('form reset callback');
                       }}
@@ -235,25 +234,7 @@ function Technology() {
             <Card.Body>
               <Row className="mt-3">
                 <Col>
-                  <StarkFormBuilder
-                    containerClass=''
-                    formHeaderClass=''
-                    formSections={FormSections}
-                    onFormSubmit={(formValues) => { submitForm(formValues); }}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    currentUser={currentUser}
-                    submitBtnText="Submit"
-                    showResetBtn={true} // eslint-disable-line
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
-                    isStepForm={false}
-
-                    onFormReset={() => {
-                      console.log('form reset callback');
-                    }}
-                  />
+                  <AddTechnology technology={technology} />
                 </Col>
                 <Col>
                   <CustomTable
@@ -266,9 +247,11 @@ function Technology() {
                       activePage: currentPage,
                       onPageChange: (pageNo) => {
                         getRowData(pageNo);
-                      }
+                      },
                     }}
-                    emptyRender={() => { return ('No record found.'); }}
+                    emptyRender={() => {
+                      return 'No record found.';
+                    }}
                   />
                 </Col>
               </Row>
