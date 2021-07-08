@@ -84,7 +84,7 @@
       {
         "name": "fromDate",
         "type": "date",
-        "label": "FromDate",
+        "label": "From Date",
         "id": "",
         "placeholder": "",
         "inputClass": "",
@@ -119,7 +119,7 @@
       {
         "name": "toDate",
         "type": "date",
-        "label": "ToDate",
+        "label": "To Date",
         "id": "",
         "placeholder": "",
         "inputClass": "",

@@ -69,7 +69,7 @@ function Confirmation() {
             <Row>
               <Col md={4}>
                 <Datepicker
-                  label="Joining Date"
+                  label="Confirmation Date"
                   className="form-control"
                   // selected={joiningDate}
                   placeholder="dd/mm/yyyy"
