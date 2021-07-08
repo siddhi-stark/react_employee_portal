@@ -30,6 +30,22 @@ function InterviewRounds() {
     updatedJsonSchema();
   }, [currentUser]);
 
+
+useEffect(() => {
+  const formSchema = [...FormSections];
+    const updatedSchema = formSchema.map((section)=>{
+      const s = {...section};
+      s.fields = section.fields.map((item) => {
+        const itemData = item;
+         if(item.name === 'date') itemData.disabled = true;
+          if(item.name === 'time') itemData.disabled = true;
+         return itemData;
+      })
+      return s;
+    })
+  updateJsonSchema([...updatedSchema]); 
+},[])
+
   const updatedJsonSchema = async () => {
     updateJsonSchema([]);
     if (Number(currentUser) !== 4) {
