@@ -139,13 +139,13 @@ function Technology() {
     console.log('postData',postData);
 
     const payload = customFunctions.cleanObject(postData);
-    const callback = technologyId
+
+    const callback = 2
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
-    const endPoint = technologyId
-      ? `${Api.employeeStackUrl}${technologyId}/`
+    const endPoint = 2
+      ? `${Api.employeeStackUrl}${2}/`
       : Api.employeeStackUrl;
-
     const { data } = await callback(endPoint, payload);
     if (!data) {
       // show error

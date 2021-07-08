@@ -9493,6 +9493,9 @@ p:empty {
     -webkit-box-shadow: none !important;
     box-shadow: none !important; }
 
+.accordion .card-body {
+  overflow: hidden; }
+
 .create_form .accordion > .card:first-of-type {
   border: 1px solid rgba(0, 0, 0, 0.125); }
 
@@ -11130,12 +11133,14 @@ body .morning-mail-sent {
   background-color: #292a52;
   border-color: #dee2e6 #dee2e6 #ffffff; }
 
+
 .select-options .form-group {
   color: #212529; }
 
 .address-edit-delete img {
   margin-left: 10px; }
 
+ Recruitment-file-upload
 @media (min-width: 576px) {
   .bd-content .highlight {
     margin-right: 0;

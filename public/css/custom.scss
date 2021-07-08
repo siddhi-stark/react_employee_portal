@@ -946,9 +946,15 @@ p:empty {
         border-radius: 0 !important;
         box-shadow: none !important;
     }
+
+    .card-body {
+        overflow: hidden;
+    }
+
     /*.card-body {
         overflow: hidden;
     }*/
+ Recruitment-file-upload
 }
 .create_form .accordion>.card:first-of-type {
     border:1px solid rgba(0, 0, 0, 0.125);
@@ -2893,6 +2899,7 @@ body .morning-mail-sent {
     border-color: #dee2e6 #dee2e6 #ffffff;
 }
 
+
 .select-options {
     .form-group {
         color: #212529;
@@ -2903,6 +2910,7 @@ body .morning-mail-sent {
         margin-left: 10px;
     }
 }
+Recruitment-file-upload
 
 @media (min-width: 576px){
     .bd-content .highlight {
