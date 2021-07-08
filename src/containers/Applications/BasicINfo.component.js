@@ -30,7 +30,6 @@ function BasicInformation() {
     if(Number(currentUser) === 4){
     const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section)=>{
-  console.log('section basic ---',section);
 
       const s = {...section};
       s.fields = section.fields.map((item) => {
