@@ -96,7 +96,7 @@ function EmployeeTechListing() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeUrl}`;
+    const endPoint = `${Api.employeeStack}`;
     const params = {
       page,
       limit,
@@ -146,16 +146,16 @@ function EmployeeTechListing() {
   };
     
   const getEmployee = async () => {
-    const {data} = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if(!data) {
+    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    if (!data) {
       // show error
       return;
     }
-    
+
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
+      dpOptions.push({ label: op.full_name, value: op.id });
       return op;
     });
     const allOptions = {
@@ -163,33 +163,28 @@ function EmployeeTechListing() {
       employee: dpOptions
     };
     updateOptions(allOptions);
-  }
-
-  useEffect(() => {
-    getEmployee();
-  }, []);
+  };
       
+  
   const getTechnology = async () => {
-    const {data} = await AuthApi.getDataFromServer(Api.designationUrl);
-    if(!data) {
+    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    if (!data) {
       // show error
       return;
     }
-    
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
-      return op;
+
+    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
     });
-    const allOptions = {
-      ...options,
-      technology: dpOptions
-    };
-    updateOptions(allOptions);
-  }
+
+    options.technology = dpOptions;
+    const allOptions = options;
+    await updateOptions(allOptions);
+  };
+
 
   useEffect(() => {
+    getEmployee();
     getTechnology();
   }, []);
       

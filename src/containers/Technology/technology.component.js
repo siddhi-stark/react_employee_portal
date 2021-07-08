@@ -27,6 +27,7 @@ function Technology() {
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
 
+
   const title = 'Employees List';
   const limit = 5;
   const items = [
@@ -34,7 +35,7 @@ function Technology() {
     { label: 'Employee' },
   ];
 
-  const handleActionCallback = (row) => {
+  const handleActionCallback = ({index,name}) => {
     return (
       <>
         <a
@@ -43,8 +44,8 @@ function Technology() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setTechnologyId(row.id);
-            // setTechnologyName(name);
+            setTechnologyId(index);
+            updateDefaultValues({name})
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Technology" />
