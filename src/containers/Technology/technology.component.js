@@ -136,14 +136,14 @@ function Technology() {
     console.log('postData',postData);
 
     const payload = customFunctions.cleanObject(postData);
-    const callback = idd
+    const callback = 2
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
-    const endPoint = idd
-      ? `${Api.employeeStackUrl}${idd}/`
+    const endPoint = 2
+      ? `${Api.employeeStackUrl}${2}/`
       : Api.employeeStackUrl;
-
-    const { data } = await AuthApi.postDataToServer(Api.employeeStackUrl, formValues);
+ const { data } = await callback(endPoint, payload);
+    // const { data } = await AuthApi.postDataToServer(Api.employeeStackUrl, payload);
     if (!data) {
       // show error
       return; // eslint-disable-line
