@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
-import StarkFormBuilder from 'stark-form-builder';
 import { withRouter } from 'react-router-dom';
 import { Card, Accordion, Button,Row, Col, Image } from 'react-bootstrap';
-import FormSections from './addTechnology.json';
+import StarkFormBuilder from 'stark-form-builder';
 import FilterFormSections from './FilterTechnology.json';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import AddTechnology from './AddTechnology.component';
 
 function Technology() {
 
@@ -26,7 +26,7 @@ function Technology() {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-
+  const [technology, setTechnologyName] = useState('');
 
   const title = 'Employees List';
   const limit = 5;
@@ -45,7 +45,7 @@ function Technology() {
             e.preventDefault();
             e.stopPropagation();
             setTechnologyId(index);
-            updateDefaultValues({name})
+            setTechnologyName(name)
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Technology" />
@@ -126,31 +126,7 @@ function Technology() {
     getUserRole();
   }, []);
 
-  // Submit Form
-  const submitForm = async (formValues) => {
-    console.log(formValues);
-
-    const postData = {
-      name: formValues.name
-    }
-
-    console.log('postData',postData);
-
-    const payload = customFunctions.cleanObject(postData);
-    const callback = 2
-      ? AuthApi.putDataToServer
-      : AuthApi.postDataToServer;
-    const endPoint = 2
-      ? `${Api.employeeStackUrl}${2}/`
-      : Api.employeeStackUrl;
- const { data } = await callback(endPoint, payload);
-    // const { data } = await AuthApi.postDataToServer(Api.employeeStackUrl, payload);
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
-    }
-    // Perform success actions
-  };
+  
 
   // Get data for form
   const getData = async () => {
@@ -180,6 +156,7 @@ function Technology() {
 
   return (
     <>
+    {console.log('technology', technology)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Technology</h2>
@@ -235,25 +212,9 @@ function Technology() {
             <Card.Body>
               <Row className="mt-3">
                 <Col>
-                  <StarkFormBuilder
-                    containerClass=''
-                    formHeaderClass=''
-                    formSections={FormSections}
-                    onFormSubmit={(formValues) => { submitForm(formValues); }}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    currentUser={currentUser}
-                    submitBtnText="Submit"
-                    showResetBtn={true} // eslint-disable-line
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
-                    isStepForm={false}
-
-                    onFormReset={() => {
-                      console.log('form reset callback');
-                    }}
-                  />
+                <AddTechnology 
+                 technology={technology}
+                />
                 </Col>
                 <Col>
                   <CustomTable
