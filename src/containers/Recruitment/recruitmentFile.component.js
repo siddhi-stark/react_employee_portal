@@ -136,25 +136,23 @@ function RecruitmentFileComponent() {
   };
 
   const getTechnology = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
     if (!data) {
       // show error
       return;
     }
 
-    const dpOptions = [];
+    const dpOptions = []; 
     data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.full_name, value: op.id });
+      dpOptions.push ({ label: op.name, value: op.id });
       return op;
     });
-    const allOptions = {
+     const allOptions = {
       ...filterOptions,
       ...defaultFilterOptions,
-      technology: dpOptions,
+      position: dpOptions,
     };
-    defaultFilterOptions = { ...allOptions };
-    updateFilterOptions(allOptions);
+    updateOptions(allOptions);
   };
 
   useEffect(() => {

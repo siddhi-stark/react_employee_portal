@@ -4,12 +4,17 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertFromHTML, ContentState } from 'draft-js';
-import { Datepicker, DropdownInput } from '../../components/FormInputs';
+import { Datepicker, DropdownInput, Helmet } from '../../components/FormInputs';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 function Confirmation() {
+  const title = 'Confirmation';
+
+  const items = [{ to: '/', label: 'Home' }, { label: 'Confirmation' }];
+
   const test =
     'Dear Employee First Name,<br />With reference to the thorough evaluation of your performance during the probation period from Start Date to End Date, we are pleased to inform you that your employment is being confirmed as Job Title from Date of Confirmation. </br> The terms and conditions of your employment and your job responsibilities will continue to remain the same. We thank you for your valuable contribution made to your process and hope that you will perform with equal enthusiasm in future.</br>All the very best in all your endeavors with Stark!!</br>All the very best for a fruitful carrear with Stark !!</br>Regards,';
   const [description, setDescription] = useState(
@@ -52,6 +57,11 @@ function Confirmation() {
 
   return (
     <>
+     <Helmet title={title} />
+      <div className="title-breadcrumb-section">
+        <h2 className="main-content-title tx-24 mg-b-5">Confirmation</h2>
+        <Breadcrumb items={items} />
+      </div>
       <div className="mt-4">
         <p>Employee Name - John</p>
         <section className="content-area">
