@@ -38,6 +38,12 @@ const menu = [
         icon: 'report.svg',
         roleaccess: [4, 5],
       },
+      {
+        title: 'Recruitment Applications',
+        path: '/recruitment',
+        icon: 'report.svg',
+        roleaccess: [5],
+      },
     ],
     roleaccess: [4, 5],
   },

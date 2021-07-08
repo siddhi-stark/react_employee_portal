@@ -32,6 +32,7 @@ import InterviewerRoundStatus from './containers/Applications/InterviewerRoundsS
 import SelectedCandidate from './containers/Confirmation/SelectedCandidate.component';
 import SelectedCandidateListing from './containers/Confirmation/SelectedCandidateListing.component';
 import EmailTemplates from './containers/EmailTemplates/emailTemplates.component';
+import RecruitmentApplication from './containers/Recruitment/recruitmentApplication.component';
 
 function Routes() {
   return (
@@ -66,6 +67,7 @@ function Routes() {
       <Route path="/selected" exact component={SelectedCandidate} />
       <Route path="/candidate-listing" exact component={SelectedCandidateListing} />
       <Route path="/email-templates" exact component={EmailTemplates} />
+      <Route path="/recruitment" exact component={RecruitmentApplication} />
       <Route component={NotFound} />
     </Switch>
   );
