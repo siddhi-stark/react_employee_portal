@@ -96,6 +96,15 @@ function Confirmation() {
               </Col>
 
               <Col md={6}>
+                <p className="mt-3">
+                  <b>
+                    Note:-The given list of words are the dynamic content which
+                    will replaced by the appropriate words while sending mail.
+                    Please use word as per the need as it is, do not make
+                    changes into them.
+                  </b>
+                  [first_name], [last_name], [joining_date]
+                </p>
                 <Editor
                   // readOnly={viewType}
                   wrapperClassName="demo-wrapper"

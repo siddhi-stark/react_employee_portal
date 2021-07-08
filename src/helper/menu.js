@@ -70,6 +70,13 @@ const menu = [
     roleaccess: [1],
   },
   {
+    title: 'Email Templates',
+    path: '/email-templates',
+    icon: 'Designation.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  {
     title: 'Employees',
     path: '/employee',
     icon: 'Employee.svg',

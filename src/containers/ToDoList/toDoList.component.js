@@ -17,7 +17,6 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constant';
 import Task from './Task.component';
-import EmployeeListComponent from '../Employee/employeeList.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
 import SharedService from '../../services/SharedService/sharedServices';
@@ -744,7 +743,6 @@ function ToDoList(props) {
                 </div>
               </Card.Body>
             </Card>
-            <EmployeeListComponent />
           </UserRestrictions>
         </div>
       </section>

@@ -1,76 +1,23 @@
 [
 	{
-		"sectionName": "interviewerrounds",
-		"sectionTitle": "Interviewer Rounds",
-		"layout": { "label": "2 Column", "value": "2column" },
+		"sectionName": "interviewform",
+		"sectionTitle": "Interview Rounds",
+		"layout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
 		"containerClass": "",
 		"displaySection": true,
 		"displaySectionTitle": true,
 		"fields": [
 			{
-				"name": "date",
-				"type": "date",
-				"label": "Interview Date",
+				"name": "interviewround",
+				"type": "addmore",
+				"label": "",
 				"id": "",
 				"placeholder": "",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": { "label": "1 Column", "value": "1column" },
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			},
-			{
-				"name": "time",
-				"type": "text",
-				"label": "Time",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": { "label": "1 Column", "value": "1column" },
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			},
-			{
-				"name": "interviewer",
-				"type": "select",
-				"label": "Select Interviewer ",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "designationUrl",
 				"validations": [],
 				"displayWhen": {},
 				"haveValidations": "false",
@@ -84,13 +31,225 @@
 				"isMulti": false,
 				"allowedUsers": [],
 				"fieldsToReset": [],
-				"fieldLayout": { "label": "1 Column", "value": "1column" },
-				"fields": [],
-				"optionCallback": "getInterviewer",
+				"fieldLayout": "2column",
+				"fields": [
+					{
+						"name": "date",
+						"type": "date",
+						"label": "Date",
+						"id": "",
+						"placeholder": "",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [
+							{
+								"type": "required",
+								"applyWhen": [],
+								"applyWhenRelation": "OR"
+							}
+						],
+						"displayWhen": {},
+						"haveValidations": "true",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": {
+							"label": "1 Column",
+							"value": "1column"
+						},
+						"options": [],
+						"fields": []
+					},
+					{
+						"name": "time",
+						"type": "date",
+						"label": "Time",
+						"id": "",
+						"placeholder": "",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [
+							{
+								"type": "required",
+								"applyWhen": [],
+								"applyWhenRelation": "OR"
+							}
+						],
+						"displayWhen": {},
+						"haveValidations": "true",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"dateFormat": "h:mm aa",
+						"showTimeSelect": "showTimeSelect",
+						"showTimeSelectOnly": "showTimeSelectOnly",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": {
+							"label": "1 Column",
+							"value": "1column"
+						},
+						"fields": [],
+						"options": []
+					},
+					{
+						"name": "interviewer",
+						"type": "select",
+						"label": "Interviewer",
+						"id": "",
+						"placeholder": "",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [],
+						"displayWhen": {},
+						"haveValidations": "false",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": {
+							"label": "1 Column",
+							"value": "1column"
+						},
+						"fields": [],
+						"optionsCallbackUrl": "employeeUrl",
+						"optionCallback": "getInterviewer",
+						"options": []
+					},
+					{
+						"name": "round",
+						"type": "select",
+						"label": "Round",
+						"id": "",
+						"placeholder": "",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [],
+						"displayWhen": {},
+						"haveValidations": "false",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": {
+							"label": "1 Column",
+							"value": "1column"
+						},
+						"fields": [],
+						"options": [
+							{
+								"label": "Technical",
+								"value": "technical"
+							},
+							{
+								"label": "Machine",
+								"value": "machine"
+							},
+							{
+								"label": "HR",
+								"value": "hr"
+							}
+						]
+					},
+					{
+						"name": "status",
+						"type": "select",
+						"label": "Status",
+						"id": "",
+						"placeholder": "",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [],
+						"displayWhen": {},
+						"haveValidations": "false",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": {
+							"label": "1 Column",
+							"value": "1column"
+						},
+						"fields": [],
+						"options": [
+							{
+								"label": "Selected",
+								"value": "selected"
+							},
+							{
+								"label": "Hold",
+								"value": "hold"
+							},
+							{
+								"label": "Rejected",
+								"value": "rejected"
+							}
+						]
+					},
+					{
+						"name": "feedback",
+						"type": "textarea",
+						"label": "Feedback",
+						"id": "",
+						"placeholder": "",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [],
+						"displayWhen": {},
+						"haveValidations": "false",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": {
+							"label": "1 Column",
+							"value": "1column"
+						},
+						"fields": [],
+						"options": []
+					}
+				],
+				"optionCallback": "",
 				"options": []
 			}
 		],
 		"allowedUsers": [],
-		"sectionLayout": "2column"
+		"sectionLayout": "1column"
 	}
 ]
