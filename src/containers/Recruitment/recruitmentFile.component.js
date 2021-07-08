@@ -12,9 +12,9 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 function RecruitmentFileComponent() {
-  const title = 'Recruitment';
+  const title = 'Batch Upload';
 
-  const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Batch Upload' }];
 
   // Variable declarations Filter form
   const [defaultFilterValues, updateDefaultFilterValues] = useState({});
@@ -217,52 +217,51 @@ function RecruitmentFileComponent() {
     getRowData(1);
   }, [filterData]);
 
-
   // Upload Form
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues,updateDefaultValues);
-    
-      const { data } = await AuthApi.postDataToServer(Api.employeeUrl, formValues);
-      if(!data) {
-        // show error
-      }
-      // Perform success actions
-      
+    console.log(formValues, updateDefaultValues);
+
+    const { data } = await AuthApi.postDataToServer(
+      Api.employeeUrl,
+      formValues
+    );
+    if (!data) {
+      // show error
+    }
+    // Perform success actions
   };
-    
+
   const getTecchnology = async () => {
-    const {data} = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if(!data) {
+    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    if (!data) {
       // show error
       return;
     }
-    
+
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
+      dpOptions.push({ label: op.title, value: op.id });
       return op;
     });
     const allOptions = {
       ...options,
-      tecchnology: dpOptions
+      tecchnology: dpOptions,
     };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getTecchnology();
   }, []);
-      
-
 
   return (
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Recruitment</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Batch Upload</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
@@ -270,40 +269,41 @@ function RecruitmentFileComponent() {
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Technology</h4>
+                <h4 className="text-primary m-0">Batch Upload</h4>
               </div>
             </Card.Header>
             <Card.Title>
               <Row>
-              <Col>
-  <StarkFormBuilder
-    containerClass=''
-    formHeaderClass=''
-    formSections={FormSections}
-    formHeading="Upload Form"
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={false}
-    resetBtnText="Clear"
-    btnContainerClass="form-submit-buttons"
-    isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-    }}
-  />
-    
-
-                
+                <Col>
+                  <StarkFormBuilder
+                    containerClass=""
+                    formHeaderClass=""
+                    formSections={FormSections}
+                    formHeading="Upload Form"
+                    onFormSubmit={(formValues) => {
+                      submitForm(formValues);
+                    }}
+                    options={options}
+                    callbacks={{}}
+                    defaultFormValues={defaultValues}
+                    currentUser={currentUser}
+                    submitBtnText="Submit"
+                    showResetBtn={false}
+                    resetBtnText="Clear"
+                    btnContainerClass="form-submit-buttons"
+                    isStepForm={false}
+                    onFormReset={() => {
+                      console.log('form reset callback');
+                    }}
+                  />
                 </Col>
                 <Col className="mt-4">
-                <div title='Download CSV File'> 
-                  <Image src="/images/dropdown-select.svg" alt="Download File" />
-                </div>
+                  <div title="Download CSV File">
+                    <Image
+                      src="/images/dropdown-select.svg"
+                      alt="Download File"
+                    />
+                  </div>
                 </Col>
               </Row>
             </Card.Title>
