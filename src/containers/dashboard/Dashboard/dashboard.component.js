@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
 import { Helmet } from '../../../components/FormInputs';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
@@ -26,6 +26,7 @@ function Dashboard() {
   const [show, setShow] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [morningMail, setMorningMail] = useState(false);
+  const history = useHistory();
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -37,22 +38,22 @@ function Dashboard() {
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'clockin',
       label: 'Clock In',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'clockout',
       label: 'Clock out',
-      roleAccess: [2, 3, 4],
+      roleAccess: [2, 3, 4, 5],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [2, 3, 4],
+      roleAccess: [2, 3, 4, 5],
     },
   ];
 
@@ -189,8 +190,7 @@ function Dashboard() {
                   </div>
                 </Col>
                 <Col md={3}>
-                  <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
-
+                  <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
                     <div className="check-in">
                       {
                         showClockIn && (
@@ -244,6 +244,7 @@ function Dashboard() {
             {showClockIn && <ToDoList onMorningSendScrum={getDailyActivity} onClockoutReport={getTimeSheetList} />}
           </Col>
           <Col xl={4} id="right-sidebar">
+          <UserRestrictions permittedUsers={[1, 2, 3, 4]} roleId={userRole}>
             <Card className="flex-fill w-100 weekly-status-box">
               <Card.Body>
                 <Row>
@@ -292,7 +293,8 @@ function Dashboard() {
                 </Row>
               </Card.Body>
             </Card>
-            <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+            </UserRestrictions>
+            <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
 
               <div className="table-projects time-sheet-table">
                 <div className="card">
@@ -319,6 +321,11 @@ function Dashboard() {
                       )}
                     />
                   </div>
+                  <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+                  <div className="d-flex justify-content-end mr-3">
+                    <Button onClick={()=> history.push('/emp-timesheet')}>View All</Button>
+                 </div>
+                  </UserRestrictions>
                 </div>
               </div>
             </UserRestrictions>

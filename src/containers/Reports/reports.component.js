@@ -23,32 +23,32 @@ function Reports(props) {
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'task',
       label: 'Todays Task',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'project',
       label: 'Project',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'eta',
       label: 'ETA',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: showButton ? '' : 'at',
       label: showButton ? '' : 'AT' ,
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: showButton ? '' : 'status',
       label: showButton ? '' : 'status',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
   ];
 

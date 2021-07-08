@@ -267,7 +267,7 @@ function Profile() {
                 <h5 className="mt-5">Personal Information</h5>
                 <div className="personal-info-date-number">
                   <Form.Label>
-                    <UserRestrictions permittedUsers={[2, 3, 4]} roleId={role}>
+                    <UserRestrictions permittedUsers={[2, 3, 4,5]} roleId={role}>
                       <Image
                         src="/images/up-coming-birthday.svg"
                         className="svg me-3"
@@ -293,7 +293,7 @@ function Profile() {
                   </Form.Label>
                 </div>
 
-                <UserRestrictions permittedUsers={[2, 3, 4]} roleId={role}>
+                <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={role}>
                   <h5 className="mt-5">Job Information</h5>
                   <Row>
                     <Col sm={3}>

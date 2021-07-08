@@ -9484,10 +9484,14 @@ p:empty {
   margin-bottom: 0;
   list-style: none; }
 
-.accordion .card {
-  border-radius: 0 !important;
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important; }
+.accordion {
+  /*.card-body {
+        overflow: hidden;
+    }*/ }
+  .accordion .card {
+    border-radius: 0 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important; }
 
 .accordion .card-body {
   overflow: hidden; }
@@ -11129,6 +11133,14 @@ body .morning-mail-sent {
   background-color: #292a52;
   border-color: #dee2e6 #dee2e6 #ffffff; }
 
+
+.select-options .form-group {
+  color: #212529; }
+
+.address-edit-delete img {
+  margin-left: 10px; }
+
+ Recruitment-file-upload
 @media (min-width: 576px) {
   .bd-content .highlight {
     margin-right: 0;

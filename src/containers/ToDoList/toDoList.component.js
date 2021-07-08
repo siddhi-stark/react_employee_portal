@@ -17,6 +17,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import constants from '../../helper/constant';
 import Task from './Task.component';
+import EmployeeListComponent from '../Employee/employeeList.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
 import SharedService from '../../services/SharedService/sharedServices';
@@ -64,46 +65,46 @@ function ToDoList(props) {
     {
       id: 'id',
       label: 'Id',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
       isDisplay: false,
     },
     {
       id: 'twId',
       label: 'twId',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
       isDisplay: false,
     },
     {
       id: 'taskType',
       label: 'taskType',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
       isDisplay: false,
     },
 
     {
       id: 'todo',
       label: 'To Do Tasks',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'projects',
       label: 'Projects',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'status',
       label: 'Status',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'eta',
       label: 'ETA',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'action',
       label: 'Action',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
       render: ({ id, twId, taskType }) => {
         return (
           <>
@@ -608,7 +609,6 @@ function ToDoList(props) {
 
   return (
     <>
-
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -669,7 +669,7 @@ function ToDoList(props) {
       <Loader showLoader={loader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-          <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
+          <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
             <Card>
               <Card.Header>
                 <div className="d-flex align-items-center justify-content-between">
@@ -744,6 +744,7 @@ function ToDoList(props) {
                 </div>
               </Card.Body>
             </Card>
+            <EmployeeListComponent />
           </UserRestrictions>
         </div>
       </section>

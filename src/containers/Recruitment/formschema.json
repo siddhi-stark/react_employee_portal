@@ -1,0 +1,47 @@
+[
+  {
+    "sectionName": "uploadbatch",
+    "sectionTitle": "Upload Batch",
+    "layout": {
+      "label": "1 Column",
+      "value": "1column"
+    },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "attachements",
+        "type": "file",
+        "label": "Upload New Batch",
+        "id": "",
+        "placeholder": "Upload Batch",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "accept": ".xlsx, .xls, .csv",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "1column"
+  }
+]

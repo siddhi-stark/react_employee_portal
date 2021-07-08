@@ -1,0 +1,303 @@
+[{
+	"sectionName": "editdetails",
+	"sectionTitle": "Edit Details",
+	"layout": {
+		"label": "3 Column",
+		"value": "3column"
+	},
+	"containerClass": "",
+	"displaySection": true,
+	"displaySectionTitle": true,
+	"fields": [{
+		"name": "name",
+		"type": "text",
+		"label": "Name",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "designation",
+		"type": "select",
+		"label": "Designation",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "getDesignation",
+		"optionsCallbackUrl": "designationUrl",
+		"options": []
+	}, {
+		"name": "joining_date",
+		"type": "date",
+		"label": "Joining Date",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "personal_id",
+		"type": "email",
+		"label": "Personal Email",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "company_id",
+		"type": "email",
+		"label": "Company Email",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "number",
+		"type": "text",
+		"label": "Number",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "confirm_date",
+		"type": "text",
+		"label": "Confirmation Date",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "relieving_date",
+		"type": "date",
+		"label": "Relieving Date",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "dob",
+		"type": "date",
+		"label": "DOB",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}],
+	"allowedUsers": [],
+	"sectionLayout": "3column"
+}]
