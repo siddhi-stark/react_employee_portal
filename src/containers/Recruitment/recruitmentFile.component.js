@@ -65,7 +65,7 @@ function RecruitmentFileComponent() {
             // history.push('/edit-employee');
           }}
         >
-          <Image src="/images/down-arrow.png" alt="Download File" />
+          <Image src="/images/download.svg" alt="Download File" />
         </a>
       </>
     );
@@ -300,9 +300,8 @@ function RecruitmentFileComponent() {
                 <Col className="mt-4">
                   <div title="Download CSV File">
                     <Image
-                      src="/images/down-arrow.png"
+                      src="/images/download.svg"
                       alt="Download File"
-                      style={{height:'50px'}}
                     />
                   </div>
                 </Col>

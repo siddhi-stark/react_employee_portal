@@ -22,17 +22,16 @@ function Technology() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-  const [count, forceUpdate] = useState(0);
-  const [technology, setTechnologyName] = useState('');
 
   const title = 'Employees List';
   const limit = 5;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
-  const handleActionCallback = ({ index, name }) => {
+  const handleActionCallback = ({ id }) => {
+    console.log('uid',id)
     return (
       <>
         <a
@@ -41,12 +40,8 @@ function Technology() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setTechnologyId(row.id);
-            forceUpdate(count + 1);
 
-            // setTechnologyName(name);
-            setTechnologyId(index);
-            setTechnologyName(name);
+            setTechnologyId(id);
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Technology" />
@@ -128,56 +123,12 @@ function Technology() {
   }, []);
 
   // Submit Form
-  const submitForm = async (formValues) => {
-    console.log(formValues);
-
-    const postData = {
-      name: formValues.name,
-    };
-
-    console.log('postData', postData);
-
-    const payload = customFunctions.cleanObject(postData);
-
-    const callback = 2 ? AuthApi.putDataToServer : AuthApi.postDataToServer;
-    const endPoint = 2 ? `${Api.employeeStackUrl}${2}/` : Api.employeeStackUrl;
-    const { data } = await callback(endPoint, payload);
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
-    }
-    // Perform success actions
-  };
-
-  // Get data for form
-  const getData = async () => {
-    if (!technologyId) return;
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeStackUrl}${technologyId}/`
-    );
-    console.log('data', data);
-    if (!data) {
-      // show error
-      return;
-    }
-    updateDefaultValues({ name: data.data.name });
-  };
-
-  // Call get data method on load
-  useEffect(() => {
-    getData();
-    console.log('count', count);
-  }, [technologyId, count]);
-
-  // Submit Form
   const submitFilterForm = async (formValues) => {
     console.log(formValues);
     setFilterData(formValues);
   };
-
   return (
     <>
-      {console.log('technology', technology)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Technology</h2>
@@ -234,7 +185,7 @@ function Technology() {
             <Card.Body>
               <Row className="mt-3">
                 <Col>
-                  <AddTechnology technology={technology} />
+                  <AddTechnology technologyId={technologyId} />
                 </Col>
                 <Col>
                   <CustomTable
