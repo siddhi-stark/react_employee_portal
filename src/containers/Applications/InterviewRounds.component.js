@@ -34,6 +34,7 @@ function InterviewRounds() {
 useEffect(() => {
   const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section)=>{
+      console.log('section');
       const s = {...section};
       s.fields = section.fields.map((item) => {
         const itemData = item;
