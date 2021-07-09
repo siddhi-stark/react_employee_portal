@@ -84,7 +84,7 @@ function EmployeeTechListing() {
       label: 'EmployeeName',
     },
     {
-      id: 'Technology',
+      id: 'techstacks',
       label: 'Technology',
     },
     {
