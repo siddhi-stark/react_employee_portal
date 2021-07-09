@@ -175,19 +175,16 @@ function EmployeeTechListing() {
     updateOptions(allOptions);
   };
 
-  const getTechnology = async () => {
+   const getTechnology = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
     if (!data) {
       // show error
       return;
     }
 
-    const dpOptions =
-      (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
-        return { label: op.name, value: op.id };
-      });
+    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
+    });
 
     options.technology = dpOptions;
     const allOptions = options;

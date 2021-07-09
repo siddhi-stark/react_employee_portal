@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './AddTechStack.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import customFunctions from '../../helper/customFunctions';
 
 function AddTechnologyStack() {
 
@@ -11,6 +12,8 @@ function AddTechnologyStack() {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+
+  const history = useHistory();
 
   // Get user role
   const getUserRole = async () => {
@@ -22,15 +25,40 @@ function AddTechnologyStack() {
     getUserRole();
   }, []);
 
+
+
+
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
-    const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
+    console.log(formValues.technology);
+    const technologyStack = [];
+
+    const obj = {
+      employee: formValues.employee && formValues.employee.value ? formValues.employee.value : '',
+      techstack: formValues.technology && formValues.technology.value ? formValues.technology.value : '',
+      is_interviewer: formValues.isINterviewer ? formValues.isINterviewer[0] : '',
     }
-    // Perform success actions
+
+    technologyStack.push(obj);
+    const postData = {
+      data: technologyStack
+    }
+
+    console.log('postData',postData);
+    const payload = customFunctions.cleanObject(postData);
+    const callback = 
+      AuthApi.postDataToServer;
+    const endPoint =
+      Api.employeeStackUrl;
+
+    const {
+      data,
+      message
+    } = await callback(endPoint, payload);
+    if (data) {
+      console.log('data', data, message);
+      history.push('/emp-stack');
+    }
   };
 
   // Get data for form
