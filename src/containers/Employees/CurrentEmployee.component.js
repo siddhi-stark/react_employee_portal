@@ -36,6 +36,7 @@ function CurrentEmployee() {
         <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
           <span className="mini-stat-icon bg-purple mr-0 float-right">
             <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
+            <span className="np-sup">NP</span>
           </span>
           <div className="mini-stat-info">
             <span className="counter text-purple">{emp.name}</span>

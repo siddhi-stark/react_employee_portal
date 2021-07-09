@@ -35,7 +35,7 @@ function EmployeeTechListing() {
     { label: 'Employee Technology Stack' },
   ];
 
-  const handleActionCallback = () => {
+  const handleActionCallback = ({id}) => {
     return (
       <>
         <a
@@ -44,7 +44,7 @@ function EmployeeTechListing() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            // history.push('/add-technology-stack');
+            history.push(`/edit-technology-stack/${id}`);
             // setModalShow(true);
             // setEmployeeId(id);
             // getRowData(1,index);
@@ -53,22 +53,6 @@ function EmployeeTechListing() {
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Designation" />
-        </a>
-        <a
-          href="/"
-          className="pl-2"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // history.push('/edit-employee');
-            // setModalShow(true);
-            // setEmployeeId(id);
-            // getRowData(1,index);
-            // setAddButton(true);
-            // setCntClearFilter(cntClearFilter + 1);
-          }}
-        >
-          <Image src="/images/delete.png" alt="Delete Designation" />
         </a>
       </>
     );

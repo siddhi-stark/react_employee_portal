@@ -6,13 +6,12 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
-function AddTechnologyStack() {
+function AddTechnologyStack(props) {
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-
   const history = useHistory();
 
   // Get user role
@@ -30,7 +29,7 @@ function AddTechnologyStack() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues.technology);
+    console.log('formValues',formValues);
     const technologyStack = [];
 
     const obj = {
@@ -62,26 +61,53 @@ function AddTechnologyStack() {
   };
 
   // Get data for form
-  const getData = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if (!data) {
-      // show error
-      return;
-    }
-    updateDefaultValues(data);
+  const getData = async (stackId, technology) => {
+    const technoData = technology;
+    const techId = stackId;
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}${techId}/`);
+    
+    let techData = {};
+
+    await technoData.map((tech) => {
+      if(data.data.name === tech.name) {
+        techData = {
+          label : tech.name,
+          value : tech.id,
+
+        }
+
+      }
+      return tech;
+    })
+    updateDefaultValues({
+      technology: techData
+    });
   };
 
-  // Call get data method on load
-  useEffect(() => {
-    getData();
-  }, []);
 
   const getEmployee = async () => {
+    const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if (!data) {
-      // show error
-      return;
-    }
+    
+      if(id) {
+        let emp = {};
+        data.data.map((employee) => {
+          console.log('employee',employee);
+          if(Number(id) === Number(employee.id)) {
+            emp = {
+              label : employee.full_name,
+              value : employee.id
+            }
+          }
+          console.log('emp',emp);
+          updateDefaultValues({
+            employee : emp
+          })
+
+          return employee;
+        })
+      }
+    
 
     const dpOptions = [];
     data.data.map((op) => {
@@ -101,8 +127,8 @@ function AddTechnologyStack() {
   }, []);
 
   
-
   const getTechnology = async () => {
+    const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
     if (!data) {
       // show error
@@ -116,12 +142,16 @@ function AddTechnologyStack() {
     options.technology = dpOptions;
     const allOptions = options;
     await updateOptions(allOptions);
+    if(id) {
+
+    await getData(id,data.data);
+    await getEmployee();
+    }
   };
 
   useEffect(() => {
     getTechnology();
   }, []);
-
   return (
     <>
       <StarkFormBuilder

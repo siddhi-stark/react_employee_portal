@@ -86,7 +86,7 @@ function Confirmation() {
                   }}
                 />
 
-                <div className="justify-content-left mt-4">
+                <div className="justify-content-left mt-4 preview-send-btn">
                   <Button variant="primary">Save</Button>
 
                   <Button variant="primary" type="submit" className="ms-4">
