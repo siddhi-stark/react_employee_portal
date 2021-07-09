@@ -24,14 +24,27 @@ function EmployeeTimesheet() {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-
+  // const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const title = 'Employees List';
   const limit = 10;
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
-  
+
+  useEffect(() => {
+
+    const formSchema = [...FormSections];
+    formSchema[0].fields.map((section) => {
+      const sectionData = section;
+      if (sectionData.name === 'toDate') {
+        const date = new Date();
+        sectionData.maxDate = date;
+      }
+      return sectionData;
+    });
+
+  }, [])
   const handleActionCallback = (row) => {
     console.log('row', row.id);
     return (
@@ -180,6 +193,7 @@ function EmployeeTimesheet() {
 
   useEffect(() => {
     getEmployeeName();
+    console.log('jsonschema',FormSections);
   }, []);
 
   return (
