@@ -160,9 +160,14 @@
           "value": "1column"
         },
         "fields": [],
-        "optionCallback": "getPosition",
-        "optionsCallbackUrl": "employeeUrl",
-        "options": []
+        "optionCallback": "",
+        "optionsCallbackUrl": "",
+         "options": [
+          { "label": "Junior", "value": "junior" },
+          { "label": "Senior", "value": "senior" },
+          { "label": "Fresher", "value": "fresher" },
+          { "label": "Management", "value": "management" }
+        ]
       }
     ],
     "allowedUsers": [],

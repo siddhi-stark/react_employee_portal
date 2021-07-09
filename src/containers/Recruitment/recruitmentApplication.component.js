@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Image, Button, Accordion } from 'react-bootstrap';
 import FormSections from './applicationformschema.json';
 import customFunctions from '../../helper/customFunctions';
@@ -11,9 +11,10 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 function RecruitmentApplicationComponent() {
-  const title = 'Application';
+  const title = 'Recruitment';
 
-  const items = [{ to: '/', label: 'Home' }, { label: 'Application' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
+  const history = useHistory();
 
   // Variable declarations Filter Form
   const [defaultValues, updateDefaultValues] = useState({});
@@ -26,6 +27,7 @@ function RecruitmentApplicationComponent() {
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  let filterOptions = {};
 
   const handleEducationCallback = (row) => {
     console.log('row', row.id);
@@ -69,7 +71,7 @@ function RecruitmentApplicationComponent() {
   const columns = [
     {
       id: 'no',
-      label: 'Sr.No',
+      label: 'Sr. No',
     },
     {
       id: 'Date',
@@ -77,11 +79,11 @@ function RecruitmentApplicationComponent() {
     },
     {
       id: 'applicantname',
-      label: 'ApplicantName',
+      label: 'Applicant Name',
     },
     {
       id: 'position',
-      label: 'ApplicationForPosition',
+      label: 'Application For Position',
     },
     {
       id: 'technology',
@@ -93,15 +95,15 @@ function RecruitmentApplicationComponent() {
     },
     {
       id: 'noticeperiod',
-      label: 'NoticePeriod',
+      label: 'Notice Period',
     },
     {
       id: 'email',
-      label: 'EmailId',
+      label: 'Email Id',
     },
     {
       id: 'mobile',
-      label: 'ContactNo',
+      label: 'Contact No',
     },
     {
       id: 'education',
@@ -179,13 +181,15 @@ function RecruitmentApplicationComponent() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
+      dpOptions.push({label: op.name, value: op.id});
       return op;
     });
     const allOptions = {
+      ...filterOptions,
       ...options,
       designation: dpOptions
     };
+    filterOptions = {...allOptions};
     updateOptions(allOptions);
   }
 
@@ -198,7 +202,7 @@ function RecruitmentApplicationComponent() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Application</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Recruitment</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
@@ -217,7 +221,7 @@ function RecruitmentApplicationComponent() {
             <Accordion.Collapse eventKey="1">
             <Card.Title>
                 <StarkFormBuilder
-                  containerClass=''
+                  containerClass='select-options'
                   formHeaderClass=''
                   formSections={FormSections}
                   formHeading="Filter Form"
@@ -243,20 +247,25 @@ function RecruitmentApplicationComponent() {
         <Card>
           <Card.Header>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Application</h4>
+              <h4 className="text-primary mt-2 mb-2">Recruitment</h4>
               <div className="d-flex align-items-center justify-content-end">
-                <a href="#" onClick={() => {}} className="btn-link">
+                <a href="#" onClick={() => {history.push('/applications');}} className="btn-link">
                   Add New
                 </a>
               </div>
             </div>
           </Card.Header>
           <Card.Body>
+          <div>
+            <Button variant="primary" className="mb-2" onClick={()=> { history.push('/batch-upload');}}>Bulk Upload</Button>
+          </div>
+          <div>
             <Button variant="primary" className="mb-2">All</Button>
             <Button variant="primary" className="ml-2 mb-2">Selected</Button>
             <Button variant="primary" className="ml-2 mb-2">Shortlisted</Button>
             <Button variant="primary" className="ml-2 mb-2">Rejected</Button>
             <Button variant="primary" className="ml-2 mb-2">Offer Send</Button>
+          </div>
             <CustomTable
               columns={columns}
               rows={rowData}
