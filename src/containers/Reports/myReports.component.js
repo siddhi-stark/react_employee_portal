@@ -30,38 +30,38 @@ function AllReports() {
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'name',
       label: 'Name',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
       isDisplay: false,
     },
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'clockin',
       label: 'Clock in',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'clockout',
       label: 'Clock Out',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'report',
       label: 'View Report',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
   ];
 

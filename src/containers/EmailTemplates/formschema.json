@@ -1,0 +1,70 @@
+[
+	{
+		"sectionName": "emailtemplates",
+		"sectionTitle": "Email Templates",
+		"layout": { "label": "1 Column", "value": "1column" },
+		"containerClass": "",
+		"displaySection": true,
+		"displaySectionTitle": false,
+		"fields": [
+			{
+				"name": "emailName",
+				"type": "text",
+				"label": "Email Template Name",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": { "label": "1 Column", "value": "1column" },
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
+				"name": "emailSubject",
+				"type": "text",
+				"label": "Email Template Subject",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": { "label": "1 Column", "value": "1column" },
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			}
+		],
+		"allowedUsers": [],
+		"sectionLayout": "1column"
+	}
+]

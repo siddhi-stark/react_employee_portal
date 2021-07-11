@@ -22,7 +22,8 @@ const menu = [
   },
   {
     title: 'Recruitment',
-    path: '',
+    path: '#',
+    redirect: false,
     icon: 'dashboard.svg',
     submenu: [
       {
@@ -35,10 +36,16 @@ const menu = [
         title: 'Applications',
         path: '/applications',
         icon: 'report.svg',
+        roleaccess: [4, 5],
+      },
+      {
+        title: 'Recruitment Applications',
+        path: '/recruitment',
+        icon: 'report.svg',
         roleaccess: [5],
       },
     ],
-    roleaccess: [5],
+    roleaccess: [4, 5],
   },
   {
     title: 'Projects',
@@ -64,6 +71,13 @@ const menu = [
   {
     title: 'Employee Technology Stack',
     path: '/emp-stack',
+    icon: 'Designation.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  {
+    title: 'Email Templates',
+    path: '/email-templates',
     icon: 'Designation.svg',
     submenu: [],
     roleaccess: [1],

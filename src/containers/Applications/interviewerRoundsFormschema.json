@@ -1,0 +1,70 @@
+[
+	{
+		"sectionName": "feedback",
+		"sectionTitle": "Feedback",
+		"layout": { "label": "2 Column", "value": "2column" },
+		"containerClass": "",
+		"displaySection": true,
+		"displaySectionTitle": false,
+		"fields": [
+			{
+				"name": "status",
+				"type": "radio",
+				"label": "Status",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": { "label": "1 Column", "value": "1column" },
+				"fields": [],
+				"optionCallback": "",
+				"options": [
+					{ "label": "Selected", "value": "selected" },
+					{ "label": "Rejected", "value": "rejected" },
+					{ "label": "Hold", "value": "hold" }
+				]
+			},
+			{
+				"name": "feedback",
+				"type": "textarea",
+				"label": "Feedback",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": { "label": "1 Column", "value": "1column" },
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			}
+		],
+		"allowedUsers": [],
+		"sectionLayout": "2column"
+	}
+]

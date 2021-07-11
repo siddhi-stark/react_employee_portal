@@ -1,193 +1,193 @@
 [
-    {
-        "sectionName": "employee",
-        "sectionTitle": "Employee",
-        "layout": {
-            "label": "1 Column",
-            "value": "1column"
-        },
-        "containerClass": "",
-        "displaySection": true,
-        "displaySectionTitle": false,
-        "fields": [
-            {
-                "name": "designation",
-                "type": "select",
-                "label": "Designation",
-                "id": "",
-                "placeholder": "",
-                "inputClass": "",
-                "containerClass": "col-md-6",
-                "validations": [
-                    {
-                        "type": "required",
-                        "applyWhen": [],
-                        "applyWhenRelation": "OR"
-                    }
-                ],
-                "displayWhen": {},
-                "haveValidations": "true",
-                "haveDisplayOptions": "false",
-                "callback": "",
-                "callbackUrl": "",
-                "inputToChange": "",
-                "minDateSelector": "",
-                "maxDateSelector": "",
-                "disabled": false,
-                "isMulti": false,
-                "allowedUsers": [],
-                "fieldsToReset": [],
-                "fieldLayout": {
-                    "label": "1 Column",
-                    "value": "1column"
-                },
-                "fields": [],
-                "optionCallback": "getDesignation",
-                "optionsCallbackUrl": "designationUrl",
-                "options": []
-            },
-            {
-                "name": "name",
-                "type": "text",
-                "label": "Name",
-                "id": "",
-                "placeholder": "",
-                "inputClass": "",
-                "containerClass": "col-md-6",
-                "validations": [
-                    {
-                        "type": "required",
-                        "applyWhen": [],
-                        "applyWhenRelation": "OR"
-                    }
-                ],
-                "displayWhen": {},
-                "haveValidations": "true",
-                "haveDisplayOptions": "false",
-                "callback": "",
-                "callbackUrl": "",
-                "inputToChange": "",
-                "minDateSelector": "",
-                "maxDateSelector": "",
-                "disabled": false,
-                "isMulti": false,
-                "allowedUsers": [],
-                "fieldsToReset": [],
-                "fieldLayout": {
-                    "label": "1 Column",
-                    "value": "1column"
-                },
-                "fields": [],
-                "optionCallback": "",
-                "options": []
-            },
-            {
-                "name": "fromDate",
-                "type": "date",
-                "label": "FromDate",
-                "id": "",
-                "placeholder": "",
-                "inputClass": "",
-                "containerClass": "col-md-6",
-                "validations": [
-                    {
-                        "type": "required",
-                        "applyWhen": [],
-                        "applyWhenRelation": "OR"
-                    }
-                ],
-                "displayWhen": {},
-                "haveValidations": "true",
-                "haveDisplayOptions": "false",
-                "callback": "",
-                "callbackUrl": "",
-                "inputToChange": "",
-                "minDateSelector": "",
-                "maxDateSelector": "",
-                "disabled": false,
-                "isMulti": false,
-                "allowedUsers": [],
-                "fieldsToReset": [],
-                "fieldLayout": {
-                    "label": "1 Column",
-                    "value": "1column"
-                },
-                "fields": [],
-                "optionCallback": "",
-                "options": []
-            },
-            {
-                "name": "toDate",
-                "type": "date",
-                "label": "ToDate",
-                "id": "",
-                "placeholder": "",
-                "inputClass": "",
-                "containerClass": "col-md-6",
-                "validations": [
-                    {
-                        "type": "required",
-                        "applyWhen": [],
-                        "applyWhenRelation": "OR"
-                    }
-                ],
-                "displayWhen": {},
-                "haveValidations": "true",
-                "haveDisplayOptions": "false",
-                "callback": "",
-                "callbackUrl": "",
-                "inputToChange": "",
-                "minDateSelector": "fromDate",
-                "maxDateSelector": "",
-                "disabled": false,
-                "isMulti": false,
-                "allowedUsers": [],
-                "fieldsToReset": [],
-                "fieldLayout": {
-                    "label": "1 Column",
-                    "value": "1column"
-                },
-                "fields": [],
-                "optionCallback": "",
-                "options": []
-            },
-            {
-                "name": "address",
-                "type": "textarea",
-                "label": "Address",
-                "id": "",
-                "placeholder": "",
-                "inputClass": "",
-                "containerClass": "col-md-6",
-                "validations": [
-                    {
-                        "type": "required",
-                        "applyWhen": [],
-                        "applyWhenRelation": "OR"
-                    }
-                ],
-                "displayWhen": {},
-                "haveValidations": "true",
-                "haveDisplayOptions": "false",
-                "callback": "",
-                "callbackUrl": "",
-                "inputToChange": "",
-                "minDateSelector": "",
-                "maxDateSelector": "",
-                "disabled": false,
-                "isMulti": false,
-                "allowedUsers": [],
-                "fieldsToReset": [],
-                "fieldLayout": {
-                    "label": "1 Column",
-                    "value": "1column"
-                },
-                "fields": [],
-                "optionCallback": "",
-                "options": []
-            }
+  {
+    "sectionName": "employee",
+    "sectionTitle": "Employee",
+    "layout": {
+      "label": "1 Column",
+      "value": "1column"
+    },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "designation",
+        "type": "select",
+        "label": "Designation",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-6",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
         ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
         "allowedUsers": [],
-        "sectionLayout": "1column"
-    }
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getDesignation",
+        "optionsCallbackUrl": "designationUrl",
+        "options": []
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "label": "Name",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-6",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "fromDate",
+        "type": "date",
+        "label": "FromDate",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-6",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "toDate",
+        "type": "date",
+        "label": "ToDate",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-6",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "fromDate",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "address",
+        "type": "textarea",
+        "label": "Address",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-6",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "1column"
+  }
 ]

@@ -1,0 +1,171 @@
+[
+  {
+    "sectionName": "filter",
+    "sectionTitle": "Filter",
+    "layout": {
+      "label": "4 Column",
+      "value": "4column"
+    },
+    "containerClass": "select-options",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "fromDate",
+        "type": "date",
+        "label": "",
+        "id": "",
+        "placeholder": "Form date",
+        "inputClass": "",
+        "containerClass": "mt-3",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              {
+                "name": "toDate",
+                "value": "toDate",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "toDate",
+        "type": "date",
+        "label": "",
+        "id": "",
+        "placeholder": "To date",
+        "inputClass": "",
+        "containerClass": "mt-3",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              {
+                "name": "fromDate",
+                "value": "fromDate",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "fromDate",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "technology",
+        "type": "select",
+        "label": "",
+        "id": "",
+        "placeholder": "Select Technology",
+        "inputClass": "",
+        "containerClass": "mt-3",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getTechnology",
+        "optionsCallbackUrl": "employeeUrl",
+        "options": []
+      },
+      {
+        "name": "position",
+        "type": "select",
+        "label": "",
+        "id": "",
+        "placeholder": "Select Position ",
+        "inputClass": "",
+        "containerClass": "mt-3",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getPosition",
+        "optionsCallbackUrl": "employeeUrl",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "4column"
+  }
+]

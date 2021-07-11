@@ -53,6 +53,10 @@ export default class Api extends Component {
 
   static bullkDesignation = `${Api.baseUrl}designation-bulk/`;
 
+  static employeeStackUrl = `${Api.baseUrl}technologystack/`;
+
+  static employeeStack = `${Api.baseUrl}employeetechstack/`;
+  
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
