@@ -30,14 +30,18 @@ function AddTechnologyStack(props) {
   }, []);
 
   const onInit = async () => {
+    const id = await props.match.params.stackId;
     await getUserRole();
     await getEmployee();
     await getTechnology();
+    if(id) {
+    await getData(id);
+    }
   }
 
   // Submit Form
   const submitForm = async (formValues) => {
-     // console.log('formValues',formValues);
+     console.log('formValues',formValues);
     const technologyStack = [];
     // const technoData = {};
 
@@ -76,50 +80,64 @@ function AddTechnologyStack(props) {
       
   };
 
-   const getData = async (stackId, technology) => {
-     console.log('stackid',stackId);
-    const technoData = technology;
-    console.log(technoData,'technology');
+   const getData = async (stackId) => {
     const techId = stackId;
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeStack}${techId}/`);
-    console.log('data',data);
-    // let techData = {};
+    console.log('data',data.data);
+    if(data.data) {
 
-    // await technoData.map((tech) => {
-    //   if(data.data.name === tech.name) {
-    //     techData = {
-    //       label : tech.name,
-    //       value : tech.id,
 
-    //     }
+    const techData = [];
 
-    //   }
-    //   return tech;
-    // })
-    // updateDefaultValues({
-    //   technology: techData
-    // });
+    await data.data.tech_stack_ids.map((e) => {
+      console.log('options.technology',options.technology);
+      const find = options.technology.find(x => x.value === e);
+      console.log('find',find);
+      if (find) {
+
+      techData.push({
+        isINterviewer : data.data.isINterviewer,
+        technology:{
+        label: find.label,
+        value: find.value
+      }
+      });
+      }
+      return e;
+    });
+    console.log('techData',techData);
+    updateDefaultValues({
+      addmore: techData,
+      employee:  data.data.id && {
+        label: data.data.full_name,
+        value: data.data.id
+      }
+
+    });
+    }
   };
     
   const getEmployee = async () => {
-    const id = props.match.params.stackId;
+    // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
-     if(id) {
-        let emp = {};
-        data.data.map((employee) => {
-          if(Number(id) === Number(employee.id)) {
-            emp = {
-              label : employee.full_name,
-              value : employee.id
-            }
-          }
-          updateDefaultValues({
-            employee : emp
-          })
-
-          return employee;
-        })
-      }
+     // if(id) {
+     //    // let emp = {};
+     //    data.data.map((employee) => {
+     //      if(Number(id) === Number(employee.id)) {
+     //        // emp = {
+     //        //   label : employee.full_name,
+     //        //   value : employee.id
+     //        // }
+     //      }
+     //      updateDefaultValues({
+     //        employee : {
+     //          label: 'Sanjay Mangalaram',
+     //           value: 3
+     //        }
+     //      })
+     //      return employee;
+     //    })
+     //  }
     
      const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
       return { label: op.full_name, value: op.id };
@@ -131,7 +149,7 @@ function AddTechnologyStack(props) {
   }
       
    const getTechnology = async () => {
-      const id = props.match.params.stackId;
+      // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(Api.employeeStackUrl);
     if(!data) {
       // show error
@@ -145,14 +163,9 @@ function AddTechnologyStack(props) {
     options.technology = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-    if(id) {
-
-    await getData(id,data.data);
-    await getEmployee();
-    }
 
   }   
-
+console.log('defaultValues',defaultValues);
   return (
     <>
   <StarkFormBuilder
