@@ -44,7 +44,7 @@ function EmailTemplatesComponent() {
           ContentState.createFromBlockArray(convertFromHTML(email.body))
         );
         email.content = dp; //eslint-disable-line
-        // console.log('desc', dp);
+        console.log('desc', dp);
         return email;
       });
       setEmailContent(data.data);
@@ -64,7 +64,8 @@ function EmailTemplatesComponent() {
     }
   };
 
-  const onEditorStateChange = (editorState) => {
+  const onEditorStateChange = (editorState,index) => {
+    if(!index) return;
     setDescription(editorState);
   };
 
@@ -117,7 +118,7 @@ function EmailTemplatesComponent() {
     document.execCommand('copy');
     window.getSelection().removeAllRanges();
   };
-  // console.log('emailContent',emailContent);
+  console.log('emailContent',emailContent);
   return (
     <>
       <Helmet title={title} />
@@ -169,7 +170,7 @@ function EmailTemplatesComponent() {
             ))}
         </p>
         {emailContent &&
-          emailContent.map((eml) => {
+          emailContent.map((eml,index) => {
             return (
               <>
                 <b>{eml.name}</b>
@@ -180,7 +181,7 @@ function EmailTemplatesComponent() {
                   editorState={eml.content}
                   onEditorStateChange={(e) => {
                     console.log('e', e);
-                    onEditorStateChange(e);
+                    onEditorStateChange(e,index);
                   }}
                   toolbar={{
                     options: [
@@ -190,7 +191,6 @@ function EmailTemplatesComponent() {
                       'list',
                       'textAlign',
                       'link',
-                      // 'placeholder',
                       'history',
                     ],
                     fontSize: {
@@ -205,10 +205,6 @@ function EmailTemplatesComponent() {
                     list: {
                       options: ['unordered', 'ordered'],
                     },
-                    // placeholder: {
-                    //   inDropdown: true,
-                    //   options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code']
-                    // },
                   }}
                 />
               </>
