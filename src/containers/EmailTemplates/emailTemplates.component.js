@@ -38,6 +38,15 @@ function EmailTemplatesComponent() {
       `${Api.emailTemplates}`
     );
     if (data) {
+      await data.data.map((email) => {
+        // console.log('email', email);
+        const dp = EditorState.createWithContent(
+          ContentState.createFromBlockArray(convertFromHTML(email.body))
+        );
+        email.content = dp; //eslint-disable-line
+        // console.log('desc', dp);
+        return email;
+      });
       setEmailContent(data.data);
     } else {
       swal(message, '', 'error');
@@ -99,7 +108,6 @@ function EmailTemplatesComponent() {
     // Perform success actions
   };
 
-
   const copyToClipboard = (id) => {
     window.getSelection().removeAllRanges();
     const range = document.createRange();
@@ -109,8 +117,7 @@ function EmailTemplatesComponent() {
     document.execCommand('copy');
     window.getSelection().removeAllRanges();
   };
-
-
+  // console.log('emailContent',emailContent);
   return (
     <>
       <Helmet title={title} />
@@ -148,24 +155,31 @@ function EmailTemplatesComponent() {
             word as per the need as it is, do not make changes into them.
           </b>
           {placeholdersData &&
-            placeholdersData.map((place) => <p id={place.name} title={toggle?'copied': 'copy'}// eslint-disable-line
-              onClick={()=>{setToggle(true); copyToClipboard(place.name);}}>{place.name}</p>)}
+            placeholdersData.map((place) => (
+              <p // eslint-disable-line
+                id={place.name}
+                title={toggle ? 'copied' : 'copy'}
+                onClick={() => {
+                  setToggle(true);
+                  copyToClipboard(place.name);
+                }}
+              >
+                {place.name}
+              </p>
+            ))}
         </p>
         {emailContent &&
-          emailContent.map((email) => {
-            const desc = EditorState.createWithContent(
-              ContentState.createFromBlockArray(convertFromHTML(email.body))
-            );
+          emailContent.map((eml) => {
             return (
               <>
-                {console.log('email', email)}
-                <b>{email.name}</b>
+                <b>{eml.name}</b>
                 <Editor
                   // readOnly={viewType}
                   wrapperClassName="demo-wrapper mt-4"
                   editorClassName="demo-editor"
-                  editorState={desc}
+                  editorState={eml.content}
                   onEditorStateChange={(e) => {
+                    console.log('e', e);
                     onEditorStateChange(e);
                   }}
                   toolbar={{
