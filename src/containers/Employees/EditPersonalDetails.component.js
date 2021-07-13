@@ -48,7 +48,8 @@ function EditPersonalDetails(props) {
       return;
     }
     updateDefaultValues({
-      full_name: data.data.full_name
+      name: data.data.full_name,
+      joining_date: data.data.date_joined ? new Date(customFunctions.getFormattedDate(data.data.date_joined)) : null ,
     });
   };
 
