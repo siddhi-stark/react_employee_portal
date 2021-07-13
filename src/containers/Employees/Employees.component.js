@@ -6,58 +6,68 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import Pagination from '../../components/Pagination/pagination.component';
 
-// const Employee = [{
-//   'name': ' Employee 1',
-//   'designation': 'developer',
-//   'date': '20/05/2021',
-//   'id': 'SDMS23'
-// },
-// {
-//   'name': ' Employee 2',
-//   'designation': 'developer',
-//   'date': '10/05/2021',
-//   'id': 'SDMS123'
-// },
-// {
-//   'name': ' Employee 3',
-//   'designation': 'developer',
-//   'date': '02/05/2021',
-//   'id': 'SDMS12'
-// },
-// {
-//   'name': ' Employee 4',
-//   'designation': 'developer',
-//   'date': '21/05/2021',
-//   'id': 'SDMS3'
-// }
-// ]
+
 function Employees() {
   const title = 'Employees List';
   const [employee, setEmployee] = useState([]);
+  // const [noticePeriod,onNoticePeriod] = useState([]);
+  const limit = 10;
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const items = [
     { to: '/', label: 'Home' },
     { label: 'Employee' },
   ];
 
-const getEmployee = async () => {
- const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}`
-      
-    );
-    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      setEmployee(data.data);
+const getEmployee = async (pageNo) => {
+  const page = pageNo || 0;
+const endPoint = `${Api.employeeUrl}`;
+  const params = {
+      limit,
+      page,
+
+      // ...filterList
     }
+     const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
+    // const { data } = await AuthApi.getDataFromServer(
+    //   `${Api.employeeUrl}`
+      
+    // );
+      // console.log('data',data);
+      // await data.data.map((emp) => {
+      //   // console.log('emp',emp.on_notice_period === Boolean(false));
+      //   if(!emp.on_notice_period) {
+      //     console.log('inside if condition',emp);
+      //   }
+      //   // else{
+      //   //   onNoticePeriod(emp);
+
+      //   // }
+
+
+
+      //     return emp;
+      // });
+      setEmployee(data.data);
+      
+      setTotalCount(data.paginator.total_count);
+      // setLimit(data.paginator.limit);
+      setCurrentPage(Number(data.paginator.current_page));
+      // console.log('data.paginator', data.paginator);
   };
 
 
 useEffect(() => {
-getEmployee();
+getEmployee(1);
 },[])
 
 
     console.log('employeeData',employee);
+    // console.log('noticePeriod',noticePeriod);
   return (
     <>
       <Helmet title={title} />
@@ -76,7 +86,7 @@ getEmployee();
               >
                 <Tab eventKey="currentEmployee" title="Current Employee">
                   <div className="row ml-2">
-                    {employee && employee.map((emp) => (
+                    {employee && employee.filter(e => e.on_notice_period === false).map((emp) => (
                       <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
                         <span className="mini-stat-icon bg-purple mr-0 float-right">
                           <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
@@ -100,19 +110,19 @@ getEmployee();
 
                 <Tab eventKey='noticePeriod' title='Serving Notice Period'>
                    <div className="row ml-2">
-                    {employee && employee.map((emp) => (
+                    {employee && employee.filter(e => e.on_notice_period === true).map((emp) => (
                       <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
                         <span className="mini-stat-icon bg-purple mr-0 float-right">
                           <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
                         </span>
                         <div className="mini-stat-info">
-                          <span className="counter text-purple">{emp.name}</span>
-                          {emp.designation} <br/>
+                          <span className="counter text-purple">{emp.full_name}</span>
+                          {emp.designation_name} <br/>
                            <br/>
-                          <p className="text-primary"> confirmation Date- {emp.date}</p> <br/>
+                          <p className="text-primary"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p> <br/>
                         </div>
                           <div className="d-flex align-items-center justify-content-between">
-                            <h4 className="text-primary">{emp.id}</h4>
+                            <h4 className="text-primary">{emp.emp_code}</h4>
                             <div className="d-flex align-items-center justify-content-end">
                               <Button size="sm">View</Button>
                             </div>
@@ -124,7 +134,7 @@ getEmployee();
 
                 <Tab eventKey='oldEmployee' title='Old Employee'>
                    <div className="row ml-2">
-                    {employee && employee.map((emp) => (
+                   {employee && employee.filter(e => e.relieved === true).map((emp) => (
                       <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
                         <span className="mini-stat-icon bg-purple mr-0 float-right">
                           <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
@@ -146,6 +156,14 @@ getEmployee();
                   </div>
                 </Tab>
               </Tabs>
+            </div>
+            <div>
+                      <Pagination
+                      totalCount={totalCount}
+                      currentPage={currentPage}
+                      limit={limit}
+                      getData={getEmployee}
+                    />
             </div>
           </Card.Body>
         </Card>
