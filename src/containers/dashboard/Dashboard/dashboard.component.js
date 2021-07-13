@@ -11,6 +11,7 @@ import Table from '../../../components/ReactTable/simpletable.component';
 import UserRestrictions from '../../../components/UserRestrictions/userrestrictions.component';
 import SharedService from '../../../services/SharedService/sharedServices';
 import Loader from '../../../components/Loader/index';
+import EmployeeListComponent from '../../Employee/employeeList.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -38,22 +39,22 @@ function Dashboard() {
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'clockin',
       label: 'Clock In',
-      roleAccess: [1, 2, 3, 4],
+      roleAccess: [1, 2, 3, 4, 5],
     },
     {
       id: 'clockout',
       label: 'Clock out',
-      roleAccess: [2, 3, 4],
+      roleAccess: [2, 3, 4, 5],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [2, 3, 4],
+      roleAccess: [2, 3, 4, 5],
     },
   ];
 
@@ -229,6 +230,12 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
+            <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+            <div className="mt-4">
+              <EmployeeListComponent />
+            </div>
+            </UserRestrictions>
+
             <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>
             {
               showClockIn && !morningMail && (
@@ -322,7 +329,9 @@ function Dashboard() {
                     />
                   </div>
                   <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+                  <div className="d-flex justify-content-end mr-3">
                     <Button onClick={()=> history.push('/emp-timesheet')}>View All</Button>
+                 </div>
                   </UserRestrictions>
                 </div>
               </div>

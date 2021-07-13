@@ -1,114 +1,116 @@
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
-import StarkFormBuilder from 'stark-form-builder';
 import { withRouter } from 'react-router-dom';
-import { Card, Accordion, Button, Form, Row, Col, Image } from 'react-bootstrap';
-import FormSections from './addTechnology.json';
+import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
+import StarkFormBuilder from 'stark-form-builder';
+import FilterFormSections from './FilterTechnology.json';
 import customFunctions from '../../helper/customFunctions';
-import { Helmet, TextInput } from '../../components/FormInputs';
+import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-
-
-const handleActionCallback = () => {
-  return (
-    <>
-      <a
-        href="/"
-        className=""
-      // onClick={(e) => {
-      //   e.preventDefault();
-      //   e.stopPropagation();
-      //   setDesignationId(id);
-      //   setDesignation(name);
-      // }}
-      >
-        <Image src="/images/edit-button.svg" alt="Edit Technology" />
-      </a>
-      <a
-        href="/"
-        className="ml-2"
-      // onClick={(e) => {
-      //   e.preventDefault();
-      //   e.stopPropagation();
-      //   removeDesignation(id);
-      // }}
-      >
-        <Image src="/images/delete.png" alt="Delete Technology" />
-      </a>
-    </>
-  );
-};
-
-const columns = [{
-  'id': 'id',
-  'label': 'Sr.No',
-},
-{
-  'id': 'name',
-  'label': 'Technology',
-},
-{
-  'id': 'action',
-  'label': 'Action',
-  render: handleActionCallback
-},
-];
-
+import AddTechnology from './AddTechnology.component';
 
 function Technology() {
-
-  // Declare variable 
-  const [rowData, setRowData] = useState([])
+  // Declare variable
+  const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
+  // const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}) // eslint-disable-line
-
-  const title = 'Employees List';
-
-  const items = [
-    { to: '/', label: 'Home' },
-    { label: 'Employee' },
-  ];
-
+  const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [technologyId, setTechnologyId] = useState('');
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
 
+  const title = 'Employees List';
+  const limit = 5;
+  const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
+  const handleActionCallback = ({ id }) => {
+    console.log('uid',id)
+    return (
+      <>
+        <a
+          href="/"
+          className=""
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
+            setTechnologyId(id);
+          }}
+        >
+          <Image src="/images/edit-button.svg" alt="Edit Technology" />
+        </a>
+        <a
+          href="/"
+          className="ml-2"
+          // onClick={(e) => {
+          //   e.preventDefault();
+          //   e.stopPropagation();
+          //   removeDesignation(id);
+          // }}
+        >
+          <Image src="/images/delete.png" alt="Delete Technology" />
+        </a>
+      </>
+    );
+  };
+
+  const columns = [
+    {
+      id: 'index',
+      label: 'Sr.No',
+    },
+    {
+      id: 'name',
+      label: 'Technology',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: handleActionCallback,
+    },
+  ];
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.designationUrl}`;
+    const endPoint = `${Api.employeeStackUrl}`;
     // const filterList = filterData && !customFunctions.checkIfEmpty(filterData, 'O') ? customFunctions.jsonParse(filterData) : {};
     const params = {
       page,
       limit,
-    }
+    };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
+      // setLimit(data.paginator.limit);
+      setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setRowData(data && data.data || []);
-    } else {
-      console.log('error', message)
-    }
-  }
 
+      const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.index = (page - 1) * itemsPerPage + (i + 1);
+        return newItem;
+      });
+
+      setRowData((data && data.data) || []);
+    } else {
+      console.log('error', message);
+    }
+  };
 
   useEffect(() => {
-    getRowData(1)
-  }, [filterData])
-
+    getRowData(1);
+  }, [filterData]);
 
   // Get user role
   const getUserRole = async () => {
@@ -121,39 +123,10 @@ function Technology() {
   }, []);
 
   // Submit Form
-  const submitForm = async (formValues) => {
+  const submitFilterForm = async (formValues) => {
     console.log(formValues);
-
-    const { data } = await AuthApi.putDataToServer(Api.designationUrl, formValues);
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
-    }
-    // Perform success actions
-
+    setFilterData(formValues);
   };
-
-
-  // Get data for form
-  const getData = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
-    if (!data) {
-      // show error
-      return;
-    }
-    updateDefaultValues(data);
-  };
-
-  // Call get data method on load
-  useEffect(() => {
-    getData();
-  }, []);
-
-
-
-
-
-
   return (
     <>
       <Helmet title={title} />
@@ -178,50 +151,26 @@ function Technology() {
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
                   <Card.Title>
-                    <Form>
-                      {/* {filterErr && (
-                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
-                          <div className="img-text">
-                            <img src="/images/fail.svg" alt="Success" />{' '}
-                            {filterErr}
-                          </div>
-                        </div>
-                      )} */}
-                      <Row className="mt-3">
-                        <Col sm={3}>
-                          <div className="search-bar-input">
-                            <TextInput
-                              inputClass="form-control"
-                              // value={searchKeyword}
-                              placeholder="search designation"
-                            // onInputChange={(e) => {
-                            //   setFilterErr('');
-                            //   setSearchKeyword(e.target.value);
-                            // }}
-                            />
-                          </div>
-                        </Col>
-                        <Col sm={3}>
-                          <div className="filter-btn">
-                            <Button
-                              variant="primary"
-                              type="submit"
-                              className="ms-4"
-                            >
-                              Submit
-                            </Button>
-                            <Button
-                              variant="primary"
-                              type="button"
-                              className="ms-4"
-                            // onClick={() => onClear()}
-                            >
-                              Clear
-                            </Button>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Form>
+                    <StarkFormBuilder
+                      containerClass=""
+                      formHeaderClass=""
+                      formSections={FilterFormSections}
+                      onFormSubmit={(formValues) => {
+                        submitFilterForm(formValues);
+                      }}
+                      options={options}
+                      callbacks={{}}
+                      defaultFormValues={defaultValues}
+                      currentUser={currentUser}
+                      submitBtnText="Submit"
+                      showResetBtn={true} // eslint-disable-line
+                      resetBtnText="Clear"
+                      btnContainerClass="form-submit-buttons"
+                      isStepForm={false}
+                      onFormReset={() => {
+                        console.log('form reset callback');
+                      }}
+                    />
                   </Card.Title>
                 </Card.Body>
               </Accordion.Collapse>
@@ -230,33 +179,13 @@ function Technology() {
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Designation</h4>
+                <h4 className="text-primary mt-2 mb-2">Technology</h4>
               </div>
             </Card.Header>
             <Card.Body>
               <Row className="mt-3">
                 <Col>
-                  <StarkFormBuilder
-                    containerClass=''
-                    formHeaderClass=''
-                    formSections={FormSections}
-                    onFormSubmit={(formValues) => { submitForm(formValues); }}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    currentUser={currentUser}
-                    submitBtnText="Submit"
-                    showResetBtn={true} // eslint-disable-line
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
-                    isStepForm={false}
-
-                    onFormReset={() => {
-                      console.log('form reset callback')
-                    }}
-                  />
-
-
+                  <AddTechnology technologyId={technologyId} />
                 </Col>
                 <Col>
                   <CustomTable
@@ -269,11 +198,12 @@ function Technology() {
                       activePage: currentPage,
                       onPageChange: (pageNo) => {
                         getRowData(pageNo);
-                      }
+                      },
                     }}
-                    emptyRender={() => { return ('No record found.') }}
+                    emptyRender={() => {
+                      return 'No record found.';
+                    }}
                   />
-
                 </Col>
               </Row>
             </Card.Body>
@@ -281,7 +211,7 @@ function Technology() {
         </div>
       </section>
     </>
-  )
+  );
 }
 
 export default withRouter(Technology);

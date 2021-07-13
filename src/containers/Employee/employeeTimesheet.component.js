@@ -12,30 +12,41 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 
 function EmployeeTimesheet() {
-
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [dataShow, setDataShow] = useState(false);
+  const history = useHistory();
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-
+  // const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const title = 'Employees List';
   const limit = 10;
-  const history = useHistory();
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
-  const items = [
-    { to: '/', label: 'Home' },
-    { label: 'Employee' },
-  ];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
-  const handleActionCallback = () => {
+  useEffect(() => {
+
+    const formSchema = [...FormSections];
+    formSchema[0].fields.map((section) => {
+      const sectionData = section;
+      if (sectionData.name === 'toDate') {
+        const date = new Date();
+        sectionData.maxDate = date;
+      }
+      return sectionData;
+    });
+
+  }, [])
+  const handleActionCallback = (row) => {
+    console.log('row', row.id);
     return (
       <>
         <a
@@ -45,59 +56,74 @@ function EmployeeTimesheet() {
             e.preventDefault();
             e.stopPropagation();
             history.push('/edit-employee');
-            // setModalShow(true);
-            // setEmployeeId(id);
-            // getRowData(1,index);
-            // setAddButton(true);
-            // setCntClearFilter(cntClearFilter + 1);
           }}
         >
           Edit
-    </a>
+        </a>
       </>
     );
   };
 
   // Declare columns
-  const columns = [{
-    'id': 'index',
-    'label': 'Sr.No',
-  },
-  {
-    'id': 'emp_code',
-    'label': 'Employee ID',
-  },
-  {
-    'id': 'full_name',
-    'label': 'Employee Name',
-  },
-  {
-    'id': 'designation_name',
-    'label': 'Designation ',
-  },
-  {
-    'id': 'clockIn',
-    'label': 'Clock-In',
-  },
-  {
-    'id': 'clockout',
-    'label': 'Clock-Out',
-  },
-  {
-    'id': 'total',
-    'label': 'Total Working Hours',
-  },
-  {
-    'id': 'action',
-    'label': 'Action',
-    render: handleActionCallback
-  },
+  const columns = [
+    {
+      id: 'index',
+      label: 'Sr.No',
+    },
+    {
+      id: 'emp_code',
+      label: dataShow ? '' : 'Employee ID',
+    },
+    {
+      id: 'day',
+      label: dataShow ? 'Day' : '',
+    },
+    {
+      id: 'date',
+      label: dataShow ? 'Date' : '',
+    },
+    {
+      id: 'emp_name',
+      label: 'Employee Name',
+    },
+    {
+      id: 'designation_name',
+      label: dataShow ? '' : 'Designation ',
+    },
+    {
+      id: 'sign_in',
+      label: 'Clock-In',
+    },
+    {
+      id: 'sign_out',
+      label: 'Clock-Out',
+    },
+    {
+      id: 'estimation',
+      label: 'Total Working Hours',
+      render: ({ estimation }) => {
+        return (
+          <>
+            <span>{estimation} Hrs</span>
+          </>
+        );
+      },
+    },
+    { 
+      id: 'date',
+      label: 'Date',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: handleActionCallback,
+    },
   ];
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeUrl}`;
+    const endPoint = `${Api.timeSheetUrl}`;
     const params = {
       limit,
       page,
@@ -114,11 +140,11 @@ function EmployeeTimesheet() {
       const newData = [...data.data];
       newData.map((item, i) => {
         const newItem = item;
-        newItem.index = ((page - 1) * itemsPerPage) + (i + 1);
+        newItem.index = (page - 1) * itemsPerPage + (i + 1);
         return newItem;
       });
 
-      setRowData(data && data.data || []);
+      setRowData((data && data.data) || []);
     } else {
       console.log('error', message);
     }
@@ -141,6 +167,7 @@ function EmployeeTimesheet() {
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues, updateDefaultValues);
+    setDataShow(true);
     setFilterData(formValues);
   };
 
@@ -159,70 +186,72 @@ function EmployeeTimesheet() {
     });
     const allOptions = {
       ...options,
-      full_name: dpOptions
+      full_name: dpOptions,
     };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getEmployeeName();
+    console.log('jsonschema',FormSections);
   }, []);
 
   return (
     <>
       <Helmet title={title} />
-      <div className='page-header'>
-        <div className='title-breadcrumb-section'>
-          <h2 className='main-content-title tx-24 mg-b-5'>{title}</h2>
+      <div className="page-header">
+        <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
           <Breadcrumb items={items} />
         </div>
       </div>
-      <div className='mt-5'>
-        <Accordion defaultActiveKey='0'>
+      <div className="mt-5">
+        <Accordion defaultActiveKey="0">
           <Card>
             <Card.Header>
-              <div className='d-flex align-items-center justify-content-between'>
-                <h4 className='text-primary m-0'>Filters</h4>
-                <div className='d-flex align-items-center justify-content-end'>
-                  <Accordion.Toggle as={Button} variant='link' eventKey='1'>
+              <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary m-0">Filters</h4>
+                <div className="d-flex align-items-center justify-content-end">
+                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
                     Expand
-                    </Accordion.Toggle>
+                  </Accordion.Toggle>
                 </div>
               </div>
             </Card.Header>
-            <Accordion.Collapse eventKey='1'>
-              <Card.Body>
-                <Card.Title>
-                  <StarkFormBuilder
-                    containerClass=''
-                    formHeaderClass=''
-                    formSections={FormSections}
-                    formHeading=""
-                    onFormSubmit={(formValues) => { submitForm(formValues); }}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    currentUser={currentUser}
-                    submitBtnText="Submit"
-                    showResetBtn={true} // eslint-disable-line
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
-                    isStepForm={false}
 
-                    onFormReset={() => {
-                      console.log('form reset callback')
-                    }}
-                  />
-                </Card.Title>
-              </Card.Body>
+            <Accordion.Collapse eventKey="1">
+              <Card.Title>
+                <StarkFormBuilder
+                  containerClass=""
+                  formHeaderClass=""
+                  formSections={FormSections}
+                  formHeading=""
+                  onFormSubmit={(formValues) => {
+                    submitForm(formValues);
+                  }}
+                  options={options}
+                  callbacks={{}}
+                  defaultFormValues={defaultValues}
+                  currentUser={currentUser}
+                  submitBtnText="Submit"
+                  showResetBtn={true} // eslint-disable-line
+                  resetBtnText="Clear"
+                  btnContainerClass="form-submit-buttons pull-right mb-3"
+                  isStepForm={false}
+                  onFormReset={() => {
+                    setDataShow(false);
+                  }}
+                />
+              </Card.Title>
+
             </Accordion.Collapse>
           </Card>
         </Accordion>
         <Card>
-        <Card.Header>
-          <div className="d-flex align-items-center justify-content-between">
-            <h4 className="text-primary mt-2 mb-2">Employees List</h4>
-          </div>
+          <Card.Header>
+            <div className="d-flex align-items-center justify-content-between">
+              <h4 className="text-primary mt-2 mb-2">Employees List</h4>
+            </div>
           </Card.Header>
           <Card.Body>
             <CustomTable
@@ -235,11 +264,12 @@ function EmployeeTimesheet() {
                 activePage: currentPage,
                 onPageChange: (pageNo) => {
                   getRowData(pageNo);
-                }
+                },
               }}
-              emptyRender={() => { return ('No record found.'); }}
+              emptyRender={() => {
+                return 'No record found.';
+              }}
             />
-
           </Card.Body>
         </Card>
       </div>

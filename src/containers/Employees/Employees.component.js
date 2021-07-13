@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Tabs, Tab, Card, Image, Button } from 'react-bootstrap';
+import { Tabs, Tab, Card, Button, Image } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
 
+// import CurrentEmployee from './CurrentEmployee.component';
+// import NoticePeriod from './NoticePeriod.component';
+// import OldEmployee from './OldEmployee.component';
 
 function Employees() {
   const title = 'Employees List';
@@ -76,6 +80,7 @@ getEmployee(1);
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
+
         <Card>
           <Card.Body>
             <div>
@@ -168,9 +173,10 @@ getEmployee(1);
             </div>
           </Card.Body>
         </Card>
+
       </section>
     </>
-  )
+  );
 }
 
 export default withRouter(Employees);

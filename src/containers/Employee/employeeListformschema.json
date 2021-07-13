@@ -6,7 +6,7 @@
       "label": "3 Column",
       "value": "3column"
     },
-    "containerClass": "",
+    "containerClass": "mt-3 select-options",
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
@@ -17,12 +17,19 @@
         "id": "",
         "placeholder": "From Date",
         "inputClass": "",
+        "dateFormat": "dd/MM/yyyy",
         "containerClass": "",
         "validations": [
           {
             "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "AND"
+            "applyWhen": [
+              {
+                "name": "toDate",
+                "value": "toDate",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
           }
         ],
         "displayWhen": {},
@@ -50,14 +57,21 @@
         "type": "date",
         "label": "",
         "id": "",
+        "dateFormat": "dd/MM/yyyy",
         "placeholder": "To Date",
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          {
+           {
             "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "AND"
+            "applyWhen": [
+              {
+                "name": "fromDate",
+                "value": "fromDate",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
           }
         ],
         "displayWhen": {},
@@ -66,7 +80,7 @@
         "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
-        "minDateSelector": "",
+        "minDateSelector": "fromDate",
         "maxDateSelector": "",
         "disabled": false,
         "isMulti": false,
@@ -88,15 +102,9 @@
         "placeholder": "Select Employee",
         "inputClass": "",
         "containerClass": "",
-        "validations": [
-          {
-            "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          }
-        ],
+        "validations": [],
         "displayWhen": {},
-        "haveValidations": "true",
+        "haveValidations": "false",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -117,9 +125,7 @@
         "options": []
       }
     ],
-    "allowedUsers": [
-      5
-    ],
+    "allowedUsers": [5],
     "sectionLayout": "3column"
   }
 ]

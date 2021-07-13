@@ -272,6 +272,14 @@ class CustomFunctions extends Component {
    
     return { hours, minutes, seconds, milliseconds };
   }
+  
+  jsonParse = (jsonString) => {
+    try {
+      return JSON.parse(jsonString);
+    } catch (error) {
+      return jsonString;
+    }
+  };
 }
 
 export default new CustomFunctions();
