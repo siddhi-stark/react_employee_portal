@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Image, Card, Row, Col, Button } from 'react-bootstrap';
 import AddHistory from './AddHistory.component';
-import EditEmployee from './EditPersonalDetails.component';
+import EditPersonalDetails from './EditPersonalDetails.component';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+import customFunctions from '../../helper/customFunctions';
 
 const companyList =[{
   id:1,
@@ -27,23 +30,38 @@ const companyList =[{
 },
 ]
 
-function EmployeeProfile() {
+function EmployeeProfile(props) {
 
   const [showEmployee, setShowEMployee] = useState(false);
-  const [data, setData] = useState({});
+  const [dataa, setData] = useState({});
+  const [employeeDetails,setEmployeeDetails] = useState({});
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
   const history = useHistory();
   
+  const getEmployeeDetails = async () => {
+    const employeeId = props.match.params.id;
+    customFunctions.setLocalStorage('id',employeeId);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${employeeId}/`);
+    console.log('data',data.data);
+    
+      setEmployeeDetails(data.data);
+    
+  }
+
+  useEffect(() => {
+    getEmployeeDetails();
+  },[])
 
   return (
     <>
+    {console.log('employeeDetails',employeeDetails)}
       <h6 className="mt-3">Employee Profile Page</h6>
       <Image src="/images/edit-profile-img.png" style={{ 'height': '90px' }} />
       <div className="table-projects">
        
         {showPersonalDetails ?  (
           <Card className="mt-3">
-          <EditEmployee 
+          <EditPersonalDetails 
           handleModalCLose={(e) => setShowPersonalDetails(e)}
           />
           </Card>
@@ -56,7 +74,7 @@ function EmployeeProfile() {
                 </div>
               </div> */}
           <div className="d-flex align-items-center justify-content-between">
-            <h3><strong>Employee Name</strong></h3>
+            <h3><strong>{employeeDetails.full_name}</strong></h3>
             <div className="date-edit-option d-flex align-items-center">
               <h6>Birthday - 30/10/1991</h6>
                <a
@@ -74,25 +92,25 @@ function EmployeeProfile() {
           <p>Designation</p>
           <Row>
             <Col md={4}>
-              <h7>Joining Date - DD/MM/YYYY</h7>
+              <h7>Joining Date - {customFunctions.getFormattedDate(employeeDetails.date_joined)}</h7>
             </Col>
 
             <Col md={4}>
-              <h7>Email Id - admin@starkdigtial.net</h7>
+              <h7>Email Id - {employeeDetails.email}</h7>
             </Col>
 
             <Col md={4}>
-              <h7>Email Id - admin@gmail.com</h7>
+              <h7>Email Id - admin@gmail.com </h7>
             </Col>
           </Row><br />
 
           <Row>
             <Col md={4}>
-              <h7>Contact No - 8765434212</h7>
+              <h7>Contact No - {employeeDetails.mobile}</h7>
             </Col>
 
             <Col md={2}>
-              <h7>Confirmation Date - DD/MM/YYYY</h7>
+              <h7>Confirmation Date - {customFunctions.getFormattedDate(employeeDetails.confirmation_date)}</h7>
             </Col>
             <Col md={2}>
               <Button onClick={() => history.push('/confirmation')}>Confirm</Button>
@@ -115,7 +133,7 @@ function EmployeeProfile() {
         <Card className="mt-4">
 
           <AddHistory
-            optionsData={data}
+            optionsData={dataa}
             handleModalCLose={(e) => setShowEMployee(e)}
           />
         </Card>

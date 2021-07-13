@@ -4,7 +4,7 @@ import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './editEmployee.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';    
-
+import customFunctions from '../../helper/customFunctions';
 
 function EditPersonalDetails(props) {
 
@@ -40,12 +40,16 @@ function EditPersonalDetails(props) {
 
   // Get data for form
   const getData = async () => {
-    const {data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    const id = customFunctions.getLocalStorage('id');
+    const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${id}/`);
+    console.log('data',data);
     if(!data) {
       // show error
       return;
     }
-    updateDefaultValues(data);
+    updateDefaultValues({
+      full_name: data.data.full_name
+    });
   };
 
   // Call get data method on load

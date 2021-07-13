@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Tabs, Tab, Card, Button, Image } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -16,11 +16,12 @@ import Pagination from '../../components/Pagination/pagination.component';
 function Employees() {
   const title = 'Employees List';
   const [employee, setEmployee] = useState([]);
-  // const [noticePeriod,onNoticePeriod] = useState([]);
+  // const[employeeId,setId] = useState(null);
   const limit = 10;
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
+const history = useHistory();
   const items = [
     { to: '/', label: 'Home' },
     { label: 'Employee' },
@@ -37,27 +38,8 @@ const endPoint = `${Api.employeeUrl}`;
     }
      const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
-    // const { data } = await AuthApi.getDataFromServer(
-    //   `${Api.employeeUrl}`
-      
-    // );
-      // console.log('data',data);
-      // await data.data.map((emp) => {
-      //   // console.log('emp',emp.on_notice_period === Boolean(false));
-      //   if(!emp.on_notice_period) {
-      //     console.log('inside if condition',emp);
-      //   }
-      //   // else{
-      //   //   onNoticePeriod(emp);
-
-      //   // }
-
-
-
-      //     return emp;
-      // });
       setEmployee(data.data);
-      
+      // setId(data.data.id);
       setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -106,7 +88,7 @@ getEmployee(1);
                           <div className="d-flex align-items-center justify-content-between">
                             <h4 className="text-primary">{emp.emp_code}</h4>
                             <div className="d-flex align-items-center justify-content-end">
-                              <Button size="sm">View</Button>
+                              <Button size="sm" onClick={() => history.push(`/employee-profile/${emp.id}`)}>View</Button>
                             </div>
                           </div>
                       </div>
