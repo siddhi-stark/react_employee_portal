@@ -88,9 +88,10 @@ getEmployee(1);
                   <div className="row ml-2">
                     {employee && employee.filter(e => e.on_notice_period === false).map((emp) => (
                       <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
-                        <span className="mini-stat-icon bg-purple mr-0 float-right">
-                          <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
-                        </span>
+                       <span className="mini-stat-icon bg-purple mr-0 float-right">
+            <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
+            <span className="np-sup">NP</span>
+          </span>
                         <div className="mini-stat-info">
                           <span className="counter text-purple">{emp.full_name}</span>
                           {emp.designation_name} <br/>
