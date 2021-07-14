@@ -64,6 +64,9 @@ function EmployeeProfile(props) {
     getEmployeeDetails();
   },[])
 
+const onChangeInHistory = () => {
+  getEmployeeDetails();
+}
 
   return (
     <>
@@ -147,6 +150,9 @@ function EmployeeProfile(props) {
           <AddHistory
             optionsData={dataa}
             handleModalCLose={(e) => setShowEMployee(e)}
+            onChanges={() => {
+            onChangeInHistory();
+          }}
           />
         </Card>
       )}

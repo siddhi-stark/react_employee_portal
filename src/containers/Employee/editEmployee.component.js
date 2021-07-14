@@ -110,13 +110,13 @@ function EditEmployee(props) {
     const postData = {
       user_id:Number(id),
       content: formValues.task,
-      start_time: customFunctions.getTimeFormatter(formValues.login),
-      end_time: customFunctions.getTimeFormatter(formValues.logout),
+      start_time: ((new Date(formValues.login).toISOString()).replace('T', ' ')).substr(0, 19),
+      end_time: ((new Date(formValues.logout).toISOString()).replace('T', ' ')).substr(0, 19),
       description:formValues.description
 
     }
     console.log('postData',postData);
-    const { data } = await AuthApi.postDataToServer(Api.employeeTimesheet, formValues);
+    const { data } = await AuthApi.postDataToServer(Api.employeeTimesheet, postData);
      if(data) {
        console.log('data',data);
        console.log('message',data.message[0]);

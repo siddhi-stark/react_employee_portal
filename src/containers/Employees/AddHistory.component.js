@@ -37,6 +37,7 @@ function AddHistory(props) {
   const submitForm = async (formValues) => {
     console.log(formValues);
     const employeeId = customFunctions.getLocalStorage('id');
+     const history = customFunctions.getLocalStorage('hisotryID');
     const postData = {
       employee: Number(employeeId),
       designation: formValues.designation ? formValues.designation.label : '',
@@ -45,8 +46,19 @@ function AddHistory(props) {
       end_date: formValues.toDate ? customFunctions.getDate(formValues.toDate) : '',
       location: formValues.address,
     }
-    console.log('postData',postData);
-    const { data } = await AuthApi.postDataToServer(Api.historyUrl, postData);
+     const callback = history
+      ? AuthApi.putDataToServer
+      : AuthApi.postDataToServer;
+    const endPoint = history
+      ? `${Api.historyUrl}`
+      : Api.historyUrl;
+
+       if (history) {
+         postData.id = history;
+         postData.employee = employeeId;
+       } 
+
+    const { data } = await callback(endPoint, postData);
     if(data) {
       swal({
         title: data.message[0],
@@ -55,6 +67,9 @@ function AddHistory(props) {
         .then(okAction => {
           if (okAction) {
        props.handleModalCLose(false);
+       props.onChanges();
+       customFunctions.removeLocalStorage('id');
+       customFunctions.removeLocalStorage('hisotryID');
           }
         });
     }
