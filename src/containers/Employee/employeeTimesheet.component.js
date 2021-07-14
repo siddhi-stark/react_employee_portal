@@ -21,7 +21,7 @@ function EmployeeTimesheet() {
   const history = useHistory();
 
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   // const [jsonSchema, updateJsonSchema] = useState(FormSections);
@@ -32,19 +32,19 @@ function EmployeeTimesheet() {
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const formSchema = [...FormSections];
-    formSchema[0].fields.map((section) => {
-      const sectionData = section;
-      if (sectionData.name === 'toDate') {
-        const date = new Date();
-        sectionData.maxDate = date;
-      }
-      return sectionData;
-    });
+  //   const formSchema = [...FormSections];
+  //   formSchema[0].fields.map((section) => {
+  //     const sectionData = section;
+  //     if (sectionData.name === 'toDate') {
+  //       const date = new Date();
+  //       sectionData.maxDate = date;
+  //     }
+  //     return sectionData;
+  //   });
 
-  }, [])
+  // }, [])
   const handleActionCallback = (row) => {
     // console.log('row', row.id);
     return (
@@ -127,12 +127,14 @@ function EmployeeTimesheet() {
     const params = {
       limit,
       page,
+      start_date: filterData.fromDate ? customFunctions.getDate(filterData.fromDate) : '',
+      end_date: filterData.toDate ? customFunctions.getDate(filterData.toDate) : '',
+      employee_id: filterData.full_name ? filterData.full_name.value : '',
       // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    console.log('data',data);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -168,7 +170,7 @@ function EmployeeTimesheet() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, updateDefaultValues);
+    console.log(formValues, formValues);
     setDataShow(true);
     setFilterData(formValues);
   };
@@ -196,6 +198,13 @@ function EmployeeTimesheet() {
   useEffect(() => {
     getEmployeeName();
   }, []);
+
+     const onResetForm = () => {
+    setFilterData('');
+    getRowData(1);
+    setFilterData(false);
+  }
+  
 
   return (
     <>
@@ -241,6 +250,7 @@ function EmployeeTimesheet() {
                   isStepForm={false}
                   onFormReset={() => {
                     setDataShow(false);
+                    onResetForm();
                   }}
                 />
               </Card.Title>

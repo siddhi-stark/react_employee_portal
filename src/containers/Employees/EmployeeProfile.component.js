@@ -7,28 +7,28 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
-const companyList =[{
-  id:1,
-  designation:'Senior Engineer',
-  cname:'Stark Digital Media Services Pvt Ltd',
-  date:'Mar | 2021',
-  country:'Pune, India'
-},
-{
-  id:2,
-  designation:'Android Developer',
-  cname:'Stark Digital Media Services Pvt Ltd',
-  date:'Mar | 2021',
-  country:'Pune, India'
-},
-{
-  id:3,
-  designation:'Senior Developer',
-  cname:'Stark Digital Media Services Pvt Ltd',
-  date:'Mar | 2021',
-  country:'Pune, India'
-},
-]
+// const companyList =[{
+//   id:1,
+//   designation:'Senior Engineer',
+//   cname:'Stark Digital Media Services Pvt Ltd',
+//   date:'Mar | 2021',
+//   country:'Pune, India'
+// },
+// {
+//   id:2,
+//   designation:'Android Developer',
+//   cname:'Stark Digital Media Services Pvt Ltd',
+//   date:'Mar | 2021',
+//   country:'Pune, India'
+// },
+// {
+//   id:3,
+//   designation:'Senior Developer',
+//   cname:'Stark Digital Media Services Pvt Ltd',
+//   date:'Mar | 2021',
+//   country:'Pune, India'
+// },
+// ]
 
 function EmployeeProfile(props) {
 
@@ -36,25 +36,37 @@ function EmployeeProfile(props) {
   const [dataa, setData] = useState({});
   const [employeeDetails,setEmployeeDetails] = useState({});
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
+  const [companyList,setCompanyList] = useState([]);
   const history = useHistory();
   
   const getEmployeeDetails = async () => {
     const employeeId = props.match.params.id;
     customFunctions.setLocalStorage('id',employeeId);
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${employeeId}/`);
-    console.log('data',data.data);
+    // console.log('data',data.data);
     
       setEmployeeDetails(data.data);
     
   }
 
+  const getEmployeeHIstory = async () => {
+    const employeeId = props.match.params.id;
+    const endPoint =  `${Api.historyUrl}?employee_id=${employeeId}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    // customFunctions.setLocalStorage('historyId',data.data.id);
+    // console.log('data',data.data);
+    setCompanyList(data.data);
+
+  }
+
   useEffect(() => {
+    getEmployeeHIstory();
     getEmployeeDetails();
   },[])
 
+
   return (
     <>
-    {console.log('employeeDetails',employeeDetails)}
       <h6 className="mt-3">Employee Profile Page</h6>
       <Image src="/images/edit-profile-img.png" style={{ 'height': '90px' }} />
       <div className="table-projects">
@@ -143,13 +155,15 @@ function EmployeeProfile(props) {
         <div className="d-flex align-items-start justify-content-between">
           <div className="address-content">
             <p><strong>{comp.designation}</strong> </p>
-            <p>{comp.cname} <br /> {comp.date}</p>
-            <p>{comp.country}</p><hr />
+            <p>{comp.company_name} - {comp.employement_type_name} <br /> {comp.date}| {comp.duration}</p>
+            <p>{comp.location}</p><hr />
           </div>
           <div className="address-edit-delete">
           <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
             setData(comp);
             setShowEMployee(true);
+            customFunctions.setLocalStorage('hisotryID',comp.id);
+            console.log('idddd',comp.id);
             // history.push(`/profile-history/id=${comp.id}`)
           }}/>
 

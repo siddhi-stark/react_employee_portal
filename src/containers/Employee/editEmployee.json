@@ -64,7 +64,7 @@
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
-        "callback": "",
+        "callback": "onStartTimeCallback",
         "callbackUrl": "",
         "inputToChange": "",
         "minDateSelector": "",
@@ -100,9 +100,13 @@
           }
         ],
         "displayWhen": {},
+         "minTime": "login",
+         "minDate":"",
+        "maxTime": "",
+
         "haveValidations": "true",
         "haveDisplayOptions": "false",
-        "callback": "",
+        "callback": "onDurationCallback",
         "callbackUrl": "",
         "inputToChange": "",
         "minDateSelector": "",
