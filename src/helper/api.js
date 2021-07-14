@@ -56,6 +56,8 @@ export default class Api extends Component {
   static employeeStackUrl = `${Api.baseUrl}technologystack/`;
 
   static employeeStack = `${Api.baseUrl}employeetechstack/`;
+
+  static employeeTimesheet = `${Api.baseUrl}employee-timesheet/`;
   
   // Get base URL of APIs
   static getBaseUrl() {

@@ -46,7 +46,7 @@ function EmployeeTimesheet() {
 
   }, [])
   const handleActionCallback = (row) => {
-    console.log('row', row.id);
+    // console.log('row', row.id);
     return (
       <>
         <a
@@ -55,7 +55,7 @@ function EmployeeTimesheet() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push('/edit-employee');
+            history.push(`/edit-employee/${row.emp_id}`);
           }}
         >
           Edit
@@ -71,23 +71,23 @@ function EmployeeTimesheet() {
       label: 'Sr.No',
     },
     {
-      id: 'emp_code',
+      id: 'emp_id',
       label: dataShow ? '' : 'Employee ID',
     },
-    {
-      id: 'day',
-      label: dataShow ? 'Day' : '',
-    },
-    {
-      id: 'date',
-      label: dataShow ? 'Date' : '',
-    },
+    // {
+    //   id: 'day',
+    //   label: dataShow ? 'Day' : '',
+    // },
+    // {
+    //   id: 'date',
+    //   label: dataShow ? 'Date' : '',
+    // },
     {
       id: 'emp_name',
       label: 'Employee Name',
     },
     {
-      id: 'designation_name',
+      id: 'designatin_name',
       label: dataShow ? '' : 'Designation ',
     },
     {
@@ -123,7 +123,7 @@ function EmployeeTimesheet() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.timeSheetUrl}`;
+    const endPoint = `${Api.employeeTimesheet}`;
     const params = {
       limit,
       page,
@@ -131,6 +131,8 @@ function EmployeeTimesheet() {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
+
+    console.log('data',data);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -193,7 +195,6 @@ function EmployeeTimesheet() {
 
   useEffect(() => {
     getEmployeeName();
-    console.log('jsonschema',FormSections);
   }, []);
 
   return (
