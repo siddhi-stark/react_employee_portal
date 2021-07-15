@@ -87,6 +87,7 @@ function EditEmployee() {
   // Submit Form
   const submitForm = async (formValues) => {
     console.log('formValues', formValues, setFilterData);
+    console.log('formValues',customFunctions.getDateTime( formValues.login));
     const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
     if (!data) {
       // show error

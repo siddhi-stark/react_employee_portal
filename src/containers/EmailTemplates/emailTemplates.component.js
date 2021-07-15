@@ -31,7 +31,14 @@ function EmailTemplatesComponent() {
 
   // Email
 
-  const [description, setDescription] = useState(EditorState.createEmpty());
+  const [description, ] = useState(EditorState.createEmpty());
+  // const test =
+  //   'Dear Employee First Name,<br />With reference to the thorough evaluation of your performance during the probation period from Start Date to End Date, we are pleased to inform you that your employment is being confirmed as Job Title from Date of Confirmation. </br> The terms and conditions of your employment and your job responsibilities will continue to remain the same. We thank you for your valuable contribution made to your process and hope that you will perform with equal enthusiasm in future.</br>All the very best in all your endeavors with Stark!!</br>All the very best for a fruitful carrear with Stark !!</br>Regards,';
+  // const [description, setDescription] = useState(
+  //   EditorState.createWithContent(
+  //     ContentState.createFromBlockArray(convertFromHTML(test))
+  //   )
+  // );
 
   const getEmailTemplateData = async () => {
     const { data, message } = await AuthApi.getDataFromServer(
@@ -40,11 +47,12 @@ function EmailTemplatesComponent() {
     if (data) {
       await data.data.map((email) => {
         // console.log('email', email);
-        const dp = EditorState.createWithContent(
+       
+         const dp = EditorState.createWithContent(
           ContentState.createFromBlockArray(convertFromHTML(email.body))
         );
         email.content = dp; //eslint-disable-line
-        console.log('desc', dp);
+        // console.log('desc', dp);
         return email;
       });
       setEmailContent(data.data);
@@ -65,8 +73,17 @@ function EmailTemplatesComponent() {
   };
 
   const onEditorStateChange = (editorState,index) => {
-    if(!index) return;
-    setDescription(editorState);
+    console.log('index',index);
+    console.log('editorState',editorState);
+    // setDescription(editorState);
+    const emlContent = [...emailContent]; 
+    const data = emlContent.map((d,i)=>{
+      if(i === index){
+        d.content = editorState;  //eslint-disable-line
+      }
+      return d;
+    })
+    setEmailContent([...data]);
   };
 
   // Get user role
@@ -170,7 +187,7 @@ function EmailTemplatesComponent() {
             ))}
         </p>
         {emailContent &&
-          emailContent.map((eml,index) => {
+          emailContent.map((eml, index) => {
             return (
               <>
                 <b>{eml.name}</b>
