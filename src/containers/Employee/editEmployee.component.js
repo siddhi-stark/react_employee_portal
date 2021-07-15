@@ -11,7 +11,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 function EditEmployee(props) {
-  let time = '';
+  // let time = '';
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
@@ -23,6 +23,8 @@ function EditEmployee(props) {
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
 
   const columns = [
     {
@@ -137,23 +139,34 @@ function EditEmployee(props) {
   }, [filterData]);
 
   const getEndTime = (value) => {
-    const tEndTime = new Date(value);
-    const tStartTime = new Date(time);
+    setEndTime(value);
+    getDuration(startTime, value);
+  }
+
+  const getDuration = (start, end) => {
+    if (start && end) {
+    const dur = defaultValues;
+    updateDefaultValues(null);
+    const tStartTime = new Date(start);
+    const tEndTime = new Date(end);
     const diffMs = (tEndTime - tStartTime);
     const timeDiff = customFunctions.msToTime(diffMs);
-    const hr = timeDiff.hours;
-    const min = timeDiff.minutes;
-    const differenceee = `${hr} : ${min}`;
-    const dur = defaultValues;
-    dur.duration = differenceee;
-    // dur.duration = timeDiff.hours.toString().length < 10 ?  '0' + timeDiff.hours.toString() : timeDiff.hours.toString() + ':' + timeDiff.minutes.toString().length < 10 ? '0' + timeDiff.minutes.toString() : timeDiff.minutes.toString() //eslint-disable-line
+    // const hr = timeDiff.hours;
+    // const min = timeDiff.minutes;
+    // const differenceee = `${hr} : ${min}`;
+    // dur.duration = differenceee;
+    dur.duration = (timeDiff.hours < 10 ? ('0' + timeDiff.hours.toString()) : timeDiff.hours.toString()) + ':' + (timeDiff.minutes < 10 ? ('0' + timeDiff.minutes.toString()) : timeDiff.minutes.toString()) //eslint-disable-line
+    console.log('dur.duration', dur.duration, dur);
     updateDefaultValues({...dur});
-
+    }
   }
 
   const getStartTime = (value) => {
+    console.log('getStartTime--->', value);
     // getDuration(value);
-    time = value
+    // time = value;
+    setStartTime(value);
+    getDuration(value, endTime);
   }
 
   return (

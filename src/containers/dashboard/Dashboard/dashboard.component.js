@@ -330,7 +330,7 @@ function Dashboard() {
                   </div>
                   <UserRestrictions permittedUsers={[5]} roleId={userRole}>
                   <div className="d-flex justify-content-end mr-3">
-                    <Button onClick={()=> history.push('/emp-timesheet')}>View All</Button>
+                    <Button onClick={()=> history.push('/emp-timesheet',{ type: 'timesheet' })}>View All</Button>
                  </div>
                   </UserRestrictions>
                 </div>

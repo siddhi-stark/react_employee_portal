@@ -11,7 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 
-function EmployeeTimesheet() {
+function EmployeeTimesheet(props) {
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -45,6 +45,13 @@ function EmployeeTimesheet() {
   //   });
 
   // }, [])
+
+  useEffect(() => {
+    console.log('employeeTimesheet',props.location.state.type);
+    // if (props.match && props.match.params && props.match.params.type) {
+    //   this.setState({ customerId: this.props.match.params.customerId, customerDetails: this.props.location.state.customerDetails });
+    // }
+  },[])
   const handleActionCallback = (row) => {
     console.log('row', row);
     return (
