@@ -29,24 +29,24 @@ function RecruitmentApplicationComponent() {
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   let filterOptions = {};
 
-  const handleEducationCallback = (row) => {
-    console.log('row', row.id);
-    return (
-      <>
-        <a
-          href="/"
-          className="pl-2"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // history.push('/edit-employee');
-          }}
-        >
-          Edit
-        </a>
-      </>
-    );
-  };
+  // const handleEducationCallback = (row) => {
+  //   console.log('row', row.id);
+  //   return (
+  //     <>
+  //       <a
+  //         href="/"
+  //         className="pl-2"
+  //         onClick={(e) => {
+  //           e.preventDefault();
+  //           e.stopPropagation();
+  //           // history.push('/edit-employee');
+  //         }}
+  //       >
+  //         Edit
+  //       </a>
+  //     </>
+  //   );
+  // };
 
   const handleActionCallback = (row) => {
     console.log('row', row.id);
@@ -74,27 +74,27 @@ function RecruitmentApplicationComponent() {
       label: 'Sr. No',
     },
     {
-      id: 'Date',
+      id: 'created_at',
       label: 'Date',
     },
     {
-      id: 'applicantname',
+      id: 'name',
       label: 'Applicant Name',
     },
     {
-      id: 'position',
+      id: 'applied_for_name',
       label: 'Application For Position',
     },
     {
-      id: 'technology',
+      id: 'tech_stack_ids',
       label: 'Technology',
     },
     {
-      id: 'experience',
+      id: 'total_exp',
       label: 'Total Experience',
     },
     {
-      id: 'noticeperiod',
+      id: 'notice_period',
       label: 'Notice Period',
     },
     {
@@ -108,7 +108,7 @@ function RecruitmentApplicationComponent() {
     {
       id: 'education',
       label: 'Education',
-      render: handleEducationCallback,
+      // render: handleEducationCallback,
     },
     {
       id: 'status',
@@ -124,7 +124,7 @@ function RecruitmentApplicationComponent() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.timeSheetUrl}`;
+    const endPoint = `${Api.applicantsUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
