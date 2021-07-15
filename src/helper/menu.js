@@ -22,24 +22,23 @@ const menu = [
   },
   {
     title: 'Recruitment',
+    path: '/recruitment',
+    icon: 'dashboard.svg',
+    roleaccess: [5],
+  },
+  {
+    title: 'Recruitment',
     path: '#',
-    redirect: false,
     icon: 'dashboard.svg',
     submenu: [
-      {
-        title: 'Batch Upload',
-        path: '/batch-upload',
-        icon: 'report.svg',
-        roleaccess: [5],
-      },
       {
         title: 'Applications',
         path: '/applications',
         icon: 'report.svg',
-        roleaccess: [4, 5],
+        roleaccess: [4],
       },
     ],
-    roleaccess: [4, 5],
+    roleaccess: [4],
   },
   {
     title: 'Projects',

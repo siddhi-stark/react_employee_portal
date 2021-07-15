@@ -57,6 +57,10 @@ function InterviewRounds() {
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.filter((item) => {
+          const itemData = item;
+          if(item.name === 'date') itemData.disabled = true;
+          if(item.name === 'time') itemData.disabled = true;
+
           return !['interviewer', 'round'].includes(item.name);
         });
         return s;

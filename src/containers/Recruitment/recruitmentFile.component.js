@@ -159,30 +159,30 @@ function RecruitmentFileComponent() {
     getTechnology();
   }, []);
 
-  const getPosition = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if (!data) {
-      // show error
-      return;
-    }
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.full_name, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...filterOptions,
-      ...defaultFilterOptions,
-      position: dpOptions,
-    };
-    defaultFilterOptions = { ...allOptions };
-    updateFilterOptions(allOptions);
-  };
+  // const getPosition = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+  //   if (!data) {
+  //     // show error
+  //     return;
+  //   }
+  //   const dpOptions = [];
+  //   data.data.map((op) => {
+  //     // Change appropriate keys
+  //     dpOptions.push({ label: op.full_name, value: op.id });
+  //     return op;
+  //   });
+  //   const allOptions = {
+  //     ...filterOptions,
+  //     ...defaultFilterOptions,
+  //     position: dpOptions,
+  //   };
+  //   defaultFilterOptions = { ...allOptions };
+  //   updateFilterOptions(allOptions);
+  // };
 
-  useEffect(() => {
-    getPosition();
-  }, []);
+  // useEffect(() => {
+  //   getPosition();
+  // }, []);
 
   // table method
   // Declare methods
@@ -319,7 +319,7 @@ function RecruitmentFileComponent() {
                 </div>
               </Card.Header>
               <Accordion.Collapse eventKey="1">
-                <Card.Body>
+                <>
                   <StarkFormBuilder
                     containerClass=""
                     formHeaderClass=""
@@ -362,7 +362,7 @@ function RecruitmentFileComponent() {
                       />
                     </div>
                   )}
-                </Card.Body>
+                </>
               </Accordion.Collapse>
             </Card>
           </Accordion>

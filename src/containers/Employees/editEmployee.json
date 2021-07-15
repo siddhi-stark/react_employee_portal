@@ -17,12 +17,12 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
+			"type": "",
 			"applyWhen": [],
 			"applyWhenRelation": "OR"
 		}],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -49,12 +49,12 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
+			"type": "",
 			"applyWhen": [],
 			"applyWhenRelation": "OR"
 		}],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -82,12 +82,12 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
+			"type": "",
 			"applyWhen": [],
 			"applyWhenRelation": "OR"
 		}],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -114,12 +114,12 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
+			"type": "",
 			"applyWhen": [],
 			"applyWhenRelation": "OR"
 		}],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -146,12 +146,12 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
+			"type": "",
 			"applyWhen": [],
 			"applyWhenRelation": "OR"
 		}],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -178,12 +178,12 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
+			"type": "",
 			"applyWhen": [],
 			"applyWhenRelation": "OR"
 		}],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -203,7 +203,7 @@
 		"options": []
 	}, {
 		"name": "confirm_date",
-		"type": "text",
+		"type": "date",
 		"label": "Confirmation Date",
 		"id": "",
 		"placeholder": "",
@@ -274,12 +274,12 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
+			"type": "",
 			"applyWhen": [],
 			"applyWhenRelation": "OR"
 		}],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",

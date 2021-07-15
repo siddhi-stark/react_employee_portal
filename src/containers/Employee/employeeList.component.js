@@ -106,8 +106,11 @@ function EmployeeListComponent() {
           <CustomTable
             columns={columns}
             rows={rowData}
+
+            showPagination={true} // eslint-disable-line
+
             role={5}
-            showPagination={true}
+
             paginationProps={{
               totalItems: totalCount,
               itemsPerPage: limit,

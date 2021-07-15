@@ -3,6 +3,7 @@ import CustomTable from 'stark-custom-datatable';
 import { withRouter } from 'react-router-dom';
 import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
+import swal from 'sweetalert';
 import FilterFormSections from './FilterTechnology.json';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
@@ -31,11 +32,10 @@ function Technology() {
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
   const handleActionCallback = ({ id }) => {
-    console.log('uid',id)
     return (
       <>
         <a
-          href="/"
+          href="javascript:void(0)"
           className=""
           onClick={(e) => {
             e.preventDefault();
@@ -47,13 +47,13 @@ function Technology() {
           <Image src="/images/edit-button.svg" alt="Edit Technology" />
         </a>
         <a
-          href="/"
+          href="javascript:void(0)"
           className="ml-2"
-          // onClick={(e) => {
+          onClick={() => {
           //   e.preventDefault();
           //   e.stopPropagation();
-          //   removeDesignation(id);
-          // }}
+            deleteTechnolody(id);
+          }}
         >
           <Image src="/images/delete.png" alt="Delete Technology" />
         </a>
@@ -81,10 +81,11 @@ function Technology() {
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeStackUrl}`;
-    // const filterList = filterData && !customFunctions.checkIfEmpty(filterData, 'O') ? customFunctions.jsonParse(filterData) : {};
+    const filterList = filterData && !customFunctions.checkIfEmpty(filterData, 'O') ? customFunctions.jsonParse(filterData) : {};
     const params = {
       page,
       limit,
+      ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -127,6 +128,44 @@ function Technology() {
     console.log(formValues);
     setFilterData(formValues);
   };
+
+  const deleteTechnolody = (id) => {
+    console.log('id',id);
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to delete this record?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.employeeStackUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getRowData(1);
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
+  };
+
   return (
     <>
       <Helmet title={title} />
@@ -168,6 +207,7 @@ function Technology() {
                       btnContainerClass="form-submit-buttons"
                       isStepForm={false}
                       onFormReset={() => {
+                        setFilterData('');
                         console.log('form reset callback');
                       }}
                     />

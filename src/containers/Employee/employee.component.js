@@ -32,6 +32,7 @@ const items = [
 
 const currentdate = new Date();
 const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
+console.log(new Date(currentdate.setYear(currentdate.getFullYear() - 18)));
 
 const validator = new SimpleReactValidator(
   {

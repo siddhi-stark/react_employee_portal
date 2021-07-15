@@ -1,39 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Image, Card, Row, Col, Button } from 'react-bootstrap';
 import AddHistory from './AddHistory.component';
-import EditEmployee from './EditPersonalDetails.component';
+import EditPersonalDetails from './EditPersonalDetails.component';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+import customFunctions from '../../helper/customFunctions';
 
-const companyList =[{
-  id:1,
-  designation:'Senior Engineer',
-  cname:'Stark Digital Media Services Pvt Ltd',
-  date:'Mar | 2021',
-  country:'Pune, India'
-},
-{
-  id:2,
-  designation:'Android Developer',
-  cname:'Stark Digital Media Services Pvt Ltd',
-  date:'Mar | 2021',
-  country:'Pune, India'
-},
-{
-  id:3,
-  designation:'Senior Developer',
-  cname:'Stark Digital Media Services Pvt Ltd',
-  date:'Mar | 2021',
-  country:'Pune, India'
-},
-]
+// const companyList =[{
+//   id:1,
+//   designation:'Senior Engineer',
+//   cname:'Stark Digital Media Services Pvt Ltd',
+//   date:'Mar | 2021',
+//   country:'Pune, India'
+// },
+// {
+//   id:2,
+//   designation:'Android Developer',
+//   cname:'Stark Digital Media Services Pvt Ltd',
+//   date:'Mar | 2021',
+//   country:'Pune, India'
+// },
+// {
+//   id:3,
+//   designation:'Senior Developer',
+//   cname:'Stark Digital Media Services Pvt Ltd',
+//   date:'Mar | 2021',
+//   country:'Pune, India'
+// },
+// ]
 
-function EmployeeProfile() {
+function EmployeeProfile(props) {
 
   const [showEmployee, setShowEMployee] = useState(false);
-  const [data, setData] = useState({});
+  const [dataa, setData] = useState({});
+  const [employeeDetails,setEmployeeDetails] = useState({});
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
+  const [companyList,setCompanyList] = useState([]);
   const history = useHistory();
   
+  const getEmployeeDetails = async () => {
+    const employeeId = props.match.params.id;
+    customFunctions.setLocalStorage('id',employeeId);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${employeeId}/`);
+    // console.log('data',data.data);
+    
+      setEmployeeDetails(data.data);
+    
+  }
+
+  const getEmployeeHIstory = async () => {
+    const employeeId = props.match.params.id;
+    const endPoint =  `${Api.historyUrl}?employee_id=${employeeId}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    // customFunctions.setLocalStorage('historyId',data.data.id);
+    // console.log('data',data.data);
+    setCompanyList(data.data);
+
+  }
+
+  useEffect(() => {
+    getEmployeeHIstory();
+    getEmployeeDetails();
+  },[])
+
+const onChangeInHistory = () => {
+  getEmployeeDetails();
+}
 
   return (
     <>
@@ -43,7 +76,7 @@ function EmployeeProfile() {
        
         {showPersonalDetails ?  (
           <Card className="mt-3">
-          <EditEmployee 
+          <EditPersonalDetails 
           handleModalCLose={(e) => setShowPersonalDetails(e)}
           />
           </Card>
@@ -56,7 +89,7 @@ function EmployeeProfile() {
                 </div>
               </div> */}
           <div className="d-flex align-items-center justify-content-between">
-            <h3><strong>Employee Name</strong></h3>
+            <h3><strong>{employeeDetails.full_name}</strong></h3>
             <div className="date-edit-option d-flex align-items-center">
               <h6>Birthday - 30/10/1991</h6>
                <a
@@ -74,25 +107,25 @@ function EmployeeProfile() {
           <p>Designation</p>
           <Row>
             <Col md={4}>
-              <h7>Joining Date - DD/MM/YYYY</h7>
+              <h7>Joining Date - {customFunctions.getFormattedDate(employeeDetails.date_joined)}</h7>
             </Col>
 
             <Col md={4}>
-              <h7>Email Id - admin@starkdigtial.net</h7>
+              <h7>Email Id - {employeeDetails.email}</h7>
             </Col>
 
             <Col md={4}>
-              <h7>Email Id - admin@gmail.com</h7>
+              <h7>Email Id - admin@gmail.com </h7>
             </Col>
           </Row><br />
 
           <Row>
             <Col md={4}>
-              <h7>Contact No - 8765434212</h7>
+              <h7>Contact No - {employeeDetails.mobile}</h7>
             </Col>
 
             <Col md={2}>
-              <h7>Confirmation Date - DD/MM/YYYY</h7>
+              <h7>Confirmation Date - {customFunctions.getFormattedDate(employeeDetails.confirmation_date)}</h7>
             </Col>
             <Col md={2}>
               <Button onClick={() => history.push('/confirmation')}>Confirm</Button>
@@ -115,8 +148,11 @@ function EmployeeProfile() {
         <Card className="mt-4">
 
           <AddHistory
-            optionsData={data}
+            optionsData={dataa}
             handleModalCLose={(e) => setShowEMployee(e)}
+            onChanges={() => {
+            onChangeInHistory();
+          }}
           />
         </Card>
       )}
@@ -125,13 +161,15 @@ function EmployeeProfile() {
         <div className="d-flex align-items-start justify-content-between">
           <div className="address-content">
             <p><strong>{comp.designation}</strong> </p>
-            <p>{comp.cname} <br /> {comp.date}</p>
-            <p>{comp.country}</p><hr />
+            <p>{comp.company_name} - {comp.employement_type_name} <br /> {comp.date}| {comp.duration}</p>
+            <p>{comp.location}</p><hr />
           </div>
           <div className="address-edit-delete">
           <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
             setData(comp);
             setShowEMployee(true);
+            customFunctions.setLocalStorage('hisotryID',comp.id);
+            console.log('idddd',comp.id);
             // history.push(`/profile-history/id=${comp.id}`)
           }}/>
 

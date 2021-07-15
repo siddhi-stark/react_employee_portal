@@ -21,19 +21,32 @@ function EmployeeTimesheet() {
   const history = useHistory();
 
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-
+  // const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const title = 'Employees List';
   const limit = 10;
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
-  
+
+  // useEffect(() => {
+
+  //   const formSchema = [...FormSections];
+  //   formSchema[0].fields.map((section) => {
+  //     const sectionData = section;
+  //     if (sectionData.name === 'toDate') {
+  //       const date = new Date();
+  //       sectionData.maxDate = date;
+  //     }
+  //     return sectionData;
+  //   });
+
+  // }, [])
   const handleActionCallback = (row) => {
-    console.log('row', row.id);
+    // console.log('row', row.id);
     return (
       <>
         <a
@@ -42,7 +55,7 @@ function EmployeeTimesheet() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push('/edit-employee');
+            history.push(`/edit-employee/${row.emp_id}`);
           }}
         >
           Edit
@@ -58,23 +71,23 @@ function EmployeeTimesheet() {
       label: 'Sr.No',
     },
     {
-      id: 'emp_code',
+      id: 'emp_id',
       label: dataShow ? '' : 'Employee ID',
     },
-    {
-      id: 'day',
-      label: dataShow ? 'Day' : '',
-    },
-    {
-      id: 'date',
-      label: dataShow ? 'Date' : '',
-    },
+    // {
+    //   id: 'day',
+    //   label: dataShow ? 'Day' : '',
+    // },
+    // {
+    //   id: 'date',
+    //   label: dataShow ? 'Date' : '',
+    // },
     {
       id: 'emp_name',
       label: 'Employee Name',
     },
     {
-      id: 'designation_name',
+      id: 'designatin_name',
       label: dataShow ? '' : 'Designation ',
     },
     {
@@ -96,6 +109,10 @@ function EmployeeTimesheet() {
         );
       },
     },
+    { 
+      id: 'date',
+      label: 'Date',
+    },
     {
       id: 'action',
       label: 'Action',
@@ -106,14 +123,18 @@ function EmployeeTimesheet() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.timeSheetUrl}`;
+    const endPoint = `${Api.employeeTimesheet}`;
     const params = {
       limit,
       page,
+      start_date: filterData.fromDate ? customFunctions.getDate(filterData.fromDate) : '',
+      end_date: filterData.toDate ? customFunctions.getDate(filterData.toDate) : '',
+      employee_id: filterData.full_name ? filterData.full_name.value : '',
       // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
+
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -149,7 +170,7 @@ function EmployeeTimesheet() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, updateDefaultValues);
+    console.log(formValues, formValues);
     setDataShow(true);
     setFilterData(formValues);
   };
@@ -178,6 +199,13 @@ function EmployeeTimesheet() {
     getEmployeeName();
   }, []);
 
+     const onResetForm = () => {
+    setFilterData('');
+    getRowData(1);
+    setFilterData(false);
+  }
+  
+
   return (
     <>
       <Helmet title={title} />
@@ -200,6 +228,7 @@ function EmployeeTimesheet() {
                 </div>
               </div>
             </Card.Header>
+
             <Accordion.Collapse eventKey="1">
               <Card.Title>
                 <StarkFormBuilder
@@ -221,9 +250,11 @@ function EmployeeTimesheet() {
                   isStepForm={false}
                   onFormReset={() => {
                     setDataShow(false);
+                    onResetForm();
                   }}
                 />
               </Card.Title>
+
             </Accordion.Collapse>
           </Card>
         </Accordion>
