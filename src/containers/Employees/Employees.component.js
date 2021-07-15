@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Tabs, Tab, Card, Button, Image } from 'react-bootstrap';
+import { Tabs, Tab, Row, Col, Card, Button, Image } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
@@ -74,24 +74,35 @@ getEmployee(1);
                 <Tab eventKey="currentEmployee" title="Current Employee">
                   <div className="row ml-2">
                     {employee && employee.filter(e => e.on_notice_period === false).map((emp) => (
-                      <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
-                       <span className="mini-stat-icon bg-purple mr-0 float-right">
-            <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
-            <span className="np-sup">NP</span>
-          </span>
-                        <div className="mini-stat-info">
-                          <span className="counter text-purple">{emp.full_name}</span>
-                          {emp.designation_name} <br/>
-                           <br/>
-                          <p className="text-primary"> confirmation Date-  {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p> <br/>
-                        </div>
-                          <div className="d-flex align-items-center justify-content-between">
-                            <h4 className="text-primary">{emp.emp_code}</h4>
-                            <div className="d-flex align-items-center justify-content-end">
-                              <Button size="sm" onClick={() => history.push(`/employee-profile/${emp.id}`)}>View</Button>
-                            </div>
-                          </div>
-                      </div>
+                     <Card className="mt-3 me-3" style={{ width: '30%' }}>
+            <Card.Body>
+              <Row>
+                <Col>
+                  <Image
+                    className="card-img-top"
+                    src="/images/edit-profile-img.png"
+                    alt="Card image cap"
+                    style={{ width: '80px', height: '80px' }}
+                  />
+                </Col>
+                <Col>
+                  <Card.Title>{emp.name}</Card.Title>
+                  <p className="card-text">
+                    {emp.full_name}
+                    {emp.designation_name} <br />
+                  </p>
+                  <p className="text-primary"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
+                  <br />
+                </Col>
+              </Row>
+              <Card.Footer>
+                <h4 className="text-primary">
+                  {emp.emp_code}
+                  <Button size="sm" className="pull-right" onClick={() => history.push(`/employee-profile/${emp.id}`)}>View</Button>
+                </h4>
+              </Card.Footer>
+            </Card.Body>
+          </Card>
                     ))}
                   </div>
                 </Tab>
@@ -99,23 +110,35 @@ getEmployee(1);
                 <Tab eventKey='noticePeriod' title='Serving Notice Period'>
                    <div className="row ml-2">
                     {employee && employee.filter(e => e.on_notice_period === true).map((emp) => (
-                      <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
-                        <span className="mini-stat-icon bg-purple mr-0 float-right">
-                          <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
-                        </span>
-                        <div className="mini-stat-info">
-                          <span className="counter text-purple">{emp.full_name}</span>
-                          {emp.designation_name} <br/>
-                           <br/>
-                          <p className="text-primary"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p> <br/>
-                        </div>
-                          <div className="d-flex align-items-center justify-content-between">
-                            <h4 className="text-primary">{emp.emp_code}</h4>
-                            <div className="d-flex align-items-center justify-content-end">
-                              <Button size="sm">View</Button>
-                            </div>
-                          </div>
-                      </div>
+                             <Card className="mt-3 me-3" style={{ width: '30%' }}>
+            <Card.Body>
+              <Row>
+                <Col>
+                  <Image
+                    className="card-img-top"
+                    src="/images/edit-profile-img.png"
+                    alt="Card image cap"
+                    style={{ width: '80px', height: '80px' }}
+                  />
+                </Col>
+                <Col>
+                  <Card.Title>{emp.name}</Card.Title>
+                  <p className="card-text">
+                    {emp.full_name}
+                    {emp.designation_name} <br />
+                  </p>
+                  <p className="text-primary"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
+                  <br />
+                </Col>
+              </Row>
+              <Card.Footer>
+                <h4 className="text-primary">
+                  {emp.emp_code}
+                  <Button size="sm" className="pull-right"  onClick={() => history.push(`/employee-profile/${emp.id}`)}>View</Button>
+                </h4>
+              </Card.Footer>
+            </Card.Body>
+          </Card>
                     ))}
                   </div>
                 </Tab>
@@ -123,23 +146,35 @@ getEmployee(1);
                 <Tab eventKey='oldEmployee' title='Old Employee'>
                    <div className="row ml-2">
                    {employee && employee.filter(e => e.relieved === true).map((emp) => (
-                      <div className="mini-stat clearfix bg-white col-md-2 ml-2 mt-3">
-                        <span className="mini-stat-icon bg-purple mr-0 float-right">
-                          <Image src="/images/edit-profile-img.png" style={{ 'height': '60px' }} />
-                        </span>
-                        <div className="mini-stat-info">
-                          <span className="counter text-purple">{emp.name}</span>
-                          {emp.designation} <br/>
-                           <br/>
-                          <p className="text-primary"> confirmation Date-{emp.date}</p> <br/>
-                        </div>
-                          <div className="d-flex align-items-center justify-content-between">
-                            <h4 className="text-primary">{emp.id}</h4>
-                            <div className="d-flex align-items-center justify-content-end">
-                              <Button size="sm">View</Button>
-                            </div>
-                          </div>
-                      </div>
+                             <Card className="mt-3 me-3" style={{ width: '30%' }}>
+            <Card.Body>
+              <Row>
+                <Col>
+                  <Image
+                    className="card-img-top"
+                    src="/images/edit-profile-img.png"
+                    alt="Card image cap"
+                    style={{ width: '80px', height: '80px' }}
+                  />
+                </Col>
+                <Col>
+                  <Card.Title>{emp.name}</Card.Title>
+                  <p className="card-text">
+                    {emp.full_name}
+                    {emp.designation_name} <br />
+                  </p>
+                  <p className="text-primary"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
+                  <br />
+                </Col>
+              </Row>
+              <Card.Footer>
+                <h4 className="text-primary">
+                  {emp.emp_code}
+                  <Button size="sm" className="pull-right" onClick={() => history.push(`/employee-profile/${emp.id}`)}>View</Button>
+                </h4>
+              </Card.Footer>
+            </Card.Body>
+          </Card>
                     ))}
                   </div>
                 </Tab>
