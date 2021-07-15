@@ -14,15 +14,15 @@ const columns = [
     label: 'Sr.No',
   },
   {
-    id: 'emp_code',
+    id: 'emp_id',
     label: 'Employee ID',
   },
   {
-    id: 'full_name',
+    id: 'emp_name',
     label: 'Employee Name',
   },
   {
-    id: 'designation_name',
+    id: 'designatin_name',
     label: 'Designation',
   },
   {
@@ -59,7 +59,7 @@ function EmployeeListComponent() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.timeSheetUrl}`;
+    const endPoint = `${Api.employeeTimesheet}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
@@ -107,7 +107,7 @@ function EmployeeListComponent() {
             columns={columns}
             rows={rowData}
 
-            showPagination={true} // eslint-disable-line
+            showPagination={false} 
 
             role={5}
 

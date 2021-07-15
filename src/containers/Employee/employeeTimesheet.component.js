@@ -74,14 +74,14 @@ function EmployeeTimesheet() {
       id: 'emp_id',
       label: dataShow ? '' : 'Employee ID',
     },
-    // {
-    //   id: 'day',
-    //   label: dataShow ? 'Day' : '',
-    // },
-    // {
-    //   id: 'date',
-    //   label: dataShow ? 'Date' : '',
-    // },
+    {
+      id: 'day',
+      label: dataShow ? 'Day' : '',
+    },
+    {
+      id: 'date',
+      label: dataShow ? 'Date' : '',
+    },
     {
       id: 'emp_name',
       label: 'Employee Name',

@@ -203,7 +203,6 @@ function EditEmployee(props) {
 
   return (
     <div className="mt-4 edit-timelog">
-    console.log('startTime',time)
       <Card body>
         <div className="d-flex justify-content-center mt-4">
           <p>Employee Name: Shubham Bhise</p>

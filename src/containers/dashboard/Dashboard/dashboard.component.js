@@ -78,7 +78,7 @@ function Dashboard() {
   };
 
   const getTimeSheetList = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}?limit=5`);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: data.paginator ? Number(data.paginator.current_page) : 0,
