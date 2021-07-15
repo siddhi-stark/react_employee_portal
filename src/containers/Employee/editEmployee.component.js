@@ -119,6 +119,7 @@ function EditEmployee(props) {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
+    console.log('data',data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
@@ -159,8 +160,8 @@ function EditEmployee(props) {
     <div className="mt-4 edit-timelog">
       <Card body>
         <div className="d-flex justify-content-center mt-4">
-          <p>Employee Name: Shubham Bhise</p>
-          <p className="ms-4">Employee Date: 20/02/2021</p>
+          <p>Employee Name: {customFunctions.getLocalStorage('employeeName')}</p>
+          <p className="ms-4">Employee Date: {customFunctions.getLocalStorage('date')}</p>
         </div>
         <StarkFormBuilder
           containerClass=""

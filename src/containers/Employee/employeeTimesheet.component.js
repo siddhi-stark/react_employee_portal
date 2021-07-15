@@ -46,7 +46,7 @@ function EmployeeTimesheet() {
 
   // }, [])
   const handleActionCallback = (row) => {
-    // console.log('row', row.id);
+    console.log('row', row);
     return (
       <>
         <a
@@ -56,9 +56,11 @@ function EmployeeTimesheet() {
             e.preventDefault();
             e.stopPropagation();
             history.push(`/edit-employee/${row.emp_id}`);
+            customFunctions.setLocalStorage('employeeName',row.emp_name);
+            customFunctions.setLocalStorage('date',row.date);
           }}
         >
-          Edit
+          Add
         </a>
       </>
     );
@@ -74,14 +76,14 @@ function EmployeeTimesheet() {
       id: 'emp_id',
       label: dataShow ? '' : 'Employee ID',
     },
-    // {
-    //   id: 'day',
-    //   label: dataShow ? 'Day' : '',
-    // },
-    // {
-    //   id: 'date',
-    //   label: dataShow ? 'Date' : '',
-    // },
+    {
+      id: 'day',
+      label: dataShow ? 'Day' : '',
+    },
+    {
+      id: 'date',
+      label: dataShow ? 'Date' : '',
+    },
     {
       id: 'emp_name',
       label: 'Employee Name',
@@ -135,12 +137,14 @@ function EmployeeTimesheet() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
+      // console.log('data.emp_name',data);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-
+      // customFunctions.setLocalStorage('employeeName',data.emp_name);
+      // customFunctions.setLocalStorage('date',data.data.date);
       const newData = [...data.data];
       newData.map((item, i) => {
         const newItem = item;
