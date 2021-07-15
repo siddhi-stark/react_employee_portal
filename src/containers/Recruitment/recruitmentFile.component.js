@@ -18,7 +18,7 @@ function RecruitmentFileComponent() {
 
   // Variable declarations Filter form
   const [defaultFilterValues, updateDefaultFilterValues] = useState({});
-  const [filterOptions, updateFilterOptions] = useState({});
+  const [filterOptions, updateFilterOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [show, setShow] = useState(false);
 
@@ -28,7 +28,7 @@ function RecruitmentFileComponent() {
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
-  let defaultFilterOptions = {};
+  let defaultFilterOptions = {}; //eslint-disable-line
   // Form
 
   // Variable declarations
