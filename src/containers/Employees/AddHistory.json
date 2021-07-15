@@ -47,7 +47,7 @@
         "options": []
       },
       {
-        "name": "name",
+        "name": "company_name",
         "type": "text",
         "label": "Name",
         "id": "",
@@ -82,7 +82,7 @@
         "options": []
       },
       {
-        "name": "fromDate",
+        "name": "start_date",
         "type": "date",
         "label": "From Date",
         "id": "",
@@ -117,7 +117,7 @@
         "options": []
       },
       {
-        "name": "toDate",
+        "name": "end_date",
         "type": "date",
         "label": "To Date",
         "id": "",
@@ -137,7 +137,7 @@
         "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
-        "minDateSelector": "fromDate",
+        "minDateSelector": "start_date",
         "maxDateSelector": "",
         "disabled": false,
         "isMulti": false,
@@ -152,7 +152,7 @@
         "options": []
       },
       {
-        "name": "address",
+        "name": "location",
         "type": "textarea",
         "label": "Address",
         "id": "",

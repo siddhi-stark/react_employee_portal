@@ -41,10 +41,10 @@ function AddHistory(props) {
     const postData = {
       employee: Number(employeeId),
       designation: formValues.designation ? formValues.designation.label : '',
-      company_name: formValues.name,
-      start_date: formValues.fromDate ? customFunctions.getDate(formValues.fromDate) : '',
-      end_date: formValues.toDate ? customFunctions.getDate(formValues.toDate) : '',
-      location: formValues.address,
+      company_name: formValues.company_name,
+      start_date: formValues.start_date ? customFunctions.getDate(formValues.start_date) : '',
+      end_date: formValues.end_date ? customFunctions.getDate(formValues.end_date) : '',
+      location: formValues.location,
     }
      const callback = history
       ? AuthApi.putDataToServer
@@ -80,10 +80,10 @@ function AddHistory(props) {
     console.log('getData',id);
     console.log('designation',designation);
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
-     console.log('data',data);
+     console.log('data',data.data);
      let des = {};
 
-     designation.map((ds) => {
+     await designation.map((ds) => {
        console.log('data.data.designation === des.name',data.data.designation === ds.name);
        console.log('data.data.designation',data.data.designation);
        console.log('des.name',ds.id);
@@ -95,26 +95,28 @@ function AddHistory(props) {
        }
        console.log('des',des);
        return ds;
-     })
-     updateDefaultValues({
-       name: data.data.company_name,
-       address: data.data.location,
-       fromDate: data.data.start_date ? new Date(customFunctions.getDate(data.data.start_date)) : '',
-       toDate: data.data.end_date ? new Date(customFunctions.getDate(data.data.end_date)) : '',
-       designation: des,
-      // designation: 
-      //   data.data.designation ? {
-      //     label: abc,
-      //     value: avc
-      //   } : ''
-      
-     })    // updateDefaultValues(data);
+     });
+     data.data.start_date = data.data.start_date ? new Date(customFunctions.getDate(data.data.start_date)) : '';
+     data.data.end_date = data.data.end_date ? new Date(customFunctions.getDate(data.data.end_date)) : '';
+     const obj = {
+       ...data.data,
+       designation: des
+     };
+     updateDefaultValues({...obj})    // updateDefaultValues(data);
+     console.log('obj', obj);
   };
 
   // Call get data method on load
   useEffect(() => {
-    const {optionsData} = props;
-    updateDefaultValues(optionsData);
+    // const {optionsData} = props;
+    // console.log('optionsData', optionsData);
+    // optionsData.start_date = optionsData.start_date ? new Date(customFunctions.getDate(optionsData.start_date)) : '',
+    // optionsData.end_date = optionsData.end_date ? new Date(customFunctions.getDate(optionsData.end_date)) : '',
+    // updateDefaultValues({
+    //   company_name: optionsData.company_name,
+    //   designation: optionsData.designation,
+    //   location: optionsData.location,
+    // });
     }, []);
 
   const getDesignation = async () => {
