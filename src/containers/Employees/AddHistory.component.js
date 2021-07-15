@@ -22,16 +22,6 @@ function AddHistory(props) {
     getUserRole();
   }, []);
 
-//   {
-// "employee": 2,
-// "designation": "Front developer",
-// "company_name": "TCS",
-// "start_date": "2021-01-01",
-// "end_date": "2022-01-3",
-// "location": "Pune India",
-// "employement_type": 2
-// }
-
 
   // Submit Form
   const submitForm = async (formValues) => {
@@ -72,6 +62,8 @@ function AddHistory(props) {
        customFunctions.removeLocalStorage('hisotryID');
           }
         });
+    }else{
+       props.onChanges();
     }
   };
 
@@ -125,17 +117,15 @@ function AddHistory(props) {
       // show error
       return;
     }
-    const dpOptions =
-      (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
-        // eslint-disable-line
-        return { label: op.name, value: op.id };
-      });
 
+ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
+
+    });
     options.designation = dpOptions;
     const allOptions = options;
-    await updateOptions(allOptions);
+    await updateOptions({...allOptions});
+
     const history = customFunctions.getLocalStorage('hisotryID');
     console.log('history',history);
     if(history) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Image, Card, Row, Col, Button } from 'react-bootstrap';
+import swal from 'sweetalert';
 import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
 import AuthApi from '../../helper/authApi';
@@ -65,8 +66,44 @@ function EmployeeProfile(props) {
   },[])
 
 const onChangeInHistory = () => {
-  getEmployeeDetails();
+  getEmployeeHIstory();
 }
+
+const deleteEmployeeHistory = (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to delete the employee history?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.historyUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getEmployeeHIstory();
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
+  };
 
   return (
     <>
@@ -173,7 +210,9 @@ const onChangeInHistory = () => {
             // history.push(`/profile-history/id=${comp.id}`)
           }}/>
 
-          <Image src="/images/delete.png" alt="Edit Profile" />
+          <Image src="/images/delete.png" alt="Edit Profile" onClick={() => {
+            deleteEmployeeHistory(comp.id)
+          }} />
 </div>
         </div>
         ))
