@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
+import swal from 'sweetalert';
 import FormSections from './AddHistory.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function AddHistory(props) {
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -21,30 +22,97 @@ function AddHistory(props) {
     getUserRole();
   }, []);
 
+//   {
+// "employee": 2,
+// "designation": "Front developer",
+// "company_name": "TCS",
+// "start_date": "2021-01-01",
+// "end_date": "2022-01-3",
+// "location": "Pune India",
+// "employement_type": 2
+// }
+
+
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
-    const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
+    const employeeId = customFunctions.getLocalStorage('id');
+     const history = customFunctions.getLocalStorage('hisotryID');
+    const postData = {
+      employee: Number(employeeId),
+      designation: formValues.designation ? formValues.designation.label : '',
+      company_name: formValues.name,
+      start_date: formValues.fromDate ? customFunctions.getDate(formValues.fromDate) : '',
+      end_date: formValues.toDate ? customFunctions.getDate(formValues.toDate) : '',
+      location: formValues.address,
     }
-    // Perform success actions
+     const callback = history
+      ? AuthApi.putDataToServer
+      : AuthApi.postDataToServer;
+    const endPoint = history
+      ? `${Api.historyUrl}`
+      : Api.historyUrl;
+
+       if (history) {
+         postData.id = history;
+         postData.employee = employeeId;
+       } 
+
+    const { data } = await callback(endPoint, postData);
+    if(data) {
+      swal({
+        title: data.message[0],
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+       props.handleModalCLose(false);
+       props.onChanges();
+       customFunctions.removeLocalStorage('id');
+       customFunctions.removeLocalStorage('hisotryID');
+          }
+        });
+    }
   };
 
   // Get data for form
-  const getData = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if (!data) {
-      // show error
-      return;
-    }
-    updateDefaultValues(data);
+  const getData = async (id, designation) => {
+    console.log('getData',id);
+    console.log('designation',designation);
+     const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
+     console.log('data',data);
+     let des = {};
+
+     designation.map((ds) => {
+       console.log('data.data.designation === des.name',data.data.designation === ds.name);
+       console.log('data.data.designation',data.data.designation);
+       console.log('des.name',ds.id);
+       if(data.data.designation.toString() === ds.name.toString()) {
+         des = {
+           label: ds.name,
+           value: ds.id
+         }
+       }
+       console.log('des',des);
+       return ds;
+     })
+     updateDefaultValues({
+       name: data.data.company_name,
+       address: data.data.location,
+       fromDate: data.data.start_date ? new Date(customFunctions.getDate(data.data.start_date)) : '',
+       toDate: data.data.end_date ? new Date(customFunctions.getDate(data.data.end_date)) : '',
+       designation: des,
+      // designation: 
+      //   data.data.designation ? {
+      //     label: abc,
+      //     value: avc
+      //   } : ''
+      
+     })    // updateDefaultValues(data);
   };
 
   // Call get data method on load
   useEffect(() => {
-    getData();
     const {optionsData} = props;
     updateDefaultValues(optionsData);
     }, []);
@@ -66,6 +134,12 @@ function AddHistory(props) {
     options.designation = dpOptions;
     const allOptions = options;
     await updateOptions(allOptions);
+    const history = customFunctions.getLocalStorage('hisotryID');
+    console.log('history',history);
+    if(history) {
+
+    getData(history,data.data);
+    }
   };
 
   useEffect(() => {

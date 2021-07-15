@@ -4,12 +4,14 @@ import { Card } from 'react-bootstrap';
 // import { setHours, setMinutes } from 'date-fns';
 import StarkFormBuilder from 'stark-form-builder';
 import CustomTable from 'stark-custom-datatable';
+import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import FormSections from './editEmployee.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
-function EditEmployee() {
+function EditEmployee(props) {
+  let time = '';
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
@@ -21,22 +23,36 @@ function EditEmployee() {
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
+// const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
+ // useEffect(() => {
+ //  const formSchema = [...FormSections];
+ //  formSchema[0].fields.map((section) => {
+ //   // console.log('section',section);
+ //    const sectionData = section;
+ //    if (sectionData.name === 'login') {
+ //      // const date = new Date();
+ //      // sectionData.minDate = date;
+ //      // sectionData.minTime = setHours(setMinutes(date, parseInt(timeMinutes, 10) + 1), parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour);
+ //      // sectionData.maxTime = setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours());
+ //  };
+ //    return section;
+ //  });
+ //  }, []);
 
- useEffect(() => {
-  const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
-   console.log('section',section);
-    const sectionData = section;
-    if (sectionData.name === 'login') {
-      // const date = new Date();
-      // sectionData.minDate = date;
-      // sectionData.minTime = setHours(setMinutes(date, parseInt(timeMinutes, 10) + 1), parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour);
-      // sectionData.maxTime = setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours());
-  };
-    return section;
-  });
-  }, []);
+//   useEffect(() => {
+
+//     const formSchema = [...FormSections];
+//     formSchema[0].fields.map((section) => {
+//       const sectionData = section;
+//       if (sectionData.name === 'logout') {
+//         const date = new Date();
+//         sectionData.minDate = date;
+//       }
+//       return sectionData;
+//     });
+// updateJsonSchema[...formSchema])
+//   }, [])
 
   // Declare columns
   const columns = [
@@ -86,30 +102,43 @@ function EditEmployee() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues', formValues, setFilterData);
-    console.log('formValues',customFunctions.getDateTime( formValues.login));
-    const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
+    const id = props.match.params.employeeId;
+    console.log('formValues', formValues.login);
+    console.log('formValues', setFilterData);
+    // const loginDate = formValues.login.replace('T', ' ');
+    // const login = loginDate.split('.')[0]
+    const postData = {
+      user_id:Number(id),
+      content: formValues.task,
+      start_time: ((new Date(formValues.login).toISOString()).replace('T', ' ')).substr(0, 19),
+      end_time: ((new Date(formValues.logout).toISOString()).replace('T', ' ')).substr(0, 19),
+      description:formValues.description
+
     }
-    // Perform success actions
+    console.log('postData',postData);
+    const { data } = await AuthApi.postDataToServer(Api.employeeTimesheet, postData);
+     if(data) {
+       console.log('data',data);
+       console.log('message',data.message[0]);
+       swal(data && data.message[0]);
+       
+      }
   };
 
-  // Get data for form
-  const getData = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if (!data) {
-      // show error
-      return;
-    }
-    updateDefaultValues(data);
-  };
+  // // Get data for form
+  // const getData = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+  //   if (!data) {
+  //     // show error
+  //     return;
+  //   }
+  //   updateDefaultValues(data);
+  // };
 
-  // Call get data method on load
-  useEffect(() => {
-    getData();
-  }, []);
+  // // Call get data method on load
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   // Declare methods table
   const getRowData = async (pageNo = 1) => {
@@ -136,12 +165,45 @@ function EditEmployee() {
     }
   };
 
+
+
   useEffect(() => {
     getRowData(1);
   }, [filterData]);
 
+  const getEndTime = (value) => {
+    console.log('value',value);
+    // console.log('startTIme',startTime);
+    console.log('timeeeeee',time);
+    const tEndTime = new Date(value);
+    const tStartTime = new Date(time);
+    const diffMs = (tEndTime - tStartTime);
+    const timeDiff = customFunctions.msToTime(diffMs);
+    // console.log('diffference',timeDiff);
+    // console.log('timeDiff.hours + timeDiff.minutes',timeDiff.hours + timeDiff.minutes);
+    const hr = timeDiff.hours;
+    const min = timeDiff.minutes;
+    const differenceee = `${hr} : ${min}`;
+    console.log('differenceee',differenceee);
+    // console.log('defaultValues',defaultValues);
+    console.log('hours',hr,min);
+    const dur = defaultValues;
+    dur.duration = differenceee;
+    // dur.duration = timeDiff.hours.toString().length < 10 ?  '0' + timeDiff.hours.toString() : timeDiff.hours.toString() + ':' + timeDiff.minutes.toString().length < 10 ? '0' + timeDiff.minutes.toString() : timeDiff.minutes.toString() //eslint-disable-line
+    console.log('dur.duration', dur.duration);
+    updateDefaultValues({...dur});
+
+  }
+
+  const getStartTime = (value) => {
+    // getDuration(value);
+    console.log('value',value);
+    time = value
+  }
+
   return (
     <div className="mt-4 edit-timelog">
+    console.log('startTime',time)
       <Card body>
         <div className="d-flex justify-content-center mt-4">
           <p>Employee Name: Shubham Bhise</p>
@@ -155,7 +217,9 @@ function EditEmployee() {
             submitForm(formValues);
           }}
           options={options}
-          callbacks={{}}
+          callbacks={{ onDurationCallback: (value) => { getEndTime(value); },
+          onStartTimeCallback: (value) => { getStartTime(value); }
+        }}
           defaultFormValues={defaultValues}
           currentUser={currentUser}
           submitBtnText="Save"

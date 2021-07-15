@@ -35,7 +35,7 @@ function EmployeeTechListing() {
     { label: 'Employee Technology Stack' },
   ];
 
-  const handleActionCallback = () => {
+  const handleActionCallback = ({id}) => {
     return (
       <>
         <a
@@ -44,7 +44,7 @@ function EmployeeTechListing() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            // history.push('/add-technology-stack');
+            history.push(`/edit-technology-stack/${id}`);
             // setModalShow(true);
             // setEmployeeId(id);
             // getRowData(1,index);
@@ -53,22 +53,6 @@ function EmployeeTechListing() {
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Designation" />
-        </a>
-        <a
-          href="/"
-          className="pl-2"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            // history.push('/edit-employee');
-            // setModalShow(true);
-            // setEmployeeId(id);
-            // getRowData(1,index);
-            // setAddButton(true);
-            // setCntClearFilter(cntClearFilter + 1);
-          }}
-        >
-          <Image src="/images/delete.png" alt="Delete Designation" />
         </a>
       </>
     );
@@ -84,7 +68,7 @@ function EmployeeTechListing() {
       label: 'EmployeeName',
     },
     {
-      id: 'Technology',
+      id: 'techstacks',
       label: 'Technology',
     },
     {
@@ -175,19 +159,16 @@ function EmployeeTechListing() {
     updateOptions(allOptions);
   };
 
-  const getTechnology = async () => {
+   const getTechnology = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
     if (!data) {
       // show error
       return;
     }
 
-    const dpOptions =
-      (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
-        return { label: op.name, value: op.id };
-      });
+    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
+    });
 
     options.technology = dpOptions;
     const allOptions = options;

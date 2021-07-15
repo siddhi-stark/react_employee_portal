@@ -1,120 +1,195 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './AddTechStack.json';
+import FormSections from './techstack.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import customFunctions from '../../helper/customFunctions';
 
-function AddTechnologyStack() {
+function AddTechnologyStack(props) {
 
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
+  const [options, updateOptions] = useState({
+    employee : [],
+    technology : []
+  });
   const [currentUser, updateCurrentUser] = useState(0);
+  const history = useHistory();
 
+
+  
   // Get user role
-  const getUserRole = async () => {
+  const getUserRole = async() => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
 
   useEffect(() => {
-    getUserRole();
+    onInit();
   }, []);
+
+  const onInit = async () => {
+    const id = await props.match.params.stackId;
+    await getUserRole();
+    await getEmployee();
+    await getTechnology();
+    if(id) {
+    await getData(id);
+    }
+  }
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
-    const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
+     console.log('formValues',formValues);
+    const technologyStack = [];
+    // const technoData = {};
+
+    formValues.addmore.map((tech) => {
+      let obj = {};
+      obj = {
+
+      techstack: tech.technology.value ? tech.technology.value : '',
+      is_interviewer: tech.isINterviewer.toString() === 'true' ? true : false, // eslint-disable-line
+      }
+    technologyStack.push(obj);
+      return tech;
+    })
+   
+
+    const postData = {
+      employee: formValues.employee && Boolean(formValues.employee.value) ? formValues.employee.value : '',
+      data: technologyStack
     }
-    // Perform success actions
+
+    // console.log('postData',postData);
+    const payload = customFunctions.cleanObject(postData);
+    const callback = 
+      AuthApi.postDataToServer;
+    const endPoint =
+      Api.employeeStack;
+
+    const {
+      data,
+      
+    } = await callback(endPoint, payload);
+    if (data) {
+      // console.log('data', data, message);
+      history.push('/emp-stack');
+    }
+      
   };
 
-  // Get data for form
-  const getData = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if (!data) {
-      // show error
-      return;
-    }
-    updateDefaultValues(data);
-  };
+   const getData = async (stackId) => {
+    const techId = stackId;
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStack}${techId}/`);
+    console.log('data',data.data);
+    if(data.data) {
 
-  // Call get data method on load
-  useEffect(() => {
-    getData();
-  }, []);
 
-  const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if (!data) {
-      // show error
-      return;
-    }
+    const techData = [];
 
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.full_name, value: op.id });
-      return op;
+    await data.data.tech_stack_ids.map((e) => {
+      console.log('options.technology',options.technology);
+      const find = options.technology.find(x => x.value === e);
+      console.log('find',find);
+      if (find) {
+
+      techData.push({
+        isINterviewer : data.data.isINterviewer,
+        technology:{
+        label: find.label,
+        value: find.value
+      }
+      });
+      }
+      return e;
     });
-    const allOptions = {
-      ...options,
-      employee: dpOptions
-    };
-    updateOptions(allOptions);
+    console.log('techData',techData);
+    updateDefaultValues({
+      addmore: techData,
+      employee:  data.data.id && {
+        label: data.data.full_name,
+        value: data.data.id
+      }
+
+    });
+    }
   };
+    
+  const getEmployee = async () => {
+    // const id = props.match.params.stackId;
+    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
+     // if(id) {
+     //    // let emp = {};
+     //    data.data.map((employee) => {
+     //      if(Number(id) === Number(employee.id)) {
+     //        // emp = {
+     //        //   label : employee.full_name,
+     //        //   value : employee.id
+     //        // }
+     //      }
+     //      updateDefaultValues({
+     //        employee : {
+     //          label: 'Sanjay Mangalaram',
+     //           value: 3
+     //        }
+     //      })
+     //      return employee;
+     //    })
+     //  }
+    
+     const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.full_name, value: op.id };
 
-  useEffect(() => {
-    getEmployee();
-  }, []);
-
-  
-
-  const getTechnology = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
-    if (!data) {
+    });
+    options.employee = dpOptions;
+    const allOptions = options;
+    await updateOptions({...allOptions});
+  }
+      
+   const getTechnology = async () => {
+      // const id = props.match.params.stackId;
+    const {data} = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    if(!data) {
       // show error
       return;
     }
-
-    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+    
+ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
       return { label: op.name, value: op.id };
     });
 
     options.technology = dpOptions;
     const allOptions = options;
-    await updateOptions(allOptions);
-  };
+    await updateOptions({...allOptions});
 
-  useEffect(() => {
-    getTechnology();
-  }, []);
-
+  }   
+console.log('defaultValues',defaultValues);
   return (
     <>
-      <StarkFormBuilder
-        containerClass=''
-        formHeaderClass=''
-        formSections={FormSections}
-        onFormSubmit={(formValues) => { submitForm(formValues); }}
-        options={options}
-        callbacks={{}}
-        defaultFormValues={defaultValues}
-        currentUser={currentUser}
-        submitBtnText="Submit"
-        showResetBtn={true} // eslint-disable-line
-        resetBtnText="Clear"
-        btnContainerClass="form-submit-buttons"
-        isStepForm={false}
+  <StarkFormBuilder
+    containerClass=''
+    formHeaderClass=''
+    formSections={FormSections}
+    onFormSubmit={(formValues) => {submitForm(formValues);}}
+    options={options}
+    callbacks={{}}
+    defaultFormValues={defaultValues}
+    currentUser={currentUser}
+    submitBtnText="Submit"
+    showResetBtn={true}
+    resetBtnText="Clear"
+    btnContainerClass="form-submit-buttons"
+    isStepForm={false}
+    
+    onFormReset={() => {
+      console.log('form reset callback')
+    }}
+  />
+    
 
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
-      />
+
     </>
   );
 }

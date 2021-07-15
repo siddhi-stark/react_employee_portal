@@ -56,12 +56,13 @@ function Routes() {
       <Route path="/emp-stack" exact component={EmployeeTechListing} />
       <Route path="/employee-list" exact component={EmployeeList} />
       <Route path="/emp-timesheet" exact component={EmployeeTimesheet} />
-      <Route path="/edit-employee" exact component={EditEmployee} />
+      <Route path="/edit-employee/:employeeId" exact component={EditEmployee} />
       <Route path="/employees" exact component={Employees} />
       <Route path="/applications" exact component={Applications} />
       <Route path="/batch-upload" exact component={RecruitmentFileComponent} />
       <Route path="/add-technology-stack" exact component={AddTechnologyStack} />
-      <Route path="/employee-profile" exact component={EmployeeProfile} />
+      <Route path="/edit-technology-stack/:stackId" exact component={AddTechnologyStack} />
+      <Route path="/employee-profile/:id" exact component={EmployeeProfile} />
       <Route path="/confirmation" exact component={Confirmation} />
       <Route path="/interviewer-round" exact component={InterviewerRoundStatus} />
       <Route path="/selected" exact component={SelectedCandidate} />
