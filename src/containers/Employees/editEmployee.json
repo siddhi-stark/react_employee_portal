@@ -9,7 +9,7 @@
 	"displaySection": true,
 	"displaySectionTitle": true,
 	"fields": [{
-		"name": "name",
+		"name": "full_name",
 		"type": "text",
 		"label": "Name",
 		"id": "",
@@ -106,7 +106,7 @@
 		"optionCallback": "",
 		"options": []
 	}, {
-		"name": "personal_id",
+		"name": "personal_email",
 		"type": "email",
 		"label": "Personal Email",
 		"id": "",
@@ -138,7 +138,7 @@
 		"optionCallback": "",
 		"options": []
 	}, {
-		"name": "company_id",
+		"name": "email",
 		"type": "email",
 		"label": "Company Email",
 		"id": "",
@@ -170,7 +170,7 @@
 		"optionCallback": "",
 		"options": []
 	}, {
-		"name": "number",
+		"name": "mobile",
 		"type": "text",
 		"label": "Number",
 		"id": "",
@@ -202,7 +202,7 @@
 		"optionCallback": "",
 		"options": []
 	}, {
-		"name": "confirm_date",
+		"name": "confirmation_date",
 		"type": "date",
 		"label": "Confirmation Date",
 		"id": "",

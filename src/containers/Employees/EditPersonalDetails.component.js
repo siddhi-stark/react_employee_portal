@@ -30,13 +30,15 @@ function EditPersonalDetails(props) {
     const id = customFunctions.getLocalStorage('id');
     console.log(formValues);
 
-    const postData = {
-      full_name: formValues.name,
+    let postData = {
+      ...formValues,
+    };
+
+
+    postData = {
+      ...postData,
       designation: formValues.designation ? formValues.designation.value : null,
       joining_date: formValues.joining_date ? customFunctions.getDate(formValues.joining_date) : '',
-      personal_email: formValues.personal_id,
-      email: formValues.company_id,
-      mobile: formValues.number,
       confirmation_date: formValues.confirm_date ? customFunctions.getDate(formValues.confirm_date) : null,
       confirmed: formValues.confirm_date ? true : false, // eslint-disable-line
       relieving_date: formValues.relieving_date ? customFunctions.getDate(formValues.relieving_date) : null,
@@ -65,26 +67,26 @@ function EditPersonalDetails(props) {
     const id = customFunctions.getLocalStorage('id');
     const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${id}/`);
     console.log('data',data);
-    if(!data) {
-      // show error
-      return;
-    }
-    updateDefaultValues({
-      name: data.data.full_name,
-      joining_date: data.data.date_joined ? new Date(customFunctions.getDate(data.data.date_joined)) : '' ,
-      personal_id: data.data.personal_email,
-      company_id: data.data.email,
-      number: data.data.mobile,
-      confirm_date : data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '',
-      relieving_date: data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '',
-      dob: data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '',
-    });
-  };
+      
+      data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
+      data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
+      data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
+      data.data.joined_date = data.data.joined_date ? new Date(customFunctions.getDate(data.data.joined_date)) : '';
+      
+     const ds = data.data.designation_id ? {
+        label: data.data.designation_name,
+        value: data.data.designation_id
+      } : ''
 
-  // Call get data method on load
-  useEffect(() => {
-    getData();
-  }, []);
+     const obj = {
+       ...data.data,
+       designation: ds
+     };
+
+     updateDefaultValues({...obj})    // updateDefaultValues(data);
+     console.log('obj', obj);
+
+  };
 
 
   const getDesignation = async () => {
@@ -102,6 +104,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
   options.designation = dpOptions;
   const allOptions = options;
   await updateOptions({...allOptions});
+   getData();
 
 }  
 

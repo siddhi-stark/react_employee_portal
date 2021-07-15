@@ -8,29 +8,6 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
-// const companyList =[{
-//   id:1,
-//   designation:'Senior Engineer',
-//   cname:'Stark Digital Media Services Pvt Ltd',
-//   date:'Mar | 2021',
-//   country:'Pune, India'
-// },
-// {
-//   id:2,
-//   designation:'Android Developer',
-//   cname:'Stark Digital Media Services Pvt Ltd',
-//   date:'Mar | 2021',
-//   country:'Pune, India'
-// },
-// {
-//   id:3,
-//   designation:'Senior Developer',
-//   cname:'Stark Digital Media Services Pvt Ltd',
-//   date:'Mar | 2021',
-//   country:'Pune, India'
-// },
-// ]
-
 function EmployeeProfile(props) {
 
   const [showEmployee, setShowEMployee] = useState(false);
@@ -65,8 +42,14 @@ function EmployeeProfile(props) {
     getEmployeeDetails();
   },[])
 
-const onChangeInHistory = () => {
-  getEmployeeHIstory();
+  const onChangeInHistory = () => {
+    getEmployeeHIstory();
+    getEmployeeDetails();
+  }
+
+
+const onEmployeePersonalDetails = () => {
+  getEmployeeDetails();
 }
 
 const deleteEmployeeHistory = (id) => {
@@ -115,6 +98,9 @@ const deleteEmployeeHistory = (id) => {
           <Card className="mt-3">
           <EditPersonalDetails 
           handleModalCLose={(e) => setShowPersonalDetails(e)}
+          onPersonalDetailChanges={() => {
+            onEmployeePersonalDetails();
+          }}
           />
           </Card>
           ) : (
@@ -144,7 +130,7 @@ const deleteEmployeeHistory = (id) => {
           <p>Designation</p>
           <Row>
             <Col md={4}>
-              <h7>Joining Date - {customFunctions.getFormattedDate(employeeDetails.date_joined)}</h7>
+              <h7>Joining Date -  {employeeDetails.joined_date ? customFunctions.getFormattedDate(employeeDetails.joined_date) : ''}</h7>
             </Col>
 
             <Col md={4}>
@@ -162,7 +148,7 @@ const deleteEmployeeHistory = (id) => {
             </Col>
 
             <Col md={2}>
-              <h7>Confirmation Date - {customFunctions.getFormattedDate(employeeDetails.confirmation_date)}</h7>
+              <h7>Confirmation Date - {employeeDetails.confirmation_date ? customFunctions.getFormattedDate(employeeDetails.confirmation_date) : ''}</h7>
             </Col>
             <Col md={2}>
               <Button onClick={() => history.push('/confirmation')}>Confirm</Button>

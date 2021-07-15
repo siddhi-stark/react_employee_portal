@@ -62,17 +62,15 @@ function AddHistory(props) {
        customFunctions.removeLocalStorage('hisotryID');
           }
         });
-    }else{
-       props.onChanges();
     }
   };
 
   // Get data for form
   const getData = async (id, designation) => {
-    console.log('getData',id);
-    console.log('designation',designation);
+    // console.log('getData',id);
+    // console.log('designation',designation);
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
-     console.log('data',data.data);
+     // console.log('data',data.data);
      let des = {};
 
      await designation.map((ds) => {
