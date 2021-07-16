@@ -155,7 +155,7 @@ function EditEmployee(props) {
     if (start && end) {
     const dur = defaultValues;
     defaultValues = {};
-    updateDefaultValues({});
+    updateDefaultValues(defaultValues);
     const tStartTime = new Date(start);
     const tEndTime = new Date(end);
     const diffMs = (tEndTime - tStartTime);
@@ -167,7 +167,7 @@ function EditEmployee(props) {
     dur.duration = (timeDiff.hours < 10 ? ('0' + timeDiff.hours.toString()) : timeDiff.hours.toString()) + ':' + (timeDiff.minutes < 10 ? ('0' + timeDiff.minutes.toString()) : timeDiff.minutes.toString()) //eslint-disable-line
     console.log('dur.duration', dur.duration, dur);
     defaultValues = {...dur};
-    updateDefaultValues({...dur});
+    updateDefaultValues({...defaultValues});
     }
   }
 
@@ -217,6 +217,7 @@ function EditEmployee(props) {
           //   console.log('form reset callback');
           // }}
         />
+        <>{JSON.stringify(defaultValues)} </>
         <div className="mt-4">
           <CustomTable
             columns={columns}
