@@ -15,9 +15,10 @@ import { Helmet } from '../../components/FormInputs';
 function EditEmployee(props) {
   // let time = '';
   // Variable declarations
-  let [defaultValues, updateDefaultValues] = useState({});  // eslint-disable-line
+  let [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
+  const [toggle, setToggle] = useState(false);
 
   // Declare variable Table
   const [rowData, setRowData] = useState([]);
@@ -27,8 +28,8 @@ function EditEmployee(props) {
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-   const title = 'Add Time Log Of Employee';
-   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
+  const title = 'Add Time Log Of Employee';
+  const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
 
   const columns = [
     {
@@ -81,18 +82,29 @@ function EditEmployee(props) {
     // const loginDate = formValues.login.replace('T', ' ');
     // const login = loginDate.split('.')[0]
     const postData = {
-      user_id:Number(id),
+      user_id: Number(id),
       content: formValues.task,
-      start_time: ((new Date(formValues.login).toISOString()).replace('T', ' ')).substr(0, 19),
-      end_time: ((new Date(formValues.logout).toISOString()).replace('T', ' ')).substr(0, 19),
-      description:formValues.description
-
-    }
-    const { data } = await AuthApi.postDataToServer(Api.employeeTimesheet, postData);
-     if(data) {
-       swal(data && data.message[0]);
-       
+      start_time: new Date(formValues.login)
+        .toISOString()
+        .replace('T', ' ')
+        .substr(0, 19),
+      end_time: new Date(formValues.logout)
+        .toISOString()
+        .replace('T', ' ')
+        .substr(0, 19),
+      description: formValues.description,
+    };
+    const { data } = await AuthApi.postDataToServer(
+      Api.employeeTimesheet,
+      postData
+    );
+    if (data) {
+      swal(data && data.message[0], '', 'success').then((result) => {
+      if (result) {
+        setToggle(true);
       }
+    });
+    }
   };
 
   // // Get data for form
@@ -125,7 +137,7 @@ function EditEmployee(props) {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data',data);
+    console.log('data', data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
@@ -136,8 +148,6 @@ function EditEmployee(props) {
     }
   };
 
-
-
   useEffect(() => {
     getRowData(1);
   }, [filterData]);
@@ -145,7 +155,7 @@ function EditEmployee(props) {
   const getEndTime = (value) => {
     setEndTime(value);
     getDuration(startTime, value);
-  }
+  };
 
   // useEffect(() => {
   //   getDuration(startTime, endTime);
@@ -153,23 +163,23 @@ function EditEmployee(props) {
 
   const getDuration = (start, end) => {
     if (start && end) {
-    const dur = defaultValues;
-    defaultValues = {};
-    updateDefaultValues(defaultValues);
-    const tStartTime = new Date(start);
-    const tEndTime = new Date(end);
-    const diffMs = (tEndTime - tStartTime);
-    const timeDiff = customFunctions.msToTime(diffMs);
-    // const hr = timeDiff.hours;
-    // const min = timeDiff.minutes;
-    // const differenceee = `${hr} : ${min}`;
-    // dur.duration = differenceee;
-    dur.duration = (timeDiff.hours < 10 ? ('0' + timeDiff.hours.toString()) : timeDiff.hours.toString()) + ':' + (timeDiff.minutes < 10 ? ('0' + timeDiff.minutes.toString()) : timeDiff.minutes.toString()) //eslint-disable-line
-    console.log('dur.duration', dur.duration, dur);
-    defaultValues = {...dur};
-    updateDefaultValues({...defaultValues});
+      const dur = defaultValues;
+      defaultValues = {};
+      updateDefaultValues({});
+      const tStartTime = new Date(start);
+      const tEndTime = new Date(end);
+      const diffMs = tEndTime - tStartTime;
+      const timeDiff = customFunctions.msToTime(diffMs);
+      // const hr = timeDiff.hours;
+      // const min = timeDiff.minutes;
+      // const differenceee = `${hr} : ${min}`;
+      // dur.duration = differenceee;
+      dur.duration = (timeDiff.hours < 10 ? '0' + timeDiff.hours.toString() : timeDiff.hours.toString()) + ':' + (timeDiff.minutes < 10 ? '0' + timeDiff.minutes.toString() : timeDiff.minutes.toString()); //eslint-disable-line
+      console.log('dur.duration', dur.duration, dur);
+      defaultValues = { ...dur };
+      updateDefaultValues({ ...dur });
     }
-  }
+  };
 
   const getStartTime = (value) => {
     console.log('getStartTime--->', value);
@@ -177,7 +187,7 @@ function EditEmployee(props) {
     // time = value;
     setStartTime(value);
     getDuration(value, endTime);
-  }
+  };
 
   return (
     <>
@@ -188,57 +198,67 @@ function EditEmployee(props) {
           <Breadcrumb items={items} />
         </div>
       </div>
-    <div className="mt-4 edit-timelog">
-      <Card body>
-        <div className="d-flex justify-content-center mt-4">
-          <p>Employee Name: {customFunctions.getLocalStorage('employeeName')}</p>
-          <p className="ms-4">Date: {customFunctions.getLocalStorage('date')}</p>
-        </div>
-        <StarkFormBuilder
-          containerClass=""
-          formHeaderClass=""
-          formSections={FormSections}
-          onFormSubmit={(formValues) => {
-            submitForm(formValues);
-          }}
-          options={options}
-          callbacks={{ onDurationCallback: (value) => { getEndTime(value); },
-          onStartTimeCallback: (value) => { getStartTime(value); }
-        }}
-          defaultFormValues={defaultValues}
-          currentUser={currentUser}
-          submitBtnText="Save"
-          showResetBtn={false}
-          // resetBtnText="Clear"
-          btnContainerClass="form-submit-buttons mt-0"
-          isStepForm={false}
-
-          // onFormReset={() => {
-          //   console.log('form reset callback');
-          // }}
-        />
-        <>{JSON.stringify(defaultValues)} </>
-        <div className="mt-4">
-          <CustomTable
-            columns={columns}
-            rows={rowData}
-            role={5}
-            showPagination={true}
-            paginationProps={{
-              totalItems: totalCount,
-              itemsPerPage: limit,
-              activePage: currentPage,
-              onPageChange: (pageNo) => {
-                getRowData(pageNo);
+      <div className="mt-4 edit-timelog">
+        <Card body>
+          <div className="d-flex justify-content-center mt-4">
+            <p>
+              Employee Name: {customFunctions.getLocalStorage('employeeName')}
+            </p>
+            <p className="ms-4">
+              Date: {customFunctions.getLocalStorage('date')}
+            </p>
+          </div>
+          <StarkFormBuilder
+            containerClass=""
+            formHeaderClass=""
+            formSections={FormSections}
+            onFormSubmit={(formValues) => {
+              submitForm(formValues);
+            }}
+            options={options}
+            callbacks={{
+              onDurationCallback: (value) => {
+                getEndTime(value);
+              },
+              onStartTimeCallback: (value) => {
+                getStartTime(value);
               },
             }}
-            emptyRender={() => {
-              return 'No record found.';
-            }}
+            defaultFormValues={defaultValues}
+            currentUser={currentUser}
+            submitBtnText="Save"
+            showResetBtn={false}
+            // resetBtnText="Clear"
+            btnContainerClass="form-submit-buttons mt-0"
+            isStepForm={false}
+
+            // onFormReset={() => {
+            //   console.log('form reset callback');
+            // }}
           />
-        </div>
-      </Card>
-    </div>
+          <div className="mt-4">
+            {toggle && (
+              <CustomTable
+                columns={columns}
+                rows={rowData}
+                role={5}
+                showPagination={true}
+                paginationProps={{
+                  totalItems: totalCount,
+                  itemsPerPage: limit,
+                  activePage: currentPage,
+                  onPageChange: (pageNo) => {
+                    getRowData(pageNo);
+                  },
+                }}
+                emptyRender={() => {
+                  return 'No record found.';
+                }}
+              />
+            )}
+          </div>
+        </Card>
+      </div>
     </>
   );
 }
