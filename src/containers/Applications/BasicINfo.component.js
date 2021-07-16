@@ -59,7 +59,7 @@ function BasicInformation() {
   };
 
   const getTechnology = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
     if (!data) {
       // show error
       return;
@@ -68,7 +68,7 @@ function BasicInformation() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
+      dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
     const allOptions = {

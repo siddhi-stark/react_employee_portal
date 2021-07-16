@@ -8,15 +8,26 @@
 		"displaySectionTitle": false,
 		"fields": [
 			{
-				"name": "toDate",
+				"name": "start_date",
 				"type": "date",
 				"label": "",
+        "dateFormat": "dd/MM/yyyy",
 				"id": "",
-				"placeholder": "Select to date",
+				"placeholder": "Select form date",
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+					{
+            "type": "required",
+            "applyWhen": [
+              {
+                "name": "end_date",
+                "value": "end_date",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
+          }
 				],
 				"displayWhen": {},
 				"haveValidations": "true",
@@ -36,15 +47,26 @@
 				"options": []
 			},
 			{
-				"name": "fromDate",
+				"name": "end_date",
 				"type": "date",
 				"label": "",
+        "dateFormat": "dd/MM/yyyy",
 				"id": "",
-				"placeholder": "Select from date",
+				"placeholder": "Select to date",
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+					{
+            "type": "required",
+            "applyWhen": [
+              {
+                "name": "start_date",
+                "value": "start_date",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
+          }
 				],
 				"displayWhen": {},
 				"haveValidations": "true",
@@ -52,7 +74,7 @@
 				"callback": "",
 				"callbackUrl": "",
 				"inputToChange": "",
-				"minDateSelector": "toDate",
+				"minDateSelector": "start_date",
 				"maxDateSelector": "",
 				"disabled": false,
 				"isMulti": false,
@@ -71,9 +93,7 @@
 				"placeholder": "Search keyword",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
-				],
+				"validations": [],
 				"displayWhen": {},
 				"haveValidations": "true",
 				"haveDisplayOptions": "false",
@@ -92,7 +112,7 @@
 				"options": []
 			},
 			{
-				"name": "designation",
+				"name": "designation_id",
 				"type": "select",
 				"label": "",
 				"id": "",

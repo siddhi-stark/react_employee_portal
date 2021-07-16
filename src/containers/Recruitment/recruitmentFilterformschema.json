@@ -11,7 +11,7 @@
     "displaySectionTitle": false,
     "fields": [
       {
-        "name": "fromDate",
+        "name": "start_date",
         "type": "date",
         "label": "",
         "id": "",
@@ -23,8 +23,8 @@
             "type": "required",
             "applyWhen": [
               {
-                "name": "toDate",
-                "value": "toDate",
+                "name": "end_date",
+                "value": "end_date",
                 "condition": "!empty"
               }
             ],
@@ -52,7 +52,7 @@
         "options": []
       },
       {
-        "name": "toDate",
+        "name": "end_date",
         "type": "date",
         "label": "",
         "id": "",
@@ -64,8 +64,8 @@
             "type": "required",
             "applyWhen": [
               {
-                "name": "fromDate",
-                "value": "fromDate",
+                "name": "start_date",
+                "value": "start_date",
                 "condition": "!empty"
               }
             ],
@@ -78,7 +78,7 @@
         "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
-        "minDateSelector": "fromDate",
+        "minDateSelector": "start_date",
         "maxDateSelector": "",
         "disabled": false,
         "isMulti": false,
@@ -125,7 +125,7 @@
         },
         "fields": [],
         "optionCallback": "getTechnology",
-        "optionsCallbackUrl": "employeeUrl",
+        "optionsCallbackUrl": "employeeStackUrl",
         "options": []
       },
       {
@@ -160,14 +160,9 @@
           "value": "1column"
         },
         "fields": [],
-        "optionCallback": "",
-        "optionsCallbackUrl": "",
-         "options": [
-          { "label": "Junior", "value": "junior" },
-          { "label": "Senior", "value": "senior" },
-          { "label": "Fresher", "value": "fresher" },
-          { "label": "Management", "value": "management" }
-        ]
+        "optionCallback": "getDesignation",
+        "optionsCallbackUrl": "designationUrl",
+        "options": []
       }
     ],
     "allowedUsers": [],

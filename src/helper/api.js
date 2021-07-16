@@ -66,7 +66,6 @@ export default class Api extends Component {
   static historyUrl = `${Api.baseUrl}employementhistory/`;
   
   static applicantsUrl = `${Api.baseUrl}applicants/`;
-
   
   // Get base URL of APIs
   static getBaseUrl() {

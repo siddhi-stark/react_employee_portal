@@ -14,7 +14,7 @@ import { Helmet } from '../../components/FormInputs';
 function EmployeeTimesheet() {
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [dataShow, setDataShow] = useState(false);
@@ -32,19 +32,16 @@ function EmployeeTimesheet() {
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
-  // useEffect(() => {
+  const formSchema = [...FormSections];
+  formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (sectionData.name === 'toDate') {
+      const date = new Date();
+      sectionData.maxDate = date;
+    }
+    return sectionData;
+  });
 
-  //   const formSchema = [...FormSections];
-  //   formSchema[0].fields.map((section) => {
-  //     const sectionData = section;
-  //     if (sectionData.name === 'toDate') {
-  //       const date = new Date();
-  //       sectionData.maxDate = date;
-  //     }
-  //     return sectionData;
-  //   });
-
-  // }, [])
   const handleActionCallback = (row) => {
     // console.log('row', row.id);
     return (
@@ -73,14 +70,35 @@ function EmployeeTimesheet() {
     {
       id: 'emp_id',
       label: dataShow ? '' : 'Employee ID',
+      render: ({ row }) => {
+        return (
+          <>
+            <span>{dataShow ? '' : row.emp_id}</span>
+          </>
+        );
+      },
     },
     {
       id: 'day',
       label: dataShow ? 'Day' : '',
+      render: ({ day }) => {
+        return (
+          <>
+            <span>{dataShow ? day : ''}</span>
+          </>
+        );
+      },
     },
     {
       id: 'date',
       label: dataShow ? 'Date' : '',
+      render: ({ row }) => {
+        return (
+          <>
+            <span>{dataShow ? row.Date : ''}</span>
+          </>
+        );
+      },
     },
     {
       id: 'emp_name',
@@ -89,6 +107,13 @@ function EmployeeTimesheet() {
     {
       id: 'designatin_name',
       label: dataShow ? '' : 'Designation ',
+      render: ({ row }) => {
+        return (
+          <>
+            <span>{dataShow ? '' : row.Designation}</span>
+          </>
+        );
+      },
     },
     {
       id: 'sign_in',
@@ -109,7 +134,7 @@ function EmployeeTimesheet() {
         );
       },
     },
-    { 
+    {
       id: 'date',
       label: 'Date',
     },
@@ -127,14 +152,17 @@ function EmployeeTimesheet() {
     const params = {
       limit,
       page,
-      start_date: filterData.fromDate ? customFunctions.getDate(filterData.fromDate) : '',
-      end_date: filterData.toDate ? customFunctions.getDate(filterData.toDate) : '',
+      start_date: filterData.fromDate
+        ? customFunctions.getDate(filterData.fromDate)
+        : '',
+      end_date: filterData.toDate
+        ? customFunctions.getDate(filterData.toDate)
+        : '',
       employee_id: filterData.full_name ? filterData.full_name.value : '',
       // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -199,12 +227,11 @@ function EmployeeTimesheet() {
     getEmployeeName();
   }, []);
 
-     const onResetForm = () => {
+  const onResetForm = () => {
     setFilterData('');
     getRowData(1);
     setFilterData(false);
-  }
-  
+  };
 
   return (
     <>
@@ -254,7 +281,6 @@ function EmployeeTimesheet() {
                   }}
                 />
               </Card.Title>
-
             </Accordion.Collapse>
           </Card>
         </Accordion>

@@ -17,39 +17,30 @@ function RecruitmentApplicationComponent() {
   const history = useHistory();
 
   // Variable declarations Filter Form
-  const [defaultValues, updateDefaultValues] = useState({});
+  // const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [status, setStatus] = useState(null);
+  const [filterData, setFilterData] = useState({});
   let filterOptions = {};
-
-  // const handleEducationCallback = (row) => {
-  //   console.log('row', row.id);
-  //   return (
-  //     <>
-  //       <a
-  //         href="/"
-  //         className="pl-2"
-  //         onClick={(e) => {
-  //           e.preventDefault();
-  //           e.stopPropagation();
-  //           // history.push('/edit-employee');
-  //         }}
-  //       >
-  //         Edit
-  //       </a>
-  //     </>
-  //   );
-  // };
-
-  const handleActionCallback = (row) => {
-    console.log('row', row.id);
+  
+  const formSchema = [...FormSections];
+  formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
+      const date = new Date();
+      sectionData.maxDate = date;
+    }
+    return sectionData;
+  });
+  
+  const handleActionCallback = () => {
     return (
       <>
         <a
@@ -76,6 +67,13 @@ function RecruitmentApplicationComponent() {
     {
       id: 'created_at',
       label: 'Date',
+      render: ({ created_at }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{customFunctions.getFormattedDate(created_at)}</span>
+          </>
+        );
+      },
     },
     {
       id: 'name',
@@ -86,7 +84,7 @@ function RecruitmentApplicationComponent() {
       label: 'Application For Position',
     },
     {
-      id: 'tech_stack_ids',
+      id: 'techstacks',
       label: 'Technology',
     },
     {
@@ -108,7 +106,6 @@ function RecruitmentApplicationComponent() {
     {
       id: 'education',
       label: 'Education',
-      // render: handleEducationCallback,
     },
     {
       id: 'status',
@@ -141,6 +138,14 @@ function RecruitmentApplicationComponent() {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
+
+      const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.no = (page - 1) * limit + (i + 1);
+        return newItem;
+      });
+
       setRowData((data && data.data) || []);
     } else {
       console.log('error', message);
@@ -154,7 +159,7 @@ function RecruitmentApplicationComponent() {
   // filter Form
 
   // Get user role
-  const getUserRole = async() => {
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
@@ -165,38 +170,56 @@ function RecruitmentApplicationComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, updateDefaultValues);
+    console.log(formValues,'----',status);
+    let payload = {};
     
-    setFilterData(formValues);
-      
+    if(formValues) {
+      payload = {
+        keyword: formValues.keyword ? formValues.keyword:'',
+        designation_id: formValues.designation_id
+          ? formValues.designation_id.value
+          : '',
+        start_date: formValues.start_date
+          ? customFunctions.getDate(formValues.start_date)
+          : '',
+        end_date: formValues.end_date
+          ? customFunctions.getDate(formValues.end_date)
+          : '',
+      };
+    }
+   payload.status = status;
+   setFilterData(payload);
   };
-    
+
+  useEffect(() => {
+    submitForm();
+  }, [status]);
+
   const getDesignation = async () => {
-    const {data} = await AuthApi.getDataFromServer(Api.designationUrl);
-    if(!data) {
+    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
+    if (!data) {
       // show error
       return;
     }
-    
+
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({label: op.name, value: op.id});
+      dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
     const allOptions = {
       ...filterOptions,
       ...options,
-      designation: dpOptions
+      designation_id: dpOptions,
     };
-    filterOptions = {...allOptions};
+    filterOptions = { ...allOptions };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getDesignation();
   }, []);
-      
 
   return (
     <>
@@ -206,7 +229,7 @@ function RecruitmentApplicationComponent() {
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
-      <Accordion defaultActiveKey="0">
+        <Accordion defaultActiveKey="0">
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
@@ -219,25 +242,27 @@ function RecruitmentApplicationComponent() {
               </div>
             </Card.Header>
             <Accordion.Collapse eventKey="1">
-            <Card.Title>
+              <Card.Title>
                 <StarkFormBuilder
-                  containerClass='select-options'
-                  formHeaderClass=''
+                  containerClass="select-options"
+                  formHeaderClass=""
                   formSections={FormSections}
                   formHeading="Filter Form"
-                  onFormSubmit={(formValues) => {submitForm(formValues);}}
+                  onFormSubmit={(formValues) => {
+                    submitForm(formValues);
+                  }}
                   options={options}
                   callbacks={{}}
-                  defaultFormValues={defaultValues}
+                  // defaultFormValues={defaultValues}
                   currentUser={currentUser}
                   submitBtnText="Submit"
                   showResetBtn={true}
                   resetBtnText="Clear"
                   btnContainerClass="form-submit-buttons pull-right mb-3"
                   isStepForm={false}
-                  
                   onFormReset={() => {
-                    console.log('form reset callback')
+                    getRowData(1);
+                    setFilterData();
                   }}
                 />
               </Card.Title>
@@ -249,23 +274,77 @@ function RecruitmentApplicationComponent() {
             <div className="d-flex align-items-center justify-content-between">
               <h4 className="text-primary mt-2 mb-2">Recruitment</h4>
               <div className="d-flex align-items-center justify-content-end">
-                <a href="#" onClick={() => {history.push('/applications');}} className="btn-link">
+                <a
+                  href="#"
+                  onClick={() => {
+                    history.push('/applications');
+                  }}
+                  className="btn-link"
+                >
                   Add New
                 </a>
               </div>
             </div>
           </Card.Header>
           <Card.Body>
-          <div>
-            <Button variant="primary" className="mb-2" onClick={()=> { history.push('/batch-upload');}}>Bulk Upload</Button>
-          </div>
-          <div>
-            <Button variant="primary" className="mb-2">All</Button>
-            <Button variant="primary" className="ml-2 mb-2">Selected</Button>
-            <Button variant="primary" className="ml-2 mb-2">Shortlisted</Button>
-            <Button variant="primary" className="ml-2 mb-2">Rejected</Button>
-            <Button variant="primary" className="ml-2 mb-2">Offer Send</Button>
-          </div>
+            <div>
+              <Button
+                variant="primary"
+                className="mb-2"
+                onClick={() => {
+                  history.push('/batch-upload');
+                }}
+              >
+                Bulk Upload
+              </Button>
+            </div>
+            <div>
+              <Button
+                variant="primary"
+                className="mb-2"
+                onClick={() => {
+                  setFilterData();
+                }}
+              >
+                All
+              </Button>
+              <Button
+                variant="primary"
+                className="ml-2 mb-2"
+                onClick={() => {
+                  setStatus(1);
+                }}
+              >
+                Selected
+              </Button>
+              <Button
+                variant="primary"
+                className="ml-2 mb-2"
+                onClick={() => {
+                  setStatus(2);
+                }}
+              >
+                Shortlisted
+              </Button>
+              <Button
+                variant="primary"
+                className="ml-2 mb-2"
+                onClick={() => {
+                  setStatus(3);
+                }}
+              >
+                Rejected
+              </Button>
+              <Button
+                variant="primary"
+                className="ml-2 mb-2"
+                onClick={() => {
+                  setStatus(4);
+                }}
+              >
+                Offer Send
+              </Button>
+            </div>
             <CustomTable
               columns={columns}
               rows={rowData}

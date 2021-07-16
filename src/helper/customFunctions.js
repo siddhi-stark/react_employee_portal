@@ -39,20 +39,18 @@ class CustomFunctions extends Component {
     return formattedate;
   };
 
- 
-    getTimeFormatter = (dateTime) => {
-const newdate = new Date(dateTime);
-const h = newdate.getHours();
-const min = newdate.getMinutes();
-const formatTime = h + ':' + min; //eslint-disable-line
-const d = newdate.getDate();
-const m = newdate.getMonth() + 1;
-const y = newdate.getFullYear();
-const formattedate =
-(d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y + formatTime; //eslint-disable-line
-return formattedate;
-};
-
+  getTimeFormatter = (dateTime) => {
+    const newdate = new Date(dateTime);
+    const h = newdate.getHours();
+    const min = newdate.getMinutes();
+    const formatTime = h + ':' + min; //eslint-disable-line
+    const d = newdate.getDate();
+    const m = newdate.getMonth() + 1;
+    const y = newdate.getFullYear();
+    const formattedate = 
+      (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y + formatTime; //eslint-disable-line
+    return formattedate;
+  };
 
   getMonthDate = (dateTime) => {
     const newdate = new Date(dateTime);
@@ -205,19 +203,27 @@ return formattedate;
       case 'A':
         return !value || (value && !value.length);
       case 'O':
-        return !value || value && !Object.keys(value).length;
+        return !value || (value && !Object.keys(value).length);
 
       default:
         return !value;
     }
   };
 
-  changeStatus = async (url, urlParams = {}, type = 'put', successCallback = null, errorCallback = null) => {
+  changeStatus = async (
+    url,
+    urlParams = {},
+    type = 'put',
+    successCallback = null,
+    errorCallback = null
+  ) => {
     try {
-      if (this.checkIfEmpty(urlParams, 'O'))
-        return false;
+      if (this.checkIfEmpty(urlParams, 'O')) return false;
 
-      const apiCall = (type.toLowerCase() === 'put') ? AuthApi.putDataToServer : AuthApi.postDataToServer;
+      const apiCall =
+        type.toLowerCase() === 'put'
+          ? AuthApi.putDataToServer
+          : AuthApi.postDataToServer;
       const params = this.cleanObject(urlParams);
       const { data, message } = await apiCall(url, params);
       if (data && !data.success) {
@@ -232,7 +238,7 @@ return formattedate;
 
       return e;
     }
-  }
+  };
 
   localStorageClear = () => {
     localStorage.removeItem('access_token');
@@ -267,27 +273,27 @@ return formattedate;
   };
 
   msToTime = (duration) => {
-    const milliseconds = parseInt((duration % 1000) / 100,10);
+    const milliseconds = parseInt((duration % 1000) / 100, 10);
     let seconds = Math.floor((duration / 1000) % 60);
     let minutes = Math.floor((duration / (1000 * 60)) % 60);
     let hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
 
-    hours = (hours < 10) ? `${hours}` : hours;
-    minutes = (minutes < 10) ? `${minutes}` : minutes;
-    seconds = (seconds < 10) ? `${seconds}` : seconds;
-    
-    if(seconds >= 59 && milliseconds) {
+    hours = hours < 10 ? `${hours}` : hours;
+    minutes = minutes < 10 ? `${minutes}` : minutes;
+    seconds = seconds < 10 ? `${seconds}` : seconds;
+
+    if (seconds >= 59 && milliseconds) {
       minutes = Number(minutes) + 1;
       seconds = 0;
     }
-    if(Number(minutes) > 59 && (seconds || milliseconds)) {
+    if (Number(minutes) > 59 && (seconds || milliseconds)) {
       hours = Number(hours) + 1;
       minutes = 0;
     }
-   
+
     return { hours, minutes, seconds, milliseconds };
-  }
-  
+  };
+
   jsonParse = (jsonString) => {
     try {
       return JSON.parse(jsonString);

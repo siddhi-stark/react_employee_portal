@@ -22,10 +22,19 @@ function RecruitmentFileComponent() {
   const [currentUser, updateCurrentUser] = useState(0);
   const [show, setShow] = useState(false);
 
+  const formSchema = [...RecruitmentFilterFormSections];
+  formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
+      const date = new Date();
+      sectionData.maxDate = date;
+    }
+    return sectionData;
+  });
   // Declare variable table
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
   let defaultFilterOptions = {}; //eslint-disable-line
@@ -79,7 +88,7 @@ function RecruitmentFileComponent() {
       isDisplay: false,
     },
     {
-      id: 'full_name',
+      id: 'name',
       label: 'Applicant Name',
     },
     {
@@ -91,20 +100,52 @@ function RecruitmentFileComponent() {
       label: 'Contact No',
     },
     {
-      id: 'ctc',
-      label: 'CTC',
+      id: 'locality',
+      label: 'Locality',
+    },
+    {
+      id: 'current_ctc',
+      label: 'Current CTC',
     },
     {
       id: 'expected_ctc',
       label: 'Expected CTC',
     },
     {
-      id: 'notice',
+      id: 'notice_period',
       label: 'Notice Period',
     },
     {
-      id: 'date',
+      id: 'total_exp',
+      label: 'Total Exp',
+    },
+    {
+      id: 'rel_exp',
+      label: 'Relevant Exp',
+    },
+    {
+      id: 'resume_source',
+      label: 'Resume Source',
+    },
+    {
+      id: 'reason_job_change',
+      label: 'Reason Job Change',
+    },
+    {
+      id: 'gender_name',
+      label: 'Gender',
+    },
+  
+    {
+      id: 'created_at',
       label: 'Date',
+      render: ({ created_at }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{customFunctions.getFormattedDate(created_at)}</span>
+          </>
+        );
+      },
     },
     {
       id: 'resume',
@@ -131,12 +172,55 @@ function RecruitmentFileComponent() {
   // Submit Form
   const submitFilterForm = async (formValues) => {
     console.log(formValues, updateDefaultFilterValues);
-    setFilterData(formValues);
+      const  payload = {
+        technology_id: formValues.technology
+          ? formValues.technology.value
+          : '',
+        designation_id: formValues.position
+          ? formValues.position.value
+          : '',
+        start_date: formValues.start_date
+          ? customFunctions.getDate(formValues.start_date)
+          : '',
+        end_date: formValues.end_date
+          ? customFunctions.getDate(formValues.end_date)
+          : '',
+      };
+      
+    setFilterData(payload);
     setShow(true);
   };
 
   const getTechnology = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    console.log('data',data);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = []; 
+    data.data.map((op) => {
+      dpOptions.push ({ label: op.name, value: op.id });
+      return op;
+    });
+     const allOptions = {
+      ...filterOptions,
+      ...defaultFilterOptions,
+      technology: dpOptions,
+    };
+    defaultFilterOptions = { ...allOptions };
+    console.log('allOptions', allOptions)
+    updateFilterOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getTechnology();
+  }, []); 
+
+  const getDesignation = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
+    console.log('data',data);
     if (!data) {
       // show error
       return;
@@ -152,11 +236,13 @@ function RecruitmentFileComponent() {
       ...defaultFilterOptions,
       position: dpOptions,
     };
-    updateOptions(allOptions);
+    defaultFilterOptions = { ...allOptions };
+    console.log('allOptions', allOptions)
+    updateFilterOptions(allOptions);
   };
 
   useEffect(() => {
-    getTechnology();
+    getDesignation();
   }, []);
 
   // const getPosition = async () => {
@@ -188,7 +274,7 @@ function RecruitmentFileComponent() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeUrl}`;
+    const endPoint = `${Api.applicantsUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
@@ -220,19 +306,33 @@ function RecruitmentFileComponent() {
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues, updateDefaultValues);
-
     const { data } = await AuthApi.postDataToServer(
-      Api.employeeUrl,
+      Api.applicantsUrl,
       formValues
     );
+
+     // payload = {
+     //    technology_id: formValues.technology_id
+     //      ? formValues.technology_id.value
+     //      : '',
+     //    designation_id: formValues.designation_id
+     //      ? formValues.designation_id.value
+     //      : '',
+     //    start_date: formValues.start_date
+     //      ? customFunctions.getDate(formValues.start_date)
+     //      : '',
+     //    end_date: formValues.end_date
+     //      ? customFunctions.getDate(formValues.end_date)
+     //      : '',
+     //  };
     if (!data) {
       // show error
     }
     // Perform success actions
   };
 
-  const getTecchnology = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+  const getPosition = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
     if (!data) {
       // show error
       return;
@@ -241,18 +341,20 @@ function RecruitmentFileComponent() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
+      dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
     const allOptions = {
       ...options,
-      tecchnology: dpOptions,
+      ...defaultFilterOptions,
+      applied_for: dpOptions,
     };
+    defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
 
   useEffect(() => {
-    getTecchnology();
+    getPosition();
   }, []);
 
   return (
@@ -338,7 +440,7 @@ function RecruitmentFileComponent() {
                     btnContainerClass="form-submit-buttons pull-right mb-4"
                     isStepForm={false}
                     onFormReset={() => {
-                      console.log('form reset callback');
+                      setFilterData();
                     }}
                   />
 

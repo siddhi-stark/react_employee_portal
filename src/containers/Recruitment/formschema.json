@@ -8,11 +8,11 @@
     "displaySectionTitle": false,
     "fields": [
       {
-        "name": "tecchnology",
+        "name": "applied_for",
         "type": "select",
-        "label": "Tecchnology",
+        "label": "Position",
         "id": "",
-        "placeholder": "Select Technology",
+        "placeholder": "Select Position",
         "inputClass": "",
         "containerClass": "",
         "validations": [
@@ -32,12 +32,12 @@
         "fieldsToReset": [],
         "fieldLayout": { "label": "1 Column", "value": "1column" },
         "fields": [],
-        "optionCallback": "getTecchnology",
-        "optionsCallbackUrl": "employeeUrl",
+        "optionCallback": "getPosition",
+        "optionsCallbackUrl": "designationUrl",
         "options": []
       },
       {
-        "name": "attachments",
+        "name": "file_name",
         "type": "file",
         "label": "Attachments",
         "id": "",
@@ -58,6 +58,7 @@
         "disabled": false,
         "isMulti": false,
         "allowedUsers": [],
+        "accept":".csv",
         "fieldsToReset": [],
         "fieldLayout": { "label": "1 Column", "value": "1column" },
         "fields": [],
