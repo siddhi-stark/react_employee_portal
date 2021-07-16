@@ -71,17 +71,23 @@ getEmployee(1);
               >
                 <Tab eventKey="currentEmployee" title="Current Employee">
                   <div className="row ml-2">
-                    {employee && employee.filter(e => e.on_notice_period === false).map((emp) => (
+                    {employee && employee.map((emp) => (
                      <Card className="mt-3 me-3" style={{ width: '30%' }}>
             <Card.Body>
               <Row>
                 <Col>
+                 <span className="mini-stat-icon bg-purple mr-0 float-right">
                   <Image
                     className="card-img-top"
                     src="/images/edit-profile-img.png"
                     alt="Card image cap"
                     style={{ width: '80px', height: '80px' }}
                   />
+                  {emp.on_notice_period && (
+                    <span className="np-sup">NP</span>
+                    )}
+                  
+                  </span>
                 </Col>
                 <Col>
                   <Card.Title>{emp.name}</Card.Title>
@@ -112,12 +118,15 @@ getEmployee(1);
             <Card.Body>
               <Row>
                 <Col>
+                 <span className="mini-stat-icon bg-purple mr-0 float-right">
                   <Image
                     className="card-img-top"
                     src="/images/edit-profile-img.png"
                     alt="Card image cap"
                     style={{ width: '80px', height: '80px' }}
                   />
+                   <span className="np-sup">NP</span>
+                   </span>
                 </Col>
                 <Col>
                   <Card.Title>{emp.name}</Card.Title>
