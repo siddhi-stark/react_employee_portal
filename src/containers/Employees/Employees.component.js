@@ -27,8 +27,8 @@ const history = useHistory();
     { label: 'Employee' },
   ];
 
-const getEmployee = async (pageNo) => {
-  const page = pageNo || 0;
+const getEmployee = async (pageNo = 1) => {
+  const page = pageNo || currentPage;
 const endPoint = `${Api.employeeUrl}`;
   const params = {
       limit,
@@ -63,8 +63,6 @@ getEmployee(1);
       </div>
       <section className="content-area">
 
-        <Card>
-          <Card.Body>
             <div>
               <Tabs
                 defaultActiveKey="currentEmployee"
@@ -188,8 +186,6 @@ getEmployee(1);
                       getData={getEmployee}
                     />
             </div>
-          </Card.Body>
-        </Card>
 
       </section>
     </>

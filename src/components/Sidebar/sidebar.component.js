@@ -19,6 +19,10 @@ function Sidebar() {
     document.addEventListener('MenuChange', () => {
       onSubActiveClass();
     });
+
+    document.addEventListener('ViewBtnChange', () => {
+      onSubActiveClass();
+    })
   },[]);
 
   const dispatch = useDispatch();

@@ -35,6 +35,8 @@ function Dashboard() {
     totalItems: 10,
   });
 
+  const viewButton = new Event('ViewBtnChange', { isUpdated: true });
+
   const columns = [
     {
       id: 'date',
@@ -155,6 +157,13 @@ function Dashboard() {
     if (userclockedin)
       setShowClockIn(userclockedin);
   }, []);
+
+  const onViewButtonClick = () => {
+    
+    document.dispatchEvent(viewButton);
+    return true;
+  };
+
 
   return (
     <>
@@ -330,7 +339,10 @@ function Dashboard() {
                   </div>
                   <UserRestrictions permittedUsers={[5]} roleId={userRole}>
                   <div className="d-flex justify-content-end mr-3">
-                    <Button onClick={()=> history.push('/emp-timesheet',{ type: 'timesheet' })}>View All</Button>
+                    <Button onClick={()=> 
+                      {history.push('/emp-timesheet',customFunctions.setLocalStorage('type','EmpType'));
+                      onViewButtonClick();
+                    }}>View All</Button>
                  </div>
                   </UserRestrictions>
                 </div>

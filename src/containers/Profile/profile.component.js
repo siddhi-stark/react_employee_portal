@@ -186,18 +186,6 @@ function Profile() {
     }
   };
 
-  // const getImageName = (profileImage) => {
-  //   const img = profileImage
-  //     ? profileImage.split(Api.s3Url)
-  //     : imageUrl.split(Api.s3Url);
-  //   let img1 = '';
-
-  //   if (img.length > 1) {
-  //     img1 = img[1].split('?').length > 1 ? img[1].split('?')[0] : img[0];
-  //   }
-  //   return img1;
-  // };
-
   return (
     <>
      <Helmet title={title} />

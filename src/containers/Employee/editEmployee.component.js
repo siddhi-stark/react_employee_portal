@@ -9,11 +9,13 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './editEmployee.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import { Helmet } from '../../components/FormInputs';
 
 function EditEmployee(props) {
   // let time = '';
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
+  let [defaultValues, updateDefaultValues] = useState({});  // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
 
@@ -25,6 +27,8 @@ function EditEmployee(props) {
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+   const title = 'Add Time Log Of Employee';
+   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
 
   const columns = [
     {
@@ -143,10 +147,15 @@ function EditEmployee(props) {
     getDuration(startTime, value);
   }
 
+  // useEffect(() => {
+  //   getDuration(startTime, endTime);
+  // }, [startTime, endTime]);
+
   const getDuration = (start, end) => {
     if (start && end) {
     const dur = defaultValues;
-    updateDefaultValues(null);
+    defaultValues = {};
+    updateDefaultValues({});
     const tStartTime = new Date(start);
     const tEndTime = new Date(end);
     const diffMs = (tEndTime - tStartTime);
@@ -157,6 +166,7 @@ function EditEmployee(props) {
     // dur.duration = differenceee;
     dur.duration = (timeDiff.hours < 10 ? ('0' + timeDiff.hours.toString()) : timeDiff.hours.toString()) + ':' + (timeDiff.minutes < 10 ? ('0' + timeDiff.minutes.toString()) : timeDiff.minutes.toString()) //eslint-disable-line
     console.log('dur.duration', dur.duration, dur);
+    defaultValues = {...dur};
     updateDefaultValues({...dur});
     }
   }
@@ -170,11 +180,19 @@ function EditEmployee(props) {
   }
 
   return (
+    <>
+      <Helmet title={title} />
+      <div className="page-header">
+        <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
+          <Breadcrumb items={items} />
+        </div>
+      </div>
     <div className="mt-4 edit-timelog">
       <Card body>
         <div className="d-flex justify-content-center mt-4">
           <p>Employee Name: {customFunctions.getLocalStorage('employeeName')}</p>
-          <p className="ms-4">Employee Date: {customFunctions.getLocalStorage('date')}</p>
+          <p className="ms-4">Date: {customFunctions.getLocalStorage('date')}</p>
         </div>
         <StarkFormBuilder
           containerClass=""
@@ -220,6 +238,7 @@ function EditEmployee(props) {
         </div>
       </Card>
     </div>
+    </>
   );
 }
 
