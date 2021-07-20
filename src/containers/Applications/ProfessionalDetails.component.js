@@ -4,6 +4,7 @@ import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './AddProfessional.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function ProfessionalDetails() {
   // Variable declarations
@@ -42,15 +43,25 @@ function ProfessionalDetails() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
+
+    let postData = {
+      ...formValues
+    }
+
+    postData ={
+      ...postData,
+      resume_source: formValues.resume_source ? formValues.resume_source.value : '',
+    }
 
     const { data } = await AuthApi.postDataToServer(
-      Api.employeeUrl,
-      formValues
+      Api.applicantsUrl,
+      postData
     );
-    if (!data) {
-      // show error
-      return; // eslint-disable-line
+
+    if (data) {
+      console.log('data',data.data.id);
+      console.log('............');
+      customFunctions.setLocalStorage('applicantId',data.data.id);
     }
     // Perform success actions
   };

@@ -8,7 +8,7 @@
 		"displaySectionTitle": false,
 		"fields": [
 			{
-				"name": "date",
+				"name": "int_date",
 				"type": "date",
 				"label": "Date",
 				"id": "",
@@ -36,7 +36,7 @@
 				"options": []
 			},
 			{
-				"name": "time",
+				"name": "int_time",
 				"type": "date",
 				"label": "Time",
 				"id": "",
@@ -94,7 +94,7 @@
 				"options": []
 			},
 			{
-				"name": "round",
+				"name": "round_status",
 				"type": "select",
 				"label": "Round",
 				"id": "",
@@ -118,9 +118,9 @@
 				"fields": [],
 				"optionCallback": "getRound",
 				"options": [
-					{ "label": "Technical", "value": "technical" },
-					{ "label": "Machine", "value": "machine" },
-					{ "label": "HR", "value": "hr" }
+					{ "label": "Technical", "value": "2" },
+					{ "label": "Machine", "value": "1" },
+					{ "label": "HR", "value": "2" }
 				]
 			},
 			{

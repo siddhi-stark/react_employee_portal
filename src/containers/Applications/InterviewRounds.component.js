@@ -7,6 +7,7 @@ import hrInterviewFormSections from './hrInterviewFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import customFunctions from '../../helper/customFunctions';
 
 function InterviewRounds() {
   const history = useHistory();
@@ -71,13 +72,20 @@ function InterviewRounds() {
 
   // Submit Form
   const submitAddMoreForm = async (formValues) => {
-    console.log(formValues);
+    console.log('formValues',formValues);
+    const postData = {
+      int_date: formValues.int_date ? customFunctions.getFormattedDate(formValues.int_date) : '',
+      int_time: formValues.int_time ? customFunctions.getTime(formValues.int_time) : '',
+      round_status: formValues.round_status ? formValues.round_status.value : '',
+      interviewer: formValues.interviewer ? formValues.interviewer.value : '',
+    }
+    console.log('postData',postData);
     const { data } = await AuthApi.postDataToServer(
-      Api.getEmployeeUrl,
-      formValues
+      Api.roundsUrl,
+      postData
     );
-    if (!data) {
-      // show error
+    if (data) {
+      console.log('data',data);
     }
     // Perform success actions
   };
@@ -108,16 +116,23 @@ function InterviewRounds() {
 
   // Submit Form HR
   const submitForm = async (formValues) => {
-    console.log(formValues);
-
-    const { data } = await AuthApi.postDataToServer(
-      Api.employeeUrl,
-      formValues
-    );
-    if (!data) {
-      // show error
+    const id = customFunctions.getLocalStorage('applicantId');
+    console.log('formValues',formValues);
+    const postData = {
+      int_date: formValues.int_date ? customFunctions.getDate(formValues.int_date) : '',
+      int_time: formValues.int_time ? customFunctions.getTime(formValues.int_time) : '',
+      round_status: formValues.round_status ? formValues.round_status.value : '',
+      interviewer: formValues.interviewer ? formValues.interviewer.value : '',
+      applicant: id
     }
-    // Perform success actions
+    console.log('postData',postData);
+    const { data } = await AuthApi.postDataToServer(
+      Api.roundsUrl,
+      postData
+    );
+    if (data) {
+      console.log('data',data);
+    }
   };
 
   const getHrInterviewer = async () => {

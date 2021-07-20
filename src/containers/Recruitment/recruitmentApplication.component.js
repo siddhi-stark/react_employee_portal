@@ -121,7 +121,8 @@ function RecruitmentApplicationComponent() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.applicantsUrl}`;
+    const group = customFunctions.getLocalStorage('group');
+    const endPoint =  group === 4 ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
@@ -133,6 +134,7 @@ function RecruitmentApplicationComponent() {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
+    console.log('data',data);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
