@@ -6,18 +6,17 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
-function BasicInformation() {
+function BasicInformation(props) {
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-
+const[id,setId] = useState('');
   
     // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
-    console.log('roleId ',roleId );
     updateCurrentUser(Number(roleId));
   };
 
@@ -42,6 +41,34 @@ function BasicInformation() {
   updateJsonSchema([...updatedSchema]);        
   } 
   }, [currentUser]);
+
+   // Get data for form
+  const getData = async () => {
+    const ApplicantId = props.match.params.ID;
+    const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${ApplicantId}/`);
+      
+     //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
+     //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
+     //  data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
+     //  data.data.joined_date = data.data.joined_date ? new Date(customFunctions.getDate(data.data.joined_date)) : '';
+      
+     const ds = data.data.applied_for_id ? {
+        label: data.data.applied_for_name,
+        value: data.data.applied_for_id
+      } : ''
+
+     const obj = {
+       ...data.data,
+       applied_for: ds
+     };
+
+     updateDefaultValues({...obj})    // updateDefaultValues(data);
+
+  };
+
+  // useEffect(() => {
+  //   getData();
+  // }, [])
 
 
    // Submit Form
@@ -92,6 +119,7 @@ function BasicInformation() {
     options.applied_for = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
+    await getData();
 
   }
 
@@ -116,6 +144,8 @@ function BasicInformation() {
   }  
 
   useEffect(() => {
+    const idd = props.match.params.ID;
+    setId(idd);
     getTechnology();
     getDesignation();
   }, []);
@@ -124,32 +154,8 @@ function BasicInformation() {
 
   return (
 
+<>
 
-  // // Usage
-  // <StarkFormBuilder
-  //   containerClass=''
-  //   formHeaderClass=''
-  //   formSections={FormSections}
-  //   formHeading="Add Form"
-  //   onFormSubmit={(formValues) => {submitForm(formValues);}}
-  //   options={options}
-  //   callbacks={{}}
-  //   defaultFormValues={defaultValues}
-  //   currentUser={currentUser}
-  //   submitBtnText="Submit"
-  //   showResetBtn={false}
-  //   resetBtnText="Clear"
-  //   btnContainerClass="form-submit-buttons"
-  //   isStepForm={false}
-    
-  //   onFormReset={() => {
-  //     console.log('form reset callback')
-  //   }}
-  // />
-    
-
-
-    // Usage
     <StarkFormBuilder
     containerClass="mt-3"
     formHeaderClass=""
@@ -162,8 +168,8 @@ function BasicInformation() {
     callbacks={{}}
     defaultFormValues={defaultValues}
     currentUser={currentUser}
-    submitBtnText={Number(currentUser) === 4 ? '' : 'Save'}
-    btnContainerClass={`form-submit-buttons ${Number(currentUser) === 4 ? 'd-none' : ''}`}
+    submitBtnText={(Number(currentUser) === 4)  ? '' : 'Save'}
+    btnContainerClass={`form-submit-buttons ${(Number(currentUser) === 4) || id ? 'd-none' : ''}`}
     showResetBtn={false}
     resetBtnText="Clear"
     isStepForm={false}
@@ -171,7 +177,9 @@ function BasicInformation() {
       console.log('form reset callback');
     }}
     />
+</>
     );
+
 }
 
 export default withRouter(BasicInformation);

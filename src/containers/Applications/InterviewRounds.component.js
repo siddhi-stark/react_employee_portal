@@ -70,6 +70,43 @@ function InterviewRounds() {
     }
   };
 
+  const getData = async () => {
+    // console.log(designation);
+    // const ApplicantId = props.match.params.ID;
+
+    const section = hrInterviewFormSections[0].fields[3].options;
+    console.log('sections',section);
+    const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
+      console.log('data',data);
+    const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
+    data.data.int_date = intDate ? new Date(intDate) : '';
+    data.data.int_time = data.data.int_time ? new Date(intDate + ' ' + data.data.int_time) : ''; //eslint-disable-line
+  
+     const ds = data.data.interviewer_id ? {
+        label: data.data.interviewer_name,
+        value: data.data.interviewer_id
+      } : ''   
+
+       const interw = data.data.round_type ? {
+        label: data.data.round_type_name,
+        value: data.data.round_type
+      } : ''  
+
+     const obj = {
+       ...data.data,
+       interviewer: ds,
+       round_status: interw
+     };
+
+     updateDefaultValues({...obj})    // updateDefaultValues(data);
+
+  };
+
+  useEffect(() => {
+    getData();
+  },[])
+
+
   // Submit Form
   const submitAddMoreForm = async (formValues) => {
     console.log('formValues',formValues);

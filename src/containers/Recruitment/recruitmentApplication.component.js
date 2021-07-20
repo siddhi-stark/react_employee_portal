@@ -40,7 +40,8 @@ function RecruitmentApplicationComponent() {
     return sectionData;
   });
   
-  const handleActionCallback = () => {
+  const handleActionCallback = ({id}) => {
+    console.log('row',id);
     return (
       <>
         <a
@@ -49,6 +50,8 @@ function RecruitmentApplicationComponent() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            history.push(`/applications/${id}`);
+
             // history.push('/edit-employee');
           }}
         >
@@ -64,8 +67,13 @@ function RecruitmentApplicationComponent() {
       id: 'no',
       label: 'Sr. No',
     },
+      {
+      id: 'id',
+      label: 'Sr. No',
+      isDisplay: false,
+    },
     {
-      id: 'created_at',
+      id: `{{'int_date'} ? 'int_date': 'created_at'}`, // eslint-disable-line
       label: 'Date',
       render: ({ created_at }) => { // eslint-disable-line
         return (
@@ -122,7 +130,8 @@ function RecruitmentApplicationComponent() {
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     const group = customFunctions.getLocalStorage('group');
-    const endPoint =  group === 4 ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
+    console.log('group',group);
+    const endPoint =  (Number(group) === 4) ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)

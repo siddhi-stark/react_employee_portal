@@ -118,8 +118,8 @@
 				"fields": [],
 				"optionCallback": "getRound",
 				"options": [
-					{ "label": "Technical", "value": "2" },
-					{ "label": "Machine", "value": "1" },
+					{ "label": "Technical", "value": "1" },
+					{ "label": "Machine", "value": "0" },
 					{ "label": "HR", "value": "2" }
 				]
 			},
