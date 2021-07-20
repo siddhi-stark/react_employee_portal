@@ -12,7 +12,7 @@ import Api from '../../helper/api';
 
 function RecruitmentApplicationComponent() {
   const title = 'Recruitment';
-
+const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
   const history = useHistory();
 
@@ -129,8 +129,7 @@ function RecruitmentApplicationComponent() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const group = customFunctions.getLocalStorage('group');
-    console.log('group',group);
+    
     const endPoint =  (Number(group) === 4) ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
@@ -272,7 +271,6 @@ function RecruitmentApplicationComponent() {
                   btnContainerClass="form-submit-buttons pull-right mb-3"
                   isStepForm={false}
                   onFormReset={() => {
-                    getRowData(1);
                     setFilterData();
                   }}
                 />
@@ -292,22 +290,24 @@ function RecruitmentApplicationComponent() {
                   }}
                   className="btn-link"
                 >
-                  Add New
+                   {Number(group) === 4 ? '' : 'Add New'}
                 </a>
               </div>
             </div>
           </Card.Header>
           <Card.Body>
             <div>
-              <Button
-                variant="primary"
-                className="mb-2"
-                onClick={() => {
-                  history.push('/batch-upload');
-                }}
-              >
-                Bulk Upload
-              </Button>
+               {!(Number(group) === 4) && (
+                <Button
+                  variant="primary"
+                  className="mb-2"
+                  onClick={() => {
+                    history.push('/batch-upload');
+                  }}
+                >
+                  Bulk Upload
+                </Button>
+              )}
             </div>
             <div>
               <Button
@@ -328,33 +328,37 @@ function RecruitmentApplicationComponent() {
               >
                 Selected
               </Button>
-              <Button
-                variant="primary"
-                className="ml-2 mb-2"
-                onClick={() => {
-                  setStatus(2);
-                }}
-              >
-                Shortlisted
-              </Button>
-              <Button
-                variant="primary"
-                className="ml-2 mb-2"
-                onClick={() => {
-                  setStatus(3);
-                }}
-              >
-                Rejected
-              </Button>
-              <Button
-                variant="primary"
-                className="ml-2 mb-2"
-                onClick={() => {
-                  setStatus(4);
-                }}
-              >
-                Offer Send
-              </Button>
+                {!(Number(group) === 4) && (
+                <>
+                  <Button
+                    variant="primary"
+                    className="ml-2 mb-2"
+                    onClick={() => {
+                      setStatus(2);
+                    }}
+                  >
+                    Shortlisted
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="ml-2 mb-2"
+                    onClick={() => {
+                      setStatus(3);
+                    }}
+                  >
+                    Rejected
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="ml-2 mb-2"
+                    onClick={() => {
+                      setStatus(4);
+                    }}
+                  >
+                    Offer Send
+                  </Button>
+                </>
+              )}
             </div>
             <CustomTable
               columns={columns}

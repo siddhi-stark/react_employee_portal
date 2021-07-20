@@ -57,12 +57,14 @@ function ProfessionalDetails(props) {
      //    value: data.data.applied_for_id
      //  } : ''
 
+     if(data) {
      const obj = {
        ...data.data,
        // applied_for: ds
      };
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
+      } 
 
   };
 
@@ -74,7 +76,9 @@ function ProfessionalDetails(props) {
 
 
   // Submit Form
-  const submitForm = async (formValues) => {
+   const submitForm = async (formValues) => {
+    const applicantId = customFunctions.getLocalStorage('applicantId');
+
 
     let postData = {
       ...formValues
@@ -85,15 +89,14 @@ function ProfessionalDetails(props) {
       resume_source: formValues.resume_source ? formValues.resume_source.value : '',
     }
 
-    const { data } = await AuthApi.postDataToServer(
-      Api.applicantsUrl,
+    const { data } = await AuthApi.putDataToServer(
+      `${Api.applicantsUrl}${applicantId}/`,
       postData
     );
 
     if (data) {
       console.log('data',data.data.id);
       console.log('............');
-      customFunctions.setLocalStorage('applicantId',data.data.id);
     }
     // Perform success actions
   };

@@ -18,6 +18,7 @@ function InterviewRounds() {
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState([]);
   const [toggle, setToggle] = useState(false);
+  const [flag, setFlag] = useState(false);
 
   // Variable declarations HR
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -37,10 +38,11 @@ function InterviewRounds() {
   useEffect(() => {
     updatedJsonSchema();
   }, [currentUser]);
+  console.log('flag', flag);
 
   const updatedJsonSchema = async () => {
     updateJsonSchema([]);
-    if (Number(currentUser) !== 4) {
+    if (Number(currentUser) !== 4 ) {
       const formSchema = [...hrInterviewFormSections];
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -53,7 +55,7 @@ function InterviewRounds() {
       return;
     }
 
-    if (Number(currentUser) === 4) {
+    if (Number(currentUser) === 4 || !flag) {
       const formSchema = [...hrInterviewFormSections];
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -62,7 +64,7 @@ function InterviewRounds() {
           if(item.name === 'date') itemData.disabled = true;
           if(item.name === 'time') itemData.disabled = true;
 
-          return !['interviewer', 'round'].includes(item.name);
+          return !['interviewer', 'round', 'feedback'].includes(item.name);
         });
         return s;
       });
@@ -103,6 +105,7 @@ function InterviewRounds() {
   };
 
   useEffect(() => {
+
     getData();
   },[])
 
@@ -273,7 +276,7 @@ function InterviewRounds() {
       )}
       <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
         <div className="mt-3">
-          <Button onClick={() => history.push('/interviewer-round')}>
+          <Button onClick={() =>{setFlag(true); history.push('/interviewer-round');}}>
             Approval
           </Button>
         </div>

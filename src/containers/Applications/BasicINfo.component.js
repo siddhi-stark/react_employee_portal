@@ -51,7 +51,8 @@ const[id,setId] = useState('');
      //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
      //  data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
      //  data.data.joined_date = data.data.joined_date ? new Date(customFunctions.getDate(data.data.joined_date)) : '';
-      
+      if(data) {
+        
      const ds = data.data.applied_for_id ? {
         label: data.data.applied_for_name,
         value: data.data.applied_for_id
@@ -63,6 +64,7 @@ const[id,setId] = useState('');
      };
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
+      }
 
   };
 
@@ -75,14 +77,20 @@ const[id,setId] = useState('');
   const submitForm = async (formValues) => {
     console.log(formValues);
 
+  const techId = [];
 
       let postData = {
       ...formValues,
     };
+    if(formValues){
+      formValues.technologies_stack.map((tech)=>{
+          return techId.push(tech.value);
+      });
+    }
 
     postData = {
       ...postData,
-      technologies_stack: formValues.technology ? formValues.technology.value : '',
+      technologies_stack: techId,
       applied_for: formValues.applied_for ? formValues.applied_for.value : '',
     }
 

@@ -150,21 +150,9 @@ function EmployeeTimesheet() {
   ];
 
   // Declare methods
-  const getRowData = async (pageNo = 1) => {
-    // let EmployeeType = '';
-    const userId = customFunctions.getLocalStorage('userId');
+    const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    let endPoint = '';
-    if(EmployeeType && userId) {
-      endPoint = `${Api.employeeTimesheet}?employee_id=${86}&limit=${limit}&page=${page}`;
-    }
-    else {
-      console.log('else block');
-      endPoint = `${Api.employeeTimesheet}`; 
-    }
-
-    console.log('endPOint', endPoint);
-
+    const endPoint = `${Api.employeeTimesheet}`;
     const params = {
       limit,
       page,
@@ -177,16 +165,14 @@ function EmployeeTimesheet() {
       employee_id: filterData.full_name ? filterData.full_name.value : '',
       // ...filterList
     };
-    
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await AuthApi.getDataFromServer(endPoint, url);
+    const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      // customFunctions.setLocalStorage('employeeName',data.emp_name);
-      // customFunctions.setLocalStorage('date',data.data.date);
+
       const newData = [...data.data];
       newData.map((item, i) => {
         const newItem = item;
@@ -195,7 +181,6 @@ function EmployeeTimesheet() {
       });
 
       setRowData((data && data.data) || []);
-      customFunctions.removeLocalStorage('type');
     } else {
       console.log('error', message);
     }
@@ -219,6 +204,7 @@ function EmployeeTimesheet() {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    if (!formValues) return;
     setDataShow(true);
     setFilterData(formValues);
   };
