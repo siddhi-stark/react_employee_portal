@@ -24,6 +24,7 @@ function InterviewRounds() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
 
+  // const[onClick,isOnClick] = useState(false);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
@@ -38,7 +39,6 @@ function InterviewRounds() {
   useEffect(() => {
     updatedJsonSchema();
   }, [currentUser]);
-  console.log('flag', flag);
 
   const updatedJsonSchema = async () => {
     updateJsonSchema([]);
@@ -47,7 +47,12 @@ function InterviewRounds() {
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.filter((item) => {
+          const itemData = item;
+          if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = true;
           return !['feedback'].includes(item.name);
+          // const itemData = item;
+         // if(item.name === 'int_date') itemData.disabled = true;
+
         });
         return s;
       });
@@ -226,6 +231,18 @@ function InterviewRounds() {
     getRound();
   }, []);
 
+  const OnReschedule = async () => {
+    const js = jsonSchema[0].fields;
+    console.log('js',js);
+   const updatedSchema = await js.map((item) => {
+      const itemData = item;
+          if(item.name === 'int_date') itemData.disabled = false;
+          if(item.name === 'int_time') itemData.disabled = false;
+   return itemData;
+    })
+    updateJsonSchema([...updatedSchema]);
+  }
+
   return (
     <>
       {jsonSchema && jsonSchema.length > 0 && (
@@ -235,8 +252,10 @@ function InterviewRounds() {
           formSections={jsonSchema}
           formHeading="HR Interview Form"
           onFormSubmit={(formValues) => {
+            OnReschedule();
             submitForm(formValues);
           }}
+
           options={options}
           callbacks={{}}
           defaultFormValues={defaultValues}
