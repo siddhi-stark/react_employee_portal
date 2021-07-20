@@ -68,9 +68,9 @@ getData(pageNumber);
 
 render() {
   
-  
 // const { totalCount, limit, activePage } = this.state;
 const { totalCount, limit, currentPage } = this.props;
+  console.log('paginationnnnn', totalCount, limit, currentPage)
 
 return (
 <div>

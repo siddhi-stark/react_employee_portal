@@ -12,6 +12,7 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 
 function EmployeeTimesheet() {
+  const EmployeeType = customFunctions.getLocalStorage('type');
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -25,12 +26,13 @@ function EmployeeTimesheet() {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   // const [jsonSchema, updateJsonSchema] = useState(FormSections);
-  const title = 'Employees List';
+  const title = 'Employee Timesheet';
   const limit = 10;
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
+
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -43,7 +45,6 @@ function EmployeeTimesheet() {
   });
 
   const handleActionCallback = (row) => {
-    // console.log('row', row.id);
     return (
       <>
         <a
@@ -53,9 +54,11 @@ function EmployeeTimesheet() {
             e.preventDefault();
             e.stopPropagation();
             history.push(`/edit-employee/${row.emp_id}`);
+            customFunctions.setLocalStorage('employeeName',row.emp_name);
+            customFunctions.setLocalStorage('date',row.date);
           }}
         >
-          Edit
+          Add
         </a>
       </>
     );
@@ -69,7 +72,8 @@ function EmployeeTimesheet() {
     },
     {
       id: 'emp_id',
-      label: dataShow ? '' : 'Employee ID',
+      label: dataShow && EmployeeType ? '' : 'Employee ID',
+
       render: ({ row }) => {
         return (
           <>
@@ -101,8 +105,8 @@ function EmployeeTimesheet() {
       },
     },
     {
-      id: 'emp_name',
-      label: 'Employee Name',
+      id: EmployeeType ? '' : 'emp_name',
+      label: EmployeeType ? '' : 'Employee Name',
     },
     {
       id: 'designatin_name',
@@ -140,15 +144,27 @@ function EmployeeTimesheet() {
     },
     {
       id: 'action',
-      label: 'Action',
-      render: handleActionCallback,
+      label: EmployeeType ? '' : 'Action',
+      render: EmployeeType ? '' : handleActionCallback,
     },
   ];
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
+    // let EmployeeType = '';
+    const userId = customFunctions.getLocalStorage('userId');
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeTimesheet}`;
+    let endPoint = '';
+    if(EmployeeType && userId) {
+      endPoint = `${Api.employeeTimesheet}?employee_id=${86}&limit=${limit}&page=${page}`;
+    }
+    else {
+      console.log('else block');
+      endPoint = `${Api.employeeTimesheet}`; 
+    }
+
+    console.log('endPOint', endPoint);
+
     const params = {
       limit,
       page,
@@ -161,14 +177,16 @@ function EmployeeTimesheet() {
       employee_id: filterData.full_name ? filterData.full_name.value : '',
       // ...filterList
     };
+    
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await AuthApi.getDataFromServer(url);
+    const { data, message } = await AuthApi.getDataFromServer(endPoint, url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-
+      // customFunctions.setLocalStorage('employeeName',data.emp_name);
+      // customFunctions.setLocalStorage('date',data.data.date);
       const newData = [...data.data];
       newData.map((item, i) => {
         const newItem = item;
@@ -177,12 +195,15 @@ function EmployeeTimesheet() {
       });
 
       setRowData((data && data.data) || []);
+      customFunctions.removeLocalStorage('type');
     } else {
       console.log('error', message);
     }
   };
 
   useEffect(() => {
+    // const EmployeeType = props.location.state.type;
+    // setEmployeeType(EmployeeType);
     getRowData(1);
   }, [filterData]);
 
@@ -198,7 +219,6 @@ function EmployeeTimesheet() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, formValues);
     setDataShow(true);
     setFilterData(formValues);
   };

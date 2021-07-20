@@ -47,30 +47,41 @@ const columns = [
 ];
 
 function EmployeeListComponent() {
+
+const today = new Date();
+const yesterday = new Date();
+
+yesterday.setDate(today.getDate() - 1);
+
+console.log('Today: ' + today); // eslint-disable-line
+console.log('Yesterday: ' + yesterday); // eslint-disable-line
+
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({});
+  const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const history = useHistory();
   const [userRole, setUserRole] = useState('');
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeTimesheet}`;
-    const filterList =
-      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-        ? customFunctions.jsonParse(filterData)
-        : {};
-    const params = {
-      page,
-      limit:5,
-      ...filterList,
-    };
-    const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    const endPoint = `${Api.employeeTimesheet}?start_date=2021-07-15&limit=${5}&page=${page}`;
+    // const filterList =
+    //   filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+    //     ? customFunctions.jsonParse(filterData)
+    //     : {};
+    // const params = {
+    //   page,
+    //   limit:5,
+    //   ...filterList,
+    // };
+    // const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(endPoint);
+
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -88,7 +99,7 @@ function EmployeeListComponent() {
       console.log('error', message);
     }
   };
-  console.log(setFilterData);
+  // console.log(setFilterData);
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));

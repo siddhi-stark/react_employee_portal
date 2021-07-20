@@ -28,11 +28,11 @@ import RecruitmentFileComponent from './containers/Recruitment/recruitmentFile.c
 import AddTechnologyStack from './containers/Employee Technology Stack/AddTechnologyStack.component';
 import EmployeeProfile from './containers/Employees/EmployeeProfile.component';
 import Confirmation from './containers/Employees/confirmation.component';
-import InterviewerRoundStatus from './containers/Applications/InterviewerRoundsStatus.component';
 import SelectedCandidate from './containers/Confirmation/SelectedCandidate.component';
 import SelectedCandidateListing from './containers/Confirmation/SelectedCandidateListing.component';
 import EmailTemplates from './containers/EmailTemplates/emailTemplates.component';
 import RecruitmentApplication from './containers/Recruitment/recruitmentApplication.component';
+import InterviewerRoundStatus from './containers/Applications/InterviewerRoundsStatus.component';
 
 function Routes() {
   return (

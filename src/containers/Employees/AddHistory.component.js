@@ -22,16 +22,6 @@ function AddHistory(props) {
     getUserRole();
   }, []);
 
-//   {
-// "employee": 2,
-// "designation": "Front developer",
-// "company_name": "TCS",
-// "start_date": "2021-01-01",
-// "end_date": "2022-01-3",
-// "location": "Pune India",
-// "employement_type": 2
-// }
-
 
   // Submit Form
   const submitForm = async (formValues) => {
@@ -77,10 +67,7 @@ function AddHistory(props) {
 
   // Get data for form
   const getData = async (id, designation) => {
-    console.log('getData',id);
-    console.log('designation',designation);
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
-     console.log('data',data.data);
      let des = {};
 
      await designation.map((ds) => {
@@ -106,18 +93,6 @@ function AddHistory(props) {
      console.log('obj', obj);
   };
 
-  // Call get data method on load
-  useEffect(() => {
-    // const {optionsData} = props;
-    // console.log('optionsData', optionsData);
-    // optionsData.start_date = optionsData.start_date ? new Date(customFunctions.getDate(optionsData.start_date)) : '',
-    // optionsData.end_date = optionsData.end_date ? new Date(customFunctions.getDate(optionsData.end_date)) : '',
-    // updateDefaultValues({
-    //   company_name: optionsData.company_name,
-    //   designation: optionsData.designation,
-    //   location: optionsData.location,
-    // });
-    }, []);
 
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
@@ -125,17 +100,15 @@ function AddHistory(props) {
       // show error
       return;
     }
-    const dpOptions =
-      (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
-        // eslint-disable-line
-        return { label: op.name, value: op.id };
-      });
 
+ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
+
+    });
     options.designation = dpOptions;
     const allOptions = options;
-    await updateOptions(allOptions);
+    await updateOptions({...allOptions});
+
     const history = customFunctions.getLocalStorage('hisotryID');
     console.log('history',history);
     if(history) {

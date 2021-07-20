@@ -16,7 +16,7 @@
                 "label": "Employee",
                 "id": "",
                 "placeholder": "",
-                "inputClass": "col-md-4",
+                "inputClass": "col-md-6",
                 "containerClass": "",
                 "validations": [
                     {
