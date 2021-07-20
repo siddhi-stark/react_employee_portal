@@ -80,6 +80,8 @@ function InterviewRounds() {
     console.log('sections',section);
     const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
       console.log('data',data);
+      if(data) {
+        
     const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
     data.data.int_date = intDate ? new Date(intDate) : '';
     data.data.int_time = data.data.int_time ? new Date(intDate + ' ' + data.data.int_time) : ''; //eslint-disable-line
@@ -101,6 +103,7 @@ function InterviewRounds() {
      };
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
+      }
 
   };
 
