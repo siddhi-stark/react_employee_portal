@@ -151,20 +151,8 @@ function EmployeeTimesheet() {
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
-    // let EmployeeType = '';
-    const userId = customFunctions.getLocalStorage('userId');
     const page = pageNo || currentPage;
-    let endPoint = '';
-    if(EmployeeType && userId) {
-      endPoint = `${Api.employeeTimesheet}?employee_id=${86}&limit=${limit}&page=${page}`;
-    }
-    else {
-      console.log('else block');
-      endPoint = `${Api.employeeTimesheet}`; 
-    }
-
-    console.log('endPOint', endPoint);
-
+    const endPoint = `${Api.employeeTimesheet}`;
     const params = {
       limit,
       page,
@@ -177,7 +165,7 @@ function EmployeeTimesheet() {
       employee_id: filterData.full_name ? filterData.full_name.value : '',
       // ...filterList
     };
-    
+
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(endPoint, url);
 
