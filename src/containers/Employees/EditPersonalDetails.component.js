@@ -13,7 +13,28 @@ function EditPersonalDetails(props) {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-    
+   const [jsonSchema, updateJsonSchema] = useState(FormSections);  
+
+useEffect(() => {
+  const employeeId = customFunctions.getLocalStorage('id');
+    if(employeeId){
+      const formSchema = [...FormSections];
+    const updatedSchema = formSchema.map((section)=>{
+      const s = {...section};
+      s.fields = section.fields.map((item) => {
+        const itemData = item;
+         if(item.name === 'full_name') itemData.disabled = true;
+         if(item.name === 'joining_date') itemData.disabled = true;
+         if(item.name === 'email') itemData.disabled = true;
+         if(item.name === 'mobile') itemData.disabled = true;
+         return itemData;
+      })
+      return s;
+    })
+  updateJsonSchema([...updatedSchema]);        
+  } 
+  }, []);
+
 
   // Get user role
   const getUserRole = async() => {
@@ -122,7 +143,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
   <StarkFormBuilder
     containerClass=''
     formHeaderClass=''
-    formSections={FormSections}
+    formSections={jsonSchema}
     formHeading="Employee"
     onFormSubmit={(formValues) => {submitForm(formValues);}}
     options={options}

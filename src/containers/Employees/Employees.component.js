@@ -27,8 +27,8 @@ const history = useHistory();
     { label: 'Employee' },
   ];
 
-const getEmployee = async (pageNo) => {
-  const page = pageNo || 0;
+const getEmployee = async (pageNo = 1) => {
+  const page = pageNo || currentPage;
 const endPoint = `${Api.employeeUrl}`;
   const params = {
       limit,
@@ -63,8 +63,6 @@ getEmployee(1);
       </div>
       <section className="content-area">
 
-        <Card>
-          <Card.Body>
             <div>
               <Tabs
                 defaultActiveKey="currentEmployee"
@@ -73,33 +71,39 @@ getEmployee(1);
               >
                 <Tab eventKey="currentEmployee" title="Current Employee">
                   <div className="row ml-2">
-                    {employee && employee.filter(e => e.on_notice_period === false).map((emp) => (
+                    {employee && employee.map((emp) => (
                      <Card className="mt-3 me-3" style={{ width: '30%' }}>
             <Card.Body>
               <Row>
-                <Col>
+                <Col className="col-md-4">
+                 <span className="mini-stat-icon bg-purple mr-0 float-right">
                   <Image
                     className="card-img-top"
                     src="/images/edit-profile-img.png"
                     alt="Card image cap"
                     style={{ width: '80px', height: '80px' }}
                   />
+                  {emp.on_notice_period && (
+                    <span className="np-sup">NP</span>
+                    )}
+                  
+                  </span>
                 </Col>
-                <Col>
+                <Col className="col-md-8">
                   <Card.Title>{emp.name}</Card.Title>
                   <p className="card-text">
-                    {emp.full_name}
+                    {emp.full_name} <br />
                     {emp.designation_name} <br />
                   </p>
-                  <p className="text-primary"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
+                  <p className="text-primary confirmation-date"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
                   <br />
                 </Col>
               </Row>
-              <Card.Footer>
+              <Card.Footer className="card-footer-view">
                 <h4 className="text-primary">
-                  {emp.emp_code}
-                  <Button size="sm" className="pull-right" onClick={() => history.push(`/employee-profile/${emp.id}`)}>View</Button>
+                 SDMS{emp.emp_code}
                 </h4>
+                <Button size="sm" className="pull-right" onClick={() => history.push(`/employee-profile/${emp.id}`)}>View</Button>
               </Card.Footer>
             </Card.Body>
           </Card>
@@ -114,12 +118,15 @@ getEmployee(1);
             <Card.Body>
               <Row>
                 <Col>
+                 <span className="mini-stat-icon bg-purple mr-0 float-right">
                   <Image
                     className="card-img-top"
                     src="/images/edit-profile-img.png"
                     alt="Card image cap"
                     style={{ width: '80px', height: '80px' }}
                   />
+                   <span className="np-sup">NP</span>
+                   </span>
                 </Col>
                 <Col>
                   <Card.Title>{emp.name}</Card.Title>
@@ -127,7 +134,7 @@ getEmployee(1);
                     {emp.full_name}
                     {emp.designation_name} <br />
                   </p>
-                  <p className="text-primary"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
+                  <p className="text-primary confirmation-date"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
                   <br />
                 </Col>
               </Row>
@@ -163,7 +170,7 @@ getEmployee(1);
                     {emp.full_name}
                     {emp.designation_name} <br />
                   </p>
-                  <p className="text-primary"> confirmation Date- {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
+                  <p className="text-primary confirmation-date"> confirmation Date- <br /> {emp.confirmation_date ? customFunctions.getDate(emp.confirmation_date) : null}</p>{' '}
                   <br />
                 </Col>
               </Row>
@@ -188,8 +195,6 @@ getEmployee(1);
                       getData={getEmployee}
                     />
             </div>
-          </Card.Body>
-        </Card>
 
       </section>
     </>

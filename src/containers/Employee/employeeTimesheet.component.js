@@ -12,6 +12,7 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 
 function EmployeeTimesheet() {
+  const EmployeeType = customFunctions.getLocalStorage('type');
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -25,28 +26,14 @@ function EmployeeTimesheet() {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   // const [jsonSchema, updateJsonSchema] = useState(FormSections);
-  const title = 'Employees List';
+  const title = 'Employee Timesheet';
   const limit = 10;
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
-  // useEffect(() => {
-
-  //   const formSchema = [...FormSections];
-  //   formSchema[0].fields.map((section) => {
-  //     const sectionData = section;
-  //     if (sectionData.name === 'toDate') {
-  //       const date = new Date();
-  //       sectionData.maxDate = date;
-  //     }
-  //     return sectionData;
-  //   });
-
-  // }, [])
   const handleActionCallback = (row) => {
-    console.log('row', row);
     return (
       <>
         <a
@@ -74,19 +61,19 @@ function EmployeeTimesheet() {
     },
     {
       id: 'emp_id',
-      label: dataShow ? '' : 'Employee ID',
+      label: dataShow && EmployeeType ? '' : 'Employee ID',
     },
+    // {
+    //   id: 'day',
+    //   label: dataShow ? 'Day' : '',
+    // },
+    // {
+    //   id: 'date',
+    //   label: dataShow ? 'Date' : '',
+    // },
     {
-      id: 'day',
-      label: dataShow ? 'Day' : '',
-    },
-    {
-      id: 'date',
-      label: dataShow ? 'Date' : '',
-    },
-    {
-      id: 'emp_name',
-      label: 'Employee Name',
+      id: EmployeeType ? '' : 'emp_name',
+      label: EmployeeType ? '' : 'Employee Name',
     },
     {
       id: 'designatin_name',
@@ -117,15 +104,27 @@ function EmployeeTimesheet() {
     },
     {
       id: 'action',
-      label: 'Action',
-      render: handleActionCallback,
+      label: EmployeeType ? '' : 'Action',
+      render: EmployeeType ? '' : handleActionCallback,
     },
   ];
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
+    // let EmployeeType = '';
+    const userId = customFunctions.getLocalStorage('userId');
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeTimesheet}`;
+    let endPoint = '';
+    if(EmployeeType && userId) {
+      endPoint = `${Api.employeeTimesheet}?employee_id=${86}&limit=${limit}&page=${page}`;
+    }
+    else {
+      console.log('else block');
+      endPoint = `${Api.employeeTimesheet}`; 
+    }
+
+    console.log('endPOint', endPoint);
+
     const params = {
       limit,
       page,
@@ -134,8 +133,9 @@ function EmployeeTimesheet() {
       employee_id: filterData.full_name ? filterData.full_name.value : '',
       // ...filterList
     };
+    
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await AuthApi.getDataFromServer(url);
+    const { data, message } = await AuthApi.getDataFromServer(endPoint, url);
 
       // console.log('data.emp_name',data);
 
@@ -153,12 +153,15 @@ function EmployeeTimesheet() {
       });
 
       setRowData((data && data.data) || []);
+      customFunctions.removeLocalStorage('type');
     } else {
       console.log('error', message);
     }
   };
 
   useEffect(() => {
+    // const EmployeeType = props.location.state.type;
+    // setEmployeeType(EmployeeType);
     getRowData(1);
   }, [filterData]);
 
@@ -174,7 +177,6 @@ function EmployeeTimesheet() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, formValues);
     setDataShow(true);
     setFilterData(formValues);
   };

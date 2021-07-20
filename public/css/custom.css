@@ -11160,6 +11160,29 @@ span.np-sup {
   top: 0;
   left: 14px; }
 
+.card-body .confirmation-date {
+  min-height: 48px; }
+
+.form-submit-buttons .mr-5.btn {
+  margin-right: 15px !important; }
+
+.card-footer-view.card-footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border: 0; }
+  .card-footer-view.card-footer h4, .card-footer-view.card-footer .h4 {
+    margin-bottom: 0; }
+
+.stark-form-builder .form-submit-buttons {
+  margin-top: 1rem !important; }
+
 @media (min-width: 576px) {
   .bd-content .highlight {
     margin-right: 0;
