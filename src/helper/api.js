@@ -70,6 +70,8 @@ export default class Api extends Component {
   static roundsUrl = `${Api.baseUrl}applicant-rounds/`;
 
   static interviewUrl =  `${Api.baseUrl}interviewer/`;
+
+  static generateContentUrl = `${Api.baseUrl}generate-content/`;
   
   // Get base URL of APIs
   static getBaseUrl() {

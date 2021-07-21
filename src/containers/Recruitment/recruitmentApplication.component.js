@@ -41,7 +41,6 @@ const group = customFunctions.getLocalStorage('group');
   });
   
   const handleActionCallback = ({id}) => {
-    console.log('row',id);
     return (
       <>
         <a
@@ -73,15 +72,8 @@ const group = customFunctions.getLocalStorage('group');
       isDisplay: false,
     },
     {
-      id: `{{'int_date'} ? 'int_date': 'created_at'}`, // eslint-disable-line
+      id: 'int_date', // eslint-disable-line
       label: 'Date',
-      render: ({ created_at }) => { // eslint-disable-line
-        return (
-          <>
-            <span>{customFunctions.getFormattedDate(created_at)}</span>
-          </>
-        );
-      },
     },
     {
       id: 'name',
@@ -142,7 +134,6 @@ const group = customFunctions.getLocalStorage('group');
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data',data);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -180,7 +171,6 @@ const group = customFunctions.getLocalStorage('group');
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues,'----',status);
     let payload = {};
     
     if(formValues) {

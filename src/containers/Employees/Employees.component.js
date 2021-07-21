@@ -103,7 +103,7 @@ getEmployee(1);
                 <h4 className="text-primary">
                  SDMS{emp.emp_code}
                 </h4>
-                <Button size="sm" className="pull-right" onClick={() => history.push(`/employee-profile/${emp.id}`)}>View</Button>
+                <Button size="sm" className="pull-right" onClick={() => {history.push(`/employee-profile/${emp.id}`); localStorage.setItem('employeeName',emp.full_name) ; localStorage.setItem('candidateId',emp.id)}}>View</Button>
               </Card.Footer>
             </Card.Body>
           </Card>
