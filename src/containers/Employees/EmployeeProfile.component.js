@@ -9,7 +9,7 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
 function EmployeeProfile(props) {
-
+  const flag = customFunctions.getLocalStorage('isEmployeeConfirmed');
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails,setEmployeeDetails] = useState({});
@@ -147,16 +147,17 @@ const deleteEmployeeHistory = (id) => {
               <h7>Contact No - {employeeDetails.mobile}</h7>
             </Col>
 
-            <Col md={2}>
+            <Col md={4}>
               <h7>Confirmation Date - {employeeDetails.confirmation_date ? customFunctions.getFormattedDate(employeeDetails.confirmation_date) : ''}</h7>
             </Col>
-            <Col md={2}>
-              <Button onClick={() => history.push('/confirmation')}>Confirm</Button>
-            </Col>
+            {flag  ? '' : (
 
-            <Col md={4}>
-              <h7>Reliving Date - DD/MM/YYYY</h7>
+            <Col md={2}>
+              <Button onClick={() => {history.push('/confirmation')}}>Confirm</Button>
             </Col>
+            ) }
+
+            
           </Row>
         </Card>
           )}

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertFromHTML, ContentState, convertToRaw } from 'draft-js';
 import SimpleReactValidator from 'simple-react-validator';
+import swal from 'sweetalert';
 import { Datepicker, Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -12,6 +13,10 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 function Confirmation() {
+  const history = useHistory();
+        const name = customFunctions.getLocalStorage('employeeName');
+        const jobTitle = customFunctions.getLocalStorage('title');
+    const id = localStorage.getItem('candidateId');
 const validator = new SimpleReactValidator({autoForceUpdate: this});
 // const name = localStorage.getItem('employeeName');
   const title = 'Confirmation';
@@ -61,19 +66,42 @@ const validator = new SimpleReactValidator({autoForceUpdate: this});
   //   return options;
   // };
 
-  const sendMail = () => {
-    const id = localStorage.getItem('candidateId');
+
+  const sendConfirmationLetter = async (emailbody) => {
+    const postData = {
+      name : 'Confirmation Letter',
+      subject : 'Confirmation Subject',
+      employee_id : id,
+      body : emailbody,
+      confirmation_date : confirmationDate ? customFunctions.getDate(confirmationDate) : '',
+      email_type : 'confirmation_mail',
+    }
+
+    const endPoint = `${Api.sendMailUrl}`;;
+    const { message } = await AuthApi.postDataToServer(endPoint, postData);
+    console.log('data',message);
+    if(message) {
+      swal(message);
+       swal({
+        title: message,
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+      customFunctions.setLocalStorage('isEmployeeConfirmed','true');
+      history.push('/employees');
+          }
+        });
+    }
+  }
+
+  const sendMail = async () => {
       let stringDescription = '';
       convertToRaw(description.getCurrentContent()) && convertToRaw(description.getCurrentContent()).blocks && convertToRaw(description.getCurrentContent()).blocks.map((desc)=>{ //eslint-disable-line
-        const name = customFunctions.getLocalStorage('employeeName');
-        console.log('name', name);
         // const str = desc.text.substring(5,19).replace(name);
-        const str = desc.text.substring(5,19);
-        const strNew = desc.text.replace(str,`${name},\n`);
-        console.log('strNew',str, '------',strNew);
+        const strNew = desc.text.replace('Employee Name', `${name}`).replace('Job Title',`${jobTitle}`);
         // stringDescription+=`${desc.text}\n`;
         stringDescription = strNew;
-        console.log('stringDescription', stringDescription);
         return desc;
       });
       // (("Employee Name  gygbu Job Title gdnwfef").replace('Employee Name', 'Gaurav')).replace('Job Title',  'Full Stack')
@@ -86,12 +114,28 @@ const validator = new SimpleReactValidator({autoForceUpdate: this});
       name : 'ConfirmationLetter',
       body : stringDescription
     }
-  console.log('postData',postData);
-   const endPoint = Api.generateContentUrl;
-    const { data } = AuthApi.postDataToServer(endPoint, postData);
+  // console.log('postData',postData);
+
+   // const callback =  AuthApi.postDataToServer;
+   //  const endPoint = `${Api.generateContentUrl}`;
+
+   //  const { data } = await callback(endPoint, postData);
+
+   const endPoint = `${Api.generateContentUrl}`;;
+    const { data } = await AuthApi.postDataToServer(endPoint, postData);
     console.log('dataaaaaaaaaaaa',data);
     if(data) {
-      console.log('data',data);
+      console.log('data',data.data);
+       // swal(data && data.message[0]);
+        swal({
+        title: data && data.message[0],
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+            sendConfirmationLetter(data.data.body);
+          }
+        });
 
     }
   }
@@ -122,7 +166,7 @@ const validator = new SimpleReactValidator({autoForceUpdate: this});
         <Breadcrumb items={items} />
       </div>
       <div className="mt-4">
-        <p>Employee Name - John</p>
+        <p>Employee Name - {name}</p>
         <section className="content-area">
           <Form   onSubmit={(e) => {
               onSubmitButton(e);

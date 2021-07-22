@@ -44,9 +44,9 @@ const [appicantId,setAppicantId] = useState('');
   }, [currentUser]);
 
    // Get data for form
-  const getData = async (technology) => {
+  const getData = async (technology, id = null) => {
     console.log('technology',technology);
-    const ApplicantId = props.match.params.ID;
+    const ApplicantId = id || props.match.params.ID;
     const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${ApplicantId}/`);
       
      //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
@@ -92,6 +92,8 @@ const [appicantId,setAppicantId] = useState('');
        applied_for: ds,
        technologies_stack: techStack
      };
+
+     props.onBasicInfo(data.data.id);
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
       }
@@ -147,6 +149,7 @@ const [appicantId,setAppicantId] = useState('');
     if (data) {
       console.log('data',data);
       customFunctions.setLocalStorage('applicantId',data.data.id);
+      await getData(options.technologies_stack, data.data.id);
     }
   };
     

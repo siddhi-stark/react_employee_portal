@@ -62,6 +62,7 @@ function ProfessionalDetails(props) {
        ...data.data,
        // applied_for: ds
      };
+     props.onProfDetInfo(data.data.id);
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
       } 

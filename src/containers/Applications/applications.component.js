@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
@@ -11,8 +11,15 @@ function Applications() {
   const title = 'Applications';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Applications' }];
+  const [isBasicInfoId, setBasicInfo ] = useState(null);
+ const [isProfessionalInfoId, setProfessionalInfo ] = useState(null);
+ const [isBI, setBI ] = useState(true);
+ const [isPD, setPD ] = useState(true);
+
   return (
     <>
+    {console.log('isBasicInfoId',isBasicInfoId)}
+    {console.log('isProfessionalInfoId',isProfessionalInfoId)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
@@ -25,17 +32,26 @@ function Applications() {
             >
               <Tab eventKey="currentEmployee" title="Basic Information">
                 <div className="row ml-2">
-                  <BasicInformation />
+                  <BasicInformation onBasicInfo={(value) => {console.log('value', value); setBasicInfo(value); setBI(false);}} />
                 </div>
               </Tab>
-              <Tab eventKey="noticePeriod" title="Professional Details">
+              <Tab eventKey="noticePeriod" title="Professional Details" disabled={isBI}>
                 <div className="row ml-2">
-                  <ProfessonalDetails />
+                {
+                  !isBI && (
+                        <ProfessonalDetails onProfDetInfo={(value) => {setProfessionalInfo(value);  setPD(false);}}/>
+                    )
+                }
                 </div>
               </Tab>
-              <Tab eventKey="old period" title="Interview Rounds">
+              <Tab eventKey="old period" title="Interview Rounds" disabled={isPD}> 
                 <div className="row ml-2">
-                  <InterviewRounds />
+                {
+                  !isPD && (
+                      <InterviewRounds isProfessionalInfoId={isProfessionalInfoId} />
+                    )
+                }
+                
                 </div>
               </Tab>
             </Tabs>
