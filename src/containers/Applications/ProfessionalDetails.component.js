@@ -96,6 +96,7 @@ function ProfessionalDetails(props) {
 
     if (data) {
       console.log('data',data.data.id);
+      localStorage.setItem('InterviewId',data.data.id);
       console.log('............');
     }
     // Perform success actions

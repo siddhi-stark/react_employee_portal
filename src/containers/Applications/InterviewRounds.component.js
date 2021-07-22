@@ -41,26 +41,36 @@ function InterviewRounds() {
   }, [currentUser]);
 
   const updatedJsonSchema = async () => {
+    const id = customFunctions.getLocalStorage('InterviewId');
+    console.log('iddd',id);
     updateJsonSchema([]);
-    if (Number(currentUser) !== 4 ) {
-      const formSchema = [...hrInterviewFormSections];
-      const updatedSchema = formSchema.map((section) => {
-        const s = { ...section };
-        s.fields = section.fields.filter((item) => {
-          const itemData = item;
-          if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = true;
-          return !['feedback'].includes(item.name);
-          // const itemData = item;
-         // if(item.name === 'int_date') itemData.disabled = true;
+    // if (Number(currentUser) !== 4 ) {
+    //   console.log('first if');
+    //   const formSchema = [...hrInterviewFormSections];
+    //   const updatedSchema = formSchema.map((section) => {
+    //     const s = { ...section };
+    //     s.fields = section.fields.filter((item) => {
+    //       if(!id) {
+    //       const itemData = item;
+    //       if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = false;
+    //       } else{
+            
+    //       const itemData = item;
+    //       if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = true;
+    //       }
+    //       return !['feedback'].includes(item.name);
+    //       // const itemData = item;
+    //      // if(item.name === 'int_date') itemData.disabled = true;
 
-        });
-        return s;
-      });
-      updateJsonSchema([...updatedSchema]);
-      return;
-    }
+    //     });
+    //     return s;
+    //   });
+    //   updateJsonSchema([...updatedSchema]);
+    //   return;
+    // }
 
     if (Number(currentUser) === 4 || !flag) {
+      console.log('second if');
       const formSchema = [...hrInterviewFormSections];
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -77,13 +87,13 @@ function InterviewRounds() {
     }
   };
 
-  const getData = async () => {
+  const getData = async (applicantId) => {
     // console.log(designation);
     // const ApplicantId = props.match.params.ID;
 
     const section = hrInterviewFormSections[0].fields[3].options;
     console.log('sections',section);
-    const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
+    const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${applicantId}/`);
       console.log('data',data);
       if(data) {
         
@@ -113,8 +123,10 @@ function InterviewRounds() {
   };
 
   useEffect(() => {
-
-    getData();
+    const id = customFunctions.getLocalStorage('InterviewId');
+    if(id) {
+    getData(id);
+    }
   },[])
 
 
