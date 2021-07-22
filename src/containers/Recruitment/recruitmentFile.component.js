@@ -21,7 +21,7 @@ function RecruitmentFileComponent() {
   const [defaultFilterValues, updateDefaultFilterValues] = useState({}); // eslint-disable-line
   const [filterOptions, updateFilterOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
 
   const formSchema = [...RecruitmentFilterFormSections];
   formSchema[0].fields.map((section) => {
@@ -189,7 +189,7 @@ function RecruitmentFileComponent() {
       };
       
     setFilterData(payload);
-    setShow(true);
+    // setShow(true);
   };
 
   const getTechnology = async () => {
@@ -295,6 +295,7 @@ function RecruitmentFileComponent() {
   };
 
   useEffect(() => {
+
     getRowData(1);
   }, [filterData]);
 
@@ -458,7 +459,6 @@ function RecruitmentFileComponent() {
                     }}
                   />
 
-                  {show && (
                     <div className="mt-5">
                       <CustomTable
                         columns={columns}
@@ -477,7 +477,7 @@ function RecruitmentFileComponent() {
                         }}
                       />
                     </div>
-                  )}
+                  
                 </>
               </Accordion.Collapse>
             </Card>
