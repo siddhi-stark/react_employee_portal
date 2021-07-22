@@ -5,11 +5,19 @@ export default {
   setupInterceptors: async () => {
     await axios.interceptors.request.use(
       async (config) => {
-        const requestConfig = config;
-        requestConfig.headers['Content-Type'] = 'application/json';
+        // const requestConfig = config;
+        // requestConfig.headers['Content-Type'] = 'application/json';
+
+        const configuration = config;
+        console.log('configuration.url',configuration.url);
+        if (configuration.url.indexOf('upload') > -1) {
+          configuration.headers['Content-Type'] = 'multipart/form-data'; // eslint-disable-line
+        } else {
+          configuration.headers['Content-Type'] = 'application/json'; // eslint-disable-line
+        }
         const token = customFucntions.getLocalStorage('access_token');
-        if (token) requestConfig.headers['Authorization'] = `Bearer ${token}`; // eslint-disable-line
-        return requestConfig;
+        if (token) configuration.headers['Authorization'] = `Bearer ${token}`; // eslint-disable-line
+        return configuration;
       },
       (error) => {
         Promise.reject(error);
@@ -33,3 +41,11 @@ export default {
     );
   },
 };
+
+
+// const configuration = config;
+// if (configuration.url.indexOf('upload') > -1) {
+// configuration.headers['Content-Type'] = 'multipart/form-data'; // eslint-disable-line
+// } else {
+// configuration.headers['Content-Type'] = 'application/json'; // eslint-disable-line
+// }

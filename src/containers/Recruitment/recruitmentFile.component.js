@@ -302,18 +302,28 @@ function RecruitmentFileComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
-    console.log('formValues.file_name[0]',formValues.file_name[0]);
+    // console.log('formValues',formValues);
+    console.log('formValues.file_name[0]', fileValue[0],formValues.file_name[0]);
+    // console.log('fileValue[0]',fileValue[0]);
     const csvData = fileValue[0];
-    const  payload = {}
-    payload.applied_for = formValues.applied_for
+
+
+    const formData = new FormData();
+    formData.append('file_name', csvData);
+    formData.append('applied_for', formValues.applied_for
           ? formValues.applied_for.value
-          : ''
-    payload.file_name = csvData;
-    console.log('payload',payload);
+          : '');
+
+    // const  payload = {}
+    // payload.applied_for = formValues.applied_for
+    //       ? formValues.applied_for.value
+    //       : ''
+    // payload.file_name = csvData;
+    // console.log('payload',payload);
+    console.log('formData',formData, csvData);
     const { data, message } = await AuthApi.postDataToServer(
       Api.batchUploadUrl,
-      payload
+      formData
     );
 
     if (!data) {
