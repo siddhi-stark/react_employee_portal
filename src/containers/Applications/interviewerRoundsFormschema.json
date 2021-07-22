@@ -32,13 +32,13 @@
 				"fields": [],
 				"optionCallback": "",
 				"options": [
-					{ "label": "Selected", "value": "selected" },
-					{ "label": "Rejected", "value": "rejected" },
-					{ "label": "Hold", "value": "hold" }
+					{ "label": "Selected", "value": "1" },
+					{ "label": "Rejected", "value": "2" },
+					{ "label": "Hold", "value": "3" }
 				]
 			},
 			{
-				"name": "feedback",
+				"name": "comments",
 				"type": "textarea",
 				"label": "Feedback",
 				"id": "",

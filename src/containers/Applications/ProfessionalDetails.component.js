@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './AddProfessional.json';
 import Api from '../../helper/api';
@@ -12,7 +13,6 @@ function ProfessionalDetails(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-  const[id,setId] = useState('');
 
   // Get user role
   const getUserRole = async () => {
@@ -33,7 +33,7 @@ function ProfessionalDetails(props) {
       const s = {...section};
       s.fields = section.fields.map((item) => {
         const itemData = item;
-         if(item.name === 'total_exp' || item.name === 'rel_exp' || item.name === 'current_ctc' || item.name === 'expected_ctc' || item.name === 'resume' || item.name === 'reference' || item.name === 'upload') itemData.disabled = true;
+         if(item.name === 'total_exp' || item.name === 'rel_exp' || item.name === 'current_ctc' || item.name === 'expected_ctc' || item.name === 'resume' || item.name === 'reference'|| item.name === 'resume_source' || item.name === 'upload') itemData.disabled = true;
          return itemData;
       })
       return s;
@@ -45,7 +45,7 @@ function ProfessionalDetails(props) {
    const getData = async (designation) => {
     console.log(designation);
     const ApplicantId = props.match.params.ID;
-    const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${ApplicantId}/`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${ApplicantId}/`);
       
      //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
      //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
@@ -58,19 +58,24 @@ function ProfessionalDetails(props) {
      //  } : ''
 
      if(data) {
+     localStorage.setItem('InterviewId',data.data.id);
      const obj = {
        ...data.data,
        // applied_for: ds
      };
-
+       if (Number(data.data.resume_source) === 1){
+          obj.resume_source = {label:'Naukri' ,value:data.data.resume_source}
+       } else if (Number(data.data.resume_source) === 2){
+          obj.resume_source = {label:'Indeed' ,value:data.data.resume_source}
+       } else if (Number(data.data.resume_source) === 3){
+          obj.resume_source = {label:'Linkedin' ,value:data.data.resume_source}
+       }
      updateDefaultValues({...obj})    // updateDefaultValues(data);
       } 
 
   };
 
   useEffect(() => {
-    const idd = props.match.params.ID;
-    setId(idd);
     getData();
   },[])
 
@@ -78,7 +83,7 @@ function ProfessionalDetails(props) {
   // Submit Form
    const submitForm = async (formValues) => {
     const applicantId = customFunctions.getLocalStorage('applicantId');
-
+    console.log('applicantId',applicantId);
 
     let postData = {
       ...formValues
@@ -89,16 +94,26 @@ function ProfessionalDetails(props) {
       resume_source: formValues.resume_source ? formValues.resume_source.value : '',
     }
 
-    const { data } = await AuthApi.putDataToServer(
+    const { data, message } = await AuthApi.putDataToServer(
       `${Api.applicantsUrl}${applicantId}/`,
       postData
     );
-
-    if (data) {
-      console.log('data',data.data.id);
-      localStorage.setItem('InterviewId',data.data.id);
-      console.log('............');
-    }
+      if (data) {
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+        localStorage.setItem('InterviewId',data.data.id);
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
     // Perform success actions
   };
 
@@ -143,8 +158,8 @@ function ProfessionalDetails(props) {
       submitBtnText="Save"
       showResetBtn={false}
       resetBtnText="Clear"
-      // btnContainerClass={`form-submit-buttons ${Number(currentUser) === 4 ? 'd-none' : ''}`}
-         btnContainerClass={`form-submit-buttons ${id ? 'd-none' : ''}`}
+      btnContainerClass={`form-submit-buttons ${Number(currentUser) === 4 ? 'd-none' : ''}`}
+      // btnContainerClass={`form-submit-buttons ${id ? 'd-none' : ''}`}
       isStepForm={false}
       onFormReset={() => {
         console.log('form reset callback');

@@ -237,7 +237,7 @@
 	{
 		"name": "resume",
 		"type": "text",
-		"label": "Resume",
+		"label": "Resume Reference",
 		"id": "",
 		"placeholder": "",
 		"inputClass": "",

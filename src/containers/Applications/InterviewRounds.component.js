@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
-import { Button } from 'react-bootstrap';
+import { Button, Row, Col } from 'react-bootstrap';
 import FormSections from './InterviewRounds.json';
 import hrInterviewFormSections from './hrInterviewFormschema.json';
 import Api from '../../helper/api';
@@ -18,6 +18,7 @@ function InterviewRounds() {
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState([]);
   const [toggle, setToggle] = useState(false);
+  const [statusName, setStatusName] = useState('');
   const [flag, setFlag] = useState(false);
 
   // Variable declarations HR
@@ -41,33 +42,29 @@ function InterviewRounds() {
   }, [currentUser]);
 
   const updatedJsonSchema = async () => {
-    const id = customFunctions.getLocalStorage('InterviewId');
-    console.log('iddd',id);
     updateJsonSchema([]);
-    // if (Number(currentUser) !== 4 ) {
-    //   console.log('first if');
-    //   const formSchema = [...hrInterviewFormSections];
-    //   const updatedSchema = formSchema.map((section) => {
-    //     const s = { ...section };
-    //     s.fields = section.fields.filter((item) => {
-    //       if(!id) {
-    //       const itemData = item;
-    //       if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = false;
-    //       } else{
+    if (Number(currentUser) !== 4 ) {
+      console.log('first if');
+      const formSchema = [...hrInterviewFormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.filter((item) => {
             
-    //       const itemData = item;
-    //       if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = true;
-    //       }
-    //       return !['feedback'].includes(item.name);
-    //       // const itemData = item;
-    //      // if(item.name === 'int_date') itemData.disabled = true;
+          const itemData = item;
+          if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = false;
+          if(!statusName === 'selected'){
+            console.log('selected');
+          }
+            return !['feedback'].includes(item.name);
+          // const itemData = item;
+         // if(item.name === 'int_date') itemData.disabled = true;
 
-    //     });
-    //     return s;
-    //   });
-    //   updateJsonSchema([...updatedSchema]);
-    //   return;
-    // }
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+      return;
+    }
 
     if (Number(currentUser) === 4 || !flag) {
       console.log('second if');
@@ -76,10 +73,11 @@ function InterviewRounds() {
         const s = { ...section };
         s.fields = section.fields.filter((item) => {
           const itemData = item;
-          if(item.name === 'date') itemData.disabled = true;
-          if(item.name === 'time') itemData.disabled = true;
+          if(item.name === 'int_date') itemData.disabled = true;
+          if(item.name === 'int_time') itemData.disabled = true;
+          if(item.name === 'round_status') itemData.disabled = true;
 
-          return !['interviewer', 'round', 'feedback'].includes(item.name);
+          return !['interviewer', 'feedback'].includes(item.name);
         });
         return s;
       });
@@ -87,47 +85,46 @@ function InterviewRounds() {
     }
   };
 
-  const getData = async (applicantId) => {
-    // console.log(designation);
-    // const ApplicantId = props.match.params.ID;
+ const getData = async (applicantId) => {
+// console.log(designation);
+// const ApplicantId = props.match.params.ID;
 
-    const section = hrInterviewFormSections[0].fields[3].options;
-    console.log('sections',section);
-    const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${applicantId}/`);
-      console.log('data',data);
-      if(data) {
-        
-    const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
-    data.data.int_date = intDate ? new Date(intDate) : '';
-    data.data.int_time = data.data.int_time ? new Date(intDate + ' ' + data.data.int_time) : ''; //eslint-disable-line
-  
-     const ds = data.data.interviewer_id ? {
-        label: data.data.interviewer_name,
-        value: data.data.interviewer_id
-      } : ''   
+const section = hrInterviewFormSections[0].fields[3].options;
+console.log('sections',section);
+const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${applicantId}/`);
+  console.log('data',data);
+  if(data) {
+setStatusName(data.data.status_name);
+const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
+data.data.int_date = intDate ? new Date(intDate) : '';
+data.data.int_time = data.data.int_time ? new Date(intDate + ' ' + data.data.int_time) : ''; //eslint-disable-line
 
-       const interw = data.data.round_type ? {
-        label: data.data.round_type_name,
-        value: data.data.round_type
-      } : ''  
+ const ds = data.data.interviewer_id ? {
+    label: data.data.interviewer_name,
+    value: data.data.interviewer_id
+  } : ''   
 
-     const obj = {
-       ...data.data,
-       interviewer: ds,
-       round_status: interw
-     };
+   const interw = data.data.round_type ? {
+    label: data.data.round_type_name,
+    value: data.data.round_type
+  } : ''  
 
-     updateDefaultValues({...obj})    // updateDefaultValues(data);
-      }
+ const obj = {
+   ...data.data,
+   interviewer: ds,
+   round_status: interw
+ };
 
-  };
+ updateDefaultValues({...obj})    // updateDefaultValues(data);
+  }
+};
 
-  useEffect(() => {
-    const id = customFunctions.getLocalStorage('InterviewId');
-    if(id) {
+useEffect(() => {
+const id = customFunctions.getLocalStorage('InterviewId');
+  if(id) {
     getData(id);
-    }
-  },[])
+  }
+},[])
 
 
   // Submit Form
@@ -191,6 +188,7 @@ function InterviewRounds() {
       postData
     );
     if (data) {
+      customFunctions.removeLocalStorage('InterviewId');
       console.log('data',data);
     }
   };
@@ -258,8 +256,10 @@ function InterviewRounds() {
   return (
     <>
       {jsonSchema && jsonSchema.length > 0 && (
+        <>
+        <p className="mt-3">{(statusName==='selected')? 'Interview schedule approve by interviewer':''}</p>
         <StarkFormBuilder
-          containerClass="mt-4"
+          containerClass="mt-1"
           formHeaderClass=""
           formSections={jsonSchema}
           formHeading="HR Interview Form"
@@ -277,15 +277,22 @@ function InterviewRounds() {
           }
           showResetBtn={false}
           resetBtnText="Clear"
-          btnContainerClass="form-submit-buttons"
+          btnContainerClass={`form-submit-buttons ${(statusName==='selected')?'d-none':''}`}
           isStepForm={false}
           onFormReset={() => {
             console.log('form reset callback');
           }}
         />
+      </>
       )}
-
-      {toggle && (
+      <hr/>
+        <>
+        <Row>
+        <Col sm={1}>
+        <Button onClick={()=>{setToggle(true);}}>{(statusName==='selected')?'+':''}</Button>
+        </Col>
+        </Row>
+      {toggle && (statusName==='selected') && (
         <StarkFormBuilder
           containerClass=""
           formHeaderClass=""
@@ -308,6 +315,7 @@ function InterviewRounds() {
           }}
         />
       )}
+        </>
       <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
         <div className="mt-3">
           <Button onClick={() =>{setFlag(true); history.push('/interviewer-round');}}>
