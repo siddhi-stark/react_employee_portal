@@ -12,8 +12,7 @@ function BasicInformation(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-// const[id,setId] = useState('');
-const [appicantId,setAppicantId] = useState('');
+  const [appicantId,setAppicantId] = useState('');
   
     // Get user role
   const getUserRole = async () => {
@@ -34,7 +33,7 @@ const [appicantId,setAppicantId] = useState('');
       const s = {...section};
       s.fields = section.fields.map((item) => {
         const itemData = item;
-         if(item.name === 'name' || item.name === 'position' || item.name === 'technology' || item.name === 'education' || item.name === 'email' || item.name === 'mobile') itemData.disabled = true;
+         if(item.name === 'name' || item.name === 'position' || item.name === 'technologies_stack' || item.name === 'applied_for' || item.name === 'education' || item.name === 'email' || item.name === 'mobile') itemData.disabled = true;
          return itemData;
       })
       return s;
@@ -96,6 +95,7 @@ const [appicantId,setAppicantId] = useState('');
      props.onBasicInfo(data.data.id);
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
+      customFunctions.setLocalStorage('applicantId',data.data.id);
       }
 
   };
@@ -201,8 +201,6 @@ const [appicantId,setAppicantId] = useState('');
   }  
 
   useEffect(() => {
-    // const idd = props.match.params.ID;
-    // setId(idd);
     getTechnology();
     getDesignation();
   }, []);
@@ -227,9 +225,8 @@ const [appicantId,setAppicantId] = useState('');
     defaultFormValues={defaultValues}
     currentUser={currentUser}
     submitBtnText={(Number(currentUser) === 4)  ? '' : 'Save'}
-    btnContainerClass='form-submit-buttons'
-    // btnContainerClass={`form-submit-buttons ${(Number(currentUser) === 4) || id ? 'd-none' : ''}`}
-
+    // btnContainerClass='form-submit-buttons'
+    btnContainerClass={`form-submit-buttons ${Number(currentUser) === 4 ? 'd-none' : ''}`}
     showResetBtn={false}
     resetBtnText="Clear"
     isStepForm={false}

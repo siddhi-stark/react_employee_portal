@@ -276,6 +276,7 @@ const group = customFunctions.getLocalStorage('group');
                 <a
                   href="#"
                   onClick={() => {
+                    customFunctions.removeLocalStorage('InterviewId');
                     history.push('/applications');
                   }}
                   className="btn-link"

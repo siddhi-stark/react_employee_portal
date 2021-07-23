@@ -1,66 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import CustomTable from 'stark-custom-datatable';
-import { withRouter } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
+import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
-import swal from 'sweetalert';
-import { ModalInput } from '../../components/FormInputs';
+import { Button } from 'react-bootstrap';
+import FormSections from './InterviewRounds.json';
 import hrInterviewFormSections from './hrInterviewFormschema.json';
-import customFunctions from '../../helper/customFunctions';
-import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import customFunctions from '../../helper/customFunctions';
 
-function InterviewRounds(props) {
-  
-// Declare columns
-const columns = [{
-        'id':'index',
-        'label': 'Sr.No',
-},
-{
-        'id':'int_date',
-        'label': 'Interview Date',
-},
-{
-        'id':'int_time',
-        'label': 'Interview Time',
-},
-{
-        'id':'round_type_name',
-        'label': 'InterviewRound',
-},
-{
-        'id':'applicant_name',
-        'label': 'Applicant Name',
-},
-{
-        'id':'interviewer_name',
-        'label': 'InterviewerName',
-},
-{
-        'id':'interviewer_status_name',
-        'label': 'InterviewStatus',
-},
-{
-        'id':'status_name',
-        'label': 'Status',
-},
-];
+function InterviewRounds() {
+  const history = useHistory();
 
+  // Variable declarations
+  const [defaultAddMoreValues, updateDefaultAddMoreValues] = useState({}); // eslint-disable-line
+  const [addMoreValuesOptions, updateAddMoreValuesOptions] = useState({});
+  const [currentUser, updateCurrentUser] = useState(0);
+  const [jsonSchema, updateJsonSchema] = useState([]);
+  const [toggle, setToggle] = useState(false);
+  const [flag, setFlag] = useState(false);
 
-
-// Declare variable 
-const [rowData, setRowData] = useState([])
-const [totalCount, setTotalCount] = useState(10);
-const limit = 5;
-const [currentPage, setCurrentPage] = useState(1);
-const [itemsPerPage, setItemsPerPage] = useState(10);
-const [modalShow, setModalShow] = useState('false');
- const [currentUser, updateCurrentUser] = useState(0);
-
- const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
+  // Variable declarations HR
+  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
 
+  // const[onClick,isOnClick] = useState(false);
+  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -68,62 +33,136 @@ const [modalShow, setModalShow] = useState('false');
 
   useEffect(() => {
     getUserRole();
+    setToggle(false);
   }, []);
 
-  // useEffect(() => {
-  //   updatedJsonSchema();
-  // }, [currentUser]);
+  useEffect(() => {
+    updatedJsonSchema();
+  }, [currentUser]);
 
-// Declare methods
-const getRowData = async (pageNo = 1,id) =>{
-  const page = pageNo || currentPage;
-  console.log('interviewRounds',id);
-    const endPoint = `${Api.roundsUrl}`;
+  const updatedJsonSchema = async () => {
+    updateJsonSchema([]);
+    if (Number(currentUser) !== 4 ) {
+      const formSchema = [...hrInterviewFormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.filter((item) => {
+          const itemData = item;
+          if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = true;
+          return !['feedback'].includes(item.name);
+          // const itemData = item;
+         // if(item.name === 'int_date') itemData.disabled = true;
 
-
-     const params = {
-      limit,
-      page,
-      applicant_id : id
-    };
-    const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await AuthApi.getDataFromServer(url);
-
-
-    
-    // const url = customFunctions.generateUrl(endPoint, params);
-    // const { data, message } = await AuthApi.getDataFromServer(url);
-    
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-       setTotalCount(data.paginator.total_count);
-      setItemsPerPage(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-
-
-      const newData = [...data.data];
-      newData.map((item, i) => {
-        const newItem = item;
-        newItem.index = (page - 1) * itemsPerPage + (i + 1);
-        return newItem;
+        });
+        return s;
       });
-
-      setRowData(data && data.data || []);
-    }else{
-      console.log('error', message)
+      updateJsonSchema([...updatedSchema]);
+      return;
     }
-} 
+
+    if (Number(currentUser) === 4 || !flag) {
+      const formSchema = [...hrInterviewFormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.filter((item) => {
+          const itemData = item;
+          if(item.name === 'date') itemData.disabled = true;
+          if(item.name === 'time') itemData.disabled = true;
+
+          return !['interviewer', 'round', 'feedback'].includes(item.name);
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+    }
+  };
+
+  const getData = async () => {
+    // console.log(designation);
+    // const ApplicantId = props.match.params.ID;
+
+    const section = hrInterviewFormSections[0].fields[3].options;
+    console.log('sections',section);
+    const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
+      console.log('data',data);
+      if(data) {
+        
+    const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
+    data.data.int_date = intDate ? new Date(intDate) : '';
+    data.data.int_time = data.data.int_time ? new Date(intDate + ' ' + data.data.int_time) : ''; //eslint-disable-line
+  
+     const ds = data.data.interviewer_id ? {
+        label: data.data.interviewer_name,
+        value: data.data.interviewer_id
+      } : ''   
+
+       const interw = data.data.round_type ? {
+        label: data.data.round_type_name,
+        value: data.data.round_type
+      } : ''  
+
+     const obj = {
+       ...data.data,
+       interviewer: ds,
+       round_status: interw
+     };
+
+     updateDefaultValues({...obj})    // updateDefaultValues(data);
+      }
+
+  };
+
+  useEffect(() => {
+
+    getData();
+  },[])
 
 
-useEffect(()=>{
-  // const id = customFunctions.getLocalStorage('InterviewId');
-  console.log('props.isProfessionalInfoId',props.isProfessionalInfoId);
-  getRowData(1,props.isProfessionalInfoId);
-},[])
+  // Submit Form
+  const submitAddMoreForm = async (formValues) => {
+    console.log('formValues',formValues);
+    const postData = {
+      int_date: formValues.int_date ? customFunctions.getFormattedDate(formValues.int_date) : '',
+      int_time: formValues.int_time ? customFunctions.getTime(formValues.int_time) : '',
+      round_status: formValues.round_status ? formValues.round_status.value : '',
+      interviewer: formValues.interviewer ? formValues.interviewer.value : '',
+    }
+    console.log('postData',postData);
+    const { data } = await AuthApi.postDataToServer(
+      Api.roundsUrl,
+      postData
+    );
+    if (data) {
+      console.log('data',data);
+    }
+    // Perform success actions
+  };
 
-const onCancel = () => {
-setModalShow(false);
-}
+  const getInterviewer = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    if (!data) {
+      // show error
+      return;
+    }
 
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.full_name, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...addMoreValuesOptions,
+      interviewer: dpOptions,
+    };
+    updateAddMoreValuesOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getInterviewer();
+  }, []);
+
+  // Submit Form HR
   const submitForm = async (formValues) => {
     const id = customFunctions.getLocalStorage('applicantId');
     console.log('formValues',formValues);
@@ -141,18 +180,6 @@ setModalShow(false);
     );
     if (data) {
       console.log('data',data);
-      
-
-       swal({
-        title: data && data.message[0],
-        icon: 'success',
-      })
-        .then(okAction => {
-          if (okAction) {
-            setModalShow(false);
-          }
-        });
-
     }
   };
 
@@ -204,87 +231,28 @@ setModalShow(false);
     getRound();
   }, []);
 
-
- // const submitForm = async (formValues) => {
- //    const id = customFunctions.getLocalStorage('applicantId');
- //    console.log('formValues',formValues);
- //    const postData = {
- //      int_date: formValues.int_date ? customFunctions.getDate(formValues.int_date) : '',
- //      int_time: formValues.int_time ? customFunctions.getTime(formValues.int_time) : '',
- //      round_status: formValues.round_status ? formValues.round_status.value : '',
- //      interviewer: formValues.interviewer ? formValues.interviewer.value : '',
- //      applicant: id
- //    }
- //    console.log('postData',postData);
- //    const { data } = await AuthApi.postDataToServer(
- //      Api.roundsUrl,
- //      postData
- //    );
- //    if (data) {
- //      console.log('data',data);
- //    }
- //  };
+  const OnReschedule = async () => {
+    const js = jsonSchema[0].fields;
+    console.log('js',js);
+   const updatedSchema = await js.map((item) => {
+      const itemData = item;
+          if(item.name === 'int_date') itemData.disabled = false;
+          if(item.name === 'int_time') itemData.disabled = false;
+   return itemData;
+    })
+    updateJsonSchema([...updatedSchema]);
+  }
 
   return (
-    <>  
-     <div className="mt-5">
-
-       <Card>
-         <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Interview Rounds</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <a
-                    href="#"
-                    onClick={() => {
-                      // history.push('/add-technology-stack');
-                       setModalShow(true);
-                    }}
-                    className="btn-link"
-                  >
-                    Add Round
-                  </a>
-                </div>
-              </div>
-            </Card.Header>
-          <Card.Body>
-
-<CustomTable
-              columns={columns}
-              rows={rowData}
-              showPagination={true} // eslint-disable-line
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
-              }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
-            />
-          </Card.Body>
-        </Card>
-
-
-     </div>    
-
-     <ModalInput
-        size="lg"
-        centered
-        show={modalShow}
-        onHide={onCancel}
-        label='Add Interview Round'
-        id="contained-modal-title-vcenter"
-        modalBody={
-          <StarkFormBuilder
+    <>
+      {jsonSchema && jsonSchema.length > 0 && (
+        <StarkFormBuilder
           containerClass="mt-4"
           formHeaderClass=""
-          formSections={hrInterviewFormSections}
+          formSections={jsonSchema}
           formHeading="HR Interview Form"
           onFormSubmit={(formValues) => {
+            OnReschedule();
             submitForm(formValues);
           }}
 
@@ -303,9 +271,38 @@ setModalShow(false);
             console.log('form reset callback');
           }}
         />
-        }
-      />  
+      )}
 
+      {toggle && (
+        <StarkFormBuilder
+          containerClass=""
+          formHeaderClass=""
+          formSections={FormSections}
+          formHeading=""
+          onFormSubmit={(formValues) => {
+            submitAddMoreForm(formValues);
+          }}
+          options={addMoreValuesOptions}
+          callbacks={{}}
+          defaultFormValues={defaultAddMoreValues}
+          currentUser={currentUser}
+          submitBtnText="Schedule Interview"
+          showResetBtn={false}
+          resetBtnText="Clear"
+          btnContainerClass="form-submit-buttons"
+          isStepForm={false}
+          onFormReset={() => {
+            console.log('form reset callback');
+          }}
+        />
+      )}
+      <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
+        <div className="mt-3">
+          <Button onClick={() =>{setFlag(true); history.push('/interviewer-round');}}>
+            Approval
+          </Button>
+        </div>
+      </UserRestrictions>
     </>
   );
 }
