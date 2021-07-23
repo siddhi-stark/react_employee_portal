@@ -76,6 +76,8 @@ export default class Api extends Component {
   static sendMailUrl = `${Api.baseUrl}send-email/`;
 
   static batchUploadUrl =  `${Api.baseUrl}batch-upload/`;
+
+  static bulkStatusUrl = `${Api.baseUrl}applicants-bulk-status/`;
   
   // Get base URL of APIs
   static getBaseUrl() {

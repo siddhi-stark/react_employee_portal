@@ -3,6 +3,7 @@ import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Image, Button, Accordion } from 'react-bootstrap';
+import swal from 'sweetalert';
 import FormSections from './applicationformschema.json';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
@@ -40,7 +41,8 @@ const group = customFunctions.getLocalStorage('group');
     return sectionData;
   });
   
-  const handleActionCallback = ({id}) => {
+  const handleActionCallback = ({id,status_name}) => { //eslint-disable-line
+      console.log('status_name',status_name)
     return (
       <>
         <a
@@ -54,7 +56,9 @@ const group = customFunctions.getLocalStorage('group');
             // history.push('/edit-employee');
           }}
         >
-          <Image src="/images/edit-button.svg" />
+
+          <Image src= {status_name === 'shortlisted' ? '/images/edit-button.svg' : ''} // eslint-disable-line
+           />  
         </a>
       </>
     );
@@ -108,7 +112,7 @@ const group = customFunctions.getLocalStorage('group');
       label: 'Education',
     },
     {
-      id: 'status',
+      id: 'status_name',
       label: 'Status',
     },
     {
@@ -118,44 +122,155 @@ const group = customFunctions.getLocalStorage('group');
     },
   ];
 
-  // Declare methods
-  const getRowData = async (pageNo = 1) => {
-    const page = pageNo || currentPage;
+  // // Declare methods
+  // const getRowData = async (pageNo = 1) => {
+  //   const page = pageNo || currentPage;
     
-    const endPoint =  (Number(group) === 4) ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
-    const filterList =
-      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-        ? customFunctions.jsonParse(filterData)
-        : {};
+  //   const endPoint =  (Number(group) === 4) ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
+  //   const filterList =
+  //     filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+  //       ? customFunctions.jsonParse(filterData)
+  //       : {};
+  //   const params = {
+  //     page,
+  //     limit,
+  //     ...filterList,
+  //   };
+  //   const url = customFunctions.generateUrl(endPoint, params);
+  //   const { data, message } = await AuthApi.getDataFromServer(url);
+
+  //   if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+  //     setTotalCount(data.paginator.total_count);
+  //     setLimit(data.paginator.limit);
+  //     setCurrentPage(Number(data.paginator.current_page));
+
+  //     const newData = [...data.data];
+  //     newData.map((item, i) => {
+  //       const newItem = item;
+  //       newItem.no = (page - 1) * limit + (i + 1);
+  //       return newItem;
+  //     });
+
+  //     setRowData((data && data.data) || []);
+  //   } else {
+  //     console.log('error', message);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getRowData(1);
+  // }, [filterData]);
+
+
+
+// Declare methods
+const getRowData = async (pageNo=1) =>{
+    const page = pageNo || currentPage;
+    const endPoint = 'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/applicants/';
+    const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
     const params = {
       page,
       limit,
-      ...filterList,
-    };
+      ...filterList
+      }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-
+    
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-
-      const newData = [...data.data];
-      newData.map((item, i) => {
-        const newItem = item;
-        newItem.no = (page - 1) * limit + (i + 1);
-        return newItem;
-      });
-
-      setRowData((data && data.data) || []);
-    } else {
-      console.log('error', message);
+      setRowData(data && data.data || []);
+    }else{
+      console.log('error', message)
     }
-  };
+} 
 
-  useEffect(() => {
-    getRowData(1);
-  }, [filterData]);
+
+useEffect(()=>{
+  getRowData(1)
+},[filterData])
+
+
+const handleChangeActiveStatus = async (selectedIds) => {
+          if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
+            const params = {
+              status: 2,
+              ids: selectedIds
+            }
+             const successHandle = (e) => {
+        swal(e && e.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+          getRowData(1);
+        });
+      };
+      const errorHandle = (e) => {
+        swal(e && e.message[0], '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+          getRowData(1);
+        });
+      };
+            await customFunctions.changeStatus(
+        `${Api.bulkStatusUrl}`,
+        params,
+        'put',
+        successHandle,
+        errorHandle
+      );
+          }
+      } 
+
+const handleChangeInactiveStatus = async (selectedIds) => {
+          if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
+            const params = {
+              status: 3,
+              ids: selectedIds
+            }
+            const successHandle = (e) => {
+        swal(e && e.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+          getRowData(1);
+        });
+      };
+      const errorHandle = (e) => {
+        swal(e && e.message[0], '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+          getRowData(1);
+        });
+      };
+              await customFunctions.changeStatus(
+        `${Api.bulkStatusUrl}`,
+        params,
+        'put',
+        successHandle,
+        errorHandle
+      );
+          }
+      } 
+
+ 
+
+
 
   // filter Form
 
@@ -351,23 +466,24 @@ const group = customFunctions.getLocalStorage('group');
                 </>
               )}
             </div>
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              role={5}
-              showPagination={true}
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
-              }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
-            />
+           
+<CustomTable
+    columns={columns}
+    rows={rowData}
+bulkActions={[{'actionTitle' : 'Shortlisted','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Rejected','actionCallback' : handleChangeInactiveStatus},]} 
+showPagination={true} 
+paginationProps={{
+            totalItems: totalCount,
+            itemsPerPage: limit,
+            activePage: currentPage,
+            onPageChange: (pageNo) => {
+              getRowData(pageNo);
+            }
+          }} 
+showCheckbox={true} 
+emptyRender={()=>{ return ('No record found.')}} 
+/>
+
           </Card.Body>
         </Card>
       </section>
