@@ -71,9 +71,13 @@ export default class Api extends Component {
 
   static interviewUrl =  `${Api.baseUrl}interviewer/`;
 
+<<<<<<< HEAD
   static generateContentUrl = `${Api.baseUrl}generate-content/`;
 
   static sendMailUrl = `${Api.baseUrl}send-email/`;
+=======
+  static batchUploadUrl =  `${Api.baseUrl}batch-upload/`;
+>>>>>>> email-template-integration
   
   // Get base URL of APIs
   static getBaseUrl() {
