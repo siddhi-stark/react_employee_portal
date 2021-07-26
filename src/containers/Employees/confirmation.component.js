@@ -1,59 +1,162 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState, convertFromHTML, ContentState } from 'draft-js';
-import { Datepicker, DropdownInput, Helmet } from '../../components/FormInputs';
-import Api from '../../helper/api';
-import AuthApi from '../../helper/authApi';
+import { EditorState, convertFromHTML, ContentState, convertToRaw } from 'draft-js';
+import SimpleReactValidator from 'simple-react-validator';
+import swal from 'sweetalert';
+import { Datepicker, Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
 
 function Confirmation() {
+  const history = useHistory();
+        const name = customFunctions.getLocalStorage('employeeName');
+        const jobTitle = customFunctions.getLocalStorage('title');
+    const id = localStorage.getItem('candidateId');
+const validator = new SimpleReactValidator({autoForceUpdate: this});
+// const name = localStorage.getItem('employeeName');
   const title = 'Confirmation';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Confirmation' }];
 
   const test =
-    'Dear Employee First Name,<br />With reference to the thorough evaluation of your performance during the probation period from Start Date to End Date, we are pleased to inform you that your employment is being confirmed as Job Title from Date of Confirmation. </br> The terms and conditions of your employment and your job responsibilities will continue to remain the same. We thank you for your valuable contribution made to your process and hope that you will perform with equal enthusiasm in future.</br>All the very best in all your endeavors with Stark!!</br>All the very best for a fruitful carrear with Stark !!</br>Regards,';
+    'Dear Employee Name,<br />With reference to the thorough evaluation of your performance during the probation period from Start Date to End Date, we are pleased to inform you that your employment is being confirmed as Job Title from Date of Confirmation. </br> The terms and conditions of your employment and your job responsibilities will continue to remain the same. We thank you for your valuable contribution made to your process and hope that you will perform with equal enthusiasm in future.</br>All the very best in all your endeavors with Stark!!</br>All the very best for a fruitful carrear with Stark !!</br>Regards,';
   const [description, setDescription] = useState(
     EditorState.createWithContent(
       ContentState.createFromBlockArray(convertFromHTML(test))
     )
   );
-  const [designation, setDesignation] = useState([]);
-  const [selectedDesignationOption, setSelectedDesignationOption] = useState(
-    ''
-  );
+   const [key_element, setKeyElement] = useState(EditorState.createEmpty()); //eslint-disable-line
+
+  const [confirmationDate,setConfirmationDate] = useState('');
+  // const [selectedDesignationOption, setSelectedDesignationOption] = useState(
+  //   ''
+  // );
   const onEditorStateChange = (editorState) => {
     setDescription(editorState);
   };
 
-  const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.designationUrl}?type=all`
-    );
-    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      setDesignation(data.data);
-    }
-  };
+
+  // const getDesignation = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(
+  //     `${Api.designationUrl}?type=all`
+  //   );
+  //   if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+  //     setDesignation(data.data);
+  //   }
+  // };
 
   useEffect(() => {
-    getDesignation();
+    // getDesignation();
   }, []);
 
-  const getDesignationList = () => {
-    if (!designation) return [];
-    const options = [];
-    designation.map((desgn) => {
-      return options.push({
-        label: desgn.name,
-        id: desgn.id,
+  // const getDesignationList = () => {
+  //   if (!designation) return [];
+  //   const options = [];
+  //   designation.map((desgn) => {
+  //     return options.push({
+  //       label: desgn.name,
+  //       id: desgn.id,
+  //     });
+  //   });
+  //   return options;
+  // };
+
+
+  const sendConfirmationLetter = async (emailbody) => {
+    const postData = {
+      name : 'Confirmation Letter',
+      subject : 'Confirmation Subject',
+      employee_id : id,
+      body : emailbody,
+      confirmation_date : confirmationDate ? customFunctions.getDate(confirmationDate) : '',
+      email_type : 'confirmation_mail',
+    }
+
+    const endPoint = `${Api.sendMailUrl}`;;
+    const { message } = await AuthApi.postDataToServer(endPoint, postData);
+    console.log('data',message);
+    if(message) {
+      swal(message);
+       swal({
+        title: message,
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+      customFunctions.setLocalStorage('isEmployeeConfirmed','true');
+      history.push('/employees');
+          }
+        });
+    }
+  }
+
+  const sendMail = async () => {
+      let stringDescription = '';
+      convertToRaw(description.getCurrentContent()) && convertToRaw(description.getCurrentContent()).blocks && convertToRaw(description.getCurrentContent()).blocks.map((desc)=>{ //eslint-disable-line
+        // const str = desc.text.substring(5,19).replace(name);
+        const strNew = desc.text.replace('Employee Name', `${name}`).replace('Job Title',`${jobTitle}`);
+        // stringDescription+=`${desc.text}\n`;
+        stringDescription = strNew;
+        return desc;
       });
-    });
-    return options;
+      // (("Employee Name  gygbu Job Title gdnwfef").replace('Employee Name', 'Gaurav')).replace('Job Title',  'Full Stack')
+
+    const postData = {
+      employee_id : id,
+      confirmation_date : confirmationDate ? customFunctions.getDate(confirmationDate) : '',
+      email_type : 'confirmation_mail',
+      subject : 'ConfirmationSubject',
+      name : 'ConfirmationLetter',
+      body : stringDescription
+    }
+  // console.log('postData',postData);
+
+   // const callback =  AuthApi.postDataToServer;
+   //  const endPoint = `${Api.generateContentUrl}`;
+
+   //  const { data } = await callback(endPoint, postData);
+
+   const endPoint = `${Api.generateContentUrl}`;;
+    const { data } = await AuthApi.postDataToServer(endPoint, postData);
+    console.log('dataaaaaaaaaaaa',data);
+    if(data) {
+      console.log('data',data.data);
+       // swal(data && data.message[0]);
+        swal({
+        title: data && data.message[0],
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+            sendConfirmationLetter(data.data.body);
+          }
+        });
+
+    }
+  }
+
+  const onSubmitButton = (e) => {
+    e.preventDefault();
+    console.log('validationnnnnnnn');
+
+    if (validator.allValid()) {
+      sendMail();
+    } else {
+      validator.showMessages();
+      console.log('else', validator.fieldValid('confirmationDate'));
+      console.log('dateee',validator.message(
+                                   'Confirm Date',
+                                   confirmationDate,
+                                   'required'
+                                 ))
+    }
   };
+ validator.purgeFields();
 
   return (
     <>
@@ -63,45 +166,45 @@ function Confirmation() {
         <Breadcrumb items={items} />
       </div>
       <div className="mt-4">
-        <p>Employee Name - John</p>
+        <p>Employee Name - {name}</p>
         <section className="content-area">
-          <Form>
+          <Form   onSubmit={(e) => {
+              onSubmitButton(e);
+            }}
+            autocomplete="off">
             <Row>
               <Col md={4}>
-                <Datepicker
+
+               <Datepicker
                   label="Confirmation Date"
+                  asterisk="*"
                   className="form-control"
-                  // selected={joiningDate}
+                  selected={confirmationDate}
                   placeholder="dd/mm/yyyy"
                   // maxDate={maxdate}
                   dateFormat="dd/MM/yyyy"
-                  // maxDate={new Date()}
-                  // onChange={(e) => {
-                  //   setJoiningDate(e);
-                  // }}
-                  // errorMessage={validator.message(
-                  //   'Joining Date',
-                  //   joiningDate,
-                  //   'required'
-                  // )}
+                  maxDate={new Date()}
+                  onChange={(e) => {
+                    setConfirmationDate(e);
+                  }}
+                  errorMessage={validator.message(
+                    'Confirm Date',
+                    confirmationDate,
+                    'required'
+                  )}
                 />
 
-                <DropdownInput
-                  label="Designation"
-                  options={getDesignationList()}
-                  placeholder="Select Designation"
-                  defaultValue={selectedDesignationOption}
-                  onSelectHandler={(select) => {
-                    setSelectedDesignationOption(select);
-                  }}
-                />
+               { console.log('dateee',validator.message(
+                                   'Confirm Date',
+                                   confirmationDate,
+                                   'required'
+                                 ))}
+
+
+                 
 
                 <div className="justify-content-left mt-4 preview-send-btn">
-                  <Button variant="primary">Save</Button>
-
-                  <Button variant="primary" type="submit" className="ms-4">
-                    Preview and Send
-                  </Button>
+                  <Button type="submit" variant="primary">Save and Send Mail</Button>
                 </div>
               </Col>
 
@@ -119,10 +222,9 @@ function Confirmation() {
                   // readOnly={viewType}
                   wrapperClassName="demo-wrapper"
                   editorClassName="demo-editor"
+
                   editorState={description}
-                  onEditorStateChange={(e) => {
-                    onEditorStateChange(e);
-                  }}
+                   onEditorStateChange={(e)=>{onEditorStateChange(e);}}
                   toolbar={{
                     options: [
                       'inline',

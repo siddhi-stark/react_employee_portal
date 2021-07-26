@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
+import swal from 'sweetalert';
 import { withRouter } from 'react-router-dom';
 import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
 import FormSections from './formschema.json';
@@ -17,10 +18,10 @@ function RecruitmentFileComponent() {
   const items = [{ to: '/', label: 'Home' }, { label: 'Batch Upload' }];
 
   // Variable declarations Filter form
-  const [defaultFilterValues, updateDefaultFilterValues] = useState({});
+  const [defaultFilterValues, updateDefaultFilterValues] = useState({}); // eslint-disable-line
   const [filterOptions, updateFilterOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
 
   const formSchema = [...RecruitmentFilterFormSections];
   formSchema[0].fields.map((section) => {
@@ -37,12 +38,13 @@ function RecruitmentFileComponent() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
-  let defaultFilterOptions = {}; //eslint-disable-line
+  let defaultFilterOptions = {};
   // Form
 
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({});
+  // const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
+  const [fileValue, setFileValue] = useState();
 
   const handleActionCallback = () => {
     return (
@@ -169,9 +171,8 @@ function RecruitmentFileComponent() {
     getUserRole();
   }, []);
 
-  // Submit Form
+  // Submit Form Filter
   const submitFilterForm = async (formValues) => {
-    console.log(formValues, updateDefaultFilterValues);
       const  payload = {
         technology_id: formValues.technology
           ? formValues.technology.value
@@ -188,12 +189,11 @@ function RecruitmentFileComponent() {
       };
       
     setFilterData(payload);
-    setShow(true);
+    // setShow(true);
   };
 
   const getTechnology = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
-    console.log('data',data);
     if (!data) {
       // show error
       return;
@@ -210,7 +210,6 @@ function RecruitmentFileComponent() {
       technology: dpOptions,
     };
     defaultFilterOptions = { ...allOptions };
-    console.log('allOptions', allOptions)
     updateFilterOptions(allOptions);
   };
 
@@ -220,7 +219,6 @@ function RecruitmentFileComponent() {
 
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
-    console.log('data',data);
     if (!data) {
       // show error
       return;
@@ -237,7 +235,6 @@ function RecruitmentFileComponent() {
       position: dpOptions,
     };
     defaultFilterOptions = { ...allOptions };
-    console.log('allOptions', allOptions)
     updateFilterOptions(allOptions);
   };
 
@@ -298,6 +295,7 @@ function RecruitmentFileComponent() {
   };
 
   useEffect(() => {
+
     getRowData(1);
   }, [filterData]);
 
@@ -305,29 +303,41 @@ function RecruitmentFileComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, updateDefaultValues);
-    const { data } = await AuthApi.postDataToServer(
-      Api.applicantsUrl,
-      formValues
+    // console.log('formValues',formValues);
+    console.log('formValues.file_name[0]', fileValue[0],formValues.file_name[0]);
+    // console.log('fileValue[0]',fileValue[0]);
+    const csvData = fileValue[0];
+
+
+    const formData = new FormData();
+    formData.append('file_name', csvData);
+    formData.append('applied_for', formValues.applied_for
+          ? formValues.applied_for.value
+          : '');
+
+    // const  payload = {}
+    // payload.applied_for = formValues.applied_for
+    //       ? formValues.applied_for.value
+    //       : ''
+    // payload.file_name = csvData;
+    // console.log('payload',payload);
+    console.log('formData',formData, csvData);
+    const { data, message } = await AuthApi.postDataToServer(
+      Api.batchUploadUrl,
+      formData
     );
 
-     // payload = {
-     //    technology_id: formValues.technology_id
-     //      ? formValues.technology_id.value
-     //      : '',
-     //    designation_id: formValues.designation_id
-     //      ? formValues.designation_id.value
-     //      : '',
-     //    start_date: formValues.start_date
-     //      ? customFunctions.getDate(formValues.start_date)
-     //      : '',
-     //    end_date: formValues.end_date
-     //      ? customFunctions.getDate(formValues.end_date)
-     //      : '',
-     //  };
     if (!data) {
-      // show error
+      swal(message, '', 'error');
     }
+    swal(data && data.message[0], '', 'success', {
+      closeOnClickOutside: false,
+      allowOutsideClick: false,
+      buttons: false,
+      timer: 2000,
+    }).then(() => {
+      swal.close();
+    });
     // Perform success actions
   };
 
@@ -384,8 +394,13 @@ function RecruitmentFileComponent() {
                       submitForm(formValues);
                     }}
                     options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
+                    callbacks={{
+                       getFileCallback: (value) => {
+                         setFileValue(value);
+                         console.log('value',value);
+                  },
+                    }}
+                    // defaultFormValues={defaultValues}
                     currentUser={currentUser}
                     submitBtnText="Submit"
                     showResetBtn={false}
@@ -435,7 +450,7 @@ function RecruitmentFileComponent() {
                     defaultFormValues={defaultFilterValues}
                     currentUser={currentUser}
                     submitBtnText="Submit"
-                    showResetBtn={true} // eslint-disable-line
+                    showResetBtn={true}
                     resetBtnText="Clear"
                     btnContainerClass="form-submit-buttons pull-right mb-4"
                     isStepForm={false}
@@ -444,7 +459,6 @@ function RecruitmentFileComponent() {
                     }}
                   />
 
-                  {show && (
                     <div className="mt-5">
                       <CustomTable
                         columns={columns}
@@ -463,7 +477,7 @@ function RecruitmentFileComponent() {
                         }}
                       />
                     </div>
-                  )}
+                  
                 </>
               </Accordion.Collapse>
             </Card>

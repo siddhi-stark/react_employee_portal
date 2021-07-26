@@ -9,7 +9,7 @@
 		"fields": [
 			{
 				"name": "emailName",
-				"type": "text",
+				"type": "select",
 				"label": "Email Template Name",
 				"id": "",
 				"placeholder": "",
@@ -21,7 +21,7 @@
 				"displayWhen": {},
 				"haveValidations": "true",
 				"haveDisplayOptions": "false",
-				"callback": "",
+				"callback": "selectHandler",
 				"callbackUrl": "",
 				"inputToChange": "",
 				"minDateSelector": "",
@@ -32,8 +32,9 @@
 				"fieldsToReset": [],
 				"fieldLayout": { "label": "1 Column", "value": "1column" },
 				"fields": [],
-				"optionCallback": "",
-				"options": []
+				"optionCallback": "getEmailTemplateName",
+				"options": [],
+				"optionsCallbackUrl": "emailTemplates"
 			},
 			{
 				"name": "emailSubject",

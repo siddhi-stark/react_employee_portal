@@ -24,21 +24,7 @@ const menu = [
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'dashboard.svg',
-    roleaccess: [5],
-  },
-  {
-    title: 'Recruitment',
-    path: '#',
-    icon: 'dashboard.svg',
-    submenu: [
-      {
-        title: 'Applications',
-        path: '/applications',
-        icon: 'report.svg',
-        roleaccess: [4],
-      },
-    ],
-    roleaccess: [4],
+    roleaccess: [5, 4],
   },
   {
     title: 'Projects',

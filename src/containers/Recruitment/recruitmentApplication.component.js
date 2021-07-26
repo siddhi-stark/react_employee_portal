@@ -12,7 +12,7 @@ import Api from '../../helper/api';
 
 function RecruitmentApplicationComponent() {
   const title = 'Recruitment';
-
+const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
   const history = useHistory();
 
@@ -40,7 +40,7 @@ function RecruitmentApplicationComponent() {
     return sectionData;
   });
   
-  const handleActionCallback = () => {
+  const handleActionCallback = ({id}) => {
     return (
       <>
         <a
@@ -49,6 +49,8 @@ function RecruitmentApplicationComponent() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            history.push(`/applications/${id}`);
+
             // history.push('/edit-employee');
           }}
         >
@@ -64,16 +66,14 @@ function RecruitmentApplicationComponent() {
       id: 'no',
       label: 'Sr. No',
     },
+      {
+      id: 'id',
+      label: 'Sr. No',
+      isDisplay: false,
+    },
     {
-      id: 'created_at',
+      id: 'int_date', // eslint-disable-line
       label: 'Date',
-      render: ({ created_at }) => { // eslint-disable-line
-        return (
-          <>
-            <span>{customFunctions.getFormattedDate(created_at)}</span>
-          </>
-        );
-      },
     },
     {
       id: 'name',
@@ -121,7 +121,8 @@ function RecruitmentApplicationComponent() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.applicantsUrl}`;
+    
+    const endPoint =  (Number(group) === 4) ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
@@ -170,7 +171,6 @@ function RecruitmentApplicationComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues,'----',status);
     let payload = {};
     
     if(formValues) {
@@ -261,7 +261,6 @@ function RecruitmentApplicationComponent() {
                   btnContainerClass="form-submit-buttons pull-right mb-3"
                   isStepForm={false}
                   onFormReset={() => {
-                    getRowData(1);
                     setFilterData();
                   }}
                 />
@@ -277,26 +276,29 @@ function RecruitmentApplicationComponent() {
                 <a
                   href="#"
                   onClick={() => {
+                    customFunctions.removeLocalStorage('InterviewId');
                     history.push('/applications');
                   }}
                   className="btn-link"
                 >
-                  Add New
+                   {Number(group) === 4 ? '' : 'Add New'}
                 </a>
               </div>
             </div>
           </Card.Header>
           <Card.Body>
             <div>
-              <Button
-                variant="primary"
-                className="mb-2"
-                onClick={() => {
-                  history.push('/batch-upload');
-                }}
-              >
-                Bulk Upload
-              </Button>
+               {!(Number(group) === 4) && (
+                <Button
+                  variant="primary"
+                  className="mb-2"
+                  onClick={() => {
+                    history.push('/batch-upload');
+                  }}
+                >
+                  Bulk Upload
+                </Button>
+              )}
             </div>
             <div>
               <Button
@@ -317,33 +319,37 @@ function RecruitmentApplicationComponent() {
               >
                 Selected
               </Button>
-              <Button
-                variant="primary"
-                className="ml-2 mb-2"
-                onClick={() => {
-                  setStatus(2);
-                }}
-              >
-                Shortlisted
-              </Button>
-              <Button
-                variant="primary"
-                className="ml-2 mb-2"
-                onClick={() => {
-                  setStatus(3);
-                }}
-              >
-                Rejected
-              </Button>
-              <Button
-                variant="primary"
-                className="ml-2 mb-2"
-                onClick={() => {
-                  setStatus(4);
-                }}
-              >
-                Offer Send
-              </Button>
+                {!(Number(group) === 4) && (
+                <>
+                  <Button
+                    variant="primary"
+                    className="ml-2 mb-2"
+                    onClick={() => {
+                      setStatus(2);
+                    }}
+                  >
+                    Shortlisted
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="ml-2 mb-2"
+                    onClick={() => {
+                      setStatus(3);
+                    }}
+                  >
+                    Rejected
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="ml-2 mb-2"
+                    onClick={() => {
+                      setStatus(4);
+                    }}
+                  >
+                    Offer Send
+                  </Button>
+                </>
+              )}
             </div>
             <CustomTable
               columns={columns}
