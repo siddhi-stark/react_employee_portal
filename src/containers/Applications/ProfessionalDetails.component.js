@@ -7,7 +7,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
-function ProfessionalDetails(props) {
+function ProfessionalDetails() {
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
@@ -42,11 +42,8 @@ function ProfessionalDetails(props) {
   } 
   }, [currentUser]);
 
-   const getData = async (designation) => {
-    console.log(designation);
-    const ApplicantId = props.match.params.ID;
-    const { data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${ApplicantId}/`);
-      
+   const getData = async (profId) => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${profId}/`);
      //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
      //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
      //  data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
@@ -63,7 +60,7 @@ function ProfessionalDetails(props) {
        ...data.data,
        // applied_for: ds
      };
-     props.onProfDetInfo(data.data.id);
+     // props.onProfDetInfo(data.data.id);
        if (Number(data.data.resume_source) === 1){
           obj.resume_source = {label:'Naukri' ,value:data.data.resume_source}
        } else if (Number(data.data.resume_source) === 2){
@@ -77,7 +74,8 @@ function ProfessionalDetails(props) {
   };
 
   useEffect(() => {
-    getData();
+    const Id = customFunctions.getLocalStorage('profInfoId')
+    getData(Id);
   },[])
 
 

@@ -43,11 +43,11 @@ function BasicInformation(props) {
   }, [currentUser]);
 
    // Get data for form
-  const getData = async (technology, id = null) => {
-    console.log('technology',technology);
-    const ApplicantId = id || props.match.params.ID;
-    const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${ApplicantId}/`);
-      
+  const getData = async (technology, id) => {
+    // console.log('technology',technology);
+    // const ApplicantId = id || props.match.params.ID;
+    const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${id}/`);
+      // console.log('data',data);
      //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
      //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
      //  data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
@@ -55,18 +55,9 @@ function BasicInformation(props) {
      
      const techStack = [];
 
-       // data.data.tech_stack_ids.map((ids) => {
-       //   console.log('ids',ids);
-       //   return ids;
-       //   if(ids === tech.id) {
-       //      techStack = {
-       //       name : tech.name,
-       //       id:  tech.id
-       //     }
-       //   }
-       // })
+    if(data) {
 
-     if (data && data.data) {
+     if (data && data.data && data.data.tech_stack_ids && data.data.tech_stack_ids.length > 0 && technology && technology.length > 0) {
        const techStackIds = data.data.tech_stack_ids;
        await technology.map((tech) => {
        if (techStackIds.includes(tech.id)) {
@@ -78,6 +69,8 @@ function BasicInformation(props) {
        return tech;
      })
      }
+    }
+
 
       if(data) {
         
@@ -92,7 +85,7 @@ function BasicInformation(props) {
        technologies_stack: techStack
      };
 
-     props.onBasicInfo(data.data.id);
+     // props.onBasicInfo(data.data.id);
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
       customFunctions.setLocalStorage('applicantId',data.data.id);
@@ -105,14 +98,14 @@ function BasicInformation(props) {
   // }, [])
 
   useEffect(() => {
-      const ApplicantId = props.match.params.ID;
+      const ApplicantId = props.match.params.id;
       setAppicantId(ApplicantId);
   },[])
 
 
    // Submit Form
   const submitForm = async (formValues) => {
-    console.log('appicantId',appicantId, formValues);
+    console.log('formValues',formValues);
 
   const techId = [];
 
@@ -131,7 +124,6 @@ function BasicInformation(props) {
       applied_for: formValues.applied_for ? formValues.applied_for.value : '',
     }
 
-    console.log('data',postData);
 
      const callback = appicantId
       ? AuthApi.putDataToServer
@@ -146,10 +138,15 @@ function BasicInformation(props) {
     //   Api.applicantsUrl,
     //   postData
     //   );
+
     if (data) {
-      console.log('data',data);
       customFunctions.setLocalStorage('applicantId',data.data.id);
-      await getData(options.technologies_stack, data.data.id);
+      //  const ApplicantId = props.match.params.id;
+      //  console.log('ApplicantId',ApplicantId);
+      //  if(ApplicantId) {
+
+      // await getData(options.technologies_stack, ApplicantId);
+      //  }
     }
   };
     
@@ -196,21 +193,24 @@ function BasicInformation(props) {
     options.technologies_stack = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-    await getData(data.data);
+   // console.log('applicantId',appicantId);
+    if(appicantId) {
+
+    await getData(data.data,appicantId);
+    }
 
   }  
 
   useEffect(() => {
     getTechnology();
     getDesignation();
-  }, []);
+  }, [appicantId]);
       
 
 
   return (
 
 <>
-{console.log('appicantId',appicantId)}
 
     <StarkFormBuilder
     containerClass="mt-3"

@@ -70,6 +70,7 @@ function Routes() {
       <Route path="/candidate-listing" exact component={SelectedCandidateListing} />
       <Route path="/email-templates" exact component={EmailTemplates} />
       <Route path="/recruitment" exact component={RecruitmentApplication} />
+       <Route path="/recruitment/:id" exact component={Applications} />
       <Route component={NotFound} />
     </Switch>
   );

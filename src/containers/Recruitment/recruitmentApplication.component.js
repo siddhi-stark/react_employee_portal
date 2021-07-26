@@ -42,7 +42,6 @@ const group = customFunctions.getLocalStorage('group');
   });
   
   const handleActionCallback = ({id,status_name}) => { //eslint-disable-line
-      console.log('status_name',status_name)
     return (
       <>
         <a
@@ -51,7 +50,8 @@ const group = customFunctions.getLocalStorage('group');
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/applications/${id}`);
+            history.push(`/recruitment/${id}`);
+            customFunctions.setLocalStorage('profInfoId',id);
 
             // history.push('/edit-employee');
           }}
@@ -465,7 +465,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                   </Button>
                 </>
               )}
-            </div>
+            </div>      
            
 <CustomTable
     columns={columns}

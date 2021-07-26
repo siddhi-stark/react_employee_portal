@@ -1,25 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import BasicInformation from './BasicINfo.component';
 import ProfessonalDetails from './ProfessionalDetails.component';
-import InterviewRounds from './InterviewRounds.component';
+import NewInterviewRounds from './NewInterviewRounds.component';
 
 function Applications() {
   const title = 'Applications';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Applications' }];
-  const [isBasicInfoId, setBasicInfo ] = useState(null);
- const [isProfessionalInfoId, setProfessionalInfo ] = useState(null);
- const [isBI, setBI ] = useState(true);
- const [isPD, setPD ] = useState(true);
+ //  const [isBasicInfoId, setBasicInfo ] = useState(null);
+ // const [isProfessionalInfoId, setProfessionalInfo ] = useState(null);
+ // const [isBI, setBI ] = useState(true);
+ // const [isPD, setPD ] = useState(true);
 
   return (
     <>
-    {console.log('isBasicInfoId',isBasicInfoId)}
-    {console.log('isProfessionalInfoId',isProfessionalInfoId)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
@@ -32,25 +30,22 @@ function Applications() {
             >
               <Tab eventKey="currentEmployee" title="Basic Information">
                 <div className="row ml-2">
-                  <BasicInformation onBasicInfo={(value) => {console.log('value', value); setBasicInfo(value); setBI(false);}} />
+                  <BasicInformation  />
                 </div>
               </Tab>
-              <Tab eventKey="noticePeriod" title="Professional Details" disabled={isBI}>
+              <Tab eventKey="noticePeriod" title="Professional Details" >
                 <div className="row ml-2">
-                {
-                  !isBI && (
-                        <ProfessonalDetails onProfDetInfo={(value) => {setProfessionalInfo(value);  setPD(false);}}/>
-                    )
-                }
+                
+                        <ProfessonalDetails />
+                    
+                
                 </div>
               </Tab>
-              <Tab eventKey="old period" title="Interview Rounds" disabled={isPD}> 
+              <Tab eventKey="old period" title="Interview Rounds" > 
                 <div className="row ml-2">
-                {
-                  !isPD && (
-                      <InterviewRounds isProfessionalInfoId={isProfessionalInfoId} />
-                    )
-                }
+                
+                      <NewInterviewRounds  />
+                    
                 
                 </div>
               </Tab>

@@ -9,7 +9,6 @@ export default {
         // requestConfig.headers['Content-Type'] = 'application/json';
 
         const configuration = config;
-        console.log('configuration.url',configuration.url);
         if (configuration.url.indexOf('upload') > -1) {
           configuration.headers['Content-Type'] = 'multipart/form-data'; // eslint-disable-line
         } else {

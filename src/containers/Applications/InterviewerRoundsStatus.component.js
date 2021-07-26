@@ -128,7 +128,7 @@ function InterviewerRoundsStatus() {
           submitBtnText="Submit"
           showResetBtn={false}
           resetBtnText="Clear"
-          btnContainerClass={`form-submit-buttons ${(interviewData.interviewRound === 'pending') ? '':'d-none'}`}
+          btnContainerClass='form-submit-buttons'
           isStepForm={false}
           onFormReset={() => {
             console.log('form reset callback');
