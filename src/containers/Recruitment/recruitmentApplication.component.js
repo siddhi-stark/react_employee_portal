@@ -470,7 +470,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
 <CustomTable
     columns={columns}
     rows={rowData}
-bulkActions={[{'actionTitle' : 'Shortlisted','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Rejected','actionCallback' : handleChangeInactiveStatus},]} 
+bulkActions={Number(group) === 5 ? [{'actionTitle' : 'Shortlisted','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Rejected','actionCallback' : handleChangeInactiveStatus},] : ''} 
 showPagination={true} 
 paginationProps={{
             totalItems: totalCount,
