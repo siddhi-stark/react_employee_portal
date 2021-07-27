@@ -139,6 +139,52 @@ function Header() {
                 </a>
               </div>
             </div>
+            
+            <div className="dropdown main-header-notification"> 
+              <a className="nav-link icon" href="javascript:void(0)"> 
+                <img src="/images/notification.png" alt="notification"/>
+                <span className="badge badge-danger nav-link-badge">4</span> 
+              </a> 
+              <div className="dropdown-menu"> 
+                <div className="header-navheading"> 
+                  <p className="main-notification-text">You have 1 unread notification
+                    <span className="badge badge-pill badge-primary ml-3">View all</span>
+                  </p>
+                </div>
+                <div className="main-notification-list"> 
+                  <div className="media new"> 
+                    <div className="main-img-user online">
+                      <img alt="avatar" src="/images/5.jpg"/>
+                    </div> 
+                    <div className="media-body"> 
+                      <p>Congratulate <strong>Olivia James</strong> for New template start</p>
+                      <span>Oct 15 12:32pm</span> 
+                    </div> 
+                  </div> 
+                  <div className="media"> 
+                    <div className="main-img-user">
+                      <img alt="avatar" src="/images/5.jpg"/>
+                    </div> 
+                    <div className="media-body"> 
+                      <p><strong>Joshua Gray</strong> New Message Received</p>
+                      <span>Oct 13 02:56am</span> 
+                    </div> 
+                  </div> 
+                  <div className="media"> 
+                    <div className="main-img-user online">
+                      <img alt="avatar" src="/images/5.jpg"/>
+                    </div> 
+                    <div className="media-body"> 
+                      <p><strong>Elizabeth Lewis</strong> added new schedule realease</p>
+                      <span>Oct 12 10:40pm</span> 
+                    </div> 
+                  </div> 
+                </div> 
+                <div className="dropdown-footer"> 
+                  <a href="#">View All Notifications</a> 
+                </div> 
+              </div> 
+            </div>
             <div className="dropdown d-md-flex header-settings">
               <a
                 href="#"
@@ -208,6 +254,7 @@ function Header() {
                       </a>
                     </li>
                   </ul>
+
                 </div>
               </div>
             </div>
