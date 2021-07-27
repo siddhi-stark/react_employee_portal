@@ -9,7 +9,6 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
-    "chart.js": "^3.0.2",
     "core-js": "^3.15.2",
     "crypto-js": "^4.0.0",
     "draft-js": "^0.11.7",
@@ -32,6 +31,7 @@
     "rxjs": "^7.1.0",
     "simple-react-validator": "^1.6.0",
     "stark-custom-datatable": "^0.1.7",
+    "stark-doughnut-graph": "^0.1.5",
     "stark-form-builder": "^0.2.9",
     "sweetalert": "^2.1.2",
     "web-vitals": "^1.0.1"

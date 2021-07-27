@@ -44,38 +44,44 @@ import './style.css';
 // require("bootstrap/less/bootstrap.less");
 
 export default class Pagination extends Component {
-constructor(props) {
-super(props);
-this.state = {
-activePage: 1,
-};
-}
+  constructor(props) {
+    super(props);
+    this.state = {
+      activePage: 1,
+    };
+  }
 
-UNSAFE_componentWillReceiveProps(props) { // eslint-disable-line
-  
-this.setState({ activePage: props.currentPage });
-}
+  UNSAFE_componentWillReceiveProps(props) { // eslint-disable-line
 
-handlePageChange = async (pageNumber) => {
-const { getData } = this.props;
-const { activePage } = this.state;
-if (activePage !== pageNumber) {
-await this.setState({ activePage: pageNumber });
-if (getData)
-getData(pageNumber);
-}
-}
+    this.setState({ activePage: props.currentPage });
+  }
 
-render() {
-  
-// const { totalCount, limit, activePage } = this.state;
-const { totalCount, limit, currentPage } = this.props;
-  console.log('paginationnnnn', totalCount, limit, currentPage)
+  handlePageChange = async (pageNumber) => {
+    const { getData } = this.props;
+    const { activePage } = this.state;
+    if (activePage !== pageNumber) {
+      await this.setState({ activePage: pageNumber });
+      if (getData) getData(pageNumber);
+    }
+  };
 
-return (
-<div>
-<PaginationComponent activePage={currentPage} itemsCountPerPage={limit} totalItemsCount={totalCount} pageRangeDisplayed={5} onChange={this.handlePageChange} hideFirstLastPages hideDisabled={true} activeClass />
-</div>
-);
-}
+  render() {
+    // const { totalCount, limit, activePage } = this.state;
+    const { totalCount, limit, currentPage } = this.props;
+
+    return (
+      <div>
+        <PaginationComponent
+          activePage={currentPage}
+          itemsCountPerPage={limit}
+          totalItemsCount={totalCount}
+          pageRangeDisplayed={5}
+          onChange={this.handlePageChange}
+          hideFirstLastPages
+          hideDisabled={true}
+          activeClass
+        />
+      </div>
+    );
+  }
 }

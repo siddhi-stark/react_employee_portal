@@ -22,7 +22,7 @@ function Sidebar() {
 
     document.addEventListener('ViewBtnChange', () => {
       onSubActiveClass();
-    })
+    });
   },[]);
 
   const dispatch = useDispatch();
