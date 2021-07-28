@@ -24,12 +24,8 @@ function AddTechnology(props) {
 		};
 
 		const payload = customFunctions.cleanObject(postData);
-		const callback = technologyId.technologyId
-			? AuthApi.putDataToServer
-			: AuthApi.postDataToServer;
-		const endPoint = technologyId.technologyId
-			? `${Api.employeeStackUrl}${technologyId.technologyId}/`
-			: Api.employeeStackUrl;
+		const callback =  AuthApi.postDataToServer;
+		const endPoint =  Api.employeeStackUrl;
 		const { data, message } = await callback(endPoint, payload);
 		console.log('data ', data);
 		if (!data) {
