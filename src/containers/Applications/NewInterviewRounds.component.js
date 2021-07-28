@@ -63,6 +63,8 @@ function NewInterviewRounds() {
       Api.roundsUrl,
       postData
     );
+    customFunctions.removeLocalStorage('InterviewId');
+
     if (data) {
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
