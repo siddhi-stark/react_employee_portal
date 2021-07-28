@@ -51,23 +51,12 @@ const [filterData, setFilterData] = useState({})
       label: 'Name',
     },
     {
-      id: 'tech_stack_name',
-      label: 'Technology',
+      id: 'ctc',
+      label: 'CTC Offer',
     },
     {
-      id: 'applied_for_name',
-      label: 'Position',
-    },
-    {
-      id: 'created_at',
-      label: 'Joining Date',
-      render: ({ created_at }) => { // eslint-disable-line
-        return (
-          <>
-            <span>{customFunctions.getFormattedDate(created_at)}</span>
-          </>
-        );
-      },
+      id: 'status',
+      label: 'Status',
     },
   ];
 
@@ -378,7 +367,7 @@ useEffect(()=>{
         </Row>
         <hr />
         <Row>
-          <h5>Upcoming Joining</h5>
+          <h5>Offer Status</h5>
           <CustomTable
             columns={columns}
             rows={rowData}

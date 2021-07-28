@@ -6,6 +6,8 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import BasicInformation from './BasicINfo.component';
 import ProfessonalDetails from './ProfessionalDetails.component';
 import NewInterviewRounds from './NewInterviewRounds.component';
+import InterviewerRoundsStatus from './InterviewerRoundsStatus.component';
+import customFunctions from '../../helper/customFunctions';
 
 function Applications() {
   const title = 'Applications';
@@ -15,6 +17,7 @@ function Applications() {
  // const [isProfessionalInfoId, setProfessionalInfo ] = useState(null);
  // const [isBI, setBI ] = useState(true);
  // const [isPD, setPD ] = useState(true);
+  const group = customFunctions.getLocalStorage('group');
 
   return (
     <>
@@ -35,18 +38,18 @@ function Applications() {
               </Tab>
               <Tab eventKey="noticePeriod" title="Professional Details" >
                 <div className="row ml-2">
-                
-                        <ProfessonalDetails />
+                  <ProfessonalDetails />
                     
                 
                 </div>
               </Tab>
               <Tab eventKey="old period" title="Interview Rounds" > 
                 <div className="row ml-2">
-                
-                      <NewInterviewRounds  />
-                    
-                
+                { (Number(group) === 4) ? 
+                    <InterviewerRoundsStatus/> :
+                     <NewInterviewRounds  />
+                      }
+                  
                 </div>
               </Tab>
             </Tabs>

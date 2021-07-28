@@ -55,7 +55,7 @@ function ProfessionalDetails() {
      //  } : ''
 
      if(data) {
-     localStorage.setItem('InterviewId',data.data.id);
+     await localStorage.setItem('InterviewId',data.data.id);
      const obj = {
        ...data.data,
        // applied_for: ds
@@ -98,6 +98,7 @@ function ProfessionalDetails() {
       postData
     );
       if (data) {
+        await localStorage.setItem('InterviewId',data.data.id);
         swal(data && data.message[0], '', 'success', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -105,7 +106,6 @@ function ProfessionalDetails() {
           timer: 2000,
         }).then(() => {
           swal.close();
-        localStorage.setItem('InterviewId',data.data.id);
             });
           } else {
             swal(message, '', 'error', {
