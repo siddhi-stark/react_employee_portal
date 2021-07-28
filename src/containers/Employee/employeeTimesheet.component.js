@@ -300,7 +300,7 @@ function EmployeeTimesheet() {
         <Card>
           <Card.Header>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Employees List</h4>
+              <h4 className="text-primary mt-2 mb-2">Employees Timesheet</h4>
             </div>
           </Card.Header>
           <Card.Body>

@@ -50,11 +50,28 @@ function EmployeeListComponent() {
 
 const today = new Date();
 const yesterday = new Date();
-
 yesterday.setDate(today.getDate() - 1);
+// const y = yesterday.getFullYear();
+// const m = yesterday.getMonth();
+// const d = yesterday.getDay();
+// console.log('y',y,m,d);
+const date = customFunctions.getDate(new Date(yesterday));
+console.log('date',date);
 
-console.log('Today: ' + today); // eslint-disable-line
-console.log('Yesterday: ' + yesterday); // eslint-disable-line
+  const weekday = new Array(7);
+  weekday[0] = 'Sunday';
+  weekday[1] = 'Monday';
+  weekday[2] = 'Tuesday';
+  weekday[3] = 'Wednesday';
+  weekday[4] = 'Thursday';
+  weekday[5] = 'Friday';
+  weekday[6] = 'Saturday';
+
+  const n = weekday[yesterday.getDay()];
+
+
+// console.log('Today: ' + today); // eslint-disable-line
+// console.log('Yesterday: ' + yesterday); // eslint-disable-line
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
@@ -69,7 +86,7 @@ console.log('Yesterday: ' + yesterday); // eslint-disable-line
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
 
-    const endPoint = `${Api.employeeTimesheet}?start_date=2021-07-15&limit=${5}&page=${page}`;
+    const endPoint = `${Api.employeeTimesheet}?start_date=${date}&limit=${5}&page=${page}`;
     // const filterList =
     //   filterData && !customFunctions.checkIfEmpty(filterData, 'O')
     //     ? customFunctions.jsonParse(filterData)
@@ -80,6 +97,7 @@ console.log('Yesterday: ' + yesterday); // eslint-disable-line
     //   ...filterList,
     // };
     // const url = customFunctions.generateUrl(endPoint, params);
+    console.log('endPoint',endPoint);
     const { data, message } = await AuthApi.getDataFromServer(endPoint);
 
 
@@ -111,7 +129,7 @@ console.log('Yesterday: ' + yesterday); // eslint-disable-line
       <Card>
         <Card.Header>
           {' '}
-          <h4 className="text-primary mt-2 mb-2">Employee List</h4>
+          <h4 className="text-primary mt-2 mb-2">Employee List - {n}</h4>
         </Card.Header>
         <Card.Body>
           <CustomTable

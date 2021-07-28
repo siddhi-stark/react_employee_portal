@@ -205,14 +205,14 @@ function Dashboard() {
                       {
                         showClockIn && (
                           <div className="time-count text-center">
-                            <span>{signInTime || '00:00'}</span>
+                            <span><p>clockin Time</p>{signInTime || '00:00'}</span>
                           </div>
                         )
                       }
 
                       {time && (
                         <div className="time-count text-center">
-                          <span>{time || '00:00'}</span>
+                          <span><p>clockout Time</p>{time || '00:00'}</span>
                         </div>
                       )}
 
