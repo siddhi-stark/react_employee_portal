@@ -7,7 +7,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
-function ProfessionalDetails() {
+function ProfessionalDetails(props) {
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
@@ -55,12 +55,11 @@ function ProfessionalDetails() {
      //  } : ''
 
      if(data) {
-     localStorage.setItem('InterviewId',data.data.id);
      const obj = {
        ...data.data,
        // applied_for: ds
      };
-     // props.onProfDetInfo(data.data.id);
+     props.onProfDetInfo(data.data.id);
        if (Number(data.data.resume_source) === 1){
           obj.resume_source = {label:'Naukri' ,value:data.data.resume_source}
        } else if (Number(data.data.resume_source) === 2){
@@ -74,8 +73,8 @@ function ProfessionalDetails() {
   };
 
   useEffect(() => {
-    const Id = customFunctions.getLocalStorage('profInfoId')
-    getData(Id);
+    const appId = props.isBasicInfoId;
+    getData(appId);
   },[])
 
 
@@ -98,6 +97,7 @@ function ProfessionalDetails() {
       postData
     );
       if (data) {
+        await localStorage.setItem('InterviewId',data.data.id);
         swal(data && data.message[0], '', 'success', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -105,7 +105,6 @@ function ProfessionalDetails() {
           timer: 2000,
         }).then(() => {
           swal.close();
-        localStorage.setItem('InterviewId',data.data.id);
             });
           } else {
             swal(message, '', 'error', {

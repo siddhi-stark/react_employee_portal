@@ -3,7 +3,6 @@ import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Image, Button, Accordion } from 'react-bootstrap';
-import swal from 'sweetalert';
 import FormSections from './applicationformschema.json';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
@@ -41,7 +40,7 @@ const group = customFunctions.getLocalStorage('group');
     return sectionData;
   });
   
-  const handleActionCallback = ({id,status_name}) => { //eslint-disable-line
+  const handleActionCallback = ({id}) => {
     return (
       <>
         <a
@@ -50,45 +49,16 @@ const group = customFunctions.getLocalStorage('group');
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/recruitment/${id}`);
-            customFunctions.setLocalStorage('profInfoId',id);
+            history.push(`/applications/${id}`);
 
             // history.push('/edit-employee');
           }}
         >
-
-          <Image src= {status_name === 'shortlisted' ? '/images/edit-button.svg' : ''} // eslint-disable-line
-           />  
+          <Image src="/images/edit-button.svg" />
         </a>
       </>
     );
   };
-
-  const handleResumeCallback = ({resume}) => { //eslint-disable-line
-   console.log('resume',resume)
-    return (
-      <>
-        <a
-          href="https://www.google.com"
-          download
-          target='_blank'
-          className="pl-2"
-          // onClick={(e) => {
-          //   e.preventDefault();
-          //   e.stopPropagation();
-
-
-          //   // history.push('/edit-employee');
-          // }}
-        >
-
-          <Image src= '/images/down-arrow.png' // eslint-disable-line
-           />  
-        </a>
-      </>
-    );
-  };
-
 
   // Declare columns
   const columns = [
@@ -102,8 +72,15 @@ const group = customFunctions.getLocalStorage('group');
       isDisplay: false,
     },
     {
-      id: 'int_date', // eslint-disable-line
+      id: `{{'int_date'} ? 'int_date': 'created_at'}`, // eslint-disable-line
       label: 'Date',
+      render: ({ created_at }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{customFunctions.getFormattedDate(created_at)}</span>
+          </>
+        );
+      },
     },
     {
       id: 'name',
@@ -111,7 +88,7 @@ const group = customFunctions.getLocalStorage('group');
     },
     {
       id: 'applied_for_name',
-      label: 'Position',
+      label: 'Application For Position',
     },
     {
       id: 'techstacks',
@@ -134,12 +111,11 @@ const group = customFunctions.getLocalStorage('group');
       label: 'Contact No',
     },
     {
-      id: 'resumee',
-      label: 'Resume',
-      render: handleResumeCallback
+      id: 'education',
+      label: 'Education',
     },
     {
-      id: 'status_name',
+      id: 'status',
       label: 'Status',
     },
     {
@@ -149,155 +125,45 @@ const group = customFunctions.getLocalStorage('group');
     },
   ];
 
-  // // Declare methods
-  // const getRowData = async (pageNo = 1) => {
-  //   const page = pageNo || currentPage;
-    
-  //   const endPoint =  (Number(group) === 4) ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
-  //   const filterList =
-  //     filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-  //       ? customFunctions.jsonParse(filterData)
-  //       : {};
-  //   const params = {
-  //     page,
-  //     limit,
-  //     ...filterList,
-  //   };
-  //   const url = customFunctions.generateUrl(endPoint, params);
-  //   const { data, message } = await AuthApi.getDataFromServer(url);
-
-  //   if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-  //     setTotalCount(data.paginator.total_count);
-  //     setLimit(data.paginator.limit);
-  //     setCurrentPage(Number(data.paginator.current_page));
-
-  //     const newData = [...data.data];
-  //     newData.map((item, i) => {
-  //       const newItem = item;
-  //       newItem.no = (page - 1) * limit + (i + 1);
-  //       return newItem;
-  //     });
-
-  //     setRowData((data && data.data) || []);
-  //   } else {
-  //     console.log('error', message);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getRowData(1);
-  // }, [filterData]);
-
-
-
-// Declare methods
-const getRowData = async (pageNo=1) =>{
+  // Declare methods
+  const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = 'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/applicants/';
-    const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
+    
+    const endPoint =  (Number(group) === 4) ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
     const params = {
       page,
       limit,
-      ...filterList
-      }
+      ...filterList,
+    };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    
+    console.log('data',data);
+
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setRowData(data && data.data || []);
-    }else{
-      console.log('error', message)
+
+      const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.no = (page - 1) * limit + (i + 1);
+        return newItem;
+      });
+
+      setRowData((data && data.data) || []);
+    } else {
+      console.log('error', message);
     }
-} 
+  };
 
-
-useEffect(()=>{
-  getRowData(1)
-},[filterData])
-
-
-const handleChangeActiveStatus = async (selectedIds) => {
-          if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
-            const params = {
-              status: 2,
-              ids: selectedIds
-            }
-             const successHandle = (e) => {
-        swal(e && e.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-          getRowData(1);
-        });
-      };
-      const errorHandle = (e) => {
-        swal(e && e.message[0], '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-          getRowData(1);
-        });
-      };
-            await customFunctions.changeStatus(
-        `${Api.bulkStatusUrl}`,
-        params,
-        'put',
-        successHandle,
-        errorHandle
-      );
-          }
-      } 
-
-const handleChangeInactiveStatus = async (selectedIds) => {
-          if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
-            const params = {
-              status: 6,
-              ids: selectedIds
-            }
-            const successHandle = (e) => {
-        swal(e && e.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-          getRowData(1);
-        });
-      };
-      const errorHandle = (e) => {
-        swal(e && e.message[0], '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-          getRowData(1);
-        });
-      };
-              await customFunctions.changeStatus(
-        `${Api.bulkStatusUrl}`,
-        params,
-        'put',
-        successHandle,
-        errorHandle
-      );
-          }
-      } 
-
- 
-
-
+  useEffect(() => {
+    getRowData(1);
+  }, [filterData]);
 
   // filter Form
 
@@ -313,6 +179,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    console.log(formValues,'----',status);
     let payload = {};
     
     if(formValues) {
@@ -418,7 +285,6 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                 <a
                   href="#"
                   onClick={() => {
-                    customFunctions.removeLocalStorage('InterviewId');
                     history.push('/applications');
                   }}
                   className="btn-link"
@@ -430,7 +296,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
           </Card.Header>
           <Card.Body>
             <div>
-               {(Number(group) === 5) && (
+               {!(Number(group) === 4) && (
                 <Button
                   variant="primary"
                   className="mb-2"
@@ -492,25 +358,24 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                   </Button>
                 </>
               )}
-            </div>      
-           
-<CustomTable
-    columns={columns}
-    rows={rowData}
-bulkActions={Number(group) === 5 ? [{'actionTitle' : 'Shortlisted','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Declined','actionCallback' : handleChangeInactiveStatus},] : ''} 
-showPagination={true} 
-paginationProps={{
-            totalItems: totalCount,
-            itemsPerPage: limit,
-            activePage: currentPage,
-            onPageChange: (pageNo) => {
-              getRowData(pageNo);
-            }
-          }} 
-showCheckbox={true} 
-emptyRender={()=>{ return ('No record found.')}} 
-/>
-
+            </div>
+            <CustomTable
+              columns={columns}
+              rows={rowData}
+              role={5}
+              showPagination={true}
+              paginationProps={{
+                totalItems: totalCount,
+                itemsPerPage: limit,
+                activePage: currentPage,
+                onPageChange: (pageNo) => {
+                  getRowData(pageNo);
+                },
+              }}
+              emptyRender={() => {
+                return 'No record found.';
+              }}
+            />
           </Card.Body>
         </Card>
       </section>
