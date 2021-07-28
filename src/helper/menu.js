@@ -8,7 +8,7 @@ const menu = [
   },
   {
     title: 'Employee Timesheet',
-    path: '/emp-timesheet',
+    path: '/emp-timesheet/all',
     icon: 'dashboard.svg',
     submenu: [],
     roleaccess: [5],

@@ -11,7 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 
-function EmployeeTimesheet() {
+function EmployeeTimesheet(props) {
   const EmployeeType = customFunctions.getLocalStorage('type');
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -19,6 +19,7 @@ function EmployeeTimesheet() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [dataShow, setDataShow] = useState(false);
+  const [typeeee,setType] = useState('');
   const history = useHistory();
 
   // Variable declarations
@@ -197,7 +198,10 @@ function EmployeeTimesheet() {
     // const EmployeeType = props.location.state.type;
     // setEmployeeType(EmployeeType);
     getRowData(1);
-  }, [filterData]);
+    console.log('typeeeeeeeeee',props.match.params.empType);
+    const type = props.match.params.empType;
+    setType(type);
+  }, [filterData,typeeee]);
 
   // Get user role
   const getUserRole = async () => {

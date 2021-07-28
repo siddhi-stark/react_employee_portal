@@ -340,7 +340,7 @@ function Dashboard() {
                   <UserRestrictions permittedUsers={[5]} roleId={userRole}>
                   <div className="d-flex justify-content-end mr-3">
                     <Button onClick={()=> 
-                      {history.push('/emp-timesheet',customFunctions.setLocalStorage('type','EmpType'));
+                      {history.push('/emp-timesheet/hr',customFunctions.setLocalStorage('type','EmpType'));
                       onViewButtonClick();
                     }}>View All</Button>
                  </div>
