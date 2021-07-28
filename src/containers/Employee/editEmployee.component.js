@@ -26,8 +26,8 @@ function EditEmployee(props) {
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
+  // const [startTime, setStartTime] = useState(null);
+  // const [endTime, setEndTime] = useState(null);
   const title = 'Add Time Log Of Employee';
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
 
@@ -153,40 +153,38 @@ function EditEmployee(props) {
   }, [filterData]);
 
   const getEndTime = (value) => {
-    setEndTime(value);
-    getDuration(startTime, value);
+    console.log('value',value);
+    // setEndTime(value);
+    // getDuration(startTime, value);
   };
 
-  // useEffect(() => {
-  //   getDuration(startTime, endTime);
-  // }, [startTime, endTime]);
 
-  const getDuration = (start, end) => {
-    if (start && end) {
-      const dur = defaultValues;
-      defaultValues = {};
-      updateDefaultValues({});
-      const tStartTime = new Date(start);
-      const tEndTime = new Date(end);
-      const diffMs = tEndTime - tStartTime;
-      const timeDiff = customFunctions.msToTime(diffMs);
-      // const hr = timeDiff.hours;
-      // const min = timeDiff.minutes;
-      // const differenceee = `${hr} : ${min}`;
-      // dur.duration = differenceee;
-      dur.duration = (timeDiff.hours < 10 ? '0' + timeDiff.hours.toString() : timeDiff.hours.toString()) + ':' + (timeDiff.minutes < 10 ? '0' + timeDiff.minutes.toString() : timeDiff.minutes.toString()); //eslint-disable-line
-      console.log('dur.duration', dur.duration, dur);
-      defaultValues = { ...dur };
-      updateDefaultValues({ ...dur });
-    }
-  };
+  // const getDuration = (start, end) => {
+  //   if (start && end) {
+  //     const dur = defaultValues;
+  //     // defaultValues = {};
+  //     // updateDefaultValues({});
+  //     const tStartTime = new Date(start);
+  //     const tEndTime = new Date(end);
+  //     const diffMs = tEndTime - tStartTime;
+  //     const timeDiff = customFunctions.msToTime(diffMs);
+  //     // const hr = timeDiff.hours;
+  //     // const min = timeDiff.minutes;
+  //     // const differenceee = `${hr} : ${min}`;
+  //     // dur.duration = differenceee;
+  //     dur.duration = (timeDiff.hours < 10 ? '0' + timeDiff.hours.toString() : timeDiff.hours.toString()) + ':' + (timeDiff.minutes < 10 ? '0' + timeDiff.minutes.toString() : timeDiff.minutes.toString()); //eslint-disable-line
+  //     console.log('dur.duration', dur.duration, dur);
+  //     defaultValues = { ...dur };
+  //     updateDefaultValues({ ...dur });
+  //   }
+  // };
 
   const getStartTime = (value) => {
     console.log('getStartTime--->', value);
     // getDuration(value);
     // time = value;
-    setStartTime(value);
-    getDuration(value, endTime);
+    // setStartTime(value);
+    // getDuration(value, endTime);
   };
 
   return (

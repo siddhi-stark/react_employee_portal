@@ -64,6 +64,32 @@ const group = customFunctions.getLocalStorage('group');
     );
   };
 
+  const handleResumeCallback = ({resume}) => { //eslint-disable-line
+   console.log('resume',resume)
+    return (
+      <>
+        <a
+          href="https://www.google.com"
+          download
+          target='_blank'
+          className="pl-2"
+          // onClick={(e) => {
+          //   e.preventDefault();
+          //   e.stopPropagation();
+
+
+          //   // history.push('/edit-employee');
+          // }}
+        >
+
+          <Image src= '/images/down-arrow.png' // eslint-disable-line
+           />  
+        </a>
+      </>
+    );
+  };
+
+
   // Declare columns
   const columns = [
     {
@@ -85,7 +111,7 @@ const group = customFunctions.getLocalStorage('group');
     },
     {
       id: 'applied_for_name',
-      label: 'Application For Position',
+      label: 'Position',
     },
     {
       id: 'techstacks',
@@ -108,8 +134,9 @@ const group = customFunctions.getLocalStorage('group');
       label: 'Contact No',
     },
     {
-      id: 'education',
-      label: 'Education',
+      id: 'resumee',
+      label: 'Resume',
+      render: handleResumeCallback
     },
     {
       id: 'status_name',
@@ -233,7 +260,7 @@ const handleChangeActiveStatus = async (selectedIds) => {
 const handleChangeInactiveStatus = async (selectedIds) => {
           if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
             const params = {
-              status: 3,
+              status: 6,
               ids: selectedIds
             }
             const successHandle = (e) => {
@@ -403,7 +430,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
           </Card.Header>
           <Card.Body>
             <div>
-               {!(Number(group) === 4) && (
+               {(Number(group) === 5) && (
                 <Button
                   variant="primary"
                   className="mb-2"
@@ -470,7 +497,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
 <CustomTable
     columns={columns}
     rows={rowData}
-bulkActions={Number(group) === 5 ? [{'actionTitle' : 'Shortlisted','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Rejected','actionCallback' : handleChangeInactiveStatus},] : ''} 
+bulkActions={Number(group) === 5 ? [{'actionTitle' : 'Shortlisted','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Declined','actionCallback' : handleChangeInactiveStatus},] : ''} 
 showPagination={true} 
 paginationProps={{
             totalItems: totalCount,

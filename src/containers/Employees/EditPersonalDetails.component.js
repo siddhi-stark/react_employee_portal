@@ -7,6 +7,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';    
 import customFunctions from '../../helper/customFunctions';
 
+
 function EditPersonalDetails(props) {
 
   // Variable declarations
@@ -14,6 +15,17 @@ function EditPersonalDetails(props) {
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
    const [jsonSchema, updateJsonSchema] = useState(FormSections);  
+
+
+// const formSchema = [...FormSections];
+//   formSchema[0].fields.map((section) => {
+//     const sectionData = section;
+//     if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
+//       const date = new Date();
+//       sectionData.maxDate = date;
+//     }
+//     return sectionData;
+//   });
 
 useEffect(() => {
   const employeeId = customFunctions.getLocalStorage('id');
@@ -27,6 +39,12 @@ useEffect(() => {
          if(item.name === 'joining_date') itemData.disabled = true;
          if(item.name === 'email') itemData.disabled = true;
          if(item.name === 'mobile') itemData.disabled = true;
+         if(item.name === 'dob') {
+        const currentdate = new Date();
+        const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
+        console.log(new Date(currentdate.setYear(currentdate.getFullYear() - 18)));
+        itemData.maxDate = maxdate;
+         }
          return itemData;
       })
       return s;
@@ -105,7 +123,7 @@ useEffect(() => {
      };
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
-     console.log('obj', obj);
+     // console.log('obj', obj);
 
   };
 
@@ -139,7 +157,8 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
   } 
 
 	return (
-
+    <>
+    {console.log('jsonSchema',jsonSchema)}
   <StarkFormBuilder
     containerClass=''
     formHeaderClass=''
@@ -163,7 +182,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
   />
     
 
-    
+    </>
 
 		)
 }
