@@ -72,7 +72,7 @@ function EmployeeTimesheet() {
     },
     {
       id: 'emp_id',
-      label: dataShow && EmployeeType ? '' : 'Employee ID',
+      label: dataShow || EmployeeType ? '' : 'Employee ID',
 
       render: ({ row }) => {
         return (
@@ -140,7 +140,14 @@ function EmployeeTimesheet() {
     },
     {
       id: 'date',
-      label: 'Date',
+      label: dataShow ? '' : 'Date ',
+      render: ({ row }) => {
+        return (
+          <>
+            <span>{dataShow ? '' : row.date}</span>
+          </>
+        );
+      },
     },
     {
       id: 'action',

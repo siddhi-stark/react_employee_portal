@@ -44,6 +44,7 @@ function BasicInformation(props) {
 
    // Get data for form
   const getData = async (technology, id) => {
+    console.log('getData----');
     // console.log('technology',technology);
     // const ApplicantId = id || props.match.params.ID;
     const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${id}/`);
@@ -85,7 +86,8 @@ function BasicInformation(props) {
        technologies_stack: techStack
      };
 
-     // props.onBasicInfo(data.data.id);
+     props.onBasicInfo(data.data.id);
+     console.log('id---',data.data.id)
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
       customFunctions.setLocalStorage('applicantId',data.data.id);
@@ -98,7 +100,9 @@ function BasicInformation(props) {
   // }, [])
 
   useEffect(() => {
-      const ApplicantId = props.match.params.id;
+    console.log()
+      const ApplicantId = props.match.params.ID;
+      console.log('ApplicantId--',ApplicantId);
       setAppicantId(ApplicantId);
   },[])
 
@@ -179,6 +183,7 @@ function BasicInformation(props) {
  
       
  const getTechnology = async () => {
+   console.log('getTechnology');
       // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(Api.employeeStackUrl);
     if(!data) {

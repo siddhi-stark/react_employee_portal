@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
@@ -13,14 +13,15 @@ function Applications() {
   const title = 'Applications';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Applications' }];
- //  const [isBasicInfoId, setBasicInfo ] = useState(null);
- // const [isProfessionalInfoId, setProfessionalInfo ] = useState(null);
- // const [isBI, setBI ] = useState(true);
- // const [isPD, setPD ] = useState(true);
+  const [isBasicInfoId, setBasicInfo] = useState(null);
+  const [isProfessionalInfoId, setProfessionalInfo] = useState(null);
+
   const group = customFunctions.getLocalStorage('group');
 
   return (
     <>
+      {console.log('isBasicInfoId', isBasicInfoId)}
+      {console.log('isProfessionalInfoId', isProfessionalInfoId)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
@@ -33,23 +34,38 @@ function Applications() {
             >
               <Tab eventKey="currentEmployee" title="Basic Information">
                 <div className="row ml-2">
-                  <BasicInformation  />
+                  <BasicInformation
+                    onBasicInfo={(value) => {
+                      console.log('value--', value);
+                      setBasicInfo(value);
+                    }}
+                  />
                 </div>
               </Tab>
-              <Tab eventKey="noticePeriod" title="Professional Details" >
+              <Tab eventKey="noticePeriod" title="Professional Details">
                 <div className="row ml-2">
-                  <ProfessonalDetails />
-                    
-                
+                  {isBasicInfoId && (
+                    <ProfessonalDetails
+                      isBasicInfoId={isBasicInfoId}
+                      onProfDetInfo={(value) => {
+                        console.log('value',value);
+                        setProfessionalInfo(value);
+                      }}
+                    />
+                  )}
                 </div>
               </Tab>
-              <Tab eventKey="old period" title="Interview Rounds" > 
+              <Tab eventKey="old period" title="Interview Rounds">
                 <div className="row ml-2">
-                { (Number(group) === 4) ? 
-                    <InterviewerRoundsStatus/> :
-                     <NewInterviewRounds  />
-                      }
-                  
+                  {Number(group) === 4 && isProfessionalInfoId ? (
+                    <InterviewerRoundsStatus
+                      isProfessionalInfoId={isProfessionalInfoId}
+                    />
+                  ) : (
+                    <NewInterviewRounds
+                      isProfessionalInfoId={isProfessionalInfoId}
+                    />
+                  )}
                 </div>
               </Tab>
             </Tabs>

@@ -8,9 +8,9 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
-import customFunctions from '../../helper/customFunctions';
+// import customFunctions from '../../helper/customFunctions';
 
-function InterviewerRoundsStatus() {
+function InterviewerRoundsStatus(props) {
   const items = [
     { to: '/', label: 'Home' },
     { to: '/intervie', label: 'Interviewer Rounds' },
@@ -30,6 +30,8 @@ function InterviewerRoundsStatus() {
   const [interviewData, setInterviewData] = useState(initialState);
   const [interviewId, setInterviewId] = useState('');
   const history = useHistory();
+  const { isProfessionalInfoId } = props;
+
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -56,10 +58,9 @@ function InterviewerRoundsStatus() {
   };
 
   useEffect(() => {
-    const id = customFunctions.getLocalStorage('InterviewId');
-    setInterviewId(id);
-    getData(id);
-  }, []);
+    setInterviewId(isProfessionalInfoId);
+    getData(isProfessionalInfoId);
+  }, [isProfessionalInfoId]);
 
   // Submit Form
   const submitForm = async (formValues) => {

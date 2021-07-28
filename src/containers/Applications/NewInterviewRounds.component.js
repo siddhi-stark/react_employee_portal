@@ -18,12 +18,13 @@ import customFunctions from '../../helper/customFunctions';
 //   ],
 // };
 
-function NewInterviewRounds() {
+function NewInterviewRounds(props) {
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [count, forceUpdate] = useState(0);
+  const { isProfessionalInfoId } = props;
 
   // Get user role
   const getUserRole = async () => {
@@ -67,7 +68,6 @@ function NewInterviewRounds() {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        customFunctions.removeLocalStorage('InterviewId');
         swal.close();
       });
     } else {
@@ -82,10 +82,9 @@ function NewInterviewRounds() {
     }
   };
 
-  const getData = async () => {
-    const Interview = customFunctions.getLocalStorage('InterviewId');
+  const getData = async (interviewerId) => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.roundsUrl}?applicant_id=${Interview}`
+      `${Api.roundsUrl}?applicant_id=${interviewerId}`
     );
     if (data) {
       const interviewData = [];
@@ -112,8 +111,10 @@ function NewInterviewRounds() {
 
   // Call get data method on load
   useEffect(() => {
-    getData();
-  }, []);
+    if(isProfessionalInfoId){
+      getData(isProfessionalInfoId);
+    }
+  }, [isProfessionalInfoId]);
 
   const getInterviewer = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
