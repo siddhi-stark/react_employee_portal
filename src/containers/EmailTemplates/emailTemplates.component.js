@@ -84,6 +84,7 @@ function EmailTemplatesComponent() {
       }
       return d;
     });
+    console.log('data---',data);
     setEmailContent([...data]);
   };
 
@@ -103,7 +104,7 @@ function EmailTemplatesComponent() {
   const submitForm = async (formValues) => {
     let stringDescription = '';
     const payload = {
-      name: formValues.emailName,
+      name: formValues.emailName ? formValues.emailName.label:'',
       subject: formValues.emailSubject,
     };
     convertToRaw(description.getCurrentContent()) &&
@@ -114,13 +115,13 @@ function EmailTemplatesComponent() {
       });
     formValues = stringDescription; //eslint-disable-line
     payload.body = formValues;
-    console.log('payload', payload);
     const { data, message } = await AuthApi.postDataToServer(
       Api.emailTemplates,
       payload
     );
     swal(data && data.message[0], '', 'success');
     if (!data) {
+      console.log('message',message);
       swal(message, '', 'error');
       // show error
     }

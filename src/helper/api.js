@@ -79,6 +79,10 @@ export default class Api extends Component {
 
   static bulkStatusUrl = `${Api.baseUrl}applicants-bulk-status/`;
   
+  static hrReportUrl = `${Api.baseUrl}report-count/`;
+
+  static offerUrl = `${Api.baseUrl}offer-list/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

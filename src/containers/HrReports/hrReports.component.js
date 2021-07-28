@@ -38,11 +38,11 @@ function HrReports() {
 
   // Declare variable
  
-const [rowData, setRowData] = useState([])
+const [rowData, setRowData] = useState([]);
 const [totalCount, setTotalCount] = useState(10);
 const [limit, setLimit] = useState(5);
 const [currentPage, setCurrentPage] = useState(1);
-const [filterData, setFilterData] = useState({})
+const [filterData, setFilterData] = useState({});
 
   // Declare columns Upcoming
   const columns = [
@@ -51,37 +51,33 @@ const [filterData, setFilterData] = useState({})
       label: 'Name',
     },
     {
-      id: 'ctc',
+      id: 'offered_ctc',
       label: 'CTC Offer',
     },
     {
-      id: 'status',
+      id: 'status_name',
       label: 'Status',
     },
   ];
 
+  const initialState = {
+      shortlistedCount:null,
+      totalApplicantCount:null,
+      rejectedCount:null,
+      pendingCount:null,
+      declinedCount:null,
+      selectedCount:null,
+      finalCount:null
+  };
   // declare state graph
+  const [shortlistedGraph, setShortlistedGraph] = useState(initialState);
   const [graphData, setGraphData] = useState([]);
   const [shortlistedData, setShortlistedData] = useState([]);
-  // const [centerPercentage, setCenterPercentage] = useState('');
-  // const [centerShortlistPercentage, setCenterShortlistPercentage] =
-  useState('');
+  const [legendData, setLegendData] = useState([]);
+  const [legendSelectedData, setLegendSelectedData] = useState([]);
+  // const [centerPercentage, setCenterPercentage] = useState(null);
+  // const [centerShortlistPercentage, setCenterShortlistPercentage] = useState(null);
   const graphref = useRef();
-
-  useEffect(() => {
-    const graph = [
-      { x: 'Shortlisted', y: 30 },
-      { x: 'Rejected', y: 50 },
-      { x: 'Pending', y: 20 },
-    ];
-    const graphShortlistData = [
-      { x: 'Selected', y: 35 },
-      { x: 'Rejected', y: 55 },
-      { x: 'Inprogress', y: 10 },
-    ];
-    setGraphData([...graph]);
-    setShortlistedData([...graphShortlistData]);
-  }, []);
 
   // some code
 
@@ -99,35 +95,17 @@ const [filterData, setFilterData] = useState({})
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
-
-    setFilterData(formValues);
-  };
-
-  const getselecteddate = async (value) => {
-    const { data } = await AuthApi.getDataFromServer(value);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
+    setFilterData({
+      hr_id: formValues.hr_name && formValues.hr_name.value,
+      designation_id: formValues.position && formValues.position.value,
+      technology_id: formValues.technology && formValues.technology.value,
+      start_date: formValues.from_date && customFunctions.getDate(formValues.from_date),
+      end_date: formValues.to_date && customFunctions.getDate(formValues.to_date)
     });
-    const allOptions = {
-      ...options,
-      ...defaultFilterOptions,
-      undefined: dpOptions,
-    };
-    defaultFilterOptions = { ...allOptions };
-    updateOptions(allOptions);
   };
 
   const getHrName = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=5`);
     if (!data) {
       // show error
       return;
@@ -135,7 +113,6 @@ const [filterData, setFilterData] = useState({})
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.full_name, value: op.id });
       return op;
     });
@@ -208,30 +185,79 @@ const [filterData, setFilterData] = useState({})
 
 const getRowData = async (pageNo=1) =>{
     const page = pageNo || currentPage;
-    const endPoint = Api.applicantsUrl;
-    const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
+    const endPoint = Api.offerUrl;
     const params = {
       page,
       limit,
-      ...filterList
-      }
+    };
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await AuthApi.getDataFromServer(url);
+    const { data } = await AuthApi.getDataFromServer(url);
     
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setRowData(data && data.data || []);
-    }else{
-      console.log('error', message)
     }
-} 
-
+};
 
 useEffect(()=>{
-  getRowData(1)
-},[filterData])
+  getRowData(1);
+},[]);
+
+  const getGraphData = async () => {
+    const endPoint = Api.hrReportUrl;
+    const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
+    const params = {
+      ...filterList
+      };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
+
+    if(data){
+      // const percentage = (data.data.shortlisted + data.data.pending + data.data.declined) / 3;
+      // const per = (data.data.selected + data.data.rejected) / 2;
+      const graph = [
+        { x: 'Shortlisted', y: data.data.shortlisted_percentage },
+        { x: 'Rejected', y: data.data.declined_percentage },
+        { x: 'Pending', y: data.data.pending_percentage },
+      ];
+      const legData = [
+        { name: `Shortlisted ${data.data.shortlisted_percentage}%`, symbol: { fill: 'green' } },
+        { name: `Declined ${data.data.declined_percentage}%`, symbol: { fill: 'red' } },
+        { name: `Pending ${data.data.pending_percentage}%`, symbol: { fill: 'yellow' } },
+        { name: `Applicant ${data.data.total_applicant_percentage}%`, symbol: { fill: 'none' } },
+      ];
+      const selectedGraph = [
+        { x: 'Selected', y: data.data.shortlisted_final_percentage },
+        { x: 'Rejected', y: data.data.rejected_final_percentage },
+      ];
+      const selectedlegData = [
+        { name: `Selected ${data.data.shortlisted_final_percentage}%`, symbol: { fill: 'green' } },
+        { name: `Rejected ${data.data.rejected_final_percentage}%`, symbol: { fill: 'red' } },
+        { name: `Shortlisted ${data.data.total_final_percentage}%`, symbol: { fill: 'none' } },
+      ];
+      setShortlistedGraph({
+        shortlistedCount:data.data.shortlisted_count,
+        declinedCount:data.data.declined_count,
+        pendingCount:data.data.pending_count,
+        totalApplicantCount:data.data.total_applicant_count,
+        selectedCount: data.data.shortlisted_final_count,
+        rejectedCount:data.data.rejected_final_count,
+        finalCount:data.data.total_final_count
+      });
+      setShortlistedData([...selectedGraph]);
+      setLegendData([...legData]);
+      setLegendSelectedData([...selectedlegData]);
+      setGraphData([...graph]);
+      // setCenterShortlistPercentage(per.toFixed(2));
+      // setCenterPercentage(percentage.toFixed(2));
+    }
+  };
+
+  useEffect(()=>{
+    getGraphData();
+  },[filterData]);
 
   return (
     <>
@@ -251,20 +277,16 @@ useEffect(()=>{
               submitForm(formValues);
             }}
             options={options}
-            callbacks={{
-              getselecteddate: (value) => {
-                getselecteddate(value);
-              },
-            }}
+            callbacks={{}}
             defaultFormValues={defaultValues}
             currentUser={currentUser}
             submitBtnText="Submit"
-            showResetBtn={false}
+            showResetBtn={true}
             resetBtnText="Clear"
             btnContainerClass="form-submit-buttons pull-right"
             isStepForm={false}
             onFormReset={() => {
-              console.log('form reset callback');
+              setFilterData({});
             }}
           />
         </Row>
@@ -272,95 +294,63 @@ useEffect(()=>{
         <Row className="mt-4">
           <h5>HR Activity</h5>
           <Col sm={6}>
+          <p>Shortlisted: {shortlistedGraph.shortlistedCount}<br/>
+          Declined: {shortlistedGraph.declinedCount}<br/>
+          Pending: {shortlistedGraph.pendingCount}<br/>
+          Total Applicant: {shortlistedGraph.totalApplicantCount}</p>
             <Doughnut
               ref={graphref}
-              // optional
               id="dougnut"
-              s
-              // required : data in array of object
               data={graphData}
-              // optional: String : to show text in center
               subTitle=""
-              // optional: String : to show text in center bold
-              // title={centerPercentage}
-              // optional : height for graph
+              // title={`${centerPercentage}%`}
               height="150"
-              // optional : width for graph
               width="150"
-              // optional : to use as constrain to visible area
               constrainToVisibleArea="true"
-              // optional : to overirde tooltip message
               labels={({ datum }) => `${datum.x}: ${datum.y}%`}
-              // optional : horizontal or vertical
               legendOrientation="vertical"
-              // optional : left, right, top, buttom to show legends
               legendPosition="right"
-              // optional : to show legends, also u can specify color by symbol inside fill color
-              legendData={[
-                { name: 'Shortlisted 20%', symbol: { fill: 'green' } },
-                { name: 'Rejected 30%', symbol: { fill: 'red' } },
-                { name: 'Pending 50%', symbol: { fill: 'yellow' } },
-              ]}
-              // optional : to custom legends color
+              legendData={legendData}
               legends={{
                 colorScale: ['green', 'red', 'yellow'],
               }}
-              // optional : to manage legends based on height and width
               padding={{
                 bottom: 0,
                 left: 10,
                 right: 10, // Adjusted to accommodate legend
                 top: 0,
               }}
-              // optional : to custom color on radious
               colorScale={['green', 'red', 'yellow']}
-              // optional : wrapper size in px or percentage
               wrapperSize={{ height: '150px', width: '100%' }}
             />
           </Col>
           <Col sm={6}>
+          <p>Selected: {shortlistedGraph.selectedCount} <br/>
+            Rejected: {shortlistedGraph.rejectedCount}<br/>
+            Shortlisted: {shortlistedGraph.finalCount}</p>
             <Doughnut
               ref={graphref}
-              // optional
               id="dougnut"
-              // required : data in array of object
               data={shortlistedData}
-              // optional: String : to show text in center
               subTitle=""
-              // optional: String : to show text in center bold
-              // title={centerShortlistPercentage}
-              // optional : height for graph
+              // title={`${centerShortlistPercentage}%`}
               height="150"
-              // optional : width for graph
               width="150"
-              // optional : to use as constrain to visible area
               constrainToVisibleArea="true"
-              // optional : to overirde tooltip message
               labels={({ datum }) => `${datum.x}: ${datum.y}%`}
-              // optional : horizontal or vertical
               legendOrientation="vertical"
-              // optional : left, right, top, buttom to show legends
               legendPosition="right"
-              // optional : to show legends, also u can specify color by symbol inside fill color
-              legendData={[
-                { name: 'Selected 20%', symbol: { fill: 'green' } },
-                { name: 'Rejected 30%', symbol: { fill: 'red' } },
-                { name: 'Inprogress 10%', symbol: { fill: 'yellow' } },
-              ]}
-              // optional : to custom legends color
+              legendData={legendSelectedData}
               legends={{
                 colorScale: ['red', 'yellow', 'green'],
               }}
-              // optional : to manage legends based on height and width
               padding={{
                 bottom: 0,
                 left: 10,
                 right: 10, // Adjusted to accommodate legend
                 top: 0,
               }}
-              // optional : to custom color on radious
               colorScale={['green', 'red', 'yellow']}
-              // optional : wrapper size in px or percentage
               wrapperSize={{ height: '150px', width: '100%' }}
             />
           </Col>
