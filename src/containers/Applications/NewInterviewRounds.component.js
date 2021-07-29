@@ -41,10 +41,10 @@ function NewInterviewRounds(props) {
     const id = customFunctions.getLocalStorage('applicantId');
     const position = formValues.addmore.length-1;
     const postData = {
-      int_date: formValues.addmore[position].int_date
+      int_date: formValues.addmore[position]
         ? customFunctions.getDate(formValues.addmore[position].int_date)
         : '',
-      int_time: formValues.addmore[position].int_time
+      int_time: formValues.addmore[position]
         ? customFunctions.getTime(formValues.addmore[position].int_time)
         : '',
       round_status: formValues.addmore[position].round_status
@@ -89,8 +89,9 @@ function NewInterviewRounds(props) {
     if (data) {
       const interviewData = [];
       data.data.map((dt) => {
-        const newTime = dt.int_date && new Date(`${dt.int_date}T${dt.int_time}Z`);
-        const newDate = dt.int_date && new Date(dt.int_date);
+        if(dt){
+        const newTime = (!dt.int_time === null) && new Date(`${dt.int_date}T${dt.int_time}Z`);
+        const newDate = (!dt.int_date === null) && new Date(dt.int_date);
         return interviewData.push({
           interviewer: { label: dt.interviewer_name, value: dt.interviewer_id },
           round_status: {
@@ -99,7 +100,9 @@ function NewInterviewRounds(props) {
           },
           int_date: newDate,
           int_time: newTime,
-        });
+          });
+        }
+        return dt;
       });
 
       if(interviewData) {

@@ -34,6 +34,7 @@ import EmailTemplates from './containers/EmailTemplates/emailTemplates.component
 import RecruitmentApplication from './containers/Recruitment/recruitmentApplication.component';
 import InterviewerRoundStatus from './containers/Applications/InterviewerRoundsStatus.component';
 import HrReports from './containers/HrReports/hrReports.component';
+import HRListing from './containers/Employee/HRListing.component';
 
 function Routes() {
   return (
@@ -73,6 +74,7 @@ function Routes() {
       <Route path="/recruitment" exact component={RecruitmentApplication} />
        <Route path="/recruitment/:id" exact component={Applications} />
        <Route path="/hr-reports" exact component={HrReports} />
+       <Route path='/hr-listing' exact component={HRListing} />
       <Route component={NotFound} />
     </Switch>
   );
