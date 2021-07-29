@@ -205,14 +205,14 @@ function Dashboard() {
                       {
                         showClockIn && (
                           <div className="time-count text-center">
-                            <span>{signInTime || '00:00'}</span>
+                            <span><p>clockin Time</p>{signInTime || '00:00'}</span>
                           </div>
                         )
                       }
 
                       {time && (
                         <div className="time-count text-center">
-                          <span>{time || '00:00'}</span>
+                          <span><p>clockout Time</p>{time || '00:00'}</span>
                         </div>
                       )}
 
@@ -340,7 +340,7 @@ function Dashboard() {
                   <UserRestrictions permittedUsers={[5]} roleId={userRole}>
                   <div className="d-flex justify-content-end mr-3">
                     <Button onClick={()=> 
-                      {history.push('/emp-timesheet',customFunctions.setLocalStorage('type','EmpType'));
+                      {history.push('/hr-listing',customFunctions.setLocalStorage('type','EmpType'));
                       onViewButtonClick();
                     }}>View All</Button>
                  </div>

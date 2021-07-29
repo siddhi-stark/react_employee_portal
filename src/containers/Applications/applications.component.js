@@ -43,16 +43,19 @@ function Applications() {
                 </div>
               </Tab>
               <Tab eventKey="noticePeriod" title="Professional Details">
+                {isBasicInfoId && (
+                  <div className="row ml-2">
+                      <ProfessonalDetails
+                        isBasicInfoId={isBasicInfoId}
+                        onProfDetInfo={(value) => {
+                          console.log('value',value);
+                          setProfessionalInfo(value);
+                        }}
+                      />
+                  </div>
+                )}
                 <div className="row ml-2">
-                  {isBasicInfoId && (
-                    <ProfessonalDetails
-                      isBasicInfoId={isBasicInfoId}
-                      onProfDetInfo={(value) => {
-                        console.log('value',value);
-                        setProfessionalInfo(value);
-                      }}
-                    />
-                  )}
+                    <ProfessonalDetails/>
                 </div>
               </Tab>
               <Tab eventKey="old period" title="Interview Rounds">

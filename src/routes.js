@@ -34,6 +34,7 @@ import EmailTemplates from './containers/EmailTemplates/emailTemplates.component
 import RecruitmentApplication from './containers/Recruitment/recruitmentApplication.component';
 import InterviewerRoundStatus from './containers/Applications/InterviewerRoundsStatus.component';
 import HrReports from './containers/HrReports/hrReports.component';
+import HRListing from './containers/Employee/HRListing.component';
 
 function Routes() {
   return (
@@ -56,7 +57,7 @@ function Routes() {
       <Route path="/technology" exact component={Technology} />
       <Route path="/emp-stack" exact component={EmployeeTechListing} />
       <Route path="/employee-list" exact component={EmployeeList} />
-      <Route path="/emp-timesheet" exact component={EmployeeTimesheet} />
+      <Route path="/emp-timesheet/:empType" exact component={EmployeeTimesheet} />
       <Route path="/edit-employee/:employeeId" exact component={EditEmployee} />
       <Route path="/employees" exact component={Employees} />
       <Route path="/applications" exact component={Applications} />
@@ -73,6 +74,7 @@ function Routes() {
       <Route path="/recruitment" exact component={RecruitmentApplication} />
        <Route path="/recruitment/:id" exact component={Applications} />
        <Route path="/hr-reports" exact component={HrReports} />
+       <Route path='/hr-listing' exact component={HRListing} />
       <Route component={NotFound} />
     </Switch>
   );
