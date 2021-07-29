@@ -18,24 +18,24 @@ function EditEmployee(props) {
   let [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-  const [toggle, setToggle] = useState(false);
   // const [taskValue, setTaskValue] = useState('');
   // const [descriptionValue, setDescriptionValue] = useState('');
 
   // Declare variable Table
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   // const [startTime, setStartTime] = useState(null);
   // const [endTime, setEndTime] = useState(null);
   const title = 'Add Time Log Of Employee';
+  const limit = 10;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
 
   const columns = [
     {
-      id: 'no',
+      id: 'index',
       label: 'Sr.No',
     },
     {
@@ -80,21 +80,24 @@ function EditEmployee(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
+    const datee = customFunctions.getLocalStorage('date');
+    const dataaa = datee.split('-');
+    const newDate = dataaa[2]+'-'+dataaa[1]+'-'+dataaa[0]; //eslint-disable-line
     const id = props.match.params.employeeId;
     // const loginDate = formValues.login.replace('T', ' ');
     // const login = loginDate.split('.')[0]
     const postData = {
       user_id: Number(id),
       content: formValues.task,
-      start_time: new Date(formValues.login)
-        .toISOString()
-        .replace('T', ' ')
-        .substr(0, 19),
-      end_time: new Date(formValues.logout)
-        .toISOString()
-        .replace('T', ' ')
-        .substr(0, 19),
+      start_time: `${newDate} ${customFunctions.getTime(formValues.login)}`,
+      // start_time: new Date(formValues.login)
+      //   .toISOString()
+      //   .replace('T', ' ')
+      //   .substr(0, 19),
+      end_time:  `${newDate} ${customFunctions.getTime(formValues.logout)}`,
+        // .toISOString()
+        // .replace('T', ' ')
+        // .substr(0, 19),
       description: formValues.description,
     };
     const { data } = await AuthApi.postDataToServer(
@@ -102,11 +105,7 @@ function EditEmployee(props) {
       postData
     );
     if (data) {
-      swal(data && data.message[0], '', 'success').then((result) => {
-      if (result) {
-        setToggle(true);
-      }
-    });
+      swal(data && data.message[0], '', 'success');
     }
   };
 
@@ -140,12 +139,26 @@ function EditEmployee(props) {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data', data);
+    console.log('data', data.data.morning_data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
+      // setTotalCount(data.paginator.total_count);
+      // setLimit(data.paginator.limit);
+      // setItemsPerPage(data.paginator.limit);
+      // setCurrentPage(Number(data.paginator.current_page));
+
+       setTotalCount(data.paginator.total_count);
+      setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setRowData((data && data.data && data.data.evening_data) || []);
+
+      const newData = [...data.data.morning_data];
+      newData.map((item, i) => {
+        // console.log('dsfd',item);
+        const newItem = item;
+        newItem.index = (page - 1) * itemsPerPage + (i + 1);
+        return newItem;
+      });
+      console.log('rowdata',data.data.morning_data);
+      setRowData((data && data.data && data.data.morning_data) || []);
     } else {
       console.log('error', message);
     }
@@ -248,7 +261,6 @@ function EditEmployee(props) {
             // }}
           />
           <div className="mt-4">
-            {toggle && (
               <CustomTable
                 columns={columns}
                 rows={rowData}
@@ -266,7 +278,6 @@ function EditEmployee(props) {
                   return 'No record found.';
                 }}
               />
-            )}
           </div>
         </Card>
       </div>

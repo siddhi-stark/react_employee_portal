@@ -21,6 +21,14 @@ class CustomFunctions extends Component {
     return formattedTime;
   };
 
+getNewTime = (dateTime) => {
+const newdate = new Date(dateTime);
+const h = newdate.getHours();
+const min = newdate.getMinutes();
+const formattedate = h + ':' + min; //eslint-disable-line
+return formattedate;
+};
+
   headerDate = (date) => {
     const newDate = new Date(date);
     const splitDate = newDate.split(' ');
@@ -28,6 +36,16 @@ class CustomFunctions extends Component {
       splitDate[0] + ',' + splitDate[2] + splitDate[1] + ',' + splitDate[3]; //eslint-disable-line
     return formattedDate;
   };
+
+  getDMYDate = (dateTime) => {
+const newdate = new Date(dateTime);
+const d = newdate.getDate();
+const m = newdate.getMonth() + 1;
+const y = newdate.getFullYear();
+const formattedate =
+(d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y; //eslint-disable-line
+return formattedate;
+};
 
   getFormattedDate = (dateTime) => {
     const newdate = new Date(dateTime);

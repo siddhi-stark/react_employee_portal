@@ -87,11 +87,17 @@ function NewInterviewRounds(props) {
       `${Api.roundsUrl}?applicant_id=${interviewerId}`
     );
     if (data) {
+      let newTime = '';
+      let newDate = '';
       const interviewData = [];
       data.data.map((dt) => {
-        if(dt){
-        const newTime = (!dt.int_time === null) && new Date(`${dt.int_date}T${dt.int_time}Z`);
-        const newDate = (!dt.int_date === null) && new Date(dt.int_date);
+        if(!customFunctions.checkIfEmpty(dt.int_date)){
+          newDate = new Date(dt.int_date);
+        }
+        if(!customFunctions.checkIfEmpty(dt.int_time)){
+          newTime = new Date(`${customFunctions.getDate(dt.int_date)}T${dt.int_time}Z`);
+        }
+
         return interviewData.push({
           interviewer: { label: dt.interviewer_name, value: dt.interviewer_id },
           round_status: {
@@ -101,10 +107,7 @@ function NewInterviewRounds(props) {
           int_date: newDate,
           int_time: newTime,
           });
-        }
-        return dt;
       });
-
       if(interviewData) {
         updateDefaultValues({ addmore: [...interviewData] });
      }

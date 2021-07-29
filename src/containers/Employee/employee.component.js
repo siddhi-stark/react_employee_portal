@@ -740,7 +740,7 @@ function Employee() {
 
   return (
     <>
-
+    {console.log('pagination',pagination)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Employees</h2>

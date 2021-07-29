@@ -90,6 +90,7 @@ const deleteEmployeeHistory = (id) => {
 
   return (
     <>
+    {console.log('employeeDetails',employeeDetails.designation_name)}
       <h6 className="mt-3">Employee Profile Page</h6>
       <Image src="/images/edit-profile-img.png" style={{ 'height': '90px' }} />
       <div className="table-projects">
@@ -127,7 +128,7 @@ const deleteEmployeeHistory = (id) => {
               
             </div>
           </div>
-          <p>Designation</p>
+          <p>{employeeDetails.designation_name}</p>
           <Row>
             <Col md={4}>
               <h7>Joining Date -  {employeeDetails.joined_date ? customFunctions.getFormattedDate(employeeDetails.joined_date) : ''}</h7>
@@ -147,13 +148,23 @@ const deleteEmployeeHistory = (id) => {
               <h7>Contact No - {employeeDetails.mobile}</h7>
             </Col>
 
+            { employeeDetails.relieving_date ? (
+              <Col>
+              <h7>Confirmation Date - {employeeDetails.relieving_date ? customFunctions.getFormattedDate(employeeDetails.relieving_date) : ''}</h7>
+              </Col>
+              ) : (
+              
             <Col md={4}>
               <h7>Confirmation Date - {employeeDetails.confirmation_date ? customFunctions.getFormattedDate(employeeDetails.confirmation_date) : ''}</h7>
             </Col>
+              )  }
+
             {flag  ? '' : (
 
             <Col md={2}>
               <Button onClick={() => {history.push('/confirmation')}}>Confirm</Button>
+            
+
             </Col>
             ) }
 

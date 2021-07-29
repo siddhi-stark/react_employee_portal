@@ -184,8 +184,8 @@ function ToDoList(props) {
       setClockinClockoutStorage();
       setPagination({
         current_page: Number(data.paginator.current_page),
-        activePage: data.paginator.current_page,
-        itemsPerPage: data.paginator.limit,
+        activePage: Number(data.paginator.current_page),
+        itemsPerPage: Number(data.paginator.limit),
         totalItems: data.paginator.total_count,
       });
 
@@ -609,6 +609,7 @@ function ToDoList(props) {
 
   return (
     <>
+    {console.log('selectedId',selectedId)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -696,7 +697,7 @@ function ToDoList(props) {
                   <Table
                     columns={columns}
                     rows={rows}
-                    showPagination
+                    showPagination={true}
                     showCheckbox
                     paginationProps={{
                       ...pagination,
@@ -708,9 +709,19 @@ function ToDoList(props) {
                     dropdownContainerClass="mb-3"
                     selectedRowItems={selectedId}
                     // selectedRowItems={[25763, 25250]}
-                    onSelectRowsIndexes={(rowIndex) => {
-                      setSelectedId([...rowIndex]);
-
+                    onSelectRowsIndexes={async (rowIndex) => {
+                      console.log('rowIndex',rowIndex);
+                      const arr = [...selectedId,...rowIndex];
+                      const arrNew = [];
+                      await arr.filter(e => {
+                        if(!arrNew.includes(e)) {
+                          arrNew.push(e);
+                        }
+                        return e;
+                      });
+                      setSelectedId([...arrNew]);
+                      // const arr = selectedId;
+                      // if (selectedId)
                     }}
                     tableClass="table-striped"
                     emptyRender={() => (

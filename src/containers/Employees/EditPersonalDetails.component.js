@@ -20,9 +20,9 @@ function EditPersonalDetails(props) {
 // const formSchema = [...FormSections];
 //   formSchema[0].fields.map((section) => {
 //     const sectionData = section;
-//     if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
+//     if (sectionData.name === 'confirmation_date' || sectionData.name === 'relieving_date') {
 //       const date = new Date();
-//       sectionData.maxDate = date;
+//       sectionData.minDate = date;
 //     }
 //     return sectionData;
 //   });
@@ -45,6 +45,10 @@ useEffect(() => {
         console.log(new Date(currentdate.setYear(currentdate.getFullYear() - 18)));
         itemData.maxDate = maxdate;
          }
+          if (item.name === 'confirmation_date' || item.name === 'relieving_date') {
+      const date = new Date();
+      itemData.minDate = date;
+    }
          return itemData;
       })
       return s;
@@ -105,13 +109,13 @@ useEffect(() => {
   const getData = async () => {
     const id = customFunctions.getLocalStorage('id');
     const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${id}/`);
-    console.log('data',data);
       
       data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
       data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
       data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
-      data.data.joined_date = data.data.joined_date ? new Date(customFunctions.getDate(data.data.joined_date)) : '';
-      
+      data.data.joining_date = data.data.date_joined ? customFunctions.getFormattedDate(data.data.date_joined) : '';
+    console.log('data987978',customFunctions.getFormattedDate(data.data.date_joined));
+     
      const ds = data.data.designation_id ? {
         label: data.data.designation_name,
         value: data.data.designation_id
@@ -158,7 +162,6 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
 
 	return (
     <>
-    {console.log('jsonSchema',jsonSchema)}
   <StarkFormBuilder
     containerClass=''
     formHeaderClass=''

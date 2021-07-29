@@ -53,28 +53,29 @@ export default class Pagination extends Component {
 
   UNSAFE_componentWillReceiveProps(props) { // eslint-disable-line
 
-    this.setState({ activePage: props.currentPage });
+    this.setState({ activePage: props.current_page });
   }
 
   handlePageChange = async (pageNumber) => {
-    const { getData } = this.props;
+    const { onPageChange } = this.props;
     const { activePage } = this.state;
     if (activePage !== pageNumber) {
       await this.setState({ activePage: pageNumber });
-      if (getData) getData(pageNumber);
+      if (onPageChange) onPageChange(pageNumber);
     }
   };
 
   render() {
-    // const { totalCount, limit, activePage } = this.state;
-    const { totalCount, limit, currentPage } = this.props;
+    // const { totalItems, itemsPerPage, activePage } = this.state;
+    const { totalItems, itemsPerPage, current_page } = this.props; //eslint-disable-line
 
+      console.log('totalItems, itemsPerPage, current_page',totalItems, itemsPerPage, current_page)
     return (
       <div>
         <PaginationComponent
-          activePage={currentPage}
-          itemsCountPerPage={limit}
-          totalItemsCount={totalCount}
+          activePage={current_page} //eslint-disable-line
+          itemsCountPerPage={itemsPerPage}
+          totalItemsCount={totalItems}
           pageRangeDisplayed={5}
           onChange={this.handlePageChange}
           hideFirstLastPages

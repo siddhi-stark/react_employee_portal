@@ -9,9 +9,9 @@ import NewInterviewRounds from './NewInterviewRounds.component';
 import InterviewerRoundsStatus from './InterviewerRoundsStatus.component';
 import customFunctions from '../../helper/customFunctions';
 
-function Applications() {
+function Applications(props) {
   const title = 'Applications';
-
+  const id = props.match.params.ID; //eslint-disable-line
   const items = [{ to: '/', label: 'Home' }, { label: 'Applications' }];
   const [isBasicInfoId, setBasicInfo] = useState(null);
   const [isProfessionalInfoId, setProfessionalInfo] = useState(null);
@@ -43,7 +43,7 @@ function Applications() {
                 </div>
               </Tab>
               <Tab eventKey="noticePeriod" title="Professional Details">
-                {isBasicInfoId && (
+                {(!id || (id && isBasicInfoId)) && (
                   <div className="row ml-2">
                       <ProfessonalDetails
                         isBasicInfoId={isBasicInfoId}
@@ -54,9 +54,7 @@ function Applications() {
                       />
                   </div>
                 )}
-                <div className="row ml-2">
-                    <ProfessonalDetails/>
-                </div>
+                
               </Tab>
               <Tab eventKey="old period" title="Interview Rounds">
                 <div className="row ml-2">

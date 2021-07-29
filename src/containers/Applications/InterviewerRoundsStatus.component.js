@@ -29,6 +29,7 @@ function InterviewerRoundsStatus(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [interviewData, setInterviewData] = useState(initialState);
   const [interviewId, setInterviewId] = useState('');
+  const [applicantRoundsId,setApplicantRoundsId] = useState('');
   const history = useHistory();
   const { isProfessionalInfoId } = props;
 
@@ -47,6 +48,7 @@ function InterviewerRoundsStatus(props) {
       `${Api.interviewUrl}${id}/`
     );
     if (data) {
+      setApplicantRoundsId(data.data.applicant_rounds);
       setInterviewData({
         interviewDate: data.data.int_date,
         interviewTime: data.data.int_time,
@@ -64,10 +66,20 @@ function InterviewerRoundsStatus(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
-
+    console.log(formValues,defaultValues);
+    console.log('applicantRoundsId',applicantRoundsId);
+      const id = applicantRoundsId.length - 1;
+      console.log('id',id);
+      let newId = '';
+    applicantRoundsId.map((data,i) => {
+      console.log('data',data);
+      if(id === i) {
+        newId = data.applicant_round_id;
+      }
+      return data;
+    })
     const { data, message } = await AuthApi.putDataToServer(
-      `${Api.interviewUrl}${interviewId}/`,
+      `${Api.interviewUrl}${newId ? Number(newId) : Number(interviewId)}/`,
       formValues
     );
     if (data) {

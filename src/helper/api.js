@@ -83,6 +83,8 @@ export default class Api extends Component {
 
   static offerUrl = `${Api.baseUrl}offer-list/`;
 
+  static InterviewRoundsUrl = `${Api.baseUrl}constants/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

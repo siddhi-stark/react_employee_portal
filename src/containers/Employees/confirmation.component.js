@@ -14,6 +14,9 @@ import Api from '../../helper/api';
 
 function Confirmation() {
   const history = useHistory();
+  const firstName = '{{first-name}}';
+  const lastName = '{{last_name}}';
+  const joiningDate = '{{joining_date}}';
         const name = customFunctions.getLocalStorage('employeeName');
         const jobTitle = customFunctions.getLocalStorage('title');
     const id = localStorage.getItem('candidateId');
@@ -40,7 +43,7 @@ const validator = new SimpleReactValidator({autoForceUpdate: this});
     setDescription(editorState);
   };
 
-
+console.log('test',test);
   // const getDesignation = async () => {
   //   const { data } = await AuthApi.getDataFromServer(
   //     `${Api.designationUrl}?type=all`
@@ -216,7 +219,7 @@ const validator = new SimpleReactValidator({autoForceUpdate: this});
                     Please use word as per the need as it is, do not make
                     changes into them.
                   </b>
-                  [first_name], [last_name], [joining_date]
+                  {firstName}, {lastName},{joiningDate}
                 </p>
                 <Editor
                   // readOnly={viewType}
