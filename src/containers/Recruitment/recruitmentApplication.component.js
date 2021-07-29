@@ -3,6 +3,7 @@ import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Image, Button, Accordion } from 'react-bootstrap';
+import swal from 'sweetalert';
 import FormSections from './applicationformschema.json';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
@@ -178,6 +179,83 @@ const group = customFunctions.getLocalStorage('group');
   useEffect(() => {
     getUserRole();
   }, []);
+
+  const handleChangeActiveStatus = async (selectedIds) => {
+          if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
+            const params = {
+              status: 2,
+              ids: selectedIds
+            }
+             const successHandle = (e) => {
+        swal(e && e.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+          getRowData(1);
+        });
+      };
+      const errorHandle = (e) => {
+        swal(e && e.message[0], '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+          getRowData(1);
+        });
+      };
+            await customFunctions.changeStatus(
+        `${Api.bulkStatusUrl}`,
+        params,
+        'put',
+        successHandle,
+        errorHandle
+      );
+          }
+      } 
+
+const handleChangeInactiveStatus = async (selectedIds) => {
+          if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
+            const params = {
+              status: 6,
+              ids: selectedIds
+            }
+            const successHandle = (e) => {
+        swal(e && e.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+          getRowData(1);
+        });
+      };
+      const errorHandle = (e) => {
+        swal(e && e.message[0], '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+          getRowData(1);
+        });
+      };
+              await customFunctions.changeStatus(
+        `${Api.bulkStatusUrl}`,
+        params,
+        'put',
+        successHandle,
+        errorHandle
+      );
+          }
+      } 
+
 
   // Submit Form
   const submitForm = async (formValues) => {
@@ -361,23 +439,22 @@ const group = customFunctions.getLocalStorage('group');
                 </>
               )}
             </div>
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              role={5}
-              showPagination={true}
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
-              }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
-            />
+             <CustomTable
+    columns={columns}
+    rows={rowData}
+bulkActions={Number(group) === 5 ? [{'actionTitle' : 'Shortlisted','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Declined','actionCallback' : handleChangeInactiveStatus},] : ''} 
+showPagination={true} 
+paginationProps={{
+            totalItems: totalCount,
+            itemsPerPage: limit,
+            activePage: currentPage,
+            onPageChange: (pageNo) => {
+              getRowData(pageNo);
+            }
+          }} 
+showCheckbox={true} 
+emptyRender={()=>{ return ('No record found.')}} 
+/>
           </Card.Body>
         </Card>
       </section>
