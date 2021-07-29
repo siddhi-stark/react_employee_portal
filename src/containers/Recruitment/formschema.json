@@ -2,7 +2,7 @@
   {
     "sectionName": "uploadform",
     "sectionTitle": "Batch Upload Form",
-    "layout": { "label": "2 Column", "value": "2column" },
+    "layout": { "label": "4 Column", "value": "4column" },
     "containerClass": "mt-3",
     "displaySection": true,
     "displaySectionTitle": false,
@@ -37,11 +37,11 @@
         "options": []
       },
       {
-        "name": "applied_for",
+        "name": "technology",
         "type": "select",
-        "label": "Position",
+        "label": "Technology",
         "id": "",
-        "placeholder": "Select Position",
+        "placeholder": "Select Technology",
         "inputClass": "",
         "containerClass": "",
         "validations": [
@@ -61,8 +61,8 @@
         "fieldsToReset": [],
         "fieldLayout": { "label": "1 Column", "value": "1column" },
         "fields": [],
-        "optionCallback": "getPosition",
-        "optionsCallbackUrl": "designationUrl",
+        "optionCallback": "getTechnology",
+        "optionsCallbackUrl": "employeeStackUrl",
         "options": []
       },
       {

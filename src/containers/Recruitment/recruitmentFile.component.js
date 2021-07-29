@@ -68,33 +68,6 @@ function RecruitmentFileComponent() {
     getTechnology();
   }, []); 
 
-  const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = []; 
-    data.data.map((op) => {
-      dpOptions.push ({ label: op.name, value: op.id });
-      return op;
-    });
-     const allOptions = {
-      ...filterOptions,
-      ...defaultFilterOptions,
-      position: dpOptions,
-    };
-    defaultFilterOptions = { ...allOptions };
-    updateFilterOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getDesignation();
-  }, []);
-
-
-
   // Submit Form
   const submitForm = async (formValues) => {
     // console.log('formValues',formValues);
@@ -108,6 +81,9 @@ function RecruitmentFileComponent() {
     formData.append('applied_for', formValues.applied_for
           ? formValues.applied_for.value
           : '');
+    formData.append('technology_stack',formValues.technology ?
+      formValues.technology.value : '');
+      
 
     // const  payload = {}
     // payload.applied_for = formValues.applied_for
