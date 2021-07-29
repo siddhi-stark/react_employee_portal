@@ -11,7 +11,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 function RecruitmentApplicationComponent() {
-  const title = 'Recruitment';
+  // const title = 'Recruitment';
 const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
   const history = useHistory();
@@ -28,6 +28,7 @@ const group = customFunctions.getLocalStorage('group');
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState(null);
   const [filterData, setFilterData] = useState({});
+  const [title,setTitle] = useState('');
   let filterOptions = {};
   
   const formSchema = [...FormSections];
@@ -163,6 +164,7 @@ const group = customFunctions.getLocalStorage('group');
 
   useEffect(() => {
     getRowData(1);
+    setTitle('Recruitment');
   }, [filterData]);
 
   // filter Form

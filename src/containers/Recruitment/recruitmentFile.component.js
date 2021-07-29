@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col, Image } from 'react-bootstrap';
 import FormSections from './formschema.json';
 import { Helmet } from '../../components/FormInputs';
@@ -10,7 +10,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 function RecruitmentFileComponent() {
-  const title = 'Batch Upload';
+  // const title = 'Batch Upload';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Batch Upload' }];
 
@@ -18,11 +18,12 @@ function RecruitmentFileComponent() {
   const [defaultFilterValues, updateDefaultFilterValues] = useState({}); // eslint-disable-line
   const [filterOptions, updateFilterOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
+  const [title,setTitle] = useState('');
+  const history = useHistory();
   // const [show, setShow] = useState(false);
 
   // Declare variable table
   const [filterData, setFilterData] = useState({}); //eslint-disable-line
-  let defaultFilterOptions = {};
   // Form
 
   // Variable declarations
@@ -39,6 +40,7 @@ function RecruitmentFileComponent() {
 
   useEffect(() => {
     getUserRole();
+    setTitle('Batch Upload');
   }, []);
 
  
@@ -50,18 +52,13 @@ function RecruitmentFileComponent() {
       return;
     }
 
-    const dpOptions = []; 
-    data.data.map((op) => {
-      dpOptions.push ({ label: op.name, value: op.id });
-      return op;
+    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
     });
-     const allOptions = {
-      ...filterOptions,
-      ...defaultFilterOptions,
-      technology: dpOptions,
-    };
-    defaultFilterOptions = { ...allOptions };
-    updateFilterOptions(allOptions);
+
+    options.technology = dpOptions;
+    const allOptions = options;
+    await updateOptions({...allOptions});
   };
 
   useEffect(() => {
@@ -107,6 +104,7 @@ function RecruitmentFileComponent() {
       timer: 2000,
     }).then(() => {
       swal.close();
+      history.push('/recruitment');
     });
     // Perform success actions
   };
@@ -118,19 +116,13 @@ function RecruitmentFileComponent() {
       return;
     }
 
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.name, value: op.id });
-      return op;
+     const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
     });
-    const allOptions = {
-      ...options,
-      ...defaultFilterOptions,
-      applied_for: dpOptions,
-    };
-    defaultFilterOptions = { ...allOptions };
-    updateOptions(allOptions);
+
+    options.applied_for = dpOptions;
+    const allOptions = options;
+    await updateOptions({...allOptions});
   };
 
   useEffect(() => {

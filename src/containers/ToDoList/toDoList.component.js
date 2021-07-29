@@ -180,6 +180,7 @@ function ToDoList(props) {
     const endPoint = `${Api.taskUrl}?sort_by=id&sort_direction=descending&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
+      console.log('data.data.pagination',data.paginator.current_page);
       setClockinClockoutStorage();
       setPagination({
         current_page: Number(data.paginator.current_page),

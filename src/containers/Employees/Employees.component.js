@@ -14,15 +14,16 @@ import Pagination from '../../components/Pagination/pagination.component';
 // import OldEmployee from './OldEmployee.component';
 
 function Employees() {
-  const title = 'Employees List';
+  // const title = 'Employees List';
   const [employee, setEmployee] = useState([]);
+  const [title, setTitle] = useState('');
   // const[employeeId,setId] = useState(null);
   const limit = 9;
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   const history = useHistory();
-  const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
+  // const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
   const getEmployee = async (pageNo = 1) => {
     const page = pageNo || currentPage;
@@ -47,16 +48,19 @@ function Employees() {
 
   useEffect(() => {
     getEmployee(1);
+    setTitle('Employees');
   }, []);
 
   console.log('employeeData', employee);
   // console.log('noticePeriod',noticePeriod);
   return (
     <>
-      <Helmet title={title} />
-      <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Employees</h2>
-        <Breadcrumb items={items} />
+       <Helmet title={title} />
+      <div className="page-header">
+        <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">Employees</h2>
+          <Breadcrumb />
+        </div>
       </div>
       <section className="content-area">
         <div>

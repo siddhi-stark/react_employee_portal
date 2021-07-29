@@ -20,6 +20,7 @@ function EmployeeTimesheet(props) {
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [dataShow, setDataShow] = useState(false);
   const [typeeee,setType] = useState('');
+  const [title,setTitle] = useState('');
   const history = useHistory();
 
   // Variable declarations
@@ -27,7 +28,7 @@ function EmployeeTimesheet(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   // const [jsonSchema, updateJsonSchema] = useState(FormSections);
-  const title = 'Employee Timesheet';
+  // const title = 'Employee Timesheet';
   const limit = 10;
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
@@ -211,6 +212,7 @@ function EmployeeTimesheet(props) {
 
   useEffect(() => {
     getUserRole();
+    setTitle('EMployee TImesheet');
   }, []);
 
   // Submit Form
