@@ -100,16 +100,15 @@
           }
         ],
         "displayWhen": {},
-         "minTime": "login",
+         "minTime": "",
          "minDate":"",
         "maxTime": "",
-
         "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "onDurationCallback",
         "callbackUrl": "",
         "inputToChange": "",
-        "minDateSelector": "",
+        "minDateSelector": "login",
         "maxDateSelector": "",
         "disabled": false,
         "isMulti": false,

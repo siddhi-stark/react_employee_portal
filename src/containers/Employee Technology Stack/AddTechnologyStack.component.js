@@ -168,6 +168,8 @@ function AddTechnologyStack(props) {
 console.log('defaultValues',defaultValues);
   return (
     <>
+    <div className="mt-5">
+
   <StarkFormBuilder
     containerClass=''
     formHeaderClass=''
@@ -179,7 +181,7 @@ console.log('defaultValues',defaultValues);
     currentUser={currentUser}
     submitBtnText="Submit"
     showResetBtn={true}
-    resetBtnText="Clear"
+    resetBtnText="Cancel"
     btnContainerClass="form-submit-buttons"
     isStepForm={false}
     
@@ -187,6 +189,7 @@ console.log('defaultValues',defaultValues);
       console.log('form reset callback')
     }}
   />
+    </div>
     
 
 

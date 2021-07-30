@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
-// import { setHours, setMinutes } from 'date-fns';
+import { withRouter, useHistory } from 'react-router-dom';
+import { Card, Button } from 'react-bootstrap';
+import { setHours, setMinutes } from 'date-fns';
 import StarkFormBuilder from 'stark-form-builder';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
@@ -15,9 +15,11 @@ import { Helmet } from '../../components/FormInputs';
 function EditEmployee(props) {
   // let time = '';
   // Variable declarations
+
   let [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
+  const [formSchema, setFormschema] = useState(FormSections);
   // const [taskValue, setTaskValue] = useState('');
   // const [descriptionValue, setDescriptionValue] = useState('');
 
@@ -32,7 +34,7 @@ function EditEmployee(props) {
   const title = 'Add Time Log Of Employee';
   const limit = 10;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
-
+  const history = useHistory();
   const columns = [
     {
       id: 'index',
@@ -150,7 +152,7 @@ function EditEmployee(props) {
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
 
-      const newData = [...data.data.morning_data];
+      const newData = [...data.data.evening_data];
       newData.map((item, i) => {
         // console.log('dsfd',item);
         const newItem = item;
@@ -158,7 +160,7 @@ function EditEmployee(props) {
         return newItem;
       });
       console.log('rowdata',data.data.morning_data);
-      setRowData((data && data.data && data.data.morning_data) || []);
+      setRowData((data && data.data && data.data.evening_data) || []);
     } else {
       console.log('error', message);
     }
@@ -198,14 +200,37 @@ function EditEmployee(props) {
   //   }
   // };
 
-  // const getStartTime = (value) => {
+  const getStartTime = async (value) => {
 
-  //   console.log('getStartTime--->', value);
-  //   // getDuration(value);
-  //   // time = value;
-  //   setStartTime(value);
-  //   getDuration(value, endTime);
-  // };
+    console.log('getStartTime--->', value);
+    console.log('e.getHOurs',value.getHours(),value.getMinutes());
+    const hrs = value.getHours();
+    const minutes = value.getMinutes();
+    setFormschema([]);
+  await formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (sectionData.name === 'logout') {
+      const date = new Date(value);
+      sectionData.minDate=date
+      const time = setHours(
+                        setMinutes(date, parseInt(hrs, 10) + 1),
+                        parseInt(minutes, 10) > 58 ? parseInt(hrs, 10) + 1 : hrs
+                      )
+      sectionData.minTime=time;
+      const timeNew = setHours(setMinutes(new Date(), 59), 23)
+      sectionData.maxTime=timeNew;
+    }
+    {console.log('formSchema',formSchema)} //eslint-disable-line
+    console.log('sectionData',sectionData); //eslint-disable-line
+
+    return sectionData;
+  });
+    setFormschema([...formSchema]); //eslint-disable-line
+    // getDuration(value);
+    // time = value;
+    // setStartTime(value);
+    // getDuration(value, endTime);
+  };
 
   return (
     <>
@@ -218,18 +243,20 @@ function EditEmployee(props) {
       </div>
       <div className="mt-4 edit-timelog">
         <Card body>
+        <Button className="float-end" onClick= {() => history.push('/emp-timesheet')} >Back</Button>
           <div className="d-flex justify-content-center mt-4">
             <p>
               Employee Name: {customFunctions.getLocalStorage('employeeName')}
-            </p>
+            </p> 
             <p className="ms-4">
               Date: {customFunctions.getLocalStorage('date')}
             </p>
           </div>
+          {console.log('formSchema',formSchema)}
           <StarkFormBuilder
             containerClass=""
             formHeaderClass=""
-            formSections={FormSections}
+            formSections={formSchema}
             onFormSubmit={(formValues) => {
               submitForm(formValues);
             }}
@@ -244,8 +271,8 @@ function EditEmployee(props) {
               onDurationCallback: () => {
                 // getEndTime(value);
               },
-              onStartTimeCallback: () => {
-                // getStartTime(value);
+              onStartTimeCallback: (value) => {
+                getStartTime(value);
               },
             }}
             defaultFormValues={defaultValues}
