@@ -43,6 +43,10 @@ function EmployeeTimesheet(props) {
       const date = new Date();
       sectionData.maxDate = date;
     }
+    if (sectionData.name === 'fromDate') {
+      const date = new Date();
+      sectionData.maxDate = date;
+    }
     return sectionData;
   });
 
