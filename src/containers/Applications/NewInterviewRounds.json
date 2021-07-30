@@ -126,7 +126,7 @@
 			"optionsCallbackUrl": "employeeUrl",
 			"options": []
 		}, {
-			"name": "round_status",
+			"name": "interviewerRounds",
 			"type": "select",
 			"label": "Round",
 			"id": "",
@@ -151,14 +151,69 @@
 				"value": "1column"
 			},
 			"fields": [],
-			"options": [{ "label": "hr screening", "value": "1" },
-					{ "label": "aptitude/machine test", "value": "2" },
-					{ "label": "technical round 1", "value": "3" },{ "label": "technical round 2", "value": "4" },
-					{ "label": "Final HR", "value": "5" }]
-		}],
+			"optionCallback": "getInterviewRounds",
+			"optionsCallbackUrl": "InterviewRoundsUrl",
+			"options": []
+		},
+{
+        "name": "status_name",
+        "type": "text",
+        "label": "Round Status",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "onTaskName",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },{
+        "name": "comments",
+        "type": "textarea",
+        "label": "Feedback",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "onTaskName",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      }],
 		"optionCallback": "",
 		"options": []
-	}],
+	}
+],
 	"allowedUsers": [],
 	"sectionLayout": "2column"
 }]
