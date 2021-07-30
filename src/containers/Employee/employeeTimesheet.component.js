@@ -213,7 +213,7 @@ function EmployeeTimesheet(props) {
 
   useEffect(() => {
     getUserRole();
-    setTitle('EMployee TImesheet');
+    setTitle('Employee Timesheet');
   }, []);
 
   // Submit Form
