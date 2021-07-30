@@ -2,7 +2,7 @@
   {
     "sectionName": "uploadform",
     "sectionTitle": "Batch Upload Form",
-    "layout": { "label": "4 Column", "value": "4column" },
+    "layout": { "label": "3Column", "value": "3column" },
     "containerClass": "mt-3",
     "displaySection": true,
     "displaySectionTitle": false,

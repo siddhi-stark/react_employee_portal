@@ -11,9 +11,9 @@ import Pagination from '../../components/Pagination/pagination.component';
 
 function CurrentEmployee() {
 
-  const title = 'Current Employees';
   const [employee, setEmployee] = useState([]);
   const [totalCount, setTotalCount] = useState(9);
+  const [title, setTitle] = useState('');
   const [limit, setLimit] = useState(9);
   const [currentPage, setCurrentPage] = useState('');
 
@@ -45,8 +45,9 @@ function CurrentEmployee() {
   };
 
   useEffect(() => {
+    setTitle('Current Employees');
     getEmployee(1);
-  }, []);
+  }, [title]);
 
   return (
     <>

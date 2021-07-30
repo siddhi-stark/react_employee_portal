@@ -39,6 +39,7 @@ useEffect(() => {
          if(item.name === 'joining_date') itemData.disabled = true;
          if(item.name === 'email') itemData.disabled = true;
          if(item.name === 'mobile') itemData.disabled = true;
+         if(item.name === 'confirmation_date') itemData.disabled = true;
          if(item.name === 'dob') {
         const currentdate = new Date();
         const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));

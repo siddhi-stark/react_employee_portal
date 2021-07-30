@@ -107,7 +107,11 @@ function EditEmployee(props) {
       postData
     );
     if (data) {
-      swal(data && data.message[0], '', 'success');
+      swal(data && data.message[0], '', 'success').then((result) => {
+          if(result){
+            getRowData(1);
+          }
+        });
     }
   };
 

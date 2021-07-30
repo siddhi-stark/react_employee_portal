@@ -19,6 +19,7 @@ import customFunctions from '../../helper/customFunctions';
 // };
 
 function NewInterviewRounds(props) {
+  let defaultFilterOptions = {};
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
@@ -176,31 +177,34 @@ function NewInterviewRounds(props) {
     });
     const allOptions = {
       ...options,
+      ...defaultFilterOptions,
       interviewer: dpOptions,
     };
-    console.log('data',data.data);
+    defaultFilterOptions = {...allOptions};
     updateOptions(allOptions);
   };
 
-
-    const getInterviewRounds = async () => {
-      // const id = props.match.params.stackId;
-    const {data} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=round_type`);
-    if(!data) {
+  const getInterviewRounds = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=round_type`);
+    if (!data) {
       // show error
       return;
     }
-    
- const dpOptions = await data && data.data && data.data.round_type.length > 0 && data.data.round_type.map((op) => {
-      return { label: op.name, value: op.id };
+
+    const dpOptions = [];
+  await  data.data && data.data.round_type.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.name, value: op.id });
+      return op;
     });
-
-    options.interviewerRounds = dpOptions;
-    const allOptions = options;
-    await updateOptions({...allOptions});
-   // console.log('name',data.data);
-
-  }  
+    const allOptions = {
+      ...options,
+      ...defaultFilterOptions,
+      interviewerRounds: dpOptions,
+    };
+    defaultFilterOptions = {...allOptions};
+    updateOptions(allOptions);
+  }
 
   useEffect(() => {
     getInterviewer();
@@ -211,7 +215,6 @@ function NewInterviewRounds(props) {
     <>
     <div> 
 
-    <div className='float-left'>Round - Selected</div>
       <StarkFormBuilder
         containerClass=""
         formHeaderClass=""
