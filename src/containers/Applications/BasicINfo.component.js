@@ -56,40 +56,46 @@ function BasicInformation(props) {
      //  data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
      //  data.data.joined_date = data.data.joined_date ? new Date(customFunctions.getDate(data.data.joined_date)) : '';
      
-     const techStack = [];
+     
+
+    // if(data) {
+
+    //  if (data && data.data && data.data.tech_stack_ids && data.data.tech_stack_ids.length > 0 && technology && technology.length > 0) {
+    //    const techStackIds = data.data.tech_stack_ids;
+    //    await technology.map((tech) => {
+    //    if (techStackIds.includes(tech.id)) {
+    //      techStack.push({
+    //        label : tech.name,
+    //          value:  tech.id
+    //      });
+    //    }
+    //    return tech;
+    //  })
+    //  }
+    // }
+
 
     if(data) {
-
-     if (data && data.data && data.data.tech_stack_ids && data.data.tech_stack_ids.length > 0 && technology && technology.length > 0) {
-       const techStackIds = data.data.tech_stack_ids;
-       await technology.map((tech) => {
-       if (techStackIds.includes(tech.id)) {
-         techStack.push({
-           label : tech.name,
-             value:  tech.id
-         });
-       }
-       return tech;
-     })
-     }
-    }
-
-
-      if(data) {
         
      const ds = data.data.applied_for_id ? {
         label: data.data.applied_for_name,
         value: data.data.applied_for_id
       } : ''
 
+      const techStack = data.data.tech_stack_id ? {
+        label: data.data.tech_stack_name,
+        value: data.data.tech_stack_id
+      } : ''
+
+
      const obj = {
        ...data.data,
        applied_for: ds,
-       technologies_stack: techStack
+       tech_stack: techStack
      };
 
      props.onBasicInfo(data.data.id);
-     console.log('id---',data.data.id)
+     console.log('id---',obj)
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
       customFunctions.setLocalStorage('applicantId',data.data.id);
@@ -113,20 +119,14 @@ function BasicInformation(props) {
   const submitForm = async (formValues) => {
     console.log('formValues',formValues);
 
-  const techId = [];
 
       let postData = {
       ...formValues,
     };
-    if(formValues){
-      formValues.technologies_stack.map((tech)=>{
-          return techId.push(tech.value);
-      });
-    }
-
+    
     postData = {
       ...postData,
-      technologies_stack: techId,
+      tech_stack: formValues.tech_stack ? formValues.tech_stack.value : '',
       applied_for: formValues.applied_for ? formValues.applied_for.value : '',
     }
 
@@ -159,7 +159,7 @@ function BasicInformation(props) {
   };
     
   const getDesignation = async () => {
-    const {data} = await AuthApi.getDataFromServer(Api.designationUrl);
+    const {data} = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if(!data) {
       // show error
       return;
@@ -189,7 +189,7 @@ function BasicInformation(props) {
  const getTechnology = async () => {
    console.log('getTechnology');
       // const id = props.match.params.stackId;
-    const {data} = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    const {data} = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
     if(!data) {
       // show error
       return;
@@ -199,7 +199,7 @@ function BasicInformation(props) {
       return { label: op.name, value: op.id };
     });
 
-    options.technologies_stack = dpOptions;
+    options.tech_stack = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
    // console.log('applicantId',appicantId);

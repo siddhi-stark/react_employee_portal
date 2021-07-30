@@ -90,7 +90,7 @@
 				"type": "text",
 				"label": "",
 				"id": "",
-				"placeholder": "Search keyword",
+				"placeholder": "Search by Applicant Name",
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [],

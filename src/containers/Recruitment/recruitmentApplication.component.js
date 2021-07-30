@@ -44,6 +44,7 @@ const group = customFunctions.getLocalStorage('group');
   
   const handleActionCallback = ({id,status_name}) => { //eslint-disable-line
     return (
+
       <>
 
      
@@ -76,21 +77,26 @@ const group = customFunctions.getLocalStorage('group');
   };
 
   const handleResumeCallback = (resume) => {
- <>
+    console.log('resume',resume);
+        return (
+
+      <>
 
      
         <a
-          href={resume}
+          href={resume.resume}
           className="pl-2"
-          download
+          target='_Blank'
         >
 
           <Image src= '/images/download-file.svg' />
+            
    
 
         </a>
 
       </>
+    );
   }
 
   // Declare columns
@@ -130,10 +136,6 @@ const group = customFunctions.getLocalStorage('group');
     {
       id: 'total_exp',
       label: 'Total Experience',
-    },
-    {
-      id: 'notice_period',
-      label: 'Notice Period',
     },
     {
       id: 'email',

@@ -74,7 +74,7 @@
 		"options": [],
 		"optionsCallbackUrl": "designationUrl"
 	}, {
-		"name": "technologies_stack",
+		"name": "tech_stack",
 		"type": "select",
 		"label": "Technology Stack",
 		"id": "",
@@ -95,7 +95,7 @@
 		"minDateSelector": "",
 		"maxDateSelector": "",
 		"disabled": false,
-		"isMulti": true,
+		"isMulti": false,
 		"allowedUsers": [],
 		"fieldsToReset": [],
 		"fieldLayout": {

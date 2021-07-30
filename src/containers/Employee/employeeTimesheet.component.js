@@ -225,7 +225,7 @@ function EmployeeTimesheet(props) {
   };
 
   const getEmployeeName = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
     if (!data) {
       // show error
       return;

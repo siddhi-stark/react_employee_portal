@@ -133,7 +133,7 @@ useEffect(() => {
 
   const getDesignation = async () => {
     // const id = props.match.params.stackId;
-  const {data} = await AuthApi.getDataFromServer(Api.designationUrl);
+  const {data} = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
   if(!data) {
     // show error
     return;
