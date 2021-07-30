@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './NewInterviewRounds.json';
@@ -25,6 +25,8 @@ function NewInterviewRounds(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [count, forceUpdate] = useState(0);
   const { isProfessionalInfoId } = props;
+
+  const history = useHistory();
 
   // Get user role
   const getUserRole = async () => {
@@ -69,6 +71,7 @@ function NewInterviewRounds(props) {
         timer: 2000,
       }).then(() => {
         swal.close();
+        history.push('/recruitment');
       });
     } else {
       swal(message, '', 'error', {

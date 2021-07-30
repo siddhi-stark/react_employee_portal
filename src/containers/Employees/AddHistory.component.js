@@ -139,7 +139,7 @@ function AddHistory(props) {
       currentUser={currentUser}
       submitBtnText="Submit"
       showResetBtn={true} // eslint-disable-line
-      resetBtnText="Clear"
+      resetBtnText="Cancel"
       btnContainerClass="form-submit-buttons"
       isStepForm={false}
       onFormReset={() => {

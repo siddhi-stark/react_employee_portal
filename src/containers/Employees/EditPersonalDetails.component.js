@@ -113,8 +113,7 @@ useEffect(() => {
       data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
       data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
       data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
-      data.data.joining_date = data.data.date_joined ? customFunctions.getFormattedDate(data.data.date_joined) : '';
-    console.log('data987978',customFunctions.getFormattedDate(data.data.date_joined));
+      data.data.joining_date = data.data.date_joined ? new Date(customFunctions.getDate(data.data.date_joined)) : '';
      
      const ds = data.data.designation_id ? {
         label: data.data.designation_name,
@@ -174,7 +173,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
     currentUser={currentUser}
     submitBtnText="Submit"
     showResetBtn={true} // eslint-disable-line
-    resetBtnText="Clear"
+    resetBtnText="Cancel"
     btnContainerClass="form-submit-buttons"
     isStepForm={false}
     
