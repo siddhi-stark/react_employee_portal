@@ -172,7 +172,10 @@ const deleteEmployeeHistory = (id) => {
 
       <div className="d-flex align-items-center justify-content-between mb-4">
         <h4><b>Employee History</b></h4>
-        <Button onClick={() => setShowEMployee(true)}>Add History</Button>
+        <Button onClick={() => {setShowEMployee(true);
+            customFunctions.removeLocalStorage('hisotryID');
+          }}
+         >Add History</Button>
 
       </div>
       {showEmployee && (
@@ -199,7 +202,7 @@ const deleteEmployeeHistory = (id) => {
           <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
             setData(comp);
             setShowEMployee(true);
-            customFunctions.setLocalStorage('hisotryID',comp.id);
+            customFunctions.setLocalStorage('hisotryID;',comp.id);
             // history.push(`/profile-history/id=${comp.id}`)
           }}/>
 

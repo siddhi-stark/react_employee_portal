@@ -48,20 +48,14 @@ function InterviewerRoundsStatus(props) {
       `${Api.interviewUrl}${id}/`
     );
     if (data) {
-      const appId = data.data.applicant_rounds.length - 1;
-      console.log('appId',appId);
       setApplicantRoundsId(data.data.applicant_rounds);
-      data.data && data.data.applicant_rounds.map((dt, index)=>{
-        if(index === appId)
       setInterviewData({
-        interviewDate: dt.int_date,
-        interviewTime: dt.int_time,
-        interviewSelector: dt.interviewer_name,
-        interviewRound: dt.status_name,
+        interviewDate: data.data.applicant_rounds[0].int_date,
+        interviewTime: data.data.applicant_rounds[0].int_time,
+        interviewSelector: data.data.applicant_rounds[0].interviewer_name,
+        interviewRound: data.data.applicant_rounds[0].status_name,
       });
-      updateDefaultValues({status:String(dt.status), comments: dt.comments})
-      return dt;
-      })
+      updateDefaultValues({status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
     }
   };
 

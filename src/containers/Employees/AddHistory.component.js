@@ -80,7 +80,7 @@ function AddHistory(props) {
   const getData = async (id, designation) => {
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
      let des = {};
-
+     if(data){
      await designation.map((ds) => {
        if(data.data.designation.toString() === ds.name.toString()) {
          des = {
@@ -98,7 +98,7 @@ function AddHistory(props) {
        designation: des
      };
      updateDefaultValues({...obj})    // updateDefaultValues(data);
-     console.log('obj', obj);
+     }
   };
 
 
