@@ -67,17 +67,11 @@ function InterviewerRoundsStatus(props) {
   // Submit Form
   const submitForm = async (formValues) => {
     console.log('formValues',formValues);
-    console.log('applicantRoundsId',applicantRoundsId);
+    console.log('applicantRoundsId',applicantRoundsId[0].applicant_round_id);
       const id = applicantRoundsId.length - 1;
       console.log('id',id);
-      let newId = '';
-    applicantRoundsId.map((data,i) => {
-      console.log('data',data);
-      if(id === i) {
-        newId = data.applicant_round_id;
-      }
-      return data;
-    })
+   
+       const newId = applicantRoundsId[0].applicant_round_id;
     const { data, message } = await AuthApi.putDataToServer(
       `${Api.interviewUrl}${newId ? Number(newId) : Number(interviewId)}/`,
       formValues
