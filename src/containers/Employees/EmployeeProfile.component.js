@@ -9,7 +9,7 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
 function EmployeeProfile(props) {
-  const flag = customFunctions.getLocalStorage('isEmployeeConfirmed');
+  // const flag = customFunctions.getLocalStorage('isEmployeeConfirmed');
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails,setEmployeeDetails] = useState({});
@@ -29,7 +29,7 @@ function EmployeeProfile(props) {
 
   const getEmployeeHIstory = async () => {
     const employeeId = props.match.params.id;
-    const endPoint =  `${Api.historyUrl}?employee_id=${employeeId}`;
+    const endPoint =  `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     // customFunctions.setLocalStorage('historyId',data.data.id);
     // console.log('data',data.data);
@@ -150,7 +150,7 @@ const deleteEmployeeHistory = (id) => {
 
             { employeeDetails.relieving_date ? (
               <Col>
-              <h7>Confirmation Date - {employeeDetails.relieving_date ? customFunctions.getFormattedDate(employeeDetails.relieving_date) : ''}</h7>
+              <h7>Relieving Date - {employeeDetails.relieving_date ? customFunctions.getFormattedDate(employeeDetails.relieving_date) : ''}</h7>
               </Col>
               ) : (
               
@@ -159,16 +159,13 @@ const deleteEmployeeHistory = (id) => {
             </Col>
               )  }
 
-            {flag  ? '' : (
-
+            { employeeDetails && (!employeeDetails.confirmation_date) && (
             <Col md={2}>
-              <Button onClick={() => {history.push('/confirmation')}}>Confirm</Button>
-            
-
+              <Button onClick={() => {history.push('/confirmation')}}>
+                Confirm
+              </Button>
             </Col>
             ) }
-
-            
           </Row>
         </Card>
           )}
@@ -211,7 +208,7 @@ const deleteEmployeeHistory = (id) => {
           <Image src="/images/delete.png" alt="Edit Profile" onClick={() => {
             deleteEmployeeHistory(comp.id)
           }} />
-</div>
+          </div>
         </div>
         ))
       }

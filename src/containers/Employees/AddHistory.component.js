@@ -17,6 +17,16 @@ function AddHistory(props) {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
+ 
+ const formSchema = [...FormSections];
+  formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
+      const date = new Date();
+      sectionData.maxDate = date;
+    }
+    return sectionData;
+  });
 
   useEffect(() => {
     getUserRole();
@@ -27,6 +37,7 @@ function AddHistory(props) {
   const submitForm = async (formValues) => {
     console.log(formValues);
     const employeeId = customFunctions.getLocalStorage('id');
+    console.log('employeeId',employeeId);
      const history = customFunctions.getLocalStorage('hisotryID');
     const postData = {
       employee: Number(employeeId),
@@ -71,9 +82,6 @@ function AddHistory(props) {
      let des = {};
 
      await designation.map((ds) => {
-       console.log('data.data.designation === des.name',data.data.designation === ds.name);
-       console.log('data.data.designation',data.data.designation);
-       console.log('des.name',ds.id);
        if(data.data.designation.toString() === ds.name.toString()) {
          des = {
            label: ds.name,
@@ -110,7 +118,6 @@ function AddHistory(props) {
     await updateOptions({...allOptions});
 
     const history = customFunctions.getLocalStorage('hisotryID');
-    console.log('history',history);
     if(history) {
 
     getData(history,data.data);
@@ -127,9 +134,9 @@ function AddHistory(props) {
 
   return (
     <StarkFormBuilder
-      containerClass="mb-3"
+      containerClass="mt-4 mb-3"
       formHeaderClass=""
-      formSections={FormSections}
+      formSections={formSchema}
       onFormSubmit={(formValues) => {
         submitForm(formValues);
       }}
@@ -139,7 +146,7 @@ function AddHistory(props) {
       currentUser={currentUser}
       submitBtnText="Submit"
       showResetBtn={true} // eslint-disable-line
-      resetBtnText="Clear"
+      resetBtnText="Cancel"
       btnContainerClass="form-submit-buttons"
       isStepForm={false}
       onFormReset={() => {

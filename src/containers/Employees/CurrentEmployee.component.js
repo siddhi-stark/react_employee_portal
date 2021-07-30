@@ -1,76 +1,143 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Row, Col, Card, Button, Image } from 'react-bootstrap';
+import { Helmet } from '../../components/FormInputs';
 
-const Employee = [
-  {
-    name: ' Employee 1',
-    designation: 'developer',
-    date: '20/05/2021',
-    id: 'SDMS23',
-  },
-  {
-    name: ' Employee 2',
-    designation: 'developer',
-    date: '10/05/2021',
-    id: 'SDMS123',
-  },
-  {
-    name: ' Employee 3',
-    designation: 'developer',
-    date: '02/05/2021',
-    id: 'SDMS12',
-  },
-  {
-    name: ' Employee 4',
-    designation: 'developer',
-    date: '21/05/2021',
-    id: 'SDMS3',
-  },
-];
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+import customFunctions from '../../helper/customFunctions';
+import Pagination from '../../components/Pagination/pagination.component';
+
 
 function CurrentEmployee() {
+
+  const title = 'Current Employees';
+  const [employee, setEmployee] = useState([]);
+  const [totalCount, setTotalCount] = useState(9);
+  const [limit, setLimit] = useState(9);
+  const [currentPage, setCurrentPage] = useState('');
+
   const history = useHistory();
+  // const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
+
+  const getEmployee = async (pageNo = 1) => {
+    console.log('currentPage',currentPage);
+    const page = pageNo || currentPage;
+    const endPoint = `${Api.employeeUrl}`;
+    const params = {
+      limit,
+      page,
+
+      // ...filterList
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
+    if (data) {
+      console.log('data.paginator--',data.data);
+      setEmployee(data.data);
+      // setId(data.data.id);
+     
+      setTotalCount(Number(data.paginator.total_count));
+      setLimit(Number(data.paginator.limit));
+      setCurrentPage(Number(data.paginator.current_page));
+      // console.log('data.paginator', data.paginator);
+    }
+  };
+
+  useEffect(() => {
+    getEmployee(1);
+  }, []);
+
   return (
     <>
-      {Employee &&
-        Employee.map((emp) => (
-          <Card className="mt-3 me-3" style={{ width: '30%' }}>
-            <Card.Body>
-              <Row>
-                <Col>
-                  <Image
-                    className="card-img-top"
-                    src="/images/edit-profile-img.png"
-                    alt="Card image cap"
-                    style={{ width: '80px', height: '80px' }}
-                  />
-                </Col>
-                <Col>
-                  <Card.Title>{emp.name}</Card.Title>
-                  <p className="card-text">
-                    {emp.designation}
-                    {emp.designation} <br />
-                  </p>
-                  <p className="text-primary"> confirmation Date-{emp.date}</p>{' '}
-                  <br />
-                </Col>
-              </Row>
-              <Card.Footer>
-                <h4 className="text-primary">
-                  {emp.id}
-                  <Button
-                    size="sm"
-                    className="pull-right"
-                    onClick={() => history.push('/employee-profile')}
-                  >
-                    View
-                  </Button>
-                </h4>
-              </Card.Footer>
-            </Card.Body>
-          </Card>
-        ))}
+     <Helmet title={title} />
+      <section className="content-area">
+               <div className="row mt-3">
+                {employee &&
+                  employee.map((emp) => (
+                    <Col className="col-md-4">
+                      <Card>
+                        <Card.Body>
+                          <Row>
+                            <Col className="col-md-4">
+                              <span className="mini-stat-icon bg-purple mr-0 float-right">
+                                <Image
+                                  className="card-img-top"
+                                  src="/images/edit-profile-img.png"
+                                  alt="Card image cap"
+                                />
+                                {(emp.on_notice_period === true) && (
+                                  <span className="np-sup">NP</span>
+                                )}
+                              </span>
+                            </Col>
+                            <Col className="col-md-8">
+                              <Card.Title>{emp.name}</Card.Title>
+                              <p className="card-text">
+                                {emp.full_name} <br />
+                                {emp.designation_name} <br />
+                              </p>
+                              <p className="text-primary confirmation-date">
+                                {' '}
+                                 {emp.confirmation_date && !emp.on_notice_period && `confirmation Date-`}
+                                {emp.confirmation_date && !emp.on_notice_period &&
+                                   customFunctions.getDMYDate(
+                                      emp.confirmation_date
+                                    )
+                                 }
+                                    {!emp.confirmation_date && emp.joined_date && !emp.on_notice_period && `Joining Date-`}
+                                {!emp.confirmation_date && emp.joined_date && !emp.on_notice_period &&
+                                   customFunctions.getDMYDate(
+                                      emp.joined_date
+                                    )
+                                 }
+
+                                  { emp.on_notice_period && emp.notice_period_date && `Relieving Date-`}
+                                {emp.on_notice_period && emp.notice_period_date &&
+                                   customFunctions.getDMYDate(
+                                      emp.relieving_date
+                                    )
+                                 }
+
+                              </p>{' '}
+                              <br />
+                            </Col>
+                          </Row>
+                          <Card.Footer className="card-footer-view">
+                            <h4 className="text-primary">SDMS{emp.emp_code}</h4>
+                            <Button
+                              size="sm"
+                              className="pull-right"
+                              onClick={() => {
+                                history.push(`/employee-profile/${emp.id}`);
+                                localStorage.setItem(
+                                  'employeeName',
+                                  emp.full_name
+                                );
+                                customFunctions.setLocalStorage(
+                                  'title',
+                                  emp.designation_name
+                                );
+                                localStorage.setItem('candidateId', emp.id);
+                              }}
+                            >
+                              View
+                            </Button>
+                          </Card.Footer>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+              </div>
+        <Pagination
+              totalItems={totalCount}
+              current_page={currentPage}
+              itemsPerPage={limit}
+              onPageChange = {(pageNo) => {
+                getEmployee(pageNo);
+              }}
+            />
+            </section>
 
     </>
   );

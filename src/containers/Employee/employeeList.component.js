@@ -16,6 +16,14 @@ const columns = [
   {
     id: 'emp_id',
     label: 'Employee ID',
+     render: ({ emp_id }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{`SDMS ${emp_id}` // eslint-disable-line
+          }</span>
+          </>
+        );
+      },
   },
   {
     id: 'emp_name',

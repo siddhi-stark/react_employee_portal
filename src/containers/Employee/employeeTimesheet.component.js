@@ -76,10 +76,11 @@ function EmployeeTimesheet(props) {
       id: 'emp_id',
       label: dataShow || EmployeeType ? '' : 'Employee ID',
 
-      render: ({ row }) => {
+      render: ({ emp_id }) => { // eslint-disable-line
         return (
           <>
-            <span>{dataShow ? '' : row.emp_id}</span>
+            <span>{dataShow ? '' : `SDMS ${emp_id}` // eslint-disable-line
+          }</span>
           </>
         );
       },

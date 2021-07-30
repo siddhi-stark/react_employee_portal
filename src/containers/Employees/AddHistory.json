@@ -49,7 +49,7 @@
       {
         "name": "company_name",
         "type": "text",
-        "label": "Name",
+        "label": "Company Name",
         "id": "",
         "placeholder": "",
         "inputClass": "",

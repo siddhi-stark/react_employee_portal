@@ -109,12 +109,11 @@ useEffect(() => {
   const getData = async () => {
     const id = customFunctions.getLocalStorage('id');
     const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${id}/`);
-      
+      if(data && data.success){
       data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
       data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
       data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
-      data.data.joining_date = data.data.date_joined ? customFunctions.getFormattedDate(data.data.date_joined) : '';
-    console.log('data987978',customFunctions.getFormattedDate(data.data.date_joined));
+      data.data.joining_date = data.data.joining_date ? customFunctions.getFormattedDate(data.data.date_joined) : '';
      
      const ds = data.data.designation_id ? {
         label: data.data.designation_name,
@@ -128,7 +127,7 @@ useEffect(() => {
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
      // console.log('obj', obj);
-
+   }
   };
 
 

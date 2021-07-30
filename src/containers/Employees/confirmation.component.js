@@ -14,7 +14,7 @@ import Api from '../../helper/api';
 
 function Confirmation() {
   const history = useHistory();
-  const firstName = '{{first-name}}';
+  const firstName = '{{first_name}}';
   const lastName = '{{last_name}}';
   const joiningDate = '{{joining_date}}';
         const name = customFunctions.getLocalStorage('employeeName');
@@ -81,12 +81,12 @@ console.log('test',test);
     }
 
     const endPoint = `${Api.sendMailUrl}`;;
-    const { message } = await AuthApi.postDataToServer(endPoint, postData);
-    console.log('data',message);
-    if(message) {
-      swal(message);
-       swal({
-        title: message,
+    const { data, message } = await AuthApi.postDataToServer(endPoint, postData);
+    console.log('data-----',message);
+    console.log('datadatadata-----',data);
+    if(data) {
+      swal({
+        title: data && data.message[0],
         icon: 'success',
       })
         .then(okAction => {
@@ -95,6 +95,11 @@ console.log('test',test);
       history.push('/employees');
           }
         });
+    } else {
+      swal({
+        title: message,
+        icon: 'warning',
+      })
     }
   }
 
@@ -128,17 +133,9 @@ console.log('test',test);
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     console.log('dataaaaaaaaaaaa',data);
     if(data) {
-      console.log('data',data.data);
        // swal(data && data.message[0]);
-        swal({
-        title: data && data.message[0],
-        icon: 'success',
-      })
-        .then(okAction => {
-          if (okAction) {
+        
             sendConfirmationLetter(data.data.body);
-          }
-        });
 
     }
   }
@@ -186,7 +183,7 @@ console.log('test',test);
                   placeholder="dd/mm/yyyy"
                   // maxDate={maxdate}
                   dateFormat="dd/MM/yyyy"
-                  maxDate={new Date()}
+                  minDate={new Date()}
                   onChange={(e) => {
                     setConfirmationDate(e);
                   }}
