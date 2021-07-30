@@ -42,9 +42,12 @@ const group = customFunctions.getLocalStorage('group');
     return sectionData;
   });
   
-  const handleActionCallback = ({id}) => {
+  const handleActionCallback = ({id,status_name}) => { //eslint-disable-line
     return (
+
       <>
+
+     
         <a
           href="/"
           className="pl-2"
@@ -56,11 +59,45 @@ const group = customFunctions.getLocalStorage('group');
             // history.push('/edit-employee');
           }}
         >
-          <Image src="/images/edit-button.svg" />
+
+          {Number(group) === 5 ? 
+          
+          <Image src= {status_name === 'shortlisted' ? '/images/edit-button.svg' : ''} // eslint-disable-line
+          
+          />          
+          : 
+          <Image src= '/images/edit-button.svg' />
+           } 
+   
+
         </a>
+
       </>
     );
   };
+
+  const handleResumeCallback = (resume) => {
+    console.log('resume',resume);
+        return (
+
+      <>
+
+     
+        <a
+          href={resume.resume}
+          className="pl-2"
+          target='_Blank'
+        >
+
+          <Image src= '/images/download-file.svg' />
+            
+   
+
+        </a>
+
+      </>
+    );
+  }
 
   // Declare columns
   const columns = [
@@ -93,16 +130,12 @@ const group = customFunctions.getLocalStorage('group');
       label: 'Application For Position',
     },
     {
-      id: 'techstacks',
+      id: 'tech_stack_name',
       label: 'Technology',
     },
     {
       id: 'total_exp',
       label: 'Total Experience',
-    },
-    {
-      id: 'notice_period',
-      label: 'Notice Period',
     },
     {
       id: 'email',
@@ -116,8 +149,13 @@ const group = customFunctions.getLocalStorage('group');
       id: 'education',
       label: 'Education',
     },
+     {
+      id: 'resume',
+      label: 'Resume',
+      render: handleResumeCallback
+    },
     {
-      id: 'status',
+      id: 'status_name',
       label: 'Status',
     },
     {
@@ -139,6 +177,7 @@ const group = customFunctions.getLocalStorage('group');
     const params = {
       page,
       limit,
+      sort_direction:'descending',      
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);

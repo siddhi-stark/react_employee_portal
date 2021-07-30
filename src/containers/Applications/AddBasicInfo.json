@@ -74,7 +74,7 @@
 		"options": [],
 		"optionsCallbackUrl": "designationUrl"
 	}, {
-		"name": "technologies_stack",
+		"name": "tech_stack",
 		"type": "select",
 		"label": "Technology Stack",
 		"id": "",
@@ -95,7 +95,7 @@
 		"minDateSelector": "",
 		"maxDateSelector": "",
 		"disabled": false,
-		"isMulti": true,
+		"isMulti": false,
 		"allowedUsers": [],
 		"fieldsToReset": [],
 		"fieldLayout": {
@@ -180,17 +180,16 @@
 		"options": []
 	}, {
 		"name": "mobile",
-		"type": "text",
+		"type": "number",
 		"label": "Contact Number",
 		"id": "",
 		"placeholder": "",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [
+{ "type": "required|min:0|max:10", "applyWhen": [], "applyWhenRelation": "OR" },
+{ "type": "phone", "applyWhen": [], "applyWhenRelation": "OR" }
+],
 		"displayWhen": {},
 		"haveValidations": "true",
 		"haveDisplayOptions": "false",

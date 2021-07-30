@@ -97,6 +97,7 @@ function ProfessionalDetails(props) {
       postData
     );
       if (data) {
+        props.onProfDetInfo(data.data.id);
         await localStorage.setItem('InterviewId',data.data.id);
         swal(data && data.message[0], '', 'success', {
           closeOnClickOutside: false,

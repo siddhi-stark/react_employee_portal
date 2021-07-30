@@ -1,298 +1,298 @@
 [
-	{
-		"sectionName": "experience",
-		"sectionTitle": "Experience",
-		"layout": {
-			"label": "2 Column",
-			"value": "2column"
-		},
-		"containerClass": "",
-		"displaySection": true,
-		"displaySectionTitle": true,
-		"fields": [
-			{
-				"name": "total_exp",
-				"type": "number",
-				"label": "Total_exp",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
-					{
-						"type": "numeric|min:0,num",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			},
-			{
-				"name": "rel_exp",
-				"type": "number",
-				"label": "Rel_exp",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
-					{
-						"type": "numeric|min:0,num",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			}
-		],
-		"allowedUsers": [],
-		"sectionLayout": "2column"
-	},
-	{
-		"sectionName": "salary",
-		"sectionTitle": "Salary",
-		"layout": {
-			"label": "2 Column",
-			"value": "2column"
-		},
-		"containerClass": "",
-		"displaySection": true,
-		"displaySectionTitle": true,
-		"fields": [
-			{
-				"name": "current_ctc",
-				"type": "number",
-				"label": "Current_ctc",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
-					{
-						"type": "numeric|min:0,num",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			},
-			{
-				"name": "expected_ctc",
-				"type": "number",
-				"label": "Expected_ctc",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
-					{
-						"type": "numeric|min:0,num",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			}
-		],
-		"allowedUsers": [],
-		"sectionLayout": "2column"
-	},
-	{
-		"sectionName": "otherdetails",
-		"sectionTitle": "Other Details",
-		"layout": {
-			"label": "2 Column",
-			"value": "2column"
-		},
-		"containerClass": "",
-		"displaySection": true,
-		"displaySectionTitle": true,
-		"fields": [
-			{
-				"name": "resume_source",
-				"type": "select",
-				"label": "Resume",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [],
-				"displayWhen": {},
-				"haveValidations": "false",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": [
-					{
-						"label": "Naukri",
-						"value": "1"
-					},
-					{
-						"label": "Indeed",
-						"value": "2"
-					},
-					{
-						"label": "Linkedin",
-						"value": "3"
-					}
-				]
-			},
+{
+"sectionName": "experience",
+"sectionTitle": "Experience",
+"layout": {
+"label": "2 Column",
+"value": "2column"
+},
+"containerClass": "",
+"displaySection": true,
+"displaySectionTitle": true,
+"fields": [
+{
+"name": "total_exp",
+"type": "number",
+"label": "Total Experience",
+"id": "",
+"placeholder": "",
+"inputClass": "",
+"containerClass": "",
+"validations": [
+{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
+{
+"type": "numeric|min:0,num",
+"applyWhen": [],
+"applyWhenRelation": "OR"
+}
+],
+"displayWhen": {},
+"haveValidations": "true",
+"haveDisplayOptions": "false",
+"callback": "",
+"callbackUrl": "",
+"inputToChange": "",
+"minDateSelector": "",
+"maxDateSelector": "",
+"disabled": false,
+"isMulti": false,
+"allowedUsers": [],
+"fieldsToReset": [],
+"fieldLayout": {
+"label": "1 Column",
+"value": "1column"
+},
+"fields": [],
+"optionCallback": "",
+"options": []
+},
+{
+"name": "rel_exp",
+"type": "number",
+"label": "Relevant Experience",
+"id": "",
+"placeholder": "",
+"inputClass": "",
+"containerClass": "",
+"validations": [
+{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
+{
+"type": "numeric|min:0,num",
+"applyWhen": [],
+"applyWhenRelation": "OR"
+}
+],
+"displayWhen": {},
+"haveValidations": "true",
+"haveDisplayOptions": "false",
+"callback": "",
+"callbackUrl": "",
+"inputToChange": "",
+"minDateSelector": "",
+"maxDateSelector": "",
+"disabled": false,
+"isMulti": false,
+"allowedUsers": [],
+"fieldsToReset": [],
+"fieldLayout": {
+"label": "1 Column",
+"value": "1column"
+},
+"fields": [],
+"optionCallback": "",
+"options": []
+}
+],
+"allowedUsers": [],
+"sectionLayout": "2column"
+},
+{
+"sectionName": "salary",
+"sectionTitle": "Salary",
+"layout": {
+"label": "2 Column",
+"value": "2column"
+},
+"containerClass": "",
+"displaySection": true,
+"displaySectionTitle": true,
+"fields": [
+{
+"name": "current_ctc",
+"type": "number",
+"label": "Current CTC",
+"id": "",
+"placeholder": "",
+"inputClass": "",
+"containerClass": "",
+"validations": [
+{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
+{
+"type": "numeric|min:0,num",
+"applyWhen": [],
+"applyWhenRelation": "OR"
+}
+],
+"displayWhen": {},
+"haveValidations": "true",
+"haveDisplayOptions": "false",
+"callback": "",
+"callbackUrl": "",
+"inputToChange": "",
+"minDateSelector": "",
+"maxDateSelector": "",
+"disabled": false,
+"isMulti": false,
+"allowedUsers": [],
+"fieldsToReset": [],
+"fieldLayout": {
+"label": "1 Column",
+"value": "1column"
+},
+"fields": [],
+"optionCallback": "",
+"options": []
+},
+{
+"name": "expected_ctc",
+"type": "number",
+"label": "Expected CTC",
+"id": "",
+"placeholder": "",
+"inputClass": "",
+"containerClass": "",
+"validations": [
+{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
+{
+"type": "numeric|min:0,num",
+"applyWhen": [],
+"applyWhenRelation": "OR"
+}
+],
+"displayWhen": {},
+"haveValidations": "true",
+"haveDisplayOptions": "false",
+"callback": "",
+"callbackUrl": "",
+"inputToChange": "",
+"minDateSelector": "",
+"maxDateSelector": "",
+"disabled": false,
+"isMulti": false,
+"allowedUsers": [],
+"fieldsToReset": [],
+"fieldLayout": {
+"label": "1 Column",
+"value": "1column"
+},
+"fields": [],
+"optionCallback": "",
+"options": []
+}
+],
+"allowedUsers": [],
+"sectionLayout": "2column"
+},
+{
+"sectionName": "otherdetails",
+"sectionTitle": "Other Details",
+"layout": {
+"label": "2 Column",
+"value": "2column"
+},
+"containerClass": "",
+"displaySection": true,
+"displaySectionTitle": true,
+"fields": [
+{
+"name": "resume_source",
+"type": "select",
+"label": "Resume",
+"id": "",
+"placeholder": "",
+"inputClass": "",
+"containerClass": "",
+"validations": [],
+"displayWhen": {},
+"haveValidations": "false",
+"haveDisplayOptions": "false",
+"callback": "",
+"callbackUrl": "",
+"inputToChange": "",
+"minDateSelector": "",
+"maxDateSelector": "",
+"disabled": false,
+"isMulti": false,
+"allowedUsers": [],
+"fieldsToReset": [],
+"fieldLayout": {
+"label": "1 Column",
+"value": "1column"
+},
+"fields": [],
+"optionCallback": "",
+"options": [
+{
+"label": "Naukri",
+"value": "1"
+},
+{
+"label": "Indeed",
+"value": "2"
+},
+{
+"label": "Linkedin",
+"value": "3"
+}
+]
+},
 
-			{
-				"name": "reference",
-				"type": "text",
-				"label": "Reference",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{
-						"type": "required",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			},
-			{
-				"name": "resume",
-				"type": "text",
-				"label": "Resume Reference",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [],
-				"displayWhen": {},
-				"haveValidations": "false",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			}
-		],
-		"allowedUsers": [],
-		"sectionLayout": "2column"
-	}
+        {
+            "name": "reference",
+            "type": "text",
+            "label": "Reference",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "validations": [
+                {
+                    "type": "required",
+                    "applyWhen": [],
+                    "applyWhenRelation": "OR"
+                }
+            ],
+            "displayWhen": {},
+            "haveValidations": "true",
+            "haveDisplayOptions": "false",
+            "callback": "",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+                "label": "1 Column",
+                "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "",
+            "options": []
+        },
+        {
+            "name": "resume",
+            "type": "text",
+            "label": "Resume Reference",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "validations": [],
+            "displayWhen": {},
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callback": "",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+                "label": "1 Column",
+                "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "",
+            "options": []
+        }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "2column"
+}
 ]

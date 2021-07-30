@@ -103,7 +103,7 @@ function AddHistory(props) {
 
 
   const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if (!data) {
       // show error
       return;

@@ -43,6 +43,10 @@ function EmployeeTimesheet(props) {
       const date = new Date();
       sectionData.maxDate = date;
     }
+    if (sectionData.name === 'fromDate') {
+      const date = new Date();
+      sectionData.maxDate = date;
+    }
     return sectionData;
   });
 
@@ -171,6 +175,7 @@ function EmployeeTimesheet(props) {
     const params = {
       limit,
       page,
+      sort_direction:'descending',
       start_date: filterData.fromDate
         ? customFunctions.getDate(filterData.fromDate)
         : '',
@@ -229,7 +234,7 @@ function EmployeeTimesheet(props) {
   };
 
   const getEmployeeName = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
     if (!data) {
       // show error
       return;

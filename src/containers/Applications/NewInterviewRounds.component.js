@@ -163,7 +163,7 @@ function NewInterviewRounds(props) {
   }, [isProfessionalInfoId]);
 
   const getInterviewer = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
     if (!data) {
       // show error
       return;
