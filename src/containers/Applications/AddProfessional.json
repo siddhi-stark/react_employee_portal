@@ -11,9 +11,9 @@
 	"fields": [{
 		"name": "total_exp",
 		"type": "text",
-		"label": "Total_exp",
+		"label": "Total Experience",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Years",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -43,9 +43,9 @@
 	}, {
 		"name": "rel_exp",
 		"type": "text",
-		"label": "Rel_exp",
+		"label": "Relevant Experience",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Years",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -88,9 +88,9 @@
 	"fields": [{
 		"name": "current_ctc",
 		"type": "text",
-		"label": "Current_ctc",
+		"label": "Current CTC",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "LPA",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -120,9 +120,9 @@
 	}, {
 		"name": "expected_ctc",
 		"type": "text",
-		"label": "Expected_ctc",
+		"label": "Expected CTC",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "LPA",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -209,11 +209,6 @@
 		"placeholder": "",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
 		"displayWhen": {},
 		"haveValidations": "true",
 		"haveDisplayOptions": "false",

@@ -42,9 +42,11 @@ const group = customFunctions.getLocalStorage('group');
     return sectionData;
   });
   
-  const handleActionCallback = ({id}) => {
+  const handleActionCallback = ({id,status_name}) => { //eslint-disable-line
     return (
       <>
+
+     
         <a
           href="/"
           className="pl-2"
@@ -56,8 +58,17 @@ const group = customFunctions.getLocalStorage('group');
             // history.push('/edit-employee');
           }}
         >
+
+          { (status_name === 'shortlisted' || Number(group) === 4) ? // eslint-disable-line
+
           <Image src="/images/edit-button.svg" />
+
+          :  ''
+
+           }       
+
         </a>
+
       </>
     );
   };
@@ -93,7 +104,7 @@ const group = customFunctions.getLocalStorage('group');
       label: 'Application For Position',
     },
     {
-      id: 'techstacks',
+      id: 'tech_stack_name',
       label: 'Technology',
     },
     {
@@ -117,7 +128,7 @@ const group = customFunctions.getLocalStorage('group');
       label: 'Education',
     },
     {
-      id: 'status',
+      id: 'status_name',
       label: 'Status',
     },
     {
@@ -139,6 +150,7 @@ const group = customFunctions.getLocalStorage('group');
     const params = {
       page,
       limit,
+      sort_direction:'descending',      
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);

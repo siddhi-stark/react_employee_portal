@@ -15,6 +15,8 @@ function Applications(props) {
   const items = [{ to: '/', label: 'Home' }, { label: 'Applications' }];
   const [isBasicInfoId, setBasicInfo] = useState(null);
   const [isProfessionalInfoId, setProfessionalInfo] = useState(null);
+  const [isBI, setIsBI] = useState(true);
+  const [isPD, setIsPD] = useState(true);
 
   const group = customFunctions.getLocalStorage('group');
 
@@ -32,17 +34,18 @@ function Applications(props) {
               defaultActiveKey="currentEmployee"
               // id="uncontrolled-tab-example"
             >
-              <Tab eventKey="currentEmployee" title="Basic Information">
+              <Tab eventKey="currentEmployee" title="Basic Information" >
                 <div className="row ml-2">
                   <BasicInformation
                     onBasicInfo={(value) => {
                       console.log('value--', value);
                       setBasicInfo(value);
+                      setIsBI(false);
                     }}
                   />
                 </div>
               </Tab>
-              <Tab eventKey="noticePeriod" title="Professional Details">
+              <Tab eventKey="noticePeriod" title="Professional Details" disabled={isBI}>
                 {(!id || (id && isBasicInfoId)) && (
                   <div className="row ml-2">
                       <ProfessonalDetails
@@ -50,13 +53,14 @@ function Applications(props) {
                         onProfDetInfo={(value) => {
                           console.log('value',value);
                           setProfessionalInfo(value);
+                          setIsPD(false);
                         }}
                       />
                   </div>
                 )}
                 
               </Tab>
-              <Tab eventKey="old period" title="Interview Rounds">
+              <Tab eventKey="old period" title="Interview Rounds" disabled={isPD}>
                 <div className="row ml-2">
                   {Number(group) === 4 && isProfessionalInfoId ? (
                     <InterviewerRoundsStatus

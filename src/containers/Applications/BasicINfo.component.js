@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
+
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './AddBasicInfo.json';
 import Api from '../../helper/api';
@@ -144,7 +146,9 @@ function BasicInformation(props) {
     //   );
 
     if (data) {
+      props.onBasicInfo(data.data.id);
       customFunctions.setLocalStorage('applicantId',data.data.id);
+      swal(data && data.message[0], '', 'success');
       //  const ApplicantId = props.match.params.id;
       //  console.log('ApplicantId',ApplicantId);
       //  if(ApplicantId) {

@@ -211,7 +211,6 @@ function NewInterviewRounds(props) {
     <>
     <div> 
 
-    <div className='float-left'>Round - Selected</div>
       <StarkFormBuilder
         containerClass=""
         formHeaderClass=""

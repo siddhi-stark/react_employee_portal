@@ -166,6 +166,7 @@ function EmployeeTimesheet(props) {
     const params = {
       limit,
       page,
+      sort_direction:'descending',
       start_date: filterData.fromDate
         ? customFunctions.getDate(filterData.fromDate)
         : '',
