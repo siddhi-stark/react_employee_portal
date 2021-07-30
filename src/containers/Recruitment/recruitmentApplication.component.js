@@ -59,19 +59,39 @@ const group = customFunctions.getLocalStorage('group');
           }}
         >
 
-          { (status_name === 'shortlisted' || Number(group) === 4) ? // eslint-disable-line
-
-          <Image src="/images/edit-button.svg" />
-
-          :  ''
-
-           }       
+          {Number(group) === 5 ? 
+          
+          <Image src= {status_name === 'shortlisted' ? '/images/edit-button.svg' : ''} // eslint-disable-line
+          
+          />          
+          : 
+          <Image src= '/images/edit-button.svg' />
+           } 
+   
 
         </a>
 
       </>
     );
   };
+
+  const handleResumeCallback = (resume) => {
+ <>
+
+     
+        <a
+          href={resume}
+          className="pl-2"
+          download
+        >
+
+          <Image src= '/images/download-file.svg' />
+   
+
+        </a>
+
+      </>
+  }
 
   // Declare columns
   const columns = [
@@ -126,6 +146,11 @@ const group = customFunctions.getLocalStorage('group');
     {
       id: 'education',
       label: 'Education',
+    },
+     {
+      id: 'resume',
+      label: 'Resume',
+      render: handleResumeCallback
     },
     {
       id: 'status_name',
