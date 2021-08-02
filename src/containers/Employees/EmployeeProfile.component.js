@@ -114,7 +114,7 @@ const deleteEmployeeHistory = (id) => {
           <div className="d-flex align-items-center justify-content-between">
             <h3><strong>{employeeDetails.full_name}</strong></h3>
             <div className="date-edit-option d-flex align-items-center">
-              <h6 className='me-5'>Birthday - {customFunctions.getDMYDate(employeeDetails.dob)}</h6>
+              <h6 className='me-5'>Birthday - {employeeDetails.dob ? customFunctions.getDMYDate(employeeDetails.dob) : ''}</h6>
                <a
                         href="javascript:void()"
                         onClick={() => {
