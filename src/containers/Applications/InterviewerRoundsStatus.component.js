@@ -30,7 +30,6 @@ function InterviewerRoundsStatus(props) {
   const [interviewData, setInterviewData] = useState(initialState);
   const [interviewId, setInterviewId] = useState('');
   const [applicantRoundsId,setApplicantRoundsId] = useState('');
-  const [statusName,setStatusName] = useState([]);
   const history = useHistory();
   const { isProfessionalInfoId } = props;
 
@@ -49,17 +48,15 @@ function InterviewerRoundsStatus(props) {
       `${Api.interviewUrl}${id}/`
     );
     if (data) {
+      console.log('data',data);
       setApplicantRoundsId(data.data.applicant_rounds);
-      data.data.applicant_rounds.map((round) => {
-        setStatusName(round.status_name);
-        return round;
-      });
       setInterviewData({
         interviewDate: data.data.applicant_rounds[0].int_date,
         interviewTime: data.data.applicant_rounds[0].int_time,
         interviewSelector: data.data.applicant_rounds[0].interviewer_name,
         interviewRound: data.data.applicant_rounds[0].status_name,
       });
+      console.log('obj',{status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
       updateDefaultValues({status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
     }
   };
@@ -101,7 +98,6 @@ function InterviewerRoundsStatus(props) {
   };
   return (
     <>
-    {console.log('applicantRoundsId',statusName,applicantRoundsId)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Interviewer Rounds</h2>
