@@ -155,7 +155,6 @@ export default function SimpleTable(props) {
  
   return (
     <>
-    {console.log('paginationProps',paginationProps)}
       <div className={`table-projects table-responsive ${tableContainerClass}`}>
         {bulkActions && bulkActions.length > 0 && rows.length > 0 && (
           <>
