@@ -69,7 +69,6 @@ export default class Pagination extends Component {
     // const { totalItems, itemsPerPage, activePage } = this.state;
     const { totalItems, itemsPerPage, current_page } = this.props; //eslint-disable-line
 
-      console.log('totalItems, itemsPerPage, current_page',totalItems, itemsPerPage, current_page)
     return (
       <div>
         <PaginationComponent

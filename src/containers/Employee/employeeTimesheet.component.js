@@ -51,6 +51,7 @@ function EmployeeTimesheet(props) {
   });
 
   const handleActionCallback = (row) => {
+    const userId = customFunctions.getLocalStorage('userId');
     return (
       <>
         <a
@@ -64,7 +65,7 @@ function EmployeeTimesheet(props) {
             customFunctions.setLocalStorage('date',row.date);
           }}
         >
-          Add
+         {(Number(userId) === Number(row.user_id)) ? '' :'Add'}
         </a>
       </>
     );

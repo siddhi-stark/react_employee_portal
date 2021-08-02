@@ -74,9 +74,9 @@ function NoticePeriodComponent() {
                       </Col>
                       <Col className="col-md-8">
                         <Card.Title>{emp.name}</Card.Title>
-                        <p className="card-text">
-                          {emp.full_name} <br />
-                          {emp.designation_name} <br />
+                        <p className="card-text employee-details">
+                          {emp.full_name}
+                         <span> {emp.designation_name} </span>
                         </p>
                         <p className="text-primary confirmation-date">
                           {' '}

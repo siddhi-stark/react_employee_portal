@@ -21,6 +21,8 @@ function CurrentEmployee() {
   // const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
   const getEmployee = async (pageNo = 1) => {
+    setEmployee([]);
+
     console.log('currentPage',currentPage);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
@@ -34,7 +36,7 @@ function CurrentEmployee() {
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       console.log('data.paginator--',data.data);
-      setEmployee(data.data);
+      setEmployee([...data.data]);
       // setId(data.data.id);
      
       setTotalCount(Number(data.paginator.total_count));
@@ -53,10 +55,10 @@ function CurrentEmployee() {
     <>
      <Helmet title={title} />
       <section className="content-area">
-               <div className="row mt-3">
+               <div className="row mt-3 employee-grid-list">
                 {employee &&
                   employee.map((emp) => (
-                    <Col className="col-md-4">
+                    <Col className="col-md-4 h-100">
                       <Card>
                         <Card.Body>
                           <Row>
@@ -74,9 +76,9 @@ function CurrentEmployee() {
                             </Col>
                             <Col className="col-md-8">
                               <Card.Title>{emp.name}</Card.Title>
-                              <p className="card-text">
-                                {emp.full_name} <br />
-                                {emp.designation_name} <br />
+                              <p className="card-text employee-details">
+                                {emp.full_name}
+                               <span> {emp.designation_name}</span>
                               </p>
                               <p className="text-primary confirmation-date">
                                 {' '}
