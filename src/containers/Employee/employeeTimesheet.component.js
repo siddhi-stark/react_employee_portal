@@ -59,7 +59,7 @@ function EmployeeTimesheet(props) {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/edit-employee/${row.emp_id}`);
+            history.push(`/edit-employee/${row.user_id}`);
             customFunctions.setLocalStorage('employeeName',row.emp_name);
             customFunctions.setLocalStorage('date',row.date);
           }}
@@ -73,6 +73,11 @@ function EmployeeTimesheet(props) {
   // Declare columns
   const columns = [
     {
+      id: 'user_id',
+      label: 'id',
+      isDisplay: false
+    },
+     {
       id: 'index',
       label: 'Sr.No',
     },

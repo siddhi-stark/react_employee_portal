@@ -317,7 +317,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
   }, [status]);
 
   const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if (!data) {
       // show error
       return;
@@ -463,6 +463,15 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                     href='/'
                     className="ml-2 mb-2"
                     onClick={() => {
+                      setStatus(6);
+                    }}
+                  >
+                    Decline
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="ml-2 mb-2"
+                    onClick={() => {
                       setStatus(4);
                     }}
                   >
@@ -474,7 +483,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
              <CustomTable
     columns={columns}
     rows={rowData}
-bulkActions={Number(group) === 5 ? [{'actionTitle' : 'Shortlisted','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Declined','actionCallback' : handleChangeInactiveStatus},] : ''} 
+bulkActions={Number(group) === 5 ? [{'actionTitle' : 'Shortlist','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Decline','actionCallback' : handleChangeInactiveStatus},] : ''} 
 showPagination={true} 
 paginationProps={{
             totalItems: totalCount,

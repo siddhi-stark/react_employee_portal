@@ -90,7 +90,6 @@ const deleteEmployeeHistory = (id) => {
 
   return (
     <>
-    {console.log('employeeDetails',employeeDetails.designation_name)}
       <h6 className="mt-3">Employee Profile Page</h6>
       <Image src="/images/edit-profile-img.png" style={{ 'height': '90px' }} />
       <div className="table-projects">
@@ -115,14 +114,14 @@ const deleteEmployeeHistory = (id) => {
           <div className="d-flex align-items-center justify-content-between">
             <h3><strong>{employeeDetails.full_name}</strong></h3>
             <div className="date-edit-option d-flex align-items-center">
-              <h6>Birthday - 30/10/1991</h6>
+              <h6 className='me-5'>Birthday - {customFunctions.getDMYDate(employeeDetails.dob)}</h6>
                <a
                         href="javascript:void()"
                         onClick={() => {
                          setShowPersonalDetails(true)
                         }}
                       >
-                        <img src="/images/edit-button.svg" alt="Edit Profile" />
+                      { !employeeDetails.relieved && (  <img src="/images/edit-button.svg" alt="Edit Profile" /> )}
                       </a>
 
               
@@ -131,7 +130,7 @@ const deleteEmployeeHistory = (id) => {
           <p>{employeeDetails.designation_name}</p>
           <Row>
             <Col md={4}>
-              <h7>Joining Date -  {employeeDetails.joined_date ? customFunctions.getFormattedDate(employeeDetails.joined_date) : ''}</h7>
+              <h7>Joining Date -  {employeeDetails.joined_date ? customFunctions.getDMYDate(employeeDetails.joined_date) : ''}</h7>
             </Col>
 
             <Col md={4}>
@@ -150,16 +149,16 @@ const deleteEmployeeHistory = (id) => {
 
             { employeeDetails.relieving_date ? (
               <Col>
-              <h7>Relieving Date - {employeeDetails.relieving_date ? customFunctions.getFormattedDate(employeeDetails.relieving_date) : ''}</h7>
+              <h7>Relieving Date - {employeeDetails.relieving_date ? customFunctions.getDMYDate(employeeDetails.relieving_date) : ''}</h7>
               </Col>
               ) : (
               
             <Col md={4}>
-              <h7>Confirmation Date - {employeeDetails.confirmation_date ? customFunctions.getFormattedDate(employeeDetails.confirmation_date) : ''}</h7>
+              <h7>Confirmation Date - {employeeDetails.confirmation_date ? customFunctions.getDMYDate(employeeDetails.confirmation_date) : ''}</h7>
             </Col>
               )  }
 
-            { employeeDetails && (!employeeDetails.confirmation_date) && (
+            { employeeDetails && (!employeeDetails.confirmation_date && !employeeDetails.relieving_date) && (
             <Col md={2}>
               <Button onClick={() => {history.push('/confirmation')}}>
                 Confirm
@@ -173,7 +172,10 @@ const deleteEmployeeHistory = (id) => {
 
       <div className="d-flex align-items-center justify-content-between mb-4">
         <h4><b>Employee History</b></h4>
-        <Button onClick={() => setShowEMployee(true)}>Add History</Button>
+        <Button onClick={() => {setShowEMployee(true);
+           customFunctions.removeLocalStorage('hisotryID');
+          }}
+         >Add History</Button>
 
       </div>
       {showEmployee && (
@@ -193,7 +195,7 @@ const deleteEmployeeHistory = (id) => {
         <div className="d-flex align-items-start justify-content-between">
           <div className="address-content">
             <p><strong>{comp.designation}</strong> </p>
-            <p>{comp.company_name} - {comp.employement_type_name} <br /> {comp.date}| {comp.duration}</p>
+            <p>{comp.company_name} - {comp.employement_type_name} <br /> {comp.start_date_formate} - {comp.end_date_formate} {comp.date}| {comp.duration}</p>
             <p>{comp.location}</p><hr />
           </div>
           <div className="address-edit-delete">
@@ -201,7 +203,6 @@ const deleteEmployeeHistory = (id) => {
             setData(comp);
             setShowEMployee(true);
             customFunctions.setLocalStorage('hisotryID',comp.id);
-            console.log('idddd',comp.id);
             // history.push(`/profile-history/id=${comp.id}`)
           }}/>
 

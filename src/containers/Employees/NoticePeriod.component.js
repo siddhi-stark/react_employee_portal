@@ -45,7 +45,7 @@ function NoticePeriodComponent() {
   useEffect(() => {
     getEmployee(1);
     setTitle('Notice Period Employees');
-  }, []);
+  }, [title]);
 
   console.log('employeeData', employee);
 

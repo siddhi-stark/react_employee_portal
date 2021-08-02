@@ -45,7 +45,7 @@ function OldEmployee() {
   useEffect(() => {
     getEmployee(1);
     setTitle('Old Employees');
-  }, []);
+  }, [title]);
 
   return (
     <>

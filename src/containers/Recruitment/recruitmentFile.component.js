@@ -3,6 +3,7 @@ import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col, Image } from 'react-bootstrap';
+import { CSVLink } from 'react-csv';
 import FormSections from './formschema.json';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -11,6 +12,33 @@ import Api from '../../helper/api';
 
 function RecruitmentFileComponent() {
   // const title = 'Batch Upload';
+
+  const csvdata = [
+    { Candidate_Name: '', Email: '', Mobile_No: '', Locality: '' , Current_CTC: '', Expected_CTC: '', Notice_Period: '', Total_Exp: '' ,
+     Relevant_Exp: '', Resume_Source: '', Reason_Job_Change: '', Resume: '',Gender:'' },
+  ];
+
+   const csvHeader = [
+  { label: 'Candidate Name', key: 'Candidate_Name' },
+  { label: 'Email', key: 'Email' },
+  { label: 'Mobile No', key: 'Mobile_No' },
+  { label: 'Locality', key: 'Locality' },  
+  { label: 'Last Current CTC', key: 'Current_CTC' },
+  { label: 'Expected CTC', key: 'Expected_CTC' },
+  { label: 'Notice Period', key: 'Notice_Period' },  
+  { label: 'Total Exp', key: 'Total_Exp' },
+  { label: 'Relevant Exp', key: 'Relevant_Exp' },
+  { label: 'ResumeSource', key: 'Resume_Source' },
+  { label: 'Reason Job Change', key: 'Reason_Job_Change' },
+  { label: 'Resume', key: 'Resume' },
+  { label: 'Gender', key: 'Gender' }
+  ];
+
+  const csvReport = {
+    data: csvdata,
+    headers: csvHeader,
+    filename: 'sample.csv'
+  };
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Batch Upload' }];
 
@@ -43,10 +71,8 @@ function RecruitmentFileComponent() {
     setTitle('Batch Upload');
   }, []);
 
- 
-
   const getTechnology = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
     if (!data) {
       // show error
       return;
@@ -110,7 +136,7 @@ function RecruitmentFileComponent() {
   };
 
   const getPosition = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if (!data) {
       // show error
       return;
@@ -174,12 +200,15 @@ function RecruitmentFileComponent() {
                     }}
                   />
                 </Col>
-                <Col className="mt-4">
+                <Col className="mt-4 col-md-1">
+                                
                   <div title="Download CSV File">
+                  <CSVLink {...csvReport}  target="_blank">
                     <Image
                       src="/images/download.svg"
                       alt="Download File"
                     />
+                  </CSVLink>
                   </div>
                 </Col>
               </Row>
