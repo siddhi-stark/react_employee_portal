@@ -56,15 +56,6 @@ const columns = [
 
 function EmployeeListComponent() {
 
-const today = new Date();
-const yesterday = new Date();
-yesterday.setDate(today.getDate() - 1);
-// const y = yesterday.getFullYear();
-// const m = yesterday.getMonth();
-// const d = yesterday.getDay();
-// console.log('y',y,m,d);
-const date = customFunctions.getDate(new Date(yesterday));
-console.log('date',date);
 
   const weekday = new Array(7);
   weekday[0] = 'Sunday';
@@ -74,6 +65,21 @@ console.log('date',date);
   weekday[4] = 'Thursday';
   weekday[5] = 'Friday';
   weekday[6] = 'Saturday';
+const today = new Date();
+const yesterday = new Date();
+if(weekday[yesterday.getDay()] === 'Monday') {
+yesterday.setDate(today.getDate() - 3);
+
+}else {
+
+yesterday.setDate(today.getDate() - 1);
+}
+// const y = yesterday.getFullYear();
+// const m = yesterday.getMonth();
+// const d = yesterday.getDay();
+// console.log('y',y,m,d);
+const date = customFunctions.getDate(new Date(yesterday));
+console.log('date',date);
 
   const n = weekday[yesterday.getDay()];
 
