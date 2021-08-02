@@ -105,7 +105,10 @@ function InterviewerRoundsStatus(props) {
       </div>
 
        {
-         applicantRoundsId.length > 0 && applicantRoundsId.map((round) => (
+         applicantRoundsId.length > 0 && applicantRoundsId.map((round,i) => (
+         <>
+         {
+           i !== 0 && (
           <Card body className="mt-4">
 
           <Row>
@@ -137,6 +140,10 @@ function InterviewerRoundsStatus(props) {
 
             </Col>
          </Card>
+
+           )
+         }
+         </>
          ))
        }
 

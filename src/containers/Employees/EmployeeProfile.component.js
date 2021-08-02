@@ -195,7 +195,7 @@ const deleteEmployeeHistory = (id) => {
         <div className="d-flex align-items-start justify-content-between">
           <div className="address-content">
             <p><strong>{comp.designation}</strong> </p>
-            <p>{comp.company_name} - {comp.employement_type_name} <br /> {comp.start_date_formate} - {comp.end_date_formate} {comp.date}| {comp.duration}</p>
+            <p>{comp.company_name}  <br /> {comp.start_date_formate} - {comp.end_date_formate} {comp.date}| {comp.duration}</p>
             <p>{comp.location}</p><hr />
           </div>
           <div className="address-edit-delete">
