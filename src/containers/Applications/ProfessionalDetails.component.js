@@ -142,6 +142,8 @@ function ProfessionalDetails(props) {
 
   return (
     // Usage
+    <div mt-4>
+
     <StarkFormBuilder
       containerClass="mt-3"
       formHeaderClass=""
@@ -157,13 +159,14 @@ function ProfessionalDetails(props) {
       submitBtnText="Save"
       showResetBtn={false}
       resetBtnText="Clear"
-      btnContainerClass={`form-submit-buttons ${Number(currentUser) === 4 ? 'd-none' : ''}`}
+      btnContainerClass={`form-submit-buttons mb-5 ${Number(currentUser) === 4 ? 'd-none' : ''}`}
       // btnContainerClass={`form-submit-buttons ${id ? 'd-none' : ''}`}
       isStepForm={false}
       onFormReset={() => {
         console.log('form reset callback');
       }}
     />
+    </div>
   );
 }
 

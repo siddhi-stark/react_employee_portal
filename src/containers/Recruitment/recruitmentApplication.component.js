@@ -101,10 +101,7 @@ const group = customFunctions.getLocalStorage('group');
 
   // Declare columns
   const columns = [
-    {
-      id: 'no',
-      label: 'Sr. No',
-    },
+    
       {
       id: 'id',
       label: 'Sr. No',
@@ -123,11 +120,11 @@ const group = customFunctions.getLocalStorage('group');
     },
     {
       id: 'name',
-      label: 'Applicant Name',
+      label: 'Name',
     },
     {
       id: 'applied_for_name',
-      label: 'Application For Position',
+      label: 'Position',
     },
     {
       id: 'tech_stack_name',
@@ -135,7 +132,7 @@ const group = customFunctions.getLocalStorage('group');
     },
     {
       id: 'total_exp',
-      label: 'Total Experience',
+      label: 'Experence',
     },
     {
       id: 'email',
@@ -146,10 +143,6 @@ const group = customFunctions.getLocalStorage('group');
       label: 'Contact No',
     },
     {
-      id: 'education',
-      label: 'Education',
-    },
-     {
       id: 'resume',
       label: 'Resume',
       render: handleResumeCallback
@@ -428,53 +421,53 @@ const handleChangeInactiveStatus = async (selectedIds) => {
               )}
             </div>
             <div>
-              <Button
-                variant="primary"
+              <a
+               href='/'
                 className="mb-2"
                 onClick={() => {
                   setFilterData();
                 }}
               >
                 All
-              </Button>
-              <Button
-                variant="primary"
+              </a> &nbsp; &nbsp; &nbsp; &nbsp; $nbsp;
+              <a
+                href='/'
                 className="ml-2 mb-2"
                 onClick={() => {
                   setStatus(1);
                 }}
               >
                 Selected
-              </Button>
+              </a> &nbsp; &nbsp; &nbsp; &nbsp;
                 {!(Number(group) === 4) && (
                 <>
-                  <Button
-                    variant="primary"
+                  <a
+                    href='/'
                     className="ml-2 mb-2"
                     onClick={() => {
                       setStatus(2);
                     }}
                   >
                     Shortlisted
-                  </Button>
-                  <Button
-                    variant="primary"
+                  </a> &nbsp; &nbsp; &nbsp; &nbsp;
+                  <a
+                    href='/'
                     className="ml-2 mb-2"
                     onClick={() => {
                       setStatus(3);
                     }}
                   >
                     Rejected
-                  </Button>
-                  <Button
-                    variant="primary"
+                  </a> &nbsp; &nbsp; &nbsp; &nbsp;
+                  <a
+                    href='/'
                     className="ml-2 mb-2"
                     onClick={() => {
                       setStatus(4);
                     }}
                   >
                     Offer Send
-                  </Button>
+                  </a>
                 </>
               )}
             </div>
