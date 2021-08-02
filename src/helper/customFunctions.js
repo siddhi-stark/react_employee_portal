@@ -11,6 +11,7 @@ class CustomFunctions extends Component {
     const formattedate =
       y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d); //eslint-disable-line
     return formattedate;
+
   };
 
   getTime = (time) => {
@@ -319,6 +320,37 @@ return formattedate;
       return jsonString;
     }
   };
+  
+  formatDate = (dt, seperator = '-', format = 'ymd') => {
+const dateObj = new Date(dt);
+let month = dateObj.getUTCMonth() + 1; // months from 1-12
+month = month < 10 ? `0${month}` : month;
+let day = dateObj.getDate();
+day = day < 10 ? `0${day}` : day;
+const year = dateObj.getUTCFullYear();
+let newdate;
+switch (format) {
+case 'ymd':
+newdate = year + seperator + month + seperator + day;
+break;
+case 'dmy':
+newdate = day + seperator + month + seperator + year;
+break;
+case 'mdy':
+newdate = month + seperator + day + seperator + year;
+break;
+case 'dM':
+newdate =
+day +
+seperator +
+dateObj.toLocaleString('default', { month: 'short' });
+break;
+default:
+newdate = year + seperator + month + seperator + day;
+break;
+}
+return newdate;
+};
 }
 
 export default new CustomFunctions();

@@ -26,7 +26,6 @@ function Sidebar() {
     });
 
     document.addEventListener('ViewButtonChange', () => {
-    console.log('vieewButtonMenu',window.location.pathname);
       onSubActiveClass();
       setActiveMenu();
     });
@@ -68,7 +67,6 @@ function Sidebar() {
                   ? 'show active'
                   : '';
 
-                  console.log('window.location.pathname',parentActiveCls,menuItem)
               const parentLinkCls = `nav-link ${hasSubMenu ? 'with-sub' : ''}`;
               return (
                 <UserRestrictions permittedUsers={menuItem.roleaccess}>

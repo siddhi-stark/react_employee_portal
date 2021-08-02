@@ -132,6 +132,12 @@ function EditEmployee(props) {
 
   // Declare methods table
   const getRowData = async (pageNo = 1) => {
+    const date = customFunctions.getLocalStorage('date');
+    console.log('date',date);
+    const dateNew = date.split('-');
+    console.log('dateNew',dateNew);
+    const FormateedDate = dateNew[2]+'-'+dateNew[1]+'-'+dateNew[0]; //eslint-disable-line
+    console.log('FormateedDate',FormateedDate);
     const page = pageNo || currentPage;
     const endPoint = `${Api.dailyReportUrl}`;
     const filterList =
@@ -139,13 +145,13 @@ function EditEmployee(props) {
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
+      date: FormateedDate,
       page,
       limit,
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data---------------------', data.data.evening_data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       // setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
@@ -255,7 +261,6 @@ function EditEmployee(props) {
               Date: {customFunctions.getLocalStorage('date')}
             </p>
           </div>
-          {console.log('formSchema',formSchema)}
           <StarkFormBuilder
             containerClass=""
             formHeaderClass=""
