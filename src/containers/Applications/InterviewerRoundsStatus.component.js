@@ -30,6 +30,7 @@ function InterviewerRoundsStatus(props) {
   const [interviewData, setInterviewData] = useState(initialState);
   const [interviewId, setInterviewId] = useState('');
   const [applicantRoundsId,setApplicantRoundsId] = useState('');
+  const [statusName,setStatusName] = useState([]);
   const history = useHistory();
   const { isProfessionalInfoId } = props;
 
@@ -49,6 +50,10 @@ function InterviewerRoundsStatus(props) {
     );
     if (data) {
       setApplicantRoundsId(data.data.applicant_rounds);
+      data.data.applicant_rounds.map((round) => {
+        setStatusName(round.status_name);
+        return round;
+      });
       setInterviewData({
         interviewDate: data.data.applicant_rounds[0].int_date,
         interviewTime: data.data.applicant_rounds[0].int_time,
@@ -94,9 +99,9 @@ function InterviewerRoundsStatus(props) {
     }
     // Perform success actions
   };
-  console.log('defaultValues',defaultValues);
   return (
     <>
+    {console.log('applicantRoundsId',statusName,applicantRoundsId)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Interviewer Rounds</h2>
@@ -110,15 +115,22 @@ function InterviewerRoundsStatus(props) {
           <Col>
             <p>Interview Time - {interviewData.interviewTime} </p>
           </Col>
-        </Row>
-        <Row>
+
+       {
+         applicantRoundsId.length > 0 && applicantRoundsId.map((round) => (
+            <Row className="mt-3">
           <Col>
-            <p>Select Interviewer - {interviewData.interviewSelector} </p>
+            <p>Round Name - {round.round_type_name} </p>
           </Col>
           <Col>
-            <p>Round - {interviewData.interviewRound} </p>
+            <p>Round Status - {round.status_name} </p>
           </Col>
+
+          </Row>
+         ))
+       }
         </Row>
+       
 
         <StarkFormBuilder
           containerClass=""

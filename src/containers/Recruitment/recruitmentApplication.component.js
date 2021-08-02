@@ -422,16 +422,16 @@ const handleChangeInactiveStatus = async (selectedIds) => {
             </div>
             <div>
               <a
-               href='/'
+               href='#'
                 className="mb-2"
                 onClick={() => {
                   setFilterData();
                 }}
               >
                 All
-              </a> &nbsp; &nbsp; &nbsp; &nbsp; $nbsp;
+              </a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               <a
-                href='/'
+                href='#'
                 className="ml-2 mb-2"
                 onClick={() => {
                   setStatus(1);
@@ -442,7 +442,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                 {!(Number(group) === 4) && (
                 <>
                   <a
-                    href='/'
+                    href='#'
                     className="ml-2 mb-2"
                     onClick={() => {
                       setStatus(2);
@@ -451,7 +451,7 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                     Shortlisted
                   </a> &nbsp; &nbsp; &nbsp; &nbsp;
                   <a
-                    href='/'
+                    href='#'
                     className="ml-2 mb-2"
                     onClick={() => {
                       setStatus(3);
@@ -460,16 +460,16 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                     Rejected
                   </a> &nbsp; &nbsp; &nbsp; &nbsp;
                   <a
-                    href='/'
+                    href='#'
                     className="ml-2 mb-2"
                     onClick={() => {
                       setStatus(6);
                     }}
                   >
                     Decline
-                  </Button>
-                  <Button
-                    variant="primary"
+                  </a> &nbsp; &nbsp; &nbsp; &nbsp;
+                  <a
+                    href='#'
                     className="ml-2 mb-2"
                     onClick={() => {
                       setStatus(4);
