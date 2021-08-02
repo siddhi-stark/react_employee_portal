@@ -162,7 +162,7 @@ const group = customFunctions.getLocalStorage('group');
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     
-    const endPoint =  (Number(group) === 4) ? `${Api.interviewUrl}` : `${Api.applicantsUrl}`;
+    const endPoint = `${Api.applicantsUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)

@@ -24,7 +24,7 @@ const menu = [
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'dashboard.svg',
-    roleaccess: [5, 4],
+    roleaccess: [5,4,3,2,1],
   },  
   {
     title: 'HR',

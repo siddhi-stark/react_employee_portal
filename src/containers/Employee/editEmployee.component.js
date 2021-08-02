@@ -145,7 +145,7 @@ function EditEmployee(props) {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data', data.data.morning_data);
+    console.log('data---------------------', data.data.evening_data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       // setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
@@ -163,7 +163,6 @@ function EditEmployee(props) {
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
         return newItem;
       });
-      console.log('rowdata',data.data.morning_data);
       setRowData((data && data.data && data.data.evening_data) || []);
     } else {
       console.log('error', message);

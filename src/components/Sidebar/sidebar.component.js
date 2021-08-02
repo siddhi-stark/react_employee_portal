@@ -16,6 +16,7 @@ function Sidebar() {
 
   useEffect(()=>{
 
+
     document.addEventListener('MenuChange', () => {
       onSubActiveClass();
     });
@@ -23,6 +24,14 @@ function Sidebar() {
     document.addEventListener('ViewBtnChange', () => {
       onSubActiveClass();
     });
+
+    document.addEventListener('ViewButtonChange', () => {
+    console.log('vieewButtonMenu',window.location.pathname);
+      onSubActiveClass();
+      setActiveMenu();
+    });
+
+    
   },[]);
 
   const dispatch = useDispatch();
@@ -58,6 +67,8 @@ function Sidebar() {
                   menuItem.path.length > 1)
                   ? 'show active'
                   : '';
+
+                  console.log('window.location.pathname',parentActiveCls,menuItem)
               const parentLinkCls = `nav-link ${hasSubMenu ? 'with-sub' : ''}`;
               return (
                 <UserRestrictions permittedUsers={menuItem.roleaccess}>

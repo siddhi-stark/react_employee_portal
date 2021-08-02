@@ -96,6 +96,9 @@ console.log('date',date);
   const history = useHistory();
   const [userRole, setUserRole] = useState('');
 
+  const ViewButtonMenu = new Event('ViewButtonChange', { isUpdated: true });
+
+
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
@@ -138,6 +141,15 @@ console.log('date',date);
     getRowData(1);
   }, [filterData]);
 
+  const onViewBtnChange = () => {
+
+    console.log('onViewBtnChange');
+    
+    document.dispatchEvent(ViewButtonMenu);
+    return true;
+  };
+
+
   return (
     <>
       <Card>
@@ -168,7 +180,11 @@ console.log('date',date);
           />
           <UserRestrictions permittedUsers={[5]} roleId={userRole}>
             <div className="d-flex justify-content-end mr-3">
-              <Button onClick={() => history.push('/emp-timesheet')}>
+              <Button onClick={() => {
+                history.push('/emp-timesheet');
+                onViewBtnChange(); 
+
+              }}>
                 View All
               </Button>
             </div>

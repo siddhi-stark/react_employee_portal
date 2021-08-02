@@ -28,7 +28,7 @@ function Technology() {
   const [currentUser, updateCurrentUser] = useState(0);
 
   const title = 'Employees List';
-  const limit = 5;
+  const limit = 10;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
   const handleActionCallback = ({ id }) => {
