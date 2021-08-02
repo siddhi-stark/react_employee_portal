@@ -107,6 +107,44 @@ function InterviewerRoundsStatus(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Interviewer Rounds</h2>
         <Breadcrumb items={items} />
       </div>
+
+       {
+         applicantRoundsId.length > 0 && applicantRoundsId.map((round) => (
+          <Card body className="mt-4">
+
+          <Row>
+          <Col md={6}>
+            <p>Interview Date - {round.int_date} </p>
+
+          </Col>
+          <Col md={6}>
+
+            <p>Interview Time - {round.int_time} </p>
+          </Col>
+
+          </Row>
+
+          <Row>
+          <Col md={6}>
+
+            <p>Round Name - {round.round_type_name} </p>
+          </Col>
+          <Col md={6}>
+
+            <p>Round Status - {round.status_name} </p>
+          </Col>
+
+          </Row>
+            <Col md={5}>
+
+            <p>Comment - {round.comments} </p>
+
+            </Col>
+         </Card>
+         ))
+       }
+
+       
       <Card body className="mt-4">
         <Row className="mt-3">
           <Col>
@@ -115,20 +153,6 @@ function InterviewerRoundsStatus(props) {
           <Col>
             <p>Interview Time - {interviewData.interviewTime} </p>
           </Col>
-
-       {
-         applicantRoundsId.length > 0 && applicantRoundsId.map((round) => (
-            <Row className="mt-3">
-          <Col>
-            <p>Round Name - {round.round_type_name} </p>
-          </Col>
-          <Col>
-            <p>Round Status - {round.status_name} </p>
-          </Col>
-
-          </Row>
-         ))
-       }
         </Row>
        
 
