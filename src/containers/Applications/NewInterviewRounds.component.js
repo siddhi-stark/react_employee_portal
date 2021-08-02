@@ -31,31 +31,27 @@ function NewInterviewRounds(props) {
   const history = useHistory();
 
   useEffect(() => {
-    
-      const formSchema = [...FormSections];
-    const updatedSchema = formSchema.map((section)=>{
-      const s = {...section};
+    const formSchema = [...FormSections];
+    const updatedSchema = formSchema.map((section) => {
+      const s = { ...section };
       s.fields = section.fields.map((item) => {
-        console.log('itemmmm',item.fields[4].name);
+        console.log('itemmmm', item.fields[4].name);
         item.fields.map((it) => {
-        const itemData = it;
-        console.log('itemData',it);
-          if(it.name === 'status_name') itemData.disabled = true;
-          if(it.name === 'comments') itemData.disabled = true;
+          const itemData = it;
+          console.log('itemData', it);
+          if (it.name === 'status_name') itemData.disabled = true;
+          if (it.name === 'comments') itemData.disabled = true;
           const date = new Date();
-          if(it.name === 'int_date') itemData.minDate = date;
+          if (it.name === 'int_date') itemData.minDate = date;
 
-          
-         return it;
-        })
-         return item;
-
-      })
+          return it;
+        });
+        return item;
+      });
       return s;
-    })
-    console.log('updatedSchema',updatedSchema);
-  updateJsonSchema([...updatedSchema]);        
-  
+    });
+    console.log('updatedSchema', updatedSchema);
+    updateJsonSchema([...updatedSchema]);
   }, []);
 
   // Get user role
@@ -72,8 +68,7 @@ function NewInterviewRounds(props) {
   const submitForm = async (formValues) => {
     // console.log('formValues',formValues.addmore[position].interviewerRounds);
     const id = customFunctions.getLocalStorage('applicantId');
-    const position = formValues.addmore.length-1;
-    console.log('position',formValues.addmore[position].interviewerRounds);
+    const position = formValues.addmore.length - 1;
     const postData = {
       int_date: formValues.addmore[position]
         ? customFunctions.getDate(formValues.addmore[position].int_date)
@@ -87,8 +82,32 @@ function NewInterviewRounds(props) {
       interviewer: formValues.addmore[position].interviewer
         ? formValues.addmore[position].interviewer.value
         : '',
+      interview_type: formValues.addmore[position].interview_type
+        ? Number(formValues.addmore[position].interview_type.value)
+        : '',
+      description: formValues.addmore[position].description
+        ? formValues.addmore[position].description
+        : '',
       applicant: id,
     };
+
+    const payload = {
+      name: 'Interview Round',
+      subject: 'Interview Round',
+      applicant_id: id,
+      body: '<h1>Hello {{Applicant:CandidateName}}, you are interview round.</h1>',
+      email_type: 'interview_round',
+    };
+   
+    await AuthApi.postDataToServer(
+      Api.generateContentUrl,
+      payload
+    );
+
+    await AuthApi.postDataToServer(
+      Api.sendMailUrl,
+      payload
+    );
 
     const { data, message } = await AuthApi.postDataToServer(
       Api.roundsUrl,
@@ -126,12 +145,14 @@ function NewInterviewRounds(props) {
       let newDate = '';
       const interviewData = [];
       data.data.map((dt) => {
-        console.log('dtttt',dt.status_name);
-        if(!customFunctions.checkIfEmpty(dt.int_date)){
+        console.log('dtttt', dt.status_name);
+        if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);
         }
-        if(!customFunctions.checkIfEmpty(dt.int_time)){
-          newTime = new Date(`${customFunctions.getDate(dt.int_date)}T${dt.int_time}Z`);
+        if (!customFunctions.checkIfEmpty(dt.int_time)) {
+          newTime = new Date(
+            `${customFunctions.getDate(dt.int_date)}T${dt.int_time}Z`
+          );
         }
 
         return interviewData.push({
@@ -143,34 +164,36 @@ function NewInterviewRounds(props) {
           int_date: newDate,
           int_time: newTime,
           status_name: dt.status_name,
-          comments: dt.comments
-          });
+          comments: dt.comments,
+        });
       });
-        console.log('interviewData',interviewData);
+      console.log('interviewData', interviewData);
 
-      if(interviewData) {
+      if (interviewData) {
         updateDefaultValues({ addmore: [...interviewData] });
-     }
+      }
       forceUpdate(count + 1);
     }
   };
 
   // Call get data method on load
   useEffect(() => {
-    if(isProfessionalInfoId){
+    if (isProfessionalInfoId) {
       getData(isProfessionalInfoId);
     }
   }, [isProfessionalInfoId]);
 
   const getInterviewer = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?type=all`
+    );
     if (!data) {
       // show error
       return;
     }
 
     const dpOptions = [];
-  await  data.data.map((op) => {
+    await data.data.map((op) => {
       // Change appropriate keys
       dpOptions.push({ label: op.full_name, value: op.id });
       return op;
@@ -180,31 +203,34 @@ function NewInterviewRounds(props) {
       ...defaultFilterOptions,
       interviewer: dpOptions,
     };
-    defaultFilterOptions = {...allOptions};
+    defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
 
   const getInterviewRounds = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=round_type`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=round_type`
+    );
     if (!data) {
       // show error
       return;
     }
 
     const dpOptions = [];
-  await  data.data && data.data.round_type.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.name, value: op.id });
-      return op;
-    });
+    (await data.data) &&
+      data.data.round_type.map((op) => {
+        // Change appropriate keys
+        dpOptions.push({ label: op.name, value: op.id });
+        return op;
+      });
     const allOptions = {
       ...options,
       ...defaultFilterOptions,
       interviewerRounds: dpOptions,
     };
-    defaultFilterOptions = {...allOptions};
+    defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getInterviewer();
@@ -213,31 +239,30 @@ function NewInterviewRounds(props) {
 
   return (
     <>
-    <div> 
-
-      <StarkFormBuilder
-        containerClass=""
-        formHeaderClass=""
-        formSections={jsonSchema}
-        formHeading="form"
-        onFormSubmit={(formValues) => {
-          submitForm(formValues);
-        }}
-        options={options}
-        callbacks={{}}
-        defaultFormValues={defaultValues}
-        refreshCounter={count}
-        currentUser={currentUser}
-        submitBtnText="Submit"
-        showResetBtn={false}
-        resetBtnText="Clear"
-        btnContainerClass="form-submit-buttons mb-5"
-        isStepForm={false}
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
-      />
-    </div>
+      <div>
+        <StarkFormBuilder
+          containerClass=""
+          formHeaderClass=""
+          formSections={jsonSchema}
+          formHeading="form"
+          onFormSubmit={(formValues) => {
+            submitForm(formValues);
+          }}
+          options={options}
+          callbacks={{}}
+          defaultFormValues={defaultValues}
+          refreshCounter={count}
+          currentUser={currentUser}
+          submitBtnText="Submit"
+          showResetBtn={false}
+          resetBtnText="Clear"
+          btnContainerClass="form-submit-buttons mb-5"
+          isStepForm={false}
+          onFormReset={() => {
+            console.log('form reset callback');
+          }}
+        />
+      </div>
     </>
   );
 }

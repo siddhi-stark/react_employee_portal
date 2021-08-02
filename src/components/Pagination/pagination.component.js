@@ -79,7 +79,9 @@ export default class Pagination extends Component {
           onChange={this.handlePageChange}
           hideFirstLastPages
           hideDisabled={true}
-          activeClass
+          // activeClass
+          itemClass="page-item"
+          linkClass="page-link"
         />
       </div>
     );
