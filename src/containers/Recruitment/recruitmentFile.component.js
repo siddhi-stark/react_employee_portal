@@ -19,19 +19,19 @@ function RecruitmentFileComponent() {
   ];
 
    const csvHeader = [
-  { label: 'Candidate Name', key: 'Candidate_Name' },
-  { label: 'Email', key: 'Email' },
-  { label: 'Mobile No', key: 'Mobile_No' },
-  { label: 'Locality', key: 'Locality' },  
-  { label: 'Last Current CTC', key: 'Current_CTC' },
-  { label: 'Expected CTC', key: 'Expected_CTC' },
-  { label: 'Notice Period', key: 'Notice_Period' },  
-  { label: 'Total Exp', key: 'Total_Exp' },
-  { label: 'Relevant Exp', key: 'Relevant_Exp' },
-  { label: 'ResumeSource', key: 'Resume_Source' },
-  { label: 'Reason Job Change', key: 'Reason_Job_Change' },
-  { label: 'Resume', key: 'Resume' },
-  { label: 'Gender', key: 'Gender' }
+    { label: 'Candidate Name', key: 'Candidate_Name' },
+    { label: 'Email', key: 'Email' },
+    { label: 'Mobile No', key: 'Mobile_No' },
+    { label: 'Locality', key: 'Locality' },  
+    { label: 'Current CTC', key: 'Current_CTC' },
+    { label: 'Expected CTC', key: 'Expected_CTC' },
+    { label: 'Notice Period', key: 'Notice_Period' },  
+    { label: 'Total Exp.', key: 'Total_Exp' },
+    { label: 'Relevant Exp.', key: 'Relevant_Exp' },
+    { label: 'Resume Source', key: 'Resume_Source' },
+    { label: 'Reason Job Change', key: 'Reason_Job_Change' },
+    { label: 'Resume', key: 'Resume' },
+    { label: 'Gender', key: 'Gender' }
   ];
 
   const csvReport = {

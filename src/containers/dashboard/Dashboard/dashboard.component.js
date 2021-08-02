@@ -346,7 +346,7 @@ console.log('lastDay', customFunctions.getDate(lastday));
                     <Table
                       columns={columns}
                       rows={rows}
-                      showPagination
+                      // showPagination
                       paginationProps={{
                         ...pagination,
                         activePage: pagination.current_page,
