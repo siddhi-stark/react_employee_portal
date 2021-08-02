@@ -109,7 +109,7 @@ function EditEmployee(props) {
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
           if(result){
-            getRowData(1);
+            // getRowData(1);
           }
         });
     }
@@ -145,7 +145,6 @@ function EditEmployee(props) {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data---------------------', data.data.evening_data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       // setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
@@ -161,6 +160,7 @@ function EditEmployee(props) {
         // console.log('dsfd',item);
         const newItem = item;
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
+        console.log('newItem.index',newItem.index);
         return newItem;
       });
       setRowData((data && data.data && data.data.evening_data) || []);
