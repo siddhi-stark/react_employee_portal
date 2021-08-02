@@ -13,7 +13,7 @@ import Api from '../../helper/api';
 
 function RecruitmentApplicationComponent() {
   // const title = 'Recruitment';
-const group = customFunctions.getLocalStorage('group');
+  const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
   const history = useHistory();
 
@@ -29,9 +29,10 @@ const group = customFunctions.getLocalStorage('group');
   const [currentPage, setCurrentPage] = useState(1);
   const [status, setStatus] = useState(null);
   const [filterData, setFilterData] = useState({});
-  const [title,setTitle] = useState('');
+  const [activeMenu, setActiveMenu] = useState('all');
+  const [title, setTitle] = useState('');
   let filterOptions = {};
-  
+
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
     const sectionData = section;
@@ -41,13 +42,10 @@ const group = customFunctions.getLocalStorage('group');
     }
     return sectionData;
   });
-  
-  const handleActionCallback = ({id,status_name}) => { //eslint-disable-line
+
+  const handleActionCallback = ({ id, status_name }) => { //eslint-disable-line
     return (
-
       <>
-
-     
         <a
           href="/"
           className="pl-2"
@@ -59,50 +57,32 @@ const group = customFunctions.getLocalStorage('group');
             // history.push('/edit-employee');
           }}
         >
-
-          {Number(group) === 5 ? 
-          
-          <Image src= {status_name === 'shortlisted' ? '/images/edit-button.svg' : ''} // eslint-disable-line
-          
-          />          
-          : 
-          <Image src= '/images/edit-button.svg' />
-           } 
-   
-
+          {Number(group) === 5 ? (
+            <Image
+              src={ status_name === 'shortlisted' ? '/images/edit-button.svg' : '' } // eslint-disable-line
+            />
+          ) : (
+            <Image src="/images/edit-button.svg" />
+          )}
         </a>
-
       </>
     );
   };
 
   const handleResumeCallback = (resume) => {
-    console.log('resume',resume);
-        return (
-
+    console.log('resume', resume);
+    return (
       <>
-
-     
-        <a
-          href={resume.resume}
-          className="pl-2"
-          target='_Blank'
-        >
-
-          <Image src= '/images/download-file.svg' />
-            
-   
-
+        <a href={resume.resume} className="pl-2" target="_Blank">
+          <Image src="/images/download-file.svg" />
         </a>
-
       </>
     );
-  }
+  };
 
   // Declare columns
   const columns = [
-    
-      {
+    {
       id: 'id',
       label: 'Sr. No',
       isDisplay: false,
@@ -145,7 +125,7 @@ const group = customFunctions.getLocalStorage('group');
     {
       id: 'resume',
       label: 'Resume',
-      render: handleResumeCallback
+      render: handleResumeCallback,
     },
     {
       id: 'status_name',
@@ -161,8 +141,10 @@ const group = customFunctions.getLocalStorage('group');
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
+
     
     const endPoint = `${Api.applicantsUrl}`;
+
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
@@ -170,12 +152,12 @@ const group = customFunctions.getLocalStorage('group');
     const params = {
       page,
       limit,
-      sort_direction:'descending',      
+      sort_direction: 'descending',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data',data);
+    console.log('data', data);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -213,12 +195,12 @@ const group = customFunctions.getLocalStorage('group');
   }, []);
 
   const handleChangeActiveStatus = async (selectedIds) => {
-          if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
-            const params = {
-              status: 2,
-              ids: selectedIds
-            }
-             const successHandle = (e) => {
+    if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
+      const params = {
+        status: 2,
+        ids: selectedIds,
+      };
+      const successHandle = (e) => {
         swal(e && e.message[0], '', 'success', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -240,23 +222,23 @@ const group = customFunctions.getLocalStorage('group');
           getRowData(1);
         });
       };
-            await customFunctions.changeStatus(
+      await customFunctions.changeStatus(
         `${Api.bulkStatusUrl}`,
         params,
         'put',
         successHandle,
         errorHandle
       );
-          }
-      } 
+    }
+  };
 
-const handleChangeInactiveStatus = async (selectedIds) => {
-          if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
-            const params = {
-              status: 6,
-              ids: selectedIds
-            }
-            const successHandle = (e) => {
+  const handleChangeInactiveStatus = async (selectedIds) => {
+    if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
+      const params = {
+        status: 6,
+        ids: selectedIds,
+      };
+      const successHandle = (e) => {
         swal(e && e.message[0], '', 'success', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -278,25 +260,24 @@ const handleChangeInactiveStatus = async (selectedIds) => {
           getRowData(1);
         });
       };
-              await customFunctions.changeStatus(
+      await customFunctions.changeStatus(
         `${Api.bulkStatusUrl}`,
         params,
         'put',
         successHandle,
         errorHandle
       );
-          }
-      } 
-
+    }
+  };
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues,'----',status);
+    console.log(formValues, '----', status);
     let payload = {};
-    
-    if(formValues) {
+
+    if (formValues) {
       payload = {
-        keyword: formValues.keyword ? formValues.keyword:'',
+        keyword: formValues.keyword ? formValues.keyword : '',
         designation_id: formValues.designation_id
           ? formValues.designation_id.value
           : '',
@@ -308,8 +289,8 @@ const handleChangeInactiveStatus = async (selectedIds) => {
           : '',
       };
     }
-   payload.status = status;
-   setFilterData(payload);
+    payload.status = status;
+    setFilterData(payload);
   };
 
   useEffect(() => {
@@ -317,7 +298,9 @@ const handleChangeInactiveStatus = async (selectedIds) => {
   }, [status]);
 
   const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.designationUrl}?type=all`
+    );
     if (!data) {
       // show error
       return;
@@ -401,14 +384,14 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                   }}
                   className="btn-link"
                 >
-                   {Number(group) === 4 ? '' : 'Add New'}
+                  {Number(group) === 4 ? '' : 'Add New'}
                 </a>
               </div>
             </div>
           </Card.Header>
           <Card.Body>
-            <div>
-               {!(Number(group) === 4) && (
+            <div className="text-end">
+              {!(Number(group) === 4) && (
                 <Button
                   variant="primary"
                   className="mb-2"
@@ -420,58 +403,74 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                 </Button>
               )}
             </div>
-            <div>
+            <div className="recruitment-links-wrapper">
               <a
-               href='#'
-                className="mb-2"
+                href="#"
+                className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
                 onClick={() => {
+                  setActiveMenu('all');
                   setFilterData();
                 }}
               >
                 All
-              </a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              </a>
               <a
-                href='#'
-                className="ml-2 mb-2"
+                href="#"
+                className={`ml-2 mb-2 ${
+                  activeMenu === 'selected' ? 'active' : ''
+                }`}
                 onClick={() => {
+                  setActiveMenu('selected');
                   setStatus(1);
                 }}
               >
                 Selected
-              </a> &nbsp; &nbsp; &nbsp; &nbsp;
-                {!(Number(group) === 4) && (
+              </a>
+              {!(Number(group) === 4) && (
                 <>
                   <a
-                    href='#'
-                    className="ml-2 mb-2"
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'Shortlisted' ? 'active' : ''
+                    }`}
                     onClick={() => {
+                      setActiveMenu('Shortlisted');
                       setStatus(2);
                     }}
                   >
                     Shortlisted
-                  </a> &nbsp; &nbsp; &nbsp; &nbsp;
+                  </a>
                   <a
-                    href='#'
-                    className="ml-2 mb-2"
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'Rejected' ? 'active' : ''
+                    }`}
                     onClick={() => {
+                      setActiveMenu('Rejected');
                       setStatus(3);
                     }}
                   >
                     Rejected
-                  </a> &nbsp; &nbsp; &nbsp; &nbsp;
+                  </a>
                   <a
-                    href='#'
-                    className="ml-2 mb-2"
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'Decline' ? 'active' : ''
+                    }`}
                     onClick={() => {
+                      setActiveMenu('Decline');
                       setStatus(6);
                     }}
                   >
                     Decline
-                  </a> &nbsp; &nbsp; &nbsp; &nbsp;
+                  </a>
                   <a
-                    href='#'
-                    className="ml-2 mb-2"
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'Offer' ? 'active' : ''
+                    }`}
                     onClick={() => {
+                      setActiveMenu('Offer');
                       setStatus(4);
                     }}
                   >
@@ -480,22 +479,38 @@ const handleChangeInactiveStatus = async (selectedIds) => {
                 </>
               )}
             </div>
-             <CustomTable
-    columns={columns}
-    rows={rowData}
-bulkActions={Number(group) === 5 ? [{'actionTitle' : 'Shortlist','actionCallback' : handleChangeActiveStatus},{'actionTitle' : 'Decline','actionCallback' : handleChangeInactiveStatus},] : ''} 
-showPagination={true} 
-paginationProps={{
-            totalItems: totalCount,
-            itemsPerPage: limit,
-            activePage: currentPage,
-            onPageChange: (pageNo) => {
-              getRowData(pageNo);
-            }
-          }} 
-showCheckbox={true} 
-emptyRender={()=>{ return ('No record found.')}} 
-/>
+            <CustomTable
+              tableContainerClass="mt-2"
+              columns={columns}
+              rows={rowData}
+              bulkActions={
+                Number(group) === 5
+                  ? [
+                      {
+                        actionTitle: 'Shortlist',
+                        actionCallback: handleChangeActiveStatus,
+                      },
+                      {
+                        actionTitle: 'Decline',
+                        actionCallback: handleChangeInactiveStatus,
+                      },
+                    ]
+                  : ''
+              }
+              showPagination={true}
+              paginationProps={{
+                totalItems: totalCount,
+                itemsPerPage: limit,
+                activePage: currentPage,
+                onPageChange: (pageNo) => {
+                  getRowData(pageNo);
+                },
+              }}
+              showCheckbox={true}
+              emptyRender={() => {
+                return 'No record found.';
+              }}
+            />
           </Card.Body>
         </Card>
       </section>

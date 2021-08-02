@@ -94,7 +94,6 @@ function RecruitmentFileComponent() {
   // Submit Form
   const submitForm = async (formValues) => {
     // console.log('formValues',formValues);
-    console.log('formValues.file_name[0]', fileValue[0],formValues.file_name[0]);
     // console.log('fileValue[0]',fileValue[0]);
     const csvData = fileValue[0];
 
@@ -202,7 +201,7 @@ function RecruitmentFileComponent() {
                 </Col>
                 <Col className="mt-4 col-md-1">
                                 
-                  <div title="Download CSV File">
+                  <div title="Download sample.csv File">
                   <CSVLink {...csvReport}  target="_blank">
                     <Image
                       src="/images/download.svg"

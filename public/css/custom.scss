@@ -1021,11 +1021,11 @@ select {
                 transition: all 0.9s;
                 li {
                     border-bottom: 1px solid $purple;
-                    &:first-child {
+/*                     &:first-child {
                         a {
                             padding-top: 0;                            
                         }
-                    }
+                    } */
                     &:last-child {
                         border-bottom: 0;
                     }
@@ -2492,6 +2492,37 @@ table {
         margin-bottom: 0;
     }
 }
+.confirmation-content-box {
+    border-radius: 0px;
+    .demo-wrapper.rdw-editor-wrapper {
+        border: 1px solid #ccc;
+        .rdw-editor-toolbar {
+            border: 1px solid #ccc;
+            background: #f0f0f0;
+        }
+        .rdw-editor-main {
+            padding: 0px 15px;
+        }
+    }
+}
+.recruitment-links-wrapper {
+    a {
+        display: inline-block;
+        margin-right: 25px;
+        &.active {
+            border-bottom: 3px solid #303160;
+        }
+
+    }
+}
+
+p.employee-details {
+    min-height: 50px;
+    span {
+        display: block;
+        font-size: 12px;
+    }
+}
 
 
 /*@media (min-width: 576px){
@@ -2771,13 +2802,18 @@ table {
         border-radius: 0px 5px 5px 0px;
     }
     select {
-        background-color: #E3E3E3;
+        background-color: #fff;
         color: #707070;
         border-color: #E3E3E3;
-        min-height: 37px;
+        min-height: 37px !important;
         max-width: 155px;
         width: 100%;
         padding: 0 10px;
+        background-image: url('../images/dropdown-select.svg');
+        background-repeat: no-repeat;
+        background-size: 6%;
+        background-position: 97%;
+        margin-right: 10px !important;
         &:focus {
             border-color: #E3E3E3;
             outline: none;

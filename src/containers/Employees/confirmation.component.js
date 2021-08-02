@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Form, Button, Card } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertFromHTML, ContentState, convertToRaw } from 'draft-js';
@@ -165,16 +165,14 @@ console.log('test',test);
         <h2 className="main-content-title tx-24 mg-b-5">Confirmation</h2>
         <Breadcrumb items={items} />
       </div>
-      <div className="mt-4">
+      <Card body className="confirmation-content-box">
+      <div className="mt-2">
         <p>Employee Name - {name}</p>
         <section className="content-area">
           <Form   onSubmit={(e) => {
               onSubmitButton(e);
             }}
             autocomplete="off">
-            <Row>
-              <Col md={4}>
-
                <Datepicker
                   label="Confirmation Date"
                   asterisk="*"
@@ -206,9 +204,7 @@ console.log('test',test);
                 <div className="justify-content-left mt-4 preview-send-btn">
                   <Button type="submit" variant="primary">Save and Send Mail</Button>
                 </div>
-              </Col>
 
-              <Col md={6}>
                 <p className="mt-3">
                   <b>
                     Note:-The given list of words are the dynamic content which
@@ -313,11 +309,10 @@ console.log('test',test);
                     },
                   }}
                 />
-              </Col>
-            </Row>
           </Form>
         </section>
       </div>
+      </Card>
     </>
   );
 }
