@@ -69,7 +69,7 @@ function AddHistory(props) {
           if (okAction) {
        props.handleModalCLose(false);
        props.onChanges();
-       customFunctions.removeLocalStorage('id');
+       // customFunctions.removeLocalStorage('id');
        customFunctions.removeLocalStorage('hisotryID');
           }
         });

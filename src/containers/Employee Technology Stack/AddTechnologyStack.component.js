@@ -41,16 +41,17 @@ function AddTechnologyStack(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-     console.log('formValues',formValues);
+     // console.log('formValues',formValues);
     const technologyStack = [];
     // const technoData = {};
 
     formValues.addmore.map((tech) => {
+      console.log('tech',tech);
       let obj = {};
       obj = {
 
       techstack: tech.technology.value ? tech.technology.value : '',
-      is_interviewer: tech.isINterviewer.toString() === 'true' ? true : false, // eslint-disable-line
+      is_interviewer: tech.isINterviewer.toString() === 'Yes' ? true : false, // eslint-disable-line
       }
     technologyStack.push(obj);
       return tech;
@@ -83,20 +84,18 @@ function AddTechnologyStack(props) {
    const getData = async (stackId) => {
     const techId = stackId;
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeStack}${techId}/`);
-    console.log('data',data.data);
+    console.log('data',data.data.is_interviewer);
     if(data.data) {
 
 
     const techData = [];
 
     await data.data.tech_stack_ids.map((e) => {
-      console.log('options.technology',options.technology);
       const find = options.technology.find(x => x.value === e);
-      console.log('find',find);
       if (find) {
 
       techData.push({
-        isINterviewer : data.data.isINterviewer,
+        isINterviewer : data.data.is_interviewer,
         technology:{
         label: find.label,
         value: find.value
@@ -105,7 +104,7 @@ function AddTechnologyStack(props) {
       }
       return e;
     });
-    console.log('techData',techData);
+    // console.log('techData',techData);
     updateDefaultValues({
       addmore: techData,
       employee:  data.data.id && {
@@ -165,7 +164,6 @@ function AddTechnologyStack(props) {
     await updateOptions({...allOptions});
 
   }   
-console.log('defaultValues',defaultValues);
   return (
     <>
     <div className="mt-5">
