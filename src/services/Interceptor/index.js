@@ -32,8 +32,11 @@ export default {
           (data.status === 401 || data.statusText === 'Unauthorized')
         ) {
           customFucntions.localStorageClear();
-        localStorage.clear();
+        console.log('window.location.href', window.location.href);
+        if (window.location.pathname !== '/login') {
+          localStorage.clear();
           window.location.href = '/login';
+        }
           return Promise.reject(error.response.data);
         }
         return Promise.reject(error.response);

@@ -85,6 +85,13 @@ export default class Api extends Component {
 
   static InterviewRoundsUrl = `${Api.baseUrl}constants/`;
 
+
+  static notificationUrl = `${Api.baseUrl}notification/`;
+
+  static notificationCountUrl = `${Api.baseUrl}notification-count/`;
+
+
+
   static quotesUrl = `${Api.baseUrl}quotes/`;
 
   static randomQuotesUrl = `${Api.baseUrl}random-quotes/`;
