@@ -101,7 +101,7 @@ const dateNew = customFunctions.getFormattedDate(date);
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
 
-    const endPoint = `${Api.employeeTimesheet}?start_date=${date}&limit=${5}&page=${page}`;
+    const endPoint = `${Api.employeeTimesheet}?sort_by=user__full_name&sort_direction=ascending&start_date=${date}&limit=${5}&page=${page}`;
     // const filterList =
     //   filterData && !customFunctions.checkIfEmpty(filterData, 'O')
     //     ? customFunctions.jsonParse(filterData)
