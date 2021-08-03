@@ -198,7 +198,7 @@ function Header() {
             <div className="dropdown main-header-notification"> 
               <a className="nav-link icon" href="javascript:void(0)" onClick={() => onNotification()}> 
                 <img src="/images/notification.png" alt="notification" />
-                <span className="badge badge-danger nav-link-badge">{notificationCount}</span> 
+                <span className="badge badge-danger nav-link-badge">{notificationCount === 0 ? '' : notificationCount}</span> 
               </a> 
               <div className="dropdown-menu"> 
                 <div className="header-navheading"> 
