@@ -103,7 +103,9 @@ const deleteEmployeeHistory = (id) => {
         </div>
       </div>
 
-      <Image src="/images/edit-profile-img.png" style={{ 'height': '90px' }} />
+      <Image 
+          src={employeeDetails.profile_image_url ? `${employeeDetails.profile_image_url}` : `${Api.s3UrlnoProfile}`}
+          alt="Card image cap" style={{ 'height': '90px' }} />
       <div className="table-projects">
        
         {showPersonalDetails ?  (
