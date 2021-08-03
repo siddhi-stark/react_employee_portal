@@ -27,7 +27,6 @@ function AddTechnology(props) {
 		const callback =  AuthApi.postDataToServer;
 		const endPoint =  Api.employeeStackUrl;
 		const { data, message } = await callback(endPoint, payload);
-		console.log('data ', data);
 		if (!data) {
 			swal(message, '', 'error');
 		}
@@ -42,7 +41,6 @@ function AddTechnology(props) {
 
 	// Get data for form
 	const getData = async (id) => {
-		console.log('id', id);
 		if (!id.technologyId) return;
 		const { data } = await AuthApi.getDataFromServer(
 			`${Api.employeeStackUrl}${id.technologyId}/`
@@ -54,11 +52,9 @@ function AddTechnology(props) {
 		// $('.clearTechnology form').trigger('reset');
 		updateDefaultValues({ name: data.data.name });
 	};
-		console.log('defaultValues',defaultValues );
 
 	// Call get data method on load
 	useEffect(() => {
-		console.log('getData');
 		getData(technologyId);
 		forceUpdate(count + 1);
 	}, [technologyId]);
@@ -81,7 +77,6 @@ function AddTechnology(props) {
 			btnContainerClass="form-submit-buttons"
 			isStepForm={false}
 			onFormReset={() => {
-				console.log('form reset callback');
 			}}
 		/>
 	);

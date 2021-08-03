@@ -27,6 +27,7 @@ function Dashboard() {
   const [show, setShow] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [morningMail, setMorningMail] = useState(false);
+  const [quotesContent, setQuotesContent] = useState('');
   const history = useHistory();
 
   const [pagination, setPagination] = useState({
@@ -66,9 +67,6 @@ function Dashboard() {
 
   // console.log('lastDay',lastDayNew);
 
-
-
-
 const curr = new Date; // get current date
 const first = curr.getDate() - curr.getDay() +1; // First day is the day of the month - the day of the week
 const last = first + 4; // last day is the first day + 6
@@ -78,9 +76,6 @@ const lastday = new Date(curr.setDate(last)).toUTCString();
 
 const FirstDay = customFunctions.getDate(firstday);
 const LastDay = customFunctions.getDate(lastday);
-console.log('lastDay', customFunctions.getDate(lastday));
-
-
 
   const getDailyActivity = async () => {
     setShowLoader(true);
@@ -101,9 +96,8 @@ console.log('lastDay', customFunctions.getDate(lastday));
     }
   };
 
-  const getTimeSheetList = async (pageNo = 0) => {
-    const page = pageNo || pagination.current_page;
-    console.log('page',page);
+  const getTimeSheetList = async () => {
+    // const page = pageNo || pagination.current_page;
     const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}?start_date=${FirstDay}&end_date=${LastDay}`);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
@@ -188,6 +182,18 @@ console.log('lastDay', customFunctions.getDate(lastday));
     return true;
   };
 
+ const getQuotes = async () => {
+    const endPoint = `${Api.randomQuotesUrl}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+
+    if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
+      setQuotesContent(data.data.content);
+    }
+  };
+  
+  useEffect(() => {
+    getQuotes();
+  }, []);
 
   return (
     <>
@@ -217,8 +223,7 @@ console.log('lastDay', customFunctions.getDate(lastday));
                     </h1>
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
-                        "The secret of your success is determined by your daily
-                        agenda"
+                       "{quotesContent}"
                       </p>
                     </blockquote>
                   </div>

@@ -101,10 +101,10 @@ function NewInterviewRounds(props) {
       email_type: 'interview_round',
     };
    
-    await AuthApi.postDataToServer(
-      Api.generateContentUrl,
-      payload
-    );
+    // await AuthApi.postDataToServer(
+    //   Api.generateContentUrl,
+    //   payload
+    // );
 
     await AuthApi.postDataToServer(
       Api.sendMailUrl,

@@ -35,6 +35,8 @@ import RecruitmentApplication from './containers/Recruitment/recruitmentApplicat
 import InterviewerRoundStatus from './containers/Applications/InterviewerRoundsStatus.component';
 import HrReports from './containers/HrReports/hrReports.component';
 import HRListing from './containers/Employee/HRListing.component';
+import Quotes from './containers/Quotes/quotes.component';
+import AddQuotes from './containers/Quotes/addQuotes.component';
 
 function Routes() {
   return (
@@ -75,6 +77,9 @@ function Routes() {
        <Route path="/recruitment/:id" exact component={Applications} />
        <Route path="/hr-reports" exact component={HrReports} />
        <Route path='/hr-listing' exact component={HRListing} />
+       <Route path='/quotes' exact component={Quotes} />
+       <Route path='/add-quotes' exact component={AddQuotes} />
+       <Route path='/edit-quotes/:qid' exact component={AddQuotes} />
       <Route component={NotFound} />
     </Switch>
   );

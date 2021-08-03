@@ -85,6 +85,10 @@ export default class Api extends Component {
 
   static InterviewRoundsUrl = `${Api.baseUrl}constants/`;
 
+  static quotesUrl = `${Api.baseUrl}quotes/`;
+
+  static randomQuotesUrl = `${Api.baseUrl}random-quotes/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

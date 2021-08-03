@@ -16,7 +16,6 @@ function Sidebar() {
 
   useEffect(()=>{
 
-
     document.addEventListener('MenuChange', () => {
       onSubActiveClass();
     });
@@ -29,7 +28,6 @@ function Sidebar() {
       onSubActiveClass();
       setActiveMenu();
     });
-
     
   },[]);
 

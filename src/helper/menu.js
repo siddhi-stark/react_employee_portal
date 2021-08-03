@@ -47,6 +47,13 @@ const menu = [
     ],
     roleaccess: [1,2],
   },
+   {
+    title: 'Quotes',
+    path: '/quotes',
+    icon: 'dashboard.svg',
+    submenu: [],
+    roleaccess: [1,2],
+  },
   {
     title: 'Projects',
     path: '/projects',

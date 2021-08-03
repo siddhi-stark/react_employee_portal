@@ -180,7 +180,6 @@ function ToDoList(props) {
     const endPoint = `${Api.taskUrl}?sort_by=id&sort_direction=descending&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
-      console.log('data.data.pagination',data.paginator.current_page);
       setClockinClockoutStorage();
       setPagination({
         current_page: Number(data.paginator.current_page),
@@ -609,7 +608,6 @@ function ToDoList(props) {
 
   return (
     <>
-    {console.log('selectedId',selectedId)}
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -710,7 +708,6 @@ function ToDoList(props) {
                     selectedRowItems={selectedId}
                     // selectedRowItems={[25763, 25250]}
                     onSelectRowsIndexes={async (rowIndex) => {
-                      console.log('rowIndex',rowIndex);
                       const arr = [...selectedId,...rowIndex];
                       const arrNew = [];
                       await arr.filter(e => {

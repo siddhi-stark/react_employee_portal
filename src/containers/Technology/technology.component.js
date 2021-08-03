@@ -125,12 +125,10 @@ function Technology() {
 
   // Submit Form
   const submitFilterForm = async (formValues) => {
-    console.log(formValues);
     setFilterData(formValues);
   };
 
   const deleteTechnolody = (id) => {
-    console.log('id',id);
     if (id) {
       swal({
         title: 'Are you sure?',
@@ -208,7 +206,6 @@ function Technology() {
                       isStepForm={false}
                       onFormReset={() => {
                         setFilterData('');
-                        console.log('form reset callback');
                       }}
                     />
                   </Card.Title>
