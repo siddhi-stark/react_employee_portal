@@ -12,7 +12,6 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 
 function EmployeeTimesheet(props) {
-  const EmployeeType = customFunctions.getLocalStorage('type');
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -84,7 +83,7 @@ function EmployeeTimesheet(props) {
     },
     {
       id: 'emp_id',
-      label: dataShow || EmployeeType ? '' : 'Employee ID',
+      label: dataShow ? '' : 'Employee ID',
 
       render: ({ emp_id }) => { // eslint-disable-line
         return (
@@ -118,8 +117,8 @@ function EmployeeTimesheet(props) {
       },
     },
     {
-      id: EmployeeType ? '' : 'emp_name',
-      label: EmployeeType ? '' : 'Employee Name',
+      id: 'emp_name',
+      label: 'Employee Name',
     },
     {
       id: 'designatin_name',
@@ -164,8 +163,8 @@ function EmployeeTimesheet(props) {
     },
     {
       id: 'action',
-      label: EmployeeType ? '' : 'Action',
-      render: EmployeeType ? '' : handleActionCallback,
+      label: 'Action',
+      render: handleActionCallback,
     },
   ];
 

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
+// import { setHours, setMinutes } from 'date-fns';
 import FormSections from './NewInterviewRounds.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
-
 // const addMoreData = {
 //   addmore: [
 //     {
@@ -35,7 +35,6 @@ function NewInterviewRounds(props) {
     const updatedSchema = formSchema.map((section) => {
       const s = { ...section };
       s.fields = section.fields.map((item) => {
-        console.log('itemmmm', item.fields[4].name);
         item.fields.map((it) => {
           const itemData = it;
           console.log('itemData', it);
@@ -43,6 +42,9 @@ function NewInterviewRounds(props) {
           // if (it.name === 'comments') itemData.disabled = true;
           const date = new Date();
           if (it.name === 'int_date') itemData.minDate = date;
+          // if (it.name === 'int_time') itemData.minTime = setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours());
+          // if (it.name === 'int_time') itemData.minDate = new Date();
+          // console.log('setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours())', setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours()));
 
           return it;
         });
@@ -145,7 +147,6 @@ function NewInterviewRounds(props) {
       let newDate = '';
       const interviewData = [];
       data.data.map((dt) => {
-        console.log('dtttt', dt.status_name);
         if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);
         }
@@ -165,6 +166,8 @@ function NewInterviewRounds(props) {
           int_time: newTime,
           status_name: dt.status_name,
           comments: dt.comments,
+          interview_type:  { label: dt.interview_type_name, value: dt.interview_type_id },
+          description: dt.description
         });
       });
       console.log('interviewData', interviewData);
