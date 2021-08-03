@@ -17,6 +17,9 @@ function Header() {
   const [time, setTime] = useState('');
   const [clockedInTime, setClockInTime] = useState('');
   const [userRole, setUserRole] = useState('');
+  const [notification,setNotificationData] = useState([]);
+  const [notificationCount,setNotificationCount] = useState('');
+  const [isClicked,setIsClicked] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
@@ -38,6 +41,17 @@ function Header() {
     }
     return true;
   };
+
+   const getNotificationCount = async () => {
+    console.log('Notifcation List');
+    const endPoint = `${Api.notificationCountUrl}`;
+
+    const {data} = await AuthApi.getDataFromServer(endPoint);
+    if(data) {
+      console.log('data',data.data);
+      setNotificationCount(data.data.count);
+    }
+  }
 
   const getCLocTIme = () => {
     const clockTime = customFunctions.getLocalStorage('clockinTime');
@@ -69,6 +83,7 @@ function Header() {
     getProfile();
     getCLocTIme();
     getClockOutTime();
+    getNotificationCount();
 
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
@@ -94,8 +109,48 @@ function Header() {
     return true;
   };
 
+  const onNotification = async () => {
+    console.log('Notifcation List',isClicked === true);
+    const endPoint = isClicked === true ? `${Api.notificationUrl}` : `${Api.notificationUrl}?limit=${3}`;
+
+    const {data} = await AuthApi.getDataFromServer(endPoint);
+    if(data) {
+      console.log('data',data.data);
+      setNotificationData(data.data);
+    }
+  }
+
+  const onMessageClick = async (notificatioId) => {
+    console.log('notificationMessage',notificatioId);
+    const endPoint = `${Api.notificationUrl}`;
+
+    const postData = {
+     'is_read': true,
+    'notifications': [notificatioId] 
+    }
+    const {data} = await AuthApi.putDataToServer(endPoint,postData);
+    if(data && data.data.is_read) {
+      console.log('data',data);
+      getNotificationCount();
+
+      // swal({
+      //   title: data.message[0],
+      //   icon: 'success',
+      // })
+      //   .then(okAction => {
+      //     if (okAction) {
+      //  props.handleModalCLose(false);
+      //  props.onChanges();
+      //  // customFunctions.removeLocalStorage('id');
+      //  customFunctions.removeLocalStorage('hisotryID');
+      //     }
+      //   });
+    }
+  }
+
   return (
     <>
+    {console.log('notification',notification)}
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
@@ -141,47 +196,36 @@ function Header() {
             </div>
             
             <div className="dropdown main-header-notification"> 
-              <a className="nav-link icon" href="javascript:void(0)"> 
-                <img src="/images/notification.png" alt="notification"/>
-                <span className="badge badge-danger nav-link-badge">4</span> 
+              <a className="nav-link icon" href="javascript:void(0)" onClick={() => onNotification()}> 
+                <img src="/images/notification.png" alt="notification" />
+                <span className="badge badge-danger nav-link-badge">{notificationCount}</span> 
               </a> 
               <div className="dropdown-menu"> 
                 <div className="header-navheading"> 
-                  <p className="main-notification-text">You have 1 unread notification
-                    <span className="badge badge-pill badge-primary ml-3">View all</span>
+                  <p className="main-notification-text">You have {notificationCount} unread notification
+                    <span className="badge badge-pill badge-primary ml-3" onClick={() => {onNotification(); setIsClicked(true) // eslint-disable-line
+                    }} 
+                    >View all</span>
                   </p>
                 </div>
                 <div className="main-notification-list"> 
+
+                    { notification.map((note) => ( //eslint-disable-line
+                      <>
+                      {console.log('note',note)}
                   <div className="media new"> 
                     <div className="main-img-user online">
                       <img alt="avatar" src="/images/5.jpg"/>
                     </div> 
                     <div className="media-body"> 
-                      <p>Congratulate <strong>Olivia James</strong> for New template start</p>
-                      <span>Oct 15 12:32pm</span> 
+                     <p onClick={() => onMessageClick(note.id)} // eslint-disable-line
+                      >
+                      {note.message}</p>
+                      <span>{note.time}</span> 
                     </div> 
-                  </div> 
-                  <div className="media"> 
-                    <div className="main-img-user">
-                      <img alt="avatar" src="/images/5.jpg"/>
-                    </div> 
-                    <div className="media-body"> 
-                      <p><strong>Joshua Gray</strong> New Message Received</p>
-                      <span>Oct 13 02:56am</span> 
-                    </div> 
-                  </div> 
-                  <div className="media"> 
-                    <div className="main-img-user online">
-                      <img alt="avatar" src="/images/5.jpg"/>
-                    </div> 
-                    <div className="media-body"> 
-                      <p><strong>Elizabeth Lewis</strong> added new schedule realease</p>
-                      <span>Oct 12 10:40pm</span> 
-                    </div> 
-                  </div> 
-                </div> 
-                <div className="dropdown-footer"> 
-                  <a href="#">View All Notifications</a> 
+                  </div>  
+                  </>
+                    )) }
                 </div> 
               </div> 
             </div>
