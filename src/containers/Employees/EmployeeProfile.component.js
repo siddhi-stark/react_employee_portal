@@ -7,6 +7,9 @@ import EditPersonalDetails from './EditPersonalDetails.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+
+import { Helmet } from '../../components/FormInputs';
 
 function EmployeeProfile(props) {
   // const flag = customFunctions.getLocalStorage('isEmployeeConfirmed');
@@ -15,6 +18,9 @@ function EmployeeProfile(props) {
   const [employeeDetails,setEmployeeDetails] = useState({});
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
   const [companyList,setCompanyList] = useState([]);
+  const [title,setTitle] = useState('');
+
+  const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
   
   const getEmployeeDetails = async () => {
@@ -40,6 +46,7 @@ function EmployeeProfile(props) {
   useEffect(() => {
     getEmployeeHIstory();
     getEmployeeDetails();
+    setTitle('Employee Profile');
   },[])
 
   const onChangeInHistory = () => {
@@ -90,7 +97,15 @@ const deleteEmployeeHistory = (id) => {
 
   return (
     <>
-      <h6 className="mt-3">Employee Profile Page</h6>
+
+     <Helmet title={title} />
+      <div className="page-header">
+        <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
+          <Breadcrumb items={items} />
+        </div>
+      </div>
+
       <Image src="/images/edit-profile-img.png" style={{ 'height': '90px' }} />
       <div className="table-projects">
        
