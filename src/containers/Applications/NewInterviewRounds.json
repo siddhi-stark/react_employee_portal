@@ -141,7 +141,7 @@
 			"displayWhen": {},
 			"haveValidations": "false",
 			"haveDisplayOptions": "false",
-			"callback": "",
+			"callback": "getinterviewvalue",
 			"callbackUrl": "",
 			"inputToChange": "",
 			"minDateSelector": "",
@@ -190,9 +190,9 @@
 			"options": [{"label":"Telephonic","value":"1"},
 				{"label":"Google Meet", "value":"2"}]
 		},
-{
+		{
         "name": "description",
-        "type": "text",
+        "type": "textarea",
         "label": "Description",
         "id": "",
         "placeholder": "",

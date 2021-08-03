@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
+import { Button } from 'react-bootstrap';
 // import { setHours, setMinutes } from 'date-fns';
 import FormSections from './NewInterviewRounds.json';
 import Api from '../../helper/api';
@@ -25,6 +26,7 @@ function NewInterviewRounds(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
+  const [applicantName, setApplicantName] = useState('');
   const [count, forceUpdate] = useState(0);
   const { isProfessionalInfoId } = props;
 
@@ -37,8 +39,7 @@ function NewInterviewRounds(props) {
       s.fields = section.fields.map((item) => {
         item.fields.map((it) => {
           const itemData = it;
-          console.log('itemData', it);
-          if (it.name === 'status_name') itemData.disabled = true;
+          // if (it.name === 'status_name') itemData.disabled = true;
           // if (it.name === 'comments') itemData.disabled = true;
           const date = new Date();
           if (it.name === 'int_date') itemData.minDate = date;
@@ -52,7 +53,6 @@ function NewInterviewRounds(props) {
       });
       return s;
     });
-    console.log('updatedSchema', updatedSchema);
     updateJsonSchema([...updatedSchema]);
   }, []);
 
@@ -92,27 +92,65 @@ function NewInterviewRounds(props) {
         : '',
       applicant: id,
     };
-
-    const payload = {
-      name: 'Interview Round',
-      subject: 'Interview Round',
-      applicant_id: id,
-      body: '<h1>Hello {{Applicant:CandidateName}}, you are interview round.</h1>',
-      email_type: 'interview_round',
-    };
-   
-    // await AuthApi.postDataToServer(
-    //   Api.generateContentUrl,
-    //   payload
-    // );
-
-    await AuthApi.postDataToServer(
-      Api.sendMailUrl,
-      payload
-    );
+    
+    if(Number(formValues.addmore[position].interview_type.value) === 1) {
+      const payload = {
+        name: 'Interview Round',
+        subject: 'Interview Round',
+        applicant_id: id,
+        body: `Hello ${applicantName}, you are telephonic round will be at ${customFunctions.getTime(formValues.addmore[position].int_time)}.`,
+        email_type: 'interview_round',
+      };
+     
+      // await AuthApi.postDataToServer(
+      //   Api.generateContentUrl,
+      //   payload
+      // );
+      await AuthApi.postDataToServer(
+        Api.sendMailUrl,
+        payload
+      );
+    }
 
     const { data, message } = await AuthApi.postDataToServer(
       Api.roundsUrl,
+      postData
+    );
+
+    if (data) {
+      swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+      });
+    } else {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+      });
+    }
+  };
+
+  const getOfferSend = async ()=> {
+    const id = customFunctions.getLocalStorage('applicantId');
+
+    const postData = {
+      name: 'Interview Round',
+      subject: 'Interview Round',
+      applicant_id: id,
+      body: `Hello ${applicantName},<br/> Cogratulations, I am happy to share your employement offer with you. <br/> This offer is valid for 3 Days.`,
+      email_type: 'interview_round',
+    };
+
+    const { data, message } = await AuthApi.postDataToServer(
+      Api.sendMailUrl,
       postData
     );
 
@@ -136,17 +174,19 @@ function NewInterviewRounds(props) {
         swal.close();
       });
     }
-  };
+  }
 
   const getData = async (interviewerId) => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.roundsUrl}?applicant_id=${interviewerId}`
     );
+    console.log('data',data);
     if (data) {
       let newTime = '';
       let newDate = '';
       const interviewData = [];
       data.data.map((dt) => {
+        setApplicantName(dt.applicant_name);
         if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);
         }
@@ -170,7 +210,6 @@ function NewInterviewRounds(props) {
           description: dt.description
         });
       });
-      console.log('interviewData', interviewData);
 
       if (interviewData) {
         updateDefaultValues({ addmore: [...interviewData] });
@@ -235,6 +274,8 @@ function NewInterviewRounds(props) {
     updateOptions(allOptions);
   };
 
+  // const getInterviewValue = async (value)=> {
+  // }
   useEffect(() => {
     getInterviewer();
     getInterviewRounds();
@@ -252,19 +293,30 @@ function NewInterviewRounds(props) {
             submitForm(formValues);
           }}
           options={options}
-          callbacks={{}}
+          // callbacks={{
+          //   getinterviewvalue: (value) => { getInterviewValue(value); },
+          // }}
           defaultFormValues={defaultValues}
           refreshCounter={count}
           currentUser={currentUser}
           submitBtnText="Submit"
           showResetBtn={false}
           resetBtnText="Clear"
-          btnContainerClass="form-submit-buttons mb-5"
+          btnContainerClass="form-submit-buttons"
           isStepForm={false}
           onFormReset={() => {
             console.log('form reset callback');
           }}
         />
+         <Button
+            size="sm"
+            className="mt-2"
+            onClick={() =>{
+              getOfferSend();
+            }}
+          >
+            Offer Send
+          </Button>
       </div>
     </>
   );
