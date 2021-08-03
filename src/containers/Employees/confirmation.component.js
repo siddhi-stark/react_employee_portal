@@ -43,7 +43,6 @@ const validator = new SimpleReactValidator({autoForceUpdate: this});
     setDescription(editorState);
   };
 
-console.log('test',test);
   // const getDesignation = async () => {
   //   const { data } = await AuthApi.getDataFromServer(
   //     `${Api.designationUrl}?type=all`
@@ -69,7 +68,6 @@ console.log('test',test);
   //   return options;
   // };
 
-
   const sendConfirmationLetter = async (emailbody) => {
     const postData = {
       name : 'Confirmation Letter',
@@ -78,12 +76,10 @@ console.log('test',test);
       body : emailbody,
       confirmation_date : confirmationDate ? customFunctions.getDate(confirmationDate) : '',
       email_type : 'confirmation_mail',
-    }
+    };
 
     const endPoint = `${Api.sendMailUrl}`;;
     const { data, message } = await AuthApi.postDataToServer(endPoint, postData);
-    console.log('data-----',message);
-    console.log('datadatadata-----',data);
     if(data) {
       swal({
         title: data && data.message[0],
@@ -99,9 +95,9 @@ console.log('test',test);
       swal({
         title: message,
         icon: 'warning',
-      })
+      });
     }
-  }
+  };
 
   const sendMail = async () => {
       let stringDescription = '';
@@ -121,7 +117,7 @@ console.log('test',test);
       subject : 'ConfirmationSubject',
       name : 'ConfirmationLetter',
       body : stringDescription
-    }
+    };
   // console.log('postData',postData);
 
    // const callback =  AuthApi.postDataToServer;
@@ -131,29 +127,21 @@ console.log('test',test);
 
    const endPoint = `${Api.generateContentUrl}`;;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
-    console.log('dataaaaaaaaaaaa',data);
     if(data) {
        // swal(data && data.message[0]);
         
             sendConfirmationLetter(data.data.body);
 
     }
-  }
+  };
 
   const onSubmitButton = (e) => {
     e.preventDefault();
-    console.log('validationnnnnnnn');
 
     if (validator.allValid()) {
       sendMail();
     } else {
       validator.showMessages();
-      console.log('else', validator.fieldValid('confirmationDate'));
-      console.log('dateee',validator.message(
-                                   'Confirm Date',
-                                   confirmationDate,
-                                   'required'
-                                 ))
     }
   };
  validator.purgeFields();
@@ -191,15 +179,6 @@ console.log('test',test);
                     'required'
                   )}
                 />
-
-               { console.log('dateee',validator.message(
-                                   'Confirm Date',
-                                   confirmationDate,
-                                   'required'
-                                 ))}
-
-
-                 
 
                 <div className="justify-content-left mt-4 preview-send-btn">
                   <Button type="submit" variant="primary">Save and Send Mail</Button>

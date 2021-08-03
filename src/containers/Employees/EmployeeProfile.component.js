@@ -30,8 +30,7 @@ function EmployeeProfile(props) {
     // console.log('data',data.data);
     
       setEmployeeDetails(data.data);
-    
-  }
+  };
 
   const getEmployeeHIstory = async () => {
     const employeeId = props.match.params.id;
@@ -40,8 +39,7 @@ function EmployeeProfile(props) {
     // customFunctions.setLocalStorage('historyId',data.data.id);
     // console.log('data',data.data);
     setCompanyList(data.data);
-
-  }
+  };
 
   useEffect(() => {
     getEmployeeHIstory();
@@ -52,12 +50,11 @@ function EmployeeProfile(props) {
   const onChangeInHistory = () => {
     getEmployeeHIstory();
     getEmployeeDetails();
-  }
-
+  };
 
 const onEmployeePersonalDetails = () => {
   getEmployeeDetails();
-}
+};
 
 const deleteEmployeeHistory = (id) => {
     if (id) {
@@ -106,7 +103,9 @@ const deleteEmployeeHistory = (id) => {
         </div>
       </div>
 
-      <Image src="/images/edit-profile-img.png" style={{ 'height': '90px' }} />
+      <Image 
+          src={employeeDetails.profile_image_url ? `${employeeDetails.profile_image_url}` : `${Api.s3UrlnoProfile}`}
+          alt="Card image cap" style={{ 'height': '90px' }} />
       <div className="table-projects">
        
         {showPersonalDetails ?  (
@@ -133,13 +132,11 @@ const deleteEmployeeHistory = (id) => {
                <a
                         href="javascript:void()"
                         onClick={() => {
-                         setShowPersonalDetails(true)
+                         setShowPersonalDetails(true);
                         }}
                       >
                       { !employeeDetails.relieved && (  <img src="/images/edit-button.svg" alt="Edit Profile" /> )}
                       </a>
-
-              
             </div>
           </div>
           <p>{employeeDetails.designation_name}</p>
@@ -175,7 +172,7 @@ const deleteEmployeeHistory = (id) => {
 
             { employeeDetails && (!employeeDetails.confirmation_date && !employeeDetails.relieving_date) && (
             <Col md={2}>
-              <Button onClick={() => {history.push('/confirmation')}}>
+              <Button onClick={() => {history.push('/confirmation');}}>
                 Confirm
               </Button>
             </Col>
@@ -214,17 +211,20 @@ const deleteEmployeeHistory = (id) => {
             <p>{comp.location}</p><hr />
           </div>
           <div className="address-edit-delete">
-          <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
-            setData(comp);
-            setShowEMployee(true);
-            console.log('iddddd',comp.id);
-            customFunctions.setLocalStorage('hisotryID',comp.id);
-            // history.push(`/profile-history/id=${comp.id}`)
-          }}/>
+          {!employeeDetails.relieved && (
+            <>
+              <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
+                setData(comp);
+                setShowEMployee(true);
+                customFunctions.setLocalStorage('hisotryID',comp.id);
+                // history.push(`/profile-history/id=${comp.id}`)
+              }}/>
 
-          <Image src="/images/delete.png" alt="Edit Profile" onClick={() => {
-            deleteEmployeeHistory(comp.id)
-          }} />
+              <Image src="/images/delete.png" alt="Edit Profile" onClick={() => {
+                deleteEmployeeHistory(comp.id);
+              }} />
+            </>
+          )}
           </div>
         </div>
         ))

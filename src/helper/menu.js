@@ -24,8 +24,36 @@ const menu = [
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'dashboard.svg',
-    roleaccess: [5,4,3,2,],
+    roleaccess: [5,4,3],
   },  
+  {
+    title: 'HR',
+    path: '#',
+    redirect: false,
+    icon: 'dashboard.svg',
+    submenu: [
+      {
+        title: 'HR Report',
+        path: '/hr-reports',
+        icon: 'report.svg',
+        roleaccess: [1, 2],
+      },
+      {
+        title: 'Recruitment',
+        path: '/recruitment',
+        icon: 'report.svg',
+        roleaccess: [1, 2],
+      },
+    ],
+    roleaccess: [1,2],
+  },
+   {
+    title: 'Quotes',
+    path: '/quotes',
+    icon: 'dashboard.svg',
+    submenu: [],
+    roleaccess: [1,2],
+  },
   {
     title: 'Projects',
     path: '/projects',
@@ -111,27 +139,6 @@ const menu = [
       },
     ],
     roleaccess: [2, 3],
-  },
-  {
-    title: 'HR',
-    path: '#',
-    redirect: false,
-    icon: 'dashboard.svg',
-    submenu: [
-      {
-        title: 'HR Report',
-        path: '/hr-reports',
-        icon: 'report.svg',
-        roleaccess: [1, 2],
-      },
-      {
-        title: 'Recruitment',
-        path: '/recruitment',
-        icon: 'report.svg',
-        roleaccess: [1, 2],
-      },
-    ],
-    roleaccess: [1,2],
   },
   {
     title: 'Logout',

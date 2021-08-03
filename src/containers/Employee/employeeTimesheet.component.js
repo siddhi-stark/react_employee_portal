@@ -212,7 +212,6 @@ function EmployeeTimesheet(props) {
     // const EmployeeType = props.location.state.type;
     // setEmployeeType(EmployeeType);
     getRowData(1);
-    console.log('typeeeeeeeeee',props.match.params.empType);
     const type = props.match.params.empType;
     setType(type);
   }, [filterData,typeeee]);

@@ -126,12 +126,10 @@ function Technology() {
 
   // Submit Form
   const submitFilterForm = async (formValues) => {
-    console.log(formValues);
     setFilterData(formValues);
   };
 
   const deleteTechnolody = (id) => {
-    console.log('id',id);
     if (id) {
       swal({
         title: 'Are you sure?',
@@ -209,7 +207,6 @@ function Technology() {
                       isStepForm={false}
                       onFormReset={() => {
                         setFilterData('');
-                        console.log('form reset callback');
                       }}
                     />
                   </Card.Title>
@@ -226,7 +223,9 @@ function Technology() {
             <Card.Body>
               <Row className="mt-3">
                 <Col>
-                  <AddTechnology technologyId={technologyId} />
+                  <AddTechnology 
+                  onChange ={()=>getRowData(1)}
+                  technologyId={technologyId} />
                 </Col>
                 <Col>
                   <CustomTable

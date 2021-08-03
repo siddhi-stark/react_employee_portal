@@ -59,7 +59,6 @@ function RecruitmentFileComponent() {
   const [options, updateOptions] = useState({});
   const [fileValue, setFileValue] = useState();
 
-
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -97,7 +96,6 @@ function RecruitmentFileComponent() {
     // console.log('fileValue[0]',fileValue[0]);
     const csvData = fileValue[0];
 
-
     const formData = new FormData();
     formData.append('file_name', csvData);
     formData.append('applied_for', formValues.applied_for
@@ -105,7 +103,6 @@ function RecruitmentFileComponent() {
           : '');
     formData.append('technology_stack',formValues.technology ?
       formValues.technology.value : '');
-      
 
     // const  payload = {}
     // payload.applied_for = formValues.applied_for
@@ -113,7 +110,6 @@ function RecruitmentFileComponent() {
     //       : ''
     // payload.file_name = csvData;
     // console.log('payload',payload);
-    console.log('formData',formData, csvData);
     const { data, message } = await AuthApi.postDataToServer(
       Api.batchUploadUrl,
       formData
@@ -184,7 +180,6 @@ function RecruitmentFileComponent() {
                     callbacks={{
                        getFileCallback: (value) => {
                          setFileValue(value);
-                         console.log('value',value);
                   },
                     }}
                     // defaultFormValues={defaultValues}
@@ -195,7 +190,6 @@ function RecruitmentFileComponent() {
                     btnContainerClass="form-submit-buttons"
                     isStepForm={false}
                     onFormReset={() => {
-                      console.log('form reset callback');
                     }}
                   />
                 </Col>

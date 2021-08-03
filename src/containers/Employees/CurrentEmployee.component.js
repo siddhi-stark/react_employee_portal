@@ -8,7 +8,6 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
 
-
 function CurrentEmployee() {
 
   const [employee, setEmployee] = useState([]);
@@ -23,7 +22,6 @@ function CurrentEmployee() {
   const getEmployee = async (pageNo = 1) => {
     setEmployee([]);
 
-    console.log('currentPage',currentPage);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
     const params = {
@@ -36,7 +34,6 @@ function CurrentEmployee() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
-      console.log('data.paginator--',data.data);
       setEmployee([...data.data]);
       // setId(data.data.id);
      
@@ -67,7 +64,7 @@ function CurrentEmployee() {
                               <span className="mini-stat-icon bg-purple mr-0 float-right">
                                 <Image
                                   className="card-img-top"
-                                  src="/images/edit-profile-img.png"
+                                  src={emp.profile_image_url ? `${emp.profile_image_url}` : `${Api.s3UrlnoProfile}`}
                                   alt="Card image cap"
                                 />
                                 {(emp.on_notice_period === true) && (

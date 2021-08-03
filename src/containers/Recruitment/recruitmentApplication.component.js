@@ -70,7 +70,6 @@ function RecruitmentApplicationComponent() {
   };
 
   const handleResumeCallback = (resume) => {
-    console.log('resume', resume);
     return (
       <>
         <a href={resume.resume} className="pl-2" target="_Blank">
@@ -141,7 +140,6 @@ function RecruitmentApplicationComponent() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-
     
     const endPoint = `${Api.applicantsUrl}`;
 
@@ -157,7 +155,6 @@ function RecruitmentApplicationComponent() {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data', data);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -272,7 +269,6 @@ function RecruitmentApplicationComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues, '----', status);
     let payload = {};
 
     if (formValues) {
