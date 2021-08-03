@@ -44,6 +44,41 @@
         "options": []
       },
       {
+        "name": "description",
+        "type": "textarea",
+        "label": "Description",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "onDescription",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
         "name": "login",
         "type": "date",
         "label": "Start Time",
@@ -140,41 +175,6 @@
         "minDateSelector": "",
         "maxDateSelector": "",
         "disabled": true,
-        "isMulti": false,
-        "allowedUsers": [],
-        "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
-        "fields": [],
-        "optionCallback": "",
-        "options": []
-      },
-      {
-        "name": "description",
-        "type": "textarea",
-        "label": "Description",
-        "id": "",
-        "placeholder": "",
-        "inputClass": "",
-        "containerClass": "",
-        "validations": [
-          {
-            "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          }
-        ],
-        "displayWhen": {},
-        "haveValidations": "true",
-        "haveDisplayOptions": "false",
-        "callback": "onDescription",
-        "callbackUrl": "",
-        "inputToChange": "",
-        "minDateSelector": "",
-        "maxDateSelector": "",
-        "disabled": false,
         "isMulti": false,
         "allowedUsers": [],
         "fieldsToReset": [],
