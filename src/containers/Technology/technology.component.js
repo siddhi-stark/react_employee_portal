@@ -222,7 +222,9 @@ function Technology() {
             <Card.Body>
               <Row className="mt-3">
                 <Col>
-                  <AddTechnology technologyId={technologyId} />
+                  <AddTechnology 
+                  onChange ={()=>getRowData(1)}
+                  technologyId={technologyId} />
                 </Col>
                 <Col>
                   <CustomTable
