@@ -27,27 +27,6 @@ const menu = [
     roleaccess: [5,4,3,2,1],
   },  
   {
-    title: 'HR',
-    path: '#',
-    redirect: false,
-    icon: 'dashboard.svg',
-    submenu: [
-      {
-        title: 'HR Report',
-        path: '/hr-reports',
-        icon: 'report.svg',
-        roleaccess: [1, 2],
-      },
-      {
-        title: 'Recruitment',
-        path: '/recruitment',
-        icon: 'report.svg',
-        roleaccess: [1, 2],
-      },
-    ],
-    roleaccess: [1,2],
-  },
-  {
     title: 'Projects',
     path: '/projects',
     icon: 'project.svg',
@@ -68,13 +47,13 @@ const menu = [
     submenu: [],
     roleaccess: [1],
   },
-  {
-    title: 'Employee Technology Stack',
-    path: '/emp-stack',
-    icon: 'Designation.svg',
-    submenu: [],
-    roleaccess: [1],
-  },
+  // {
+  //   title: 'Employee Technology Stack',
+  //   path: '/emp-stack',
+  //   icon: 'Designation.svg',
+  //   submenu: [],
+  //   roleaccess: [1],
+  // },
   {
     title: 'Email Templates',
     path: '/email-templates',
@@ -132,6 +111,27 @@ const menu = [
       },
     ],
     roleaccess: [2, 3],
+  },
+  {
+    title: 'HR',
+    path: '#',
+    redirect: false,
+    icon: 'dashboard.svg',
+    submenu: [
+      {
+        title: 'HR Report',
+        path: '/hr-reports',
+        icon: 'report.svg',
+        roleaccess: [1, 2],
+      },
+      {
+        title: 'Recruitment',
+        path: '/recruitment',
+        icon: 'report.svg',
+        roleaccess: [1, 2],
+      },
+    ],
+    roleaccess: [1,2],
   },
   {
     title: 'Logout',

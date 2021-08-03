@@ -117,12 +117,12 @@
                 "optionCallback": "",
                 "options": [
                     {
-                        "label": "yes",
-                        "value": "Yes"
+                        "label": "true",
+                        "value": "true"
                     },
                     {
-                        "label": "no",
-                        "value": "No"
+                        "label": "false",
+                        "value": "false"
                     }
                 ]
             }

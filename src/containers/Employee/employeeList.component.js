@@ -79,13 +79,11 @@ yesterday.setDate(today.getDate() - 1);
 // const d = yesterday.getDay();
 // console.log('y',y,m,d);
 const date = customFunctions.getDate(new Date(yesterday));
-console.log('date',date);
-
+const dateNew = customFunctions.getFormattedDate(date);
   const n = weekday[yesterday.getDay()];
+  console.log('weekdate',dateNew);
 
 
-// console.log('Today: ' + today); // eslint-disable-line
-// console.log('Yesterday: ' + yesterday); // eslint-disable-line
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
@@ -155,7 +153,7 @@ console.log('date',date);
       <Card>
         <Card.Header>
           {' '}
-          <h4 className="text-primary mt-2 mb-2">Employee List - {n}</h4>
+          <h4 className="text-primary mt-2 mb-2">Employee List - {n}({dateNew})</h4>
         </Card.Header>
         <Card.Body>
           <CustomTable

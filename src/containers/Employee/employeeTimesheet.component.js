@@ -50,7 +50,7 @@ function EmployeeTimesheet(props) {
   });
 
   const handleActionCallback = (row) => {
-    const userId = customFunctions.getLocalStorage('userId');
+    // const userId = customFunctions.getLocalStorage('userId');
     return (
       <>
         <a
@@ -61,10 +61,11 @@ function EmployeeTimesheet(props) {
             e.stopPropagation();
             history.push(`/edit-employee/${row.user_id}`);
             customFunctions.setLocalStorage('employeeName',row.emp_name);
+            customFunctions.setLocalStorage('userId',row.user_id);
             customFunctions.setLocalStorage('date',row.date);
           }}
         >
-         {(Number(userId) === Number(row.user_id)) ? '' :'Add'}
+         Add
         </a>
       </>
     );
@@ -173,9 +174,10 @@ function EmployeeTimesheet(props) {
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeTimesheet}`;
     const params = {
+      sort_by:'user__full_name',
+      sort_direction:'ascending',
       limit,
       page,
-      sort_direction:'descending',
       start_date: filterData.fromDate
         ? customFunctions.getDate(filterData.fromDate)
         : '',

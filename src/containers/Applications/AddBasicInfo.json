@@ -17,7 +17,7 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
+			"type": "required|alpha_space",
 			"applyWhen": [],
 			"applyWhenRelation": "OR"
 		}],

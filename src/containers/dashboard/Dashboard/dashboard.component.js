@@ -78,7 +78,6 @@ const lastday = new Date(curr.setDate(last)).toUTCString();
 
 const FirstDay = customFunctions.getDate(firstday);
 const LastDay = customFunctions.getDate(lastday);
-console.log('lastDay', customFunctions.getDate(lastday));
 
 
 

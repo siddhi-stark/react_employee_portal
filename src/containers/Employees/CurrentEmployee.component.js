@@ -27,6 +27,7 @@ function CurrentEmployee() {
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
     const params = {
+      sort_by:'full_name',
       limit,
       page,
 

@@ -217,6 +217,7 @@ const deleteEmployeeHistory = (id) => {
           <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
             setData(comp);
             setShowEMployee(true);
+            console.log('iddddd',comp.id);
             customFunctions.setLocalStorage('hisotryID',comp.id);
             // history.push(`/profile-history/id=${comp.id}`)
           }}/>
