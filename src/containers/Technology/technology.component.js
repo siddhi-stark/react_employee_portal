@@ -26,10 +26,10 @@ function Technology() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
+  const [title, setTitle] = useState('');
 
-  const title = 'Employees List';
   const limit = 10;
-  const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Technology' }];
 
   const handleActionCallback = ({ id }) => {
     return (
@@ -111,6 +111,7 @@ function Technology() {
 
   useEffect(() => {
     getRowData(1);
+    setTitle('Technology');
   }, [filterData]);
 
   // Get user role
