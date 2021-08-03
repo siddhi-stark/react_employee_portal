@@ -193,7 +193,7 @@ const LastDay = customFunctions.getDate(lastday);
   
   useEffect(() => {
     getQuotes();
-  }, []);
+  }, [quotesContent]);
 
   return (
     <>
