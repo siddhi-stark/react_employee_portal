@@ -48,7 +48,6 @@ function InterviewerRoundsStatus(props) {
       `${Api.interviewUrl}${id}/`
     );
     if (data) {
-      console.log('data',data);
       setApplicantRoundsId(data.data.applicant_rounds);
       setInterviewData({
         interviewDate: data.data.applicant_rounds[0].int_date,
@@ -68,8 +67,6 @@ function InterviewerRoundsStatus(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
-    console.log('applicantRoundsId',applicantRoundsId[0].applicant_round_id);
       const id = applicantRoundsId.length - 1;
       console.log('id',id);
    
