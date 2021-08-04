@@ -145,16 +145,18 @@ function NewInterviewRounds(props) {
   };
 
   const getInterviewRoundsStatus = async (data,formValues) => {
-    const position = formValues.addmore.length - 1;
+    const position = formValues.addmore && formValues.addmore.length - 1;
 
     const payload = {
-      status: formValues.addmore[position].status_name
+      status: formValues.addmore && formValues.addmore[position].status_name
         ? Number(formValues.addmore[position].status_name.value) : '',
-      comments: formValues.addmore[position]
+      comments: formValues.addmore && formValues.addmore[position]
         ? formValues.addmore[position].comments : ''
     }
+    if(data){
+
    const { message } = await AuthApi.putDataToServer(
-         `${Api.interviewUrl}${data.data.id}/`,
+         `${Api.interviewUrl}${data && data.data && data.data.id}/`,
          payload
       );
 
@@ -167,44 +169,53 @@ function NewInterviewRounds(props) {
         swal.close();
       });
   }
-  
-  const getOfferSend = async ()=> {
-    const id = customFunctions.getLocalStorage('applicantId');
-
-    const postData = {
-      name: 'Interview Round',
-      subject: 'Interview Round',
-      applicant_id: id,
-      body: `Hello ${applicantName},<br/> Cogratulations, I am happy to share your employement offer with you. <br/> This offer is valid for 3 Days.`,
-      email_type: 'interview_round',
-    };
-
-    const { data, message } = await AuthApi.postDataToServer(
-      Api.sendMailUrl,
-      postData
-    );
-
-    if (data) {
-      swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-        history.push('/recruitment');
-      });
-    } else {
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-      });
     }
-  }
+  
+  // const getOfferSend = async ()=> {
+  //   const id = customFunctions.getLocalStorage('applicantId');
+
+  //   const postData = {
+  //     name: 'Offer Letter',
+  //     subject: 'Offer Letter',
+  //     applicant_id: id,
+  //     body: `Hello ${applicantName},<br/> Congratulations, I am happy to share your employement offer with you. <br/> This offer is valid for 3 Days.`,
+  //     generate_offer: true,
+  //     offered_ctc: '',
+  //     pf_included: true,
+  //   };
+
+  //   const { data, message } = await AuthApi.postDataToServer(
+  //     Api.generateContentUrl,
+  //     postData
+  //   );
+
+  //    const { data, message } = await AuthApi.postDataToServer(
+  //     Api.sendMailUrl,
+  //     postData
+  //   );
+
+
+  //   if (data) {
+  //     swal(data && data.message[0], '', 'success', {
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //       buttons: false,
+  //       timer: 2000,
+  //     }).then(() => {
+  //       swal.close();
+  //       history.push('/recruitment');
+  //     });
+  //   } else {
+  //     swal(message, '', 'error', {
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //       buttons: false,
+  //       timer: 2000,
+  //     }).then(() => {
+  //       swal.close();
+  //     });
+  //   }
+  // }
 
   const getData = async (interviewerId) => {
     const { data } = await AuthApi.getDataFromServer(
@@ -367,7 +378,7 @@ function NewInterviewRounds(props) {
             size="sm"
             className="mt-2"
             onClick={() =>{
-              getOfferSend();
+              history.push('');
             }}
           >
             Offer Send
