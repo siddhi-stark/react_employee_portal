@@ -19,7 +19,6 @@ function Header() {
   const [userRole, setUserRole] = useState('');
   const [notification,setNotificationData] = useState([]);
   const [notificationCount,setNotificationCount] = useState('');
-  const [isClicked,setIsClicked] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
@@ -109,19 +108,17 @@ function Header() {
     return true;
   };
 
-  const onNotification = async () => {
-    console.log('Notifcation List',isClicked === true);
-    const endPoint = isClicked === true ? `${Api.notificationUrl}` : `${Api.notificationUrl}?limit=${3}`;
+  const onNotification = async (type) => {
+    console.log('Notifcation List',type);
+    const endPoint = type === 1 ? `${Api.notificationUrl}` : `${Api.notificationUrl}?limit=${3}`;
 
     const {data} = await AuthApi.getDataFromServer(endPoint);
     if(data) {
-      console.log('data',data.data);
       setNotificationData(data.data);
     }
   }
 
   const onMessageClick = async (notificatioId) => {
-    console.log('notificationMessage',notificatioId);
     const endPoint = `${Api.notificationUrl}`;
 
     const postData = {
@@ -130,7 +127,6 @@ function Header() {
     }
     const {data} = await AuthApi.putDataToServer(endPoint,postData);
     if(data && data.data.is_read) {
-      console.log('data',data);
       getNotificationCount();
 
       // swal({
@@ -150,7 +146,6 @@ function Header() {
 
   return (
     <>
-    {console.log('notification',notification)}
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
@@ -196,14 +191,14 @@ function Header() {
             </div>
             
             <div className="dropdown main-header-notification"> 
-              <a className="nav-link icon" href="javascript:void(0)" onClick={() => onNotification()}> 
+              <a className="nav-link icon" href="javascript:void(0)" onClick={() => onNotification(0)}> 
                 <img src="/images/notification.png" alt="notification" />
                 <span className="badge badge-danger nav-link-badge">{notificationCount === 0 ? '' : notificationCount}</span> 
               </a> 
               <div className="dropdown-menu"> 
                 <div className="header-navheading"> 
                   <p className="main-notification-text">You have {notificationCount} unread notification
-                    <span className="badge badge-pill badge-primary ml-3" onClick={() => {onNotification(); setIsClicked(true) // eslint-disable-line
+                    <span className="badge badge-pill badge-primary ml-3" onClick={() => {onNotification(1); // eslint-disable-line
                     }} 
                     >View all</span>
                   </p>
@@ -212,7 +207,6 @@ function Header() {
 
                     { notification.map((note) => ( //eslint-disable-line
                       <>
-                      {console.log('note',note)}
                   <div className="media new"> 
                     <div className="main-img-user online">
                       <img alt="avatar" src="/images/5.jpg"/>

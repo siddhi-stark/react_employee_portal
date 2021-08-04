@@ -174,8 +174,8 @@ function EmployeeTimesheet(props) {
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeTimesheet}`;
     const params = {
-      sort_by:'user__full_name',
-      sort_direction:'ascending',
+     sort_by:'created_at',
+     sort_direction:'descending',
       limit,
       page,
       start_date: filterData.fromDate
