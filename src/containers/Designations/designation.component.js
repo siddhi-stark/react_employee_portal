@@ -430,6 +430,7 @@ function Designation() {
                     
                     <Button
                       variant="secondary"
+                      className="ms-4"
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();

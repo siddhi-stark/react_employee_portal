@@ -89,9 +89,9 @@ function NewInterviewRounds(props) {
       interview_type: formValues.addmore[position].interview_type
         ? Number(formValues.addmore[position].interview_type.value)
         : '',
-      // description: formValues.addmore[position].description
-      //   ? formValues.addmore[position].description
-      //   : '',
+      description: formValues.addmore[position].description
+        ? formValues.addmore[position].description
+        : '',
       applicant: id,
     };
     

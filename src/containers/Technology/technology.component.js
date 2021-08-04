@@ -225,7 +225,11 @@ function Technology() {
                 <Col>
                   <AddTechnology 
                   onChange ={()=>getRowData(1)}
-                  technologyId={technologyId} />
+                  technologyId={technologyId} 
+                  afterSubmitTech={() => {
+                    setTechnologyId('');
+                  }}
+                  />
                 </Col>
                 <Col>
                   <CustomTable

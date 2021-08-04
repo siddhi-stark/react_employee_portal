@@ -11328,6 +11328,9 @@ span.np-sup {
 .stark-form-builder .form-submit-buttons {
   margin-top: 1rem !important; }
 
+.active-media {
+  background-color: #f1f1f1; }
+
 @media (min-width: 576px) {
   .bd-content .highlight {
     margin-right: 0;

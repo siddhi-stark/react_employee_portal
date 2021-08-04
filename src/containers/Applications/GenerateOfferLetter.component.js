@@ -4,6 +4,9 @@ import swal from 'sweetalert';
   import StarkFormBuilder from 'stark-form-builder';
   import FormSections from './offerletter.json';
   import Api from '../../helper/api';
+import { Helmet } from '../../components/FormInputs';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+  
 import AuthApi from '../../helper/authApi'; 
 import customFunctions from '../../helper/customFunctions';
 
@@ -16,8 +19,12 @@ function GenerateOfferLetter() {
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
+ const [title, setTitle] = useState('');
+  const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
+
     
      useEffect(() => {
+    setTitle('Offer Letter');
        const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section)=>{
 
@@ -138,8 +145,16 @@ function GenerateOfferLetter() {
 
 
 	return (
+    <>
+     <Helmet title={title} />
+      <div className="page-header">
+        <div className="title-breadcrumb-section">
+          <h2 className="main-content-title tx-24 mg-b-5">Employees</h2>
+          <Breadcrumb items={items} />
+        </div>
+      </div>
 		
-  <div>
+  <div className="mt-5">
 
   <StarkFormBuilder
     containerClass=''
@@ -161,6 +176,7 @@ function GenerateOfferLetter() {
     }}
   />
   </div>
+  </>
     
 
 		)

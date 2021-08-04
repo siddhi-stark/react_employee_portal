@@ -42,6 +42,7 @@ function AddTechnology(props) {
 				props.onChange();
 				updateDefaultValues({});
 				forceUpdate(count + 1);
+				props.afterSubmitTech();
 			}
 		});
 		// Perform success actions
@@ -53,6 +54,7 @@ function AddTechnology(props) {
 		const { data } = await AuthApi.getDataFromServer(
 			`${Api.employeeStackUrl}${id.technologyId}/`
 		);
+		console.log('data.data',data.data);
 		if (!data) {
 			// show error
 			return;

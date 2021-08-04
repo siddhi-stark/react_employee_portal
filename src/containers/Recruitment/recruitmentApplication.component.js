@@ -111,7 +111,7 @@ function RecruitmentApplicationComponent() {
     },
     {
       id: 'total_exp',
-      label: 'Experence',
+      label: 'Experience',
     },
     {
       id: 'email',

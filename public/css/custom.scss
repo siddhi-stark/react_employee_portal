@@ -2916,23 +2916,23 @@ p.employee-details {
 }
 
 .change-password-type {
- .form-group {
-     width: 100%;
- }
- .input-group {
-    width: 100%;
-    .form-control {
-        padding-right: 35px;
+    .form-group {
         width: 100%;
     }
-}
-.input-group-append {
-    position: absolute;
-    z-index: 9;
-    left: auto;
-    right: 0;
-    top: 33px;
-}
+    .input-group {
+        width: 100%;
+        .form-control {
+            padding-right: 35px;
+            width: 100%;
+        }
+    }
+    .input-group-append {
+        position: absolute;
+        z-index: 9;
+        left: auto;
+        right: 0;
+        top: 33px;
+    }
 }
 /*#myinput {
     background: linear-gradient(to right, #51B773 0%, #51B773 50%, #F5F5F5 50%, #F5F5F5 100%);
@@ -3120,6 +3120,10 @@ span.np-sup {
         margin-top: 1rem !important;
     }
 }
+.active-media {
+    background-color: #f1f1f1;
+}
+
 
 @media (min-width: 576px){
     .bd-content .highlight {
