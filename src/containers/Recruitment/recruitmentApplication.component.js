@@ -64,6 +64,18 @@ function RecruitmentApplicationComponent() {
           ) : (
             <Image src="/images/edit-button.svg" />
           )}
+
+
+        </a>
+        <a
+        href="/"
+        className="p-r-2 text-info"
+        onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        }}
+        >
+        Offer Letter
         </a>
       </>
     );

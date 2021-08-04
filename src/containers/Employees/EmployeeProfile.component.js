@@ -94,7 +94,7 @@ const deleteEmployeeHistory = (id) => {
 
   return (
     <>
-    {console.log('employeeDetails',employeeDetails)}
+    {console.log('employeeDetails',employeeDetails.dob)}
      <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -109,6 +109,7 @@ const deleteEmployeeHistory = (id) => {
       <div className="table-projects">
        
         {showPersonalDetails ?  (
+          
           <Card className="mt-3">
           <EditPersonalDetails 
           handleModalCLose={(e) => setShowPersonalDetails(e)}

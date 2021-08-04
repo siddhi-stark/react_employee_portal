@@ -149,7 +149,7 @@ function GenerateOfferLetter() {
      <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Employees</h2>
+          <h2 className="main-content-title tx-24 mg-b-5">Offer Letter</h2>
           <Breadcrumb items={items} />
         </div>
       </div>

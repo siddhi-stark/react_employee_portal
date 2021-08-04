@@ -146,7 +146,7 @@ function NewInterviewRounds(props) {
 
   const getInterviewRoundsStatus = async (data,formValues) => {
     const position = formValues.addmore && formValues.addmore.length - 1;
-
+    console.log('data',data);
     const payload = {
       status: formValues.addmore && formValues.addmore[position].status_name
         ? Number(formValues.addmore[position].status_name.value) : '',
@@ -251,7 +251,7 @@ function NewInterviewRounds(props) {
           description: dt.description
         });
       });
-
+      console.log('interviewData',interviewData);
       if (interviewData) {
         updateDefaultValues({ addmore: [...interviewData] });
       }
