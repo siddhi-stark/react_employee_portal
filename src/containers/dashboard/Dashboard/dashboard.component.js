@@ -274,7 +274,7 @@ const LastDay = customFunctions.getDate(lastday);
             </div>
             </UserRestrictions>
 
-            <UserRestrictions permittedUsers={[2,3,4]} roleId={userRole}>
+            <UserRestrictions permittedUsers={[2,3,4,5]} roleId={userRole}>
             {
               showClockIn && !morningMail && (
                 <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
