@@ -59,7 +59,7 @@ function RecruitmentApplicationComponent() {
         >
           {Number(group) === 5 ? (
             <Image
-              src={ status_name === 'shortlisted' ? '/images/edit-button.svg' : '' } // eslint-disable-line
+              src={ status_name === ('shortlisted' && 'selected') ? '/images/edit-button.svg' : '' } // eslint-disable-line
             />
           ) : (
             <Image src="/images/edit-button.svg" />
@@ -380,7 +380,7 @@ function RecruitmentApplicationComponent() {
                   }}
                   className="btn-link"
                 >
-                  {Number(group) === 4 ? '' : 'Add New'}
+                  {Number(group) === 4 ? '' : 'Add Applicant'}
                 </a>
               </div>
             </div>

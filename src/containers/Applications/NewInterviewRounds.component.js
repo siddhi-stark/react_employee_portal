@@ -160,7 +160,7 @@ function NewInterviewRounds(props) {
          payload
       );
 
-      swal(message, '', 'error', {
+      swal(message, '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
         buttons: false,
@@ -378,7 +378,7 @@ function NewInterviewRounds(props) {
             size="sm"
             className="mt-2 ml-5"
             onClick={() =>{
-              history.push('');
+              history.push('/generate-offerletter');
             }}
           >
             Offer Send
@@ -390,7 +390,7 @@ function NewInterviewRounds(props) {
               getInterviewRoundsStatus(updatedData,formData);
             }}
           >
-            Give Feedback
+            Submit Feedback
           </Button>
       </div>
     </>
