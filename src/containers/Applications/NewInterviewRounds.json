@@ -218,7 +218,7 @@
         "options": []
       },{
         "name": "status_name",
-        "type": "text",
+        "type": "select",
         "label": "Round Status",
         "id": "",
         "placeholder": "",
@@ -241,7 +241,8 @@
           "value": "1column"
         },
         "fields": [],
-        "optionCallback": "",
+        "optionCallback": "getRoundsStatus",
+				"optionsCallbackUrl": "InterviewRoundsUrl",
         "options": []
       },{
         "name": "comments",

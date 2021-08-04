@@ -27,6 +27,8 @@ function NewInterviewRounds(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [applicantName, setApplicantName] = useState('');
+  const [formData, setFormData] = useState({});
+  const [updatedData, setUpdatedData] = useState({});
   const [count, forceUpdate] = useState(0);
   const { isProfessionalInfoId } = props;
 
@@ -87,9 +89,9 @@ function NewInterviewRounds(props) {
       interview_type: formValues.addmore[position].interview_type
         ? Number(formValues.addmore[position].interview_type.value)
         : '',
-      description: formValues.addmore[position].description
-        ? formValues.addmore[position].description
-        : '',
+      // description: formValues.addmore[position].description
+      //   ? formValues.addmore[position].description
+      //   : '',
       applicant: id,
     };
     
@@ -117,6 +119,8 @@ function NewInterviewRounds(props) {
       postData
     );
 
+   
+
     if (data) {
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
@@ -124,6 +128,8 @@ function NewInterviewRounds(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
+        setFormData(formValues);
+        setUpdatedData(data);
         swal.close();
       });
     } else {
@@ -138,33 +144,22 @@ function NewInterviewRounds(props) {
     }
   };
 
-  const getOfferSend = async ()=> {
-    const id = customFunctions.getLocalStorage('applicantId');
+  const getInterviewRoundsStatus = async (data,formValues) => {
+    const position = formValues.addmore && formValues.addmore.length - 1;
 
-    const postData = {
-      name: 'Interview Round',
-      subject: 'Interview Round',
-      applicant_id: id,
-      body: `Hello ${applicantName},<br/> Cogratulations, I am happy to share your employement offer with you. <br/> This offer is valid for 3 Days.`,
-      email_type: 'interview_round',
-    };
+    const payload = {
+      status: formValues.addmore && formValues.addmore[position].status_name
+        ? Number(formValues.addmore[position].status_name.value) : '',
+      comments: formValues.addmore && formValues.addmore[position]
+        ? formValues.addmore[position].comments : ''
+    }
+    if(data){
 
-    const { data, message } = await AuthApi.postDataToServer(
-      Api.sendMailUrl,
-      postData
-    );
+   const { message } = await AuthApi.putDataToServer(
+         `${Api.interviewUrl}${data && data.data && data.data.id}/`,
+         payload
+      );
 
-    if (data) {
-      swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-        history.push('/recruitment');
-      });
-    } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -173,8 +168,54 @@ function NewInterviewRounds(props) {
       }).then(() => {
         swal.close();
       });
-    }
   }
+    }
+  
+  // const getOfferSend = async ()=> {
+  //   const id = customFunctions.getLocalStorage('applicantId');
+
+  //   const postData = {
+  //     name: 'Offer Letter',
+  //     subject: 'Offer Letter',
+  //     applicant_id: id,
+  //     body: `Hello ${applicantName},<br/> Congratulations, I am happy to share your employement offer with you. <br/> This offer is valid for 3 Days.`,
+  //     generate_offer: true,
+  //     offered_ctc: '',
+  //     pf_included: true,
+  //   };
+
+  //   const { data, message } = await AuthApi.postDataToServer(
+  //     Api.generateContentUrl,
+  //     postData
+  //   );
+
+  //    const { data, message } = await AuthApi.postDataToServer(
+  //     Api.sendMailUrl,
+  //     postData
+  //   );
+
+
+  //   if (data) {
+  //     swal(data && data.message[0], '', 'success', {
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //       buttons: false,
+  //       timer: 2000,
+  //     }).then(() => {
+  //       swal.close();
+  //       history.push('/recruitment');
+  //     });
+  //   } else {
+  //     swal(message, '', 'error', {
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //       buttons: false,
+  //       timer: 2000,
+  //     }).then(() => {
+  //       swal.close();
+  //     });
+  //   }
+  // }
 
   const getData = async (interviewerId) => {
     const { data } = await AuthApi.getDataFromServer(
@@ -204,7 +245,7 @@ function NewInterviewRounds(props) {
           },
           int_date: newDate,
           int_time: newTime,
-          status_name: dt.status_name,
+          status_name: {label:dt.status_name, value:dt.status},
           comments: dt.comments,
           interview_type:  { label: dt.interview_type_name, value: dt.interview_type_id },
           description: dt.description
@@ -247,6 +288,30 @@ function NewInterviewRounds(props) {
     };
     defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
+  };  
+
+  const getRoundsStatus = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=applicant_round_status`
+    );
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    await data.data && data.data.applicant_round_status.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.name, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      ...defaultFilterOptions,
+      status_name: dpOptions,
+    };
+    defaultFilterOptions = { ...allOptions };
+    updateOptions(allOptions);
   };
 
   const getInterviewRounds = async () => {
@@ -278,6 +343,7 @@ function NewInterviewRounds(props) {
   // }
   useEffect(() => {
     getInterviewer();
+    getRoundsStatus();
     getInterviewRounds();
   }, []);
 
@@ -299,7 +365,7 @@ function NewInterviewRounds(props) {
           defaultFormValues={defaultValues}
           refreshCounter={count}
           currentUser={currentUser}
-          submitBtnText="Submit"
+          submitBtnText="Set Round"
           showResetBtn={false}
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
@@ -312,10 +378,19 @@ function NewInterviewRounds(props) {
             size="sm"
             className="mt-2 ml-5"
             onClick={() =>{
-              getOfferSend();
+              history.push('');
             }}
           >
             Offer Send
+          </Button>
+          <Button
+            size="sm"
+            className="mt-2"
+            onClick={() =>{
+              getInterviewRoundsStatus(updatedData,formData);
+            }}
+          >
+            Give Feedback
           </Button>
       </div>
     </>
