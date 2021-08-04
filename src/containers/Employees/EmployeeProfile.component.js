@@ -102,10 +102,10 @@ const deleteEmployeeHistory = (id) => {
           <Breadcrumb items={items} />
         </div>
       </div>
-
-      <Image 
-          src={employeeDetails.profile_image_url ? `${employeeDetails.profile_image_url}` : `${Api.s3UrlnoProfile}`}
+      <div className="edit-profile-image mb-4">
+        <Image src={employeeDetails.profile_image_url ? `${employeeDetails.profile_image_url}` : `${Api.s3UrlnoProfile}`}
           alt="Card image cap" style={{ 'height': '90px' }} />
+       </div>
       <div className="table-projects">
        
         {showPersonalDetails ?  (

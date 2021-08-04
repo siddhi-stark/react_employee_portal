@@ -31,8 +31,10 @@
  $border-radius-lg: 5px;
  $warning: $yellow !default;
  $form-check-input-width: 1em !default;
-
- .btn-sm, .btn-group-sm > .btn {
+.ml-5 {
+    margin-left: 23px;
+}
+.btn-sm, .btn-group-sm > .btn {
     padding: 9px 25px;
     border-radius: 0.2rem;
 }
@@ -1376,6 +1378,8 @@ select {
                     -ms-animation-fill-mode: both;
                     -o-animation-fill-mode: both;
                     animation-fill-mode: both;
+                    max-height: 410px;
+                    overflow: auto;
                 }
             }       
             .dropdown-menu {
@@ -1504,6 +1508,7 @@ select {
 }
 .main-header-notification {
     position: static;
+    margin: 0 10px;
     .btn-danger {
         max-width: 34px;
         width: 100%;
@@ -1617,6 +1622,7 @@ select {
     .dropdown {
         .nav-link {
             padding-right: 0;
+            padding-left: 0;
         }       
     }
 }
@@ -2348,10 +2354,16 @@ table {
     line-height: 1.8;
 }
 .edit-profile-image {
-    max-width: 158px;
+    /*max-width: 158px;
     min-height: 160px;
     width: 100%;
     border-radius: 100%; 
+    position: relative;
+    overflow: hidden;*/
+    max-width: 158px;
+    max-height: 158px;
+    width: 100%;
+    border-radius: 100%;
     position: relative;
     overflow: hidden;
     .profile-edit {
@@ -2999,6 +3011,7 @@ p.employee-details {
     margin-right: 10px;
     color: #ffffff;
     position: relative;
+    overflow: hidden;
 }
 
 .mini-stat-info {

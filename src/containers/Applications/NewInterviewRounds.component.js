@@ -310,7 +310,7 @@ function NewInterviewRounds(props) {
         />
          <Button
             size="sm"
-            className="mt-2"
+            className="mt-2 ml-5"
             onClick={() =>{
               getOfferSend();
             }}

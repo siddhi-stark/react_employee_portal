@@ -195,7 +195,7 @@ function RecruitmentFileComponent() {
                 </Col>
                 <Col className="mt-4 col-md-1">
                                 
-                  <div title="Download sample.csv File">
+                  <div title="Download sample.csv File" className='mt-2'>
                   <CSVLink {...csvReport}  target="_blank">
                     <Image
                       src="/images/download.svg"

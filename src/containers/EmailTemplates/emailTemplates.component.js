@@ -205,15 +205,16 @@ function EmailTemplatesComponent() {
 
         <p className="mt-3">
           <Row>
-            <b>
+            <b className='mt-2 mb-2'>
               Note:-The given list of words are the dynamic content which will
               replaced by the appropriate words while sending mail. Please use
               word as per the need as it is, do not make changes into them.
             </b>
             {placeholdersData &&
               placeholdersData.map((place) => (
-                <Col>
+                <Col md={4}>
                   <p // eslint-disable-line
+
                     id={place.name}
                     title={toggle ? 'copied' : 'copy'}
                     onClick={() => {
