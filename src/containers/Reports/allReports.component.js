@@ -7,6 +7,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -24,6 +25,8 @@ function AllReports() {
   const [title, setTitle] = useState('');
   const [employeeList, setEmployeeList] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [userRole, setUserRole] = useState('');
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -158,6 +161,8 @@ function AllReports() {
       // getReports(1);
       getEmployee();
       setTitle('Reports');
+       const uRole = customFunctions.getLocalStorage('group');
+      setUserRole(Number(uRole));
     }
     getData();
   }, []);
@@ -245,6 +250,7 @@ function AllReports() {
                         </div>
                       )}
                       <Row className="mt-3">
+                       <UserRestrictions permittedUsers={[1,2,3,4]} roleId={userRole}>
                         <Col sm={3}>
                           <div className="search-bar-input">
                              <DropdownInput
@@ -259,6 +265,7 @@ function AllReports() {
                             />
                           </div>
                         </Col>
+                        </UserRestrictions>
                         <Col sm={3}>
                           <Datepicker
                             className="form-control"

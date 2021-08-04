@@ -94,7 +94,7 @@ const deleteEmployeeHistory = (id) => {
 
   return (
     <>
-
+    {console.log('employeeDetails',employeeDetails)}
      <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -128,7 +128,7 @@ const deleteEmployeeHistory = (id) => {
           <div className="d-flex align-items-center justify-content-between">
             <h3><strong>{employeeDetails.full_name}</strong></h3>
             <div className="date-edit-option d-flex align-items-center">
-              <h6 className='me-5'>Birthday - {employeeDetails.dob ? customFunctions.getDMYDate(employeeDetails.dob) : ''}</h6>
+              <h6 className='me-5'>DOB - {employeeDetails.dob ? customFunctions.getDMYDate(employeeDetails.dob) : ''}</h6>
                <a
                         href="javascript:void()"
                         onClick={() => {
@@ -181,15 +181,26 @@ const deleteEmployeeHistory = (id) => {
         </Card>
           )}
       </div>
-
+     
       <div className="d-flex align-items-center justify-content-between mb-4">
+       {
+        !companyList.length < 1 && (
         <h4><b>Employee History</b></h4>
+         )
+      }
+
+      {!employeeDetails.relieved && (
+
         <Button onClick={() => {setShowEMployee(true);
            customFunctions.removeLocalStorage('hisotryID');
           }}
          >Add History</Button>
+        )}
+
+      
 
       </div>
+         
       {showEmployee && (
         <Card className="mt-4">
 

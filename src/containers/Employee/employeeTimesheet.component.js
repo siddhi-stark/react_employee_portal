@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Accordion, Button } from 'react-bootstrap';
+import { Card, Accordion, Button, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 // import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
@@ -32,7 +32,7 @@ function EmployeeTimesheet(props) {
   // const defaultValues = {};
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
-  const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
 
 
   const formSchema = [...FormSections];
@@ -65,7 +65,7 @@ function EmployeeTimesheet(props) {
             customFunctions.setLocalStorage('date',row.date);
           }}
         >
-         Add
+          <Image src="/images/edit-button.svg" />
         </a>
       </>
     );
