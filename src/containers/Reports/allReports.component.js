@@ -27,7 +27,8 @@ function AllReports() {
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [userRole, setUserRole] = useState('');
 
-  const [pagination, setPagination] = useState({
+
+   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
@@ -123,10 +124,11 @@ function AllReports() {
 
     const { data } = await AuthApi.postDataToServer(url, postData);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
+
       setPagination({
         current_page: Number(data.paginator.current_page),
-        activePage: data.paginator.current_page,
-        itemsPerPage: data.paginator.limit,
+        activePage: Number(data.paginator.current_page),
+        itemsPerPage: Number(data.paginator.limit),
         totalItems: data.paginator.total_count,
       });
       const row = [];

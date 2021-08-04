@@ -88,7 +88,7 @@
         "disabled": false,
         "isMulti": false,
         "allowedUsers": [],
-        "accept":".csv,.xls",
+        "accept":".csv,.xlsx",
         "fieldsToReset": [],
         "fieldLayout": { "label": "1 Column", "value": "1column" },
         "fields": [],
