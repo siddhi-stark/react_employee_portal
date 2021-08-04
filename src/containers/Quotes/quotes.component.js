@@ -21,10 +21,15 @@ function Quotes() {
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(10);
+  // const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   // const [quotesId, setQuotesId] = useState('');
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
+
+  const limit = 10;
+
 
   const handleActionCallback = ({ id }) => {
     return (
@@ -57,7 +62,7 @@ function Quotes() {
   // Declare columns
   const columns = [
     {
-      id: 'id',
+      id: 'index',
       label: 'Sr. No',
     },
     {
@@ -111,22 +116,24 @@ function Quotes() {
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     const endPoint = `${Api.quotesUrl}`;
-    const filterList =
-      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-        ? customFunctions.jsonParse(filterData)
-        : {};
     const params = {
-      page,
       limit,
-      ...filterList,
+      page,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
+      setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
+
+      const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.index = (page - 1) * itemsPerPage + (i + 1);
+        return newItem;
+      });
       setRowData((data && data.data) || []);
     } else {
       console.log('error', message);
@@ -159,7 +166,7 @@ function Quotes() {
                     }}
                     className="btn-link"
                   >
-                    Add Quotes
+                    Add Quote
                   </a>
               </div>
             </div>

@@ -59,7 +59,7 @@ function RecruitmentApplicationComponent() {
         >
           {Number(group) === 5 ? (
             <Image
-              src={ status_name === ('shortlisted' && 'selected') ? '/images/edit-button.svg' : '' } // eslint-disable-line
+              src={ status_name === ('shortlisted' || 'selected') ? '/images/edit-button.svg' : '' } // eslint-disable-line
             />
           ) : (
             <Image src="/images/edit-button.svg" />
@@ -502,7 +502,7 @@ function RecruitmentApplicationComponent() {
                   getRowData(pageNo);
                 },
               }}
-              showCheckbox={true}
+              showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
               emptyRender={() => {
                 return 'No record found.';
               }}
