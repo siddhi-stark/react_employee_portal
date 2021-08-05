@@ -147,6 +147,7 @@ function Header() {
 
   return (
     <>
+    {console.log('notification',notification.is_read)}
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
