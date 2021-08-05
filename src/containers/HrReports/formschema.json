@@ -2,7 +2,7 @@
 	{
 		"sectionName": "filter",
 		"sectionTitle": "Filter",
-		"layout": { "label": "4 Column", "value": "4column" },
+		"layout": { "label": "3 Column", "value": "3column" },
 		"containerClass": "",
 		"displaySection": true,
 		"displaySectionTitle": true,
@@ -154,6 +154,6 @@
 			}
 		],
 		"allowedUsers": [],
-		"sectionLayout": "4column"
+		"sectionLayout": "3column"
 	}
 ]

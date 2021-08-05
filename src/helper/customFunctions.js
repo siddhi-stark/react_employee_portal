@@ -22,6 +22,15 @@ class CustomFunctions extends Component {
     return formattedTime;
   };
 
+  getTimeConversion = (time) => {
+    const newDate = new Date(time);
+    const h = newDate.getHours();
+    const m = newDate.getMinutes();
+    const formattedTime = h < 10 ? `0`+ h : h + ':' + m < 10 ? `0` + m : m; //eslint-disable-line
+    console.log('formattedTime',formattedTime);
+    return formattedTime;
+  };
+
 getNewTime = (dateTime) => {
 const newdate = new Date(dateTime);
 const h = newdate.getHours();

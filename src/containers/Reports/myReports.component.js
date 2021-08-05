@@ -220,7 +220,7 @@ function AllReports() {
                               Submit
                             </Button>
                             <Button
-                              variant="primary"
+                              variant="secondary"
                               type="button"
                               className="ms-4"
                               onClick={() => onClear()}

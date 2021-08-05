@@ -163,16 +163,15 @@ function ManagePassword() {
                   </Col>
                 </Row>
                 <div className="d-flex align-items-center justify-content-end">
-                  <Button variant="secondary" onClick={() => history.push('/')}>
-                    Cancel
-                  </Button>
                   <Button
                     variant="primary"
                     type="submit"
-                    className="ms-4"
                     disabled={disableButton}
                   >
                     Save
+                  </Button>
+                  <Button variant="secondary" className="ms-4" onClick={() => history.push('/')}>
+                    Cancel
                   </Button>
                 </div>
               </Form>

@@ -29,7 +29,7 @@ function HrReports() {
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
     const sectionData = section;
-    if (sectionData.name === 'from_date') {
+    if (sectionData.name === 'from_date' || sectionData.name === 'to_date') {
       const date = new Date();
       sectionData.maxDate = date;
     }
@@ -189,6 +189,7 @@ const getRowData = async (pageNo=1) =>{
     const params = {
       page,
       limit,
+      sort_by: 'name'
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);

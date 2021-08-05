@@ -376,7 +376,7 @@ function Designation() {
                               Submit
                             </Button>
                             <Button
-                              variant="primary"
+                              variant="secondary"
                               type="button"
                               className="ms-4"
                               onClick={() => onClear()}
@@ -424,13 +424,13 @@ function Designation() {
                         'required'
                       )}
                     />
-                    <Button variant="primary" type="submit" className="ms-4">
+                    <Button variant="primary" type="submit">
                       {designationId ? 'Update' : 'Add'}
                     </Button>
                     
                     <Button
                       variant="secondary"
-                      className="ms-4"
+                      className="ms-2"
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();

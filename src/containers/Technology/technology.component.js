@@ -85,6 +85,7 @@ function Technology() {
     const params = {
       page,
       limit,
+      sort_by: 'name',
       ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);

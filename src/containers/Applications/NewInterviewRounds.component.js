@@ -98,22 +98,24 @@ function NewInterviewRounds(props) {
       id: more.id || '',
     };
     postData.push(round);
- if(Number(more.interview_type.value) === 1) {
+
+    }
+
+    const position = formValues.addmore && formValues.addmore.length - 1;
+
+ if(Number(formValues.addmore[position].interview_type.value) === 1) {
       const payload = {
         name: 'Interview Round',
         subject: 'Interview Round',
         applicant_id: id,
-        body: `Hello ${applicantName}, you are telephonic round will be at ${customFunctions.getTime(more.int_time)}.`,
+        body: `Hello ${applicantName}, you are telephonic round will be at ${customFunctions.getTime(formValues.addmore[position].int_time)}.`,
         email_type: 'interview_round',
       };
-     
       // await AuthApi.postDataToServer(
       //   Api.generateContentUrl,
       //   payload
       // );
       await AuthApi.postDataToServer(Api.sendMailUrl,payload); // eslint-disable-line
-    }
-
     }
     
    
