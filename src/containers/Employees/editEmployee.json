@@ -254,6 +254,8 @@
 		"inputToChange": "",
 		"minDateSelector": "",
 		"maxDateSelector": "",
+        "dateFormat":"dd/MM/yyyy",
+		
 		"disabled": false,
 		"isMulti": false,
 		"allowedUsers": [],
@@ -286,6 +288,8 @@
 		"inputToChange": "",
 		"minDateSelector": "",
 		"maxDateSelector": "",
+        "dateFormat":"dd/MM/yyyy",
+
 		"disabled": false,
 		"isMulti": false,
 		"allowedUsers": [],

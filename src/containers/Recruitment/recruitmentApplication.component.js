@@ -67,16 +67,22 @@ function RecruitmentApplicationComponent() {
 
 
         </a>
-        <a
+        { (status_name === 'pending' || status_name === 'reject') ? ( //eslint-disable-line
+
+       ''
+        ) : 
+ <a
         href="/"
         className="p-r-2 text-info"
         onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
+        history.push('/generate-offerletter');
         }}
         >
-        Offer Letter
+        Send Offer
         </a>
+         }
       </>
     );
   };
