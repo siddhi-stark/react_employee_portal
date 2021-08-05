@@ -59,7 +59,7 @@ function RecruitmentApplicationComponent() {
         >
           {Number(group) === 5 ? (
             <Image
-              src={ (status_name === 'shortlisted' || status_name === 'selected' || status_name === 'offer') ? '/images/edit-button.svg' : '' } // eslint-disable-line
+              src={ (status_name === 'shortlisted' || status_name === 'selected') ? '/images/edit-button.svg' : '' } // eslint-disable-line
             />
           ) : (
             <Image src="/images/edit-button.svg" />
