@@ -96,6 +96,7 @@ function NewInterviewRounds(props) {
         ? more.description
         : '',
         comments: more.comments ? more.comments : '',
+        status: more.status_name ? more.status_name.value : '',
       applicant: id || '',
       id: more.id || '',
     };
