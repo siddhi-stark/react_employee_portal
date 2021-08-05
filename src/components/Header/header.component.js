@@ -19,7 +19,6 @@ function Header() {
   const [userRole, setUserRole] = useState('');
   const [notification,setNotificationData] = useState([]);
   const [notificationCount,setNotificationCount] = useState('');
-  const [isMessageClicked,setIsMessageClicked] = useState(0);
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
@@ -147,7 +146,7 @@ function Header() {
 
   return (
     <>
-    {console.log('notification',notification.is_read)}
+    {console.log('notification',notification)}
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
@@ -214,7 +213,7 @@ function Header() {
                       <img alt="avatar" src="/images/5.jpg"/>
                     </div> 
                     <div className="media-body"> 
-                     <p onClick={() => {onMessageClick(note.id); setIsMessageClicked(i)}} className= {isMessageClicked !== i ? "active-media" : ''}  // eslint-disable-line
+                     <p onClick={() => {onMessageClick(note.id); onNotification(1);}} className= {note.is_read === false ? "active-media" : ''}  // eslint-disable-line
                       >
                       {note.message}</p>
                       <span>{note.time}</span> 
