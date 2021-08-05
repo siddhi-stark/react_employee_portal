@@ -119,8 +119,8 @@ function BasicInformation(props) {
   const submitForm = async (formValues) => {
     console.log('formValues',formValues);
 
-    customFunctions.setLocalStorage('applicantName',formValues.name);
-    customFunctions.setLocalStorage('designation',formValues.applied_for.label);
+    // customFunctions.setLocalStorage('applicantName',formValues.name);
+    // customFunctions.setLocalStorage('designation',formValues.applied_for.label);
 
       let postData = {
       ...formValues,

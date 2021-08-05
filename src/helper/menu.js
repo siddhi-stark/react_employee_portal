@@ -27,7 +27,7 @@ const menu = [
     roleaccess: [5,4,3],
   },  
   {
-    title: 'HR',
+    title: 'HR Activity',
     path: '#',
     redirect: false,
     icon: 'dashboard.svg',

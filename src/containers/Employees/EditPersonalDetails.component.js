@@ -99,6 +99,7 @@ useEffect(() => {
        console.log('message',data.message[0]);
        swal(data && data.message[0]);
        props.handleModalCLose(false);
+       props.onPersonalDetailChanges();
        
       }
       // Perform success actions
