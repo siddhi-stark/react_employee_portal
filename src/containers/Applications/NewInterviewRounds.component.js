@@ -94,6 +94,7 @@ function NewInterviewRounds(props) {
       description: more.description
         ? more.description
         : '',
+        comments: more.comments ? more.comments : '',
       applicant: id || '',
       id: more.id || '',
     };
@@ -135,6 +136,7 @@ function NewInterviewRounds(props) {
         // setFormData(formValues);
         // setUpdatedData(data);
         swal.close();
+         getData(isProfessionalInfoId);
       });
     } else {
       swal(message, '', 'error', {
