@@ -460,11 +460,11 @@ function Profile() {
               </Col>
             </Row>
             <div className="float-end">
-              <Button variant="secondary" onClick={() => onCancel()}>
-                Cancel
-              </Button>
               <Button variant="primary" type="submit" className="ms-4">
                 Update
+              </Button>
+              <Button variant="secondary ms-4" onClick={() => onCancel()}>
+                Cancel
               </Button>
             </div>
           </Form>

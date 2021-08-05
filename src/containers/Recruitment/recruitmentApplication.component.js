@@ -67,7 +67,7 @@ function RecruitmentApplicationComponent() {
 
 
         </a>
-        { (status_name === 'pending' || status_name === 'reject' || status_name === 'offered') ? ( //eslint-disable-line
+        { (status_name === 'pending' || status_name === 'reject' || status_name === 'offered' || status_name === 'declined' || status_name === 'rejected') ? ( //eslint-disable-line
 
        ''
         ) : 
