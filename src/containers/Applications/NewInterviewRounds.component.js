@@ -45,6 +45,7 @@ function NewInterviewRounds(props) {
           // if (it.name === 'comments') itemData.disabled = true;
           const date = new Date();
           if (it.name === 'int_date') itemData.minDate = date;
+          if(it.name === 'id') itemData.disabled = true;
           // if (it.name === 'int_time') itemData.minTime = setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours());
           // if (it.name === 'int_time') itemData.minDate = new Date();
           // console.log('setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours())', setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours()));
@@ -94,6 +95,8 @@ function NewInterviewRounds(props) {
       description: more.description
         ? more.description
         : '',
+        comments: more.comments ? more.comments : '',
+        status: more.status_name ? more.status_name.value : '',
       applicant: id || '',
       id: more.id || '',
     };
@@ -137,6 +140,7 @@ function NewInterviewRounds(props) {
         // setFormData(formValues);
         // setUpdatedData(data);
         swal.close();
+         getData(isProfessionalInfoId);
       });
     } else {
       swal(message, '', 'error', {

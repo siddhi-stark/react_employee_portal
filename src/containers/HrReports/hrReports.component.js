@@ -52,7 +52,7 @@ const [filterData, setFilterData] = useState({});
     },
     {
       id: 'offered_ctc',
-      label: 'CTC Offer',
+      label: 'Offered CTC',
     },
     {
       id: 'status_name',

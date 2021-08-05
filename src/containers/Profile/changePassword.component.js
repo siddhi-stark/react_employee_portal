@@ -171,6 +171,7 @@ function ManagePassword() {
                     Save
                   </Button>
                   <Button variant="secondary" className="ms-4" onClick={() => history.push('/')}>
+
                     Cancel
                   </Button>
                 </div>

@@ -43,7 +43,7 @@ function RecruitmentApplicationComponent() {
     return sectionData;
   });
 
-  const handleActionCallback = ({ id, status_name }) => { //eslint-disable-line
+  const handleActionCallback = ({ id, status_name,name,applied_for_name }) => { //eslint-disable-line
     return (
       <>
         <a
@@ -67,7 +67,7 @@ function RecruitmentApplicationComponent() {
 
 
         </a>
-        { (status_name === 'pending' || status_name === 'reject' || status_name === 'offered') ? ( //eslint-disable-line
+        { (Number(group) === 4 || status_name === 'pending' || status_name === 'reject' || status_name === 'offered' || status_name === 'declined' || status_name === 'rejected') ? ( //eslint-disable-line
 
        ''
         ) : 
@@ -78,6 +78,8 @@ function RecruitmentApplicationComponent() {
         e.preventDefault();
         e.stopPropagation();
         history.push('/generate-offerletter');
+        customFunctions.setLocalStorage('applicantName',name);
+        customFunctions.setLocalStorage('designation',applied_for_name);
         }}
         >
         Send Offer
