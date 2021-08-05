@@ -500,7 +500,7 @@ function RecruitmentApplicationComponent() {
               columns={columns}
               rows={rowData}
               bulkActions={
-                Number(group) === 5
+               (Number(group) === 5) || (Number(group) === 1)
                   ? [
                       {
                         actionTitle: 'Shortlist',
