@@ -45,7 +45,7 @@ function InterviewerRoundsStatus(props) {
 
   const getData = async (id) => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.interviewUrl}${id}/`
+      `${Api.roundsUrl}${id}/`
     );
     if (data) {
       setApplicantRoundsId(data.data.applicant_rounds);
@@ -70,10 +70,16 @@ function InterviewerRoundsStatus(props) {
       const id = applicantRoundsId.length - 1;
       console.log('id',id);
    
-       const newId = applicantRoundsId[0].applicant_round_id;
-    const { data, message } = await AuthApi.putDataToServer(
-      `${Api.interviewUrl}${newId ? Number(newId) : Number(interviewId)}/`,
-      formValues
+      const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
+      console.log('newId',newId);
+      const postData = {
+        id: newId ? Number(newId) : Number(interviewId),
+        status : formValues ? formValues.status :'',
+        comments : formValues ? formValues.comments :'',
+      }
+    const { data, message } = await AuthApi.postDataToServer(
+      `${Api.roundsUrl}`,
+      { 'data':[postData]}
     );
     if (data) {
       swal(data && data.message[0], '', 'success', {

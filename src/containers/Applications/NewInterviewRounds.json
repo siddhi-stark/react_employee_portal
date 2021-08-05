@@ -5,7 +5,7 @@
 		"label": "2 Column",
 		"value": "2column"
 	},
-	"containerClass": "",
+	"containerClass": "rounds-form",
 	"displaySection": true,
 	"displaySectionTitle": false,
 	"fields": [{
@@ -17,7 +17,9 @@
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [],
-		"displayWhen": {},
+		"displayWhen": {
+			
+		},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
@@ -30,7 +32,39 @@
 		"allowedUsers": [],
 		"fieldsToReset": [],
 		"fieldLayout": "2column",
-		"fields": [{
+		"fields": [
+ {
+			"name": "id",
+			"type": "text",
+			"label": "ID",
+			"id": "",
+			"placeholder": "",
+			"inputClass": "",
+			"containerClass": "",
+			"displayWhen": {
+				
+			},
+			"haveValidations": "false",
+			"haveDisplayOptions": "false",
+			"callback": "",
+			"callbackUrl": "",
+			"inputToChange": "",
+			"maxTime": "",
+			"maxDate": "",
+			"minTime": "",
+			"minDate": "",
+			"disabled": false,
+			"isMulti": false,
+			"allowedUsers": [],
+			"fieldsToReset": [],
+			"fieldLayout": {
+				"label": "1 Column",
+				"value": "1column"
+			},
+			"fields": [],
+			"options": []
+		},
+			{
 			"name": "int_date",
 			"type": "date",
 			"label": "Date",
@@ -62,7 +96,9 @@
 			},
 			"options": [],
 			"fields": []
-		}, {
+		},
+
+		 {
 			"name": "int_time",
 			"type": "date",
 			"label": "Time",

@@ -19,6 +19,7 @@ function Header() {
   const [userRole, setUserRole] = useState('');
   const [notification,setNotificationData] = useState([]);
   const [notificationCount,setNotificationCount] = useState('');
+  const [isMessageClicked,setIsMessageClicked] = useState(0);
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
@@ -110,7 +111,7 @@ function Header() {
 
   const onNotification = async (type) => {
     console.log('Notifcation List',type);
-    const endPoint = type === 1 ? `${Api.notificationUrl}` : `${Api.notificationUrl}?limit=${3}`;
+    const endPoint = type === 1 ? `${Api.notificationUrl}?type=all` : `${Api.notificationUrl}?limit=${3}`;
 
     const {data} = await AuthApi.getDataFromServer(endPoint);
     if(data) {
@@ -205,14 +206,14 @@ function Header() {
                 </div>
                 <div className="main-notification-list"> 
 
-                    { notification.map((note) => ( //eslint-disable-line
+                    { notification.map((note,i) => ( //eslint-disable-line
                       <>
                   <div className="media new"> 
                     <div className="main-img-user online">
                       <img alt="avatar" src="/images/5.jpg"/>
                     </div> 
                     <div className="media-body"> 
-                     <p onClick={() => onMessageClick(note.id)} // eslint-disable-line
+                     <p onClick={() => {onMessageClick(note.id); setIsMessageClicked(i)}} className= {isMessageClicked !== i ? "active-media" : ''}  // eslint-disable-line
                       >
                       {note.message}</p>
                       <span>{note.time}</span> 

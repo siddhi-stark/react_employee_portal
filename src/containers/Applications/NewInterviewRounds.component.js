@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
-import { Button } from 'react-bootstrap';
+// import { Button } from 'react-bootstrap';
 // import { setHours, setMinutes } from 'date-fns';
 import FormSections from './NewInterviewRounds.json';
 import Api from '../../helper/api';
@@ -27,12 +27,12 @@ function NewInterviewRounds(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [applicantName, setApplicantName] = useState('');
-  const [formData, setFormData] = useState({});
-  const [updatedData, setUpdatedData] = useState({});
+  // const [formData, setFormData] = useState({});
+  // const [updatedData, setUpdatedData] = useState({});
   const [count, forceUpdate] = useState(0);
   const { isProfessionalInfoId } = props;
 
-  const history = useHistory();
+  // const history = useHistory();
 
   useEffect(() => {
     const formSchema = [...FormSections];
@@ -72,35 +72,38 @@ function NewInterviewRounds(props) {
   const submitForm = async (formValues) => {
     // console.log('formValues',formValues.addmore[position].interviewerRounds);
     const id = customFunctions.getLocalStorage('applicantId');
-    const position = formValues.addmore.length - 1;
-    const postData = {
-      int_date: formValues.addmore[position]
-        ? customFunctions.getDate(formValues.addmore[position].int_date)
+    const postData =[];
+    for(const more of  formValues.addmore) {  // eslint-disable-line
+
+    const round = {
+      int_date: more.int_date
+        ? customFunctions.getDate(more.int_date)
         : '',
-      int_time: formValues.addmore[position]
-        ? customFunctions.getTime(formValues.addmore[position].int_time)
+      int_time: more.int_time
+        ? customFunctions.getTime(more.int_time)
         : '',
-      round_type: formValues.addmore[position].interviewerRounds
-        ? formValues.addmore[position].interviewerRounds.value
+      round_type: more.interviewerRounds
+        ? more.interviewerRounds.value
         : '',
-      interviewer: formValues.addmore[position].interviewer
-        ? formValues.addmore[position].interviewer.value
+      interviewer: more.interviewer
+        ? more.interviewer.value
         : '',
-      interview_type: formValues.addmore[position].interview_type
-        ? Number(formValues.addmore[position].interview_type.value)
+      interview_type: more.interview_type
+        ? Number(more.interview_type.value)
         : '',
-      description: formValues.addmore[position].description
-        ? formValues.addmore[position].description
+      description: more.description
+        ? more.description
         : '',
-      applicant: id,
+      applicant: id || '',
+      id: more.id || '',
     };
-    
-    if(Number(formValues.addmore[position].interview_type.value) === 1) {
+    postData.push(round);
+ if(Number(more.interview_type.value) === 1) {
       const payload = {
         name: 'Interview Round',
         subject: 'Interview Round',
         applicant_id: id,
-        body: `Hello ${applicantName}, you are telephonic round will be at ${customFunctions.getTime(formValues.addmore[position].int_time)}.`,
+        body: `Hello ${applicantName}, you are telephonic round will be at ${customFunctions.getTime(more.int_time)}.`,
         email_type: 'interview_round',
       };
      
@@ -108,15 +111,16 @@ function NewInterviewRounds(props) {
       //   Api.generateContentUrl,
       //   payload
       // );
-      await AuthApi.postDataToServer(
-        Api.sendMailUrl,
-        payload
-      );
+      await AuthApi.postDataToServer(Api.sendMailUrl,payload); // eslint-disable-line
     }
+
+    }
+    
+   
 
     const { data, message } = await AuthApi.postDataToServer(
       Api.roundsUrl,
-      postData
+      { 'data':postData}
     );
 
    
@@ -128,8 +132,8 @@ function NewInterviewRounds(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        setFormData(formValues);
-        setUpdatedData(data);
+        // setFormData(formValues);
+        // setUpdatedData(data);
         swal.close();
       });
     } else {
@@ -144,32 +148,32 @@ function NewInterviewRounds(props) {
     }
   };
 
-  const getInterviewRoundsStatus = async (data,formValues) => {
-    const position = formValues.addmore && formValues.addmore.length - 1;
-    console.log('data',data);
-    const payload = {
-      status: formValues.addmore && formValues.addmore[position].status_name
-        ? Number(formValues.addmore[position].status_name.value) : '',
-      comments: formValues.addmore && formValues.addmore[position]
-        ? formValues.addmore[position].comments : ''
-    }
-    if(data){
+  // const getInterviewRoundsStatus = async (data,formValues) => {
+  //   const position = formValues.addmore && formValues.addmore.length - 1;
+  //   console.log('data',data);
+  //   const payload = {
+  //     status: formValues.addmore && formValues.addmore[position].status_name
+  //       ? Number(formValues.addmore[position].status_name.value) : '',
+  //     comments: formValues.addmore && formValues.addmore[position]
+  //       ? formValues.addmore[position].comments : ''
+  //   }
+  //   if(data){
 
-   const { message } = await AuthApi.putDataToServer(
-         `${Api.interviewUrl}${data && data.data && data.data.id}/`,
-         payload
-      );
+  //  const { message } = await AuthApi.putDataToServer(
+  //        `${Api.interviewUrl}${data && data.data && data.data.id}/`,
+  //        payload
+  //     );
 
-      swal(message, '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-      });
-  }
-    }
+  //     swal(message, '', 'success', {
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //       buttons: false,
+  //       timer: 2000,
+  //     }).then(() => {
+  //       swal.close();
+  //     });
+  // }
+  //   }
   
   // const getOfferSend = async ()=> {
   //   const id = customFunctions.getLocalStorage('applicantId');
@@ -248,7 +252,8 @@ function NewInterviewRounds(props) {
           status_name: {label:dt.status_name, value:dt.status},
           comments: dt.comments,
           interview_type:  { label: dt.interview_type_name, value: dt.interview_type_id },
-          description: dt.description
+          description: dt.description,
+          id: dt.id
         });
       });
       console.log('interviewData',interviewData);
@@ -365,7 +370,7 @@ function NewInterviewRounds(props) {
           defaultFormValues={defaultValues}
           refreshCounter={count}
           currentUser={currentUser}
-          submitBtnText="Set Round"
+          submitBtnText="Submit Round"
           showResetBtn={false}
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
@@ -374,24 +379,24 @@ function NewInterviewRounds(props) {
             console.log('form reset callback');
           }}
         />
-         <Button
-            size="sm"
-            className="mt-2 ml-5"
-            onClick={() =>{
-              history.push('/generate-offerletter');
-            }}
-          >
-            Offer Send
-          </Button>
-          <Button
-            size="sm"
-            className="mt-2"
-            onClick={() =>{
-              getInterviewRoundsStatus(updatedData,formData);
-            }}
-          >
-            Submit Feedback
-          </Button>
+         {/* <Button
+                     size="sm"
+                     className="mt-2 ml-5"
+                     onClick={() =>{
+                       history.push('/generate-offerletter');
+                     }}
+                   >
+                     Offer Send
+                   </Button>
+                   <Button
+                     size="sm"
+                     className="mt-2"
+                     onClick={() =>{
+                       getInterviewRoundsStatus(updatedData,formData);
+                     }}
+                   >
+                     Submit Feedback
+                   </Button> */}
       </div>
     </>
   );
