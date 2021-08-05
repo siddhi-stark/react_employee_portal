@@ -8,7 +8,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
-// import customFunctions from '../../helper/customFunctions';
+import customFunctions from '../../helper/customFunctions';
 
 function InterviewerRoundsStatus(props) {
   const items = [
@@ -99,6 +99,8 @@ function InterviewerRoundsStatus(props) {
     }
     // Perform success actions
   };
+
+ 
   return (
     <>
       <Helmet title={title} />
@@ -116,7 +118,7 @@ function InterviewerRoundsStatus(props) {
 
           <Row>
           <Col md={6}>
-            <p>Interview Date - {round.int_date} </p>
+            <p>Interview Date - {round.int_date ? customFunctions.getDDMMYYYYDate(round.int_date) : ''} </p>
 
           </Col>
           <Col md={6}>
@@ -154,7 +156,7 @@ function InterviewerRoundsStatus(props) {
       <Card body className="mt-4">
         <Row className="mt-3">
           <Col>
-            <p>Interview Date - {interviewData.interviewDate} </p>
+            <p>Interview Date - {interviewData.interviewDate ? customFunctions.getDDMMYYYYDate(interviewData.interviewDate) : ''} </p>
           </Col>
           <Col>
             <p>Interview Time - {interviewData.interviewTime} </p>

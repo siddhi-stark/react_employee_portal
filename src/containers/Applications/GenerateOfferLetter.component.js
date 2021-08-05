@@ -32,6 +32,11 @@ function GenerateOfferLetter() {
       s.fields = section.fields.map((item) => {
         const itemData = item;
          if(item.name === 'name' || item.name === 'designation') itemData.disabled = true;
+         if(item.name === 'joining_date') {
+             const date = new Date();
+             itemData.minDate = date;
+         }
+
          return itemData;
       })
       return s;

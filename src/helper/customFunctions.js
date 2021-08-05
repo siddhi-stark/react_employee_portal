@@ -14,6 +14,15 @@ class CustomFunctions extends Component {
 
   };
 
+   getDDMMYYYYDate = (dateTime) => {
+    
+    const date = dateTime.split('/');
+
+    const dateNew =  date[2]+'/'+date[1]+'/'+date[0]; //eslint-disable-line
+    return dateNew;
+    
+      };
+
   getTime = (time) => {
     const newDate = new Date(time);
     const h = newDate.getHours();
@@ -27,7 +36,6 @@ class CustomFunctions extends Component {
     const h = newDate.getHours();
     const m = newDate.getMinutes();
     const formattedTime = h < 10 ? `0`+ h : h + ':' + m < 10 ? `0` + m : m; //eslint-disable-line
-    console.log('formattedTime',formattedTime);
     return formattedTime;
   };
 
