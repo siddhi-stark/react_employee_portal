@@ -57,7 +57,7 @@ function RecruitmentApplicationComponent() {
             // history.push('/edit-employee');
           }}
         >
-          {Number(group) === 5 ? (
+          {(Number(group) === 5) || (Number(group) === 1) ? (
             <Image
               src={ (status_name === 'shortlisted' || status_name === 'selected') ? '/images/edit-button.svg' : '' } // eslint-disable-line
             />
