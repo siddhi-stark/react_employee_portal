@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Accordion, Button, Image } from 'react-bootstrap';
+import { Card, Accordion, Button, Image, Row, Col } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 // import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
@@ -18,8 +18,8 @@ function EmployeeTimesheet(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [dataShow, setDataShow] = useState(false);
-  const [typeeee,setType] = useState('');
-  const [title,setTitle] = useState('');
+  const [typeeee, setType] = useState('');
+  const [title, setTitle] = useState('');
   const history = useHistory();
 
   // Variable declarations
@@ -33,7 +33,6 @@ function EmployeeTimesheet(props) {
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
-
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -50,7 +49,7 @@ function EmployeeTimesheet(props) {
   });
 
   const handleActionCallback = (row) => {
-    // const userId = customFunctions.getLocalStorage('userId');
+    const userId = customFunctions.getLocalStorage('userId');
     return (
       <>
         <a
@@ -60,12 +59,14 @@ function EmployeeTimesheet(props) {
             e.preventDefault();
             e.stopPropagation();
             history.push(`/edit-employee/${row.user_id}`);
-            customFunctions.setLocalStorage('employeeName',row.emp_name);
-            customFunctions.setLocalStorage('userId',row.user_id);
-            customFunctions.setLocalStorage('date',row.date);
+            customFunctions.setLocalStorage('employeeName', row.emp_name);
+            customFunctions.setLocalStorage('userId', row.user_id);
+            customFunctions.setLocalStorage('date', row.date);
           }}
         >
-          <Image src="/images/edit-button.svg" />
+          {!(Number(userId) === row.user_id) && (
+            <Image src="/images/edit-button.svg" />
+          )}
         </a>
       </>
     );
@@ -76,9 +77,9 @@ function EmployeeTimesheet(props) {
     {
       id: 'user_id',
       label: 'id',
-      isDisplay: false
+      isDisplay: false,
     },
-     {
+    {
       id: 'index',
       label: 'Sr.No',
     },
@@ -89,8 +90,11 @@ function EmployeeTimesheet(props) {
       render: ({ emp_id }) => { // eslint-disable-line
         return (
           <>
-            <span>{dataShow ? '' : `SDMS ${emp_id}` // eslint-disable-line
-          }</span>
+            <span>
+              {
+                dataShow ? '' : `SDMS ${emp_id}` // eslint-disable-line
+              }
+            </span>
           </>
         );
       },
@@ -119,7 +123,22 @@ function EmployeeTimesheet(props) {
     },
     {
       id: 'emp_name',
-      label: 'Employee Name',
+      label:
+        filterData.full_name || (filterData.formDate && filterData.toDate)
+          ? ''
+          : 'Employee Name',
+      render: ({ row }) => {
+        return (
+          <>
+            <span>
+              {filterData.full_name ||
+              (filterData.formDate && filterData.toDate)
+                ? ''
+                : row.emp_name}
+            </span>
+          </>
+        );
+      },
     },
     {
       id: 'designatin_name',
@@ -170,12 +189,12 @@ function EmployeeTimesheet(props) {
   ];
 
   // Declare methods
-    const getRowData = async (pageNo = 1) => {
+  const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeTimesheet}`;
     const params = {
-     sort_by:'created_at',
-     sort_direction:'descending',
+      sort_by: 'created_at',
+      sort_direction: 'descending',
       limit,
       page,
       start_date: filterData.fromDate
@@ -184,6 +203,7 @@ function EmployeeTimesheet(props) {
       end_date: filterData.toDate
         ? customFunctions.getDate(filterData.toDate)
         : '',
+      is_detail: filterData.is_detail ? filterData.is_detail[0] : '',
       employee_id: filterData.full_name ? filterData.full_name.value : '',
       // ...filterList
     };
@@ -214,7 +234,7 @@ function EmployeeTimesheet(props) {
     getRowData(1);
     const type = props.match.params.empType;
     setType(type);
-  }, [filterData,typeeee]);
+  }, [filterData, typeeee]);
 
   // Get user role
   const getUserRole = async () => {
@@ -235,7 +255,9 @@ function EmployeeTimesheet(props) {
   };
 
   const getEmployeeName = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?type=all`
+    );
     if (!data) {
       // show error
       return;
@@ -288,40 +310,68 @@ function EmployeeTimesheet(props) {
             </Card.Header>
 
             <Accordion.Collapse eventKey="1">
-              <Card.Title>
-                <StarkFormBuilder
-                  containerClass=""
-                  formHeaderClass=""
-                  formSections={FormSections}
-                  formHeading=""
-                  onFormSubmit={(formValues) => {
-                    submitForm(formValues);
-                  }}
-                  options={options}
-                  callbacks={{}}
-                  defaultFormValues={defaultValues}
-                  currentUser={currentUser}
-                  submitBtnText="Submit"
-                  showResetBtn={true} // eslint-disable-line
-                  resetBtnText="Clear"
-                  btnContainerClass="form-submit-buttons pull-right mb-3"
-                  isStepForm={false}
-                  onFormReset={() => {
-                    setDataShow(false);
-                    onResetForm();
-                  }}
-                />
-              </Card.Title>
+              <StarkFormBuilder
+                containerClass=""
+                formHeaderClass=""
+                formSections={FormSections}
+                formHeading=""
+                onFormSubmit={(formValues) => {
+                  submitForm(formValues);
+                }}
+                options={options}
+                callbacks={{}}
+                defaultFormValues={defaultValues}
+                currentUser={currentUser}
+                submitBtnText="Submit"
+                showResetBtn={true} // eslint-disable-line
+                resetBtnText="Clear"
+                btnContainerClass="form-submit-buttons pull-right mb-3"
+                isStepForm={false}
+                onFormReset={() => {
+                  setDataShow(false);
+                  onResetForm();
+                }}
+              />
             </Accordion.Collapse>
           </Card>
         </Accordion>
         <Card>
           <Card.Header>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Employees Timesheet</h4>
+              <h4 className="text-primary mt-2 mb-2">
+                {`Employees Timesheet ${
+                  filterData.full_name
+                    ? `for ${filterData.full_name.label}`
+                    : ''
+                }`}
+              </h4>
             </div>
           </Card.Header>
           <Card.Body>
+            {filterData.full_name && filterData.is_detail && (
+              <Row>
+                <Col>
+                  <p>
+                    {' '}
+                    No. of working days :{' '}
+                    {filterData.full_name ? filterData.full_name.label : ''}
+                  </p>
+                </Col>
+                <Col>
+                  <p>
+                    No. of leaves :{' '}
+                    {filterData.full_name ? filterData.full_name.label : ''}
+                  </p>
+                </Col>
+                <Col>
+                  <p>
+                    Total No. of working Hrs. :{' '}
+                    {filterData.full_name ? filterData.full_name.label : ''}
+                  </p>
+                </Col>
+              </Row>
+            )}
+
             <CustomTable
               columns={columns}
               rows={rowData}

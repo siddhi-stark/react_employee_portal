@@ -33,37 +33,6 @@
 		"fieldsToReset": [],
 		"fieldLayout": "2column",
 		"fields": [
- {
-			"name": "id",
-			"type": "text",
-			"label": "ID",
-			"id": "",
-			"placeholder": "",
-			"inputClass": "",
-			"containerClass": "",
-			"displayWhen": {
-				
-			},
-			"haveValidations": "false",
-			"haveDisplayOptions": "false",
-			"callback": "",
-			"callbackUrl": "",
-			"inputToChange": "",
-			"maxTime": "",
-			"maxDate": "",
-			"minTime": "",
-			"minDate": "",
-			"disabled": false,
-			"isMulti": false,
-			"allowedUsers": [],
-			"fieldsToReset": [],
-			"fieldLayout": {
-				"label": "1 Column",
-				"value": "1column"
-			},
-			"fields": [],
-			"options": []
-		},
 			{
 			"name": "int_date",
 			"type": "date",
@@ -332,7 +301,38 @@
         "fields": [],
         "optionCallback": "",
         "options": []
-      }],
+      },
+     {
+			"name": "id",
+			"type": "hidden",
+			"label": "ID",
+			"id": "",
+			"placeholder": "",
+			"inputClass": "",
+			"containerClass": "",
+			"displayWhen": {
+				
+			},
+			"haveValidations": "false",
+			"haveDisplayOptions": "false",
+			"callback": "",
+			"callbackUrl": "",
+			"inputToChange": "",
+			"maxTime": "",
+			"maxDate": "",
+			"minTime": "",
+			"minDate": "",
+			"disabled": false,
+			"isMulti": false,
+			"allowedUsers": [],
+			"fieldsToReset": [],
+			"fieldLayout": {
+				"label": "1 Column",
+				"value": "1column"
+			},
+			"fields": [],
+			"options": []
+		}],
 		"optionCallback": "",
 		"options": []
 	}

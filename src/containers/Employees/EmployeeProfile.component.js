@@ -147,7 +147,7 @@ const deleteEmployeeHistory = (id) => {
             </Col>
 
             <Col md={4}>
-              <h7>Email Id - {employeeDetails.email}</h7>
+              <h7>Personal Email Id - {employeeDetails.email}</h7>
             </Col>
 
             <Col md={4}>

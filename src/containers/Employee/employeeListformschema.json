@@ -10,7 +10,6 @@
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
-
       {
         "name": "full_name",
         "type": "select",
@@ -124,6 +123,36 @@
         "fields": [],
         "optionCallback": "",
         "options": []
+      },
+       {
+        "name": "is_detail",
+        "type": "checkbox",
+        "label": "",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "inline": true,
+        "fieldLayout": {
+        "label": "1 Column",
+        "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": [{"label":"Detailed View", "value":"true"}]
       }
     ],
     "allowedUsers": [5],

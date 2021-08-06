@@ -71,6 +71,7 @@
 		"label": "Joining Date",
 		"id": "",
 		"placeholder": "",
+     	"dateFormat": "dd/MM/yyyy",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -129,26 +130,31 @@
 		"fields": [],
 		"optionCallback": "",
 		"options": [ {
-                        "label": "true",
+                        "label": "Yes",
                         "value": "true"
                     },
                     {
-                        "label": "false",
+                        "label": "No",
                         "value": "false"
                     }]
 	}, {
 		"name": "offered_ctc",
-		"type": "text",
-		"label": "Offered CTC",
+		"type": "number",
+		"label": "Offered CTC (In LPA)",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "eg.350000",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          },
+          {
+            "type": "numeric|min:0,num",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }],
 		"displayWhen": {},
 		"haveValidations": "true",
 		"haveDisplayOptions": "false",

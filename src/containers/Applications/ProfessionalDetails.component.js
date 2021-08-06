@@ -9,8 +9,8 @@ import customFunctions from '../../helper/customFunctions';
 
 function ProfessionalDetails(props) {
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  const [options, updateOptions] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({});
+  const [options, updateOptions] = useState({});  // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
@@ -116,29 +116,29 @@ function ProfessionalDetails(props) {
     // Perform success actions
   };
 
-  const getResume = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
+  // const getResume = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type= resume_source`);
+  //   if (!data) {
+  //     // show error
+  //     return;
+  //   }
 
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      resume: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
+  //   const dpOptions = [];
+  //   data && data.data && data.data.resume_source.map((op) => {
+  //     // Change appropriate keys
+  //     dpOptions.push({ label: op.name, value: op.id });
+  //     return op;
+  //   });
+  //   const allOptions = {
+  //     ...options,
+  //     resume: dpOptions,
+  //   };
+  //   updateOptions(allOptions);
+  // };
 
-  useEffect(() => {
-    getResume();
-  }, []);
+  // useEffect(() => {
+  //   getResume();
+  // }, []);
 
   return (
     // Usage
