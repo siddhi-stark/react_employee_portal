@@ -54,7 +54,7 @@ function OldEmployee() {
     getEmployee(1);
     getEmployeeName();
     getPosition();
-  }, []);
+  }, [filterData]);
 
    const submitForm = async (formValues) => {
     console.log(formValues);

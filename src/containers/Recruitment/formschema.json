@@ -68,7 +68,7 @@
       {
         "name": "file_name",
         "type": "file",
-        "label": "Attachments(File Types - .csv, .xlxs)",
+        "label": "Attachment(File Types - .csv, .xlxs)",
         "id": "",
         "placeholder": "",
         "inputClass": "",

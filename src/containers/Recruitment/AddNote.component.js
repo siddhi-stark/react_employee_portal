@@ -7,16 +7,20 @@ import FormSections from './note.json';
 import {ModalInput} from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';    
+import customFunctions from '../../helper/customFunctions';
 
 function AddNote(props) {
+  const note = props.note; //eslint-disable-line
+ console.log('noteinside function',note);
 
+    const value = customFunctions.getLocalStorage('isClicked');
+    console.log('value',value);
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote,setShowNote] = useState(false);
   const [id,setStatusId] = useState('');
-    
 
   // Get user role
   const getUserRole = async() => {
@@ -55,26 +59,36 @@ function AddNote(props) {
     if(!data) {
       // show error
       return;
+    // const {data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    // if(!data) {
+    //   // show error
+    //   return;
+    // }
+    const NotesData = {
+      notes: note && note
     }
-    updateDefaultValues(data);
+    updateDefaultValues(NotesData);
   };
 
   // Call get data method on load
   useEffect(() => {
-    getData();
+    if(value === 'true') {
+     getData();
+    }
     setShowNote(props.show);
     setStatusId(props.statusId);
-    console.log('addnoteeeeeeeee')
+    // setNoteData(props.note);
   }, []);
 
   const onCancelButton = () => {
   	props.handleModalCLose(false);
+    customFunctions.removeLocalStorage('isClicked');
   }
       
 
 	return (
 		<>
-		{console.log('noteShow',showNote)}
+		{console.log('defaultValues',defaultValues)}
        <ModalInput
         size="sm"
         centered
@@ -95,10 +109,10 @@ function AddNote(props) {
     callbacks={{}}
     defaultFormValues={defaultValues}
     currentUser={currentUser}
-    submitBtnText="Submit"
+    submitBtnText= 'Submit'
     showResetBtn={false}
     resetBtnText="Cancel"
-    btnContainerClass="form-submit-buttons"
+    btnContainerClass={!value ? 'form-submit-buttons' : 'd-none'}
     isStepForm={false}
     
     onFormReset={() => {

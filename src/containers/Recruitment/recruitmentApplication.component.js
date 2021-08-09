@@ -34,6 +34,7 @@ function RecruitmentApplicationComponent() {
   const [activeMenu, setActiveMenu] = useState('all');
   const [title, setTitle] = useState('');
   const [statusId, setStatusId] = useState('');
+  const [note,setNote] = useState('');
   // const [statusLabel,setStatusLabel] = useState('');
   // const [selectedStatusOption,setSelectedStatusOption] = useState(null);
   let filterOptions = {};
@@ -68,7 +69,7 @@ function RecruitmentApplicationComponent() {
     return sectionData;
   });
 
-  const handleActionCallback = ({ id, status_name,name,applied_for_name }) => { //eslint-disable-line
+  const handleActionCallback = ({ id, status_name,name,applied_for_name,notes }) => { //eslint-disable-line
     return (
       <>
       {(status_name !== 'declined') ? ( //eslint-disable-line
@@ -96,9 +97,10 @@ function RecruitmentApplicationComponent() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/applications/${id}`);
+            setNote(notes);
+            customFunctions.setLocalStorage('isClicked','true');
+            setModalShow(true);
 
-            // history.push('/edit-employee');
           }}
         >
            Note
@@ -141,7 +143,6 @@ function RecruitmentApplicationComponent() {
 
   const getStatusId = (val) => {
     const data = ApplicantStatus.filter((i) => i.label === val);
-    console.log('console data',data,val);
     return data.length > 0 ? data[0] : {};
 
   }
@@ -203,6 +204,12 @@ function RecruitmentApplicationComponent() {
       id: 'tech_stack_name',
       label: 'Technology',
     },
+    {
+      id: 'notes',
+      label: 'Note',
+      isDisplay: false
+    },
+    
     
     {
       id: 'resume',
@@ -240,9 +247,7 @@ function RecruitmentApplicationComponent() {
       })
         .then(okAction => {
           if (okAction) {
-            console.log('api call');
             getRowData(currentPage);
-            console.log('postData.status',postData.status)
             if(postData.status === 6){ setStatusId(statusId); setModalShow(true);}
           }
         });
@@ -376,7 +381,6 @@ const getDepartment = () => {
 
   return (
     <>
-    {console.log('statusId',statusId)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Recruitment</h2>
@@ -554,7 +558,8 @@ const getDepartment = () => {
         <AddNote
          show={modalShow}
          statusId={statusId}
-          handleModalCLose={(e) => setModalShow(e)}
+         note={note}
+         handleModalCLose={(e) => setModalShow(e)}
          />
         )}
     </>

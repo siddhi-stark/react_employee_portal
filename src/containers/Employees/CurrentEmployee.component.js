@@ -29,15 +29,17 @@ function CurrentEmployee() {
 
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
+    console.log('after endPointttttttttt');
     const params = {
       sort_by: 'full_name',
       limit,
       page,
       designation_id: filterData.position ? filterData.position.value : '',
-      employee_id: filterData.employee ? filterData.employee.value : '',
+user_id: filterData.employee ? filterData.employee.value : '',
       // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
+    console.log('url',url);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       setEmployee([...data.data]);
@@ -55,13 +57,17 @@ function CurrentEmployee() {
     getEmployee(1);
     getEmployeeName();
     getPosition();
-  }, [title]);
+  }, [title,filterData]);
 
 
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
-
+     const postData = {
+        designation_id: filterData.position ? filterData.position.value : '',
+        user_id: filterData.employee ? filterData.employee.value : '', 
+     }
+     console.log('postData',postData);
     setFilterData(formValues); //eslint-disable-line
   };
 
@@ -142,6 +148,7 @@ function CurrentEmployee() {
     
     onFormReset={() => {
       console.log('form reset callback')
+      setFilterData();
     }}
   />
     
