@@ -7,16 +7,18 @@ import FormSections from './note.json';
 import {ModalInput} from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';    
+import customFunctions from '../../helper/customFunctions';
 
 function AddNote(props) {
 
+    const value = customFunctions.getLocalStorage('isClicked');
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote,setShowNote] = useState(false);
   const [id,setStatusId] = useState('');
-    
+  const [notes,setNoteData] = useState('');  
 
   // Get user role
   const getUserRole = async() => {
@@ -51,30 +53,35 @@ function AddNote(props) {
 
   // Get data for form
   const getData = async () => {
-    const {data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if(!data) {
-      // show error
-      return;
-    }
-    updateDefaultValues(data);
+    // const {data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    // if(!data) {
+    //   // show error
+    //   return;
+    // }
+    console.log('getData Api call');
+    updateDefaultValues({notes});
   };
 
   // Call get data method on load
   useEffect(() => {
-    getData();
+    if(value === 'true') {
+     getData();
+    }
     setShowNote(props.show);
     setStatusId(props.statusId);
-    console.log('addnoteeeeeeeee')
+    setNoteData(props.note);
   }, []);
 
   const onCancelButton = () => {
   	props.handleModalCLose(false);
+    customFunctions.removeLocalStorage('isClicked');
   }
       
 
 	return (
 		<>
-		{console.log('noteShow',showNote)}
+		{console.log('defaultValues',defaultValues)}
+    {console.log('notes',notes)}
        <ModalInput
         size="sm"
         centered
@@ -92,7 +99,7 @@ function AddNote(props) {
     callbacks={{}}
     defaultFormValues={defaultValues}
     currentUser={currentUser}
-    submitBtnText="Submit"
+    submitBtnText= {value === 'true' ? 'Cancel' : 'Submit'}
     showResetBtn={false}
     resetBtnText="Cancel"
     btnContainerClass="form-submit-buttons"
