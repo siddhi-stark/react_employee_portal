@@ -87,9 +87,12 @@ function AddNote(props) {
         centered
         show={showNote}
         onHide={onCancelButton}
-        id="contained-modal-title-vcenter"
+        className= "status-reason-popup"
+        id="contained-modal-title-center"
+        modalHeaderClass="reson-text-title d-flex align-items-center"
+        label="Reason"
         modalBody={
-
+          <>
   <StarkFormBuilder
     containerClass=''
     formHeaderClass=''
@@ -109,7 +112,7 @@ function AddNote(props) {
       console.log('form reset callback')
     }}
   />
-    
+    </>
 
         }
         />

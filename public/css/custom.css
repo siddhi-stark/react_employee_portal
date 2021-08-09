@@ -11236,7 +11236,7 @@ body .morning-mail-sent {
   float: left;
   margin-right: 10px;
   color: #ffffff;
-  position: relative;
+  /*position: relative;*/
   overflow: hidden; }
 
 .mini-stat-info {
@@ -11301,8 +11301,8 @@ span.np-sup {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  top: 0;
-  left: 53px; }
+  top: 15px;
+  left: 73px; }
 
 .card-body .confirmation-date {
   min-height: 48px; }
@@ -11331,6 +11331,23 @@ span.np-sup {
 
 .active-media {
   background-color: #f1f1f1; }
+
+.status-reason-popup .reson-text-title .title h2, .status-reason-popup .reson-text-title .title .h2 {
+  margin-bottom: 0; }
+
+.status-reason-popup .modal-header .close {
+  top: 25px; }
+
+.status-reason-popup .btn-group {
+  width: 100%; }
+  .status-reason-popup .btn-group .btn {
+    margin-right: 0 !important;
+    max-width: 155px;
+    margin: 0 auto !important; }
+
+.confirmation-content-box .form-group {
+  z-index: 999;
+  position: relative; }
 
 /*.rounds-form {
     .row {
@@ -11392,14 +11409,7 @@ span.np-sup {
 @media (max-width: 1440px) {
   .welcome-box.jumbotron {
     padding: 30px 0px 0px 29px;
-    /*background-size: 16% 57%;*/ }
-  /*.check-in {
-        .time-count {
-            span {
-                font-size: 30px;
-            }
-        }
-        }*/ }
+    /*background-size: 16% 57%;*/ } }
 
 @media (max-width: 1366px) {
   .weekly-status-box .row .col-md-6 {
@@ -11407,7 +11417,12 @@ span.np-sup {
   .check-in .time-count span {
     font-size: 26px; }
   .persentage-circle {
-    text-align: center; } }
+    text-align: center; }
+  .welcome-box .welcome-text h1, .welcome-box .welcome-text .h1 {
+    font-size: 28px; }
+  .blockquote p {
+    font-size: 14px;
+    max-width: 230px; } }
 
 @media (max-width: 1280px) {
   .content-area .row [class*="col"] {

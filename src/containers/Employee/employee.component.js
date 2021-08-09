@@ -1123,18 +1123,18 @@ function Employee() {
               </Col>
             </Row>
             <div className="float-end">
-              <Button variant="secondary" onClick={() => onCancel()}>
-                Cancel
-              </Button>
-
               <Button
                 variant="primary"
                 type="submit"
-                className="ms-4"
                 disabled={disableButton}
               >
                 {employeeId ? 'Update' : 'Add'}
               </Button>
+              <Button variant="secondary" 
+               className="ms-4" onClick={() => onCancel()}>
+                Cancel
+              </Button>
+
             </div>
           </Form>
         }

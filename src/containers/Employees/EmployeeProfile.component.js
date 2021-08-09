@@ -168,7 +168,7 @@ const deleteEmployeeHistory = (id) => {
               </Col>
               ) : (
               
-            <Col md={3}>
+            <Col md={4}>
               <h7>Confirmation Date - {employeeDetails.confirmation_date ? customFunctions.getDMYDate(employeeDetails.confirmation_date) : ''}</h7>
             </Col>
               )  }
@@ -227,16 +227,19 @@ const deleteEmployeeHistory = (id) => {
           <div className="address-edit-delete">
           {!employeeDetails.relieved && (
             <>
+            <a href="javascript:void()">
               <Image src="/images/edit-button.svg" alt="Edit Profile" onClick={()=>{
                 setData(comp);
                 setShowEMployee(true);
                 customFunctions.setLocalStorage('hisotryID',comp.id);
                 // history.push(`/profile-history/id=${comp.id}`)
               }}/>
-
+             </a>
+              <a href="javascript:void()">
               <Image src="/images/delete.png" alt="Edit Profile" onClick={() => {
                 deleteEmployeeHistory(comp.id);
               }} />
+             </a>
             </>
           )}
           </div>

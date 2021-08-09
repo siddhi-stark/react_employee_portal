@@ -13,6 +13,7 @@ export default function ModalComponent(props) {
     centered,
     onHide,
     className,
+    modalHeaderClass,
   } = props;
 
   return (
@@ -28,7 +29,7 @@ export default function ModalComponent(props) {
         }}
       >
         <div className="add-task-popup">
-          <Modal.Header closeButton>
+          <Modal.Header closeButton className={modalHeaderClass}>
             <Modal.Title id={id}>
               <div className="title">
                 <h2>{label}</h2>
