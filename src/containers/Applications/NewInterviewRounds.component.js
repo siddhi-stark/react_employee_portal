@@ -26,7 +26,6 @@ function NewInterviewRounds(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-  const [applicantName, setApplicantName] = useState('');
   // const [formData, setFormData] = useState({});
   // const [updatedData, setUpdatedData] = useState({});
   const [count, forceUpdate] = useState(0);
@@ -71,7 +70,7 @@ function NewInterviewRounds(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    // console.log('formValues',formValues.addmore[position].interviewerRounds);
+
     const id = customFunctions.getLocalStorage('applicantId');
     const postData =[];
     for(const more of  formValues.addmore) {  // eslint-disable-line
@@ -81,7 +80,7 @@ function NewInterviewRounds(props) {
         ? customFunctions.getDate(more.int_date)
         : '',
       int_time: more.int_time
-        ? customFunctions.getTime(more.int_time)
+        ? `${customFunctions.getTime(more.int_time)}`
         : '',
       round_type: more.interviewerRounds
         ? more.interviewerRounds.value
@@ -104,31 +103,10 @@ function NewInterviewRounds(props) {
 
     }
 
-    const position = formValues.addmore && formValues.addmore.length - 1;
-
- if(Number(formValues.addmore[position].interview_type.value) === 1) {
-      const payload = {
-        name: 'Interview Round',
-        subject: 'Interview Round',
-        applicant_id: id,
-        body: `Hello ${applicantName}, you are telephonic round will be at ${customFunctions.getTime(formValues.addmore[position].int_time)}.`,
-        email_type: 'interview_round',
-      };
-      // await AuthApi.postDataToServer(
-      //   Api.generateContentUrl,
-      //   payload
-      // );
-      await AuthApi.postDataToServer(Api.sendMailUrl,payload); // eslint-disable-line
-    }
-    
-   
-
     const { data, message } = await AuthApi.postDataToServer(
       Api.roundsUrl,
       { 'data':postData}
     );
-
-   
 
     if (data) {
       swal(data && data.message[0], '', 'success', {
@@ -231,19 +209,17 @@ function NewInterviewRounds(props) {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.roundsUrl}?applicant_id=${interviewerId}`
     );
-    console.log('data',data);
     if (data) {
       let newTime = '';
       let newDate = '';
       const interviewData = [];
       data.data.map((dt) => {
-        setApplicantName(dt.applicant_name);
         if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);
         }
         if (!customFunctions.checkIfEmpty(dt.int_time)) {
           newTime = new Date(
-            `${customFunctions.getDate(dt.int_date)}T${dt.int_time}Z`
+            `${customFunctions.getDate(dt.int_date)} ${customFunctions.convertTime12to24(dt.int_time)}`
           );
         }
 
@@ -262,7 +238,6 @@ function NewInterviewRounds(props) {
           id: dt.id
         });
       });
-      console.log('interviewData',interviewData);
       if (interviewData) {
         updateDefaultValues({ addmore: [...interviewData] });
       }

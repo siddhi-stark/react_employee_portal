@@ -93,6 +93,8 @@ export default class Api extends Component {
 
   static randomQuotesUrl = `${Api.baseUrl}random-quotes/`;
 
+  static timesheetDetailsUrl = `${Api.baseUrl}employee-timesheet-detail/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

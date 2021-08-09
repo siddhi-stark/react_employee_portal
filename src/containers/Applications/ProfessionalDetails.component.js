@@ -8,9 +8,11 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function ProfessionalDetails(props) {
+  let filterOptions = {};
+
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  const [options, updateOptions] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({});
+  const [options, updateOptions] = useState({});  // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
@@ -60,12 +62,14 @@ function ProfessionalDetails(props) {
        // applied_for: ds
      };
      props.onProfDetInfo(data.data.id);
-       if (Number(data.data.resume_source) === 1){
+       if (data.data.resume_source === 'naukri'){
           obj.resume_source = {label:'Naukri' ,value:data.data.resume_source}
-       } else if (Number(data.data.resume_source) === 2){
+       } else if (data.data.resume_source === 'indeed'){
           obj.resume_source = {label:'Indeed' ,value:data.data.resume_source}
-       } else if (Number(data.data.resume_source) === 3){
+       } else if (data.data.resume_source === 'linkedin'){
           obj.resume_source = {label:'Linkedin' ,value:data.data.resume_source}
+       } else if (data.data.resume_source === 'referal'){
+          obj.resume_source = {label:'Referal' ,value:data.data.resume_source}
        }
      updateDefaultValues({...obj})    // updateDefaultValues(data);
       } 
@@ -117,22 +121,25 @@ function ProfessionalDetails(props) {
   };
 
   const getResume = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=resume_source`);
     if (!data) {
       // show error
       return;
     }
 
     const dpOptions = [];
-    data.data.map((op) => {
+    data && data.data && data.data.resume_source.map((op) => {
+      console.log('op',op);
       // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
+      dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
     const allOptions = {
       ...options,
-      resume: dpOptions,
+      ...filterOptions,
+      resume_source: dpOptions,
     };
+    filterOptions = {...allOptions};
     updateOptions(allOptions);
   };
 

@@ -28,8 +28,9 @@ function EmployeeProfile(props) {
     customFunctions.setLocalStorage('id',employeeId);
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${employeeId}/`);
     // console.log('data',data.data);
-    
+    if(data){
       setEmployeeDetails(data.data);
+    }
   };
 
   const getEmployeeHIstory = async () => {
@@ -38,7 +39,9 @@ function EmployeeProfile(props) {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     // customFunctions.setLocalStorage('historyId',data.data.id);
     // console.log('data',data.data);
-    setCompanyList(data.data);
+    if(data){
+      setCompanyList(data.data);
+    }
   };
 
   useEffect(() => {
@@ -146,7 +149,7 @@ const deleteEmployeeHistory = (id) => {
             </Col>
 
             <Col md={4}>
-              <h7>Email Id - {employeeDetails.email}</h7>
+              <h7>Personal Email Id - {employeeDetails.email}</h7>
             </Col>
 
             <Col md={4}>
@@ -165,7 +168,7 @@ const deleteEmployeeHistory = (id) => {
               </Col>
               ) : (
               
-            <Col md={4}>
+            <Col md={3}>
               <h7>Confirmation Date - {employeeDetails.confirmation_date ? customFunctions.getDMYDate(employeeDetails.confirmation_date) : ''}</h7>
             </Col>
               )  }
