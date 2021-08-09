@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import StarkFormBuilder from 'stark-form-builder';
-import { Tabs, Tab, Accordion, Card, Button } from 'react-bootstrap';
-import FormSections from './EmployeeFilterSchema.json';
+import { Tabs, Tab } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
@@ -37,13 +35,7 @@ function Employees() {
     getEmployee();
   }, []);
 
-  // Submit Form
-  const submitForm = async (formValues) => {
-    console.log(formValues);
-    
-    setFilterData(formValues); //eslint-disable-line
-      
-  };
+  
     
  const getEmployee = async () => {
     // const id = props.match.params.stackId;
@@ -85,6 +77,7 @@ function Employees() {
 
   return (
     <>
+    {console.log('currentUser',currentUser)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -93,50 +86,6 @@ function Employees() {
         </div>
       </div>
       <section className="content-area">
-      <div className="mt-5">
-
-       <Accordion defaultActiveKey="0">
-          <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Filters</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                    Expand
-                  </Accordion.Toggle>
-                </div>
-              </div>
-            </Card.Header>
-
-            <Accordion.Collapse eventKey="1">
-              <Card.Title>
-  <StarkFormBuilder
-    containerClass='mt-5'
-    formHeaderClass=''
-    formSections={FormSections}
-    formHeading="filter form"
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true}
-    resetBtnText="Clear"
-    btnContainerClass="form-submit-buttons pull-right mb-3"
-    isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-    }}
-  />
-    
-
-              </Card.Title>
-            </Accordion.Collapse>
-          </Card>
-        </Accordion>
-      </div>
         <div>
           <Tabs
             defaultActiveKey="currentEmployee"

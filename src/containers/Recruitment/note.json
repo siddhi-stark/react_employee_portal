@@ -10,7 +10,7 @@
 	"displaySectionTitle": false,
 	"fields": [{
 		"name": "notes",
-		"type": "text",
+		"type": "textarea",
 		"label": "Reason",
 		"id": "",
 		"placeholder": "",

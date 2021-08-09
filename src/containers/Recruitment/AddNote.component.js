@@ -1,5 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
+
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './note.json';
 import {ModalInput} from '../../components/FormInputs';
@@ -40,6 +42,8 @@ function AddNote(props) {
       
       if(data) {
       	console.log('data',data);
+         swal(data.message[0], '','success')
+          props.handleModalCLose(false);
       }
       
   };
@@ -86,7 +90,6 @@ function AddNote(props) {
     containerClass=''
     formHeaderClass=''
     formSections={FormSections}
-    formHeading="Reason"
     onFormSubmit={(formValues) => {submitForm(formValues);}}
     options={options}
     callbacks={{}}
@@ -94,7 +97,7 @@ function AddNote(props) {
     currentUser={currentUser}
     submitBtnText="Submit"
     showResetBtn={false}
-    resetBtnText="Clear"
+    resetBtnText="Cancel"
     btnContainerClass="form-submit-buttons"
     isStepForm={false}
     
