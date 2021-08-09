@@ -68,13 +68,13 @@
       {
         "name": "file_name",
         "type": "file",
-        "label": "Attachments",
+        "label": "Attachments(File Types - .csv, .xlxs)",
         "id": "",
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "", "applyWhen": [], "applyWhenRelation": "OR" }
+          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
         "haveValidations": "true",

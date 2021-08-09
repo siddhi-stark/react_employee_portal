@@ -1,0 +1,72 @@
+[{
+	"sectionName": "filter",
+	"sectionTitle": "filter",
+	"layout": {
+		"label": "2Column",
+		"value": "2column"
+	},
+	"containerClass": "",
+	"displaySection": true,
+	"displaySectionTitle": false,
+	"fields": [{
+		"name": "employee",
+		"type": "select",
+		"label": "",
+		"id": "",
+		"placeholder": "Select Employee",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [],
+		"displayWhen": {},
+		"haveValidations": "false",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "getEmployee",
+		"optionsCallbackUrl": "employeeUrl",
+		"options": []
+	}, {
+		"name": "technology",
+		"type": "select",
+		"label": "",
+		"id": "",
+		"placeholder": "Select Technology",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [],
+		"displayWhen": {},
+		"haveValidations": "false",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "getTechnology",
+		"optionsCallbackUrl": "technologyUrl",
+		"options": []
+	}],
+	"allowedUsers": [],
+	"sectionLayout": "2column"
+}]

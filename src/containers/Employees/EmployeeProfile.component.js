@@ -94,7 +94,6 @@ const deleteEmployeeHistory = (id) => {
 
   return (
     <>
-    {console.log('employeeDetails',employeeDetails.dob)}
      <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -151,7 +150,7 @@ const deleteEmployeeHistory = (id) => {
             </Col>
 
             <Col md={4}>
-              <h7>Email Id - admin@gmail.com </h7>
+              <h7>Personal Email - {employeeDetails.personal_email} </h7>
             </Col>
           </Row><br />
 
@@ -186,7 +185,7 @@ const deleteEmployeeHistory = (id) => {
       <div className="d-flex align-items-center justify-content-between mb-4">
        {
         !companyList.length < 1 && (
-        <h4><b>Employee History</b></h4>
+        <h4><b>Employement History</b></h4>
          )
       }
 

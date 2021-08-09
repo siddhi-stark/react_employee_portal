@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Image, Button, Accordion } from 'react-bootstrap';
 import swal from 'sweetalert';
+import { Card, Image, Button, Accordion } from 'react-bootstrap';
 import FormSections from './applicationformschema.json';
 import customFunctions from '../../helper/customFunctions';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, DropdownInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import AddNote from './AddNote.component';
 
 function RecruitmentApplicationComponent() {
   // const title = 'Recruitment';
@@ -21,6 +22,7 @@ function RecruitmentApplicationComponent() {
   // const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [modalShow, setModalShow] = useState(false);
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
@@ -31,7 +33,30 @@ function RecruitmentApplicationComponent() {
   const [filterData, setFilterData] = useState({});
   const [activeMenu, setActiveMenu] = useState('all');
   const [title, setTitle] = useState('');
+  const [statusId, setStatusId] = useState('');
+  // const [statusLabel,setStatusLabel] = useState('');
+  // const [selectedStatusOption,setSelectedStatusOption] = useState(null);
   let filterOptions = {};
+
+
+   const ApplicantStatus = [
+    {
+      id: 2,
+      value: 'Shortlisted',
+      label: 'shortlisted',
+    },
+    {
+      id: 6,
+      value: 'Declined',
+      label: 'declined',
+    },
+    
+    {
+      id: 4,
+      value: 'Pending',
+      label: 'pending',
+    }
+  ];
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -46,6 +71,8 @@ function RecruitmentApplicationComponent() {
   const handleActionCallback = ({ id, status_name,name,applied_for_name }) => { //eslint-disable-line
     return (
       <>
+      {(status_name !== 'declined') ? ( //eslint-disable-line
+
         <a
           href="/"
           className="pl-2"
@@ -62,13 +89,31 @@ function RecruitmentApplicationComponent() {
 
 
         </a>
+        ) : (
+         <a
+          href="/"
+          className="pl-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            history.push(`/applications/${id}`);
+
+            // history.push('/edit-employee');
+          }}
+        >
+           Note
+         
+
+
+        </a>
+        ) }
         { (Number(group) === 4 || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'offered' || status_name === 'declined' || status_name === 'rejected') ? ( //eslint-disable-line
 
        ''
         ) : 
  <a
         href="/"
-        className="p-r-2 text-info"
+        className="p-r-2 text-info ms-3"
         onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -93,6 +138,41 @@ function RecruitmentApplicationComponent() {
       </>
     );
   };
+
+  const getStatusId = (val) => {
+    const data = ApplicantStatus.filter((i) => i.label === val);
+    console.log('console data',data,val);
+    return data.length > 0 ? data[0] : {};
+
+  }
+  const handleStatus = (status_name) => { // eslint-disable-line
+    return(
+      <>
+      {console.log('status_name', status_name)}
+      {(status_name.status_name === 'pending') ? ( // eslint-disable-line
+
+      <DropdownInput
+                  asterisk="*"
+                  options={getDepartment()}
+                  placeholder="Select status"
+                  defaultValue={status_name.status_name ? getStatusId(status_name.status_name)  : {}}
+                  onSelectHandler={(select) => {
+                    // setSelectedStatusOption(select);
+                    // setStatusLabel(select.label);
+                    onStatusClick(select,status_name.id,status_name);
+                  }}
+                  // errorMessage={validator.message(
+                  //   'Designation',
+                  //   selectedDesignationOption,
+                  //   'required'
+                  // )}
+                />
+        ): (<span>{status_name.status_name}</span>)}
+
+      </>
+      )
+  }
+
 
   // Declare columns
   const columns = [
@@ -124,18 +204,7 @@ function RecruitmentApplicationComponent() {
       id: 'tech_stack_name',
       label: 'Technology',
     },
-    {
-      id: 'total_exp',
-      label: 'Experience',
-    },
-    {
-      id: 'email',
-      label: 'Email Id',
-    },
-    {
-      id: 'mobile',
-      label: 'Contact No',
-    },
+    
     {
       id: 'resume',
       label: 'Resume',
@@ -144,6 +213,7 @@ function RecruitmentApplicationComponent() {
     {
       id: 'status_name',
       label: 'Status',
+      render: handleStatus,
     },
     {
       id: 'action',
@@ -151,6 +221,48 @@ function RecruitmentApplicationComponent() {
       render: handleActionCallback,
     },
   ];
+
+
+   const onStatusClick = async (statusData,statusId,status_name) => { //eslint-disable-line
+    const postData = {
+      ids:[statusId],
+      status: statusData.label === 'declined' ? 6 : 2
+    }
+    // setStatusLabel(status_name.status_name);
+
+    const { data } = await AuthApi.putDataToServer(
+      `${Api.bulkStatusUrl}`,
+      postData
+    );
+    if(data) {
+       swal({
+        title: data.message[0],
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+            console.log('api call');
+            getRowData(currentPage);
+            console.log('postData.status',postData.status)
+            if(postData.status === 6){ setStatusId(statusId); setModalShow(true);}
+          }
+        });
+    }
+  };
+
+
+const getDepartment = () => {
+    if (!ApplicantStatus) return [];
+    const depart = [];
+    ApplicantStatus.map((dep) => {
+      return depart.push({
+        label: dep.label,
+        id: dep.id,
+        value: dep.value,
+      });
+    });
+    return depart;
+  };
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
@@ -191,6 +303,7 @@ function RecruitmentApplicationComponent() {
 
   useEffect(() => {
     getRowData(1);
+    getDepartment();
     setTitle('Recruitment');
   }, [filterData]);
 
@@ -206,81 +319,7 @@ function RecruitmentApplicationComponent() {
     getUserRole();
   }, []);
 
-  const handleChangeActiveStatus = async (selectedIds) => {
-    if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
-      const params = {
-        status: 2,
-        ids: selectedIds,
-      };
-      const successHandle = (e) => {
-        swal(e && e.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-          getRowData(1);
-        });
-      };
-      const errorHandle = (e) => {
-        swal(e && e.message[0], '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-          getRowData(1);
-        });
-      };
-      await customFunctions.changeStatus(
-        `${Api.bulkStatusUrl}`,
-        params,
-        'put',
-        successHandle,
-        errorHandle
-      );
-    }
-  };
-
-  const handleChangeInactiveStatus = async (selectedIds) => {
-    if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
-      const params = {
-        status: 6,
-        ids: selectedIds,
-      };
-      const successHandle = (e) => {
-        swal(e && e.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-          getRowData(1);
-        });
-      };
-      const errorHandle = (e) => {
-        swal(e && e.message[0], '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-          getRowData(1);
-        });
-      };
-      await customFunctions.changeStatus(
-        `${Api.bulkStatusUrl}`,
-        params,
-        'put',
-        successHandle,
-        errorHandle
-      );
-    }
-  };
+  
 
   // Submit Form
   const submitForm = async (formValues) => {
@@ -338,6 +377,7 @@ function RecruitmentApplicationComponent() {
 
   return (
     <>
+    {console.log('statusId',statusId)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Recruitment</h2>
@@ -494,20 +534,6 @@ function RecruitmentApplicationComponent() {
               tableContainerClass="mt-2"
               columns={columns}
               rows={rowData}
-              bulkActions={
-               (Number(group) === 5) || (Number(group) === 1)
-                  ? [
-                      {
-                        actionTitle: 'Shortlist',
-                        actionCallback: handleChangeActiveStatus,
-                      },
-                      {
-                        actionTitle: 'Decline',
-                        actionCallback: handleChangeInactiveStatus,
-                      },
-                    ]
-                  : ''
-              }
               showPagination={true}
               paginationProps={{
                 totalItems: totalCount,
@@ -517,7 +543,7 @@ function RecruitmentApplicationComponent() {
                   getRowData(pageNo);
                 },
               }}
-              showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
+              // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
               emptyRender={() => {
                 return 'No record found.';
               }}
@@ -525,6 +551,13 @@ function RecruitmentApplicationComponent() {
           </Card.Body>
         </Card>
       </section>
+      {modalShow && (
+        <AddNote
+         show={modalShow}
+         statusId={statusId}
+          handleModalCLose={(e) => setModalShow(e)}
+         />
+        )}
     </>
   );
 }

@@ -45,7 +45,6 @@ function AddHistory(props) {
       company_name: formValues.company_name,
       start_date: formValues.start_date ? customFunctions.getDate(formValues.start_date) : '',
       end_date: formValues.end_date ? customFunctions.getDate(formValues.end_date) : '',
-      location: formValues.location,
     }
      const callback = history
       ? AuthApi.putDataToServer

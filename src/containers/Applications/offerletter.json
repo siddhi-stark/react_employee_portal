@@ -129,11 +129,11 @@
 		"fields": [],
 		"optionCallback": "",
 		"options": [ {
-                        "label": "true",
+                        "label": "Yes",
                         "value": "true"
                     },
                     {
-                        "label": "false",
+                        "label": "No",
                         "value": "false"
                     }]
 	}, {

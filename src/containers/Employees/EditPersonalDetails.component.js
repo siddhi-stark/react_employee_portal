@@ -31,6 +31,7 @@ useEffect(() => {
   const employeeId = customFunctions.getLocalStorage('id');
     if(employeeId){
       const formSchema = [...FormSections];
+      console.log('formSchema',formSchema);
     const updatedSchema = formSchema.map((section)=>{
       const s = {...section};
       s.fields = section.fields.map((item) => {
@@ -43,7 +44,6 @@ useEffect(() => {
          if(item.name === 'dob') {
         const currentdate = new Date();
         const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
-        console.log(new Date(currentdate.setYear(currentdate.getFullYear() - 18)));
         itemData.maxDate = maxdate;
          }
           if (item.name === 'confirmation_date' || item.name === 'relieving_date') {
@@ -72,7 +72,6 @@ useEffect(() => {
   // Submit Form
   const submitForm = async (formValues) => {
     const id = customFunctions.getLocalStorage('id');
-    console.log(formValues);
 
     let postData = {
       ...formValues,
@@ -91,12 +90,10 @@ useEffect(() => {
       
     }
 
-    console.log('postdata',postData);
 
     
       const { data } = await AuthApi.putDataToServer(`${Api.employeeUrl}${id}/`, postData);
       if(data) {
-       console.log('message',data.message[0]);
        swal(data && data.message[0]);
        props.handleModalCLose(false);
        props.onPersonalDetailChanges();
@@ -128,7 +125,6 @@ useEffect(() => {
      };
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
-     // console.log('obj', obj);
    }
   };
 
@@ -180,7 +176,6 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
     isStepForm={false}
     
     onFormReset={() => {
-      console.log('form reset callback')
       onClear();
     }}
   />

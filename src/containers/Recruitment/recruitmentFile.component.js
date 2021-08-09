@@ -40,7 +40,7 @@ function RecruitmentFileComponent() {
     filename: 'sample.csv'
   };
 
-  const items = [{ to: '/', label: 'Home' }, { label: 'Batch Upload' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Bulk Upload' }];
 
   // Variable declarations Filter form
   const [defaultFilterValues, updateDefaultFilterValues] = useState({}); // eslint-disable-line
@@ -67,7 +67,7 @@ function RecruitmentFileComponent() {
 
   useEffect(() => {
     getUserRole();
-    setTitle('Batch Upload');
+    setTitle('Bulk Upload');
   }, []);
 
   const getTechnology = async () => {
@@ -154,7 +154,7 @@ function RecruitmentFileComponent() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Batch Upload</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Bulk Upload</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
@@ -162,11 +162,27 @@ function RecruitmentFileComponent() {
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Batch Upload</h4>
+                <h4 className="text-primary m-0">Bulk Upload</h4>
               </div>
             </Card.Header>
             <Card.Title>
               <Row>
+                <Col className="mt-4 ms-4 col-md-6">
+                                
+                  <div title="Download sample.csv File" className='mt-2'>
+                <p>sample file download
+                  <CSVLink {...csvReport}  target="_blank">
+                    <Image
+                    className="ml-3"
+                      src="/images/download.svg"
+                      alt="Download File"
+                    />
+                  </CSVLink>
+                  </p>
+                  </div>
+                </Col>
+                </Row>
+                <Row>
                 <Col>
                   <StarkFormBuilder
                     containerClass=""
@@ -192,17 +208,6 @@ function RecruitmentFileComponent() {
                     onFormReset={() => {
                     }}
                   />
-                </Col>
-                <Col className="mt-4 col-md-1">
-                                
-                  <div title="Download sample.csv File" className='mt-2'>
-                  <CSVLink {...csvReport}  target="_blank">
-                    <Image
-                      src="/images/download.svg"
-                      alt="Download File"
-                    />
-                  </CSVLink>
-                  </div>
                 </Col>
               </Row>
             </Card.Title>

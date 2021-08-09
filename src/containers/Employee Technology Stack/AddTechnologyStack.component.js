@@ -119,24 +119,7 @@ function AddTechnologyStack(props) {
   const getEmployee = async () => {
     // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
-     // if(id) {
-     //    // let emp = {};
-     //    data.data.map((employee) => {
-     //      if(Number(id) === Number(employee.id)) {
-     //        // emp = {
-     //        //   label : employee.full_name,
-     //        //   value : employee.id
-     //        // }
-     //      }
-     //      updateDefaultValues({
-     //        employee : {
-     //          label: 'Sanjay Mangalaram',
-     //           value: 3
-     //        }
-     //      })
-     //      return employee;
-     //    })
-     //  }
+    
     
      const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
       return { label: op.full_name, value: op.id };
