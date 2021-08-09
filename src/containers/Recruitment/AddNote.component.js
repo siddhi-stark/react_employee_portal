@@ -1,5 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
+
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './note.json';
 import {ModalInput} from '../../components/FormInputs';
@@ -40,6 +42,7 @@ function AddNote(props) {
       
       if(data) {
       	console.log('data',data);
+         swal(data.message[0], '','success')
           props.handleModalCLose(false);
       }
       
