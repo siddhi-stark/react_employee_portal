@@ -10,15 +10,17 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
 function AddNote(props) {
+  const note = props.note; //eslint-disable-line
+ console.log('noteinside function',note);
 
     const value = customFunctions.getLocalStorage('isClicked');
+    console.log('value',value);
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote,setShowNote] = useState(false);
   const [id,setStatusId] = useState('');
-  const [notes,setNoteData] = useState('');  
 
   // Get user role
   const getUserRole = async() => {
@@ -58,8 +60,10 @@ function AddNote(props) {
     //   // show error
     //   return;
     // }
-    console.log('getData Api call');
-    updateDefaultValues({notes});
+    const NotesData = {
+      notes: note && note
+    }
+    updateDefaultValues(NotesData);
   };
 
   // Call get data method on load
@@ -69,7 +73,7 @@ function AddNote(props) {
     }
     setShowNote(props.show);
     setStatusId(props.statusId);
-    setNoteData(props.note);
+    // setNoteData(props.note);
   }, []);
 
   const onCancelButton = () => {
@@ -81,7 +85,6 @@ function AddNote(props) {
 	return (
 		<>
 		{console.log('defaultValues',defaultValues)}
-    {console.log('notes',notes)}
        <ModalInput
         size="sm"
         centered
@@ -102,10 +105,10 @@ function AddNote(props) {
     callbacks={{}}
     defaultFormValues={defaultValues}
     currentUser={currentUser}
-    submitBtnText= {value === 'true' ? 'Cancel' : 'Submit'}
+    submitBtnText= 'Submit'
     showResetBtn={false}
     resetBtnText="Cancel"
-    btnContainerClass="form-submit-buttons"
+    btnContainerClass={!value ? 'form-submit-buttons' : 'd-none'}
     isStepForm={false}
     
     onFormReset={() => {

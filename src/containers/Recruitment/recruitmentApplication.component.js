@@ -559,7 +559,7 @@ const getDepartment = () => {
          show={modalShow}
          statusId={statusId}
          note={note}
-          handleModalCLose={(e) => setModalShow(e)}
+         handleModalCLose={(e) => setModalShow(e)}
          />
         )}
     </>
