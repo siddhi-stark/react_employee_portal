@@ -40,6 +40,7 @@ function AddNote(props) {
       
       if(data) {
       	console.log('data',data);
+          props.handleModalCLose(false);
       }
       
   };

@@ -34,15 +34,15 @@
 			"value": "1column"
 		},
 		"fields": [],
-		"optionCallback": "getEmployee",
+		"optionCallback": "getEmployeeName",
 		"optionsCallbackUrl": "employeeUrl",
 		"options": []
 	}, {
-		"name": "technology",
+		"name": "position",
 		"type": "select",
 		"label": "",
 		"id": "",
-		"placeholder": "Select Technology",
+		"placeholder": "Select Position",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [],
@@ -63,8 +63,8 @@
 			"value": "1column"
 		},
 		"fields": [],
-		"optionCallback": "getTechnology",
-		"optionsCallbackUrl": "technologyUrl",
+		"optionCallback": "getPosition",
+		"optionsCallbackUrl": "designationUrl",
 		"options": []
 	}],
 	"allowedUsers": [],
