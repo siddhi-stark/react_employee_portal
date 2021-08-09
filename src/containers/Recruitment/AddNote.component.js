@@ -87,7 +87,6 @@ function AddNote(props) {
     containerClass=''
     formHeaderClass=''
     formSections={FormSections}
-    formHeading="Reason"
     onFormSubmit={(formValues) => {submitForm(formValues);}}
     options={options}
     callbacks={{}}
@@ -95,7 +94,7 @@ function AddNote(props) {
     currentUser={currentUser}
     submitBtnText="Submit"
     showResetBtn={false}
-    resetBtnText="Clear"
+    resetBtnText="Cancel"
     btnContainerClass="form-submit-buttons"
     isStepForm={false}
     
