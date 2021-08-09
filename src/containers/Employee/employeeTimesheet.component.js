@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Image, Row, Col } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
-// import swal from 'sweetalert';
+import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './employeeListformschema.json';
 import customFunctions from '../../helper/customFunctions';
@@ -16,10 +16,11 @@ function EmployeeTimesheet(props) {
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [filterData, setFilterData] = useState({}); 
   const [dataShow, setDataShow] = useState(false);
   const [typeeee, setType] = useState('');
   const [title, setTitle] = useState('');
+  const [details, setDetails] = useState({});
   const history = useHistory();
 
   // Variable declarations
@@ -224,14 +225,58 @@ function EmployeeTimesheet(props) {
 
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+      });
+    }
+  };
+
+  const getTimesheetDetails = async (pageNo = 1) => {
+    const page = pageNo || currentPage;
+    const endPoint = `${Api.timesheetDetailsUrl}`;
+    const params = {
+      limit,
+      page,
+      start_date: filterData.fromDate
+        ? customFunctions.getDate(filterData.fromDate)
+        : '',
+      end_date: filterData.toDate
+        ? customFunctions.getDate(filterData.toDate)
+        : '',
+      employee_id: filterData.full_name ? filterData.full_name.value : '',
+      // ...filterList
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+
+      setDetails((data && data.data) || []);
+    } else {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+      });
     }
   };
 
   useEffect(() => {
     // const EmployeeType = props.location.state.type;
     // setEmployeeType(EmployeeType);
-    getRowData(1);
+    if(filterData.is_detail){
+      getTimesheetDetails();
+    } else{
+      getRowData(1);
+    }
     const type = props.match.params.empType;
     setType(type);
   }, [filterData, typeeee]);
@@ -352,21 +397,22 @@ function EmployeeTimesheet(props) {
               <Row>
                 <Col>
                   <p>
+
                     {' '}
                     No. of working days :{' '}
-                    {filterData.full_name ? filterData.full_name.label : ''}
+                    {details ? details.total_working_days : ''}
                   </p>
                 </Col>
                 <Col>
                   <p>
                     No. of leaves :{' '}
-                    {filterData.full_name ? filterData.full_name.label : ''}
+                    {details ? details.total_leaves : ''}
                   </p>
                 </Col>
                 <Col>
                   <p>
                     Total No. of working Hrs. :{' '}
-                    {filterData.full_name ? filterData.full_name.label : ''}
+                    {details ? details.total_working_hours : ''}
                   </p>
                 </Col>
               </Row>

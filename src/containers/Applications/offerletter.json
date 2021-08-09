@@ -139,19 +139,14 @@
                     }]
 	}, {
 		"name": "offered_ctc",
-		"type": "number",
+		"type": "text",
 		"label": "Offered CTC (In LPA)",
 		"id": "",
 		"placeholder": "eg.350000",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
-            "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          },
-          {
-            "type": "numeric|min:0,num",
+            "type": "required|num|min:4|max:7",
             "applyWhen": [],
             "applyWhenRelation": "OR"
           }],

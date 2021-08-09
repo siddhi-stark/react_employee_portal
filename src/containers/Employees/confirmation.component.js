@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Form, Button, Card } from 'react-bootstrap';
+import { Form, Button, Card, Row, Col } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import {
@@ -180,6 +180,8 @@ function Confirmation() {
               }}
               autocomplete="off"
             >
+            <Row>
+            <Col>
               <Datepicker
                 label="Confirmation Date"
                 asterisk="*"
@@ -198,15 +200,25 @@ function Confirmation() {
                   'required'
                 )}
               />
+            </Col>
+            <Col>
               <DropdownInput
                 label="Position"
                 options={getDesignationList()}
                 placeholder="Select Position"
+                asterisk="*"
                 defaultValue={selectedDesignationOption}
                 onSelectHandler={(select) => {
                   setSelectedDesignationOption(select);
                 }}
+                errorMessage={validator.message(
+                  'position',
+                  selectedDesignationOption,
+                  'required'
+                )}
               />
+            </Col>
+               </Row>
               <div className="justify-content-left mt-4 preview-send-btn">
                 <Button type="submit" variant="primary">
                   Save and Send Mail

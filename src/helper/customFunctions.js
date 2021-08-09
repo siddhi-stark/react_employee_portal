@@ -11,17 +11,14 @@ class CustomFunctions extends Component {
     const formattedate =
       y + '-' + (m <= 9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d); //eslint-disable-line
     return formattedate;
-
   };
 
-   getDDMMYYYYDate = (dateTime) => {
-    
+  getDDMMYYYYDate = (dateTime) => {
     const date = dateTime.split('/');
 
-    const dateNew =  date[2]+'/'+date[1]+'/'+date[0]; //eslint-disable-line
+    const dateNew = date[2] + '/' + date[1] + '/' + date[0]; //eslint-disable-line
     return dateNew;
-    
-      };
+  };
 
   getTime = (time) => {
     const newDate = new Date(time);
@@ -35,17 +32,17 @@ class CustomFunctions extends Component {
     const newDate = new Date(time);
     const h = newDate.getHours();
     const m = newDate.getMinutes();
-    const formattedTime = h < 10 ? `0`+ h : h + ':' + m < 10 ? `0` + m : m; //eslint-disable-line
+    const formattedTime = h < 10 ? `0` + h : h + ':' + m < 10 ? `0` + m : m; //eslint-disable-line
     return formattedTime;
   };
 
-getNewTime = (dateTime) => {
-const newdate = new Date(dateTime);
-const h = newdate.getHours();
-const min = newdate.getMinutes();
-const formattedate = h + ':' + min; //eslint-disable-line
-return formattedate;
-};
+  getNewTime = (dateTime) => {
+    const newdate = new Date(dateTime);
+    const h = newdate.getHours();
+    const min = newdate.getMinutes();
+    const formattedate = h + ':' + min; //eslint-disable-line
+    return formattedate;
+  };
 
   headerDate = (date) => {
     const newDate = new Date(date);
@@ -56,14 +53,14 @@ return formattedate;
   };
 
   getDMYDate = (dateTime) => {
-const newdate = new Date(dateTime);
-const d = newdate.getDate();
-const m = newdate.getMonth() + 1;
-const y = newdate.getFullYear();
-const formattedate =
-(d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y; //eslint-disable-line
-return formattedate;
-};
+    const newdate = new Date(dateTime);
+    const d = newdate.getDate();
+    const m = newdate.getMonth() + 1;
+    const y = newdate.getFullYear();
+    const formattedate =
+      (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y; //eslint-disable-line
+    return formattedate;
+  };
 
   getFormattedDate = (dateTime) => {
     const newdate = new Date(dateTime);
@@ -83,8 +80,7 @@ return formattedate;
     const d = newdate.getDate();
     const m = newdate.getMonth() + 1;
     const y = newdate.getFullYear();
-    const formattedate = 
-      (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y + formatTime; //eslint-disable-line
+    const formattedate = (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y +       formatTime; //eslint-disable-line
     return formattedate;
   };
 
@@ -337,37 +333,53 @@ return formattedate;
       return jsonString;
     }
   };
-  
+
   formatDate = (dt, seperator = '-', format = 'ymd') => {
-const dateObj = new Date(dt);
-let month = dateObj.getUTCMonth() + 1; // months from 1-12
-month = month < 10 ? `0${month}` : month;
-let day = dateObj.getDate();
-day = day < 10 ? `0${day}` : day;
-const year = dateObj.getUTCFullYear();
-let newdate;
-switch (format) {
-case 'ymd':
-newdate = year + seperator + month + seperator + day;
-break;
-case 'dmy':
-newdate = day + seperator + month + seperator + year;
-break;
-case 'mdy':
-newdate = month + seperator + day + seperator + year;
-break;
-case 'dM':
-newdate =
-day +
-seperator +
-dateObj.toLocaleString('default', { month: 'short' });
-break;
-default:
-newdate = year + seperator + month + seperator + day;
-break;
-}
-return newdate;
-};
+    const dateObj = new Date(dt);
+    let month = dateObj.getUTCMonth() + 1; // months from 1-12
+    month = month < 10 ? `0${month}` : month;
+    let day = dateObj.getDate();
+    day = day < 10 ? `0${day}` : day;
+    const year = dateObj.getUTCFullYear();
+    let newdate;
+    switch (format) {
+      case 'ymd':
+        newdate = year + seperator + month + seperator + day;
+        break;
+      case 'dmy':
+        newdate = day + seperator + month + seperator + year;
+        break;
+      case 'mdy':
+        newdate = month + seperator + day + seperator + year;
+        break;
+      case 'dM':
+        newdate =
+          day +
+          seperator +
+          dateObj.toLocaleString('default', { month: 'short' });
+        break;
+      default:
+        newdate = year + seperator + month + seperator + day;
+        break;
+    }
+    return newdate;
+  };
+
+  convertTime12to24 = (time12h) => {
+    const [time, modifier] = time12h.split(' ');
+
+    let [hours, minutes] = time.split(':'); // eslint-disable-line
+
+    if (hours === '12') {
+      hours = '00';
+    }
+
+    if (modifier === 'PM') {
+      hours = parseInt(hours, 10) + 12;
+    }
+
+    return `${hours}:${minutes}`;
+  };
 }
 
 export default new CustomFunctions();

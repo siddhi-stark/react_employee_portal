@@ -283,6 +283,7 @@
         "inputClass": "",
         "containerClass": "",
         "displayWhen": {},
+        "maxLength": "250",
         "haveValidations": "false",
         "haveDisplayOptions": "false",
         "callback": "onTaskName",

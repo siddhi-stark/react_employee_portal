@@ -99,16 +99,15 @@
     "fields": [
       {
         "name": "current_ctc",
-        "type": "number",
+        "type": "text",
         "label": "Current CTC (In LPA)",
         "id": "",
         "placeholder": "eg.350000",
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
           {
-            "type": "numeric|min:0,num",
+            "type": "required|num|min:4|max:7",
             "applyWhen": [],
             "applyWhenRelation": "OR"
           }
@@ -135,7 +134,7 @@
       },
       {
         "name": "expected_ctc",
-        "type": "number",
+        "type": "text",
         "label": "Expected CTC (In LPA)",
         "id": "",
         "placeholder": "eg.500000",
@@ -143,12 +142,7 @@
         "containerClass": "",
         "validations": [
           {
-            "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          },
-          {
-            "type": "numeric|min:0,num",
+            "type": "required|num|min:4|max:7",
             "applyWhen": [],
             "applyWhenRelation": "OR"
           }
@@ -215,24 +209,8 @@
         },
         "fields": [],
         "optionCallback": "getResume",
-        "options": [
-          {
-            "label": "Naukri",
-            "value": "1"
-          },
-          {
-            "label": "Indeed",
-            "value": "2"
-          },
-          {
-            "label": "Linkedin",
-            "value": "3"
-          },
-          {
-            "label": "Referal",
-            "value": "4"
-          }
-        ]
+        "optionsCallbackUrl": "InterviewRoundsUrl",
+        "options": []
       },
 
       {
@@ -248,7 +226,7 @@
           "conditions": [
             {
               "name": "resume_source",
-              "value": "4",
+              "value": "referal",
               "condition": "=="
             }
           ],
