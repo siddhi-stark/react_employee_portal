@@ -55,10 +55,10 @@ function AddNote(props) {
 
   // Get data for form
   const getData = async () => {
-    const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?is_dropdown=1`);
-    if(!data) {
+    // const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?is_dropdown=1`);
+    // if(!data) {
       // show error
-      return;
+      // return;
     // const {data } = await AuthApi.getDataFromServer(Api.employeeUrl);
     // if(!data) {
     //   // show error

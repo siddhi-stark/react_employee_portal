@@ -19,7 +19,7 @@ function NoticePeriodComponent() {
   const [currentPage, setCurrentPage] = useState('');
   const [options, updateOptions] = useState({});
 
-  const [filterData, setFilterData] = useState({}); 
+  const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const history = useHistory();
   // const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
@@ -31,8 +31,10 @@ function NoticePeriodComponent() {
       limit,
       notice_period: 'True',
       page,
-      designation_id: filterData.position ? filterData.position.value : '',
-      employee_id: filterData.employee ? filterData.employee.value : '',
+      designation_id:
+        filterData && filterData.position ? filterData.position.value : '',
+      user_id:
+        filterData && filterData.employee ? filterData.employee.value : '',
 
       // ...filterList
     };
@@ -50,14 +52,13 @@ function NoticePeriodComponent() {
 
   useEffect(() => {
     setTitle('Notice Period Employees');
-     getEmployee(1);
-     getEmployeeName();
+    getEmployee(1);
+    getEmployeeName();
     getPosition();
-  }, []);
+  }, [filterData]);
 
-   const submitForm = async (formValues) => {
+  const submitForm = async (formValues) => {
     console.log(formValues);
-
     setFilterData(formValues); //eslint-disable-line
   };
 
@@ -101,51 +102,49 @@ function NoticePeriodComponent() {
   return (
     <>
       <Helmet title={title} />
-     <section className="content-area">
-      <div className="mt-5">
-
-       <Accordion defaultActiveKey="0">
-          <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Filters</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                    Expand
-                  </Accordion.Toggle>
+      <section className="content-area">
+        <div className="mt-5">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary m-0">Filters</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      Expand
+                    </Accordion.Toggle>
+                  </div>
                 </div>
-              </div>
-            </Card.Header>
+              </Card.Header>
 
-            <Accordion.Collapse eventKey="1">
-              <Card.Title>
-  <StarkFormBuilder
-    containerClass='mt-5'
-    formHeaderClass=''
-    formSections={FormSections}
-    formHeading="filter form"
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    // currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true}
-    resetBtnText="Clear"
-    btnContainerClass="form-submit-buttons pull-right mb-3"
-    isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-    }}
-  />
-    
-
-              </Card.Title>
-            </Accordion.Collapse>
-          </Card>
-        </Accordion>
-      </div>
+              <Accordion.Collapse eventKey="1">
+                <Card.Title>
+                  <StarkFormBuilder
+                    containerClass="mt-5"
+                    formHeaderClass=""
+                    formSections={FormSections}
+                    formHeading="filter form"
+                    onFormSubmit={(formValues) => {
+                      submitForm(formValues);
+                    }}
+                    options={options}
+                    callbacks={{}}
+                    defaultFormValues={defaultValues}
+                    // currentUser={currentUser}
+                    submitBtnText="Submit"
+                    showResetBtn={true}
+                    resetBtnText="Clear"
+                    btnContainerClass="form-submit-buttons pull-right mb-3"
+                    isStepForm={false}
+                    onFormReset={() => {
+                      setFilterData({});
+                    }}
+                  />
+                </Card.Title>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
         <div className="row mt-3">
           {employee &&
             employee.map((emp) => (
@@ -157,7 +156,11 @@ function NoticePeriodComponent() {
                         <span className="mini-stat-icon bg-purple mr-0 float-right">
                           <Image
                             className="card-img-top"
-                            src={emp.profile_image_url ? `${emp.profile_image_url}` : `${Api.s3UrlnoProfile}`}
+                            src={
+                              emp.profile_image_url
+                                ? `${emp.profile_image_url}`
+                                : `${Api.s3UrlnoProfile}`
+                            }
                             alt="Card image cap"
                           />
                           {emp.on_notice_period === true && (
@@ -169,7 +172,7 @@ function NoticePeriodComponent() {
                         <Card.Title>{emp.name}</Card.Title>
                         <p className="card-text employee-details">
                           {emp.full_name}
-                         <span> {emp.designation_name} </span>
+                          <span> {emp.designation_name} </span>
                         </p>
                         <p className="text-primary confirmation-date">
                           {' '}

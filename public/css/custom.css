@@ -11350,7 +11350,8 @@ span.np-sup {
   position: relative; }
 
 .doughnut-graph-section p {
-  max-width: 150px; }
+  max-width: 150px;
+  width: 100%; }
 
 .doughnut-graph-section .chart-container {
   max-width: 500px; }

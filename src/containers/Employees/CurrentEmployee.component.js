@@ -18,7 +18,7 @@ function CurrentEmployee() {
   const [currentPage, setCurrentPage] = useState('');
   const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
-  const [filterData, setFilterData] = useState({}); 
+  const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
 
   const history = useHistory();
@@ -29,17 +29,18 @@ function CurrentEmployee() {
 
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
-    console.log('after endPointttttttttt');
     const params = {
       sort_by: 'full_name',
       limit,
       page,
-      designation_id: filterData.position ? filterData.position.value : '',
-user_id: filterData.employee ? filterData.employee.value : '',
+      designation_id:
+        filterData && filterData.position ? filterData.position.value : '',
+      user_id:
+        filterData && filterData.employee ? filterData.employee.value : '',
       // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log('url',url);
+    console.log('url', url);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       setEmployee([...data.data]);
@@ -57,17 +58,11 @@ user_id: filterData.employee ? filterData.employee.value : '',
     getEmployee(1);
     getEmployeeName();
     getPosition();
-  }, [title,filterData]);
-
+  }, [title, filterData]);
 
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
-     const postData = {
-        designation_id: filterData.position ? filterData.position.value : '',
-        user_id: filterData.employee ? filterData.employee.value : '', 
-     }
-     console.log('postData',postData);
     setFilterData(formValues); //eslint-disable-line
   };
 
@@ -108,56 +103,52 @@ user_id: filterData.employee ? filterData.employee.value : '',
     await updateOptions({ ...allOptions });
   };
 
-
   return (
     <>
       <Helmet title={title} />
       <section className="content-area">
-      <div className="mt-5">
-
-       <Accordion defaultActiveKey="0">
-          <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Filters</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                    Expand
-                  </Accordion.Toggle>
+        <div className="mt-5">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary m-0">Filters</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      Expand
+                    </Accordion.Toggle>
+                  </div>
                 </div>
-              </div>
-            </Card.Header>
+              </Card.Header>
 
-            <Accordion.Collapse eventKey="1">
-              <Card.Title>
-  <StarkFormBuilder
-    containerClass='mt-5'
-    formHeaderClass=''
-    formSections={FormSections}
-    formHeading="filter form"
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    // currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true}
-    resetBtnText="Clear"
-    btnContainerClass="form-submit-buttons pull-right mb-3"
-    isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-      setFilterData();
-    }}
-  />
-    
-
-              </Card.Title>
-            </Accordion.Collapse>
-          </Card>
-        </Accordion>
-      </div>
+              <Accordion.Collapse eventKey="1">
+                <Card.Title>
+                  <StarkFormBuilder
+                    containerClass="mt-5"
+                    formHeaderClass=""
+                    formSections={FormSections}
+                    formHeading="filter form"
+                    onFormSubmit={(formValues) => {
+                      submitForm(formValues);
+                    }}
+                    options={options}
+                    callbacks={{}}
+                    defaultFormValues={defaultValues}
+                    // currentUser={currentUser}
+                    submitBtnText="Submit"
+                    showResetBtn={true}
+                    resetBtnText="Clear"
+                    btnContainerClass="form-submit-buttons pull-right mb-3"
+                    isStepForm={false}
+                    onFormReset={() => {
+                      setFilterData({});
+                    }}
+                  />
+                </Card.Title>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
         <div className="row mt-3 employee-grid-list">
           {employee &&
             employee.map((emp) => (
