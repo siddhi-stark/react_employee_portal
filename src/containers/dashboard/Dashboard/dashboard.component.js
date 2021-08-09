@@ -170,7 +170,8 @@ const LastDay = customFunctions.getDate(lastday);
     setTitle('Dashboard');
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-
+    const quote = customFunctions.getLocalStorage('quote');
+    setQuotesContent(quote)
     const userclockedin = customFunctions.getLocalStorage('userclockedin');
     if (userclockedin)
       setShowClockIn(userclockedin);
@@ -181,19 +182,6 @@ const LastDay = customFunctions.getDate(lastday);
     document.dispatchEvent(viewButton);
     return true;
   };
-
- const getQuotes = async () => {
-    const endPoint = `${Api.randomQuotesUrl}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-
-    if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
-      setQuotesContent(data.data.content);
-    }
-  };
-  
-  useEffect(() => {
-    getQuotes();
-  }, [quotesContent]);
 
   return (
     <>

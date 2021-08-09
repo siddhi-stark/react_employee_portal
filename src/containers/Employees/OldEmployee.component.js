@@ -65,7 +65,7 @@ function OldEmployee() {
   const getEmployeeName = async () => {
     // const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all`
+      `${Api.employeeUrl}?type=all&is_dropdown=1`
     );
 
     const dpOptions =

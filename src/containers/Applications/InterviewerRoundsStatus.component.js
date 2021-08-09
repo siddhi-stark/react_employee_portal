@@ -67,13 +67,11 @@ function InterviewerRoundsStatus(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-      const id = applicantRoundsId.length - 1;
-      console.log('id',id);
-   
+      const applicantId = customFunctions.getLocalStorage('applicantId');
       const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
-      console.log('newId',newId);
       const postData = {
         id: newId ? Number(newId) : Number(interviewId),
+        applicant: applicantId,
         status : formValues ? formValues.status :'',
         comments : formValues ? formValues.comments :'',
       }

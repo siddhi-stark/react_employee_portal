@@ -152,7 +152,7 @@ function AllReports() {
   };
 
   const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setEmployeeList(data.data);
     }

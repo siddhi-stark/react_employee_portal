@@ -274,6 +274,7 @@ function EmployeeTimesheet(props) {
     // setEmployeeType(EmployeeType);
     if(filterData.is_detail){
       getTimesheetDetails();
+      getRowData(1);
     } else{
       getRowData(1);
     }
@@ -301,7 +302,7 @@ function EmployeeTimesheet(props) {
 
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all`
+      `${Api.employeeUrl}?type=all&is_dropdown=1`
     );
     if (!data) {
       // show error
@@ -384,10 +385,10 @@ function EmployeeTimesheet(props) {
           <Card.Header>
             <div className="d-flex align-items-center justify-content-between">
               <h4 className="text-primary mt-2 mb-2">
-                {`Employees Timesheet ${
+                {`${
                   filterData.full_name
-                    ? `for ${filterData.full_name.label}`
-                    : ''
+                    ? `Employee Timesheet for ${filterData.full_name.label}`
+                    : 'Employees Timesheet'
                 }`}
               </h4>
             </div>

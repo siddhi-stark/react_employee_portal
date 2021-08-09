@@ -11349,6 +11349,12 @@ span.np-sup {
   z-index: 999;
   position: relative; }
 
+.doughnut-graph-section p {
+  max-width: 150px; }
+
+.doughnut-graph-section .chart-container {
+  max-width: 500px; }
+
 /*.rounds-form {
     .row {
         .col-md-6 {

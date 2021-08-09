@@ -105,7 +105,7 @@ const [filterData, setFilterData] = useState({});
   };
 
   const getHrName = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=5`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=5&is_dropdown=1`);
     if (!data) {
       // show error
       return;
@@ -292,9 +292,9 @@ useEffect(()=>{
           />
         </Row>
         <hr />
-        <Row className="mt-4">
+        <Row className="mt-4 doughnut-graph-section">
           <h5>HR Activity</h5>
-          <Col sm={6}>
+          <Col className="col-sm-12 d-flex pb-4">
           <p>Shortlisted: {shortlistedGraph.shortlistedCount}<br/>
           Declined: {shortlistedGraph.declinedCount}<br/>
           Pending: {shortlistedGraph.pendingCount}<br/>
@@ -325,7 +325,8 @@ useEffect(()=>{
               wrapperSize={{ height: '150px', width: '100%' }}
             />
           </Col>
-          <Col sm={6}>
+          <hr/>
+          <Col className="col-sm-12 d-flex">
           <p>Selected: {shortlistedGraph.selectedCount} <br/>
             Rejected: {shortlistedGraph.rejectedCount}<br/>
             Shortlisted: {shortlistedGraph.finalCount}</p>

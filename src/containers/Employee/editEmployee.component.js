@@ -119,7 +119,7 @@ function EditEmployee(props) {
 
   // // Get data for form
   // const getData = async () => {
-  //   const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
+  //   const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?is_dropdown=1`);
   //   if (!data) {
   //     // show error
   //     return;

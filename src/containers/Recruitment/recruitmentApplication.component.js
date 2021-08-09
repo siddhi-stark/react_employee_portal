@@ -148,7 +148,6 @@ function RecruitmentApplicationComponent() {
   const handleStatus = (status_name) => { // eslint-disable-line
     return(
       <>
-      {console.log('status_name', status_name)}
       {(status_name.status_name === 'pending') ? ( // eslint-disable-line
 
       <DropdownInput

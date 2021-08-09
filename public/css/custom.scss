@@ -2970,7 +2970,7 @@ p.employee-details {
         .loader-texts {
             margin-top: 60px;
         }
-        img{
+        img {
             width: 50px;
         }
     }
@@ -3155,6 +3155,17 @@ span.np-sup {
         position: relative;
     }
 }
+
+.doughnut-graph-section {
+    p {
+        max-width: 150px;
+    }
+    .chart-container {
+        max-width: 500px;
+    }    
+}
+
+
 
 /*.rounds-form {
     .row {

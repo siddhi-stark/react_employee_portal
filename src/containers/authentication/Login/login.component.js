@@ -80,6 +80,10 @@ function Login(props) {
     if (data && data.data && data.data.token && data.data.token.access_token) {
       setLoader(false);
       CustomFunctions.setLocalStorage(
+        'quote',
+        data.data.quote
+      );
+      CustomFunctions.setLocalStorage(
         'access_token',
         data.data.token.access_token
       );

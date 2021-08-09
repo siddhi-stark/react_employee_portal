@@ -108,10 +108,12 @@ class CustomFunctions extends Component {
     this.removeLocalStorage('access_token');
     this.removeLocalStorage('group');
     this.removeLocalStorage('userId');
+    this.removeLocalStorage('quote');
   };
 
   clearLocalStorage = () => {
     this.removeLocalStorage('access_token');
+    this.removeLocalStorage('quote');
     this.removeLocalStorage('userId');
     this.removeLocalStorage('headerDate');
     this.removeLocalStorage('name');
@@ -126,6 +128,7 @@ class CustomFunctions extends Component {
     this.removeLocalStorage('access_token');
     this.removeLocalStorage('checkbox');
     this.removeLocalStorage('email');
+    this.removeLocalStorage('quote');
     this.removeLocalStorage('password');
     this.removeLocalStorage('group');
     this.removeLocalStorage('userId');
