@@ -668,7 +668,7 @@ function ToDoList(props) {
       <Loader showLoader={loader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-          <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
+          <UserRestrictions permittedUsers={[2, 3, 4, 5,6]} roleId={userRole}>
             <Card>
               <Card.Header>
                 <div className="d-flex align-items-center justify-content-between">

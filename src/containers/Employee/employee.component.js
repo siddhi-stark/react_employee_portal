@@ -335,7 +335,7 @@ function Employee() {
 
   const getManager = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?role_id=${2}`
+      `${Api.employeeUrl}?role_id=${2}&is_dropdown=1`
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setManager(data.data);
@@ -344,7 +344,7 @@ function Employee() {
 
   const getTeamLead = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?role_id=${3}`
+      `${Api.employeeUrl}?role_id=${3}&is_dropdown=1`
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setTeamLead(data.data);

@@ -23,13 +23,7 @@ const menu = [
     roleaccess: [1, 2, 3, 4],
   },
 
-  {
-    title: 'Reports',
-    path: '/reports',
-    icon: 'report.svg',
-    submenu: [],
-    roleaccess: [1, 5, 6],
-  },
+ 
 
    {
     title: 'Quotes',
@@ -147,6 +141,13 @@ const menu = [
       },
     ],
     roleaccess: [2, 3, 6],
+  },
+   {
+    title: 'Reports',
+    path: '/reports',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [1, 5, 6],
   },
   {
     title: 'Logout',

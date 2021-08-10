@@ -72,6 +72,16 @@ class CustomFunctions extends Component {
     return formattedate;
   };
 
+    getNewFormattedDate = (dateTime) => {
+    const newdate = new Date(dateTime);
+    const d = newdate.getDate();
+    const m = newdate.getMonth() + 1;
+    const y = newdate.getFullYear();
+    const formattedate =
+      (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y; //eslint-disable-line
+    return formattedate;
+  };
+
   getTimeFormatter = (dateTime) => {
     const newdate = new Date(dateTime);
     const h = newdate.getHours();

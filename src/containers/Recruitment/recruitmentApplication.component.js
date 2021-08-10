@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { withRouter, useHistory } from 'react-router-dom';
-import swal from 'sweetalert';
 import { Card, Image, Button, Accordion } from 'react-bootstrap';
 import FormSections from './applicationformschema.json';
 import customFunctions from '../../helper/customFunctions';
@@ -11,6 +10,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import AddNote from './AddNote.component';
+
 
 function RecruitmentApplicationComponent() {
   // const title = 'Recruitment';
@@ -35,6 +35,7 @@ function RecruitmentApplicationComponent() {
   const [title, setTitle] = useState('');
   const [statusId, setStatusId] = useState('');
   const [note,setNote] = useState('');
+  const [statusData, setStatusData] = useState('');
   // const [statusLabel,setStatusLabel] = useState('');
   // const [selectedStatusOption,setSelectedStatusOption] = useState(null);
   let filterOptions = {};
@@ -65,6 +66,12 @@ function RecruitmentApplicationComponent() {
     if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
       const date = new Date();
       sectionData.maxDate = date;
+    }
+    if(Number(group) !== 6) {
+      console.log('roleee');
+      if(sectionData.name === 'role_id') {
+        sectionData.disabled = true;
+      }
     }
     return sectionData;
   });
@@ -105,7 +112,7 @@ function RecruitmentApplicationComponent() {
 
           }}
         >
-           Note
+           <Image src="/images/notes.svg" />
          
 
 
@@ -151,7 +158,7 @@ function RecruitmentApplicationComponent() {
   const handleStatus = (status_name) => { // eslint-disable-line
     return(
       <>
-      {(status_name.status_name === 'pending') ? ( // eslint-disable-line
+      {(status_name.status_name === 'pending' && Number(group) === 5) ? ( // eslint-disable-line
 
       <DropdownInput
                   asterisk="*"
@@ -161,7 +168,12 @@ function RecruitmentApplicationComponent() {
                   onSelectHandler={(select) => {
                     // setSelectedStatusOption(select);
                     // setStatusLabel(select.label);
-                    onStatusClick(select,status_name.id,status_name);
+                    // onStatusClick(select,status_name.id,status_name);
+                     setStatusId(status_name.id); 
+                    // {select.label === 'decined'}
+                    {(select.label === 'declined' || select.label === 'shortlisted') ? setModalShow(true) : ''} //eslint-disable-line
+                     // setModalShow(true);
+                     setStatusData(select);
                   }}
                   // errorMessage={validator.message(
                   //   'Designation',
@@ -189,7 +201,7 @@ function RecruitmentApplicationComponent() {
       render: ({ created_at }) => { // eslint-disable-line
         return (
           <>
-            <span>{customFunctions.getFormattedDate(created_at)}</span>
+            <span>{customFunctions.getNewFormattedDate(created_at)}</span>
           </>
         );
       },
@@ -231,30 +243,30 @@ function RecruitmentApplicationComponent() {
   ];
 
 
-   const onStatusClick = async (statusData,statusId,status_name) => { //eslint-disable-line
-    const postData = {
-      ids:[statusId],
-      status: statusData.label === 'declined' ? 6 : 2
-    }
-    // setStatusLabel(status_name.status_name);
+  //  const onStatusClick = async (statusData,statusId,status_name) => { //eslint-disable-line
+  //   const postData = {
+  //     ids:[statusId],
+  //     status: statusData.label === 'declined' ? 6 : 2
+  //   }
+  //   // setStatusLabel(status_name.status_name);
 
-    const { data } = await AuthApi.putDataToServer(
-      `${Api.bulkStatusUrl}`,
-      postData
-    );
-    if(data) {
-       swal({
-        title: data.message[0],
-        icon: 'success',
-      })
-        .then(okAction => {
-          if (okAction) {
-            getRowData(currentPage);
-            if(postData.status === 6){ setStatusId(statusId); setModalShow(true);}
-          }
-        });
-    }
-  };
+  //   const { data } = await AuthApi.putDataToServer(
+  //     `${Api.bulkStatusUrl}`,
+  //     postData
+  //   );
+  //   if(data) {
+  //      swal({
+  //       title: data.message[0],
+  //       icon: 'success',
+  //     })
+  //       .then(okAction => {
+  //         if (okAction) {
+  //           getRowData(currentPage);
+  //           if(postData.status === 6 || statusData.label === 'shortlisted'){ setStatusId(statusId); setModalShow(true); }
+  //         }
+  //       });
+  //   }
+  // };
 
 
 const getDepartment = () => {
@@ -283,7 +295,7 @@ const getDepartment = () => {
     const params = {
       page,
       limit,
-      sort_by: 'updated_at',
+      sort_direction: 'descending',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -329,6 +341,7 @@ const getDepartment = () => {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    console.log('formValues',formValues);
     let payload = {};
 
     if (formValues) {
@@ -337,6 +350,9 @@ const getDepartment = () => {
         designation_id: formValues.designation_id
           ? formValues.designation_id.value
           : '',
+        technology_stack_id: formValues.technology_stack_id ? 
+        formValues.technology_stack_id.value
+        : '', 
         start_date: formValues.start_date
           ? customFunctions.getDate(formValues.start_date)
           : '',
@@ -404,11 +420,34 @@ const getDepartment = () => {
     updateOptions(allOptions);
   };
 
+  const getTechnology = async () => {
+      // const id = props.match.params.stackId;
+    const {data} = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    if(!data) {
+      // show error
+      return;
+    }
+    
+ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
+    });
+
+    options.technology_stack_id = dpOptions;
+    const allOptions = options;
+    await updateOptions({...allOptions});
+
+  }  
+
 
   useEffect(() => {
     getHrName();
     getDesignation();
+    getTechnology();
   }, []);
+
+  const getApplicantListing = () => {
+    getRowData(currentPage);
+  }
 
   return (
     <>
@@ -601,8 +640,12 @@ const getDepartment = () => {
         <AddNote
          show={modalShow}
          statusId={statusId}
+         statusData={statusData}
          note={note}
          handleModalCLose={(e) => setModalShow(e)}
+          onStatusUpdate={() => {
+            getApplicantListing()
+          }}
          />
         )}
     </>

@@ -137,7 +137,7 @@ function AllReports() {
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,
-          date: customFunctions.getFormattedDate(report.created_at),
+          date: customFunctions.getNewFormattedDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,
