@@ -69,7 +69,6 @@ function RecruitmentApplicationComponent() {
       sectionData.maxDate = date;
     }
     if(Number(group) !== 6) {
-      console.log('roleee');
       if(sectionData.name === 'role_id') {
         sectionData.disabled = true;
       }
@@ -343,7 +342,6 @@ const getDepartment = () => {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
     let payload = {};
 
     if (formValues) {

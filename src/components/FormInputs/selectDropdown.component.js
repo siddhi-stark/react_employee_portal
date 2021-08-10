@@ -40,7 +40,6 @@ export default function SelectDropdown(props) {
 
   return (
     <>
-    {console.log('isOptionDisabled',isOptionDisabled)}
       {label && (
         <Form.Label>
           {' '}
