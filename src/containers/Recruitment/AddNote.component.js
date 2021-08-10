@@ -21,6 +21,7 @@ function AddNote(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote,setShowNote] = useState(false);
   const [id,setStatusId] = useState('');
+  const [status,setStatusData] = useState('');
 
   // Get user role
   const getUserRole = async() => {
@@ -39,15 +40,24 @@ function AddNote(props) {
     const postData = {
     	notes:formValues ? formValues.notes : '',
     	ids: [id],
-    	status: 6
+    	status: status.label === 'declined' ? 6 : 2
     };
     
       const { data } = await AuthApi.putDataToServer(`${Api.bulkStatusUrl}`, postData);
       
       if(data) {
-      	console.log('data',data);
-         swal(data.message[0], '','success')
+        props.handleModalCLose(false);
+           swal({
+        title: data.message[0],
+        icon: 'success',
+      })
+        .then(okAction => {
+          if (okAction) {
+
           props.handleModalCLose(false);
+          props.onStatusUpdate();
+          }
+        });
       }
       
   };
@@ -77,6 +87,7 @@ function AddNote(props) {
     }
     setShowNote(props.show);
     setStatusId(props.statusId);
+    setStatusData(props.statusData);
     // setNoteData(props.note);
   }, []);
 

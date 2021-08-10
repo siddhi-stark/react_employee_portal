@@ -11,7 +11,7 @@
 	"fields": [{
 		"name": "notes",
 		"type": "textarea",
-		"label": "Reason",
+		"label": "Message",
 		"id": "",
 		"placeholder": "",
 		"inputClass": "",

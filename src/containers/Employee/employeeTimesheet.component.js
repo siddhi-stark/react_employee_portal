@@ -11,14 +11,13 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 
-function EmployeeTimesheet(props) {
+function EmployeeTimesheet() {
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); 
   const [dataShow, setDataShow] = useState(false);
-  const [typeeee, setType] = useState('');
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState({});
   const history = useHistory();
@@ -278,9 +277,9 @@ function EmployeeTimesheet(props) {
     } else{
       getRowData(1);
     }
-    const type = props.match.params.empType;
-    setType(type);
-  }, [filterData, typeeee]);
+    // const type = props.match.params.empType;
+    // setType(type);
+  }, [filterData]);
 
   // Get user role
   const getUserRole = async () => {
