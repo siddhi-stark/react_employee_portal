@@ -82,7 +82,9 @@ function Header() {
     getProfile();
     getCLocTIme();
     getClockOutTime();
-    getNotificationCount();
+    setInterval(()=>{
+      getNotificationCount();
+    },500000);
 
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
