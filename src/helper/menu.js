@@ -4,7 +4,7 @@ const menu = [
     path: '/',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5],
+    roleaccess: [1, 2, 3, 4, 5, 6],
   },
 
   {
@@ -28,7 +28,7 @@ const menu = [
     path: '/reports',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1, 5],
+    roleaccess: [1, 5, 6],
   },
 
    {
@@ -89,20 +89,20 @@ const menu = [
     path: '/emp-timesheet',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [5],
+    roleaccess: [5, 6],
   },
   {
     title: 'Employees',
     path: '/employees',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [5],
+    roleaccess: [5, 6],
   },
   {
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'dashboard.svg',
-    roleaccess: [5,4,3],
+    roleaccess: [5,4,3, 6],
   },  
   // {
   //   title: 'Employee Technology Stack',
@@ -137,23 +137,23 @@ const menu = [
         title: 'My Report',
         path: '/report',
         icon: 'report.svg',
-        roleaccess: [2, 3],
+        roleaccess: [2, 3, 6],
       },
       {
         title: 'Team Report',
         path: '/team-report',
         icon: 'report.svg',
-        roleaccess: [2, 3],
+        roleaccess: [2, 3, 6],
       },
     ],
-    roleaccess: [2, 3],
+    roleaccess: [2, 3, 6],
   },
   {
     title: 'Logout',
     path: '#',
     icon: 'logout.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5],
+    roleaccess: [1, 2, 3, 4, 5, 6],
   },
 ];
 

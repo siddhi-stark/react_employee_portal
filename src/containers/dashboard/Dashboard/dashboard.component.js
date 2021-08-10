@@ -42,22 +42,22 @@ function Dashboard() {
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockin',
       label: 'Clock In',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockout',
       label: 'Clock out',
-      roleAccess: [2, 3, 4, 5],
+      roleAccess: [2, 3, 4, 5, 6],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [2, 3, 4, 5],
+      roleAccess: [2, 3, 4, 5, 6],
     },
   ];
 
@@ -217,7 +217,7 @@ const LastDay = customFunctions.getDate(lastday);
                   </div>
                 </Col>
                 <Col md={3}>
-                  <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
                     <div className="check-in">
                       {
                         showClockIn && (
@@ -256,13 +256,13 @@ const LastDay = customFunctions.getDate(lastday);
                 </Col>
               </Row>
             </Jumbotron>
-            <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+            <UserRestrictions permittedUsers={[5,6]} roleId={userRole}>
             <div className="mt-4">
               <EmployeeListComponent />
             </div>
             </UserRestrictions>
 
-            <UserRestrictions permittedUsers={[2,3,4,5]} roleId={userRole}>
+            <UserRestrictions permittedUsers={[2,3,4,5,6]} roleId={userRole}>
             {
               showClockIn && !morningMail && (
                 <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
@@ -327,7 +327,7 @@ const LastDay = customFunctions.getDate(lastday);
               </Card.Body>
             </Card>
             </UserRestrictions>
-            <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
+            <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
 
               <div className="table-projects time-sheet-table">
                 <div className="card">
@@ -354,7 +354,7 @@ const LastDay = customFunctions.getDate(lastday);
                       )}
                     />
                   </div>
-                  <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[5,6]} roleId={userRole}>
                   <div className="d-flex justify-content-end mr-3">
                     <Button onClick={()=> 
                       {history.push('/hr-listing',customFunctions.setLocalStorage('type','EmpType'));

@@ -341,6 +341,9 @@ const getDepartment = () => {
         end_date: formValues.end_date
           ? customFunctions.getDate(formValues.end_date)
           : '',
+        created_by_id: formValues.role_id
+          ? formValues.role_id.value
+          : '',
       };
     }
     payload.status = status;
@@ -375,7 +378,33 @@ const getDepartment = () => {
     updateOptions(allOptions);
   };
 
+   const getHrName = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.teamUrl}?type=all`
+    );
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.name, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...filterOptions,
+      ...options,
+      role_id: dpOptions,
+    };
+    filterOptions = { ...allOptions };
+    updateOptions(allOptions);
+  };
+
+
   useEffect(() => {
+    getHrName();
     getDesignation();
   }, []);
 

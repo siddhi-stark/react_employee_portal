@@ -159,11 +159,8 @@ const dateNew = customFunctions.getFormattedDate(date);
           <CustomTable
             columns={columns}
             rows={rowData}
-
             showPagination={false} 
-
             role={5}
-
             paginationProps={{
               totalItems: totalCount,
               itemsPerPage: limit,
@@ -176,7 +173,7 @@ const dateNew = customFunctions.getFormattedDate(date);
               return 'No record found.';
             }}
           />
-          <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+          <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
             <div className="d-flex justify-content-end mr-3">
               <Button onClick={() => {
                 history.push('/emp-timesheet');
