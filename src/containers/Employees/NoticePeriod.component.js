@@ -11,7 +11,9 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
 
-function NoticePeriodComponent() {
+function NoticePeriodComponent(props) {
+  console.log('props',props);
+  
   const [employee, setEmployee] = useState([]);
   const [title, setTitle] = useState('');
   const [totalCount, setTotalCount] = useState(9);

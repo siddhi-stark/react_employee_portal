@@ -7,77 +7,31 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import CurrentEmployee from './CurrentEmployee.component';
 import NoticePeriod from './NoticePeriod.component';
 import OldEmployee from './OldEmployee.component';
-import Api from '../../helper/api';
-import AuthApi from '../../helper/authApi';
 
 function Employees() {
   // const title = 'Employees List';
   const [title, setTitle] = useState('');
-
-  // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
-  const [options, updateOptions] = useState({});
-  const [currentUser, updateCurrentUser] = useState(0);
-    
+  const [key, setKey] = useState('currentEmployee');
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employees' }];
-
-
-  // Get user role
-  const getUserRole = async() => {
-    const roleId = await localStorage.getItem('role');
-    updateCurrentUser(Number(roleId));
-  };
-
-  useEffect(() => {
-    getUserRole();
-    getTechnology();
-    getEmployee();
-  }, []);
-
-  
-    
- const getEmployee = async () => {
-    // const id = props.match.params.stackId;
-    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
-    
-    
-     const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
-      return { label: op.full_name, value: op.id };
-
-    });
-    options.employee = dpOptions;
-    const allOptions = options;
-    await updateOptions({...allOptions});
-  }
-      
-   const getTechnology = async () => {
-      // const id = props.match.params.stackId;
-    const {data} = await AuthApi.getDataFromServer(Api.employeeStackUrl);
-    if(!data) {
-      // show error
-      return;
-    }
-    
- const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
-      return { label: op.name, value: op.id };
-    });
-
-    options.technology = dpOptions;
-    const allOptions = options;
-    await updateOptions({...allOptions});
-
-  }  
-      
-
 
   useEffect(() => {
     setTitle('Employees');
   }, []);
 
+  const handleSelect = (emp)=>{
+    console.log('currEmp',emp);
+    if(emp === 'currentEmployee'){
+      setKey('currentEmployee');
+    } else if(emp === 'noticePeriod') {
+      setKey('noticePeriod');
+    } else if(emp === 'oldEmployee'){
+      setKey('oldEmployee');
+    }
+  }
+
   return (
     <>
-    {console.log('currentUser',currentUser)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -89,18 +43,25 @@ function Employees() {
         <div>
           <Tabs
             defaultActiveKey="currentEmployee"
+            onSelect={(e)=>handleSelect(e)}
             // id="uncontrolled-tab-example"
           >
             <Tab eventKey="currentEmployee" title="Current Employee">
-              <CurrentEmployee />
+            { (key ==='currentEmployee') && (
+              <CurrentEmployee key='1'/>
+            )}
             </Tab>
 
             <Tab eventKey="noticePeriod" title="Serving Notice Period">
-              <NoticePeriod />
+            { (key ==='noticePeriod') && (
+              <NoticePeriod key={key}/>
+            )}
             </Tab>
 
             <Tab eventKey="oldEmployee" title="Old Employee">
+            { (key ==='oldEmployee') && (
               <OldEmployee />
+            )}
             </Tab>
           </Tabs>
         </div>

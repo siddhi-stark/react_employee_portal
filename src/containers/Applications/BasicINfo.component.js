@@ -35,7 +35,7 @@ function BasicInformation(props) {
       const s = {...section};
       s.fields = section.fields.map((item) => {
         const itemData = item;
-         if(item.name === 'name' || item.name === 'position' || item.name === 'technologies_stack' || item.name === 'applied_for' || item.name === 'education' || item.name === 'email' || item.name === 'mobile') itemData.disabled = true;
+         if(item.name === 'name' || item.name === 'position' || item.name === 'tech_stack' || item.name === 'applied_for' || item.name === 'education' || item.name === 'email' || item.name === 'mobile') itemData.disabled = true;
          return itemData;
       })
       return s;
@@ -106,13 +106,6 @@ function BasicInformation(props) {
   // useEffect(() => {
   //   getData();
   // }, [])
-
-  useEffect(() => {
-    console.log()
-      const ApplicantId = props.match.params.ID;
-      console.log('ApplicantId--',ApplicantId);
-      setAppicantId(ApplicantId);
-  },[])
 
 
    // Submit Form
@@ -188,7 +181,7 @@ function BasicInformation(props) {
 
  
       
- const getTechnology = async () => {
+ const getTechnology = async (ApplicantId) => {
    console.log('getTechnology');
       // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
@@ -205,17 +198,21 @@ function BasicInformation(props) {
     const allOptions = options;
     await updateOptions({...allOptions});
    // console.log('applicantId',appicantId);
-    if(appicantId) {
+    if(ApplicantId) {
 
-    await getData(data.data,appicantId);
+    await getData(data.data,ApplicantId);
     }
 
   }  
 
   useEffect(() => {
-    getTechnology();
-    getDesignation();
-  }, [appicantId]);
+  const ApplicantId = props.match.params.ID;
+    if(ApplicantId){
+      setAppicantId(ApplicantId);
+      getTechnology(ApplicantId);
+      getDesignation();
+    }
+  }, []);
       
 
 

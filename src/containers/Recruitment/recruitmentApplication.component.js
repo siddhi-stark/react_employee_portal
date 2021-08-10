@@ -80,7 +80,9 @@ function RecruitmentApplicationComponent() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/applications/${id}`);
+            history.push(`/applications/${id}`, {
+              statusObj: status_name,
+            });
 
             // history.push('/edit-employee');
           }}
@@ -558,6 +560,18 @@ const getDepartment = () => {
                     }}
                   >
                     Offer Send
+                  </a>
+                  <a
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'Pending' ? 'active' : ''
+                    }`}
+                    onClick={() => {
+                      setActiveMenu('Pending');
+                      setStatus(5);
+                    }}
+                  >
+                    Pending
                   </a>
                 </>
               )}

@@ -10,7 +10,9 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
 
-function CurrentEmployee() {
+function CurrentEmployee(props) {
+  console.log('props key',props);
+
   const [employee, setEmployee] = useState([]);
   const [totalCount, setTotalCount] = useState(9);
   const [title, setTitle] = useState('');
@@ -58,7 +60,7 @@ function CurrentEmployee() {
     getEmployee(1);
     getEmployeeName();
     getPosition();
-  }, [title, filterData]);
+  }, [filterData]);
 
   // Submit Form
   const submitForm = async (formValues) => {
