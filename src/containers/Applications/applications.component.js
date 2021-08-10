@@ -87,7 +87,7 @@ function Applications(props) {
               >
                 {key === 'oldPeriod' && (
                   <div className="row ml-2">
-                    {Number(group) === 4 && isProfessionalInfoId ? (
+                    {(Number(group) === 4 || Number(group) === 3) && isProfessionalInfoId ? (
                       <InterviewerRoundsStatus
                         isProfessionalInfoId={isProfessionalInfoId}
                       />

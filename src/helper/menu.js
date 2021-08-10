@@ -73,10 +73,10 @@ const menu = [
         title: 'Recruitment',
         path: '/recruitment',
         icon: 'report.svg',
-        roleaccess: [1, 2],
+        roleaccess: [1, 2,6],
       },
     ],
-    roleaccess: [1,2],
+    roleaccess: [1,2,6],
   },
   {
     title: 'Employee Timesheet',

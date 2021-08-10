@@ -119,7 +119,7 @@ function RecruitmentApplicationComponent() {
 
         </a>
         ) }
-        { (Number(group) === 4 || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'offered' || status_name === 'declined' || status_name === 'rejected') ? ( //eslint-disable-line
+        { (Number(group) === 4 || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'declined' || status_name === 'rejected') ? ( //eslint-disable-line
 
        ''
         ) : 
