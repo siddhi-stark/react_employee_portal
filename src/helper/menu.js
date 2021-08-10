@@ -30,7 +30,7 @@ const menu = [
     path: '/quotes',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1,2],
+    roleaccess: [1,2,5],
   },
 
   {
