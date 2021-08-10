@@ -5,8 +5,7 @@ import StarkFormBuilder from 'stark-form-builder';
 import {
   EditorState,
   convertToRaw,
-  convertFromHTML,
-  ContentState,
+ 
 } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -29,6 +28,7 @@ function EmailTemplatesComponent() {
   const [templateId, setTemplateId] = useState(null); // eslint-disable-line
   const [placeholdersData, setPlaceholdersData] = useState([]);
   const [toggle, setToggle] = useState(false);
+  // const [emailTemplate,setEmailTemplateName] = useState([]);
 
   // Email
 
@@ -41,26 +41,27 @@ function EmailTemplatesComponent() {
   //   )
   // );
 
-  const getEmailTemplateData = async () => {
-    const { data, message } = await AuthApi.getDataFromServer(
-      `${Api.emailTemplates}`
-    );
-    if (data) {
-      await data.data.map((email) => {
-        // console.log('email', email);
+  // const getEmailTemplateData = async () => {
+  //   const { data, message } = await AuthApi.getDataFromServer(
+  //     `${Api.emailTemplates}?name=Confirmation Letter`
+  //   );
+  //   console.log('data',data);
+  //   if (data) {
+  //     await data.data.map((email) => {
+  //       // console.log('email', email);
 
-        const dp = EditorState.createWithContent(
-          ContentState.createFromBlockArray(convertFromHTML(email.body))
-        );
-        email.content = dp; //eslint-disable-line
-        // console.log('desc', dp);
-        return email;
-      });
-      setEmailContent(data.data);
-    } else {
-      swal(message, '', 'error');
-    }
-  };
+  //       const dp = EditorState.createWithContent(
+  //         ContentState.createFromBlockArray(convertFromHTML(email.body))
+  //       );
+  //       email.content = dp; //eslint-disable-line
+  //       // console.log('desc', dp);
+  //       return email;
+  //     });
+  //     setEmailContent(data.data);
+  //   } else {
+  //     swal(message, '', 'error');
+  //   }
+  // };
 
   const getPlaceholders = async () => {
     const { data, message } = await AuthApi.getDataFromServer(
@@ -97,7 +98,7 @@ function EmailTemplatesComponent() {
   useEffect(() => {
     getUserRole();
     getPlaceholders();
-    getEmailTemplateData();
+    // getEmailTemplateData();
   }, []);
 
   // Submit Form
@@ -157,6 +158,7 @@ function EmailTemplatesComponent() {
       emailName: dpOptions,
     };
     updateOptions(allOptions);
+    // setEmailTemplateName(data.data);
   };
 
   useEffect(() => {
@@ -164,6 +166,25 @@ function EmailTemplatesComponent() {
   }, []);
 
   const getTemplateValue = (value) => {
+    // let ds = '';
+    // emailTemplate.map((template) => {
+    // console.log('emailTemplate',template);
+    //   if(template.name === value.label) {
+    //     console.log('template.name === value.label');
+    //    ds =  {
+    //     label: template.subject,
+    //     value: template.id
+    //   }
+    //   }
+    //   return template;
+    // });
+
+    // const obj = {
+    //   emailSubject: ds
+    // };
+
+    // updateDefaultValues({obj})
+
     if (!value) return;
     setTemplateId(value.value);
   };
@@ -191,7 +212,7 @@ function EmailTemplatesComponent() {
               getTemplateValue(value);
             },
           }}
-          // defaultFormValues={defaultValues}
+         // defaultFormValues={defaultValues}
           currentUser={currentUser}
           submitBtnText="Submit"
           showResetBtn={false}

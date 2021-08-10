@@ -134,7 +134,7 @@ function RecruitmentApplicationComponent() {
         customFunctions.setLocalStorage('designation',applied_for_name);
         }}
         >
-        Send Offer
+       <Image src="/images/offer.svg" />
         </a>
          }
       </>
