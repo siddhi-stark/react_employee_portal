@@ -16,6 +16,8 @@ export default function SelectDropdown(props) {
     asterisk,
     placeholder,
     disabled,
+    isOptionDisabled
+
   } = props;
 
   const CustomStyle = {
@@ -38,6 +40,7 @@ export default function SelectDropdown(props) {
 
   return (
     <>
+    {console.log('isOptionDisabled',isOptionDisabled)}
       {label && (
         <Form.Label>
           {' '}
@@ -57,6 +60,7 @@ export default function SelectDropdown(props) {
           isMulti={isMulti}
           styles={CustomStyle}
           isDisabled={disabled}
+          isOptionDisabled={isOptionDisabled}
         />
         <p style={{ color: 'red' }}> {errorMessage} </p>
       </Form.Group>

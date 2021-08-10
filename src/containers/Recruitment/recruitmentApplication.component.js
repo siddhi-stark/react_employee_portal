@@ -57,6 +57,7 @@ function RecruitmentApplicationComponent() {
       id: 4,
       value: 'Pending',
       label: 'pending',
+      isdisabled: true 
     }
   ];
 
@@ -178,6 +179,7 @@ function RecruitmentApplicationComponent() {
                   //   selectedDesignationOption,
                   //   'required'
                   // )}
+                  isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line
                 />
         ): (<span>{status_name.status_name}</span>)}
 
@@ -584,7 +586,7 @@ const getDepartment = () => {
                       setStatus(6);
                     }}
                   >
-                    Decline
+                    Declined
                   </a>
                   <a
                     href="#"
