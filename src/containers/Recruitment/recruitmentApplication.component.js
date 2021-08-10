@@ -12,6 +12,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import AddNote from './AddNote.component';
 
+
 function RecruitmentApplicationComponent() {
   // const title = 'Recruitment';
   const group = customFunctions.getLocalStorage('group');
@@ -65,6 +66,12 @@ function RecruitmentApplicationComponent() {
     if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
       const date = new Date();
       sectionData.maxDate = date;
+    }
+    if(Number(group) !== 6) {
+      console.log('roleee');
+      if(sectionData.name === 'role_id') {
+        sectionData.disabled = true;
+      }
     }
     return sectionData;
   });

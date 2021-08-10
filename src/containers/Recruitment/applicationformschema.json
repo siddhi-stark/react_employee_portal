@@ -157,7 +157,7 @@
 				"maxDateSelector": "",
 				"disabled": false,
 				"isMulti": false,
-				"allowedUsers": [6],
+				"allowedUsers": [1,2,3,4,5],
 				"fieldsToReset": [],
 				"fieldLayout": { "label": "1 Column", "value": "1column" },
 				"fields": [],
