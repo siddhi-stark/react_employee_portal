@@ -261,7 +261,7 @@ function EmployeeProfile(props) {
                           <div className="d-flex align-items-start justify-content-between">
                             <div className="media">
                               <Image
-                                src="/images/stark-logo.png"
+                                src={(comp.company_name === 'Stark Digital') ? '/images/stark-logo.png':'/images/sample-logo.png'}
                                 className="mr-3"
                                 alt="image"
                               />
