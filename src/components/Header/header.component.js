@@ -48,7 +48,7 @@ function Header() {
     if(data) {
       setNotificationCount(data.data.count);
     }
-  }
+  };
 
   const getCLocTIme = () => {
     const clockTime = customFunctions.getLocalStorage('clockinTime');
@@ -115,7 +115,7 @@ function Header() {
     if(data) {
       setNotificationData(data.data);
     }
-  }
+  };
 
   const onMessageClick = async (notificatioId) => {
     const endPoint = `${Api.notificationUrl}`;
@@ -123,7 +123,7 @@ function Header() {
     const postData = {
      'is_read': true,
     'notifications': [notificatioId] 
-    }
+    };
     const {data} = await AuthApi.putDataToServer(endPoint,postData);
     if(data && data.data.is_read) {
       getNotificationCount();
@@ -141,7 +141,7 @@ function Header() {
       //     }
       //   });
     }
-  }
+  };
 
   return (
     <>

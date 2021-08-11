@@ -27,7 +27,6 @@ function AllReports() {
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [userRole, setUserRole] = useState('');
 
-
    const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,

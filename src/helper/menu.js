@@ -23,8 +23,6 @@ const menu = [
     roleaccess: [1, 2, 3, 4],
   },
 
- 
-
    {
     title: 'Quotes',
     path: '/quotes',

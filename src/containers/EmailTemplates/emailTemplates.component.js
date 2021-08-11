@@ -5,8 +5,8 @@ import StarkFormBuilder from 'stark-form-builder';
 import {
   EditorState,
   convertToRaw,
- ContentState,
- convertFromHTML
+  ContentState,
+  convertFromHTML,
 } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -26,41 +26,34 @@ function EmailTemplatesComponent() {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [emailContent, setEmailContent] = useState([]);
-  const [templateId, setTemplateId] = useState(null); // eslint-disable-line
+  const [templateId, setTemplateId] = useState(null);
   const [placeholdersData, setPlaceholdersData] = useState([]);
   const [toggle, setToggle] = useState(false);
-  // const [emailTemplate,setEmailTemplateName] = useState([]);
 
-  // Email
-
-  const [description] = useState(EditorState.createEmpty());
-  // const test =
-  //   'Dear Employee First Name,<br />With reference to the thorough evaluation of your performance during the probation period from Start Date to End Date, we are pleased to inform you that your employment is being confirmed as Job Title from Date of Confirmation. </br> The terms and conditions of your employment and your job responsibilities will continue to remain the same. We thank you for your valuable contribution made to your process and hope that you will perform with equal enthusiasm in future.</br>All the very best in all your endeavors with Stark!!</br>All the very best for a fruitful carrear with Stark !!</br>Regards,';
-  // const [description, setDescription] = useState(
-  //   EditorState.createWithContent(
-  //     ContentState.createFromBlockArray(convertFromHTML(test))
-  //   )
-  // );
+  let [description] = useState(EditorState.createEmpty());
 
   const getEmailTemplateData = async () => {
     const { data, message } = await AuthApi.getDataFromServer(
       `${Api.emailTemplates}`
     );
     if (data) {
-      console.log('data.data',data.data);
       data.data.map((email) => {
         // console.log('email', email);
 
-        const dp = email.body && EditorState.createWithContent(
-          ContentState.createFromBlockArray(convertFromHTML(email.body))
-        );
+        const dp =
+          email.body &&
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(convertFromHTML(email.body))
+          );
         email.content = dp; //eslint-disable-line
-        if(templateId === email.id){
-          updateDefaultValues({ emailName:{label:email.name, value:email.id}, emailSubject:email.subject});
+        if (templateId === email.id) {
+          updateDefaultValues({
+            emailName: { label: email.name, value: email.id },
+            emailSubject: email.subject,
+          });
         }
         return email;
       });
-      console.log('defaultValues',defaultValues);
       setEmailContent(data.data);
     } else {
       swal(message, '', 'error');
@@ -79,8 +72,6 @@ function EmailTemplatesComponent() {
   };
 
   const onEditorStateChange = (editorState, index) => {
-    console.log('index', index);
-    console.log('editorState', editorState);
     // setDescription(editorState);
     const emlContent = [...emailContent];
     const data = emlContent.map((d, i) => {
@@ -89,7 +80,6 @@ function EmailTemplatesComponent() {
       }
       return d;
     });
-    console.log('data---',data);
     setEmailContent([...data]);
   };
 
@@ -105,14 +95,22 @@ function EmailTemplatesComponent() {
   }, []);
 
   useEffect(() => {
-    if(templateId) getEmailTemplateData();
+    if (templateId) getEmailTemplateData();
   }, [templateId]);
 
   // Submit Form
   const submitForm = async (formValues) => {
+    emailContent &&
+      emailContent.map((emp) => {
+        if (emp.id === templateId) {
+          description = emp.content;
+        }
+        return emp;
+      });
     let stringDescription = '';
     const payload = {
-      name: formValues.emailName ? formValues.emailName.label:'',
+      id: templateId ? Number(templateId) : '',
+      name: formValues.emailName ? formValues.emailName.label : '',
       subject: formValues.emailSubject,
     };
     convertToRaw(description.getCurrentContent()) &&
@@ -123,17 +121,25 @@ function EmailTemplatesComponent() {
       });
     formValues = stringDescription; //eslint-disable-line
     payload.body = formValues;
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.putDataToServer(
       Api.emailTemplates,
       payload
     );
-    swal(data && data.message[0], '', 'success');
-    if (!data) {
-      console.log('message',message);
+    if (data) {
+      swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+        updateDefaultValues({});
+        setEmailContent([]);
+      });
+    } else {
       swal(message, '', 'error');
       // show error
     }
-    // Perform success actions
   };
 
   const copyToClipboard = (id) => {
@@ -164,7 +170,6 @@ function EmailTemplatesComponent() {
       emailName: dpOptions,
     };
     updateOptions(allOptions);
-    // setEmailTemplateName(data.data);
   };
 
   useEffect(() => {
@@ -210,7 +215,7 @@ function EmailTemplatesComponent() {
 
         <p className="mt-3">
           <Row>
-            <b className='mt-2 mb-2'>
+            <b className="mt-2 mb-2">
               Note:-The given list of words are the dynamic content which will
               replaced by the appropriate words while sending mail. Please use
               word as per the need as it is, do not make changes into them.
@@ -219,7 +224,6 @@ function EmailTemplatesComponent() {
               placeholdersData.map((place) => (
                 <Col md={4}>
                   <p // eslint-disable-line
-
                     id={place.name}
                     title={toggle ? 'copied' : 'copy'}
                     onClick={() => {
@@ -247,7 +251,6 @@ function EmailTemplatesComponent() {
                       editorClassName="demo-editor"
                       editorState={eml.content}
                       onEditorStateChange={(e) => {
-                        console.log('e', e);
                         onEditorStateChange(e, index);
                       }}
                       toolbar={{

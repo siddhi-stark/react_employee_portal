@@ -59,8 +59,7 @@ function NoticePeriodComponent() {
   }, [filterData]);
 
   const submitForm = async (formValues) => {
-    console.log(formValues);
-    setFilterData(formValues); //eslint-disable-line
+    setFilterData(formValues);
   };
 
   const getEmployeeName = async () => {
