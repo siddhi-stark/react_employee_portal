@@ -291,7 +291,7 @@ function EmployeeProfile(props) {
                               <a href="javascript:void()">
                                 <Image
                                   src="/images/edit-button.svg"
-                                  alt="Edit Profile"
+                                  title="Edit Profile"
                                   onClick={() => {
                                     setData(comp);
                                     setShowEMployee(true);
@@ -306,7 +306,7 @@ function EmployeeProfile(props) {
                               <a href="javascript:void()">
                                 <Image
                                   src="/images/delete.png"
-                                  alt="Edit Profile"
+                                  title="Edit Profile"
                                   onClick={() => {
                                     deleteEmployeeHistory(comp.id);
                                   }}

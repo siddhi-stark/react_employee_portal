@@ -9,9 +9,11 @@ import customFunctions from '../../helper/customFunctions';
 
 function AddHistory(props) {
   // Variable declarations
+    const history = customFunctions.getLocalStorage('hisotryID');
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [designationn,setDesignation] = useState([]);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -38,7 +40,7 @@ function AddHistory(props) {
     console.log(formValues);
     const employeeId = customFunctions.getLocalStorage('id');
     console.log('employeeId',employeeId);
-     const history = customFunctions.getLocalStorage('hisotryID');
+     // const history = customFunctions.getLocalStorage('hisotryID');
     const postData = {
       employee: Number(employeeId),
       designation: formValues.designation ? formValues.designation.label : '',
@@ -77,6 +79,7 @@ function AddHistory(props) {
 
   // Get data for form
   const getData = async (id, designation) => {
+    console.log('designation',designationn);
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
      let des = {};
      if(data){
@@ -87,7 +90,6 @@ function AddHistory(props) {
            value: ds.id
          }
        }
-       console.log('des',des);
        return ds;
      });
      data.data.start_date = data.data.start_date ? new Date(customFunctions.getDate(data.data.start_date)) : '';
@@ -116,16 +118,15 @@ function AddHistory(props) {
     const allOptions = options;
     await updateOptions({...allOptions});
 
-    const history = customFunctions.getLocalStorage('hisotryID');
     if(history) {
-
+      setDesignation(data.data);
     getData(history,data.data);
     }
   };
 
   useEffect(() => {
     getDesignation();
-  }, []);
+  }, [history]);
 
   const onClear = () => {
     props.handleModalCLose(false);
