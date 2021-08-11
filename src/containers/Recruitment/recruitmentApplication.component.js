@@ -84,6 +84,7 @@ function RecruitmentApplicationComponent() {
         <a
           href="/"
           className="pl-2"
+          title="Edit Applicant"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -103,6 +104,7 @@ function RecruitmentApplicationComponent() {
          <a
           href="/"
           className="pl-2"
+          title="Show Note"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -125,6 +127,7 @@ function RecruitmentApplicationComponent() {
  <a
         href="/"
         className="p-r-2 text-info ms-3"
+        title="Send Offer"
         onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -235,6 +238,10 @@ function RecruitmentApplicationComponent() {
       id: 'status_name',
       label: 'Status',
       render: handleStatus,
+    },
+    {
+      id:  (Number(group) === 5 || Number(group) === 6) ? 'round_status_name' : ''  ,
+      label: (Number(group) === 5 || Number(group) === 6) ?  'Round Status' : '',
     },
     {
       id: 'action',
