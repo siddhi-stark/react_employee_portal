@@ -20,6 +20,7 @@ import customFunctions from '../../helper/customFunctions';
 // };
 
 function NewInterviewRounds(props) {
+  const notes = customFunctions.getLocalStorage('notes');
   let defaultFilterOptions = {};
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -29,7 +30,6 @@ function NewInterviewRounds(props) {
   // const [formData, setFormData] = useState({});
   // const [updatedData, setUpdatedData] = useState({});
   const [count, forceUpdate] = useState(0);
-  const [noteData,setNoteData] = useState('');
   const { isProfessionalInfoId } = props;
 
   // const history = useHistory();
@@ -214,9 +214,10 @@ function NewInterviewRounds(props) {
       let newTime = '';
       let newDate = '';
       const interviewData = [];
+
       data.data.map((dt) => {
-      setNoteData(data);
-      console.log('getData');
+          // console.log('getData after api call',dt);
+
         if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);
         }
@@ -250,7 +251,6 @@ function NewInterviewRounds(props) {
 
   // Call get data method on load
   useEffect(() => {
-    console.log('isProfessionalInfoId',isProfessionalInfoId);
     if (isProfessionalInfoId) {
       getData(isProfessionalInfoId);
     }
@@ -339,7 +339,12 @@ function NewInterviewRounds(props) {
 
   return (
     <>
-    {console.log('noteData',noteData)}
+    <div className="mt-3">
+    {notes === 'null' ? (
+      ''
+      ) : 
+    <p><strong>Notes: </strong>{notes}</p>
+  }
       <div>
         <StarkFormBuilder
           containerClass=""
@@ -384,6 +389,7 @@ function NewInterviewRounds(props) {
                      Submit Feedback
                    </Button> */}
       </div>
+    </div>
     </>
   );
 }

@@ -26,7 +26,7 @@ function EmailTemplatesComponent() {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [emailContent, setEmailContent] = useState([]);
-  const [templateId, setTemplateId] = useState(null); 
+  const [templateId, setTemplateId] = useState(null);
   const [placeholdersData, setPlaceholdersData] = useState([]);
   const [toggle, setToggle] = useState(false);
 
@@ -38,6 +38,7 @@ function EmailTemplatesComponent() {
     );
     if (data) {
       data.data.map((email) => {
+        // console.log('email', email);
 
         const dp =
           email.body &&
@@ -99,15 +100,16 @@ function EmailTemplatesComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    emailContent && emailContent.map((emp)=>{
-        if(emp.id === templateId){
-            description = emp.content;
+    emailContent &&
+      emailContent.map((emp) => {
+        if (emp.id === templateId) {
+          description = emp.content;
         }
         return emp;
-    })
+      });
     let stringDescription = '';
     const payload = {
-      id: templateId ? Number(templateId) :'',
+      id: templateId ? Number(templateId) : '',
       name: formValues.emailName ? formValues.emailName.label : '',
       subject: formValues.emailSubject,
     };
@@ -123,17 +125,17 @@ function EmailTemplatesComponent() {
       Api.emailTemplates,
       payload
     );
-    if(data){
-      swal(data && data.message[0], '', 'success',{ closeOnClickOutside: false,
-              allowOutsideClick: false,
-              buttons: false,
-              timer: 2000,
-            }).then(() => {
-              swal.close();
-              updateDefaultValues({});
-              setEmailContent([]);
-            });
-
+    if (data) {
+      swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+        updateDefaultValues({});
+        setEmailContent([]);
+      });
     } else {
       swal(message, '', 'error');
       // show error
@@ -186,7 +188,7 @@ function EmailTemplatesComponent() {
         <h2 className="main-content-title tx-24 mg-b-5">Email Templates</h2>
         <Breadcrumb items={items} />
       </div>
-      <Card className="confirmation-content-box" body>
+      <Card body>
         <StarkFormBuilder
           containerClass=""
           formHeaderClass=""

@@ -297,6 +297,7 @@ const getDepartment = () => {
       page,
       limit,
       sort_direction: 'descending',
+      sort_by: 'updated_at',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);

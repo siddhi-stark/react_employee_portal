@@ -10,9 +10,8 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
 
-function CurrentEmployee(props) {
-  console.log('props key',props);
-
+function CurrentEmployee() {
+  
   const [employee, setEmployee] = useState([]);
   const [totalCount, setTotalCount] = useState(9);
   const [title, setTitle] = useState('');
@@ -42,7 +41,6 @@ function CurrentEmployee(props) {
       // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log('url', url);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       setEmployee([...data.data]);

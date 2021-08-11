@@ -62,6 +62,7 @@ function ProfessionalDetails(props) {
        // applied_for: ds
      };
      props.onProfDetInfo(data.data.id);
+   
        if (data.data.resume_source === 'naukri'){
           obj.resume_source = {label:'Naukri' ,value:data.data.resume_source}
        } else if (data.data.resume_source === 'indeed'){
@@ -85,7 +86,6 @@ function ProfessionalDetails(props) {
   // Submit Form
    const submitForm = async (formValues) => {
     const applicantId = customFunctions.getLocalStorage('applicantId');
-    console.log('applicantId',applicantId);
 
     let postData = {
       ...formValues
@@ -129,7 +129,6 @@ function ProfessionalDetails(props) {
 
     const dpOptions = [];
     data && data.data && data.data.resume_source.map((op) => {
-      console.log('op',op);
       // Change appropriate keys
       dpOptions.push({ label: op.name, value: op.id });
       return op;
