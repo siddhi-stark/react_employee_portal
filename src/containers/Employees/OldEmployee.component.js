@@ -170,6 +170,9 @@ function OldEmployee() {
             getEmployee(pageNo);
           }}
         />
+         {(totalCount < 1 ) && (
+        <p className="text-center"> No records found</p>
+      )}
       </section>
     </>
   );
