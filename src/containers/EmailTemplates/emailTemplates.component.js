@@ -5,7 +5,8 @@ import StarkFormBuilder from 'stark-form-builder';
 import {
   EditorState,
   convertToRaw,
- 
+ ContentState,
+ convertFromHTML
 } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -21,7 +22,7 @@ function EmailTemplatesComponent() {
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Email Templates' }];
   // Variable declarations
-  // const [defaultValues, updateDefaultValues] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [emailContent, setEmailContent] = useState([]);
@@ -41,31 +42,34 @@ function EmailTemplatesComponent() {
   //   )
   // );
 
-  // const getEmailTemplateData = async () => {
-  //   const { data, message } = await AuthApi.getDataFromServer(
-  //     `${Api.emailTemplates}?name=Confirmation Letter`
-  //   );
-  //   console.log('data',data);
-  //   if (data) {
-  //     await data.data.map((email) => {
-  //       // console.log('email', email);
+  const getEmailTemplateData = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.emailTemplates}`
+    );
+    if (data) {
+      console.log('data.data',data.data);
+      data.data.map((email) => {
+        // console.log('email', email);
 
-  //       const dp = EditorState.createWithContent(
-  //         ContentState.createFromBlockArray(convertFromHTML(email.body))
-  //       );
-  //       email.content = dp; //eslint-disable-line
-  //       // console.log('desc', dp);
-  //       return email;
-  //     });
-  //     setEmailContent(data.data);
-  //   } else {
-  //     swal(message, '', 'error');
-  //   }
-  // };
+        const dp = email.body && EditorState.createWithContent(
+          ContentState.createFromBlockArray(convertFromHTML(email.body))
+        );
+        email.content = dp; //eslint-disable-line
+        if(templateId === email.id){
+          updateDefaultValues({ emailName:{label:email.name, value:email.id}, emailSubject:email.subject});
+        }
+        return email;
+      });
+      console.log('defaultValues',defaultValues);
+      setEmailContent(data.data);
+    } else {
+      swal(message, '', 'error');
+    }
+  };
 
   const getPlaceholders = async () => {
     const { data, message } = await AuthApi.getDataFromServer(
-      `${Api.placeholders}`
+      `${Api.placeholders}?type=all`
     );
     if (data) {
       setPlaceholdersData(data.data);
@@ -98,8 +102,11 @@ function EmailTemplatesComponent() {
   useEffect(() => {
     getUserRole();
     getPlaceholders();
-    // getEmailTemplateData();
   }, []);
+
+  useEffect(() => {
+    if(templateId) getEmailTemplateData();
+  }, [templateId]);
 
   // Submit Form
   const submitForm = async (formValues) => {
@@ -138,7 +145,6 @@ function EmailTemplatesComponent() {
     document.execCommand('copy');
     window.getSelection().removeAllRanges();
   };
-  console.log('emailContent', emailContent);
 
   const getEmailTemplateName = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.emailTemplates);
@@ -166,25 +172,6 @@ function EmailTemplatesComponent() {
   }, []);
 
   const getTemplateValue = (value) => {
-    // let ds = '';
-    // emailTemplate.map((template) => {
-    // console.log('emailTemplate',template);
-    //   if(template.name === value.label) {
-    //     console.log('template.name === value.label');
-    //    ds =  {
-    //     label: template.subject,
-    //     value: template.id
-    //   }
-    //   }
-    //   return template;
-    // });
-
-    // const obj = {
-    //   emailSubject: ds
-    // };
-
-    // updateDefaultValues({obj})
-
     if (!value) return;
     setTemplateId(value.value);
   };
@@ -208,20 +195,17 @@ function EmailTemplatesComponent() {
           options={options}
           callbacks={{
             selectHandler: (value) => {
-              console.log('value--', value);
               getTemplateValue(value);
             },
           }}
-         // defaultFormValues={defaultValues}
           currentUser={currentUser}
+          defaultFormValues={defaultValues}
           submitBtnText="Submit"
           showResetBtn={false}
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
           isStepForm={false}
-          onFormReset={() => {
-            console.log('form reset callback');
-          }}
+          onFormReset={() => {}}
         />
 
         <p className="mt-3">

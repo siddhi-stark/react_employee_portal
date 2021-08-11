@@ -27,6 +27,7 @@ export default {
       (response) => response,
       async (error) => {
         const data = await error.response;
+        console.log('data',data);
         if (
           data &&
           (data.status === 401 || data.statusText === 'Unauthorized')
