@@ -81,7 +81,6 @@ yesterday.setDate(today.getDate() - 1);
 const date = customFunctions.getDate(new Date(yesterday));
 const dateNew = customFunctions.getFormattedDate(date);
   const n = weekday[yesterday.getDay()];
-  console.log('weekdate',dateNew);
 
 
 
@@ -112,7 +111,6 @@ const dateNew = customFunctions.getFormattedDate(date);
     //   ...filterList,
     // };
     // const url = customFunctions.generateUrl(endPoint, params);
-    console.log('endPoint',endPoint);
     const { data, message } = await AuthApi.getDataFromServer(endPoint);
 
 
@@ -141,7 +139,6 @@ const dateNew = customFunctions.getFormattedDate(date);
 
   const onViewBtnChange = () => {
 
-    console.log('onViewBtnChange');
     
     document.dispatchEvent(ViewButtonMenu);
     return true;

@@ -26,7 +26,7 @@ const menu = [
    {
     title: 'Quotes',
     path: '/quotes',
-    icon: 'dashboard.svg',
+    icon: 'quote.svg',
     submenu: [],
     roleaccess: [1,2,5],
   },
@@ -50,7 +50,7 @@ const menu = [
   {
     title: 'Email Templates',
     path: '/email-templates',
-    icon: 'Designation.svg',
+    icon: 'template.svg',
     submenu: [],
     roleaccess: [1],
   },
@@ -59,7 +59,7 @@ const menu = [
     title: 'HR Activity',
     path: '#',
     redirect: false,
-    icon: 'dashboard.svg',
+    icon: 'hr activity.svg',
     submenu: [
       {
         title: 'HR Report',
@@ -70,7 +70,7 @@ const menu = [
       {
         title: 'Recruitment',
         path: '/recruitment',
-        icon: 'report.svg',
+        icon: 'recruitment.svg',
         roleaccess: [1, 2,6],
       },
     ],
@@ -145,7 +145,7 @@ const menu = [
     path: '/reports',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1, 5, 6],
+    roleaccess: [1, 5],
   },
   {
     title: 'Logout',

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import StarkFormBuilder from 'stark-form-builder';
-import { Row, Col, Card, Button, Image, Accordion } from 'react-bootstrap';
-import FormSections from './EmployeeFilterSchema.json';
+// import StarkFormBuilder from 'stark-form-builder';
+import { Row, Col, Card, Button, Image } from 'react-bootstrap';
+// import FormSections from './EmployeeFilterSchema.json';
 import { Helmet } from '../../components/FormInputs';
 
 import AuthApi from '../../helper/authApi';
@@ -19,7 +19,7 @@ function OldEmployee() {
   const [currentPage, setCurrentPage] = useState('');
   const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
-  const [filterData, setFilterData] = useState({});
+  // const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
 
   const history = useHistory();
@@ -33,10 +33,10 @@ function OldEmployee() {
       limit,
       old_employee: 'True',
       page,
-      designation_id:
-        filterData && filterData.position ? filterData.position.value : '',
-      user_id:
-        filterData && filterData.employee ? filterData.employee.value : '',
+      // designation_id:
+      //   filterData && filterData.position ? filterData.position.value : '',
+      // user_id:
+      //   filterData && filterData.employee ? filterData.employee.value : '',
       // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -56,11 +56,13 @@ function OldEmployee() {
     getEmployee(1);
     getEmployeeName();
     getPosition();
-  }, [filterData]);
+  }, []);
 
-  const submitForm = async (formValues) => {
-    setFilterData(formValues); //eslint-disable-line
-  };
+  // const submitForm = async (formValues) => {
+  //   console.log(formValues);
+  //   setFilterData(formValues); //eslint-disable-line
+  // };
+
 
   const getEmployeeName = async () => {
     // const id = props.match.params.stackId;
@@ -103,48 +105,7 @@ function OldEmployee() {
     <>
       <Helmet title={title} />
       <section className="content-area">
-        <div className="mt-5">
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-
-              <Accordion.Collapse eventKey="1">
-                <Card.Title>
-                  <StarkFormBuilder
-                    containerClass="mt-5"
-                    formHeaderClass=""
-                    formSections={FormSections}
-                    formHeading="filter form"
-                    onFormSubmit={(formValues) => {
-                      submitForm(formValues);
-                    }}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    // currentUser={currentUser}
-                    submitBtnText="Submit"
-                    showResetBtn={true}
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons pull-right mb-3"
-                    isStepForm={false}
-                    onFormReset={() => {
-                      setFilterData({});
-                    }}
-                  />
-                </Card.Title>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-        </div>
+       
         <div className="row mt-3">
           {employee &&
             employee.map((emp) => (

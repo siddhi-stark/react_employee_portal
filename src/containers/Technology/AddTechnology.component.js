@@ -83,7 +83,7 @@ function AddTechnology(props) {
 			callbacks={{}}
 			defaultFormValues={defaultValues}
 			currentUser={currentUser}
-			submitBtnText="Submit"
+			submitBtnText="Add"
 			showResetBtn={true} 
 			resetBtnText="Clear"
 			btnContainerClass="form-submit-buttons"
