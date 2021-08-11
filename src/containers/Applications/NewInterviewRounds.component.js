@@ -251,7 +251,6 @@ function NewInterviewRounds(props) {
 
   // Call get data method on load
   useEffect(() => {
-    console.log('isProfessionalInfoId',isProfessionalInfoId);
     if (isProfessionalInfoId) {
       getData(isProfessionalInfoId);
     }
@@ -340,7 +339,6 @@ function NewInterviewRounds(props) {
 
   return (
     <>
-    {console.log('notes === null',notes === 'null')}
     <div className="mt-3">
     {notes === 'null' ? (
       ''

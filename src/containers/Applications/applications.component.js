@@ -78,7 +78,6 @@ function Applications(props) {
                       <ProfessonalDetails
                         isBasicInfoId={isBasicInfoId}
                         onProfDetInfo={(value) => {
-                          console.log('value',value);
                           setProfessionalInfo(value);
                           {(id) ? setIsPD(false) : setIsPD(true)} //eslint-disable-line
                         }}

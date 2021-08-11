@@ -86,7 +86,6 @@ function ProfessionalDetails(props) {
   // Submit Form
    const submitForm = async (formValues) => {
     const applicantId = customFunctions.getLocalStorage('applicantId');
-    console.log('applicantId',applicantId);
 
     let postData = {
       ...formValues
@@ -130,7 +129,6 @@ function ProfessionalDetails(props) {
 
     const dpOptions = [];
     data && data.data && data.data.resume_source.map((op) => {
-      console.log('op',op);
       // Change appropriate keys
       dpOptions.push({ label: op.name, value: op.id });
       return op;

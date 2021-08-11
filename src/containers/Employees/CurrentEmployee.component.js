@@ -41,7 +41,6 @@ function CurrentEmployee() {
       // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log('url', url);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       setEmployee([...data.data]);

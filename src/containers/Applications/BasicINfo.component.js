@@ -77,7 +77,6 @@ function BasicInformation(props) {
 
 
     if(data) {
-        console.log(data.data.notes);
      customFunctions.setLocalStorage('notes',data.data.notes);
         
      const ds = data.data.applied_for_id ? {

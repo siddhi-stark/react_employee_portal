@@ -333,7 +333,6 @@ function EmployeeTimesheet() {
 
   return (
     <>
-    {console.log('details',details)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
