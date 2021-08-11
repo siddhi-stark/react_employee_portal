@@ -34,7 +34,12 @@
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
   background-color: #303160;
-  border-color: #303160; }
+  border-color: #303160;
+  color: #ffffff; }
+
+.btn-group.addMoreBtnContainer .btn-secondary {
+  background-color: #E3E3E3 !important;
+  border-color: #E3E3E3 !important; }
 
 .btn-secondary:focus, .btn-secondary:active, .btn-secondary:hover {
   color: #000000;
@@ -11416,7 +11421,7 @@ span.np-sup {
   position: relative;
   margin-bottom: 30px; }
   .profile-bg img {
-    max-width: 100%; }
+    width: 100%; }
   .profile-bg .profile-img {
     position: absolute;
     bottom: -20px;

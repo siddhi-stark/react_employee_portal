@@ -132,7 +132,7 @@ function BasicInformation(props) {
     const endPoint = appicantId
       ? `${Api.applicantsUrl}${appicantId}/`
       : Api.applicantsUrl;
-    const { data } = await callback(endPoint, postData);
+    const { data, message } = await callback(endPoint, postData);
 
 
     // const { data } = await AuthApi.postDataToServer(
@@ -150,6 +150,15 @@ function BasicInformation(props) {
 
       // await getData(options.technologies_stack, ApplicantId);
       //  }
+    } else {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+      });
     }
   };
     

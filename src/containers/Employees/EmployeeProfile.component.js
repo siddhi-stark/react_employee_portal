@@ -170,7 +170,7 @@ function EmployeeProfile(props) {
                     </h6>
                   </div>
                   <div className="col-md-4">
-                    <h7>Email - {employeeDetails.email}</h7>
+                    <h6>Email - {employeeDetails.email}</h6>
                   </div>
                   <div className="col-md-4">
                     <h6>Personal Email - {employeeDetails.personal_email}</h6>
@@ -223,17 +223,6 @@ function EmployeeProfile(props) {
           </div>
           <div className="profile-details">
             <div className="row">
-              <div className="col-sm-12 mb-2 mt-3">
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Activity</h5>
-                    <p className="card-text">
-                      Lorem ipsum dolor sit amet consectetur adipisicing, elit.
-                      Quidem.
-                    </p>
-                  </div>
-                </div>
-              </div>
               <div className="col-sm-12">
                 <div className="card">
                   <div className="card-body">
@@ -317,18 +306,6 @@ function EmployeeProfile(props) {
                           <hr />
                         </>
                       ))}
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-12">
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Skill &amp; endoresements</h5>
-                    <ul className="list-group list-unstyled">
-                      <li>Html 5</li>
-                      <li>Css 3</li>
-                      <li>JavaScript</li>
-                    </ul>
                   </div>
                 </div>
               </div>

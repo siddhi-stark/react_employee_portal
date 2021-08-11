@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Button } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
@@ -12,6 +12,7 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function GenerateOfferLetter() {
+  const history = useHistory();
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const [options, updateOptions] = useState({}); //eslint-disable-line
@@ -44,9 +45,15 @@ function GenerateOfferLetter() {
     updateJsonSchema([...updatedSchema]);
     const Name = customFunctions.getLocalStorage('applicantName');
     const Designation = customFunctions.getLocalStorage('designation');
+    const OfferCtc = customFunctions.getLocalStorage('offerctc');
+    const joiningdate = customFunctions.getLocalStorage('joiningdate');
+    const PfInclude = customFunctions.getLocalStorage('pfInclude');
     updateDefaultValues({
       name: Name,
       designation: Designation,
+      joining_date: (joiningdate !== 'null') ? new Date(joiningdate) :'',
+      offered_ctc: (OfferCtc !== 'null') ? Number(OfferCtc): '',
+      pf_included: (PfInclude === 'true') ? 'true':'false'
     });
   }, []);
 
@@ -58,7 +65,19 @@ function GenerateOfferLetter() {
 
   useEffect(() => {
     getUserRole();
+    getEmailTemplateData();
   }, []);
+
+  const getEmailTemplateData = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.emailTemplates}?name=Offer Letter`
+    );
+    if (data) {
+      setEmailBody(data.data.body);
+    } else {
+      swal(message, '', 'error');
+    }
+  };
 
   const sendMail = async (body, doc) => {
     const id = customFunctions.getLocalStorage('applicantId');
@@ -78,36 +97,41 @@ function GenerateOfferLetter() {
 
     if (data) {
       console.log(message);
-        swal(data && data.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-      customFunctions.removeLocalStorage('applicantName');
-      customFunctions.removeLocalStorage('designation');
-          swal.close();
-            });
-          } else {
-            swal(message, '', 'error', {
-              closeOnClickOutside: false,
-              allowOutsideClick: false,
-            });
-          }
+      swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        customFunctions.removeLocalStorage('applicantName');
+        customFunctions.removeLocalStorage('designation');
+        customFunctions.removeLocalStorage('offerctc');
+        customFunctions.removeLocalStorage('joiningdate');
+        customFunctions.removeLocalStorage('pfInclude');
+        history.push('/recruitment');
+        swal.close();
+      });
+    } else {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
+    console.log('formValues',formValues);
     const id = customFunctions.getLocalStorage('applicantId');
-    const Applicant = customFunctions.getLocalStorage('applicantName');
+    // const Applicant = customFunctions.getLocalStorage('applicantName');
     const postData = {
       name: 'Offer Letter',
       subject: 'Offer Letter',
       applicant_id: Number(id),
-      body: `Hello ${Applicant}, <br/>Congratulations, I am happy to share your employement offer with you. <br />This offer is valid for 3 Days.`,
+      body: emailBody,
       generate_offer: Boolean(true),
       offered_ctc: Number(formValues.offered_ctc),
-      pf_included: (formValues.pf_included === 'true') ? true : false, // eslint-disable-line
+      pf_included: formValues.pf_included === 'true' ? true : false, // eslint-disable-line
       joining_date: formValues.joining_date
         ? customFunctions.getDate(formValues.joining_date)
         : '',
@@ -120,23 +144,26 @@ function GenerateOfferLetter() {
     );
     if (data) {
       swal(data && data.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          setDocument(data.data.attachement);
-          setEmailBody(data.data.body);
-      customFunctions.removeLocalStorage('applicantName');
-      customFunctions.removeLocalStorage('designation');
-          swal.close();
-            });
-          } else {
-            swal(message, '', 'error', {
-              closeOnClickOutside: false,
-              allowOutsideClick: false,
-            });
-          }
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        setDocument(data.data.attachement);
+        setEmailBody(data.data.body);
+        customFunctions.removeLocalStorage('applicantName');
+        customFunctions.removeLocalStorage('designation');
+        customFunctions.removeLocalStorage('offerctc');
+        customFunctions.removeLocalStorage('joiningdate');
+        customFunctions.removeLocalStorage('pfInclude');
+        swal.close();
+      });
+    } else {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
 
     //    const { data, message } = await AuthApi.postDataToServer(
     //     Api.sendMailUrl,
@@ -198,13 +225,22 @@ function GenerateOfferLetter() {
             console.log('form reset callback');
           }}
         />
-        { document && (
-            <>
-              <iframe  src={`${document}`} title="Offer" style={{'height':'500px','width':'500px'}}/><br/>
-              <Button className="mt-3 mb-4" onClick={()=> sendMail(emailBody, document)}>Send Mail</Button>
-            </>
-          )
-        }
+        {document && (
+          <>
+            <iframe
+              src={`${document}`}
+              title="Offer"
+              style={{ height: '500px', width: '500px' }}
+            />
+            <br />
+            <Button
+              className="mt-3 mb-4"
+              onClick={() => sendMail(emailBody, document)}
+            >
+              Send Mail
+            </Button>
+          </>
+        )}
       </div>
     </>
   );
