@@ -62,6 +62,7 @@ function ProfessionalDetails(props) {
        // applied_for: ds
      };
      props.onProfDetInfo(data.data.id);
+   
        if (data.data.resume_source === 'naukri'){
           obj.resume_source = {label:'Naukri' ,value:data.data.resume_source}
        } else if (data.data.resume_source === 'indeed'){

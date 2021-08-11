@@ -48,7 +48,6 @@ function BasicInformation(props) {
 
    // Get data for form
   const getData = async (technology, id) => {
-    console.log('getData----');
     // console.log('technology',technology);
     // const ApplicantId = id || props.match.params.ID;
     const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${id}/`);
@@ -78,6 +77,8 @@ function BasicInformation(props) {
 
 
     if(data) {
+        console.log(data.data.notes);
+     customFunctions.setLocalStorage('notes',data.data.notes);
         
      const ds = data.data.applied_for_id ? {
         label: data.data.applied_for_name,
@@ -97,7 +98,6 @@ function BasicInformation(props) {
      };
 
      props.onBasicInfo(data.data.id);
-     console.log('id---',obj)
 
      updateDefaultValues({...obj})    // updateDefaultValues(data);
       customFunctions.setLocalStorage('applicantId',data.data.id);
@@ -112,7 +112,6 @@ function BasicInformation(props) {
 
    // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
 
     // customFunctions.setLocalStorage('applicantName',formValues.name);
     // customFunctions.setLocalStorage('designation',formValues.applied_for.label);
@@ -184,7 +183,6 @@ function BasicInformation(props) {
  
       
  const getTechnology = async () => {
-   console.log('getTechnology');
       // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
     if(!data) {

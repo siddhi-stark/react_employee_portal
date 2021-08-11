@@ -12,7 +12,6 @@ import customFunctions from '../../helper/customFunctions';
 function Applications(props) {
   const title = 'Applications';
   const id = props.match.params.ID; //eslint-disable-line
-  console.log('id--', id);
   const statusObj = props;
   const paginationOptions = statusObj.location.state
     ? statusObj.location.state.statusObj
@@ -43,8 +42,6 @@ function Applications(props) {
 
   return (
     <>
-    {console.log('group',isProfessionalInfoId)}
-    {console.log('Number(group) === 3',Number(group) === 3)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
@@ -61,7 +58,6 @@ function Applications(props) {
                   {key === 'currentEmployee' && (
                     <BasicInformation
                       onBasicInfo={(value) => {
-                          console.log('value---',value);
                           setProfessionalInfo(value);
                           
                         setBasicInfo(value);
