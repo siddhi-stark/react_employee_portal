@@ -42,12 +42,10 @@ function Header() {
   };
 
    const getNotificationCount = async () => {
-    console.log('Notifcation List');
     const endPoint = `${Api.notificationCountUrl}`;
 
     const {data} = await AuthApi.getDataFromServer(endPoint);
     if(data) {
-      console.log('data',data.data);
       setNotificationCount(data.data.count);
     }
   }
@@ -111,7 +109,6 @@ function Header() {
   };
 
   const onNotification = async (type) => {
-    console.log('Notifcation List',type);
     const endPoint = type === 1 ? `${Api.notificationUrl}?type=all` : `${Api.notificationUrl}?limit=${3}`;
 
     const {data} = await AuthApi.getDataFromServer(endPoint);
@@ -148,7 +145,6 @@ function Header() {
 
   return (
     <>
-    {console.log('notification',notification)}
       <div className="main-header side-header sticky sticky-pin">
         <div className="container-fluid d-flex align-items-center justify-content-end h-100">
           <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
