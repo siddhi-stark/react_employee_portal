@@ -48,6 +48,7 @@ function InterviewerRoundsStatus(props) {
       `${Api.roundsUrl}${id}/`
     );
     if (data) {
+      console.log('data',data);
       setApplicantRoundsId(data.data.applicant_rounds);
       setInterviewData({
         interviewDate: data.data.applicant_rounds[0].int_date,
@@ -55,7 +56,7 @@ function InterviewerRoundsStatus(props) {
         interviewSelector: data.data.applicant_rounds[0].interviewer_name,
         interviewRound: data.data.applicant_rounds[0].status_name,
       });
-      console.log('obj',{status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
+      // console.log('obj',{status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
       updateDefaultValues({status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
     }
   };
@@ -67,17 +68,51 @@ function InterviewerRoundsStatus(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    console.log('applicantRoundsId',applicantRoundsId);
       const applicantId = customFunctions.getLocalStorage('applicantId');
-      const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
-      const postData = {
-        id: newId ? Number(newId) : Number(interviewId),
-        applicant: applicantId,
-        status : formValues ? formValues.status :'',
-        comments : formValues ? formValues.comments :'',
+
+    const postData = [];
+    applicantRoundsId.map((intrw,i) => {
+      if(i !== 0) {
+
+      // console.log('intrw',intrw);
+      postData.push({
+        id:intrw.applicant_round_id,
+        comments:intrw.comments,
+        status:intrw.status,
+        applicant: applicantId
+        });
       }
+      return intrw;
+    });
+
+    console.log('post',postData)
+    const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
+    const abc = {
+      id:newId ? Number(newId) : Number(interviewId),
+        comments:formValues ? formValues.comments :'',
+        status:formValues ? formValues.status :'',
+        applicant: applicantId
+
+    };
+
+    //   const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
+    //   postData.id = newId ? Number(newId) : Number(interviewId);
+    //     postData.applicant = applicantId;
+    //     postData.status = formValues ? formValues.status :'';
+    //     postData.comments = formValues ? formValues.comments :'';
+    // postData = {
+    //    ...postData,
+    //   }
+
+    postData.push( 
+      abc
+    );
+    console.log('postData',postData);
+    // console.log('NewpostData',postData);
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.roundsUrl}`,
-      { 'data':[postData]}
+      { 'data':postData}
     );
     if (data) {
       swal(data && data.message[0], '', 'success', {
