@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
@@ -36,8 +36,15 @@ function Applications(props) {
     }
   };
 
+  useEffect(()=>{
+    if(id)
+      setIsPD(false); 
+  },[])
+
   return (
     <>
+    {console.log('group',isProfessionalInfoId)}
+    {console.log('Number(group) === 3',Number(group) === 3)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
@@ -54,6 +61,9 @@ function Applications(props) {
                   {key === 'currentEmployee' && (
                     <BasicInformation
                       onBasicInfo={(value) => {
+                          console.log('value---',value);
+                          setProfessionalInfo(value);
+                          
                         setBasicInfo(value);
                         setIsBI(false);
                       }}
@@ -72,8 +82,9 @@ function Applications(props) {
                       <ProfessonalDetails
                         isBasicInfoId={isBasicInfoId}
                         onProfDetInfo={(value) => {
+                          console.log('value',value);
                           setProfessionalInfo(value);
-                          setIsPD(false);
+                          {(id) ? setIsPD(false) : setIsPD(true)} //eslint-disable-line
                         }}
                       />
                     )}

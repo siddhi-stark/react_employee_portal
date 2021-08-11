@@ -24,6 +24,8 @@ function BasicInformation(props) {
 
   useEffect(() => {
     getUserRole();
+    getDesignation();
+    getTechnology();
   }, [currentUser]);
 
   useEffect(() => {
@@ -181,7 +183,7 @@ function BasicInformation(props) {
 
  
       
- const getTechnology = async (ApplicantId) => {
+ const getTechnology = async () => {
    console.log('getTechnology');
       // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
@@ -198,9 +200,9 @@ function BasicInformation(props) {
     const allOptions = options;
     await updateOptions({...allOptions});
    // console.log('applicantId',appicantId);
-    if(ApplicantId) {
+    if(appicantId) {
 
-    await getData(data.data,ApplicantId);
+    await getData(data.data,appicantId);
     }
 
   }  
@@ -209,8 +211,6 @@ function BasicInformation(props) {
   const ApplicantId = props.match.params.ID;
     if(ApplicantId){
       setAppicantId(ApplicantId);
-      getTechnology(ApplicantId);
-      getDesignation();
     }
   }, []);
       

@@ -508,7 +508,7 @@ const getDepartment = () => {
                   }}
                   className="btn-link"
                 >
-                  {Number(group) === 4 ? '' : 'Add Applicant'}
+                  {(Number(group) === 4 || Number(group) === 3) ? '' : 'Add Applicant'}
                 </a>
               </div>
             </div>

@@ -29,6 +29,7 @@ function NewInterviewRounds(props) {
   // const [formData, setFormData] = useState({});
   // const [updatedData, setUpdatedData] = useState({});
   const [count, forceUpdate] = useState(0);
+  const [noteData,setNoteData] = useState('');
   const { isProfessionalInfoId } = props;
 
   // const history = useHistory();
@@ -214,6 +215,8 @@ function NewInterviewRounds(props) {
       let newDate = '';
       const interviewData = [];
       data.data.map((dt) => {
+      setNoteData(data);
+      console.log('getData');
         if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);
         }
@@ -247,6 +250,7 @@ function NewInterviewRounds(props) {
 
   // Call get data method on load
   useEffect(() => {
+    console.log('isProfessionalInfoId',isProfessionalInfoId);
     if (isProfessionalInfoId) {
       getData(isProfessionalInfoId);
     }
@@ -254,7 +258,7 @@ function NewInterviewRounds(props) {
 
   const getInterviewer = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all`
+      `${Api.employeeUrl}?type=all&show_self=1`
     );
     if (!data) {
       // show error
@@ -335,6 +339,7 @@ function NewInterviewRounds(props) {
 
   return (
     <>
+    {console.log('noteData',noteData)}
       <div>
         <StarkFormBuilder
           containerClass=""
