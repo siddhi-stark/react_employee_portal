@@ -253,6 +253,7 @@ function EmployeeTechListing() {
                 <CustomTable
                   columns={columns}
                   rows={rowData}
+                  tableClass="table-striped"
                   showPagination={true} // eslint-disable-line
                   paginationProps={{
                     totalItems: totalCount,

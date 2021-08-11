@@ -69,6 +69,11 @@
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
     background-color: $primary;
     border-color: $primary;
+    color: $white;
+}
+.btn-group.addMoreBtnContainer .btn-secondary {
+    background-color: #E3E3E3 !important;
+    border-color: #E3E3E3 !important;
 }
 .btn-secondary{
     &:focus, &:active , &:hover {
@@ -3236,7 +3241,7 @@ span.np-sup {
     position: relative;
     margin-bottom: 30px;
     img {
-        max-width: 100%;
+        width: 100%;
     }
     .profile-img {
         position: absolute;

@@ -158,6 +158,7 @@ const dateNew = customFunctions.getFormattedDate(date);
             rows={rowData}
             showPagination={false} 
             role={5}
+            tableClass="table-striped"
             paginationProps={{
               totalItems: totalCount,
               itemsPerPage: limit,

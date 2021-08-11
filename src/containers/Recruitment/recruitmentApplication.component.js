@@ -76,7 +76,8 @@ function RecruitmentApplicationComponent() {
     return sectionData;
   });
 
-  const handleActionCallback = ({ id, status_name,name,applied_for_name,notes }) => { //eslint-disable-line
+  const handleActionCallback = ({  id, status_name,name,applied_for_name,notes,offered_ctc,joining_date, pf_included}) => { //eslint-disable-line
+
     return (
       <>
       {(status_name !== 'declined') ? ( //eslint-disable-line
@@ -97,8 +98,6 @@ function RecruitmentApplicationComponent() {
         >
             <Image src="/images/edit-button.svg" />
          
-
-
         </a>
         ) : (
          <a
@@ -115,8 +114,6 @@ function RecruitmentApplicationComponent() {
           }}
         >
            <Image src="/images/notes.svg" />
-         
-
 
         </a>
         ) }
@@ -126,14 +123,22 @@ function RecruitmentApplicationComponent() {
         ) : 
  <a
         href="/"
-        className="p-r-2 text-info ms-3"
+        className="p-r-2 text-info ms-2"
         title="Send Offer"
         onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
         history.push('/generate-offerletter');
-        customFunctions.setLocalStorage('applicantName',name);
-        customFunctions.setLocalStorage('designation',applied_for_name);
+        rowData && rowData.map((dt)=>{
+          if(id === dt.id){
+            customFunctions.setLocalStorage('applicantName',dt.name && dt.name);
+            customFunctions.setLocalStorage('designation',dt.applied_for_name && dt.applied_for_name);
+            customFunctions.setLocalStorage('offerctc',dt.offered_ctc && dt.offered_ctc);
+            customFunctions.setLocalStorage('joiningdate',dt.joining_date && dt.joining_date);
+            customFunctions.setLocalStorage('pfInclude',dt.pf_included && dt.pf_included);
+          }
+          return dt;
+        })
         }}
         >
        <Image src="/images/offer.svg" />
@@ -164,27 +169,27 @@ function RecruitmentApplicationComponent() {
       {(status_name.status_name === 'pending' && Number(group) === 5) ? ( // eslint-disable-line
 
       <DropdownInput
-                  asterisk="*"
-                  options={getDepartment()}
-                  placeholder="Select status"
-                  defaultValue={status_name.status_name ? getStatusId(status_name.status_name)  : {}}
-                  onSelectHandler={(select) => {
-                    // setSelectedStatusOption(select);
-                    // setStatusLabel(select.label);
-                    // onStatusClick(select,status_name.id,status_name);
-                     setStatusId(status_name.id); 
-                    // {select.label === 'decined'}
-                    {(select.label === 'declined' || select.label === 'shortlisted') ? setModalShow(true) : ''} //eslint-disable-line
-                     // setModalShow(true);
-                     setStatusData(select);
-                  }}
-                  // errorMessage={validator.message(
-                  //   'Designation',
-                  //   selectedDesignationOption,
-                  //   'required'
-                  // )}
-                  isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line
-                />
+        asterisk="*"
+        options={getDepartment()}
+        placeholder="Select status"
+        defaultValue={status_name.status_name ? getStatusId(status_name.status_name)  : {}}
+        onSelectHandler={(select) => {
+          // setSelectedStatusOption(select);
+          // setStatusLabel(select.label);
+          // onStatusClick(select,status_name.id,status_name);
+           setStatusId(status_name.id); 
+          // {select.label === 'decined'}
+          {(select.label === 'declined' || select.label === 'shortlisted') ? setModalShow(true) : ''} //eslint-disable-line
+           // setModalShow(true);
+           setStatusData(select);
+        }}
+        // errorMessage={validator.message(
+        //   'Designation',
+        //   selectedDesignationOption,
+        //   'required'
+        // )}
+        isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line
+      />
         ): (<span>{status_name.status_name}</span>)}
 
       </>
@@ -194,6 +199,21 @@ function RecruitmentApplicationComponent() {
 
   // Declare columns
   const columns = [
+    {
+      id: 'offered_ctc',
+      label: 'offered ctc',
+      isDisplay: false,
+    },  
+    {
+      id: 'joining_date',
+      label: 'joining date',
+      isDisplay: false,
+    },  
+    {
+      id: 'pf_included',
+      label: 'pf included',
+      isDisplay: false,
+    },  
     {
       id: 'id',
       label: 'Sr. No',
@@ -345,9 +365,7 @@ const getDepartment = () => {
   useEffect(() => {
     getUserRole();
   }, []);
-
   
-
   // Submit Form
   const submitForm = async (formValues) => {
     let payload = {};
@@ -443,10 +461,7 @@ const getDepartment = () => {
     options.technology_stack_id = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-
   }  
-
-
   useEffect(() => {
     getHrName();
     getDesignation();
@@ -627,6 +642,7 @@ const getDepartment = () => {
               tableContainerClass="mt-2"
               columns={columns}
               rows={rowData}
+              tableClass="table-striped"
               showPagination={true}
               paginationProps={{
                 totalItems: totalCount,

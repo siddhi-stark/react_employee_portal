@@ -175,6 +175,7 @@ function Quotes() {
               columns={columns}
               rows={rowData}
               showPagination={true}
+              tableClass="table-striped"
               paginationProps={{
                 totalItems: totalCount,
                 itemsPerPage: limit,

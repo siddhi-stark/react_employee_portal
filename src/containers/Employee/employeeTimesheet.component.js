@@ -49,7 +49,7 @@ function EmployeeTimesheet() {
   });
 
   const handleActionCallback = (row) => {
-    const userId = customFunctions.getLocalStorage('userId');
+    const userName = customFunctions.getLocalStorage('name');
     return (
       <>
         <a
@@ -64,7 +64,7 @@ function EmployeeTimesheet() {
             customFunctions.setLocalStorage('date', row.date);
           }}
         >
-          {!(Number(userId) === row.user_id) && (
+          {!(String(userName) === row.emp_name) && (
             <Image src="/images/edit-button.svg" />
           )}
         </a>
@@ -116,7 +116,7 @@ function EmployeeTimesheet() {
       render: ({ row }) => {
         return (
           <>
-            <span>{dataShow ? row.Date : ''}</span>
+            <span>{dataShow ? customFunctions.getNewFormattedDate(row.date) : ''}</span>
           </>
         );
       },
@@ -176,7 +176,6 @@ function EmployeeTimesheet() {
       render: ({ row }) => {
         return (
           <>
-          const dateNew = customFunctions.getNewFormattedDate(row.date);
             <span>{dataShow ? '' : customFunctions.getNewFormattedDate(row.date)}</span>
           </>
         );
@@ -422,6 +421,7 @@ function EmployeeTimesheet() {
             <CustomTable
               columns={columns}
               rows={rowData}
+              tableClass="table-striped"
               showPagination={true} // eslint-disable-line
               paginationProps={{
                 totalItems: totalCount,

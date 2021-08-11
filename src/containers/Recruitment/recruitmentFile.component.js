@@ -14,8 +14,8 @@ function RecruitmentFileComponent() {
   // const title = 'Batch Upload';
 
   const csvdata = [
-    { Candidate_Name: '', Email: '', Mobile_No: '', Locality: '' , Current_CTC: '', Expected_CTC: '', Notice_Period: '', Total_Exp: '' ,
-     Relevant_Exp: '', Resume_Source: '', Reason_Job_Change: '', Resume: '',Gender:'' },
+    { Candidate_Name: 'Lata Patil', Email: 'lata12@gmail.com', Mobile_No: '9871234587', Locality: 'Pune' , Current_CTC: '200000', Expected_CTC: '300000', Notice_Period: '3', Total_Exp: '3' ,
+     Relevant_Exp: '2', Resume_Source: 'Naukri', Reason_Job_Change: 'Better Opportunity', Resume: '',Gender:'Female' },
   ];
 
    const csvHeader = [
