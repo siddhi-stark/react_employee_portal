@@ -79,7 +79,8 @@ function Sidebar() {
                       }
                       onClick={() => {
                         if (menuItem.title === 'Logout') {
-                          customFunctions.clearLocalStorage();
+                          // customFunctions.clearLocalStorage();
+                          customFunctions.onLogout();
                           document.dispatchEvent(event);
                           dispatch({ type: 'LOGIN', value: false });
                           history.push('/login');

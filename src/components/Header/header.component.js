@@ -283,7 +283,8 @@ function Header() {
                         className="dropdown-item"
                         href="#"
                         onClick={() => {
-                          customFunctions.clearLocalStorage();
+                          // customFunctions.clearLocalStorage();
+                          customFunctions.onLogout();
                           document.dispatchEvent(event);
                           dispatch({ type: 'LOGIN', value: false });
                           history.push('/login');

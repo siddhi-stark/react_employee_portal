@@ -393,6 +393,18 @@ class CustomFunctions extends Component {
 
     return `${hours}:${minutes}`;
   };
+
+  onLogout = () =>{
+    const check = this.getLocalStorage('checkbox');
+    const pass = this.getLocalStorage('password');
+    const emailAddress = this.getLocalStorage('email');
+    localStorage.clear();
+    if(check){
+      this.setLocalStorage('checkbox',check);
+      this.setLocalStorage('password',pass);
+      this.setLocalStorage('email',emailAddress); 
+    }
+  }
 }
 
 export default new CustomFunctions();

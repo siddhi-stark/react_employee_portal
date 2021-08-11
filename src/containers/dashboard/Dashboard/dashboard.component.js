@@ -93,6 +93,8 @@ const LastDay = customFunctions.getDate(lastday);
       } else {
         setShowLoader(false);
       }
+    } else {
+      setShowLoader(false);
     }
   };
 
