@@ -59,7 +59,6 @@ function OldEmployee() {
   }, [filterData]);
 
   const submitForm = async (formValues) => {
-    console.log(formValues);
     setFilterData(formValues); //eslint-disable-line
   };
 

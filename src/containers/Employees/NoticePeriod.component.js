@@ -11,8 +11,7 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
 
-function NoticePeriodComponent(props) {
-  console.log('props',props);
+function NoticePeriodComponent() {
   
   const [employee, setEmployee] = useState([]);
   const [title, setTitle] = useState('');
@@ -60,8 +59,7 @@ function NoticePeriodComponent(props) {
   }, [filterData]);
 
   const submitForm = async (formValues) => {
-    console.log(formValues);
-    setFilterData(formValues); //eslint-disable-line
+    setFilterData(formValues);
   };
 
   const getEmployeeName = async () => {

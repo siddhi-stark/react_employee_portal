@@ -5,7 +5,8 @@ import StarkFormBuilder from 'stark-form-builder';
 import {
   EditorState,
   convertToRaw,
- 
+  ContentState,
+  convertFromHTML,
 } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -21,51 +22,46 @@ function EmailTemplatesComponent() {
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Email Templates' }];
   // Variable declarations
-  // const [defaultValues, updateDefaultValues] = useState({});
+  const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [emailContent, setEmailContent] = useState([]);
-  const [templateId, setTemplateId] = useState(null); // eslint-disable-line
+  const [templateId, setTemplateId] = useState(null); 
   const [placeholdersData, setPlaceholdersData] = useState([]);
   const [toggle, setToggle] = useState(false);
-  // const [emailTemplate,setEmailTemplateName] = useState([]);
 
-  // Email
+  let [description] = useState(EditorState.createEmpty());
 
-  const [description] = useState(EditorState.createEmpty());
-  // const test =
-  //   'Dear Employee First Name,<br />With reference to the thorough evaluation of your performance during the probation period from Start Date to End Date, we are pleased to inform you that your employment is being confirmed as Job Title from Date of Confirmation. </br> The terms and conditions of your employment and your job responsibilities will continue to remain the same. We thank you for your valuable contribution made to your process and hope that you will perform with equal enthusiasm in future.</br>All the very best in all your endeavors with Stark!!</br>All the very best for a fruitful carrear with Stark !!</br>Regards,';
-  // const [description, setDescription] = useState(
-  //   EditorState.createWithContent(
-  //     ContentState.createFromBlockArray(convertFromHTML(test))
-  //   )
-  // );
+  const getEmailTemplateData = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.emailTemplates}`
+    );
+    if (data) {
+      data.data.map((email) => {
 
-  // const getEmailTemplateData = async () => {
-  //   const { data, message } = await AuthApi.getDataFromServer(
-  //     `${Api.emailTemplates}?name=Confirmation Letter`
-  //   );
-  //   console.log('data',data);
-  //   if (data) {
-  //     await data.data.map((email) => {
-  //       // console.log('email', email);
-
-  //       const dp = EditorState.createWithContent(
-  //         ContentState.createFromBlockArray(convertFromHTML(email.body))
-  //       );
-  //       email.content = dp; //eslint-disable-line
-  //       // console.log('desc', dp);
-  //       return email;
-  //     });
-  //     setEmailContent(data.data);
-  //   } else {
-  //     swal(message, '', 'error');
-  //   }
-  // };
+        const dp =
+          email.body &&
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(convertFromHTML(email.body))
+          );
+        email.content = dp; //eslint-disable-line
+        if (templateId === email.id) {
+          updateDefaultValues({
+            emailName: { label: email.name, value: email.id },
+            emailSubject: email.subject,
+          });
+        }
+        return email;
+      });
+      setEmailContent(data.data);
+    } else {
+      swal(message, '', 'error');
+    }
+  };
 
   const getPlaceholders = async () => {
     const { data, message } = await AuthApi.getDataFromServer(
-      `${Api.placeholders}`
+      `${Api.placeholders}?type=all`
     );
     if (data) {
       setPlaceholdersData(data.data);
@@ -75,8 +71,6 @@ function EmailTemplatesComponent() {
   };
 
   const onEditorStateChange = (editorState, index) => {
-    console.log('index', index);
-    console.log('editorState', editorState);
     // setDescription(editorState);
     const emlContent = [...emailContent];
     const data = emlContent.map((d, i) => {
@@ -85,7 +79,6 @@ function EmailTemplatesComponent() {
       }
       return d;
     });
-    console.log('data---',data);
     setEmailContent([...data]);
   };
 
@@ -98,14 +91,24 @@ function EmailTemplatesComponent() {
   useEffect(() => {
     getUserRole();
     getPlaceholders();
-    // getEmailTemplateData();
   }, []);
+
+  useEffect(() => {
+    if (templateId) getEmailTemplateData();
+  }, [templateId]);
 
   // Submit Form
   const submitForm = async (formValues) => {
+    emailContent && emailContent.map((emp)=>{
+        if(emp.id === templateId){
+            description = emp.content;
+        }
+        return emp;
+    })
     let stringDescription = '';
     const payload = {
-      name: formValues.emailName ? formValues.emailName.label:'',
+      id: templateId ? Number(templateId) :'',
+      name: formValues.emailName ? formValues.emailName.label : '',
       subject: formValues.emailSubject,
     };
     convertToRaw(description.getCurrentContent()) &&
@@ -116,17 +119,25 @@ function EmailTemplatesComponent() {
       });
     formValues = stringDescription; //eslint-disable-line
     payload.body = formValues;
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.putDataToServer(
       Api.emailTemplates,
       payload
     );
-    swal(data && data.message[0], '', 'success');
-    if (!data) {
-      console.log('message',message);
+    if(data){
+      swal(data && data.message[0], '', 'success',{ closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              updateDefaultValues({});
+              setEmailContent([]);
+            });
+
+    } else {
       swal(message, '', 'error');
       // show error
     }
-    // Perform success actions
   };
 
   const copyToClipboard = (id) => {
@@ -138,7 +149,6 @@ function EmailTemplatesComponent() {
     document.execCommand('copy');
     window.getSelection().removeAllRanges();
   };
-  console.log('emailContent', emailContent);
 
   const getEmailTemplateName = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.emailTemplates);
@@ -158,7 +168,6 @@ function EmailTemplatesComponent() {
       emailName: dpOptions,
     };
     updateOptions(allOptions);
-    // setEmailTemplateName(data.data);
   };
 
   useEffect(() => {
@@ -166,25 +175,6 @@ function EmailTemplatesComponent() {
   }, []);
 
   const getTemplateValue = (value) => {
-    // let ds = '';
-    // emailTemplate.map((template) => {
-    // console.log('emailTemplate',template);
-    //   if(template.name === value.label) {
-    //     console.log('template.name === value.label');
-    //    ds =  {
-    //     label: template.subject,
-    //     value: template.id
-    //   }
-    //   }
-    //   return template;
-    // });
-
-    // const obj = {
-    //   emailSubject: ds
-    // };
-
-    // updateDefaultValues({obj})
-
     if (!value) return;
     setTemplateId(value.value);
   };
@@ -196,7 +186,7 @@ function EmailTemplatesComponent() {
         <h2 className="main-content-title tx-24 mg-b-5">Email Templates</h2>
         <Breadcrumb items={items} />
       </div>
-      <Card body>
+      <Card className="confirmation-content-box" body>
         <StarkFormBuilder
           containerClass=""
           formHeaderClass=""
@@ -208,25 +198,22 @@ function EmailTemplatesComponent() {
           options={options}
           callbacks={{
             selectHandler: (value) => {
-              console.log('value--', value);
               getTemplateValue(value);
             },
           }}
-         // defaultFormValues={defaultValues}
           currentUser={currentUser}
+          defaultFormValues={defaultValues}
           submitBtnText="Submit"
           showResetBtn={false}
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
           isStepForm={false}
-          onFormReset={() => {
-            console.log('form reset callback');
-          }}
+          onFormReset={() => {}}
         />
 
         <p className="mt-3">
           <Row>
-            <b className='mt-2 mb-2'>
+            <b className="mt-2 mb-2">
               Note:-The given list of words are the dynamic content which will
               replaced by the appropriate words while sending mail. Please use
               word as per the need as it is, do not make changes into them.
@@ -235,7 +222,6 @@ function EmailTemplatesComponent() {
               placeholdersData.map((place) => (
                 <Col md={4}>
                   <p // eslint-disable-line
-
                     id={place.name}
                     title={toggle ? 'copied' : 'copy'}
                     onClick={() => {
@@ -263,7 +249,6 @@ function EmailTemplatesComponent() {
                       editorClassName="demo-editor"
                       editorState={eml.content}
                       onEditorStateChange={(e) => {
-                        console.log('e', e);
                         onEditorStateChange(e, index);
                       }}
                       toolbar={{

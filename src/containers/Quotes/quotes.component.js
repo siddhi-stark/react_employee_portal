@@ -30,7 +30,6 @@ function Quotes() {
 
   const limit = 10;
 
-
   const handleActionCallback = ({ id }) => {
     return (
       <>

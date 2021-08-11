@@ -7,7 +7,6 @@ import {
   EditorState,
   convertFromHTML,
   ContentState,
-  convertToRaw,
 } from 'draft-js';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
@@ -19,12 +18,12 @@ import Api from '../../helper/api';
 
 function Confirmation() {
   const history = useHistory();
-  const firstName = '{{Employee:FullName}}';
-  const confirmDate = '{{confirmation_date}}';
   const name = customFunctions.getLocalStorage('employeeName');
-  const jobTitle = customFunctions.getLocalStorage('title');
+  // const jobTitle = customFunctions.getLocalStorage('title');
   const id = localStorage.getItem('candidateId');
   const [confirmationDate, setConfirmationDate] = useState('');
+  const [emailContent, setEmailContent] = useState(EditorState.createEmpty());
+  const [emailBody, setEmailBody] = useState('');
 
   const validator = new SimpleReactValidator({ autoForceUpdate: this });
   // const name = localStorage.getItem('employeeName');
@@ -32,21 +31,8 @@ function Confirmation() {
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Confirmation' }];
 
-  const test =
-    `Dear {{Employee:FullName}},,<br />With reference to the thorough evaluation of your performance during the probation {{Employee:confirmation_date}}, we are pleased to inform you that your employment is being confirmed as Job Title from Date of Confirmation. </br> The terms and conditions of your employment and your job responsibilities will continue to remain the same. We thank you for your valuable contribution made to your process and hope that you will perform with equal enthusiasm in future.</br>All the very best in all your endeavors with Stark!!</br>All the very best for a fruitful carrear with Stark !!</br>Regards,`;
-  const [description, setDescription] = useState(
-    EditorState.createWithContent(
-      ContentState.createFromBlockArray(convertFromHTML(test))
-    )
-  );
-  const [key_element, setKeyElement] = useState(EditorState.createEmpty()); //eslint-disable-line
-
   const [selectedDesignationOption, setSelectedDesignationOption] = useState([]);
   const [designation, setDesignation] = useState([]);
-
-  const onEditorStateChange = (editorState) => {
-    setDescription(editorState);
-  };
 
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -58,6 +44,7 @@ function Confirmation() {
   };
 
   useEffect(() => {
+    getEmailTemplateData();
     getDesignation();
   }, []);
 
@@ -73,19 +60,34 @@ function Confirmation() {
     return options;
   };
 
-  const sendConfirmationLetter = async (emailbody) => {
+  const getEmailTemplateData = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.emailTemplates}?name=Confirmation Letter`
+    );
+    if (data) {
+      setEmailBody(data.data.body);
+        const dp = data.data.body &&
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(convertFromHTML(data.data.body))
+          );
+      setEmailContent(dp);
+    } else {
+      swal(message, '', 'error');
+    }
+  };
+
+  const sendConfirmationLetter = async (emlBody) => {
     const postData = {
       name: 'Confirmation Letter',
       subject: 'Confirmation Subject',
       employee_id: id,
-      body: emailbody,
+      body: emlBody,
       designation_id: selectedDesignationOption ? Number(selectedDesignationOption.id):'',
       confirmation_date: confirmationDate
         ? customFunctions.getDate(confirmationDate)
         : '',
       email_type: 'confirmation_mail',
     };
-
     const endPoint = `${Api.sendMailUrl}`;
     const { data, message } = await AuthApi.postDataToServer(
       endPoint,
@@ -110,21 +112,6 @@ function Confirmation() {
   };
 
   const sendMail = async () => {
-    let stringDescription = '';
-    convertToRaw(description.getCurrentContent()) &&
-      convertToRaw(description.getCurrentContent()).blocks &&
-      convertToRaw(description.getCurrentContent()).blocks.map((desc) => {
-        //eslint-disable-line
-        // const str = desc.text.substring(5,19).replace(name);
-        const strNew = desc.text
-          .replace('Employee Name', `${name}`)
-          .replace('Job Title', `${jobTitle}`);
-        // stringDescription+=`${desc.text}\n`;
-        stringDescription = strNew;
-        return desc;
-      });
-    // (("Employee Name  gygbu Job Title gdnwfef").replace('Employee Name', 'Gaurav')).replace('Job Title',  'Full Stack')
-
     const postData = {
       employee_id: id,
       designation_id: selectedDesignationOption ? Number(selectedDesignationOption.id):'',
@@ -134,20 +121,12 @@ function Confirmation() {
       email_type: 'confirmation_mail',
       subject: 'ConfirmationSubject',
       name: 'ConfirmationLetter',
-      body: stringDescription,
+      body: emailBody,
     };
-    // console.log('postData',postData);
-
-    // const callback =  AuthApi.postDataToServer;
-    //  const endPoint = `${Api.generateContentUrl}`;
-
-    //  const { data } = await callback(endPoint, postData);
-
+  
     const endPoint = `${Api.generateContentUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
-      // swal(data && data.message[0]);
-
       sendConfirmationLetter(data.data.body);
     }
   };
@@ -219,29 +198,21 @@ function Confirmation() {
               />
             </Col>
                </Row>
-              <div className="justify-content-left mt-4 preview-send-btn">
+              <div className="justify-content-left mt-4 preview-send-btn mb-4">
                 <Button type="submit" variant="primary">
                   Save and Send Mail
                 </Button>
               </div>
-
-              <p className="mt-3">
-                <b>
-                  Note:-The given list of words are the dynamic content which
-                  will replaced by the appropriate words while sending mail.
-                  Please use word as per the need as it is, do not make changes
-                  into them.
-                </b>
-                {firstName}, {confirmDate}
-              </p>
+              {
+               emailContent && (
               <Editor
                 // readOnly={viewType}
                 wrapperClassName="demo-wrapper"
                 editorClassName="demo-editor"
-                editorState={description}
-                onEditorStateChange={(e) => {
-                  onEditorStateChange(e);
-                }}
+                editorState={emailContent}
+                // onEditorStateChange={(e) => {
+                //   onEditorStateChange(e);
+                // }}
                 toolbar={{
                   options: [
                     'inline',
@@ -266,6 +237,8 @@ function Confirmation() {
                   },
                 }}
               />
+              )}
+
             </Form>
           </section>
         </div>

@@ -171,7 +171,7 @@ const LastDay = customFunctions.getDate(lastday);
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
     const quote = customFunctions.getLocalStorage('quote');
-    setQuotesContent(quote)
+    setQuotesContent(quote);
     const userclockedin = customFunctions.getLocalStorage('userclockedin');
     if (userclockedin)
       setShowClockIn(userclockedin);
