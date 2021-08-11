@@ -176,7 +176,8 @@ function EmployeeTimesheet() {
       render: ({ row }) => {
         return (
           <>
-            <span>{dataShow ? '' : row.date}</span>
+          const dateNew = customFunctions.getNewFormattedDate(row.date);
+            <span>{dataShow ? '' : customFunctions.getNewFormattedDate(row.date)}</span>
           </>
         );
       },
