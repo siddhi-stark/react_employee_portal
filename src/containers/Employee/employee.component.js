@@ -32,7 +32,7 @@ const items = [
 
 const currentdate = new Date();
 const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
-console.log(new Date(currentdate.setYear(currentdate.getFullYear() - 18)));
+// console.log(new Date(currentdate.setYear(currentdate.getFullYear() - 18)));
 
 const validator = new SimpleReactValidator(
   {
@@ -740,7 +740,6 @@ function Employee() {
 
   return (
     <>
-    {console.log('pagination',pagination)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Employees</h2>

@@ -38,6 +38,7 @@ import HRListing from './containers/Employee/HRListing.component';
 import Quotes from './containers/Quotes/quotes.component';
 import AddQuotes from './containers/Quotes/addQuotes.component';
 import GenerateOfferLetter from './containers/Applications/GenerateOfferLetter.component';
+import AcceptInviteLink from './containers/Applications/AcceptInviteLink.component';
 
 function Routes() {
   return (
@@ -82,6 +83,9 @@ function Routes() {
        <Route path='/add-quotes' exact component={AddQuotes} />
        <Route path='/edit-quotes/:qid' exact component={AddQuotes} />
        <Route path='/generate-offerletter' exact component={GenerateOfferLetter} />
+       <Route path='/link' exact component={AcceptInviteLink} />
+
+       
        
       <Route component={NotFound} />
     </Switch>

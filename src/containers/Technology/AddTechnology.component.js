@@ -54,7 +54,6 @@ function AddTechnology(props) {
 		const { data } = await AuthApi.getDataFromServer(
 			`${Api.employeeStackUrl}${id.technologyId}/`
 		);
-		console.log('data.data',data.data);
 		if (!data) {
 			// show error
 			return;

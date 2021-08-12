@@ -82,7 +82,6 @@ function EditEmployee(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues.login.toISOString());
     const datee = customFunctions.getLocalStorage('date');
     const dataaa = datee.split('-');
     const newDate = dataaa[2]+'-'+dataaa[1]+'-'+dataaa[0]; //eslint-disable-line
@@ -103,7 +102,6 @@ function EditEmployee(props) {
         // .substr(0, 19),
       description: formValues.description,
     };
-    console.log('postData',postData);
     const { data } = await AuthApi.postDataToServer(
       Api.employeeTimesheet,
       postData
@@ -136,13 +134,13 @@ function EditEmployee(props) {
   const getRowData = async (pageNo = 1) => {
     const date = new Date();
     const YMDDate = customFunctions.getFormattedDate(date);
-    console.log('YMDDate',YMDDate);
+    // console.log('YMDDate',YMDDate);
     const ID = customFunctions.getLocalStorage('userId');
-    console.log('date',date);
+    // console.log('date',date);
     const dateNew = YMDDate.split('-');
-    console.log('dateNew',dateNew);
+    // console.log('dateNew',dateNew);
     const FormateedDate = dateNew[2]+'-'+dateNew[1]+'-'+dateNew[0]; //eslint-disable-line
-    console.log('FormateedDate',FormateedDate);
+    // console.log('FormateedDate',FormateedDate);
     const page = pageNo || currentPage;
     const endPoint = `${Api.dailyReportUrl}`;
     const filterList =
@@ -174,14 +172,14 @@ function EditEmployee(props) {
       await newData.map((item, i) => {
         // console.log('dsfd',item);
         const newItem = item;
-        console.log('page',page);
-        console.log('itemsPerPage',itemsPerPage);
+        // console.log('page',page);
+        // console.log('itemsPerPage',itemsPerPage);
 
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
-        console.log('newItem.index',newItem.index);
+        // console.log('newItem.index',newItem.index);
         return newItem;
       });
-      console.log('newData',newData);
+      // console.log('newData',newData);
       setRowData((data && data.data && data.data.evening_data) || []);
     } else {
       console.log('error', message);

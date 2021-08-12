@@ -46,7 +46,6 @@ function AddTechnologyStack(props) {
     // const technoData = {};
 
     formValues.addmore.map((tech) => {
-      console.log('tech',tech);
       let obj = {};
       obj = {
 
@@ -84,7 +83,6 @@ function AddTechnologyStack(props) {
    const getData = async (stackId) => {
     const techId = stackId;
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeStack}${techId}/`);
-    console.log('data',data.data.is_interviewer);
     if(data.data) {
 
 

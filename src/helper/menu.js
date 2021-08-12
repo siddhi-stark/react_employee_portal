@@ -22,6 +22,13 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4],
   },
+  {
+    title: 'Temporary Account',
+    path: '/accept-invitation',
+    icon: 'project.svg',
+    submenu: [],
+    roleaccess: [6],
+  },
 
    {
     title: 'Quotes',
