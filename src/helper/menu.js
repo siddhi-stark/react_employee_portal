@@ -42,7 +42,7 @@ const menu = [
   {
     title: 'Technology',
     path: '/technology',
-    icon: 'Designation.svg',
+    icon: 'technology.svg',
     submenu: [],
     roleaccess: [1],
   },
@@ -70,7 +70,7 @@ const menu = [
       {
         title: 'Recruitment',
         path: '/recruitment',
-        icon: 'recruitment.svg',
+        icon: 'recruitement.svg',
         roleaccess: [1, 2,6],
       },
     ],
@@ -79,21 +79,21 @@ const menu = [
   {
     title: 'Employee Timesheet',
     path: '/emp-timesheet',
-    icon: 'dashboard.svg',
+    icon: 'timesheet.svg',
     submenu: [],
     roleaccess: [5, 6],
   },
   {
     title: 'Employees',
     path: '/employees',
-    icon: 'dashboard.svg',
+    icon: 'Employee.svg',
     submenu: [],
     roleaccess: [5, 6],
   },
   {
     title: 'Recruitment',
     path: '/recruitment',
-    icon: 'dashboard.svg',
+    icon: 'recruitement.svg',
     roleaccess: [5,4,3, 6],
   },  
   // {
