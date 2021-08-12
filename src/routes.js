@@ -83,7 +83,7 @@ function Routes() {
        <Route path='/add-quotes' exact component={AddQuotes} />
        <Route path='/edit-quotes/:qid' exact component={AddQuotes} />
        <Route path='/generate-offerletter' exact component={GenerateOfferLetter} />
-       <Route path='/link' exact component={AcceptInviteLink} />
+       <Route path='verify/offer/:offerToken' exact component={AcceptInviteLink} />
 
        
        
