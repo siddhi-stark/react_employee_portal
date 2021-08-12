@@ -434,7 +434,7 @@ const getDepartment = () => {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.name, value: op.id });
+      dpOptions.push({ label: op.report_head_name, value: op.report_head_id });
       return op;
     });
     const allOptions = {

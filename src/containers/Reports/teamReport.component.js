@@ -33,37 +33,37 @@ function TeamReport() {
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [3,2],
+      roleAccess: [3,2,6],
     },
     {
       id: 'name',
       label: 'Name',
-      roleAccess: [3,2],
+      roleAccess: [3,2,6],
     },
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [3,2],
+      roleAccess: [3,2,6],
     },
     {
       id: 'clockin',
       label: 'Clock in',
-      roleAccess: [3,2],
+      roleAccess: [3,2,6],
     },
     {
       id: 'clockout',
       label: 'Clock Out',
-      roleAccess: [3,2],
+      roleAccess: [3,2,6],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [3,2],
+      roleAccess: [3,2,6],
     },
     {
       id: 'report',
       label: 'View Report',
-      roleAccess: [3,2],
+      roleAccess: [3,2,6],
     },
   ];
 
@@ -323,6 +323,9 @@ function TeamReport() {
                   dropdownContainerClass="mb-3"
                 />
               </div>
+            {(rows.length < 1) && (
+                <p className="text-center"> No records found</p>
+              )}
             </Row>
           </Card.Body>
         </Card>

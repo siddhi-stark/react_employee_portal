@@ -94,7 +94,7 @@ const menu = [
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'recruitement.svg',
-    roleaccess: [5,4,3, 6],
+    roleaccess: [5,4,3],
   },  
   // {
   //   title: 'Employee Technology Stack',
