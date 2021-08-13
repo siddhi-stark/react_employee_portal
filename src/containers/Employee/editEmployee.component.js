@@ -266,14 +266,7 @@ function EditEmployee(props) {
       <div className="mt-4 edit-timelog">
         <Card body>
         <Button className="float-end" onClick= {() => history.push('/emp-timesheet')} >Back</Button>
-          // <div className="d-flex justify-content-center mt-4">
-          //   <p>
-          //     Employee Name: {customFunctions.getLocalStorage('employeeName')}
-          //   </p> 
-          //   <p className="ms-4">
-          //     Date: {customFunctions.getLocalStorage('date')}
-          //   </p>
-          // </div>
+          
 
           <div className="row ms-3 mt-4">
 <p className="col">
