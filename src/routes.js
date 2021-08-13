@@ -39,6 +39,7 @@ import Quotes from './containers/Quotes/quotes.component';
 import AddQuotes from './containers/Quotes/addQuotes.component';
 import GenerateOfferLetter from './containers/Applications/GenerateOfferLetter.component';
 import AcceptInviteLink from './containers/Applications/AcceptInviteLink.component';
+import TemporaryAccount from './containers/TemporaryAccount/temporaryAccount.component';
 
 function Routes() {
   return (
@@ -84,8 +85,7 @@ function Routes() {
        <Route path='/edit-quotes/:qid' exact component={AddQuotes} />
        <Route path='/generate-offerletter' exact component={GenerateOfferLetter} />
        <Route path='verify/offer/:offerToken' exact component={AcceptInviteLink} />
-
-       
+       <Route path='/temorary-account' exact component={TemporaryAccount} />
        
       <Route component={NotFound} />
     </Switch>

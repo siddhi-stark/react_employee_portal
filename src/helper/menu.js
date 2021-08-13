@@ -102,7 +102,12 @@ const menu = [
     path: '/recruitment',
     icon: 'recruitement.svg',
     roleaccess: [5,4,3],
-  },  
+  }, 
+  {
+    title: 'temorary-account',
+    path:'/temorary-account',
+    roleaccess: [4]
+  }, 
   // {
   //   title: 'Employee Technology Stack',
   //   path: '/emp-stack',
