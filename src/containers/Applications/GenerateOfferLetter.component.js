@@ -25,6 +25,11 @@ function GenerateOfferLetter() {
   const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
 
   useEffect(() => {
+    const appLicantIdd = customFunctions.getLocalStorage('applicantId');
+if (!appLicantIdd) {
+history.goBack();
+return;
+};
     setTitle('Offer Letter');
     const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section) => {
