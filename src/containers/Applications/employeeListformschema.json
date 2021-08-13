@@ -1,0 +1,161 @@
+[
+  {
+    "sectionName": "filter",
+    "sectionTitle": "Filter",
+    "layout": {
+      "label": "3 Column",
+      "value": "3column"
+    },
+    "containerClass": "mt-3 select-options",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "full_name",
+        "type": "select",
+        "label": "",
+        "id": "",
+        "placeholder": "Select Employee",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getEmployeeName",
+        "optionsCallbackUrl": "employeeUrl",
+        "options": []
+      },
+      {
+        "name": "fromDate",
+        "type": "date",
+        "label": "",
+        "id": "",
+        "placeholder": "From Date",
+        "inputClass": "",
+        "dateFormat": "dd/MM/yyyy",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              {
+                "name": "toDate",
+                "value": "toDate",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "toDate",
+        "type": "date",
+        "label": "",
+        "id": "",
+        "dateFormat": "dd/MM/yyyy",
+        "placeholder": "To Date",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+           {
+            "type": "required",
+            "applyWhen": [
+              {
+                "name": "fromDate",
+                "value": "fromDate",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "fromDate",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+       {
+        "name": "is_detail",
+        "type": "checkbox",
+        "label": "",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "inline": true,
+        "fieldLayout": {
+        "label": "1 Column",
+        "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": [{"label":"Detailed View", "value":"true"}]
+      }
+    ],
+    "allowedUsers": [5],
+    "sectionLayout": "3column"
+  }
+]

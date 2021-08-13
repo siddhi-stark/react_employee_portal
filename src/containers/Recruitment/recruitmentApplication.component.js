@@ -11,7 +11,6 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import AddNote from './AddNote.component';
 
-
 function RecruitmentApplicationComponent() {
   // const title = 'Recruitment';
   const group = customFunctions.getLocalStorage('group');
@@ -34,14 +33,13 @@ function RecruitmentApplicationComponent() {
   const [activeMenu, setActiveMenu] = useState('all');
   const [title, setTitle] = useState('');
   const [statusId, setStatusId] = useState('');
-  const [note,setNote] = useState('');
+  const [note, setNote] = useState('');
   const [statusData, setStatusData] = useState('');
   // const [statusLabel,setStatusLabel] = useState('');
   // const [selectedStatusOption,setSelectedStatusOption] = useState(null);
   let filterOptions = {};
 
-
-   const ApplicantStatus = [
+  const ApplicantStatus = [
     {
       id: 2,
       value: 'Shortlisted',
@@ -52,13 +50,13 @@ function RecruitmentApplicationComponent() {
       value: 'Declined',
       label: 'declined',
     },
-    
+
     {
       id: 4,
       value: 'Pending',
       label: 'pending',
-      isdisabled: true 
-    }
+      isdisabled: true,
+    },
   ];
 
   const formSchema = [...FormSections];
@@ -68,82 +66,109 @@ function RecruitmentApplicationComponent() {
       const date = new Date();
       sectionData.maxDate = date;
     }
-    if(Number(group) !== 6) {
-      if(sectionData.name === 'role_id') {
+    if (Number(group) !== 6) {
+      if (sectionData.name === 'role_id') {
         sectionData.disabled = true;
       }
     }
     return sectionData;
   });
 
-  const handleActionCallback = ({  id, status_name,name,applied_for_name,notes,offered_ctc,joining_date, pf_included}) => { //eslint-disable-line
+  const handleActionCallback = ({
+    id,
+    status_name,
+    name,
+    applied_for_name,
+    notes,
+    offered_ctc,
+    joining_date,
+    pf_included,
+  }) => {
+    //eslint-disable-line
 
     return (
       <>
-      {(status_name !== 'declined') ? ( //eslint-disable-line
+        {status_name !== 'declined' ? ( //eslint-disable-line
+          <a
+            href="/"
+            className="pl-2"
+            title="Edit Applicant"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              history.push(`/applications/${id}`, {
+                statusObj: status_name,
+              });
 
-        <a
-          href="/"
-          className="pl-2"
-          title="Edit Applicant"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/applications/${id}`, {
-              statusObj: status_name,
-            });
-
-            // history.push('/edit-employee');
-          }}
-        >
+              // history.push('/edit-employee');
+            }}
+          >
             <Image src="/images/edit-button.svg" />
-         
-        </a>
+          </a>
         ) : (
-         <a
-          href="/"
-          className="pl-2"
-          title="Show Note"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setNote(notes);
-            customFunctions.setLocalStorage('isClicked','true');
-            setModalShow(true);
-
-          }}
-        >
-           <Image src="/images/notes.svg" />
-
-        </a>
-        ) }
-        { (Number(group) === 4 || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'declined' || status_name === 'rejected') ? ( //eslint-disable-line
-
-       ''
-        ) : 
- <a
-        href="/"
-        className="p-r-2 text-info ms-2"
-        title="Send Offer"
-        onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        history.push('/generate-offerletter');
-        rowData && rowData.map((dt)=>{
-          if(id === dt.id){
-            customFunctions.setLocalStorage('applicantName',dt.name && dt.name);
-            customFunctions.setLocalStorage('designation',dt.applied_for_name && dt.applied_for_name);
-            customFunctions.setLocalStorage('offerctc',dt.offered_ctc && dt.offered_ctc);
-            customFunctions.setLocalStorage('joiningdate',dt.joining_date && dt.joining_date);
-            customFunctions.setLocalStorage('pfInclude',dt.pf_included && dt.pf_included);
-          }
-          return dt;
-        })
-        }}
-        >
-       <Image src="/images/offer.svg" />
-        </a>
-         }
+          <a
+            href="/"
+            className="pl-2"
+            title="Show Note"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setNote(notes);
+              customFunctions.setLocalStorage('isClicked', 'true');
+              setModalShow(true);
+            }}
+          >
+            <Image src="/images/notes.svg" />
+          </a>
+        )}
+        {Number(group) === 4 ||
+        status_name === 'pending' ||
+        status_name === 'shortlisted' ||
+        status_name === 'reject' ||
+        status_name === 'declined' ||
+        status_name === 'rejected' ? ( //eslint-disable-line
+          ''
+        ) : (
+          <a
+            href="/"
+            className="p-r-2 text-info ms-2"
+            title="Send Offer"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              history.push('/generate-offerletter');
+              customFunctions.setLocalStorage('applicantId', id);
+              rowData &&
+                rowData.map((dt) => {
+                  if (id === dt.id) {
+                    customFunctions.setLocalStorage(
+                      'applicantName',
+                      dt.name && dt.name
+                    );
+                    customFunctions.setLocalStorage(
+                      'designation',
+                      dt.applied_for_name && dt.applied_for_name
+                    );
+                    customFunctions.setLocalStorage(
+                      'offerctc',
+                      dt.offered_ctc && dt.offered_ctc
+                    );
+                    customFunctions.setLocalStorage(
+                      'joiningdate',
+                      dt.joining_date && dt.joining_date
+                    );
+                    customFunctions.setLocalStorage(
+                      'pfInclude',
+                      dt.pf_included && dt.pf_included
+                    );
+                  }
+                  return dt;
+                });
+            }}
+          >
+            <Image src="/images/offer.svg" />
+          </a>
+        )}
       </>
     );
   };
@@ -161,41 +186,48 @@ function RecruitmentApplicationComponent() {
   const getStatusId = (val) => {
     const data = ApplicantStatus.filter((i) => i.label === val);
     return data.length > 0 ? data[0] : {};
-
-  }
-  const handleStatus = (status_name) => { // eslint-disable-line
-    return(
+  };
+  const handleStatus = (status_name) => {
+    // eslint-disable-line
+    return (
       <>
-      {(status_name.status_name === 'pending' && Number(group) === 5) ? ( // eslint-disable-line
-
-      <DropdownInput
-        asterisk="*"
-        options={getDepartment()}
-        placeholder="Select status"
-        defaultValue={status_name.status_name ? getStatusId(status_name.status_name)  : {}}
-        onSelectHandler={(select) => {
-          // setSelectedStatusOption(select);
-          // setStatusLabel(select.label);
-          // onStatusClick(select,status_name.id,status_name);
-           setStatusId(status_name.id); 
-          // {select.label === 'decined'}
-          {(select.label === 'declined' || select.label === 'shortlisted') ? setModalShow(true) : ''} //eslint-disable-line
-           // setModalShow(true);
-           setStatusData(select);
-        }}
-        // errorMessage={validator.message(
-        //   'Designation',
-        //   selectedDesignationOption,
-        //   'required'
-        // )}
-        isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line
-      />
-        ): (<span>{status_name.status_name}</span>)}
-
+        {status_name.status_name === 'pending' && Number(group) === 5 ? ( // eslint-disable-line
+          <DropdownInput
+            asterisk="*"
+            options={getDepartment()}
+            placeholder="Select status"
+            defaultValue={
+              status_name.status_name
+                ? getStatusId(status_name.status_name)
+                : {}
+            }
+            onSelectHandler={(select) => {
+              // setSelectedStatusOption(select);
+              // setStatusLabel(select.label);
+              // onStatusClick(select,status_name.id,status_name);
+              setStatusId(status_name.id);
+              // {select.label === 'decined'}
+              {
+                select.label === 'declined' || select.label === 'shortlisted'
+                  ? setModalShow(true)
+                  : '';
+              } //eslint-disable-line
+              // setModalShow(true);
+              setStatusData(select);
+            }}
+            // errorMessage={validator.message(
+            //   'Designation',
+            //   selectedDesignationOption,
+            //   'required'
+            // )}
+            isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line
+          />
+        ) : (
+          <span>{status_name.status_name}</span>
+        )}
       </>
-      )
-  }
-
+    );
+  };
 
   // Declare columns
   const columns = [
@@ -203,17 +235,17 @@ function RecruitmentApplicationComponent() {
       id: 'offered_ctc',
       label: 'offered ctc',
       isDisplay: false,
-    },  
+    },
     {
       id: 'joining_date',
       label: 'joining date',
       isDisplay: false,
-    },  
+    },
     {
       id: 'pf_included',
       label: 'pf included',
       isDisplay: false,
-    },  
+    },
     {
       id: 'id',
       label: 'Sr. No',
@@ -222,7 +254,8 @@ function RecruitmentApplicationComponent() {
     {
       id: `{{'int_date'} ? 'int_date': 'created_at'}`, // eslint-disable-line
       label: 'Date',
-      render: ({ created_at }) => { // eslint-disable-line
+      render: ({ created_at }) => {
+        // eslint-disable-line
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(created_at)}</span>
@@ -245,10 +278,9 @@ function RecruitmentApplicationComponent() {
     {
       id: 'notes',
       label: 'Note',
-      isDisplay: false
+      isDisplay: false,
     },
-    
-    
+
     {
       id: 'resume',
       label: 'Resume',
@@ -260,8 +292,8 @@ function RecruitmentApplicationComponent() {
       render: handleStatus,
     },
     {
-      id:  (Number(group) === 5 || Number(group) === 6) ? 'round_status_name' : ''  ,
-      label: (Number(group) === 5 || Number(group) === 6) ?  'Round Status' : '',
+      id: Number(group) === 5 || Number(group) === 6 ? 'round_status_name' : '',
+      label: Number(group) === 5 || Number(group) === 6 ? 'Round Status' : '',
     },
     {
       id: 'action',
@@ -269,7 +301,6 @@ function RecruitmentApplicationComponent() {
       render: handleActionCallback,
     },
   ];
-
 
   //  const onStatusClick = async (statusData,statusId,status_name) => { //eslint-disable-line
   //   const postData = {
@@ -296,8 +327,7 @@ function RecruitmentApplicationComponent() {
   //   }
   // };
 
-
-const getDepartment = () => {
+  const getDepartment = () => {
     if (!ApplicantStatus) return [];
     const depart = [];
     ApplicantStatus.map((dep) => {
@@ -313,7 +343,7 @@ const getDepartment = () => {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    
+
     const endPoint = `${Api.applicantsUrl}`;
 
     const filterList =
@@ -365,7 +395,7 @@ const getDepartment = () => {
   useEffect(() => {
     getUserRole();
   }, []);
-  
+
   // Submit Form
   const submitForm = async (formValues) => {
     let payload = {};
@@ -376,18 +406,16 @@ const getDepartment = () => {
         designation_id: formValues.designation_id
           ? formValues.designation_id.value
           : '',
-        technology_stack_id: formValues.technology_stack_id ? 
-        formValues.technology_stack_id.value
-        : '', 
+        technology_stack_id: formValues.technology_stack_id
+          ? formValues.technology_stack_id.value
+          : '',
         start_date: formValues.start_date
           ? customFunctions.getDate(formValues.start_date)
           : '',
         end_date: formValues.end_date
           ? customFunctions.getDate(formValues.end_date)
           : '',
-        created_by_id: formValues.role_id
-          ? formValues.role_id.value
-          : '',
+        created_by_id: formValues.role_id ? formValues.role_id.value : '',
       };
     }
     payload.status = status;
@@ -422,10 +450,8 @@ const getDepartment = () => {
     updateOptions(allOptions);
   };
 
-   const getHrName = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.teamUrl}?type=all`
-    );
+  const getHrName = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.teamUrl}?type=all`);
     if (!data) {
       // show error
       return;
@@ -447,21 +473,24 @@ const getDepartment = () => {
   };
 
   const getTechnology = async () => {
-      // const id = props.match.params.stackId;
-    const {data} = await AuthApi.getDataFromServer(Api.employeeStackUrl);
-    if(!data) {
+    // const id = props.match.params.stackId;
+    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    if (!data) {
       // show error
       return;
     }
-    
- const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
-      return { label: op.name, value: op.id };
-    });
+
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
 
     options.technology_stack_id = dpOptions;
     const allOptions = options;
-    await updateOptions({...allOptions});
-  }  
+    await updateOptions({ ...allOptions });
+  };
   useEffect(() => {
     getHrName();
     getDesignation();
@@ -470,7 +499,7 @@ const getDepartment = () => {
 
   const getApplicantListing = () => {
     getRowData(currentPage);
-  }
+  };
 
   return (
     <>
@@ -531,7 +560,9 @@ const getDepartment = () => {
                   }}
                   className="btn-link"
                 >
-                  {(Number(group) === 4 || Number(group) === 3) ? '' : 'Add Applicant'}
+                  {Number(group) === 4 || Number(group) === 3
+                    ? ''
+                    : 'Add Applicant'}
                 </a>
               </div>
             </div>
@@ -662,16 +693,16 @@ const getDepartment = () => {
       </section>
       {modalShow && (
         <AddNote
-         show={modalShow}
-         statusId={statusId}
-         statusData={statusData}
-         note={note}
-         handleModalCLose={(e) => setModalShow(e)}
+          show={modalShow}
+          statusId={statusId}
+          statusData={statusData}
+          note={note}
+          handleModalCLose={(e) => setModalShow(e)}
           onStatusUpdate={() => {
-            getApplicantListing()
+            getApplicantListing();
           }}
-         />
-        )}
+        />
+      )}
     </>
   );
 }
