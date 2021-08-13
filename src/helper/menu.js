@@ -160,6 +160,13 @@ const menu = [
     roleaccess: [1, 5],
   },
   {
+    title: 'Candidates',
+    path: '/candidates',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [1, 5],
+  },
+  {
     title: 'Logout',
     path: '#',
     icon: 'logout.svg',
