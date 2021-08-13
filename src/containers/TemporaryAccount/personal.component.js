@@ -25,8 +25,29 @@ function Personal() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
-
+    console.log('formValues doc_link_pan_card',formValues.doc_link_pan_card[0]);
+    console.log('formValues doc_link_adhar_card',formValues.doc_link_adhar_card[0]);
+    console.log('formValues doc_link_photo',formValues.doc_link_photo[0]);
+    const postData = {
+      email_hash: 'url',
+      password: 'abc',
+      doct_type: 2,
+      applicant_documents: [
+        {
+          doc_title: 'Aadhar',
+          doc_link: 'http://www.google.com',
+        },
+        {
+          doc_title: 'Pan Card',
+          doc_link: 'http://www.google.com',
+        },
+        {
+          doc_title: 'Photo',
+          doc_link: 'http://www.google.com',
+        },
+      ],
+    };
+    console.log('postData',postData);
     const { data } = await AuthApi.postDataToServer(
       Api.employementUrl,
       formValues

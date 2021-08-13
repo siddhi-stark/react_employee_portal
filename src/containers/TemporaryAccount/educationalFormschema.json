@@ -8,7 +8,7 @@
 		"displaySectionTitle": false,
 		"fields": [
 			{
-				"name": "doc_link",
+				"name": "doc_link_ssc",
 				"type": "file",
 				"label": "SSC",
 				"id": "",
@@ -36,7 +36,7 @@
 				"options": []
 			},
 			{
-				"name": "doc_link",
+				"name": "doc_link_hsc",
 				"type": "file",
 				"label": "HSC",
 				"id": "",
@@ -64,7 +64,7 @@
 				"options": []
 			},
 			{
-				"name": "doc_link",
+				"name": "doc_link_graduate",
 				"type": "file",
 				"label": "Graduate",
 				"id": "",
@@ -92,7 +92,7 @@
 				"options": []
 			},
 			{
-				"name": "doc_link",
+				"name": "doc_link_post_graduate",
 				"type": "file",
 				"label": "Post Graduate",
 				"id": "",
