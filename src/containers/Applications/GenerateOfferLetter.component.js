@@ -25,8 +25,8 @@ function GenerateOfferLetter() {
   const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
 
   useEffect(() => {
-    const appLicantIdd = customFunctions.getLocalStorage('applicantId');
-if (!appLicantIdd) {
+    const CandidateId = customFunctions.getLocalStorage('applicantId');
+if (!CandidateId) {
 history.goBack();
 return;
 };
@@ -45,8 +45,8 @@ return;
 
         return itemData;
       });
-      return s;
-    });
+      return s; 
+     });
     updateJsonSchema([...updatedSchema]);
     const Name = customFunctions.getLocalStorage('applicantName');
     const Designation = customFunctions.getLocalStorage('designation');
