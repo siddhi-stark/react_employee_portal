@@ -74,17 +74,7 @@ function RecruitmentApplicationComponent() {
     return sectionData;
   });
 
-  const handleActionCallback = ({
-    id,
-    status_name,
-    name,
-    applied_for_name,
-    notes,
-    offered_ctc,
-    joining_date,
-    pf_included,
-  }) => {
-    //eslint-disable-line
+  const handleActionCallback = ({ id, status_name, name, applied_for_name, notes, offered_ctc, joining_date, pf_included, }) => { //eslint-disable-line 
 
     return (
       <>
@@ -121,12 +111,7 @@ function RecruitmentApplicationComponent() {
             <Image src="/images/notes.svg" />
           </a>
         )}
-        {Number(group) === 4 ||
-        status_name === 'pending' ||
-        status_name === 'shortlisted' ||
-        status_name === 'reject' ||
-        status_name === 'declined' ||
-        status_name === 'rejected' ? ( //eslint-disable-line
+        {Number(group) === 4 || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'declined' || status_name === 'rejected' ? ( //eslint-disable-line
           ''
         ) : (
           <a
@@ -187,8 +172,7 @@ function RecruitmentApplicationComponent() {
     const data = ApplicantStatus.filter((i) => i.label === val);
     return data.length > 0 ? data[0] : {};
   };
-  const handleStatus = (status_name) => {
-    // eslint-disable-line
+  const handleStatus = (status_name) => { // eslint-disable-line
     return (
       <>
         {status_name.status_name === 'pending' && Number(group) === 5 ? ( // eslint-disable-line
@@ -207,11 +191,7 @@ function RecruitmentApplicationComponent() {
               // onStatusClick(select,status_name.id,status_name);
               setStatusId(status_name.id);
               // {select.label === 'decined'}
-              {
-                select.label === 'declined' || select.label === 'shortlisted'
-                  ? setModalShow(true)
-                  : '';
-              } //eslint-disable-line
+              { select.label === 'declined' || select.label === 'shortlisted' ? setModalShow(true) : ''; } //eslint-disable-line
               // setModalShow(true);
               setStatusData(select);
             }}
@@ -254,8 +234,7 @@ function RecruitmentApplicationComponent() {
     {
       id: `{{'int_date'} ? 'int_date': 'created_at'}`, // eslint-disable-line
       label: 'Date',
-      render: ({ created_at }) => {
-        // eslint-disable-line
+      render: ({ created_at }) => { // eslint-disable-line
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(created_at)}</span>
