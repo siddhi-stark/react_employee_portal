@@ -8,6 +8,12 @@ import AuthApi from '../../helper/authApi';
 // import swal from 'sweetalert';
 
 function EducationalDetails(props) {
+  const accProps = { props };
+  const passwordProps = accProps.props.password;
+  const tokenProps = accProps.props.token;
+  const nameProps = accProps.props.name;
+  const emailProps = accProps.props.email;
+
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
@@ -23,12 +29,42 @@ function EducationalDetails(props) {
     getUserRole();
   }, []);
 
+  const fileUpload = async (formValues) => {
+    
+    const formData = new FormData();
+
+    formData.append('file_name', formValues[0].name);
+    formData.append('employee_name', nameProps); 
+    formData.append('employee_email', emailProps);
+
+    const { data } = await AuthApi.postDataToServer(
+      `${Api.googleFileUploadUrl}`,formData
+    );
+    if (data) {
+      // setEmail(data.data.email);
+      console.log('data', data);
+    }
+  };
+
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
+    console.log('formValues',formValues);
+    if(formValues.doc_link_graduate){
+      fileUpload(formValues.doc_link_graduate);
+     }
+    if(formValues.doc_link_hsc){
+      fileUpload(formValues.doc_link_hsc);
+    }
+    if(formValues.doc_link_post_graduate){
+      fileUpload(formValues.doc_link_post_graduate);
+    }
+
+    if(formValues.doc_link_ssc){
+      fileUpload(formValues.doc_link_ssc);
+    }
     const postData = {
-      email_hash: 'url',
-      password: 'abc',
+      email_hash: tokenProps,
+      password: passwordProps,
       doct_type: 1,
       applicant_documents: [
         {
@@ -55,7 +91,7 @@ function EducationalDetails(props) {
       Api.applicantDocumentUrl,
       formValues
     );
-    props.onEducationalInfo(data.data.id);
+    // props.onEducationalInfo(data.data.id);
     
     if (!data) {
       // show error

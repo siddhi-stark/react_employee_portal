@@ -124,6 +124,7 @@
 						"type": "date",
 						"label": "Start Date",
 						"id": "",
+						 "dateFormat": "dd/MM/yyyy",
 						"placeholder": "Start Date",
 						"inputClass": "",
 						"containerClass": "",
@@ -166,6 +167,7 @@
 						"type": "date",
 						"label": "End Date",
 						"id": "",
+						 "dateFormat": "dd/MM/yyyy",
 						"placeholder": "End Date",
 						"inputClass": "",
 						"containerClass": "",
@@ -193,7 +195,7 @@
 						"callback": "",
 						"callbackUrl": "",
 						"inputToChange": "",
-						"minDateSelector": "",
+						"minDateSelector": "start_date",
 						"maxDateSelector": "",
 						"disabled": false,
 						"isMulti": false,
@@ -267,9 +269,7 @@
 						"placeholder": "Company Name",
 						"inputClass": "",
 						"containerClass": "",
-						"validations": [
-							{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
-						],
+						"validations": [],
 						"displayWhen": {},
 						"haveValidations": "true",
 						"haveDisplayOptions": "false",
@@ -344,9 +344,7 @@
 						"placeholder": "Company Name",
 						"inputClass": "",
 						"containerClass": "",
-						"validations": [
-							{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
-						],
+						"validations": [],
 						"displayWhen": {},
 						"haveValidations": "true",
 						"haveDisplayOptions": "false",

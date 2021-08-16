@@ -103,7 +103,7 @@ export default class Api extends Component {
 
   static temporaryAccountUrl = `${Api.baseUrl}verify/account/`;   
 
-  static applicantDocumentUrl = `${Api.baseUrl}applicant-document/`;
+  static applicantDocumentUrl = `${Api.baseUrl}applicant-document-detail/`;
 
   static applicantInfoUrl = `${Api.baseUrl}applicant-information/`;
 

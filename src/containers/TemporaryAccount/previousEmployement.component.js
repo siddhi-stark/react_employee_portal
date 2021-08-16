@@ -7,6 +7,12 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
 function PreviousEmployement(props) {
+  const accProps = { props };
+  const passwordProps = accProps.props.password;
+  const tokenProps = accProps.props.token;
+  const nameProps = accProps.props.name;
+  const emailProps = accProps.props.email;
+
   let filterOptions = {};
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -23,9 +29,36 @@ function PreviousEmployement(props) {
     getUserRole();
   }, []);
 
+  const fileUpload = async (formValues) => {
+    const fileArr = [];
+    // fileArr.push(formValues.file_upload);
+    for (let i = 0; i < formValues.file_upload.length; i++) { // eslint-disable-line
+       fileArr.push(formValues.file_upload[i])
+      }
+    console.log('formValues.file_upload',fileArr);
+    const formData = new FormData();
+    formData.append('file_name', fileArr);
+
+    formData.append('employee_name', nameProps); 
+    formData.append('employee_email', emailProps);
+      console.log('------',formData);
+
+    const { data } = await AuthApi.postDataToServer(
+      `${Api.googleFileUploadUrl}`,formData
+    );
+    if (data) {
+      // setEmail(data.data.email);
+      console.log('data', data);
+    }
+  };
+
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
+    console.log('formValues',formValues);
+    if(formValues){
+      fileUpload(formValues);
+     }
+   
 
   const documents = [];
   const doc = {};
@@ -36,19 +69,18 @@ function PreviousEmployement(props) {
   documents.push(doc);
 
   const postData = {
-      email_hash:
-        'gAAAAABhE6bH7Vx0DOeO9AItGzKTT-ZUe7_TQC02ga8bPVmWNbnsHkZUPXNuA3yrLkGXRz1xjvjWtnmEhvDPiMwfEQTkk57MkWChl8N2DQZMlpHxbAcpOwk=',
-      password: 'EkDZb6XaX2',
+      email_hash: tokenProps,
+      password: passwordProps,
       doc_type: 2,
       applicant_documents: documents
     };
     console.log('postData', postData);
     const { data, message } = await AuthApi.postDataToServer(
       Api.applicantDocumentUrl,
-      formValues
+      postData
     );
 
-   props.onHistoryInfo(data.data.id);
+   // props.onHistoryInfo(data.data.id);
     if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -72,16 +104,21 @@ function PreviousEmployement(props) {
   };
 
   const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.applicantInfoUrl);
+    const postData = {
+      email_hash:tokenProps,
+      password: passwordProps,
+    };
+
+    const { data } = await AuthApi.postDataToServer(Api.applicantInfoUrl,postData);
     if (!data) {
       // show error
       return;
     }
 
     const dpOptions = [];
-    data.data.map((op) => {
+    data.data && data.data.applicant_history.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.company_name, value: op.id });
+      dpOptions.push({ label: op.company_name, value: op.company_name });
       return op;
     });
     const allOptions = {

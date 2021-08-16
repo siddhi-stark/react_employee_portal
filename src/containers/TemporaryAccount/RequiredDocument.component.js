@@ -7,11 +7,11 @@ import { TextInput } from '../../components/FormInputs';
 import TemporaryAccount from './temporaryAccount.component';
 
 function RequiredDocument(props) {
-		const matchUrltoken = props.match.params.token; // eslint-disable-line
+	const matchUrltoken = props.match.params.token; // eslint-disable-line
 	// const [token, setToken] = useState(null);
 	// const dispatch = useDispatch();
-const [isBtnClicked,setIsBtnClicked] = useState(false);
-const [password,setPassword] = useState('');
+	const [isBtnClicked, setIsBtnClicked] = useState(false);
+	const [password, setPassword] = useState('');
 	// const verifyToken = async (tkn) => {
 	// 	console.log('tkn',tkn);
 	// 	const { data } = await AuthApi.getDataFromServer(
@@ -41,50 +41,47 @@ const [password,setPassword] = useState('');
 	// 	verifyToken(matchUrltoken);
 	// }, [dispatch]);
 
-
 	return (
 		<>
-			{isBtnClicked ?  (
+			{isBtnClicked ? (
 				<TemporaryAccount password={password} token={matchUrltoken} />
-				) : (
-			<>
-
-			<div className="login-page d-flex align-items-center justify-content-center flex-column">
-				<div className="logo text-center">
-					<a href="#">
-						<img
-							src="/images/logo-black.svg"
-							className="header-brand-img desktop-logo svg"
-							alt="img"
+			) : (
+				<>
+					<div className="login-page d-flex align-items-center justify-content-center flex-column">
+						<div className="logo text-center">
+							<a href="#">
+								<img
+									src="/images/logo-black.svg"
+									className="header-brand-img desktop-logo svg"
+									alt="img"
+								/>
+							</a>
+						</div>
+					</div>
+					<h5>
+						<strong>List of Required Document</strong>
+					</h5>
+					<h6>
+						1. <strong>Personal Document</strong> <br /> Adhar Card <br />
+						PAN Card <br />
+						2. <strong>Education Document</strong> <br /> SSC <br />
+						HSC
+					</h6>
+					<Col md={4}>
+						<TextInput
+							onInputChange={(e) => setPassword(e.target.value)}
+							label="Password"
+							autocomplete="off"
+							containerClass="form-group"
+							type="password"
+							value={password}
+							name="passwordTitle"
+							placeholder="Enter Password"
 						/>
-					</a>
-				</div>
-			</div>
-			<h5>
-				<strong>List of Required Document</strong>
-			</h5>
-			<h6>
-				1. <strong>Personal Document</strong> <br /> Adhar Card <br />
-				PAN Card <br />
-				2. <strong>Education Document</strong> <br /> SSC <br />
-				HSC
-			</h6>
-			<Col md={4}>
-				<TextInput
-                    onInputChange={(e) => setPassword(e.target.value)}
-					label="Password"
-					autocomplete="off"
-					containerClass="form-group"
-					type="password"
-					value={password}
-					name="passwordTitle"
-					placeholder="Enter Password"
-				/>
-			</Col>
-			<Button onClick={() => setIsBtnClicked(true)} >Submit</Button>
-			</>
-
-				)}
+					</Col>
+					<Button onClick={() => setIsBtnClicked(true)}>Submit</Button>
+				</>
+			)}
 		</>
 	);
 }

@@ -32,7 +32,7 @@
 				"fields": [],
 				"optionCallback": "getEmployee",
 		        "optionsCallbackUrl": "applicantInfoUrl",
-				"options": [{ "label": "StarkDigital", "value": "stark" }]
+				"options": []
 			},
 			{
 				"name": "file_upload",

@@ -7,6 +7,12 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
 function Personal(props) {
+  const accProps = { props };
+  const passwordProps = accProps.props.password;
+  const tokenProps = accProps.props.token;
+  const nameProps = accProps.props.name;
+  const emailProps = accProps.props.email;
+
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
@@ -23,9 +29,15 @@ function Personal(props) {
   }, []);
 
   const fileUpload = async (formValues) => {
-    console.log('formValues',formValues);
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.googleFileUploadUrl}`
+    
+    const formData = new FormData();
+
+    formData.append('file_name', formValues[0].name);
+    formData.append('employee_name', nameProps); 
+    formData.append('employee_email', emailProps);
+
+    const { data } = await AuthApi.postDataToServer(
+      `${Api.googleFileUploadUrl}`,formData
     );
     if (data) {
       // setEmail(data.data.email);
@@ -35,20 +47,20 @@ function Personal(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    fileUpload(formValues);
-    console.log(
-      'formValues doc_link_pan_card',
-      formValues.doc_link_pan_card[0]
-    );
-    console.log(
-      'formValues doc_link_adhar_card',
-      formValues.doc_link_adhar_card[0]
-    );
+    if(formValues.doc_link_pan_card){
+      fileUpload(formValues.doc_link_pan_card);
+     }
+    if(formValues.doc_link_adhar_card){
+      fileUpload(formValues.doc_link_adhar_card);
+    }
+    if(formValues.doc_link_photo){
+      fileUpload(formValues.doc_link_photo);
+    }
+  
     console.log('formValues doc_link_photo', formValues.doc_link_photo[0]);
     const postData = {
-      email_hash:
-        'gAAAAABhE6bH7Vx0DOeO9AItGzKTT-ZUe7_TQC02ga8bPVmWNbnsHkZUPXNuA3yrLkGXRz1xjvjWtnmEhvDPiMwfEQTkk57MkWChl8N2DQZMlpHxbAcpOwk=',
-      password: 'EkDZb6XaX2',
+      email_hash: tokenProps,
+      password: passwordProps,
       doc_type: 2,
       applicant_documents: [
         {

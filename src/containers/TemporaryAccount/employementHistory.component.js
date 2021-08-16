@@ -8,10 +8,25 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function EmployementHistory(props) {
+  const accProps = { props };
+  const passwordProps = accProps.props.password;
+  const tokenProps = accProps.props.token;
+  const idProps = accProps.props.id;
+
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+
+  const formSchema = [...FormSections];
+  formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
+      const date = new Date();
+      sectionData.maxDate = date;
+    }
+    return sectionData;
+  });
 
   // Get user role
   const getUserRole = async () => {
@@ -27,10 +42,15 @@ function EmployementHistory(props) {
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
+    const payload = {
+      email_hash: tokenProps,
+      password: passwordProps,
+      applicant_id:idProps
+    };
     const postData = [];
 
       const report = [];
-
+      
       formValues.addmore.map((rp) => {
           const hrReport = {};
           const managerReport = {};
@@ -39,6 +59,7 @@ function EmployementHistory(props) {
           hrReport.reporting_person = rp.reporting_person_hr;
           hrReport.email = rp.hr_email;
           hrReport.mobile = rp.hr_mobile;
+          hrReport.is_hr = true;
         }
         report.push(hrReport);
 
@@ -66,13 +87,13 @@ function EmployementHistory(props) {
       }
     postData.push(candidateHistory);
     }
-    console.log('postData',postData);
+    payload.applicant_history = postData;
+    console.log('postData',payload);
 
     const { data } = await AuthApi.postDataToServer(
      `${Api.applicantHistoryUrl}`,
-      postData
+      payload
     );
-    props.onHistoryInfo(data.data.id);
 
     if (!data) {
       // show error
