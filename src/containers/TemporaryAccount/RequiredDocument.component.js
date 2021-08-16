@@ -14,6 +14,7 @@ function RequiredDocument(props) {
 const [isBtnClicked,setIsBtnClicked] = useState(false);
 
 	const verifyToken = async (tkn) => {
+		console.log('tkn',tkn);
 		const { data } = await AuthApi.getDataFromServer(
 			`${Api.temporaryAccountUrl}?token=${tkn}`
 		);
