@@ -11,7 +11,6 @@ function Personal(props) {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-  const [currentUser, updateCurrentUser] = useState(0);
 
   // Get user role
   const getUserRole = async () => {

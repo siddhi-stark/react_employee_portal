@@ -85,7 +85,7 @@ function Routes() {
        <Route path='/add-quotes' exact component={AddQuotes} />
        <Route path='/edit-quotes/:qid' exact component={AddQuotes} />
        <Route path='/generate-offerletter' exact component={GenerateOfferLetter} />
-       <Route path='verify/offer/:offerToken' exact component={AcceptInviteLink} />
+       <Route path='/verify/offer/:offerToken' exact component={AcceptInviteLink} />
        <Route path='/candidates' exact component={CandidateListing} />
        <Route path='/temporary/account/:token' exact component={RequiredDocument} />
 
