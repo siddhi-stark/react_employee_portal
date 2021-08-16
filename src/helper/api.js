@@ -95,6 +95,8 @@ export default class Api extends Component {
 
   static timesheetDetailsUrl = `${Api.baseUrl}employee-timesheet-detail/`;
 
+  static applicantHistoryUrl = `${Api.baseUrl}applicant-history/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
