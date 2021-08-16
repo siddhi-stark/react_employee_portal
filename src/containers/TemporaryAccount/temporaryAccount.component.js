@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import swal from 'sweetalert';
+import { withRouter, useHistory } from 'react-router-dom';
+// import swal from 'sweetalert';
 import { Tabs, Tab, Image, ProgressBar, Button } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Personal from './personal.component';
@@ -12,6 +12,7 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function TemporaryAccount() {
+  const history = useHistory();
   const title = 'Applications';
   const [isPersonalId, setPersonalId] = useState(null);
   const [isEducationalId, setEducationalId] = useState(null);
@@ -30,7 +31,8 @@ function TemporaryAccount() {
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setPersonalInfo((data && data.data) || []);
     } else {
-      swal(message, '', 'error');
+      console.log('error',message);
+      // swal(message, '', 'error');
     }
   };
 
@@ -46,7 +48,15 @@ function TemporaryAccount() {
         <section className="content-area">
           <div className="col-xl-12" id="main-content">
             <div className="employee-new-profile">
-            <Button className="pull-right mb-3">Back</Button>
+                <Button
+                  variant="primary"
+                  className="mb-3 pull-right"
+                  onClick={() => {
+                    history.push('/login');
+                  }}
+                >
+                  Logout
+                </Button>
               <div className="profile-bg">
                 <Image src="/images/image.png" alt="image" />
                 <div className="profile-img">
