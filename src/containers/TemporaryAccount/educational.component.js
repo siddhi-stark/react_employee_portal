@@ -7,7 +7,7 @@ import AuthApi from '../../helper/authApi';
 
 // import swal from 'sweetalert';
 
-function EducationalDetails() {
+function EducationalDetails(props) {
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
@@ -26,11 +26,37 @@ function EducationalDetails() {
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
+    const postData = {
+      email_hash: 'url',
+      password: 'abc',
+      doct_type: 1,
+      applicant_documents: [
+        {
+          doc_title: 'SSC',
+          doc_link: 'http://www.google.com',
+        },
+        {
+          doc_title: 'HSC',
+          doc_link: 'http://www.google.com',
+        },
+        {
+          doc_title: 'Graduate',
+          doc_link: 'http://www.google.com',
+        },
+        {
+          doc_title: 'Post Graduate',
+          doc_link: 'http://www.google.com',
+        },
+      ],
+    };
+    console.log('postData',postData);
 
     const { data } = await AuthApi.postDataToServer(
-      Api.employementUrl,
+      Api.applicantDocumentUrl,
       formValues
     );
+    props.onEducationalInfo(data.data.id);
+    
     if (!data) {
       // show error
       // return;

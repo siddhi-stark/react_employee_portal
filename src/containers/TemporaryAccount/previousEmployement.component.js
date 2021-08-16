@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './employmentFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
-// import swal from 'sweetalert';
 
-function PreviousEmployement() {
+function PreviousEmployement(props) {
+  let filterOptions = {};
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
@@ -26,19 +27,52 @@ function PreviousEmployement() {
   const submitForm = async (formValues) => {
     console.log(formValues);
 
-    const { data } = await AuthApi.postDataToServer(
-      Api.employmentUrl,
+  const documents = [];
+  const doc = {};
+  if(formValues.employee) {
+    doc.doc_title = formValues.employee.label
+    doc.doc_link = formValues.file_upload
+  }
+  documents.push(doc);
+
+  const postData = {
+      email_hash:
+        'gAAAAABhE6bH7Vx0DOeO9AItGzKTT-ZUe7_TQC02ga8bPVmWNbnsHkZUPXNuA3yrLkGXRz1xjvjWtnmEhvDPiMwfEQTkk57MkWChl8N2DQZMlpHxbAcpOwk=',
+      password: 'EkDZb6XaX2',
+      doc_type: 2,
+      applicant_documents: documents
+    };
+    console.log('postData', postData);
+    const { data, message } = await AuthApi.postDataToServer(
+      Api.applicantDocumentUrl,
       formValues
     );
+
+   props.onHistoryInfo(data.data.id);
     if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+      });
       // show error
       // return;
+    } else {
+      swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(() => {
+        swal.close();
+      });
     }
     // Perform success actions
   };
 
   const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    const { data } = await AuthApi.getDataFromServer(Api.applicantInfoUrl);
     if (!data) {
       // show error
       return;
@@ -47,13 +81,15 @@ function PreviousEmployement() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
+      dpOptions.push({ label: op.company_name, value: op.id });
       return op;
     });
     const allOptions = {
       ...options,
+      ...filterOptions,
       employee: dpOptions,
     };
+    filterOptions = {...allOptions};
     updateOptions(allOptions);
   };
 

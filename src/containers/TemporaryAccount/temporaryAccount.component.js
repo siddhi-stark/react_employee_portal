@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
 import { Tabs, Tab, Image, ProgressBar, Button } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Personal from './personal.component';
@@ -7,9 +8,36 @@ import EducationalDetails from './educational.component';
 import PreviousEmployement from './previousEmployement.component';
 import EmployementHistory from './employementHistory.component';
 import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function TemporaryAccount() {
   const title = 'Applications';
+  const [isPersonalId, setPersonalId] = useState(null);
+  const [isEducationalId, setEducationalId] = useState(null);
+  const [isHistoryId, setHistoryId] = useState(null);
+  const [isBI, setIsBI] = useState(true);
+  const [isPD, setIsPD] = useState(true);
+  const [isED, setIsED] = useState(true);
+  const [personalInfo, setPersonalInfo] = useState(true);
+  
+  // Get user role
+  const getData = async () => {
+    const endPoint = `${Api.applicantInfoUrl}?email_hash=gAAAAABhE6bH7Vx0DOeO9AItGzKTT-ZUe7_TQC02ga8bPVmWNbnsHkZUPXNuA3yrLkGXRz1xjvjWtnmEhvDPiMwfEQTkk57MkWChl8N2DQZMlpHxbAcpOwk=`;
+   
+    const { data, message } = await AuthApi.getDataFromServer(endPoint);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setPersonalInfo((data && data.data) || []);
+    } else {
+      swal(message, '', 'error');
+    }
+  };
+
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <>
@@ -25,19 +53,19 @@ function TemporaryAccount() {
                   <Image src={`${Api.s3UrlnoProfile}`} alt="Card image cap" />
                 </div>
               </div>
-              <h3>full_name</h3>
-              <h5>designation_name</h5>
+              <h3>{personalInfo.name}</h3>
+              <h5>{personalInfo.applied_for_name}</h5>
               <div className="table-projects">
                 <div className="mt-4 card">
                   <div className="row">
                     <div className="col-md-4">
-                      <h6>Email - email</h6>
+                      <h6>Email - {personalInfo.email}</h6>
                     </div>
                     <div className="col-md-4">
-                      <h6>Contact No - mobile</h6>
+                      <h6>Contact No - {personalInfo.mobile}</h6>
                     </div>
                     <div className="col-md-4">
-                      <h6>Pf Included - mobile</h6>
+                      <h6>Pf Included - {personalInfo.isPf}</h6>
                     </div>
                   </div>
                   <br />
@@ -49,8 +77,8 @@ function TemporaryAccount() {
                       <ProgressBar
                         bsPrefix="progress pbar"
                         variant="info"
-                        now={60}
-                        label="completed"
+                        now={personalInfo.completion}
+                        // label="completed"
                       />
                     </div>
                   </div>
@@ -65,53 +93,62 @@ function TemporaryAccount() {
                 <Tab eventKey="Personal" title="Personal Documents">
                   <div className="row ml-2">
                     <Personal
-                    // onBasicInfo={(value) => {
-                    //     setProfessionalInfo(value);
-
-                    //   setBasicInfo(value);
-                    //   setIsBI(false);
-                    // }}
+                    onPersonalInfo={(value) => {
+                        setEducationalId(value);
+                      setPersonalId(value);
+                      setIsBI(false);
+                    }}
                     />
                   </div>
                 </Tab>
                 <Tab
                   eventKey="educational"
                   title="Educational Documents"
-                  // disabled={isBI}
+                  disabled={isBI}
                 >
+                {
+                  isPersonalId && ( 
                   <div className="row ml-2">
                     <EducationalDetails
-                    // isBasicInfoId={isBasicInfoId}
-                    // onProfDetInfo={(value) => {
-                    //   setProfessionalInfo(value);
-                    //   {(id) ? setIsPD(false) : setIsPD(true)} //eslint-disable-line
-                    // }}
+                    isPersonalId={isPersonalId}
+                    onEducationalInfo={(value) => {
+                      setEducationalId(value);
+                      setIsPD(false);
+                    }}
                     />
                   </div>
+                  )
+                }
                 </Tab>
-                <Tab eventKey="employmentHistory" title="Employment History">
+                <Tab eventKey="employmentHistory" title="Employment History"
+                 disabled={isPD}>
+                 {
+                    isEducationalId && (
                   <div className="row ml-2">
                     <EmployementHistory
-                    // onBasicInfo={(value) => {
-                    //     setProfessionalInfo(value);
-
-                    //   setBasicInfo(value);
-                    //   setIsBI(false);
-                    // }}
+                    onHistoryInfo={(value) => {
+                        setEducationalId(value);
+                      setPersonalId(value);
+                      setHistoryId(value);
+                      setIsED(false);
+                    }}
                     />
                   </div>
+                    )
+                 }
                 </Tab>
-                <Tab eventKey="previousEmployment" title="Previous Employment">
+                <Tab eventKey="previousEmployment" title="Previous Employment"
+                 disabled={isED}
+                 >
+                 {
+                    isHistoryId && (
                   <div className="row ml-2">
                     <PreviousEmployement
-                    // onBasicInfo={(value) => {
-                    //     setProfessionalInfo(value);
-
-                    //   setBasicInfo(value);
-                    //   setIsBI(false);
-                    // }}
+                     isHistoryId={isHistoryId}
                     />
                   </div>
+                    )
+                 }
                 </Tab>
               </Tabs>
             </div>

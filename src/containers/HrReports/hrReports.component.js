@@ -73,8 +73,8 @@ const [filterData, setFilterData] = useState({});
   const [shortlistedGraph, setShortlistedGraph] = useState(initialState);
   const [graphData, setGraphData] = useState([]);
   const [shortlistedData, setShortlistedData] = useState([]);
-  const [legendData, setLegendData] = useState([]);
-  const [legendSelectedData, setLegendSelectedData] = useState([]);
+  const [legendData, setLegendData] = useState([]); // eslint-disable-line
+  const [legendSelectedData, setLegendSelectedData] = useState([]); // eslint-disable-line
   // const [centerPercentage, setCenterPercentage] = useState(null);
   // const [centerShortlistPercentage, setCenterShortlistPercentage] = useState(null);
   const graphref = useRef();
@@ -245,7 +245,9 @@ useEffect(()=>{
         totalApplicantCount:data.data.total_applicant_count,
         selectedCount: data.data.shortlisted_final_count,
         rejectedCount:data.data.rejected_final_count,
-        finalCount:data.data.total_final_count
+        finalCount:data.data.total_final_count,
+        applicant: data.data.total_applicant_percentage,
+        shortlisted : data.data.total_final_percentage
       });
       setShortlistedData([...selectedGraph]);
       setLegendData([...legData]);
@@ -294,11 +296,13 @@ useEffect(()=>{
         <hr />
         <Row className="mt-4 doughnut-graph-section">
           <h5>HR Activity</h5>
-          <Col className="col-sm-12 d-flex pb-4">
+          <Col className="col-sm-6 d-flex pb-4">
           <p>Shortlisted: {shortlistedGraph.shortlistedCount}<br/>
           Declined: {shortlistedGraph.declinedCount}<br/>
           Pending: {shortlistedGraph.pendingCount}<br/>
-          Total Applicant: {shortlistedGraph.totalApplicantCount}</p>
+          Total Applicant: {shortlistedGraph.totalApplicantCount}<br/>
+          Applicant: {shortlistedGraph.applicant}%<br/>
+          </p>
             <Doughnut
               ref={graphref}
               id="dougnut"
@@ -311,7 +315,7 @@ useEffect(()=>{
               labels={({ datum }) => `${datum.x}: ${datum.y}%`}
               legendOrientation="vertical"
               legendPosition="right"
-              legendData={legendData}
+              // legendData={legendData}
               legends={{
                 colorScale: ['green', 'red', 'yellow'],
               }}
@@ -325,11 +329,11 @@ useEffect(()=>{
               wrapperSize={{ height: '150px', width: '100%' }}
             />
           </Col>
-          <hr/>
-          <Col className="col-sm-12 d-flex">
+          <Col className="col-sm-6 d-flex">
           <p>Selected: {shortlistedGraph.selectedCount} <br/>
             Rejected: {shortlistedGraph.rejectedCount}<br/>
-            Shortlisted: {shortlistedGraph.finalCount}</p>
+            Total Shortlisted: {shortlistedGraph.finalCount}<br/>
+            Shortlisted: {shortlistedGraph.shortlisted}%</p>
             <Doughnut
               ref={graphref}
               id="dougnut"
@@ -342,7 +346,7 @@ useEffect(()=>{
               labels={({ datum }) => `${datum.x}: ${datum.y}%`}
               legendOrientation="vertical"
               legendPosition="right"
-              legendData={legendSelectedData}
+              // legendData={legendSelectedData}
               legends={{
                 colorScale: ['red', 'yellow', 'green'],
               }}
