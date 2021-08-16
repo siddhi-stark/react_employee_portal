@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './historyFormschema.json';
-import Api from '../../helper/api';
-import AuthApi from '../../helper/authApi';
+// import Api from '../../helper/api';
+// import AuthApi from '../../helper/authApi';
 // import swal from 'sweetalert';
+import customFunctions from '../../helper/customFunctions';
 
 function EmployementHistory() {
   // Variable declarations
@@ -22,19 +23,60 @@ function EmployementHistory() {
     getUserRole();
   }, []);
 
+
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues);
+    const postData = [];
 
-    const { data } = await AuthApi.postDataToServer(
-      Api.employementHistory,
-      formValues
-    );
-    if (!data) {
-      // show error
-      // return;
+      const report = [];
+
+      formValues.addmore.map((rp) => {
+          const hrReport = {};
+          const managerReport = {};
+        if(rp.reporting_person_hr) {
+
+          hrReport.reporting_person = rp.reporting_person_hr;
+          hrReport.email = rp.hr_email;
+          hrReport.mobile = rp.hr_mobile;
+        }
+        report.push(hrReport);
+
+        if(rp.reporting_person_manager) {
+
+          managerReport.reporting_person = rp.reporting_person_manager;
+          managerReport.email = rp.manager_email;
+          managerReport.mobile = rp.manager_mobile;
+        }
+        report.push(managerReport);
+
+
+        return report;
+        })
+      console.log('report',report)
+      for(const history of formValues.addmore) { // eslint-disable-line
+      const candidateHistory = {
+        designation: history.designation,
+        company_name: history.company_name,
+        company_url: history.company_url,
+        start_date: history.start_date ? customFunctions.getDate(history.start_date) : '',
+        end_date: history.end_date ? customFunctions.getDate(history.end_date) : '',
+        location: history.location,
+        reportings: report
+      }
+    postData.push(candidateHistory);
     }
-    // Perform success actions
+    console.log('postData',postData);
+
+    // const { data } = await AuthApi.postDataToServer(
+    //  `${Api.applicantHistoryUrl}`,
+    //   postData
+    // );
+    // if (!data) {
+    //   // show error
+    //   // return;
+    // }
+    // // Perform success actions
   };
 
   return (

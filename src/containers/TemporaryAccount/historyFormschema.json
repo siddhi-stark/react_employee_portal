@@ -260,6 +260,33 @@
 						"options": []
 					},
 					{
+						"name": "reporting_person_hr",
+						"type": "text",
+						"label": "Hr Name",
+						"id": "",
+						"placeholder": "Company Name",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [
+							{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+						],
+						"displayWhen": {},
+						"haveValidations": "true",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": { "label": "1 Column", "value": "1column" },
+						"options": [],
+						"fields": []
+					},
+					{
 						"name": "hr_email",
 						"type": "email",
 						"label": "HR Email",
@@ -308,6 +335,33 @@
 						"fieldLayout": { "label": "1 Column", "value": "1column" },
 						"fields": [],
 						"options": []
+					},
+					{
+						"name": "reporting_person_manager",
+						"type": "text",
+						"label": "Manager Name",
+						"id": "",
+						"placeholder": "Company Name",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [
+							{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+						],
+						"displayWhen": {},
+						"haveValidations": "true",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": { "label": "1 Column", "value": "1column" },
+						"options": [],
+						"fields": []
 					},
 					{
 						"name": "manager_email",
