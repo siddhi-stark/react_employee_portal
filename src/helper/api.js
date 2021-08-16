@@ -107,6 +107,8 @@ export default class Api extends Component {
 
   static applicantInfoUrl = `${Api.baseUrl}applicant-information/`;
 
+  static googleFileUploadUrl = `${Api.baseUrl}google-upload/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

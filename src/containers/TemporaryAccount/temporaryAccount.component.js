@@ -15,9 +15,9 @@ import customFunctions from '../../helper/customFunctions';
 
 function TemporaryAccount(props) {
   const title = 'Applications';
-   const [token, setToken] = useState(null);
+  const [token, setToken] = useState(null);
   const dispatch = useDispatch();
-    const history = useHistory();
+  const history = useHistory();
   const [isPersonalId, setPersonalId] = useState(null);
   const [isEducationalId, setEducationalId] = useState(null);
   const [isHistoryId, setHistoryId] = useState(null);
@@ -58,7 +58,7 @@ function TemporaryAccount(props) {
 
   // Get user role
   const getData = async () => {
-    const endPoint = `${Api.applicantInfoUrl}?email_hash=gAAAAABhE6bH7Vx0DOeO9AItGzKTT-ZUe7_TQC02ga8bPVmWNbnsHkZUPXNuA3yrLkGXRz1xjvjWtnmEhvDPiMwfEQTkk57MkWChl8N2DQZMlpHxbAcpOwk=`;
+    const endPoint = `${Api.applicantInfoUrl}?email_hash=gAAAAABhGlRgOg0Cvste97FrmAABMeDow4UF-lYaqXEJdKuiZXWdnuQiuykkTVE621qRSzeQjIyvjwZyNkzVgIWl5-EV7KZWPm6I7742F1hKPAlk6SuO7-B-hNfDOaQif2wYkri2IIUj`;
    
     const { data, message } = await AuthApi.getDataFromServer(endPoint);
 

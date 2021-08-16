@@ -11,6 +11,7 @@ function Personal(props) {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [currentUser, updateCurrentUser] = useState(0);
 
   // Get user role
   const getUserRole = async () => {
@@ -22,8 +23,20 @@ function Personal(props) {
     getUserRole();
   }, []);
 
+  const fileUpload = async (formValues) => {
+    console.log('formValues',formValues);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.googleFileUploadUrl}`
+    );
+    if (data) {
+      // setEmail(data.data.email);
+      console.log('data', data);
+    }
+  };
+
   // Submit Form
   const submitForm = async (formValues) => {
+    fileUpload(formValues);
     console.log(
       'formValues doc_link_pan_card',
       formValues.doc_link_pan_card[0]
