@@ -1,15 +1,48 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Tabs, Tab, Image, ProgressBar, Button } from 'react-bootstrap';
+import swal from 'sweetalert';
 import { Helmet } from '../../components/FormInputs';
 import Personal from './personal.component';
 import EducationalDetails from './educational.component';
 import PreviousEmployement from './previousEmployement.component';
 import EmployementHistory from './employementHistory.component';
 import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
 
-function TemporaryAccount() {
+function TemporaryAccount(props) {
   const title = 'Applications';
+   const [token, setToken] = useState(null);
+  const dispatch = useDispatch();
+
+  const verifyToken = async (tkn) => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.temporaryAccountUrl}?token=${tkn}`
+    );
+    if (data) {
+      // setEmail(data.data.email);
+      console.log('data',data);
+    }
+    if (!data) {
+      console.log('data',data);
+      swal('Token is invalid', '', 'error');
+      // props.history.push('/login');
+    }
+  };
+
+  useEffect(() => {
+    console.log('token',token)
+    dispatch({ type: 'LOGIN', value: false });
+    const matchUrltoken = props.match.params.token;
+    console.log('matchUrltoken',matchUrltoken);
+    setToken(matchUrltoken);
+    if (!matchUrltoken) {
+      window.location = '/login';
+      console.log('toeknnnnnnnnnn')
+    }
+    verifyToken(matchUrltoken);
+  }, [dispatch]);
 
   return (
     <>

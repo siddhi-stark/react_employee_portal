@@ -97,6 +97,12 @@ export default class Api extends Component {
 
   static applicantHistoryUrl = `${Api.baseUrl}applicant-history/`;
 
+  static offerTokenUrl = `${Api.baseUrl}verify/offer/`; 
+
+  static offerStatusUrl = `${Api.baseUrl}offer-status/`;  
+
+  static temporaryAccountUrl = `${Api.baseUrl}verify/account/`;   
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
