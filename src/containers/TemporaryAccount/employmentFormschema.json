@@ -31,6 +31,7 @@
 				"fieldLayout": { "label": "1 Column", "value": "1column" },
 				"fields": [],
 				"optionCallback": "getEmployee",
+		        "optionsCallbackUrl": "applicantInfoUrl",
 				"options": [{ "label": "StarkDigital", "value": "stark" }]
 			},
 			{

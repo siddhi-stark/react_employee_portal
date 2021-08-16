@@ -105,7 +105,7 @@ const menu = [
   }, 
   {
     title: 'temorary-account',
-    path:'/temorary-account',
+    path:'/temporary-account',
     roleaccess: [4]
   }, 
   // {

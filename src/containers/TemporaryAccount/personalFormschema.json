@@ -8,7 +8,7 @@
 		"displaySectionTitle": false,
 		"fields": [
 			{
-				"name": "doc_link",
+				"name": "doc_link_pan_card",
 				"type": "file",
 				"label": "Pan Card",
 				"id": "",
@@ -37,7 +37,7 @@
 				"options": []
 			},
 			{
-				"name": "doc_link",
+				"name": "doc_link_adhar_card",
 				"type": "file",
 				"label": "Adhar Card",
 				"id": "",
@@ -66,7 +66,7 @@
 				"options": []
 			},
 			{
-				"name": "doc_link",
+				"name": "doc_link_photo",
 				"type": "file",
 				"label": "Photo",
 				"id": "",

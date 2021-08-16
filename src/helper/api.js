@@ -96,12 +96,16 @@ export default class Api extends Component {
   static timesheetDetailsUrl = `${Api.baseUrl}employee-timesheet-detail/`;
 
   static applicantHistoryUrl = `${Api.baseUrl}applicant-history/`;
-
+  
   static offerTokenUrl = `${Api.baseUrl}verify/offer/`; 
 
   static offerStatusUrl = `${Api.baseUrl}offer-status/`;  
 
   static temporaryAccountUrl = `${Api.baseUrl}verify/account/`;   
+
+  static applicantDocumentUrl = `${Api.baseUrl}applicant-document/`;
+
+  static applicantInfoUrl = `${Api.baseUrl}applicant-information/`;
 
   // Get base URL of APIs
   static getBaseUrl() {

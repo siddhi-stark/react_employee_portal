@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './historyFormschema.json';
-// import Api from '../../helper/api';
-// import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
 // import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 
-function EmployementHistory() {
+function EmployementHistory(props) {
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
@@ -68,15 +68,17 @@ function EmployementHistory() {
     }
     console.log('postData',postData);
 
-    // const { data } = await AuthApi.postDataToServer(
-    //  `${Api.applicantHistoryUrl}`,
-    //   postData
-    // );
-    // if (!data) {
-    //   // show error
-    //   // return;
-    // }
-    // // Perform success actions
+    const { data } = await AuthApi.postDataToServer(
+     `${Api.applicantHistoryUrl}`,
+      postData
+    );
+    props.onHistoryInfo(data.data.id);
+
+    if (!data) {
+      // show error
+      // return;
+    }
+    // Perform success actions
   };
 
   return (
