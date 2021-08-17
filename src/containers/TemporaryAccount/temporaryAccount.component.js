@@ -56,10 +56,12 @@ function TemporaryAccount(props) {
     if (emp === 'Personal') {
       setKey('Personal');
     } else if (emp === 'educational') {
+      console.log('emp',emp);
       setKey('educational');
     } else if (emp === 'employmentHistory') {
       setKey('employmentHistory');
     }else if (emp === 'previousEmployment') {
+      console.log('emp---',emp);
       setKey('previousEmployment');
     }
   };
@@ -70,6 +72,9 @@ function TemporaryAccount(props) {
       setIsBI(false);
       setIsED(false);
       setIsPD(false);
+      setPersonalId(false);
+      setEducationalId(false);
+      setHistoryId(false);
   }, []);
 
   return (
@@ -154,9 +159,8 @@ function TemporaryAccount(props) {
                   disabled={isBI}
                 >
                   {isPersonalId ||
-                    (candidateId && (
+                    (candidateId && String(key) === 'educational' ) && (
                       <div className="row ml-2">
-                      {key === 'educational' && (
                         <EducationalDetails
                           token={tokenProps}
                           name={name}
@@ -168,15 +172,15 @@ function TemporaryAccount(props) {
                             setIsPD(false);
                           }}
                         />
-                        )}
                       </div>
-                    ))}
+                    )}
                 </Tab>
                 <Tab
                   eventKey="employmentHistory"
                   title="Employment History"
                   disabled={isPD}
                 >
+
                   {isEducationalId ||
                     (candidateId && (
                       <div className="row ml-2">

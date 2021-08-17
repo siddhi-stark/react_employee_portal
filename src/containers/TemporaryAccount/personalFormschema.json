@@ -34,7 +34,7 @@
 				"fieldLayout": { "label": "1 Column", "value": "1column" },
 				"fields": [],
 				"optionCallback": "",
-				"accept": "image/*",
+				"accept": "image/*,.pdf",
 				"options": []
 			},
 			{
@@ -64,7 +64,7 @@
 				"fieldLayout": { "label": "1 Column", "value": "1column" },
 				"fields": [],
 				"optionCallback": "",
-				"accept": "image/*",
+				"accept": "image/*,.pdf",
 				"options": []
 			},
 			{
@@ -94,7 +94,7 @@
 				"fieldLayout": { "label": "1 Column", "value": "1column" },
 				"fields": [],
 				"optionCallback": "",
-				"accept": "image/*",
+				"accept": "image/*,.pdf",
 				"options": []
 			}
 		],

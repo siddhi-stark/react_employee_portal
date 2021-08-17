@@ -212,7 +212,6 @@ const LastDay = customFunctions.getDate(lastday);
               <Row className="align-items-center">
                 <Col md={5}>
                   <div className="welcome-text">
-                  <p>Total Working Hrs: {totalHrs}</p>
                     <h1>
                       Welcome{' '}
                       <strong>
@@ -266,6 +265,7 @@ const LastDay = customFunctions.getDate(lastday);
                   <div className="welcome-img text-right">
                     <img src="/images/welcome-img.svg" alt="img" />
                   </div>
+                  <p className="mt-3">Total Working Hrs: {totalHrs}</p>
                 </Col>
               </Row>
             </Jumbotron>

@@ -5,11 +5,11 @@ import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './employmentFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function PreviousEmployement(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
-  console.log('candidateId',candidateId);
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -20,6 +20,7 @@ function PreviousEmployement(props) {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [docId, setDocId] = useState([]);
 
   // Get user role
   const getUserRole = async () => {
@@ -31,19 +32,57 @@ function PreviousEmployement(props) {
     getUserRole();
   }, []);
 
+  const getData = async () => {
+    const docIdArr = [];
+    let obj = '';
+    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+
+    const { data, message } = await AuthApi.postDataToServer(endPoint);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      data.data &&
+        data.data.applicant_documents.map((doc) => {
+        if (doc.doc_type_name === 'Employment') {
+          obj =  { label: doc.company_name, value: doc.company_name };
+        }
+          updateDefaultValues({
+            employee: doc.company_name && obj,
+            salary_slip1: (doc.doc_title === 'Salary Slip 1') && doc.document_url,
+            salary_slip2: (doc.doc_title === 'Salary Slip 2') && doc.document_url,
+            salary_slip3: (doc.doc_title === 'Salary Slip 3') && doc.document_url,
+            reliving_letter:
+              (doc.doc_title === 'Reliving Letter') && doc.document_url,
+          });
+          docIdArr.push({ name: doc.doc_title, id: doc.doc_id });
+          return doc;
+        });
+      setDocId(docIdArr);
+    } else {
+      console.log('error', message);
+      // swal(message, '', 'error');
+    }
+  };
+
+  useEffect(() => {
+    if (candidateId) {
+      getData();
+    }
+  }, []);
+
   const fileUpload = async (formValues) => { // eslint-disable-line
-    
+
     const formData = new FormData();
 
     formData.append('file_name', formValues[0]);
-    formData.append('employee_name', nameProps); 
+    formData.append('employee_name', nameProps);
     formData.append('employee_email', emailProps);
-    formData.append('folder_name', 'Educational');
+    formData.append('folder_name', 'Employment');
     formData.append('email_hash', tokenProps);
     formData.append('password', passwordProps);
 
     const { data } = await AuthApi.postDataToServer(
-      `${Api.googleFileUploadUrl}`,formData
+      `${Api.googleFileUploadUrl}`,
+      formData
     );
     if (data) {
       console.log('data', data);
@@ -54,50 +93,78 @@ function PreviousEmployement(props) {
   // Submit Form
   const submitForm = async (formValues) => {
     let slip1fileUrl = '';
-    let slip2fileUrl ='';
-    let slip3fileUrl ='';
-    let relivingfileUrl ='';
+    let slip1fileUrlId = '';
+    let slip2fileUrl = '';
+    let slip2fileUrlId = '';
+    let slip3fileUrl = '';
+    let slip3fileUrlId = '';
+    let relivingfileUrl = '';
+    let relivingfileUrlId = '';
 
-    if(formValues.salary_slip1){
-      slip1fileUrl =  await fileUpload(formValues.salary_slip1);
+    docId &&
+      docId.map((document) => {
+        if (document.name === 'Salary Slip 1') {
+          slip1fileUrl = { id: document.id, label: document.name };
+        } else if (document.name === 'Salary Slip 2') {
+          slip2fileUrl = { id: document.id, label: document.name };
+        } else if (document.name === 'Salary Slip 3') {
+          slip3fileUrl = { id: document.id, label: document.name };
+        } else if (document.name === 'Reliving Letter') {
+          relivingfileUrl = { id: document.id, label: document.name };
+        }
+        return document;
+      });
+
+    if (formValues.salary_slip1) {
+      slip1fileUrlId = await fileUpload(formValues.salary_slip1);
     }
-    if(formValues.salary_slip2){
-      slip2fileUrl =  await fileUpload(formValues.salary_slip2);
+    if (formValues.salary_slip2) {
+      slip2fileUrlId = await fileUpload(formValues.salary_slip2);
     }
-    if(formValues.salary_slip3){
-      slip3fileUrl = await fileUpload(formValues.salary_slip3);
+    if (formValues.salary_slip3) {
+      slip3fileUrlId = await fileUpload(formValues.salary_slip3);
     }
-    if(formValues.reliving_letter){
-      relivingfileUrl = await fileUpload(formValues.reliving_letter);
+    if (formValues.reliving_letter) {
+      relivingfileUrlId = await fileUpload(formValues.reliving_letter);
     }
 
-  const postData = {
+    const postData = {
       email_hash: tokenProps,
       password: passwordProps,
-      applicant_id: candidateId ? Number(candidateId) :'',
+      applicant_id: candidateId ? Number(candidateId) : '',
       doc_type: 3,
       applicant_documents: [
         {
-          doc_title: formValues.employee ? formValues.employee.label :'',
-          doc: slip1fileUrl && slip1fileUrl.id,
+          doc_title: formValues.employee
+            ? formValues.employee.label
+            : slip1fileUrl.label,
+          doc: slip1fileUrlId ? Number(slip1fileUrlId) : slip1fileUrl.id,
         },
         {
-          doc_title: formValues.employee ? formValues.employee.label :'',
-          doc: slip2fileUrl && slip2fileUrl.id,
+          doc_title: formValues.employee
+            ? formValues.employee.label
+            : slip2fileUrl.label,
+          doc: slip2fileUrlId ? Number(slip2fileUrlId) : slip2fileUrl.id,
         },
         {
-          doc_title: formValues.employee ? formValues.employee.label :'',
-          doc: slip3fileUrl && slip3fileUrl.id,
+          doc_title: formValues.employee
+            ? formValues.employee.label
+            : slip3fileUrl.label,
+          doc: slip3fileUrlId ? Number(slip3fileUrlId) : slip3fileUrl.id,
         },
         {
-          doc_title: formValues.employee ? formValues.employee.label :'',
-          doc: relivingfileUrl && relivingfileUrl.id,
+          doc_title: formValues.employee
+            ? formValues.employee.label
+            : relivingfileUrl.label,
+          doc: relivingfileUrlId
+            ? Number(relivingfileUrlId)
+            : relivingfileUrl.id,
         },
       ],
     };
 
     const { data, message } = await AuthApi.postDataToServer(
-     `${Api.applicantDocumentUrl}`,
+      `${Api.applicantDocumentUrl}`,
       postData
     );
     if (!data) {
@@ -107,7 +174,7 @@ function PreviousEmployement(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        updateDefaultValues({});
+        // updateDefaultValues({});
         swal.close();
       });
       // show error
@@ -117,6 +184,7 @@ function PreviousEmployement(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        getData();
         swal.close();
       });
     }
@@ -125,28 +193,39 @@ function PreviousEmployement(props) {
 
   const getEmployee = async () => {
     const postData = {
-      email_hash:tokenProps,
+      email_hash: tokenProps,
       password: passwordProps,
     };
 
-    const { data } = await AuthApi.postDataToServer(Api.applicantInfoUrl,postData);
+    const callback = candidateId
+      ? AuthApi.postDataToServer
+      : AuthApi.postDataToServer;
+    const endPoint = candidateId
+      ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
+      : Api.applicantInfoUrl;
+
+    const { data } = await callback(endPoint, postData);
+
     if (!data) {
       // show error
       return;
     }
 
     const dpOptions = [];
-    data.data && data.data.applicant_history.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.company_name, value: op.company_name });
-      return op;
-    });
+    data.data &&
+      data.data.applicant_documents.map((op) => {
+        // Change appropriate keys
+        if (op.doc_type_name === 'Employment') {
+          dpOptions.push({ label: op.company_name, value: op.company_name });
+        }
+        return op;
+      });
     const allOptions = {
       ...options,
       ...filterOptions,
       employee: dpOptions,
     };
-    filterOptions = {...allOptions};
+    filterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
 

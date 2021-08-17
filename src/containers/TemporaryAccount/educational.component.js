@@ -15,6 +15,7 @@ function EducationalDetails(props) {
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
   const emailProps = accProps.props.email;
+  const [docId, setDocId] = useState([]);
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -32,12 +33,12 @@ function EducationalDetails(props) {
   }, []);
 
   const getData = async () => {
+    const docIdArr = [];
     const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
    
     const { data, message } = await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      console.log('data.data',data.data.applicant_documents);
       data.data && data.data.applicant_documents.map((doc)=>{
         updateDefaultValues({
             doc_link_ssc:(doc.doc_title === 'SSC') && doc.document_url,
@@ -45,8 +46,10 @@ function EducationalDetails(props) {
             doc_link_graduate:(doc.doc_title === 'Graduate') && doc.document_url,
             doc_link_post_graduate:(doc.doc_title === 'Post Graduate') && doc.document_url,
         });
+        docIdArr.push({name: doc.doc_title, id:doc.doc_id});
         return doc;
       })
+        setDocId(docIdArr);
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
@@ -54,6 +57,7 @@ function EducationalDetails(props) {
   };
 
   useEffect(() => {
+    console.log('candidateId',candidateId)
     if(candidateId) {
       getData();
     }
@@ -74,29 +78,47 @@ function EducationalDetails(props) {
       `${Api.googleFileUploadUrl}`,formData
     );
     if (data) {
-      return data.data;
+      return data.data.id;
     }
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
-    let sscfileUrl = '';
-    let hscfileUrl ='';
-    let graduatefileUrl ='';
-    let postfileUrl ='';
 
+    let sscfileUrl = '';
+    let sscfileUrlId = '';
+    let hscfileUrl ='';
+    let hscfileUrlId ='';
+    let graduatefileUrl ='';
+    let graduatefileUrlId ='';
+    let postfileUrl ='';
+    let postfileUrlId ='';
+    
+    docId && docId.map((document)=>{
+      if(document.name === 'SSC'){
+        sscfileUrl = document.id;
+      }else if(document.name === 'HSC'){
+        hscfileUrl = document.id;
+      }else if(document.name === 'Graduate'){
+        graduatefileUrl = document.id;
+      }else if(document.name === 'Post Graduate'){
+        postfileUrl = document.id;
+      }
+      return document;
+    })
     if(formValues.doc_link_graduate){
-      graduatefileUrl =  await fileUpload(formValues.doc_link_graduate);
+      graduatefileUrlId =  await fileUpload(formValues.doc_link_graduate);
     }
     if(formValues.doc_link_hsc){
-      hscfileUrl =  await fileUpload(formValues.doc_link_hsc);
+      hscfileUrlId =  await fileUpload(formValues.doc_link_hsc);
     }
     if(formValues.doc_link_post_graduate){
-      postfileUrl = await fileUpload(formValues.doc_link_post_graduate);
+      postfileUrlId = await fileUpload(formValues.doc_link_post_graduate);
     }
     if(formValues.doc_link_ssc){
-      sscfileUrl = await fileUpload(formValues.doc_link_ssc);
+      sscfileUrlId = await fileUpload(formValues.doc_link_ssc);
     }
+
     const postData = {
       email_hash: tokenProps,
       password: passwordProps,
@@ -105,19 +127,19 @@ function EducationalDetails(props) {
       applicant_documents: [
         {
           doc_title: 'SSC',
-          doc: sscfileUrl.id,
+          doc: sscfileUrlId ? Number(sscfileUrlId) : sscfileUrl,
         },
         {
           doc_title: 'HSC',
-          doc: hscfileUrl.id,
+          doc: hscfileUrlId ? Number(hscfileUrlId):hscfileUrl,
         },
         {
           doc_title: 'Graduate',
-          doc: graduatefileUrl.id,
+          doc: graduatefileUrlId ? Number(graduatefileUrlId):graduatefileUrl,
         },
         {
           doc_title: 'Post Graduate',
-          doc: postfileUrl.id,
+          doc: postfileUrlId ? Number(postfileUrlId):postfileUrl,
         },
       ],
     };
@@ -133,7 +155,7 @@ function EducationalDetails(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        updateDefaultValues({});
+        // updateDefaultValues({});
         swal.close();
       });
       // show error
@@ -143,6 +165,7 @@ function EducationalDetails(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        getData();
         props.onEducationalInfo(true);
         swal.close();
       });

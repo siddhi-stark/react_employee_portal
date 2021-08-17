@@ -19,6 +19,7 @@ function Personal(props) {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [docId, setDocId] = useState(null);
 
   // Get user role
   const getUserRole = async () => {
@@ -31,20 +32,24 @@ function Personal(props) {
   }, []);
 
   const getData = async () => {
+    const docIdArr = [];
     const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
    
     const { data, message } = await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      console.log('data.data',data.data.applicant_documents);
       data.data && data.data.applicant_documents.map((doc)=>{
         updateDefaultValues({
-            doc_link_pan_card:(doc.doc_title === 'Pan Card') && doc.document_url,
-            doc_link_adhar_card:(doc.doc_title === 'Aadhar') && doc.document_url,
+            doc_link_pan_card:(doc.doc_title === 'Pan') && doc.document_url,
+            doc_link_adhar_card:(String(doc.doc_title) === 'Aadhar') && doc.document_url,
             doc_link_photo:(doc.doc_title === 'Photo') && doc.document_url,
         });
+        
+        docIdArr.push({name: doc.doc_title, id:doc.doc_id});
+
         return doc;
       })
+        setDocId(docIdArr);
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
@@ -71,23 +76,38 @@ function Personal(props) {
       `${Api.googleFileUploadUrl}`,formData
     );
     if (data) {
-      return data.data;
+      return data.data.id;
     } 
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
     let pancardfileUrl ='';
+    let pancardfileUrlId ='';
     let adharfileUrl ='';
+    let adharfileUrlId ='';
     let photofileUrl ='';
+    let photofileUrlId ='';
+    
+    docId && docId.map((document)=>{
+      if(document.name === 'Pan'){
+        pancardfileUrl = document.id;
+      }else if(document.name === 'Aadhar'){
+        adharfileUrl = document.id;
+      }else if(document.name === 'Photo'){
+        photofileUrl = document.id;
+      }
+      return document;
+    })
+
     if(formValues.doc_link_pan_card){
-       pancardfileUrl = await fileUpload(formValues.doc_link_pan_card);
+       pancardfileUrlId = await fileUpload(formValues.doc_link_pan_card);
      }
     if(formValues.doc_link_adhar_card){
-      adharfileUrl = await fileUpload(formValues.doc_link_adhar_card);
+      adharfileUrlId = await fileUpload(formValues.doc_link_adhar_card);
     }
     if(formValues.doc_link_photo){
-      photofileUrl = await fileUpload(formValues.doc_link_photo);
+      photofileUrlId = await fileUpload(formValues.doc_link_photo);
     }
     
     const postData = {
@@ -98,15 +118,15 @@ function Personal(props) {
       applicant_documents: [
         {
           doc_title: 'Aadhar',
-          doc: adharfileUrl && adharfileUrl.id,
+          doc: adharfileUrlId ? Number(adharfileUrlId):adharfileUrl,
         },
         {
-          doc_title: 'Pan Card',
-          doc: pancardfileUrl && pancardfileUrl.id,
+          doc_title: 'Pan',
+          doc: pancardfileUrlId ? Number(pancardfileUrlId): pancardfileUrl,
         },
         {
           doc_title: 'Photo',
-          doc: photofileUrl && photofileUrl.id,
+          doc: photofileUrlId ? Number(photofileUrlId): photofileUrl,
         },
       ],
     };
@@ -123,7 +143,7 @@ function Personal(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        updateDefaultValues({});
+        // updateDefaultValues({});
         swal.close();
       });
       // show error
@@ -133,6 +153,7 @@ function Personal(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        getData();
         props.onPersonalInfo(true);
         swal.close();
       });

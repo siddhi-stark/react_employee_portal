@@ -39,65 +39,47 @@ function EmployementHistory(props) {
     getUserRole();
   }, []);
 
-
-    // const section = hrInterviewFormSections[0].fields[3].options;
-    // console.log('sections',section);
-    // const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
-    //   console.log('data',data);
-    //   if(data) {
-        
-    // const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
-    // data.data.int_date = intDate ? new Date(intDate) : '';
-    // data.data.int_time = data.data.int_time ? new Date(intDate + ' ' + data.data.int_time) : ''; //eslint-disable-line
-  
-    //  const ds = data.data.interviewer_id ? {
-    //     label: data.data.interviewer_name,
-    //     value: data.data.interviewer_id
-    //   } : ''   
-
-    //    const interw = data.data.round_type ? {
-    //     label: data.data.round_type_name,
-    //     value: data.data.round_type
-    //   } : ''  
-
-    //  const obj = {
-    //    ...data.data,
-    //    interviewer: ds,
-    //    round_status: interw
-    //  };
-
-    //  updateDefaultValues({...obj})    // updateDefaultValues(data);
-    //   }
-
   const getData = async () => {
+    const addmoreData = [];
+
     const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
-   
+
     const { data, message } = await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      console.log('data.data',data.data.applicant_history);
-      data.data && data.data.applicant_history.map((doc)=>{
-        doc && doc.reportings.map((report)=>{
-          updateDefaultValues({
-              company_name: doc.company_name && doc.company_name,
-              designation: doc.designation && doc.designation,
-              company_url: doc.company_url && doc.company_url,
-              start_date: doc.start_date && new Date(doc.start_date),
-              end_date: doc.end_date && new Date(doc.end_date),
-              duration: doc.duration && doc.duration,
-              location: doc.location && doc.location,
-              reporting_person_hr:(String(report.is_hr) === 'true') && report.reporting_person,
-              hr_email:(String(report.is_hr) === 'true') && report.email,
-              hr_mobile:(String(report.is_hr) === 'true') && report.mobile,
-              reporting_person_manager:(String(report.is_hr) === 'false') && report.reporting_person,
-              manager_email:(String(report.is_hr) === 'false') && report.email,
-              manager_mobile:(String(report.is_hr) === 'false') && report.mobile,
-          });
-          return report;
-        });
+      data.data && data.data.applicant_history &&
+        (data.data.applicant_history.length > 0) &&
+        data.data.applicant_history.map((doc) => {
+          doc &&  doc.reportings && (doc.reportings.length > 0) && doc.reportings.map((report) => {
+              addmoreData.push({
+                company_name: doc.company_name && doc.company_name,
+                designation: doc.designation && doc.designation,
+                company_url: doc.company_url && doc.company_url,
+                start_date: doc.start_date && new Date(doc.start_date),
+                end_date: doc.end_date && new Date(doc.end_date),
+                duration: doc.duration && doc.duration,
+                location: doc.location && doc.location,
+                reporting_person_hr:
+                  String(report.is_hr) === 'true'
+                    ? report.reporting_person
+                    : '',
+                hr_email: String(report.is_hr) === 'true' ? report.email : '',
+                hr_mobile: String(report.is_hr) === 'true' ? report.mobile : '',
+                reporting_person_manager:
+                  String(report.is_hr) === 'false'
+                    ? report.reporting_person
+                    : '',
+                manager_email:
+                  String(report.is_hr) === 'false' ? report.email : '',
+                manager_mobile:
+                  String(report.is_hr) === 'false' ? report.mobile : '',
+              });
+              return report;
+            });
 
-        return doc;
-      })
+          return doc;
+        });
+      updateDefaultValues({ addmore: [...addmoreData] });
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
@@ -105,73 +87,72 @@ function EmployementHistory(props) {
   };
 
   useEffect(() => {
-    if(candidateId) {
+    if (candidateId) {
       getData();
     }
   }, []);
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
     const payload = {
       email_hash: tokenProps,
       password: passwordProps,
-      applicant_id:idProps
+      applicant_id: idProps,
     };
     const postData = [];
 
-      const report = [];
-      
-      formValues.addmore.map((rp) => {
-          const hrReport = {};
-          const managerReport = {};
-        if(rp.reporting_person_hr) {
+    const report = {};
 
-          hrReport.reporting_person = rp.reporting_person_hr;
-          hrReport.email = rp.hr_email;
-          hrReport.mobile = rp.hr_mobile;
-          hrReport.is_hr = true;
-        }
-        report.push(hrReport);
+    await formValues.addmore.map((rp, i) => {
+      report[i] = [];
+      const hrReport = {};
+      const managerReport = {};
+      if (rp.reporting_person_hr) {
+        hrReport.reporting_person = rp.reporting_person_hr;
+        hrReport.email = rp.hr_email;
+        hrReport.mobile = rp.hr_mobile;
+        hrReport.is_hr = true;
+      report[i].push(hrReport);
+      }
 
-        if(rp.reporting_person_manager) {
-
-          managerReport.reporting_person = rp.reporting_person_manager;
-          managerReport.email = rp.manager_email;
-          managerReport.mobile = rp.manager_mobile;
-        }
-        report.push(managerReport);
-
-
-        return report;
-        })
-      for(const history of formValues.addmore) { // eslint-disable-line
+      if (rp.reporting_person_manager) {
+        managerReport.reporting_person = rp.reporting_person_manager;
+        managerReport.email = rp.manager_email;
+        managerReport.mobile = rp.manager_mobile;
+      report[i].push(managerReport);
+      }
+      return rp;
+    });
+    for (const [index, history] of formValues.addmore.entries()) {  // eslint-disable-line
       const candidateHistory = {
         designation: history.designation,
         company_name: history.company_name,
         company_url: history.company_url,
-        start_date: history.start_date ? customFunctions.getDate(history.start_date) : '',
-        end_date: history.end_date ? customFunctions.getDate(history.end_date) : '',
+        start_date: history.start_date
+          ? customFunctions.getDate(history.start_date)
+          : '',
+        end_date: history.end_date
+          ? customFunctions.getDate(history.end_date)
+          : '',
         location: history.location,
-        reportings: report
-      }
-    postData.push(candidateHistory);
+        reportings: report[index],
+      };
+      postData.push(candidateHistory);
     }
     payload.applicant_history = postData;
-
     const { data, message } = await AuthApi.postDataToServer(
-     `${Api.applicantHistoryUrl}`,
+      `${Api.applicantHistoryUrl}`,
       payload
     );
 
-   if (!data) {
+    if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
         buttons: false,
         timer: 2000,
       }).then(() => {
-        updateDefaultValues({});
+        // updateDefaultValues({});
         swal.close();
       });
       // show error
@@ -182,6 +163,7 @@ function EmployementHistory(props) {
         allowOutsideClick: false,
       }).then(() => {
         props.onHistoryInfo(true);
+        getData();
         swal.close();
       });
     }
