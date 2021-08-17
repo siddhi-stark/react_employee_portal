@@ -164,7 +164,7 @@ const menu = [
     path: '/candidates',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1, 5],
+    roleaccess: [5],
   },
   {
     title: 'Logout',

@@ -11388,6 +11388,12 @@ span.np-sup {
         }
     }
 }*/
+.Required-Document h5, .Required-Document .h5 {
+  font-size: 20px; }
+
+.Required-Document h6, .Required-Document .h6 {
+  font-size: 18px; }
+
 @media (min-width: 576px) {
   .bd-content .highlight {
     margin-right: 0;

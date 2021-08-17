@@ -41,6 +41,8 @@ import GenerateOfferLetter from './containers/Applications/GenerateOfferLetter.c
 import AcceptInviteLink from './containers/Applications/AcceptInviteLink.component';
 import CandidateListing from './containers/Applications/CandidateListing.component';
 import RequiredDocument from './containers/TemporaryAccount/RequiredDocument.component';
+import TemporaryAccount from './containers/TemporaryAccount/temporaryAccount.component';
+import OnBoard from './containers/TemporaryAccount/OnBoard.component';
 
 function Routes() {
   return (
@@ -88,6 +90,8 @@ function Routes() {
        <Route path='/verify/offer/:offerToken' exact component={AcceptInviteLink} />
        <Route path='/candidates' exact component={CandidateListing} />
        <Route path='/temporary/account/:token' exact component={RequiredDocument} />
+      <Route path="/candidates/:ID" exact component={TemporaryAccount} />
+      <Route path="/onboard/:ID" exact component={OnBoard} />
 
 
       <Route component={NotFound} />
