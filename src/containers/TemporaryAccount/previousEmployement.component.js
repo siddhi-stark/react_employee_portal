@@ -29,52 +29,69 @@ function PreviousEmployement(props) {
     getUserRole();
   }, []);
 
-  const fileUpload = async (formValues) => {
-    const fileArr = [];
-    // fileArr.push(formValues.file_upload);
-    for (let i = 0; i < formValues.file_upload.length; i++) { // eslint-disable-line
-       fileArr.push(formValues.file_upload[i])
-      }
-    console.log('formValues.file_upload',fileArr);
+  const fileUpload = async (formValues) => { // eslint-disable-line
+    
     const formData = new FormData();
-    formData.append('file_name', fileArr);
 
+    formData.append('file_name', formValues[0]);
     formData.append('employee_name', nameProps); 
     formData.append('employee_email', emailProps);
-      console.log('------',formData);
+    formData.append('folder_name', 'Educational');
+    formData.append('email_hash', tokenProps);
+    formData.append('password', passwordProps);
 
     const { data } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );
     if (data) {
-      // setEmail(data.data.email);
       console.log('data', data);
+      return data.data;
     }
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
-    if(formValues){
-      fileUpload(formValues);
-     }
-   
+    let slip1fileUrl = '';
+    let slip2fileUrl ='';
+    let slip3fileUrl ='';
+    let relivingfileUrl ='';
 
-  const documents = [];
-  const doc = {};
-  if(formValues.employee) {
-    doc.doc_title = formValues.employee.label
-    doc.doc_link = formValues.file_upload
-  }
-  documents.push(doc);
+    if(formValues.salary_slip1){
+      slip1fileUrl =  await fileUpload(formValues.salary_slip1);
+    }
+    if(formValues.salary_slip2){
+      slip2fileUrl =  await fileUpload(formValues.salary_slip2);
+    }
+    if(formValues.salary_slip3){
+      slip3fileUrl = await fileUpload(formValues.salary_slip3);
+    }
+    if(formValues.reliving_letter){
+      relivingfileUrl = await fileUpload(formValues.reliving_letter);
+    }
 
   const postData = {
       email_hash: tokenProps,
       password: passwordProps,
-      doc_type: 2,
-      applicant_documents: documents
+      doc_type: 3,
+      applicant_documents: [
+        {
+          doc_title: formValues.employee ? formValues.employee.label :'',
+          doc_link: slip1fileUrl && slip1fileUrl.file_url,
+        },
+        {
+          doc_title: formValues.employee ? formValues.employee.label :'',
+          doc_link: slip2fileUrl && slip2fileUrl.file_url,
+        },
+        {
+          doc_title: formValues.employee ? formValues.employee.label :'',
+          doc_link: slip3fileUrl && slip3fileUrl.file_url,
+        },
+        {
+          doc_title: formValues.employee ? formValues.employee.label :'',
+          doc_link: relivingfileUrl && relivingfileUrl.file_url,
+        },
+      ],
     };
-    console.log('postData', postData);
     const { data, message } = await AuthApi.postDataToServer(
       Api.applicantDocumentUrl,
       postData
@@ -88,6 +105,7 @@ function PreviousEmployement(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
+        updateDefaultValues({});
         swal.close();
       });
       // show error

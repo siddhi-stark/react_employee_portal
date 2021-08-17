@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './educationalFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
-// import swal from 'sweetalert';
 
 function EducationalDetails(props) {
   const accProps = { props };
@@ -29,38 +29,43 @@ function EducationalDetails(props) {
     getUserRole();
   }, []);
 
-  const fileUpload = async (formValues) => {
+  const fileUpload = async (formValues) => { // eslint-disable-line
     
     const formData = new FormData();
 
-    formData.append('file_name', formValues[0].name);
+    formData.append('file_name', formValues[0]);
     formData.append('employee_name', nameProps); 
     formData.append('employee_email', emailProps);
+    formData.append('folder_name', 'Educational');
+    formData.append('email_hash', tokenProps);
+    formData.append('password', passwordProps);
 
     const { data } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );
     if (data) {
-      // setEmail(data.data.email);
-      console.log('data', data);
+      return data.data;
     }
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
+    let sscfileUrl = '';
+    let hscfileUrl ='';
+    let graduatefileUrl ='';
+    let postfileUrl ='';
+
     if(formValues.doc_link_graduate){
-      fileUpload(formValues.doc_link_graduate);
-     }
+      graduatefileUrl =  await fileUpload(formValues.doc_link_graduate);
+    }
     if(formValues.doc_link_hsc){
-      fileUpload(formValues.doc_link_hsc);
+      hscfileUrl =  await fileUpload(formValues.doc_link_hsc);
     }
     if(formValues.doc_link_post_graduate){
-      fileUpload(formValues.doc_link_post_graduate);
+      postfileUrl = await fileUpload(formValues.doc_link_post_graduate);
     }
-
     if(formValues.doc_link_ssc){
-      fileUpload(formValues.doc_link_ssc);
+      sscfileUrl = await fileUpload(formValues.doc_link_ssc);
     }
     const postData = {
       email_hash: tokenProps,
@@ -69,33 +74,48 @@ function EducationalDetails(props) {
       applicant_documents: [
         {
           doc_title: 'SSC',
-          doc_link: 'http://www.google.com',
+          doc_link: sscfileUrl.file_url,
         },
         {
           doc_title: 'HSC',
-          doc_link: 'http://www.google.com',
+          doc_link: hscfileUrl.file_url,
         },
         {
           doc_title: 'Graduate',
-          doc_link: 'http://www.google.com',
+          doc_link: graduatefileUrl.file_url,
         },
         {
           doc_title: 'Post Graduate',
-          doc_link: 'http://www.google.com',
+          doc_link: postfileUrl.file_url,
         },
       ],
     };
-    console.log('postData',postData);
 
-    const { data } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.postDataToServer(
       Api.applicantDocumentUrl,
-      formValues
+      postData
     );
-    // props.onEducationalInfo(data.data.id);
     
-    if (!data) {
+   if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        updateDefaultValues({});
+        swal.close();
+      });
       // show error
       // return;
+    } else {
+      swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(() => {
+        props.onEducationalInfo(true);
+        swal.close();
+      });
     }
     // Perform success actions
   };

@@ -14,15 +14,16 @@ import customFunctions from '../../helper/customFunctions';
 function TemporaryAccount(props) {
   const accProps = { props };
   const passwordProps = accProps.props.password;
+  console.log('passwordProps', passwordProps);
   const tokenProps = accProps.props.token;
   const title = 'Applications';
   const history = useHistory();
-  const [isPersonalId, setPersonalId] = useState(null);
-  const [isEducationalId, setEducationalId] = useState(null); // eslint-disable-line
-  const [isHistoryId, setHistoryId] = useState(null);
-  const [isBI, setIsBI] = useState(true); // eslint-disable-line
-  const [isPD, setIsPD] = useState(true); // eslint-disable-line
-  const [isED, setIsED] = useState(true); // eslint-disable-line
+  const [isPersonalId, setPersonalId] = useState(false);
+  const [isEducationalId, setEducationalId] = useState(false);
+  const [isHistoryId, setHistoryId] = useState(false);
+  const [isBI, setIsBI] = useState(true);
+  const [isPD, setIsPD] = useState(true);
+  const [isED, setIsED] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
@@ -33,16 +34,15 @@ function TemporaryAccount(props) {
     const endPoint = `${Api.applicantInfoUrl}`;
     const payload = {
       email_hash: tokenProps,
-      password: passwordProps
-    }
-    const { data, message } = await AuthApi.postDataToServer(endPoint,payload);
+      password: passwordProps,
+    };
+    const { data, message } = await AuthApi.postDataToServer(endPoint, payload);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setPersonalInfo((data && data.data) || []);
       setName(data.data.name);
       setEmail(data.data.email);
       setId(data.data.id);
-
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
@@ -115,12 +115,11 @@ function TemporaryAccount(props) {
                 <Tab eventKey="Personal" title="Personal Documents">
                   <div className="row ml-2">
                     <Personal
-                      token ={tokenProps}
-                      password ={passwordProps}
-                      name ={name}
-                      email ={email}
+                      token={tokenProps}
+                      password={passwordProps}
+                      name={name}
+                      email={email}
                       onPersonalInfo={(value) => {
-                        setEducationalId(value);
                         setPersonalId(value);
                         setIsBI(false);
                       }}
@@ -130,14 +129,15 @@ function TemporaryAccount(props) {
                 <Tab
                   eventKey="educational"
                   title="Educational Documents"
-                  // disabled={isBI}
+                  disabled={isBI}
                 >
+                  {isPersonalId && (
                     <div className="row ml-2">
                       <EducationalDetails
-                      token ={tokenProps}
-                      name ={name}
-                      email ={email}
-                      password ={passwordProps}
+                        token={tokenProps}
+                        name={name}
+                        email={email}
+                        password={passwordProps}
                         isPersonalId={isPersonalId}
                         onEducationalInfo={(value) => {
                           setEducationalId(value);
@@ -145,38 +145,46 @@ function TemporaryAccount(props) {
                         }}
                       />
                     </div>
+                  )}
                 </Tab>
                 <Tab
                   eventKey="employmentHistory"
                   title="Employment History"
-                  // disabled={isPD}
+                  disabled={isPD}
                 >
+                  {isEducationalId && (
                     <div className="row ml-2">
                       <EmployementHistory
-                       token ={tokenProps}
-                       name ={name}
-                      email ={email}
-                      id ={id}
-                      password ={passwordProps}
+                        token={tokenProps}
+                        name={name}
+                        email={email}
+                        id={id}
+                        password={passwordProps}
+                        isEducationalId={isEducationalId}
                         onHistoryInfo={(value) => {
-                          setEducationalId(value);
-                          setPersonalId(value);
                           setHistoryId(value);
                           setIsED(false);
                         }}
                       />
                     </div>
+                  )}
                 </Tab>
                 <Tab
                   eventKey="previousEmployment"
                   title="Previous Employment"
-                  // disabled={isED}
+                  disabled={isED}
                 >
+                  {isHistoryId && (
                     <div className="row ml-2">
-                      <PreviousEmployement name ={name}
-                      email ={email} token ={tokenProps}
-                      password ={passwordProps} isHistoryId={isHistoryId} />
+                      <PreviousEmployement
+                        name={name}
+                        email={email}
+                        token={tokenProps}
+                        isHistoryId={isHistoryId}
+                        password={passwordProps}
+                      />
                     </div>
+                  )}
                 </Tab>
               </Tabs>
             </div>

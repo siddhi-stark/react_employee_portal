@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './historyFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
-// import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 
 function EmployementHistory(props) {
@@ -74,7 +74,6 @@ function EmployementHistory(props) {
 
         return report;
         })
-      console.log('report',report)
       for(const history of formValues.addmore) { // eslint-disable-line
       const candidateHistory = {
         designation: history.designation,
@@ -88,16 +87,32 @@ function EmployementHistory(props) {
     postData.push(candidateHistory);
     }
     payload.applicant_history = postData;
-    console.log('postData',payload);
 
-    const { data } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.postDataToServer(
      `${Api.applicantHistoryUrl}`,
       payload
     );
 
-    if (!data) {
+   if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        updateDefaultValues({});
+        swal.close();
+      });
       // show error
       // return;
+    } else {
+      swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(() => {
+        props.onHistoryInfo(true);
+        swal.close();
+      });
     }
     // Perform success actions
   };

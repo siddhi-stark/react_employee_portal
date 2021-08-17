@@ -28,36 +28,46 @@ function Personal(props) {
     getUserRole();
   }, []);
 
-  const fileUpload = async (formValues) => {
-    
+//  employee_name:Yogesh Shinde1
+// employee_email:l.kailas@starkdigital.net
+// folder_name:Educational
+// email_hash: sdfdsf
+// password: dfdsf
+// file_name: file
+
+  const fileUpload = async (formValues) => { // eslint-disable-line
     const formData = new FormData();
 
-    formData.append('file_name', formValues[0].name);
+    formData.append('file_name', formValues[0]);
+    formData.append('email_hash', tokenProps);
+    formData.append('password', passwordProps);
     formData.append('employee_name', nameProps); 
     formData.append('employee_email', emailProps);
+    formData.append('folder_name', 'Personal');
 
     const { data } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );
     if (data) {
-      // setEmail(data.data.email);
-      console.log('data', data);
-    }
+      return data.data;
+    } 
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
+    let pancardfileUrl ='';
+    let adharfileUrl ='';
+    let photofileUrl ='';
     if(formValues.doc_link_pan_card){
-      fileUpload(formValues.doc_link_pan_card);
+       pancardfileUrl = await fileUpload(formValues.doc_link_pan_card);
      }
     if(formValues.doc_link_adhar_card){
-      fileUpload(formValues.doc_link_adhar_card);
+      adharfileUrl = await fileUpload(formValues.doc_link_adhar_card);
     }
     if(formValues.doc_link_photo){
-      fileUpload(formValues.doc_link_photo);
+      photofileUrl = await fileUpload(formValues.doc_link_photo);
     }
   
-    console.log('formValues doc_link_photo', formValues.doc_link_photo[0]);
     const postData = {
       email_hash: tokenProps,
       password: passwordProps,
@@ -65,24 +75,22 @@ function Personal(props) {
       applicant_documents: [
         {
           doc_title: 'Aadhar',
-          doc_link: 'http://www.google.com',
+          doc_link: adharfileUrl && adharfileUrl.file_url,
         },
         {
           doc_title: 'Pan Card',
-          doc_link: 'http://www.google.com',
+          doc_link: pancardfileUrl && pancardfileUrl.file_url,
         },
         {
           doc_title: 'Photo',
-          doc_link: 'http://www.google.com',
+          doc_link: photofileUrl && photofileUrl.file_url,
         },
       ],
     };
-    console.log('postData', postData);
     const { data, message } = await AuthApi.postDataToServer(
       Api.applicantDocumentUrl,
       postData
     );
-    props.onPersonalInfo(data.data.id);
     if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -90,6 +98,7 @@ function Personal(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
+        updateDefaultValues({});
         swal.close();
       });
       // show error
@@ -99,6 +108,7 @@ function Personal(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        props.onPersonalInfo(true);
         swal.close();
       });
     }
