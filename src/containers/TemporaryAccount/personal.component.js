@@ -5,9 +5,11 @@ import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './personalFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function Personal(props) {
   const accProps = { props };
+  const candidateId = accProps.props.match.params.ID;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -28,12 +30,32 @@ function Personal(props) {
     getUserRole();
   }, []);
 
-//  employee_name:Yogesh Shinde1
-// employee_email:l.kailas@starkdigital.net
-// folder_name:Educational
-// email_hash: sdfdsf
-// password: dfdsf
-// file_name: file
+  const getData = async () => {
+    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+   
+    const { data, message } = await AuthApi.postDataToServer(endPoint);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      console.log('data.data',data.data.applicant_documents);
+      data.data && data.data.applicant_documents.map((doc)=>{
+        updateDefaultValues({
+            doc_link_pan_card:(doc.doc_title === 'Pan Card') && doc.document_url,
+            doc_link_adhar_card:(doc.doc_title === 'Aadhar') && doc.document_url,
+            doc_link_photo:(doc.doc_title === 'Photo') && doc.document_url,
+        });
+        return doc;
+      })
+    } else {
+      console.log('error', message);
+      // swal(message, '', 'error');
+    }
+  };
+
+  useEffect(() => {
+    if(candidateId) {
+      getData();
+    }
+  }, []);
 
   const fileUpload = async (formValues) => { // eslint-disable-line
     const formData = new FormData();
@@ -67,30 +89,33 @@ function Personal(props) {
     if(formValues.doc_link_photo){
       photofileUrl = await fileUpload(formValues.doc_link_photo);
     }
-  
+    
     const postData = {
       email_hash: tokenProps,
       password: passwordProps,
+      applicant_id: candidateId ? Number(candidateId):'',
       doc_type: 2,
       applicant_documents: [
         {
           doc_title: 'Aadhar',
-          doc_link: adharfileUrl && adharfileUrl.file_url,
+          doc: adharfileUrl && adharfileUrl.id,
         },
         {
           doc_title: 'Pan Card',
-          doc_link: pancardfileUrl && pancardfileUrl.file_url,
+          doc: pancardfileUrl && pancardfileUrl.id,
         },
         {
           doc_title: 'Photo',
-          doc_link: photofileUrl && photofileUrl.file_url,
+          doc: photofileUrl && photofileUrl.id,
         },
       ],
     };
+
     const { data, message } = await AuthApi.postDataToServer(
-      Api.applicantDocumentUrl,
+     `${Api.applicantDocumentUrl}`,
       postData
     );
+
     if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,

@@ -13,8 +13,8 @@ import customFunctions from '../../helper/customFunctions';
 
 function TemporaryAccount(props) {
   const accProps = { props };
+  const candidateId = accProps.props.match.params.ID;
   const passwordProps = accProps.props.password;
-  console.log('passwordProps', passwordProps);
   const tokenProps = accProps.props.token;
   const title = 'Applications';
   const history = useHistory();
@@ -28,10 +28,13 @@ function TemporaryAccount(props) {
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
   const [personalInfo, setPersonalInfo] = useState(true);
+  const [key, setKey] = useState('Personal');
 
   // Get user role
   const getData = async () => {
-    const endPoint = `${Api.applicantInfoUrl}`;
+    const endPoint = candidateId
+      ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
+      : `${Api.applicantInfoUrl}`;
     const payload = {
       email_hash: tokenProps,
       password: passwordProps,
@@ -49,8 +52,24 @@ function TemporaryAccount(props) {
     }
   };
 
+  const handleSelect = (emp) => {
+    if (emp === 'Personal') {
+      setKey('Personal');
+    } else if (emp === 'educational') {
+      setKey('educational');
+    } else if (emp === 'employmentHistory') {
+      setKey('employmentHistory');
+    }else if (emp === 'previousEmployment') {
+      setKey('previousEmployment');
+    }
+  };
+
   useEffect(() => {
     getData();
+    if(!candidateId) return;
+      setIsBI(false);
+      setIsED(false);
+      setIsPD(false);
   }, []);
 
   return (
@@ -60,15 +79,16 @@ function TemporaryAccount(props) {
         <section className="content-area">
           <div className="col-xl-12" id="main-content">
             <div className="employee-new-profile">
-              <Button
-                variant="primary"
-                className="mb-3 pull-right"
-                onClick={() => {
-                  history.push('/login');
-                }}
-              >
-                Logout
-              </Button>
+              <div className="logout-btn pull-right">
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    history.push('/login');
+                  }}
+                >
+                  Logout
+                </Button>
+              </div>
               <div className="profile-bg">
                 <Image src="/images/image.png" alt="image" />
                 <div className="profile-img">
@@ -109,11 +129,12 @@ function TemporaryAccount(props) {
 
               <Tabs
                 defaultActiveKey="Personal"
-                // onSelect={(e) => handleSelect(e)}
+                onSelect={(e) => handleSelect(e)}
                 // id="uncontrolled-tab-example"
               >
                 <Tab eventKey="Personal" title="Personal Documents">
                   <div className="row ml-2">
+                 {key === 'Personal' && (
                     <Personal
                       token={tokenProps}
                       password={passwordProps}
@@ -124,6 +145,7 @@ function TemporaryAccount(props) {
                         setIsBI(false);
                       }}
                     />
+                  )}
                   </div>
                 </Tab>
                 <Tab
@@ -131,60 +153,71 @@ function TemporaryAccount(props) {
                   title="Educational Documents"
                   disabled={isBI}
                 >
-                  {isPersonalId && (
-                    <div className="row ml-2">
-                      <EducationalDetails
-                        token={tokenProps}
-                        name={name}
-                        email={email}
-                        password={passwordProps}
-                        isPersonalId={isPersonalId}
-                        onEducationalInfo={(value) => {
-                          setEducationalId(value);
-                          setIsPD(false);
-                        }}
-                      />
-                    </div>
-                  )}
+                  {isPersonalId ||
+                    (candidateId && (
+                      <div className="row ml-2">
+                      {key === 'educational' && (
+                        <EducationalDetails
+                          token={tokenProps}
+                          name={name}
+                          email={email}
+                          password={passwordProps}
+                          isPersonalId={isPersonalId}
+                          onEducationalInfo={(value) => {
+                            setEducationalId(value);
+                            setIsPD(false);
+                          }}
+                        />
+                        )}
+                      </div>
+                    ))}
                 </Tab>
                 <Tab
                   eventKey="employmentHistory"
                   title="Employment History"
                   disabled={isPD}
                 >
-                  {isEducationalId && (
-                    <div className="row ml-2">
-                      <EmployementHistory
-                        token={tokenProps}
-                        name={name}
-                        email={email}
-                        id={id}
-                        password={passwordProps}
-                        isEducationalId={isEducationalId}
-                        onHistoryInfo={(value) => {
-                          setHistoryId(value);
-                          setIsED(false);
-                        }}
-                      />
-                    </div>
-                  )}
+                  {isEducationalId ||
+                    (candidateId && (
+                      <div className="row ml-2">
+                      {key === 'employmentHistory' && (
+
+                        <EmployementHistory
+                          token={tokenProps}
+                          name={name}
+                          email={email}
+                          id={id}
+                          password={passwordProps}
+                          isEducationalId={isEducationalId}
+                          onHistoryInfo={(value) => {
+                            setHistoryId(value);
+                            setIsED(false);
+                          }}
+                        />
+                        )}
+                      </div>
+                    ))}
                 </Tab>
                 <Tab
                   eventKey="previousEmployment"
                   title="Previous Employment"
                   disabled={isED}
                 >
-                  {isHistoryId && (
-                    <div className="row ml-2">
-                      <PreviousEmployement
-                        name={name}
-                        email={email}
-                        token={tokenProps}
-                        isHistoryId={isHistoryId}
-                        password={passwordProps}
-                      />
-                    </div>
-                  )}
+                  {isHistoryId ||
+                    (candidateId && (
+                      <div className="row ml-2">
+                      {key === 'previousEmployment' && (
+
+                        <PreviousEmployement
+                          name={name}
+                          email={email}
+                          token={tokenProps}
+                          isHistoryId={isHistoryId}
+                          password={passwordProps}
+                        />
+                      )}
+                      </div>
+                    ))}
                 </Tab>
               </Tabs>
             </div>

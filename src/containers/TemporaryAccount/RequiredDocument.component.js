@@ -5,9 +5,11 @@ import { TextInput } from '../../components/FormInputs';
 // import Api from '../../helper/api';
 // import AuthApi from '../../helper/authApi';
 import TemporaryAccount from './temporaryAccount.component';
+import customFunctions from '../../helper/customFunctions';
 
 function RequiredDocument(props) {
 	const matchUrltoken = props.match.params.token; // eslint-disable-line
+	JSON.parse(customFunctions.getLocalStorage('candidateData'));
 	// const [token, setToken] = useState(null);
 	// const dispatch = useDispatch();
 	const [isBtnClicked, setIsBtnClicked] = useState(false);
@@ -57,29 +59,40 @@ function RequiredDocument(props) {
 								/>
 							</a>
 						</div>
+						<div className="Required-Document">
+							<h5>
+								<strong>List of Required Document</strong>
+							</h5>
+							<h6>
+								1. <strong>Personal Document</strong>
+							</h6>
+							<ul>
+								<li>Adhar Card</li>
+								<li>PAN Card</li>
+							</ul>
+							<h6>
+								2. <strong>Educational Document</strong>
+							</h6>
+							<ul>
+								<li>SSC</li>
+								<li>HSC</li>
+							</ul>
+
+							<Col md={12}>
+								<TextInput
+									onInputChange={(e) => setPassword(e.target.value)}
+									label="Password"
+									autocomplete="off"
+									containerClass="form-group"
+									type="password"
+									value={password}
+									name="passwordTitle"
+									placeholder="Enter Password"
+								/>
+							</Col>
+							<Button onClick={() => setIsBtnClicked(true)}>Submit</Button>
+						</div>
 					</div>
-					<h5>
-						<strong>List of Required Document</strong>
-					</h5>
-					<h6>
-						1. <strong>Personal Document</strong> <br /> Adhar Card <br />
-						PAN Card <br />
-						2. <strong>Education Document</strong> <br /> SSC <br />
-						HSC
-					</h6>
-					<Col md={4}>
-						<TextInput
-							onInputChange={(e) => setPassword(e.target.value)}
-							label="Password"
-							autocomplete="off"
-							containerClass="form-group"
-							type="password"
-							value={password}
-							name="passwordTitle"
-							placeholder="Enter Password"
-						/>
-					</Col>
-					<Button onClick={() => setIsBtnClicked(true)}>Submit</Button>
 				</>
 			)}
 		</>

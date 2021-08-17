@@ -5,10 +5,12 @@ import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './educationalFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
-
+import customFunctions from '../../helper/customFunctions';
 
 function EducationalDetails(props) {
   const accProps = { props };
+  const candidateId = accProps.props.match.params.ID;
+  console.log('candidateId',candidateId);
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -27,6 +29,34 @@ function EducationalDetails(props) {
 
   useEffect(() => {
     getUserRole();
+  }, []);
+
+  const getData = async () => {
+    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+   
+    const { data, message } = await AuthApi.postDataToServer(endPoint);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      console.log('data.data',data.data.applicant_documents);
+      data.data && data.data.applicant_documents.map((doc)=>{
+        updateDefaultValues({
+            doc_link_ssc:(doc.doc_title === 'SSC') && doc.document_url,
+            doc_link_hsc:(doc.doc_title === 'HSC') && doc.document_url,
+            doc_link_graduate:(doc.doc_title === 'Graduate') && doc.document_url,
+            doc_link_post_graduate:(doc.doc_title === 'Post Graduate') && doc.document_url,
+        });
+        return doc;
+      })
+    } else {
+      console.log('error', message);
+      // swal(message, '', 'error');
+    }
+  };
+
+  useEffect(() => {
+    if(candidateId) {
+      getData();
+    }
   }, []);
 
   const fileUpload = async (formValues) => { // eslint-disable-line
@@ -70,32 +100,32 @@ function EducationalDetails(props) {
     const postData = {
       email_hash: tokenProps,
       password: passwordProps,
+      applicant_id: candidateId ? Number(candidateId) :'',
       doct_type: 1,
       applicant_documents: [
         {
           doc_title: 'SSC',
-          doc_link: sscfileUrl.file_url,
+          doc: sscfileUrl.id,
         },
         {
           doc_title: 'HSC',
-          doc_link: hscfileUrl.file_url,
+          doc: hscfileUrl.id,
         },
         {
           doc_title: 'Graduate',
-          doc_link: graduatefileUrl.file_url,
+          doc: graduatefileUrl.id,
         },
         {
           doc_title: 'Post Graduate',
-          doc_link: postfileUrl.file_url,
+          doc: postfileUrl.id,
         },
       ],
     };
 
-    const { data, message } = await AuthApi.postDataToServer(
-      Api.applicantDocumentUrl,
+   const { data, message } = await AuthApi.postDataToServer(
+     `${Api.applicantDocumentUrl}`,
       postData
     );
-    
    if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,

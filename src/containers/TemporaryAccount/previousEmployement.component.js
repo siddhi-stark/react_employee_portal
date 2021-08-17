@@ -8,6 +8,8 @@ import AuthApi from '../../helper/authApi';
 
 function PreviousEmployement(props) {
   const accProps = { props };
+  const candidateId = accProps.props.match.params.ID;
+  console.log('candidateId',candidateId);
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -72,32 +74,32 @@ function PreviousEmployement(props) {
   const postData = {
       email_hash: tokenProps,
       password: passwordProps,
+      applicant_id: candidateId ? Number(candidateId) :'',
       doc_type: 3,
       applicant_documents: [
         {
           doc_title: formValues.employee ? formValues.employee.label :'',
-          doc_link: slip1fileUrl && slip1fileUrl.file_url,
+          doc: slip1fileUrl && slip1fileUrl.id,
         },
         {
           doc_title: formValues.employee ? formValues.employee.label :'',
-          doc_link: slip2fileUrl && slip2fileUrl.file_url,
+          doc: slip2fileUrl && slip2fileUrl.id,
         },
         {
           doc_title: formValues.employee ? formValues.employee.label :'',
-          doc_link: slip3fileUrl && slip3fileUrl.file_url,
+          doc: slip3fileUrl && slip3fileUrl.id,
         },
         {
           doc_title: formValues.employee ? formValues.employee.label :'',
-          doc_link: relivingfileUrl && relivingfileUrl.file_url,
+          doc: relivingfileUrl && relivingfileUrl.id,
         },
       ],
     };
+
     const { data, message } = await AuthApi.postDataToServer(
-      Api.applicantDocumentUrl,
+     `${Api.applicantDocumentUrl}`,
       postData
     );
-
-   // props.onHistoryInfo(data.data.id);
     if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,

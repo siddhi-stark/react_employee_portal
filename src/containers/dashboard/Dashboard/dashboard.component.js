@@ -28,6 +28,7 @@ function Dashboard() {
   const [userRole, setUserRole] = useState('');
   const [morningMail, setMorningMail] = useState(false);
   const [quotesContent, setQuotesContent] = useState('');
+  const [totalHrs, setTotalHrs] = useState(null);
   const history = useHistory();
 
   const [pagination, setPagination] = useState({
@@ -169,6 +170,7 @@ const LastDay = customFunctions.getDate(lastday);
     getDailyActivity();
     getWeeklyStatus('this_week');
     getTimeSheetList();
+    getWorkingHrs();
     setTitle('Dashboard');
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
@@ -184,7 +186,15 @@ const LastDay = customFunctions.getDate(lastday);
     document.dispatchEvent(viewButton);
     return true;
   };
+  
+  const getWorkingHrs = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.workingHrsUrl}`);
 
+    if (data && data.data) {
+      setTotalHrs(data.data.duration);
+    }
+    return true;
+  };
   return (
     <>
       <Helmet title={title} />
@@ -202,6 +212,7 @@ const LastDay = customFunctions.getDate(lastday);
               <Row className="align-items-center">
                 <Col md={5}>
                   <div className="welcome-text">
+                  <p>Total Working Hrs: {totalHrs}</p>
                     <h1>
                       Welcome{' '}
                       <strong>

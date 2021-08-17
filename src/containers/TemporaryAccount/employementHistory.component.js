@@ -9,9 +9,10 @@ import customFunctions from '../../helper/customFunctions';
 
 function EmployementHistory(props) {
   const accProps = { props };
+  const candidateId = accProps.props.match.params.ID;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
-  const idProps = accProps.props.id;
+  const idProps = accProps.props.match.params.ID;
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -38,6 +39,76 @@ function EmployementHistory(props) {
     getUserRole();
   }, []);
 
+
+    // const section = hrInterviewFormSections[0].fields[3].options;
+    // console.log('sections',section);
+    // const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
+    //   console.log('data',data);
+    //   if(data) {
+        
+    // const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
+    // data.data.int_date = intDate ? new Date(intDate) : '';
+    // data.data.int_time = data.data.int_time ? new Date(intDate + ' ' + data.data.int_time) : ''; //eslint-disable-line
+  
+    //  const ds = data.data.interviewer_id ? {
+    //     label: data.data.interviewer_name,
+    //     value: data.data.interviewer_id
+    //   } : ''   
+
+    //    const interw = data.data.round_type ? {
+    //     label: data.data.round_type_name,
+    //     value: data.data.round_type
+    //   } : ''  
+
+    //  const obj = {
+    //    ...data.data,
+    //    interviewer: ds,
+    //    round_status: interw
+    //  };
+
+    //  updateDefaultValues({...obj})    // updateDefaultValues(data);
+    //   }
+
+  const getData = async () => {
+    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+   
+    const { data, message } = await AuthApi.postDataToServer(endPoint);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      console.log('data.data',data.data.applicant_history);
+      data.data && data.data.applicant_history.map((doc)=>{
+        doc && doc.reportings.map((report)=>{
+          updateDefaultValues({
+              company_name: doc.company_name && doc.company_name,
+              designation: doc.designation && doc.designation,
+              company_url: doc.company_url && doc.company_url,
+              start_date: doc.start_date && new Date(doc.start_date),
+              end_date: doc.end_date && new Date(doc.end_date),
+              duration: doc.duration && doc.duration,
+              location: doc.location && doc.location,
+              reporting_person_hr:(String(report.is_hr) === 'true') && report.reporting_person,
+              hr_email:(String(report.is_hr) === 'true') && report.email,
+              hr_mobile:(String(report.is_hr) === 'true') && report.mobile,
+              reporting_person_manager:(String(report.is_hr) === 'false') && report.reporting_person,
+              manager_email:(String(report.is_hr) === 'false') && report.email,
+              manager_mobile:(String(report.is_hr) === 'false') && report.mobile,
+          });
+          return report;
+        });
+
+        return doc;
+      })
+    } else {
+      console.log('error', message);
+      // swal(message, '', 'error');
+    }
+  };
+
+  useEffect(() => {
+    if(candidateId) {
+      getData();
+    }
+  }, []);
 
   // Submit Form
   const submitForm = async (formValues) => {

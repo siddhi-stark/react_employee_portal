@@ -109,6 +109,8 @@ export default class Api extends Component {
 
   static googleFileUploadUrl = `${Api.baseUrl}google-upload/`;
 
+  static workingHrsUrl = `${Api.baseUrl}working-hours/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

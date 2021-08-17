@@ -6,12 +6,14 @@ import { Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function AcceptInviteLink(props) {
 
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
   const [type, setType] = useState('');
+  const [candidateData,setCandidateData] = useState([]);
 
   const verifyToken = async (tkn) => {
     const { data } = await AuthApi.getDataFromServer(
@@ -20,6 +22,8 @@ function AcceptInviteLink(props) {
     if (data) {
       // setEmail(data.data.email);
       console.log('data',data);
+      setCandidateData(data.data);
+      customFunctions.setLocalStorage('candidateData', JSON.stringify(candidateData));
     }
     if (!data) {
       console.log('data',data);
@@ -55,10 +59,12 @@ function AcceptInviteLink(props) {
     );
     if(data) {
       swal(data.message[0],'','success');
+      console.log('data.data',data.data);
     }
   }
 
 	return (
+    <>
 		 <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">
@@ -69,6 +75,7 @@ function AcceptInviteLink(props) {
             />
           </a>
         </div>
+        <p>Dear <strong>{candidateData.name}</strong>, please click on accept button to accept the offer for the position of {candidateData.applied_for_name} </p>
          <div className="float-end">
               <Button
                 variant="success"
@@ -87,6 +94,7 @@ function AcceptInviteLink(props) {
 
             </div>
         </div>
+        </>
 		)
 }
 
