@@ -20,6 +20,7 @@ function CandidateListing() {
  const title = 'Canidates'
   const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
 const history = useHistory();
+const isOnBoard = customFunctions.getLocalStorage('isShowOnBoard');
 
 const actionCallBack = (row) => {
 	return (
@@ -36,7 +37,10 @@ const actionCallBack = (row) => {
 				 <Image src="/images/edit-button.svg" />
 			</a>
 
-			<a
+			{isOnBoard === 'true' ? (
+
+			''
+				) : <a
 				href="/"
 				className="pl-2 ms-4"
 				onClick={(e) => {
@@ -47,20 +51,24 @@ const actionCallBack = (row) => {
 			>
 				 On-Board
 			</a>
+		}
+
 		</>
 	);
 };
 
-const handleProgressCallBack = () => {
-	const progress = 60;
+const handleProgressCallBack = (completion) => {
 	return (
 		<>
+		{completion.completion && (
+
 			<ProgressBar
 				bsPrefix="progress pbar"
 				variant="success"
-				now={60}
-				label={`${progress}% completed`}
+				now={completion.completion}
+        label={`${completion.completion}% completed`}
 			/>
+			)}
 		</>
 	);
 };
@@ -76,11 +84,15 @@ const columns = [
 		label: 'Position',
 	},
 		{
-		id: 'email',
-		label: 'Email',
+		id: 'mobile',
+		label: 'Mobile',
 	},
 	{
-		id: 'progress',
+		id: 'tech_stack_name',
+		label: 'Technology',
+	},
+	{
+		id: 'completion',
 		label: 'Progress',
 		render: handleProgressCallBack,
 	},

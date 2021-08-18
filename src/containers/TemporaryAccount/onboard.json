@@ -13,7 +13,7 @@
 		"type": "select",
 		"label": "Tw Employee",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Select TW Employee",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [],
@@ -22,10 +22,7 @@
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
-		"inputToChange": {
-			"label": "full_name",
-			"value": "full_name"
-		},
+		"inputToChange": "",
 		"minDateSelector": "",
 		"maxDateSelector": "",
 		"disabled": false,
@@ -38,23 +35,18 @@
 		},
 		"fields": [],
 		"optionCallback": "getTw_emp",
-		"optionsCallbackUrl": "twEmployeeUrl",
 		"options": []
 	}, {
 		"name": "full_name",
 		"type": "text",
 		"label": "Full Name",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Full Name",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -77,16 +69,40 @@
 		"type": "email",
 		"label": "Email",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Email",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "emp_code",
+		"type": "text",
+		"label": "Employee Code",
+		"id": "",
+		"placeholder": "Employee Code",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [],
+		"displayWhen": {},
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -109,47 +125,12 @@
 		"type": "password",
 		"label": "Password",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Password",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [],
 		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}, {
-		"name": "emp_code",
-		"label": "Employee code",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -169,18 +150,15 @@
 		"options": []
 	}, {
 		"name": "date_joined",
+		"type": "date",
 		"label": "Joining Date",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Joining Date",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -203,16 +181,15 @@
 		"type": "text",
 		"label": "Mobile",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Mobile",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [
+{ "type": "required|min:0|max:10", "applyWhen": [], "applyWhenRelation": "OR" },
+{ "type": "phone", "applyWhen": [], "applyWhenRelation": "OR" }
+],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -235,16 +212,12 @@
 		"type": "select",
 		"label": "Designation",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Select Designation",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -261,14 +234,14 @@
 		},
 		"fields": [],
 		"optionCallback": "getDesignation",
-		"optionsCallbackUrl": "designationUrl",
-		"options": []
+		"options": [],
+		"optionsCallbackUrl": "designationUrl"
 	}, {
-		"name": "role_name",
+		"name": "role",
 		"type": "select",
-		"label": "Role",
+		"label": "Role Name",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Select Role",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -294,13 +267,14 @@
 		},
 		"fields": [],
 		"optionCallback": "getRole",
-		"options": []
+		"options": [],
+		"optionsCallbackUrl": "roleUrl"
 	}, {
 		"name": "managers",
 		"type": "select",
 		"label": "Manager",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Select Manager",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [],
@@ -322,23 +296,19 @@
 		},
 		"fields": [],
 		"optionCallback": "getManagers",
-		"optionsCallbackUrl": "roleUrl",
-		"options": []
+		"options": [],
+		"optionsCallbackUrl": "managerUrl"
 	}, {
 		"name": "team_leads",
 		"type": "select",
-		"label": "TeamLead",
+		"label": "Team Lead",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Select TeamLead",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -346,7 +316,7 @@
 		"minDateSelector": "",
 		"maxDateSelector": "",
 		"disabled": false,
-		"isMulti": true,
+		"isMulti": false,
 		"allowedUsers": [],
 		"fieldsToReset": [],
 		"fieldLayout": {
@@ -354,15 +324,15 @@
 			"value": "1column"
 		},
 		"fields": [],
-		"optionCallback": "getTeamLead",
-		"optionsCallbackUrl": "roleUrl",
+		"optionCallback": "getTeam_leads",
+		"optionsCallbackUrl": "teamLeadUrl",
 		"options": []
 	}, {
 		"name": "dob",
 		"type": "date",
-		"label": "Dob",
+		"label": "DOB",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "DOB",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [],
@@ -390,16 +360,12 @@
 		"type": "select",
 		"label": "Department",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Select Department",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
+		"validations": [],
 		"displayWhen": {},
-		"haveValidations": "true",
+		"haveValidations": "false",
 		"haveDisplayOptions": "false",
 		"callback": "",
 		"callbackUrl": "",
@@ -415,8 +381,35 @@
 			"value": "1column"
 		},
 		"fields": [],
-		"optionCallback": "getDepartment",
-		"options": []
+		"optionCallback": "",
+		"optionsCallbackUrl": "",
+		"options": [
+			         {
+			         	"id":"1",
+                        "label": "Management",
+                        "value": "Management"
+                    },
+                    {
+                    	"id":"2",
+                        "label": "Development",
+                        "value": "Development"
+                    },
+                    {
+                    	"id":"3",
+                        "label": "Design",
+                        "value": "Design"
+                    },
+                    {
+                    	"id":"4",
+                        "label": "Quality Analyst",
+                        "value": "Quality Analyst"
+                    },
+                    {
+                    	"id":"5",
+                        "label": "Other",
+                        "value": "Other"
+                    }
+		]
 	}],
 	"allowedUsers": [],
 	"sectionLayout": "2column"

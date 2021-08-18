@@ -12,7 +12,6 @@ function AcceptInviteLink(props) {
 
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
-  const [type, setType] = useState('');
   const [candidateData,setCandidateData] = useState([]);
 
   const verifyToken = async (tkn) => {
@@ -45,11 +44,11 @@ function AcceptInviteLink(props) {
     verifyToken(matchUrltoken);
   }, [dispatch]);
 
-  const onAcceptBtn = async () => {
-    console.log('Accept Button');
+  const onAcceptBtn = async (type) => {
+    console.log('type',type);
     const postData = {
       token,
-      offer_status: type === 'acceptBtn' ? 1 : 2,
+      offer_status: type === 0 ? 1 : 2,
       is_local: true 
     }
     console.log('postData',postData);
@@ -80,13 +79,13 @@ function AcceptInviteLink(props) {
               <Button
                 variant="success"
                 type="button"
-                onClick={() => {onAcceptBtn(); setType('acceptBtn')}}
+                onClick={() => {onAcceptBtn(0); }}
               >
                 Accept
               </Button>
               <Button variant="danger" 
                className="ms-4"
-                onClick={() => {onAcceptBtn(); setType('declinedBtn')}}
+                onClick={() => {onAcceptBtn(1);}}
 
                >
                 Declined
