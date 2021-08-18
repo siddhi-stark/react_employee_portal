@@ -53,6 +53,7 @@
 				"inputToChange": "",
 				"minDateSelector": "",
 				"maxDateSelector": "",
+				"accept": ".pdf,.png,.jpeg,.jpg",
 				"disabled": false,
 				"isMulti": false,
 				"allowedUsers": [],
@@ -61,7 +62,6 @@
 				"fields": [],
 				"optionCallback": "",
 				"multiple": false,
-				"accept": ".pdf",
 				"options": []
 			},
 			{
@@ -83,6 +83,7 @@
 				"inputToChange": "",
 				"minDateSelector": "",
 				"maxDateSelector": "",
+				"accept": ".pdf,.png,.jpeg,.jpg",
 				"disabled": false,
 				"isMulti": false,
 				"allowedUsers": [],
@@ -91,7 +92,6 @@
 				"fields": [],
 				"optionCallback": "",
 				"multiple": false,
-				"accept": ".pdf",
 				"options": []
 			},
 			{
@@ -121,7 +121,7 @@
 				"fields": [],
 				"optionCallback": "",
 				"multiple": false,
-				"accept": ".pdf",
+				"accept": ".pdf,.png,.jpeg,.jpg",
 				"options": []
 			},
 			{
@@ -151,7 +151,7 @@
 				"fields": [],
 				"optionCallback": "",
 				"multiple": false,
-				"accept": ".pdf",
+				"accept": ".pdf,.png,.jpeg,.jpg",
 				"options": []
 			}
 		],

@@ -46,10 +46,8 @@ function PreviousEmployement(props) {
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       data.data &&
         data.data.applicant_documents.map((doc) => {
-        if (doc.doc_type_name === 'Employment') {
           obj =  { label: doc.company_name, value: doc.company_name };
-        } else if(doc.doc_title === 'Salary Slip 1'){
-          console.log('-----',doc.doc_title === 'Salary Slip 1')
+        if(doc.doc_title === 'Salary Slip 1'){
           salary1 = doc.document_url;
         } else if(doc.doc_title === 'Salary Slip 2'){
           salary2 = doc.document_url;
@@ -149,25 +147,29 @@ function PreviousEmployement(props) {
       doc_type: 3,
       applicant_documents: [
         {
-          doc_title: formValues.employee
+          doc_title: 'Salary Slip 1',
+          company_name: formValues.employee
             ? formValues.employee.label
             : slip1fileUrl.label,
           doc: slip1fileUrlId ? Number(slip1fileUrlId) : slip1fileUrl.id,
         },
         {
-          doc_title: formValues.employee
+          doc_title: 'Salary Slip 2',
+          company_name: formValues.employee
             ? formValues.employee.label
             : slip2fileUrl.label,
           doc: slip2fileUrlId ? Number(slip2fileUrlId) : slip2fileUrl.id,
         },
         {
-          doc_title: formValues.employee
+          doc_title: 'Salary Slip 3',
+          company_name: formValues.employee
             ? formValues.employee.label
             : slip3fileUrl.label,
           doc: slip3fileUrlId ? Number(slip3fileUrlId) : slip3fileUrl.id,
         },
         {
-          doc_title: formValues.employee
+          doc_title: 'Reliving Letter',
+          company_name: formValues.employee
             ? formValues.employee.label
             : relivingfileUrl.label,
           doc: relivingfileUrlId

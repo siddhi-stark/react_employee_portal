@@ -112,7 +112,7 @@ function TemporaryAccount(props) {
                       <h6>Contact No - {personalInfo.mobile}</h6>
                     </div>
                     <div className="col-md-4">
-                      <h6>{`Pf Included - ${personalInfo.pf_included}`}</h6>
+                      <h6>Pf Included - {personalInfo.pf_included ?'Yes':'No'}</h6>
                     </div>
                   </div>
                   <br />
