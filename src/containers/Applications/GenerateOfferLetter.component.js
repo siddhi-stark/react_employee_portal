@@ -94,7 +94,7 @@ return;
       subject: 'Offer Letter',
       attachment: doc,
       body,
-      // is_local: true
+      is_local: false
     };
     const { data, message } = await AuthApi.postDataToServer(
       Api.sendMailUrl,
