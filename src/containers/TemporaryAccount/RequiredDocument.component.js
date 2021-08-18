@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Col, Button } from 'react-bootstrap';
+import { Col, Button, Form } from 'react-bootstrap';
+import swal from 'sweetalert';
 import { TextInput } from '../../components/FormInputs';
 // import Api from '../../helper/api';
 // import AuthApi from '../../helper/authApi';
@@ -12,8 +13,52 @@ function RequiredDocument(props) {
 	JSON.parse(customFunctions.getLocalStorage('candidateData'));
 	// const [token, setToken] = useState(null);
 	// const dispatch = useDispatch();
-	const [isBtnClicked, setIsBtnClicked] = useState(false);
-	const [password, setPassword] = useState('');
+
+const [isBtnClicked,setIsBtnClicked] = useState(false);
+const [password,setPassword] = useState('');
+	// const verifyToken = async (tkn) => {
+	// 	console.log('tkn',tkn);
+	// 	const { data } = await AuthApi.getDataFromServer(
+	// 		`${Api.temporaryAccountUrl}?token=${tkn}`
+	// 	);
+	// 	if (data) {
+	// 		// setEmail(data.data.email);
+	// 		console.log('data', data);
+	// 	}
+	// 	if (!data) {
+	// 		console.log('data', data);
+	// 		swal('Token is invalid', '', 'error');
+	// 		// props.history.push('/login');
+	// 	}
+	// };
+
+	// useEffect(() => {
+	// 	console.log('token', token);
+	// 	dispatch({ type: 'LOGIN', value: false });
+	// 	const matchUrltoken = props.match.params.token;
+	// 	console.log('matchUrltoken', matchUrltoken);
+	// 	setToken(matchUrltoken);
+	// 	if (!matchUrltoken) {
+	// 		window.location = '/login';
+	// 		console.log('toeknnnnnnnnnn');
+	// 	}
+	// 	verifyToken(matchUrltoken);
+	// }, [dispatch]);
+
+const addPassword = () => {
+	setIsBtnClicked(true);
+}
+
+ const onSubmit = (e) => {
+    e.preventDefault();
+    console.log('inside onsubmit');
+    if (password !== '') {
+    console.log('inside if');
+      addPassword();
+    } else {
+    	swal('Please enter the password provided in the link.','','error')
+    }
+  };
 
 	return (
 		<>
@@ -50,23 +95,28 @@ function RequiredDocument(props) {
 								<li>HSC</li>
 							</ul>
 
-							<Col md={12}>
-								<TextInput
-									onInputChange={(e) => setPassword(e.target.value)}
-									label="Password"
-									autocomplete="off"
-									containerClass="form-group"
-									type="password"
-									value={password}
-									name="passwordTitle"
-									placeholder="Enter Password"
-								/>
-							</Col>
-							<Button onClick={() => setIsBtnClicked(true)}>Submit</Button>
-						</div>
-					</div>
-				</>
-			)}
+			<Col md={12}>
+			<Form  onSubmit={(e) => {
+              onSubmit(e);
+            }}>
+
+				<TextInput
+     onInputChange={(e) => setPassword(e.target.value)}
+					label="Password"
+					autocomplete="off"
+					containerClass="form-group"
+					type="password"
+					value={password}
+					name="passwordTitle"
+					placeholder="Enter Password"
+				/>
+			<Button type='submit' >Submit</Button>
+			</Form>
+			</Col>
+			</div>	
+			</div>
+			</>
+				)}
 		</>
 	);
 }
