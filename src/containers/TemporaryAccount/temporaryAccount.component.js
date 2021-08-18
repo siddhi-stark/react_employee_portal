@@ -146,6 +146,7 @@ function TemporaryAccount(props) {
                       name={name}
                       email={email}
                       onPersonalInfo={(value) => {
+                        console.log('value--',value);
                         setPersonalId(value);
                         setIsBI(false);
                       }}
@@ -158,8 +159,9 @@ function TemporaryAccount(props) {
                   title="Educational Documents"
                   disabled={isBI}
                 >
-                  {isPersonalId ||
-                    (candidateId && String(key) === 'educational' ) && (
+               
+                  {(isPersonalId ||
+                    (candidateId && String(key) === 'educational' )) && (
                       <div className="row ml-2">
                         <EducationalDetails
                           token={tokenProps}
@@ -168,6 +170,7 @@ function TemporaryAccount(props) {
                           password={passwordProps}
                           isPersonalId={isPersonalId}
                           onEducationalInfo={(value) => {
+                        console.log('setEducationalId--',value);
                             setEducationalId(value);
                             setIsPD(false);
                           }}
@@ -181,11 +184,9 @@ function TemporaryAccount(props) {
                   disabled={isPD}
                 >
 
-                  {isEducationalId ||
-                    (candidateId && (
+                  {(isEducationalId ||
+                    candidateId && ( key === 'employmentHistory' )) && (
                       <div className="row ml-2">
-                      {key === 'employmentHistory' && (
-
                         <EmployementHistory
                           token={tokenProps}
                           name={name}
@@ -198,20 +199,17 @@ function TemporaryAccount(props) {
                             setIsED(false);
                           }}
                         />
-                        )}
                       </div>
-                    ))}
+                    )}
                 </Tab>
                 <Tab
                   eventKey="previousEmployment"
                   title="Previous Employment"
                   disabled={isED}
                 >
-                  {isHistoryId ||
-                    (candidateId && (
+                  {(isHistoryId ||
+                    candidateId && ( key === 'previousEmployment')) && (
                       <div className="row ml-2">
-                      {key === 'previousEmployment' && (
-
                         <PreviousEmployement
                           name={name}
                           email={email}
@@ -219,9 +217,8 @@ function TemporaryAccount(props) {
                           isHistoryId={isHistoryId}
                           password={passwordProps}
                         />
-                      )}
                       </div>
-                    ))}
+                    )}
                 </Tab>
               </Tabs>
             </div>

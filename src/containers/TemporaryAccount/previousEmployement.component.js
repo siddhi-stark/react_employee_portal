@@ -10,6 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 function PreviousEmployement(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
+  console.log('candidateId',candidateId);
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -85,8 +86,7 @@ function PreviousEmployement(props) {
       formData
     );
     if (data) {
-      console.log('data', data);
-      return data.data;
+      return data.data.id;
     }
   };
 
@@ -199,9 +199,7 @@ function PreviousEmployement(props) {
       password: passwordProps,
     };
 
-    const callback = candidateId
-      ? AuthApi.postDataToServer
-      : AuthApi.postDataToServer;
+    const callback = AuthApi.postDataToServer;
     const endPoint = candidateId
       ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
       : Api.applicantInfoUrl;
@@ -215,11 +213,9 @@ function PreviousEmployement(props) {
 
     const dpOptions = [];
     data.data &&
-      data.data.applicant_documents.map((op) => {
+      data.data.applicant_history.map((op) => {
         // Change appropriate keys
-        if (op.doc_type_name === 'Employment') {
           dpOptions.push({ label: op.company_name, value: op.company_name });
-        }
         return op;
       });
     const allOptions = {
@@ -232,8 +228,9 @@ function PreviousEmployement(props) {
   };
 
   useEffect(() => {
+    console.log('fgdgdfgdff');
     getEmployee();
-  }, []);
+  }, [tokenProps]);
 
   return (
     <>

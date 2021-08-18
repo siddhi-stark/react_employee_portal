@@ -89,37 +89,6 @@
 						"options": []
 					},
 					{
-						"name": "company_url",
-						"type": "text",
-						"label": "Company Url",
-						"id": "",
-						"placeholder": "Company Url",
-						"inputClass": "",
-						"containerClass": "",
-						"validations": [
-							{
-								"type": "required",
-								"applyWhen": [],
-								"applyWhenRelation": "OR"
-							}
-						],
-						"displayWhen": {},
-						"haveValidations": "true",
-						"haveDisplayOptions": "false",
-						"callback": "",
-						"callbackUrl": "",
-						"inputToChange": "",
-						"minDateSelector": "",
-						"maxDateSelector": "",
-						"disabled": false,
-						"isMulti": false,
-						"allowedUsers": [],
-						"fieldsToReset": [],
-						"fieldLayout": { "label": "1 Column", "value": "1column" },
-						"fields": [],
-						"options": []
-					},
-					{
 						"name": "start_date",
 						"type": "date",
 						"label": "Start Date",
@@ -223,6 +192,37 @@
 						"minDateSelector": "",
 						"maxDateSelector": "",
 						"disabled": true,
+						"isMulti": false,
+						"allowedUsers": [],
+						"fieldsToReset": [],
+						"fieldLayout": { "label": "1 Column", "value": "1column" },
+						"fields": [],
+						"options": []
+					},
+					{
+						"name": "company_url",
+						"type": "text",
+						"label": "Company Url",
+						"id": "",
+						"placeholder": "Company Url",
+						"inputClass": "",
+						"containerClass": "",
+						"validations": [
+							{
+								"type": "required",
+								"applyWhen": [],
+								"applyWhenRelation": "OR"
+							}
+						],
+						"displayWhen": {},
+						"haveValidations": "true",
+						"haveDisplayOptions": "false",
+						"callback": "",
+						"callbackUrl": "",
+						"inputToChange": "",
+						"minDateSelector": "",
+						"maxDateSelector": "",
+						"disabled": false,
 						"isMulti": false,
 						"allowedUsers": [],
 						"fieldsToReset": [],
