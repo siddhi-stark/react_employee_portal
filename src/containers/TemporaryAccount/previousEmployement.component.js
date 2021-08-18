@@ -35,6 +35,10 @@ function PreviousEmployement(props) {
   const getData = async () => {
     const docIdArr = [];
     let obj = '';
+    let salary1 = '';
+    let salary2 = '';
+    let salary3 = '';
+    let relive = '';
     const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
 
     const { data, message } = await AuthApi.postDataToServer(endPoint);
@@ -44,17 +48,27 @@ function PreviousEmployement(props) {
         data.data.applicant_documents.map((doc) => {
         if (doc.doc_type_name === 'Employment') {
           obj =  { label: doc.company_name, value: doc.company_name };
+        } else if(doc.doc_title === 'Salary Slip 1'){
+          console.log('-----',doc.doc_title === 'Salary Slip 1')
+          salary1 = doc.document_url;
+        } else if(doc.doc_title === 'Salary Slip 2'){
+          salary2 = doc.document_url;
+        } else if(doc.doc_title === 'Salary Slip 3'){
+          salary3 = doc.document_url;
+        } else if(doc.doc_title === 'Reliving Letter'){
+          relive = doc.document_url;
         }
-          updateDefaultValues({
-            employee: doc.company_name && obj,
-            salary_slip1: (doc.doc_title === 'Salary Slip 1') && doc.document_url,
-            salary_slip2: (doc.doc_title === 'Salary Slip 2') && doc.document_url,
-            salary_slip3: (doc.doc_title === 'Salary Slip 3') && doc.document_url,
-            reliving_letter:
-              (doc.doc_title === 'Reliving Letter') && doc.document_url,
-          });
+       
           docIdArr.push({ name: doc.doc_title, id: doc.doc_id });
           return doc;
+        });
+
+        updateDefaultValues({
+          employee: obj,
+          salary_slip1: salary1,
+          salary_slip2: salary2,
+          salary_slip3: salary3,
+          reliving_letter: relive,
         });
       setDocId(docIdArr);
     } else {

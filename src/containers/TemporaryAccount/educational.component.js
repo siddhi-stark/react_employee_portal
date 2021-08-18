@@ -10,7 +10,6 @@ import customFunctions from '../../helper/customFunctions';
 function EducationalDetails(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
-  console.log('candidateId',candidateId);
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -33,6 +32,10 @@ function EducationalDetails(props) {
   }, []);
 
   const getData = async () => {
+    let ssc = '';
+    let hsc = '';
+    let graduate = '';
+    let postGraduate = '';
     const docIdArr = [];
     const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
    
@@ -40,16 +43,28 @@ function EducationalDetails(props) {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       data.data && data.data.applicant_documents.map((doc)=>{
-        updateDefaultValues({
-            doc_link_ssc:(doc.doc_title === 'SSC') && doc.document_url,
-            doc_link_hsc:(doc.doc_title === 'HSC') && doc.document_url,
-            doc_link_graduate:(doc.doc_title === 'Graduate') && doc.document_url,
-            doc_link_post_graduate:(doc.doc_title === 'Post Graduate') && doc.document_url,
-        });
+        if(doc.doc_title === 'SSC'){
+          ssc = doc.document_url;
+        } else if(doc.doc_title === 'HSC'){
+          hsc = doc.document_url;
+        } else if(doc.doc_title === 'Graduate'){
+          graduate = doc.document_url;
+        } else if(doc.doc_title === 'Post Graduate'){
+          postGraduate = doc.document_url;
+        }
+
         docIdArr.push({name: doc.doc_title, id:doc.doc_id});
+
         return doc;
       })
-        setDocId(docIdArr);
+      updateDefaultValues({
+        doc_link_ssc: ssc,
+        doc_link_hsc:hsc,
+        doc_link_graduate:graduate,
+        doc_link_post_graduate:postGraduate,
+      });
+      
+      setDocId(docIdArr);
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
@@ -57,7 +72,6 @@ function EducationalDetails(props) {
   };
 
   useEffect(() => {
-    console.log('candidateId',candidateId)
     if(candidateId) {
       getData();
     }

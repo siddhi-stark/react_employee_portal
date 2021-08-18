@@ -32,6 +32,9 @@ function Personal(props) {
   }, []);
 
   const getData = async () => {
+    let panCard = '';
+    let adharCard = '';
+    let photo = '';
     const docIdArr = [];
     const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
    
@@ -39,17 +42,24 @@ function Personal(props) {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       data.data && data.data.applicant_documents.map((doc)=>{
-        updateDefaultValues({
-            doc_link_pan_card:(doc.doc_title === 'Pan') && doc.document_url,
-            doc_link_adhar_card:(String(doc.doc_title) === 'Aadhar') && doc.document_url,
-            doc_link_photo:(doc.doc_title === 'Photo') && doc.document_url,
-        });
-        
+        if(doc.doc_title === 'Pan'){
+          panCard = doc.document_url;
+        } else if(doc.doc_title === 'Aadhar'){
+          adharCard = doc.document_url;
+        } else if(doc.doc_title === 'Photo'){
+          photo = doc.document_url;
+        }
+
         docIdArr.push({name: doc.doc_title, id:doc.doc_id});
 
         return doc;
       })
-        setDocId(docIdArr);
+      updateDefaultValues({
+        doc_link_pan_card: panCard,
+        doc_link_adhar_card:adharCard,
+        doc_link_photo:photo,
+      });
+      setDocId(docIdArr);
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
