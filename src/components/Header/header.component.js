@@ -93,7 +93,10 @@ function Header() {
       if (
         extractedPath !== 'login' &&
         extractedPath !== 'forget-password' &&
-        extractedPath !== 'password'
+        extractedPath !== 'password' && 
+        extractedPath !== 'verify' && 
+         extractedPath !== 'temporary'
+        
       ) {
         history.push('/login');
       }

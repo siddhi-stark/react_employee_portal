@@ -79,7 +79,7 @@ function Confirmation() {
   const sendConfirmationLetter = async (emlBody) => {
     const postData = {
       name: 'Confirmation Letter',
-      subject: 'Confirmation Subject',
+      subject: 'Employee Confirmation',
       employee_id: id,
       body: emlBody,
       designation_id: selectedDesignationOption ? Number(selectedDesignationOption.id):'',

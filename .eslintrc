@@ -76,6 +76,12 @@
         "ignoreClassFields": true
       }
     ],
+    "prefer-destructuring": ["error", {
+      "array": false,
+      "object": false
+    }, {
+      "enforceForRenamedProperties": false
+    }],
     "quotes": [
       "error",
       "single",

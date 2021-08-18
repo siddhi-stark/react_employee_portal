@@ -145,11 +145,6 @@
 		"placeholder": "eg.350000",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-            "type": "required|num|min:4|max:7",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          }],
 		"displayWhen": {},
 		"haveValidations": "true",
 		"haveDisplayOptions": "false",

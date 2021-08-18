@@ -22,14 +22,6 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4],
   },
-  {
-    title: 'Temporary Account',
-    path: '/accept-invitation',
-    icon: 'project.svg',
-    submenu: [],
-    roleaccess: [6],
-  },
-
    {
     title: 'Quotes',
     path: '/quotes',
@@ -102,7 +94,7 @@ const menu = [
     path: '/recruitment',
     icon: 'recruitement.svg',
     roleaccess: [5,4,3],
-  },  
+  }, 
   // {
   //   title: 'Employee Technology Stack',
   //   path: '/emp-stack',
@@ -153,6 +145,13 @@ const menu = [
     icon: 'report.svg',
     submenu: [],
     roleaccess: [1, 5],
+  },
+  {
+    title: 'Candidates',
+    path: '/candidates',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [5],
   },
   {
     title: 'Logout',

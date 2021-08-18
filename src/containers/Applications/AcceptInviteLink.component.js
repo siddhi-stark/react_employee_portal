@@ -1,9 +1,69 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 
-function AcceptInviteLink() {
+import { Button } from 'react-bootstrap';
+import swal from 'sweetalert';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
+
+function AcceptInviteLink(props) {
+
+  const [token, setToken] = useState(null);
+  const dispatch = useDispatch();
+  const [candidateData,setCandidateData] = useState([]);
+
+  const verifyToken = async (tkn) => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.offerTokenUrl}?token=${tkn}`
+    );
+    if (data) {
+      // setEmail(data.data.email);
+      console.log('data',data);
+      setCandidateData(data.data);
+      customFunctions.setLocalStorage('candidateData', JSON.stringify(candidateData));
+    }
+    if (!data) {
+      console.log('data',data);
+      swal('Token is invalid', '', 'error');
+      props.history.push('/login');
+    }
+  };
+
+  useEffect(() => {
+    console.log('token',token)
+    dispatch({ type: 'LOGIN', value: false });
+    const matchUrltoken = props.match.params.offerToken;
+    console.log('matchUrltoken',matchUrltoken);
+    setToken(matchUrltoken);
+    if (!matchUrltoken) {
+      window.location = '/login';
+      console.log('toeknnnnnnnnnn')
+    }
+    verifyToken(matchUrltoken);
+  }, [dispatch]);
+
+  const onAcceptBtn = async (type) => {
+    console.log('type',type);
+    const postData = {
+      token,
+      offer_status: type === 0 ? 1 : 2,
+      is_local: true 
+    }
+    console.log('postData',postData);
+    const { data } = await AuthApi.putDataToServer(
+      `${Api.offerStatusUrl}`,
+      postData
+    );
+    if(data) {
+      swal(data.message[0],'','success');
+      console.log('data.data',data.data);
+    }
+  }
+
 	return (
+    <>
 		 <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">
@@ -14,20 +74,26 @@ function AcceptInviteLink() {
             />
           </a>
         </div>
+        <p>Dear <strong>{candidateData.name}</strong>, please click on accept button to accept the offer for the position of {candidateData.applied_for_name} </p>
          <div className="float-end">
               <Button
                 variant="success"
                 type="button"
+                onClick={() => {onAcceptBtn(0); }}
               >
                 Accept
               </Button>
               <Button variant="danger" 
-               className="ms-4">
+               className="ms-4"
+                onClick={() => {onAcceptBtn(1);}}
+
+               >
                 Declined
               </Button>
 
             </div>
         </div>
+        </>
 		)
 }
 

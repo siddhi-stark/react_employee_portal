@@ -2545,6 +2545,7 @@ p.employee-details {
 }
 
 
+
 /*@media (min-width: 576px){
     .bd-content .highlight {
         margin-right: 0;
@@ -3199,7 +3200,14 @@ span.np-sup {
     }
 }*/
 
-
+.Required-Document {
+    h5 {
+        font-size: 20px;
+    }
+    h6 {
+        font-size: 18px;
+    }
+}
 
 @media (min-width: 576px){
     .bd-content .highlight {
@@ -3240,6 +3248,8 @@ span.np-sup {
 .profile-bg {
     position: relative;
     margin-bottom: 30px;
+    overflow: hidden;
+    width: 100%;
     img {
         width: 100%;
     }
@@ -3255,7 +3265,10 @@ span.np-sup {
     }
 }
 
-
+.logout-btn {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
 /*Pre Code View end*/
 
 

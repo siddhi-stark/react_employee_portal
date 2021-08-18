@@ -28,6 +28,7 @@ function Dashboard() {
   const [userRole, setUserRole] = useState('');
   const [morningMail, setMorningMail] = useState(false);
   const [quotesContent, setQuotesContent] = useState('');
+  const [totalHrs, setTotalHrs] = useState(null);
   const history = useHistory();
 
   const [pagination, setPagination] = useState({
@@ -169,6 +170,7 @@ const LastDay = customFunctions.getDate(lastday);
     getDailyActivity();
     getWeeklyStatus('this_week');
     getTimeSheetList();
+    getWorkingHrs();
     setTitle('Dashboard');
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
@@ -184,7 +186,15 @@ const LastDay = customFunctions.getDate(lastday);
     document.dispatchEvent(viewButton);
     return true;
   };
+  
+  const getWorkingHrs = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.workingHrsUrl}`);
 
+    if (data && data.data) {
+      setTotalHrs(data.data.duration);
+    }
+    return true;
+  };
   return (
     <>
       <Helmet title={title} />
@@ -255,6 +265,7 @@ const LastDay = customFunctions.getDate(lastday);
                   <div className="welcome-img text-right">
                     <img src="/images/welcome-img.svg" alt="img" />
                   </div>
+                  <p className="mt-3">Total Working Hrs: {totalHrs}</p>
                 </Col>
               </Row>
             </Jumbotron>

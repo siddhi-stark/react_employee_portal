@@ -39,6 +39,10 @@ import Quotes from './containers/Quotes/quotes.component';
 import AddQuotes from './containers/Quotes/addQuotes.component';
 import GenerateOfferLetter from './containers/Applications/GenerateOfferLetter.component';
 import AcceptInviteLink from './containers/Applications/AcceptInviteLink.component';
+import CandidateListing from './containers/Applications/CandidateListing.component';
+import RequiredDocument from './containers/TemporaryAccount/RequiredDocument.component';
+import TemporaryAccount from './containers/TemporaryAccount/temporaryAccount.component';
+import OnBoard from './containers/TemporaryAccount/OnBoard.component';
 
 function Routes() {
   return (
@@ -83,10 +87,13 @@ function Routes() {
        <Route path='/add-quotes' exact component={AddQuotes} />
        <Route path='/edit-quotes/:qid' exact component={AddQuotes} />
        <Route path='/generate-offerletter' exact component={GenerateOfferLetter} />
-       <Route path='verify/offer/:offerToken' exact component={AcceptInviteLink} />
+       <Route path='/verify/offer/:offerToken' exact component={AcceptInviteLink} />
+       <Route path='/candidates' exact component={CandidateListing} />
+       <Route path='/temporary/account/:token' exact component={RequiredDocument} />
+      <Route path="/candidates/:ID" exact component={TemporaryAccount} />
+      <Route path="/onboard/:ID" exact component={OnBoard} />
 
-       
-       
+
       <Route component={NotFound} />
     </Switch>
   );
