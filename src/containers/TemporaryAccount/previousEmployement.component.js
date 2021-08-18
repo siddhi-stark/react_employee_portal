@@ -184,7 +184,9 @@ function PreviousEmployement(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        getData();
+        if(candidateId){
+          getData();
+        }
         swal.close();
       });
     }

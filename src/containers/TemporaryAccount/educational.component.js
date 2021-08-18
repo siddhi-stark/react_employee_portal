@@ -165,7 +165,9 @@ function EducationalDetails(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        getData();
+        if(candidateId){
+          getData();
+        }
         props.onEducationalInfo(true);
         swal.close();
       });

@@ -61,20 +61,20 @@ function TemporaryAccount(props) {
     } else if (emp === 'employmentHistory') {
       setKey('employmentHistory');
     }else if (emp === 'previousEmployment') {
-      console.log('emp---',emp);
       setKey('previousEmployment');
     }
   };
 
   useEffect(() => {
     getData();
-    if(!candidateId) return;
+    if(candidateId) {
       setIsBI(false);
       setIsED(false);
       setIsPD(false);
       setPersonalId(false);
       setEducationalId(false);
       setHistoryId(false);
+    }
   }, []);
 
   return (
