@@ -37,7 +37,7 @@ const actionCallBack = (row) => {
 				 <Image src="/images/edit-button.svg" />
 			</a>
 
-			{isOnBoard === 'true' ? (
+			{isOnBoard !== 'true' ? (
 
 			''
 				) : <a
@@ -49,7 +49,7 @@ const actionCallBack = (row) => {
 					history.push(`/onboard/${row.id}`)
 				}}
 			>
-				 On-Board
+				on-board
 			</a>
 		}
 

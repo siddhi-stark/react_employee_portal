@@ -187,13 +187,13 @@ function CurrentEmployee() {
                             !emp.on_notice_period &&
                             customFunctions.getDMYDate(emp.confirmation_date)}
                           {!emp.confirmation_date &&
-                            emp.joined_date &&
+                            emp.date_joined &&
                             !emp.on_notice_period &&
                             `Joining Date-`}
                           {!emp.confirmation_date &&
-                            emp.joined_date &&
+                            emp.date_joined &&
                             !emp.on_notice_period &&
-                            customFunctions.getDMYDate(emp.joined_date)}
+                            customFunctions.getDMYDate(emp.date_joined)}
                           {emp.on_notice_period &&
                             emp.notice_period_date &&
                             `Relieving Date-`}
