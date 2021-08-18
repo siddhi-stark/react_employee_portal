@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Col, Button } from 'react-bootstrap';
+import { Col, Button, Form } from 'react-bootstrap';
+import swal from 'sweetalert';
 import { TextInput } from '../../components/FormInputs';
 // import Api from '../../helper/api';
 // import AuthApi from '../../helper/authApi';
@@ -44,6 +45,20 @@ const [password,setPassword] = useState('');
 	// 	verifyToken(matchUrltoken);
 	// }, [dispatch]);
 
+const addPassword = () => {
+	setIsBtnClicked(true);
+}
+
+ const onSubmit = (e) => {
+    e.preventDefault();
+    console.log('inside onsubmit');
+    if (password !== '') {
+    console.log('inside if');
+      addPassword();
+    } else {
+    	swal('Please enter the password provided in the link.','','error')
+    }
+  };
 
 	return (
 		<>
@@ -88,6 +103,10 @@ const [password,setPassword] = useState('');
 				</ul>
 
 			<Col md={12}>
+			<Form  onSubmit={(e) => {
+              onSubmit(e);
+            }}>
+
 				<TextInput
      onInputChange={(e) => setPassword(e.target.value)}
 					label="Password"
@@ -98,8 +117,9 @@ const [password,setPassword] = useState('');
 					name="passwordTitle"
 					placeholder="Enter Password"
 				/>
+			<Button type='submit' >Submit</Button>
+			</Form>
 			</Col>
-			<Button onClick={() => setIsBtnClicked(true)} >Submit</Button>
 			</div>	
 			</div>
 			</>
