@@ -116,7 +116,7 @@ function AcceptInviteLink(props) {
         }
         </div>
         </>
-    }
+    
 		)
 }
 
