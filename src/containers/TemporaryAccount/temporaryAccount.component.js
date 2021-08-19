@@ -88,10 +88,14 @@ function TemporaryAccount(props) {
                 <Button
                   variant="primary"
                   onClick={() => {
-                    history.push('/login');
+                    if(candidateId) {
+                      history.push('/candidates');
+                    } else {
+                      history.push('/login');
+                    }
                   }}
                 >
-                  Logout
+                  {candidateId ? 'Back':'Logout'}
                 </Button>
               </div>
               <div className="profile-bg">
