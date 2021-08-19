@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
@@ -76,8 +77,12 @@ function Events() {
 
   const columns = [
     {
-      id: 'day',
-      label: 'Day',
+      id: 'title',
+      label: 'Title',
+    },
+    {
+      id: 'theme',
+      label: 'Theme',
     },
     {
       id: 'date',
@@ -94,7 +99,7 @@ function Events() {
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     const endPoint =
-      'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/employee/';
+      `${Api.eventsUrl}`
     const params = {
       page,
       limit,

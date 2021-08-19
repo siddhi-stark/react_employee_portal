@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
+import { Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import FormSections from './holiday.json';
 import AuthApi from '../../helper/authApi';
@@ -14,10 +15,39 @@ function AddHoliday(props) {
 	const [defaultValues, updateDefaultValues] = useState({});
 	const [options, updateOptions] = useState({}); // eslint-disable-line
 	const [currentUser, updateCurrentUser] = useState(0);
-	const title = 'Add Holiday';
+	const [holidayId,setHolidayId] = useState('');
+	const [view,setViewID] = useState('');
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
+
+	const viewId = props.match.params.viewID; // eslint-disable-line
+	const title = viewId ? 'View Holiday' : 'Add Holiday';
 	const items = [{ to: '/', label: 'Home' }, { label: 'Add Holiday' }];
 
 	const history = useHistory();
+
+
+	 useEffect(() => {
+    	console.log('viewIDDDDD');
+	const viewId = props.match.params.viewID; // eslint-disable-line
+	setViewID(viewId);
+    if (view) {
+    	console.log('viewIDDDDD');
+      const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (item.name === 'occasion' || item.name === 'date'
+          )
+            itemData.disabled = true;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+    }
+  }, [view]);
+
 
 	// Get user role
 	const getUserRole = async () => {
@@ -36,13 +66,24 @@ function AddHoliday(props) {
 			occasion: formValues.occasion,
 			date: formValues.date ? customFunctions.getDate(formValues.date) : '',
 		};
-		const { data } = await AuthApi.postDataToServer(
-			Api.holidayUrl,
-			postData
-		);
+
+		if(holidayId) {
+		postData.id = holidayId;	
+		} 
+
+		const callback = holidayId
+      ? AuthApi.putDataToServer
+      : AuthApi.postDataToServer;
+
+    const endPoint =  Api.holidayUrl;
+    const { data } = await callback(endPoint, postData);
+
+
+		
 		if (data) {
 			swal(data.message[0],'','success');
 			history.push('/holidays');
+			setHolidayId('');
 		}
 		// Perform success actions
 	};
@@ -61,15 +102,18 @@ function AddHoliday(props) {
 
 	// Call get data method on load
 	useEffect(() => {
-		const holidayId = props.match.params.ID;
-		if(holidayId) {
+		const id = props.match.params.ID;
+		setHolidayId(id);
+		if(id || view) {
 
-		getData(holidayId);
+		getData(id || view);
 		}
-	}, []);
+	}, [holidayId,view]);
 
 	return (
 		<>
+		{console.log('view',view)}
+
 			<Helmet title={title} />
 			<div className="page-header">
 				<div className="title-breadcrumb-section">
@@ -77,11 +121,16 @@ function AddHoliday(props) {
 					<Breadcrumb items={items} />
 				</div>
 			</div>
+			{view ? (
+
+			<Button className="float-end" onClick= {() => {history.push('/holidays');setViewID('')}} >Back</Button>
+				) : ''}
+
 			<div className="mt-5">
 				<StarkFormBuilder
 					containerClass=""
 					formHeaderClass=""
-					formSections={FormSections}
+					formSections={FormSections || jsonSchema}
 					onFormSubmit={(formValues) => {
 						submitForm(formValues);
 					}}

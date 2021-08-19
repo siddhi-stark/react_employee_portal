@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import { Image, Card } from 'react-bootstrap';
+import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -28,29 +29,27 @@ function Holidays() {
 				<a
 					href="/"
 					className="pl-2 ms-4"
-					// onClick={(e) => {
-					//   e.preventDefault();
-					//   e.stopPropagation();
-					//   history.push(`/edit-employee/${row.user_id}`);
-					//   customFunctions.setLocalStorage('employeeName', row.emp_name);
-					//   customFunctions.setLocalStorage('userId', row.user_id);
-					//   customFunctions.setLocalStorage('date', row.date);
-					// }}
+					onClick={(e) => {
+					  e.preventDefault();
+					  e.stopPropagation();
+					  history.push(`/view-holiday/${row.id}`);
+					  customFunctions.setLocalStorage('employeeName', row.emp_name);
+					  customFunctions.setLocalStorage('userId', row.user_id);
+					  customFunctions.setLocalStorage('date', row.date);
+					}}
 				>
-					view
+										<Image src="/images/edit.png" />
+
 				</a>
 
 				<a
 					href="/"
 					className="pl-2 ms-4"
-					// onClick={(e) => {
-					//   e.preventDefault();
-					//   e.stopPropagation();
-					//   history.push(`/edit-employee/${row.user_id}`);
-					//   customFunctions.setLocalStorage('employeeName', row.emp_name);
-					//   customFunctions.setLocalStorage('userId', row.user_id);
-					//   customFunctions.setLocalStorage('date', row.date);
-					// }}
+					onClick={(e) => {
+					  e.preventDefault();
+					  e.stopPropagation();
+					  removeHoliday(row.id);
+					}}
 				>
 					<Image src="/images/delete.png" />
 				</a>
@@ -116,6 +115,44 @@ function Holidays() {
 			console.log('error', message);
 		}
 	};
+
+	const removeHoliday = (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to remove the holiday?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.holidayUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getRowData(1);
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
+  };
+
+
 
 	useEffect(() => {
 		const uRole = customFunctions.getLocalStorage('group');
