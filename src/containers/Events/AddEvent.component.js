@@ -9,14 +9,16 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 
-function AddEvent() {
+function AddEvent(props) {
 	// Variable declarations
 	const [defaultValues, updateDefaultValues] = useState({});
 	const [options, updateOptions] = useState({}); // eslint-disable-line
 	const [currentUser, updateCurrentUser] = useState(0);
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
+	const [view,setView] = useState('');
 	const title = 'Add Title';
   const items = [{ to: '/', label: 'Home' }, { label: 'Add Event' }];
-
+  const [eventId,setEventId] = useState('');
 
 	// Get user role
 	const getUserRole = async () => {
@@ -54,32 +56,88 @@ function AddEvent() {
         : '',
 		}
 
-		console.log('postData',postData);
+			if(eventId) {
+		postData.id = eventId;	
+		} 
 
-		const { data } = await AuthApi.postDataToServer(Api.eventsUrl, postData);
+		const callback = eventId
+      ? AuthApi.putDataToServer
+      : AuthApi.postDataToServer;
+
+    const endPoint =  Api.eventsUrl;
+    const { data } = await callback(endPoint, postData);
+
 		if (data) {
 			swal(data.message[0],'','success');
+			setEventId('');
 		}
 		// Perform success actions
 	};
 
 	// Get data for form
-	const getData = async () => {
-		const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-		if (!data) {
-			// show error
-			return;
-		}
-		updateDefaultValues(data);
+	const getData = async (id) => {
+		const { data } = await AuthApi.getDataFromServer(`${Api.eventsUrl}${id}/`);
+		console.log('data',data);
+
+		 data.data.time = data.data.time ? new Date(
+            `${customFunctions.getDate(data.data.date)} ${customFunctions.convertTime12to24(data.data.time)}`
+          ) : '';
+
+		  data.data.date = data.data.date ? new Date(customFunctions.getDate(data.data.date)) : '';
+
+		 // if (!customFunctions.checkIfEmpty(dt.int_time)) {
+   //        newTime = new Date(
+   //          `${customFunctions.getDate(dt.int_date)} ${customFunctions.convertTime12to24(dt.int_time)}`
+   //        );
+   //      }
+
+        // const obj = {
+        // 	...data.data,
+        // }
+
+		updateDefaultValues(data.data);
 	};
+
+	const disableFields = () => {
+		const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (item.name === 'title' || item.name === 'date' || item.name === 'time' || item.name === 'description' || item.name === 'theme'
+          )
+            itemData.disabled = true;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+	}
 
 	// Call get data method on load
 	useEffect(() => {
-		getData();
+
+    const ID = props.match.params.id;
+    setEventId(ID);
+    if(ID) {
+      getData(ID)
+    }
 	}, []);
+
+		useEffect(() => {
+			console.log('view useEffect');
+    const viewid = props.match.params.id;
+    setView(viewid);
+    if(viewid) {
+    	disableFields();
+      getData(viewid)
+    }
+	}, [view]);
+
 
 	return (
 <>
+{console.log('id',eventId)}
  <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -92,7 +150,7 @@ function AddEvent() {
 			<StarkFormBuilder
 				containerClass=""
 				formHeaderClass=""
-				formSections={FormSections}
+				formSections={FormSections || jsonSchema}
 				formHeading="Event Form"
 				onFormSubmit={(formValues) => {
 					submitForm(formValues);
@@ -104,7 +162,7 @@ function AddEvent() {
 				submitBtnText="Submit"
 				showResetBtn={true}
 				resetBtnText="Clear"
-				btnContainerClass="form-submit-buttons"
+				btnContainerClass= { view ? 'd-none' : 'form-submit-buttons' } 
 				isStepForm={false}
 				onFormReset={() => {
 					console.log('form reset callback');

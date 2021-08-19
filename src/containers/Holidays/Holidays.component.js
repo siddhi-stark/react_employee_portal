@@ -32,7 +32,9 @@ function Holidays() {
 					onClick={(e) => {
 					  e.preventDefault();
 					  e.stopPropagation();
-					  history.push(`/view-holiday/${row.id}`);
+					  history.push(`/edit-holiday/${row.id}`, {
+isView: true,
+});
 					  customFunctions.setLocalStorage('employeeName', row.emp_name);
 					  customFunctions.setLocalStorage('userId', row.user_id);
 					  customFunctions.setLocalStorage('date', row.date);
