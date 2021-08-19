@@ -59,21 +59,23 @@ function AcceptInviteLink(props) {
     if(data) {
       // swal(data.message[0],'','success');
       console.log('data.data',data.data);
+      setHideButtons(true);
 
-      swal({
-        title: data.message[0],
-        icon: 'success',
-      })
-        .then(okAction => {
-          if (okAction) {
-            setHideButtons(true);
-          }
-        });
+      // swal({
+      //   title: data.message[0],
+      //   icon: 'success',
+      // })
+      //   .then(okAction => {
+      //     if (okAction) {
+      //       console.log('inside if');
+      //     }
+      //   });
     }
   }
 
 	return (
     <>
+    {console.log('hideButtons',hideButtons)}
 		 <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">
@@ -114,6 +116,7 @@ function AcceptInviteLink(props) {
         }
         </div>
         </>
+    }
 		)
 }
 
