@@ -40,7 +40,7 @@ function HrReports() {
  
 const [rowData, setRowData] = useState([]);
 const [totalCount, setTotalCount] = useState(10);
-const [limit, setLimit] = useState(5);
+const [limit, setLimit] = useState(10);
 const [currentPage, setCurrentPage] = useState(1);
 const [filterData, setFilterData] = useState({});
 
