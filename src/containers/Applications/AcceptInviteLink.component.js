@@ -13,6 +13,7 @@ function AcceptInviteLink(props) {
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
   const [candidateData,setCandidateData] = useState([]);
+  const [hideButtons,setHideButtons] = useState(false);
 
   const verifyToken = async (tkn) => {
     const { data } = await AuthApi.getDataFromServer(
@@ -56,13 +57,25 @@ function AcceptInviteLink(props) {
       postData
     );
     if(data) {
-      swal(data.message[0],'','success');
+      // swal(data.message[0],'','success');
       console.log('data.data',data.data);
+      setHideButtons(true);
+
+      // swal({
+      //   title: data.message[0],
+      //   icon: 'success',
+      // })
+      //   .then(okAction => {
+      //     if (okAction) {
+      //       console.log('inside if');
+      //     }
+      //   });
     }
   }
 
 	return (
     <>
+    {console.log('hideButtons',hideButtons)}
 		 <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">
@@ -73,6 +86,12 @@ function AcceptInviteLink(props) {
             />
           </a>
         </div>
+        {
+          hideButtons === true ? (
+        <p>Thank You for accepting the offer. PLease check your email for further process. <br /> </p>
+
+            ) : (
+            <>
         <p>Dear <strong>{candidateData.name}</strong>, please click on accept button to accept the offer for the position of {candidateData.applied_for_name} </p>
          <div className="float-end">
               <Button
@@ -91,8 +110,13 @@ function AcceptInviteLink(props) {
               </Button>
 
             </div>
+
+            </>
+            ) 
+        }
         </div>
         </>
+    }
 		)
 }
 

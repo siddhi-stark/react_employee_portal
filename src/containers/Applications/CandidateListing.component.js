@@ -20,7 +20,7 @@ function CandidateListing() {
  const title = 'Canidates'
   const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
 const history = useHistory();
-const isOnBoard = customFunctions.getLocalStorage('isShowOnBoard');
+// const isOnBoard = customFunctions.getLocalStorage('isShowOnBoard');
 
 const actionCallBack = (row) => {
 	return (
@@ -37,10 +37,9 @@ const actionCallBack = (row) => {
 				 <Image src="/images/edit-button.svg" />
 			</a>
 
-			{isOnBoard !== 'true' ? (
+			{row.employee_id ? '' : (
 
-			''
-				) : <a
+			 <a
 				href="/"
 				className="pl-2 ms-4"
 				onClick={(e) => {
@@ -51,7 +50,8 @@ const actionCallBack = (row) => {
 			>
 				on-board
 			</a>
-		}
+			)}
+		
 
 		</>
 	);
