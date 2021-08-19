@@ -84,6 +84,7 @@ function AcceptInviteLink(props) {
   return (
     <>
       {console.log('hideButtons', hideButtons)}
+      {console.log('hideDeclineButton', hideDeclineButton)}
       <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">
@@ -104,7 +105,7 @@ function AcceptInviteLink(props) {
         <p>Thankyou for your response.</p>
         )}  
 
-        {(hideButtons === false || hideDeclineButton === false) && (
+        {(hideButtons !== true || hideDeclineButton !== true) && (
            <>
         <p>Dear <strong>{candidateData.name}</strong>, please click on accept button to accept the offer for the position of {candidateData.applied_for_name} </p>
          <div className="float-end">
