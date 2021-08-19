@@ -104,7 +104,7 @@ function AcceptInviteLink(props) {
         <p>Thankyou for your response.</p>
         )}  
 
-        {(!hideButtons || !hideDeclineButton) && (
+        {(hideButtons === false || hideDeclineButton === false) && (
            <>
         <p>Dear <strong>{candidateData.name}</strong>, please click on accept button to accept the offer for the position of {candidateData.applied_for_name} </p>
          <div className="float-end">
