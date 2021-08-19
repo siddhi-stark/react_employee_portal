@@ -44,6 +44,8 @@ import RequiredDocument from './containers/TemporaryAccount/RequiredDocument.com
 import TemporaryAccount from './containers/TemporaryAccount/temporaryAccount.component';
 import OnBoard from './containers/TemporaryAccount/OnBoard.component';
 import AddEvent from './containers/Events/AddEvent.component';
+import Holidays from './containers/Holidays/Holidays.component';
+import AddHoliday from './containers/Holidays/AddHoliday.component';
 
 function Routes() {
   return (
@@ -63,6 +65,9 @@ function Routes() {
       <Route path="/manage-password" exact component={ManagePassword} />
       <Route path="/team-report" exact component={TeamReport} />
       <Route path="/event" exact component={Events} />
+      <Route path="/holidays" exact component={Holidays} />
+      <Route path="/add-holiday" exact component={AddHoliday} />
+      <Route path="/edit-holiday/:ID" exact component={AddHoliday} />
       <Route path="/add-event" exact component={AddEvent} />
       <Route path="/technology" exact component={Technology} />
       <Route path="/emp-stack" exact component={EmployeeTechListing} />

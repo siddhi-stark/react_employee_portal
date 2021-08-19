@@ -90,6 +90,13 @@ const menu = [
     roleaccess: [5],
   },
   {
+    title: 'Holidays',
+    path: '/holidays',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [5],
+  },
+  {
     title: 'Employees',
     path: '/employees',
     icon: 'Employee.svg',

@@ -27,9 +27,22 @@ function AddEvent() {
 		getUserRole();
 	}, []);
 
+
+// 	Events Create:
+// {
+// "title": "Team-Building Events",
+// "description": "Team-Building Events",
+// "theme":"White shirt",
+// "date": "2021-08-26",
+// "time": "17:00",
+// "image": 2
+// }
+
+
+
 	// Submit Form
 	const submitForm = async (formValues) => {
-		console.log(formValues);
+		console.log('formValues',formValues);
 
 		const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
 		if (!data) {

@@ -9,7 +9,7 @@
 	"displaySection": true,
 	"displaySectionTitle": false,
 	"fields": [{
-		"name": "name",
+		"name": "title",
 		"type": "text",
 		"label": "Event Name",
 		"id": "",

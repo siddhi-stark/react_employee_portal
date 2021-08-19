@@ -19,9 +19,9 @@ function Events() {
   const [currentPage, setCurrentPage] = useState(1);
   const [userRole, setUserRole] = useState('');
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
-  const title = 'Event';
+  const title = 'Events';
   const history = useHistory();
-  const items = [{ to: '/', label: 'Home' }, { label: 'Event' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Events' }];
 
   const handleActionCallback = () => {
     return (
@@ -130,7 +130,7 @@ function Events() {
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Add Event</h4>
+                <h4 className="text-primary mt-2 mb-2">Events</h4>
                 <div className="d-flex align-items-center justify-content-end">
                   <UserRestrictions permittedUsers={[5]} roleId={userRole}>
                     <a
