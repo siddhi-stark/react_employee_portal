@@ -82,12 +82,18 @@ function Personal(props) {
     formData.append('employee_email', emailProps);
     formData.append('folder_name', 'Personal');
 
-    const { data } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );
-    if (data) {
+    if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success) { 
       return data.data.id;
-    } 
+    }
   };
 
   // Submit Form
@@ -141,7 +147,7 @@ function Personal(props) {
       ],
     };
 
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data, message } = (!customFunctions.checkIfEmpty(pancardfileUrlId) && !customFunctions.checkIfEmpty(adharfileUrlId) && !customFunctions.checkIfEmpty(photofileUrlId)) && await AuthApi.postDataToServer(
      `${Api.applicantDocumentUrl}`,
       postData
     );
@@ -169,7 +175,7 @@ function Personal(props) {
         props.onPersonalInfo(true);
         swal.close();
       });
-    }
+      }
     // Perform success actions
   };
 

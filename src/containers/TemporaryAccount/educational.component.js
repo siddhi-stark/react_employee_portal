@@ -88,10 +88,17 @@ function EducationalDetails(props) {
     formData.append('email_hash', tokenProps);
     formData.append('password', passwordProps);
 
-    const { data } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );
-    if (data) {
+
+    if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success) { 
       return data.data.id;
     }
   };
@@ -158,7 +165,7 @@ function EducationalDetails(props) {
       ],
     };
 
-   const { data, message } = await AuthApi.postDataToServer(
+   const { data, message } = (!customFunctions.checkIfEmpty(graduatefileUrlId) && !customFunctions.checkIfEmpty(hscfileUrlId) && !customFunctions.checkIfEmpty(postfileUrlId) && !customFunctions.checkIfEmpty(sscfileUrlId)) && await AuthApi.postDataToServer(
      `${Api.applicantDocumentUrl}`,
       postData
     );

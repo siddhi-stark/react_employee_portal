@@ -93,11 +93,17 @@ function PreviousEmployement(props) {
     formData.append('email_hash', tokenProps);
     formData.append('password', passwordProps);
 
-    const { data } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,
       formData
     );
-    if (data) {
+     if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success) { 
       return data.data.id;
     }
   };
@@ -179,7 +185,7 @@ function PreviousEmployement(props) {
       ],
     };
 
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data, message } = (!customFunctions.checkIfEmpty(slip1fileUrlId) && !customFunctions.checkIfEmpty(slip2fileUrlId) && !customFunctions.checkIfEmpty(slip3fileUrlId) && !customFunctions.checkIfEmpty(relivingfileUrlId)) && await AuthApi.postDataToServer(
       `${Api.applicantDocumentUrl}`,
       postData
     );
