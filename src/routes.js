@@ -43,6 +43,7 @@ import CandidateListing from './containers/Applications/CandidateListing.compone
 import RequiredDocument from './containers/TemporaryAccount/RequiredDocument.component';
 import TemporaryAccount from './containers/TemporaryAccount/temporaryAccount.component';
 import OnBoard from './containers/TemporaryAccount/OnBoard.component';
+import AddEvent from './containers/Events/AddEvent.component';
 
 function Routes() {
   return (
@@ -61,7 +62,8 @@ function Routes() {
       <Route path="/profile" exact component={Profile} />
       <Route path="/manage-password" exact component={ManagePassword} />
       <Route path="/team-report" exact component={TeamReport} />
-      <Route path="/events" exact component={Events} />
+      <Route path="/event" exact component={Events} />
+      <Route path="/add-event" exact component={AddEvent} />
       <Route path="/technology" exact component={Technology} />
       <Route path="/emp-stack" exact component={EmployeeTechListing} />
       <Route path="/employee-list" exact component={EmployeeList} />
