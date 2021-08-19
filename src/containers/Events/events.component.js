@@ -1,181 +1,148 @@
+import CustomTable from 'stark-custom-datatable';
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Accordion, Card, Row, Col, Button, Form } from 'react-bootstrap';
-import { Helmet, TextInput } from '../../components/FormInputs';
-import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import { withRouter, useHistory } from 'react-router-dom';
+import {
+  Card,
+  Image,
+} from 'react-bootstrap';
 import customFunctions from '../../helper/customFunctions';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+import { Helmet } from '../../components/FormInputs';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
-import Table from '../../components/ReactTable/simpletable.component';
-import material from '../../helper/materialnew';
 
 function Events() {
-    const [title, setTitle] = useState('');
-    const [rows, setRows] = useState([]);
-    const [filterErr, setFilterErr] = useState('');
-    const [searchKeyword, setSearchKeyword] = useState('');
-    const [cntClearFilter, setCntClearFilter] = useState(0);
-    const [userRole, setUserRole] = useState('');
-    const items = [
-        { to: '/', label: 'Home' },
-        { to: '/events', label: 'Events' },
-      ];
+  // Declare variable
+  const [rowData, setRowData] = useState([]);
+  const [totalCount, setTotalCount] = useState(10);
+  const [limit, setLimit] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [userRole, setUserRole] = useState('');
+  const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const title = 'Events';
+  const history = useHistory();
+  const items = [{ to: '/', label: 'Home' }, { label: 'Events' }];
 
-    const columns = [
-          {
-              id: 'no',
-              label: 'Sr. No',
-              roleAccess: [1],
-              
-          },
-          {
-              id: 'date',
-              label: 'Date',
-              roleAccess: [1],
-          },
-          {
-            id: 'event',
-            label: 'Event Name',
-            roleAccess: [1],
-          },
-          {
-              id: 'time',
-              label: 'Time',
-              roleAccess: [1],
-          },
-
-    ]; 
-
-    const getTableData = async () => {
-  
-        const row = [];
-  
-        material((desgn) => {
-          row.push({
-           
-            date: desgn.date,
-            event: desgn.startime,
-
-          });
-          return desgn;
-        });
-        setRows(row);
-      
-    };
-
-    useEffect(() => {
-        setTitle('Events');
-        const role = customFunctions.getLocalStorage('group');
-        setUserRole(role);
-        // getTableData();
-
-    });
-
-    const filterSearch = (e) => {
-        e.preventDefault();
-        let filterSearchErr = '';
-        let isValid = true;
-    
-        if (customFunctions.checkIfEmpty(searchKeyword)) {
-          filterSearchErr = 'Please enter search keyword';
-          setFilterErr(filterSearchErr);
-          isValid = false;
-        }
-        if (isValid) {
-          setFilterErr('');
-          getTableData(1);
-        }
-      };
-
-      const onClear = () => {
-        setFilterErr('');
-        setSearchKeyword('');
-        setCntClearFilter(cntClearFilter + 1);
-      };  
-
+  const handleActionCallback = () => {
     return (
-        <>
-           <Helmet title={title} />
+      <>
+        <a
+          href="/"
+          className="pl-2"
+          // onClick={(e) => {
+          //   e.preventDefault();
+          //   e.stopPropagation();
+          //   history.push(`/edit-employee/${row.user_id}`);
+          //   customFunctions.setLocalStorage('employeeName', row.emp_name);
+          //   customFunctions.setLocalStorage('userId', row.user_id);
+          //   customFunctions.setLocalStorage('date', row.date);
+          // }}
+        >
+          <Image src="/images/edit-button.svg" />
+        </a>
+
+        <a
+          href="/"
+          className="pl-2 ms-4"
+          // onClick={(e) => {
+          //   e.preventDefault();
+          //   e.stopPropagation();
+          //   history.push(`/edit-employee/${row.user_id}`);
+          //   customFunctions.setLocalStorage('employeeName', row.emp_name);
+          //   customFunctions.setLocalStorage('userId', row.user_id);
+          //   customFunctions.setLocalStorage('date', row.date);
+          // }}
+        >
+          view
+        </a>
+
+        <a
+          href="/"
+          className="pl-2 ms-4"
+          // onClick={(e) => {
+          //   e.preventDefault();
+          //   e.stopPropagation();
+          //   history.push(`/edit-employee/${row.user_id}`);
+          //   customFunctions.setLocalStorage('employeeName', row.emp_name);
+          //   customFunctions.setLocalStorage('userId', row.user_id);
+          //   customFunctions.setLocalStorage('date', row.date);
+          // }}
+        >
+          <Image src="/images/delete.png" />
+        </a>
+      </>
+    );
+  };
+
+  const columns = [
+    {
+      id: 'title',
+      label: 'Title',
+    },
+    {
+      id: 'theme',
+      label: 'Theme',
+    },
+    {
+      id: 'date',
+      label: 'Date',
+    },
+    {
+      id: 'Action',
+      label: 'Action',
+      render: handleActionCallback,
+    },
+  ];
+
+  // Declare methods
+  const getRowData = async (pageNo = 1) => {
+    const page = pageNo || currentPage;
+    const endPoint =
+      `${Api.eventsUrl}`
+    const params = {
+      page,
+      limit,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setTotalCount(data.paginator.total_count);
+      setLimit(data.paginator.limit);
+      setCurrentPage(Number(data.paginator.current_page));
+      setRowData((data && data.data) || []);
+    } else {
+      console.log('error', message);
+    }
+  };
+
+  useEffect(() => {
+    getRowData(1);
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
+  }, [filterData]);
+
+  return (
+    <>
+      <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Events</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
-      <div className="mt-5">
-      <Accordion defaultActiveKey="0">
-      <Card>
-      <Card.Header>
-      <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-      </Card.Header>
-      <Accordion.Collapse eventKey="1">
-      <Card.Body>
-      <Card.Title>
-      <Form onSubmit={(e) => filterSearch(e)}>
-      {filterErr && (
-                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
-                          <div className="img-text">
-                            <img src="/images/fail.svg" alt="Success" />{' '}
-                            {filterErr}
-                          </div>
-                        </div>
-                      )}
-                      <Row className="mt-3">
-                        <Col sm={3}>
-                          <div className="search-bar-input">
-                            <TextInput
-                              value={searchKeyword}
-                              placeholder="Search keyword"
-                              onInputChange={(e) => {
-                                setFilterErr('');
-                                setSearchKeyword(e.target.value);
-                              }}
-                            />
-                          </div>
-                        </Col>
-                        <Col sm={3}>
-                          <div className="filter-btn">
-                            <Button
-                              variant="primary"
-                              type="submit"
-                              className="ms-4"
-                            >
-                              Submit
-                            </Button>
-                            <Button
-                              variant="primary"
-                              type="button"
-                              className="ms-4"
-                              onClick={() => onClear()}
-                            >
-                              Clear
-                            </Button>
-                          </div>
-                        </Col>
-                      </Row>
-      </Form>
-      </Card.Title>
-      </Card.Body>
-      </Accordion.Collapse>
-      </Card>
-      </Accordion>
-      <Card>
-      <Card.Header>
-      <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Add Event</h4>
+        <div className="mt-5">
+          <Card>
+            <Card.Header>
+              <div className="d-flex align-items-center justify-content-between">
+                <h4 className="text-primary mt-2 mb-2">Events</h4>
                 <div className="d-flex align-items-center justify-content-end">
-                  <UserRestrictions permittedUsers={[1]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[5]} roleId={userRole}>
                     <a
                       href="#"
-                    //   onClick={() => {
-                    //     setModalShow(true);
-                    //     setEmployeeId();
-                    //   }}
+                        onClick={() => {
+                          history.push('/add-event');
+                        }}
                       className="btn-link"
                     >
                       Add Event
@@ -183,33 +150,31 @@ function Events() {
                   </UserRestrictions>
                 </div>
               </div>
-      </Card.Header>
-      <Card.Body>
-      <Row>
-                <Table
-                  columns={columns}
-                  rows={rows}
-                //   showPagination="true"
-                //   paginationProps={{
-                //     ...pagination,
-                //     activePage: pagination.current_page,
-                //     onPageChange: (pageNo) => {
-                //       getTableData(pageNo);
-                //     },
-                //   }}
-                  tableClass="table-striped"
-                  dropdownContainerClass="mb-3"
-                  emptyRender={() => (
-                    <p className="text-center mb-0">No record found</p>
-                  )}
-                />
-              </Row>
-      </Card.Body>
-      </Card>
-      </div>
+            </Card.Header>
+            <Card.Body>
+              <CustomTable
+                columns={columns}
+                rows={rowData}
+                role={5}
+                showPagination={true}
+                paginationProps={{
+                  totalItems: totalCount,
+                  itemsPerPage: limit,
+                  activePage: currentPage,
+                  onPageChange: (pageNo) => {
+                    getRowData(pageNo);
+                  },
+                }}
+                emptyRender={() => {
+                  return 'No record found.';
+                }}
+              />
+            </Card.Body>
+          </Card>
+        </div>
       </section>
-        </>
-    );
+    </>
+  );
 }
 
 export default withRouter(Events);

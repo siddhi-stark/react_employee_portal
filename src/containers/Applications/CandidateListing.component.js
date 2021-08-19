@@ -14,7 +14,7 @@ function CandidateListing() {
 	// Declare variable
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
-	const [limit, setLimit] = useState(5);
+	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [filterData, setFilterData] = useState({}); // eslint-disable-line
  const title = 'Canidates'
@@ -60,15 +60,14 @@ const actionCallBack = (row) => {
 const handleProgressCallBack = (completion) => {
 	return (
 		<>
-		{completion.completion && (
+		
 
 			<ProgressBar
 				bsPrefix="progress pbar"
 				variant="success"
-				now={completion.completion}
-        label={`${completion.completion}% completed`}
+				now={completion.completion ? completion.completion : 0}
+        label={`${completion.completion ? completion.completion : 0}% completed`}
 			/>
-			)}
 		</>
 	);
 };
@@ -92,6 +91,10 @@ const columns = [
 		label: 'Technology',
 	},
 	{
+		id: 'offer_status_name',
+		label: 'Offer Status',
+	},
+	{
 		id: 'completion',
 		label: 'Progress',
 		render: handleProgressCallBack,
@@ -111,7 +114,7 @@ const columns = [
 		const params = {
 			page,
 			limit,
-   'offer_status':1
+     'status':4
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
