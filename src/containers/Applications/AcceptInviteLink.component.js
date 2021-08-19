@@ -88,7 +88,7 @@ function AcceptInviteLink(props) {
         </div>
         {
           hideButtons === true ? (
-        <p>Thank You for accepting the offer. PLease check your email for further process. <br /> </p>
+        <p>Thank You for accepting the offer. Please check your email for further process. <br /> for any queries, contact on hr@starkdigital.net </p>
 
             ) : (
             <>
