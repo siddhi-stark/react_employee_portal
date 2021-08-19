@@ -78,6 +78,9 @@
 		"label": "Time",
 		"id": "",
 		"placeholder": "",
+		"dateFormat":"h:mm aa",
+        "showTimeSelect":"showTimeSelect",
+        "showTimeSelectOnly":"showTimeSelectOnly",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
+import swal from 'sweetalert';
 import FormSections from './event.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-
+import customFunctions from '../../helper/customFunctions';
 
 function AddEvent() {
 	// Variable declarations
@@ -28,7 +29,6 @@ function AddEvent() {
 	}, []);
 
 
-// 	Events Create:
 // {
 // "title": "Team-Building Events",
 // "description": "Team-Building Events",
@@ -44,10 +44,21 @@ function AddEvent() {
 	const submitForm = async (formValues) => {
 		console.log('formValues',formValues);
 
-		const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
-		if (!data) {
-			// show error
-			// return;
+		const postData = {
+			title: formValues.title,
+			description: formValues.description,
+			theme: formValues.theme,
+			date: formValues.date ? customFunctions.getDate(formValues.date) : '',
+			time: formValues.time
+        ? `${customFunctions.getTime(formValues.time)}`
+        : '',
+		}
+
+		console.log('postData',postData);
+
+		const { data } = await AuthApi.postDataToServer(Api.eventsUrl, postData);
+		if (data) {
+			swal(data.message[0],'','success');
 		}
 		// Perform success actions
 	};
