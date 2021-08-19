@@ -46,6 +46,17 @@ jQuery(document).ready(function () {
     $(this).parent().siblings().removeClass('show');
   });
 
+  
+  $('body').on('click', '.main-header-notification', function (event) {
+$(this).toggleClass('open');
+/$('.nav-item').toggleClass('open');/
+});
+
+$('body').click(function (e) {
+if ($(e.target).closest('.main-header-notification').length) return;
+$('.main-header-notification').removeClass('show');
+});
+
   // Js for SVG
   jQuery('img.svg').each(function () {
     var $img = jQuery(this);

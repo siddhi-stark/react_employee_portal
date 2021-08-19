@@ -45,20 +45,6 @@ function OnBoard(props) {
 
 
 
- // full_name: fullName,
-      // email,
-      // mobile,
-      // role: selectedRole.id,
-      // password,
-      // emp_code: empCode && !employeeId  ? Number(empCode.split('-')[1]) : '',
-                  // team_leads: teamIdList,
-                   // managers: managerList,
-      // dob: date ? customFunctions.getDate(date) : null,
-      // date_joined: joiningDate ? customFunctions.getDate(joiningDate) : null,
-      // tw_emp: twId,
-      // department: selectedDepartment.id,
-
-
   // Submit Form
   const submitForm = async (formValues) => {
     console.log(formValues.managers);
@@ -69,6 +55,11 @@ function OnBoard(props) {
         managerList.push(mngr.value);
         return mngr;
       });
+
+       const teamIdList = [];
+    if (formValues.team_leads) {
+      teamIdList.push(formValues.team_leads.value);
+    }
     
 
     const postData = {
@@ -77,14 +68,14 @@ function OnBoard(props) {
       email: formValues.email,
       mobile: formValues.mobile,
       password: formValues.password,
-      department: formValues.department ? formValues.department.value : '',
+      department: formValues.department ? Number(formValues.department.id) : '',
       designation: formValues.designation ? formValues.designation.value : '',
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : '',
       role: formValues.role ? formValues.role.value : '',
-      emp_code: formValues.emp_code,
+      emp_code: Number(formValues.emp_code),
       // tw_emp: formValues.tw_emp ? formValues.tw_emp.value : '',
       managers: managerList,
-      team_leads: formValues.team_leads ? formValues.team_leads.value : '',
+      team_leads: teamIdList,
       is_onboard: true,
       applicant_id: Number(applicantId)
 

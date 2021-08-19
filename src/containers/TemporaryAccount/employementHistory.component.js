@@ -163,7 +163,9 @@ function EmployementHistory(props) {
         allowOutsideClick: false,
       }).then(() => {
         props.onHistoryInfo(true);
-        getData();
+        if(candidateId){
+          getData();
+        }
         swal.close();
       });
     }

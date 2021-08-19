@@ -149,7 +149,7 @@ const menu = [
   {
     title: 'Candidates',
     path: '/candidates',
-    icon: 'report.svg',
+    icon: 'candidate.svg',
     submenu: [],
     roleaccess: [5],
   },

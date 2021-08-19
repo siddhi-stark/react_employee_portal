@@ -163,7 +163,9 @@ function Personal(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        getData();
+        if(candidateId){
+          getData();
+        }
         props.onPersonalInfo(true);
         swal.close();
       });

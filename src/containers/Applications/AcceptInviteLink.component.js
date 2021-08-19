@@ -48,8 +48,7 @@ function AcceptInviteLink(props) {
     console.log('type',type);
     const postData = {
       token,
-      offer_status: type === 0 ? 1 : 2,
-      is_local: true 
+      offer_status: type === 0 ? 1 : 2
     }
     console.log('postData',postData);
     const { data } = await AuthApi.putDataToServer(

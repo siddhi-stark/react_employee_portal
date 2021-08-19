@@ -162,9 +162,9 @@ function EmployeeProfile(props) {
                   <div className="col-md-4">
                     <h6>
                       Joining Date -{' '}
-                      {employeeDetails.joined_date
+                      {employeeDetails.date_joined
                         ? customFunctions.getDMYDate(
-                            employeeDetails.joined_date
+                            employeeDetails.date_joined
                           )
                         : ''}
                     </h6>

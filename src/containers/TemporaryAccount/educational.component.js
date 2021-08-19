@@ -137,7 +137,7 @@ function EducationalDetails(props) {
       email_hash: tokenProps,
       password: passwordProps,
       applicant_id: candidateId ? Number(candidateId) :'',
-      doct_type: 1,
+      doc_type: 1,
       applicant_documents: [
         {
           doc_title: 'SSC',
@@ -179,7 +179,9 @@ function EducationalDetails(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        getData();
+        if(candidateId){
+          getData();
+        }
         props.onEducationalInfo(true);
         swal.close();
       });

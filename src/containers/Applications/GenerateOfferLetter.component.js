@@ -25,6 +25,11 @@ function GenerateOfferLetter() {
   const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
 
   useEffect(() => {
+    const CandidateId = customFunctions.getLocalStorage('applicantId');
+if (!CandidateId) {
+history.goBack();
+return;
+};
     setTitle('Offer Letter');
     const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section) => {
@@ -40,8 +45,8 @@ function GenerateOfferLetter() {
 
         return itemData;
       });
-      return s;
-    });
+      return s; 
+     });
     updateJsonSchema([...updatedSchema]);
     const Name = customFunctions.getLocalStorage('applicantName');
     const Designation = customFunctions.getLocalStorage('designation');
@@ -89,7 +94,6 @@ function GenerateOfferLetter() {
       subject: 'Offer Letter',
       attachment: doc,
       body,
-      is_local: true
     };
     const { data, message } = await AuthApi.postDataToServer(
       Api.sendMailUrl,

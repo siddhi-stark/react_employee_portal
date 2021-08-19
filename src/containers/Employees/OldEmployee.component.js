@@ -137,7 +137,7 @@ function OldEmployee() {
                         </p>
                         <p className="text-primary confirmation-date">
                           {' '}
-                          Relieving Date-{' '}
+                          Relieved Date-{' '}
                           {emp.relieving_date
                             ? customFunctions.getDMYDate(emp.relieving_date)
                             : null}
