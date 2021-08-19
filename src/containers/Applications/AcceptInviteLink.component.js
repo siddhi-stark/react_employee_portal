@@ -14,6 +14,7 @@ function AcceptInviteLink(props) {
   const [candidateData, setCandidateData] = useState([]);
   const [hideButtons, setHideButtons] = useState(false);
   const [hideDeclineButton,setHideDeclineButton] = useState(false);
+  const [showButton,isShowButtons] = useState(false);
 
   const verifyToken = async (tkn) => {
     const { data } = await AuthApi.getDataFromServer(
@@ -62,6 +63,8 @@ function AcceptInviteLink(props) {
     if (data) {
       // swal(data.message[0],'','success');
       console.log('data.data', data.data);
+      isShowButtons(true);
+
        if(type === 0) {
        console.log('typeeeee'); 
       setHideButtons(true);
@@ -105,7 +108,7 @@ function AcceptInviteLink(props) {
         <p>Thankyou for your response.</p>
         )}  
 
-        {(hideButtons !== true || hideDeclineButton !== true) && (
+        {showButton === true && (
            <>
         <p>Dear <strong>{candidateData.name}</strong>, please click on accept button to accept the offer for the position of {candidateData.applied_for_name} </p>
          <div className="float-end">
