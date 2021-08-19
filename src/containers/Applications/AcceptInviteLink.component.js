@@ -105,7 +105,7 @@ function AcceptInviteLink(props) {
           )}
 
         {hideDeclineButton === true && (
-        <p>Thankyou for your response.</p>
+        <p>Thank You for your response.</p>
         )}  
 
         {showButton === true ? (

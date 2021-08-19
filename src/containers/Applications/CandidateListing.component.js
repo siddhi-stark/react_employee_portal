@@ -114,6 +114,7 @@ const columns = [
 		const params = {
 			page,
 			limit,
+			sort_direction: 'descending',
      'status':4
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
