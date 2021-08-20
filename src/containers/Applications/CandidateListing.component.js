@@ -17,7 +17,7 @@ function CandidateListing() {
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [filterData, setFilterData] = useState({}); // eslint-disable-line
- const title = 'Canidates'
+ const title = 'Candidates'
   const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
 const history = useHistory();
 // const isOnBoard = customFunctions.getLocalStorage('isShowOnBoard');
