@@ -44,7 +44,9 @@
 		"placeholder": "Full Name",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [],
+		"validations": [
+			{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+		],
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
@@ -72,7 +74,9 @@
 		"placeholder": "Email",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [],
+		"validations": [
+			{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+		],
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
@@ -100,7 +104,9 @@
 		"placeholder": "Employee Code",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [],
+		"validations": [
+			{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+		],
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
@@ -128,7 +134,9 @@
 		"placeholder": "Password",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [],
+		"validations": [
+			{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+		],
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
@@ -156,7 +164,9 @@
 		"placeholder": "Joining Date",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [],
+		"validations": [
+			{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+		],
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
@@ -215,7 +225,9 @@
 		"placeholder": "Select Designation",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [],
+		"validations": [
+			{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+		],
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
@@ -335,7 +347,9 @@
 		"placeholder": "DOB",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [],
+		"validations": [
+			{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+		],
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
@@ -363,7 +377,9 @@
 		"placeholder": "Select Department",
 		"inputClass": "",
 		"containerClass": "",
-		"validations": [],
+		"validations": [
+			{ "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+		],
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",

@@ -10,6 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 function EmployementHistory(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
+  const applicantId = accProps.props.applicantId;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const idProps = accProps.props.match.params.ID;
@@ -42,9 +43,15 @@ function EmployementHistory(props) {
   const getData = async () => {
     const addmoreData = [];
 
-    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+    const endPoint = applicantId ? `${Api.applicantInfoUrl}`:`${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+    
+    const postData = {
+        email_hash: tokenProps,
+        password: passwordProps,
+      }
 
-    const { data, message } = await AuthApi.postDataToServer(endPoint);
+    const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
+    await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       data.data && data.data.applicant_history &&
@@ -87,7 +94,7 @@ function EmployementHistory(props) {
   };
 
   useEffect(() => {
-    if (candidateId) {
+    if (candidateId || applicantId) {
       getData();
     }
   }, []);
@@ -162,7 +169,6 @@ function EmployementHistory(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        props.onHistoryInfo(true);
         if(candidateId){
           getData();
         }
