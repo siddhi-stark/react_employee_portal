@@ -36,7 +36,7 @@ const actionCallBack = (row) => {
 			>
 				 <Image src="/images/edit-button.svg" />
 			</a>
-			  {(new Date(row.joining_date).getTime() <= new Date().getTime() && !row.employee_id) && (
+			  {(new Date(row.joining_date).getTime() <= new Date().getTime() && (row.offer_status_name !== 'Declined') && !row.employee_id) && (
 	         <a
 	            href="/"
 	            className="pl-2 ms-4"
@@ -49,7 +49,6 @@ const actionCallBack = (row) => {
         	on-board    
         </a>
         )}
-		
 
 		</>
 	);

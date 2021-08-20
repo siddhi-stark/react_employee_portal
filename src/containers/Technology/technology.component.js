@@ -40,7 +40,6 @@ function Technology() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-
             setTechnologyId(id);
           }}
         >

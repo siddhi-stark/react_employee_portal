@@ -267,7 +267,7 @@ input[type='checkbox'] {
 }
 input[type='checkbox']:checked {
     background-color: $darkblue;
-    background-image: url(../images/select-white.svg);
+    background-image: url('../images/select-white.svg');
     background-repeat:no-repeat;
     background-size: cover;
     background-position: center center;
@@ -2543,6 +2543,15 @@ p.employee-details {
         font-size: 12px;
     }
 }
+
+table.quotes-wrapper {
+    thead {
+        th {
+            white-space: nowrap;
+        }
+    }
+}
+
 
 
 
