@@ -121,10 +121,8 @@ function TemporaryAccount(props) {
                   </div>
                   <br />
                   <div className="row">
-                    <div className="col-md-3">
-                      <h6>Profile Completion -</h6>
-                    </div>
-                    <div className="col-md-4">
+                    <div className="col-md-12 d-flex">
+                      <h6>Profile Completion - &nbsp; &nbsp;</h6> 
                       <ProgressBar
                         bsPrefix="progress pbar"
                         variant="info"

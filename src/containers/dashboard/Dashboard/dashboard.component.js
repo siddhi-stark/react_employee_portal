@@ -228,7 +228,7 @@ const LastDay = customFunctions.getDate(lastday);
                     </blockquote>
                   </div>
                 </Col>
-                <Col md={3}>
+                <Col md={3} className='d-flex justify-content-space-between flex-wrap'>
                   <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
                     <div className="check-in">
                       {
@@ -259,13 +259,13 @@ const LastDay = customFunctions.getDate(lastday);
                       )}
                     </div>
                   </UserRestrictions>
+                  <p className="mt-4">Total Working Hrs: {totalHrs}</p>
 
                 </Col>
                 <Col md={4}>
                   <div className="welcome-img text-right">
                     <img src="/images/welcome-img.svg" alt="img" />
                   </div>
-                  <p className="mt-3">Total Working Hrs: {totalHrs}</p>
                 </Col>
               </Row>
             </Jumbotron>
