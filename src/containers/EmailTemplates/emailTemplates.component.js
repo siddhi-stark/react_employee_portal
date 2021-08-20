@@ -78,6 +78,7 @@ function EmailTemplatesComponent() {
       if (i === index) {
         d.content = editorState; //eslint-disable-line
       }
+      console.log('d.content',d.content);
       return d;
     });
     setEmailContent([...data]);
@@ -100,6 +101,7 @@ function EmailTemplatesComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    console.log('emailContent',emailContent);
     emailContent &&
       emailContent.map((emp) => {
         if (emp.id === templateId) {
