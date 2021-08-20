@@ -63,7 +63,6 @@ function TemporaryAccount(props) {
   };
   
   useEffect(() => {
-
     setId(personalInfo.id);
   }, [personalInfo]);
 
@@ -78,7 +77,7 @@ function TemporaryAccount(props) {
   useEffect(() => {
     if(trigger) {
       getCompletionData();
-      window.location.reload();
+      // window.location.reload();
     }
   }, [trigger]);
 
