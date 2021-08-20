@@ -10,7 +10,6 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
 function OnBoard(props) {
-
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); //eslint-disable-line
@@ -51,7 +50,7 @@ function OnBoard(props) {
 
 
     const managerList = [];
-      formValues.managers.map((mngr) => {
+      formValues.managers && formValues.managers.map((mngr) => {
         managerList.push(mngr.value);
         return mngr;
       });
@@ -89,8 +88,7 @@ function OnBoard(props) {
       // if (employeeId) postData.tw_emp = isFind.tw_id;
     }
 
-    console.log('postData',postData);
-      const { data } = await AuthApi.postDataToServer(Api.employeeUrl, postData);
+      const { data, message } = await AuthApi.postDataToServer(Api.employeeUrl, postData);
       if(data) {
         swal({
         title: data.message[0],
@@ -98,11 +96,22 @@ function OnBoard(props) {
       })
         .then(okAction => {
           if (okAction) {
+            props.history.push('/employees');
             customFunctions.setLocalStorage('isShowOnBoard','true');
           }
         });
 
         // swal(data.message[0],'','success');
+      } else {
+          swal(message, '', 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+            buttons: false,
+            timer: 2000,
+          }).then(() => {
+            // updateDefaultValues({});
+            swal.close();
+          });
       }
       
   };

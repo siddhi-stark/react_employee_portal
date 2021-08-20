@@ -10,6 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 function Personal(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
+  const applicantId = accProps.props.applicantId;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -36,9 +37,14 @@ function Personal(props) {
     let adharCard = '';
     let photo = '';
     const docIdArr = [];
-    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
-   
-    const { data, message } = await AuthApi.postDataToServer(endPoint);
+    const endPoint = applicantId ? `${Api.applicantInfoUrl}`:`${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+    const postData = {
+        email_hash: tokenProps,
+        password: passwordProps,
+      }
+
+    const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
+    await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       data.data && data.data.applicant_documents.map((doc)=>{
@@ -66,8 +72,9 @@ function Personal(props) {
     }
   };
 
-  useEffect(() => {
-    if(candidateId) {
+  useEffect(async() => {
+
+    if(candidateId || applicantId) {
       getData();
     }
   }, []);
@@ -117,13 +124,13 @@ function Personal(props) {
     })
 
     if(formValues.doc_link_pan_card){
-       pancardfileUrlId = await fileUpload(formValues.doc_link_pan_card);
+       pancardfileUrlId = (typeof formValues.doc_link_pan_card === 'object') && await fileUpload(formValues.doc_link_pan_card);
      }
     if(formValues.doc_link_adhar_card){
-      adharfileUrlId = await fileUpload(formValues.doc_link_adhar_card);
+      adharfileUrlId = (typeof formValues.doc_link_adhar_card === 'object') && await fileUpload(formValues.doc_link_adhar_card);
     }
     if(formValues.doc_link_photo){
-      photofileUrlId = await fileUpload(formValues.doc_link_photo);
+      photofileUrlId = (typeof formValues.doc_link_photo === 'object') && await fileUpload(formValues.doc_link_photo);
     }
     
     const postData = {
@@ -147,7 +154,7 @@ function Personal(props) {
       ],
     };
 
-    const { data, message } = (!customFunctions.checkIfEmpty(pancardfileUrlId) && !customFunctions.checkIfEmpty(adharfileUrlId) && !customFunctions.checkIfEmpty(photofileUrlId)) && await AuthApi.postDataToServer(
+    const { data, message } = (!customFunctions.checkIfEmpty(pancardfileUrlId) ||  pancardfileUrl && !customFunctions.checkIfEmpty(adharfileUrlId) || adharfileUrl && !customFunctions.checkIfEmpty(photofileUrlId) || photofileUrl) && await AuthApi.postDataToServer(
      `${Api.applicantDocumentUrl}`,
       postData
     );
@@ -172,7 +179,6 @@ function Personal(props) {
         if(candidateId){
           getData();
         }
-        props.onPersonalInfo(true);
         swal.close();
       });
       }

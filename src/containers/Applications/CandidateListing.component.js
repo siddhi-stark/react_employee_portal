@@ -36,22 +36,19 @@ const actionCallBack = (row) => {
 			>
 				 <Image src="/images/edit-button.svg" />
 			</a>
-
-			{(row.employee_id) ? '' : (
-
-			 <a
-				href="/"
-				className="pl-2 ms-4"
-				onClick={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					history.push(`/onboard/${row.id}`)
-				}}
-			>
-			{ (!row.employee_id && new Date() === new Date(row.joining_date)) ? 'on-board' : '' }	
-			</a>
-			)}
-		
+			  {(new Date(row.joining_date).getTime() <= new Date().getTime() && (row.offer_status_name !== 'Declined') && !row.employee_id) && (
+	         <a
+	            href="/"
+	            className="pl-2 ms-4"
+	            onClick={(e) => {
+	                e.preventDefault();
+	                e.stopPropagation();
+	                history.push(`/onboard/${row.id}`)
+	            }}
+	        >
+        	on-board    
+        </a>
+        )}
 
 		</>
 	);

@@ -10,6 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 function EducationalDetails(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
+  const applicantId = accProps.props.applicantId;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -37,9 +38,16 @@ function EducationalDetails(props) {
     let graduate = '';
     let postGraduate = '';
     const docIdArr = [];
-    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
-   
-    const { data, message } = await AuthApi.postDataToServer(endPoint);
+
+   const endPoint = applicantId ? `${Api.applicantInfoUrl}`:`${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+
+    const postData = {
+        email_hash: tokenProps,
+        password: passwordProps,
+      }
+
+    const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
+    await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       data.data && data.data.applicant_documents.map((doc)=>{
@@ -47,7 +55,7 @@ function EducationalDetails(props) {
           ssc = doc.document_url;
         } else if(doc.doc_title === 'HSC'){
           hsc = doc.document_url;
-        } else if(doc.doc_title === 'Graduate'){
+        } else if(doc.doc_title === 'Graduation'){
           graduate = doc.document_url;
         } else if(doc.doc_title === 'Post Graduate'){
           postGraduate = doc.document_url;
@@ -72,7 +80,7 @@ function EducationalDetails(props) {
   };
 
   useEffect(() => {
-    if(candidateId) {
+    if(candidateId || applicantId) {
       getData();
     }
   }, []);
@@ -120,24 +128,25 @@ function EducationalDetails(props) {
         sscfileUrl = document.id;
       }else if(document.name === 'HSC'){
         hscfileUrl = document.id;
-      }else if(document.name === 'Graduate'){
+      }else if(document.name === 'Graduation'){
         graduatefileUrl = document.id;
       }else if(document.name === 'Post Graduate'){
         postfileUrl = document.id;
       }
       return document;
     })
+
     if(formValues.doc_link_graduate){
-      graduatefileUrlId =  await fileUpload(formValues.doc_link_graduate);
+      graduatefileUrlId =  (typeof formValues.doc_link_graduate === 'object') && await fileUpload(formValues.doc_link_graduate);
     }
     if(formValues.doc_link_hsc){
-      hscfileUrlId =  await fileUpload(formValues.doc_link_hsc);
+      hscfileUrlId =  (typeof formValues.doc_link_hsc === 'object') && await fileUpload(formValues.doc_link_hsc);
     }
     if(formValues.doc_link_post_graduate){
-      postfileUrlId = await fileUpload(formValues.doc_link_post_graduate);
+      postfileUrlId = (typeof formValues.doc_link_post_graduate === 'object') && await fileUpload(formValues.doc_link_post_graduate);
     }
     if(formValues.doc_link_ssc){
-      sscfileUrlId = await fileUpload(formValues.doc_link_ssc);
+      sscfileUrlId = (typeof formValues.doc_link_ssc === 'object') && await fileUpload(formValues.doc_link_ssc);
     }
 
     const postData = {
@@ -155,7 +164,7 @@ function EducationalDetails(props) {
           doc: hscfileUrlId ? Number(hscfileUrlId):hscfileUrl,
         },
         {
-          doc_title: 'Graduate',
+          doc_title: 'Graduation',
           doc: graduatefileUrlId ? Number(graduatefileUrlId):graduatefileUrl,
         },
         {
@@ -165,7 +174,7 @@ function EducationalDetails(props) {
       ],
     };
 
-   const { data, message } = (!customFunctions.checkIfEmpty(graduatefileUrlId) && !customFunctions.checkIfEmpty(hscfileUrlId) && !customFunctions.checkIfEmpty(postfileUrlId) && !customFunctions.checkIfEmpty(sscfileUrlId)) && await AuthApi.postDataToServer(
+   const { data, message } = (!customFunctions.checkIfEmpty(graduatefileUrlId) || graduatefileUrl && !customFunctions.checkIfEmpty(hscfileUrlId) || hscfileUrl && !customFunctions.checkIfEmpty(postfileUrlId) || postfileUrl && !customFunctions.checkIfEmpty(sscfileUrlId) || sscfileUrl) && await AuthApi.postDataToServer(
      `${Api.applicantDocumentUrl}`,
       postData
     );
@@ -189,7 +198,6 @@ function EducationalDetails(props) {
         if(candidateId){
           getData();
         }
-        props.onEducationalInfo(true);
         swal.close();
       });
     }
