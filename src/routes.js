@@ -71,7 +71,7 @@ function Routes() {
       <Route path="/edit-holiday/:ID" exact component={AddHoliday} />
       <Route path="/add-event" exact component={AddEvent} />
       <Route path="/edit-event/:id" exact component={AddEvent} />
-      <Route path="/view-event/:id" exact component={AddEvent} />
+      <Route path="/view-event/:viewEvent" exact component={AddEvent} />
       <Route path="/technology" exact component={Technology} />
       <Route path="/emp-stack" exact component={EmployeeTechListing} />
       <Route path="/employee-list" exact component={EmployeeList} />

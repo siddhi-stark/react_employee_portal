@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import FormSections from './event.json';
@@ -11,14 +11,51 @@ import customFunctions from '../../helper/customFunctions';
 
 function AddEvent(props) {
 	// Variable declarations
+	const viewObj = props;
+const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	const [defaultValues, updateDefaultValues] = useState({});
 	const [options, updateOptions] = useState({}); // eslint-disable-line
 	const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-	const [view,setView] = useState('');
-	const title = 'Add Title';
+  const [imageUrl, setImageUrl] = useState('');
+	const [title,setTitle] = useState('');
+	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Add Event' }];
   const [eventId,setEventId] = useState('');
+
+
+  useEffect(() => {
+    if (!customFunctions.checkIfEmpty(viewOptions)) {
+      const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (item.name === 'title' || item.name === 'date' || item.name === 'time' || item.name === 'description'  || item.name === 'theme'
+          )
+            itemData.disabled = true;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+    } else {
+    	 const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+           if (item.name === 'title' || item.name === 'date' || item.name === 'time' || item.name === 'description'  || item.name === 'theme'
+          )
+            itemData.disabled = false;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+    }
+  }, []);
+
 
 	// Get user role
 	const getUserRole = async () => {
@@ -40,6 +77,28 @@ function AddEvent(props) {
 // "image": 2
 // }
 
+const handleImageFileUpload = (e) => {
+  	console.log('handleImageFileUpload',e);
+  	 if (!e) return;
+    setImageUrl(e[0]);
+  }
+
+  const uploadFile = async () => {
+  	console.log('uploadFIle');
+    let imgId = '';
+
+    const formData = new FormData();
+    formData.append('file_name', imageUrl);
+
+    const { data } = await AuthApi.postDataToServer(
+      `${Api.fileUploadUrl}`,
+      formData
+    );
+    if (data) {
+      imgId = data.data.id;
+    }
+    return imgId;
+  };
 
 
 	// Submit Form
@@ -60,6 +119,10 @@ function AddEvent(props) {
 		postData.id = eventId;	
 		} 
 
+
+		 if (imageUrl) {
+      postData.image = await uploadFile();
+    }
 		const callback = eventId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
@@ -70,6 +133,7 @@ function AddEvent(props) {
 		if (data) {
 			swal(data.message[0],'','success');
 			setEventId('');
+			history.push('/event');
 		}
 		// Perform success actions
 	};
@@ -98,43 +162,24 @@ function AddEvent(props) {
 		updateDefaultValues(data.data);
 	};
 
-	const disableFields = () => {
-		const formSchema = [...FormSections];
-      const updatedSchema = formSchema.map((section) => {
-        const s = { ...section };
-        s.fields = section.fields.map((item) => {
-          const itemData = item;
-          if (item.name === 'title' || item.name === 'date' || item.name === 'time' || item.name === 'description' || item.name === 'theme'
-          )
-            itemData.disabled = true;
-          return itemData;
-        });
-        return s;
-      });
-      updateJsonSchema([...updatedSchema]);
-	}
-
 	// Call get data method on load
 	useEffect(() => {
 
     const ID = props.match.params.id;
+    const viewID = props.match.params.viewEvent;
     setEventId(ID);
+    if(ID || viewID) {
+      getData(ID || viewID)
+    }
+    setTitle('Add Event');
     if(ID) {
-      getData(ID)
+    	setTitle('Edit Event');
+    }else{
+    	setTitle('View Event');
     }
-	}, []);
+	}, [eventId]);
 
-		useEffect(() => {
-			console.log('view useEffect');
-    const viewid = props.match.params.id;
-    setView(viewid);
-    if(viewid) {
-    	disableFields();
-      getData(viewid)
-    }
-	}, [view]);
-
-
+		
 	return (
 <>
 {console.log('id',eventId)}
@@ -156,15 +201,16 @@ function AddEvent(props) {
 					submitForm(formValues);
 				}}
 				options={options}
-				callbacks={{}}
+				callbacks={{ handleimage: (value) => { handleImageFileUpload(value); }, }}
 				defaultFormValues={defaultValues}
 				currentUser={currentUser}
 				submitBtnText="Submit"
 				showResetBtn={true}
-				resetBtnText="Clear"
-				btnContainerClass= { view ? 'd-none' : 'form-submit-buttons' } 
+				resetBtnText="Cancel"
+				btnContainerClass={viewOptions ? 'd-none':'form-submit-buttons'}
 				isStepForm={false}
 				onFormReset={() => {
+					history.push('/event')
 					console.log('form reset callback');
 				}}
 			/>
