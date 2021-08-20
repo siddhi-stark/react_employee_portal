@@ -88,7 +88,6 @@ function OnBoard(props) {
       // if (employeeId) postData.tw_emp = isFind.tw_id;
     }
 
-    console.log('postData',postData);
       const { data, message } = await AuthApi.postDataToServer(Api.employeeUrl, postData);
       if(data) {
         swal({
