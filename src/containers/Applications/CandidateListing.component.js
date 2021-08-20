@@ -37,7 +37,7 @@ const actionCallBack = (row) => {
 				 <Image src="/images/edit-button.svg" />
 			</a>
 
-			{row.employee_id ? '' : (
+			{(row.employee_id) ? '' : (
 
 			 <a
 				href="/"
@@ -48,7 +48,7 @@ const actionCallBack = (row) => {
 					history.push(`/onboard/${row.id}`)
 				}}
 			>
-				on-board
+			{ (!row.employee_id && new Date() === new Date(row.joining_date)) ? 'on-board' : '' }	
 			</a>
 			)}
 		

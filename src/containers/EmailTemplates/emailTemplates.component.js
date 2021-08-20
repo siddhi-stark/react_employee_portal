@@ -215,7 +215,7 @@ function EmailTemplatesComponent() {
           onFormReset={() => {}}
         />
 
-        <p className="mt-3">
+        <p className="mt-3 container">
           <Row>
             <b className="mt-2 mb-2">
               Note:-The given list of words are the dynamic content which will
@@ -238,7 +238,6 @@ function EmailTemplatesComponent() {
                 </Col>
               ))}
           </Row>
-        </p>
         {emailContent &&
           emailContent.map((eml, index) => {
             if (!templateId) return;
@@ -285,6 +284,7 @@ function EmailTemplatesComponent() {
               </>
             );
           })}
+          </p>
       </Card>
     </>
   );
