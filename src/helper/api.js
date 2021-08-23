@@ -115,6 +115,8 @@ export default class Api extends Component {
 
   static eventsUrl = `${Api.baseUrl}events/`;
 
+  static employeeTask = `${Api.baseUrl}employee-task/`;
+
   static applicantPercentageUrl = `${Api.baseUrl}applicant-percentage/`;
 
 

@@ -48,7 +48,6 @@ import Holidays from './containers/Holidays/Holidays.component';
 import AddHoliday from './containers/Holidays/AddHoliday.component';
 import Leaves from './containers/Leaves/Leaves.component';
 import AddLeave from './containers/Leaves/AddLeave.component';
-import Leaves from './containers/Leaves/leaves.component';
 
 function Routes() {
   return (
@@ -107,7 +106,6 @@ function Routes() {
       <Route path="/add-leave" exact component={AddLeave} />
 
 
-      <Route path="/leaves" exact component={Leaves} />
       <Route component={NotFound} />
     </Switch>
   );
