@@ -259,7 +259,7 @@ const LastDay = customFunctions.getDate(lastday);
                       )}
                     </div>
                   </UserRestrictions>
-                  <p className="mt-4">Total Working Hrs: {totalHrs}</p>
+                  <p className="text-primary mt-4"><i>Total Working Hrs: {totalHrs}</i></p>
 
                 </Col>
                 <Col md={4}>

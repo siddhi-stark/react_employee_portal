@@ -24,6 +24,8 @@ function TemporaryAccount(props) {
   const [personalInfo, setPersonalInfo] = useState([]);
   const [toggle, setToggle] = useState(false);
   const [key, setKey] = useState('Personal');
+  const [completion, setCompletion] = useState(null);
+  const [trigger, setTrigger] = useState(false);
 
   // Get user role
   const getData = async () => {
@@ -61,13 +63,23 @@ function TemporaryAccount(props) {
   };
   
   useEffect(() => {
-
     setId(personalInfo.id);
   }, [personalInfo]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, []);  
+
+  const getCompletionData =(value) =>{
+    setCompletion(value);
+  };
+
+  useEffect(() => {
+    if(trigger) {
+      getCompletionData();
+      // window.location.reload();
+    }
+  }, [trigger]);
 
   return (
     <>
@@ -118,8 +130,8 @@ function TemporaryAccount(props) {
                       <ProgressBar
                         bsPrefix="progress pbar"
                         variant="success"
-                        now={personalInfo.completion ? personalInfo.completion : 0}
-                        label={`${personalInfo.completion ? personalInfo.completion : 0}% completed`}
+                        now={personalInfo.completion ? personalInfo.completion : completion}
+                        label={`${personalInfo.completion ? personalInfo.completion : completion}% completed`}
                       />
                     </div>
                   </div>
@@ -140,6 +152,13 @@ function TemporaryAccount(props) {
                       name={name}
                       email={email}
                       applicantId={id}
+                      getParentsData={(value) => {
+                        if(value){
+                          setTrigger(true);
+                          getCompletionData(value)
+                        }
+                        console.log('value',value);
+                      }}
                     />
                   </div>
                   )}
@@ -158,6 +177,12 @@ function TemporaryAccount(props) {
                           email={email}
                           applicantId={id}
                           password={passwordProps}
+                          getParentsData={(value) => {
+                            if(value){
+                              setTrigger(true);
+                              getCompletionData(value)
+                            }
+                          }}
                         />
                       </div>
                     )}
@@ -176,6 +201,12 @@ function TemporaryAccount(props) {
                           id={id}
                           applicantId={id}
                           password={passwordProps}
+                          getParentsData={(value) => {
+                             if(value){
+                              setTrigger(true);
+                              getCompletionData(value)
+                            }
+                          }}
                         />
                       </div>
                     )}
@@ -192,6 +223,12 @@ function TemporaryAccount(props) {
                           applicantId={id}
                           token={tokenProps}
                           password={passwordProps}
+                          getParentsData={(value) => {
+                             if(value){
+                              setTrigger(true);
+                              getCompletionData(value)
+                            }
+                          }}
                         />
                       </div>
                     )}

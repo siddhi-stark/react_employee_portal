@@ -39,7 +39,7 @@ function EducationalDetails(props) {
     let postGraduate = '';
     const docIdArr = [];
 
-   const endPoint = applicantId ? `${Api.applicantInfoUrl}`:`${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+    const endPoint = candidateId ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`:`${Api.applicantInfoUrl}`;
 
     const postData = {
         email_hash: tokenProps,
@@ -108,6 +108,22 @@ function EducationalDetails(props) {
     }
     if (!customFunctions.checkIfEmpty(data) && data.success) { 
       return data.data.id;
+    }
+  };
+
+  const getApplicantPercentage = async () => { // eslint-disable-line
+    const endPoint = applicantId ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`:`${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
+
+    const { data, message } = await AuthApi.getDataFromServer(endPoint);
+    
+    if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success && data.data ) { 
+      props.getParentsData(data.data.completion);
     }
   };
 
@@ -195,6 +211,7 @@ function EducationalDetails(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        getApplicantPercentage();
         if(candidateId){
           getData();
         }

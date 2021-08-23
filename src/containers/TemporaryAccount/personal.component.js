@@ -33,11 +33,14 @@ function Personal(props) {
   }, []);
 
   const getData = async () => {
+    console.log('applicantId',applicantId);
     let panCard = '';
     let adharCard = '';
     let photo = '';
     const docIdArr = [];
-    const endPoint = applicantId ? `${Api.applicantInfoUrl}`:`${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+
+    const endPoint = candidateId ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`:`${Api.applicantInfoUrl}`;
+    
     const postData = {
         email_hash: tokenProps,
         password: passwordProps,
@@ -47,7 +50,7 @@ function Personal(props) {
     await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      data.data && data.data.applicant_documents.map((doc)=>{
+      data.data && data.data.applicant_documents && data.data.applicant_documents.map((doc)=>{
         if(doc.doc_title === 'Pan'){
           panCard = doc.document_url;
         } else if(doc.doc_title === 'Aadhar'){
@@ -100,6 +103,23 @@ function Personal(props) {
     }
     if (!customFunctions.checkIfEmpty(data) && data.success) { 
       return data.data.id;
+    }
+  };
+
+
+  const getApplicantPercentage = async () => { // eslint-disable-line
+    const endPoint = applicantId ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`:`${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
+
+    const { data, message } = await AuthApi.getDataFromServer(endPoint);
+    
+    if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success && data.data ) { 
+      props.getParentsData(data.data.completion);
     }
   };
 
@@ -176,6 +196,7 @@ function Personal(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        getApplicantPercentage();
         if(candidateId){
           getData();
         }

@@ -57,14 +57,15 @@ const actionCallBack = (row) => {
 const handleProgressCallBack = (completion) => {
 	return (
 		<>
-		
-
+		{	
+		(completion.offer_status_name !== 'Declined') && 
 			<ProgressBar
 				bsPrefix="progress pbar"
 				variant="success"
 				now={completion.completion ? completion.completion : 0}
         label={`${completion.completion ? completion.completion : 0}% completed`}
 			/>
+		}
 		</>
 	);
 };
@@ -90,6 +91,17 @@ const columns = [
 	{
 		id: 'offer_status_name',
 		label: 'Offer Status',
+	},
+	{
+		id: 'joining_date',
+		label: 'Joining Date',
+		render: ({ joining_date }) => { // eslint-disable-line
+      return (
+        <>
+          <span>{customFunctions.getDMYDate(joining_date)}</span>
+        </>
+      );
+    },
 	},
 	{
 		id: 'completion',

@@ -115,6 +115,8 @@ export default class Api extends Component {
 
   static eventsUrl = `${Api.baseUrl}events/`;
 
+  static applicantPercentageUrl = `${Api.baseUrl}applicant-percentage/`;
+
 
   // Get base URL of APIs
   static getBaseUrl() {
