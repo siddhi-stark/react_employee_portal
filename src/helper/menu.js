@@ -140,6 +140,13 @@ const menu = [
     roleaccess: [4],
   },
   {
+    title: 'Leaves',
+    path: '/leaves',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  {
     title: 'Reports',
     path: '#',
     redirect: false,
