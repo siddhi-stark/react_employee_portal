@@ -62,6 +62,7 @@ function AcceptInviteLink(props) {
     );
     if (data) {
       // swal(data.message[0],'','success');
+      verifyToken(token);
       console.log('data.data', data.data);
       isShowButtons(true);
 
