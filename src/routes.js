@@ -46,6 +46,8 @@ import OnBoard from './containers/TemporaryAccount/OnBoard.component';
 import AddEvent from './containers/Events/AddEvent.component';
 import Holidays from './containers/Holidays/Holidays.component';
 import AddHoliday from './containers/Holidays/AddHoliday.component';
+import Leaves from './containers/Leaves/Leaves.component';
+import AddLeave from './containers/Leaves/AddLeave.component';
 
 function Routes() {
   return (
@@ -100,6 +102,8 @@ function Routes() {
        <Route path='/temporary/account/:token' exact component={RequiredDocument} />
       <Route path="/candidates/:ID" exact component={TemporaryAccount} />
       <Route path="/onboard/:ID" exact component={OnBoard} />
+      <Route path="/leaves" exact component={Leaves} />
+      <Route path="/add-leave" exact component={AddLeave} />
 
 
       <Route component={NotFound} />
