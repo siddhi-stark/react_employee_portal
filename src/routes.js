@@ -104,6 +104,7 @@ function Routes() {
       <Route path="/onboard/:ID" exact component={OnBoard} />
       <Route path="/leaves" exact component={Leaves} />
       <Route path="/add-leave" exact component={AddLeave} />
+      <Route path="/edit-leave/:leaveId" exact component={AddLeave} />
 
 
       <Route component={NotFound} />

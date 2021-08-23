@@ -119,6 +119,7 @@ export default class Api extends Component {
 
   static applicantPercentageUrl = `${Api.baseUrl}applicant-percentage/`;
 
+  static leavesUrl = `${Api.baseUrl}leave/`;
 
   // Get base URL of APIs
   static getBaseUrl() {

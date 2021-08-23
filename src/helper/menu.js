@@ -142,7 +142,7 @@ const menu = [
   {
     title: 'Leaves',
     path: '/leaves',
-    icon: 'report.svg',
+    icon: '',
     submenu: [],
     roleaccess: [1],
   },

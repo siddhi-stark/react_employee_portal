@@ -4,12 +4,13 @@ import { Image, Card } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function Leaves() {
-	const handleActionCallback = () => {
+	const handleActionCallback = ({id}) => {
 		return (
 			<>
 				<a
@@ -18,7 +19,7 @@ function Leaves() {
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						// history.push(`/edit-holiday/${row.id}`);
+						history.push(`/edit-leave/${id}`);
 					}}
 				>
 					<Image src="/images/edit-button.svg" />
@@ -29,16 +30,35 @@ function Leaves() {
 	// Declare columns
 	const columns = [
 		{
+			id: 'id',
+			label: 'id',
+			isDisplay: false
+		},
+		{
 			id: 'index',
 			label: 'Sr.No',
 		},
 		{
 			id: 'leave_from_date',
 			label: 'From',
+			render: ({ leave_from_date }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{customFunctions.getNewFormattedDate(leave_from_date)}</span>
+          </>
+        );
+      },
 		},
 		{
 			id: 'leave_to_date',
 			label: 'To',
+			render: ({ leave_to_date }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{customFunctions.getNewFormattedDate(leave_to_date)}</span>
+          </>
+        );
+      },
 		},
 		{
 			id: 'leave_type',
@@ -53,7 +73,7 @@ function Leaves() {
 			label: 'Days',
 		},
 		{
-			id: 'status',
+			id: 'status_name',
 			label: 'Status',
 		},
 		{
@@ -78,11 +98,11 @@ function Leaves() {
 
 	const getRowData = async (pageNo = 1) => {
 		const page = pageNo || currentPage;
-		const endPoint =
-			'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/projects/';
+		const endPoint = `${Api.leavesUrl}`;
 		const params = {
 			page,
 			limit,
+			sort_direction:'descending'
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
@@ -114,7 +134,7 @@ function Leaves() {
 		<>
 			<Helmet title={title} />
 			<div className="title-breadcrumb-section">
-				<h2 className="main-content-title tx-24 mg-b-5">Holidays</h2>
+				<h2 className="main-content-title tx-24 mg-b-5">Leaves</h2>
 				<Breadcrumb items={items} />
 			</div>
 			<section className="content-area">
@@ -122,7 +142,7 @@ function Leaves() {
 					<Card>
 						<Card.Header>
 							<div className="d-flex align-items-center justify-content-between">
-								<h4 className="text-primary mt-2 mb-2">Holiday</h4>
+								<h4 className="text-primary mt-2 mb-2">Leaves</h4>
 								<div className="d-flex align-items-center justify-content-end">
 									<UserRestrictions permittedUsers={[4]} roleId={userRole}>
 										<a
