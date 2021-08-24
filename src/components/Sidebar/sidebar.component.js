@@ -4,18 +4,43 @@ import { useDispatch } from 'react-redux';
 import menu from '../../helper/menu';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
 import customFunctions from '../../helper/customFunctions';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
 
 function Sidebar() {
   const history = useHistory();
   const [activeMenu, setActiveMenu] = useState(0);
   const [activeSubPath, setActiveSubPath] = useState(0);
+  const [birthdays,setBirthdayData] = useState([]);
+  const [events,setEvents] = useState([]);
+
   const onSubActiveClass = () => {
     if (activeSubPath !== window.location.pathname)
       setActiveSubPath(window.location.pathname);
   };
 
-  useEffect(()=>{
 
+  const getBirthday = async () => {
+     const endPoint = `${Api.birthdayUrl}`;
+     const url = customFunctions.generateUrl(endPoint);
+    const { data } = await AuthApi.getDataFromServer(url);
+    if(data) {
+      setBirthdayData(data.data);
+    }
+  }
+
+  const getEvents = async () => {
+    const endPoint = `${Api.eventsUrl}?upcoming=true/`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if(data) {
+      console.log(data.data);
+      setEvents(data.data);
+    }
+  }
+
+  useEffect(()=>{
+    getBirthday();
+    getEvents();
     document.addEventListener('MenuChange', () => {
       onSubActiveClass();
     });
@@ -128,19 +153,25 @@ function Sidebar() {
               );
             })}
           </ul>
-          {/* <div className="upcoming-events">
+          <div className="upcoming-events">
             <div className="upcoming-bg">
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
                   <img src="/images/up-coming-event.svg" alt="Upcoming event" />
                   <p>Up Coming Events</p>
                 </div>
+
+                {events && events.map((ev) => (
+               <>
                 <div className="event-title">
-                  <p>SPL Cricket Tournament</p>
+                  <p>{ev.title}</p>
                 </div>
                 <div className="date">
-                  <span>26 June, 2021</span>
-                </div>
+                  <span> {customFunctions.getNewFormattedDate(ev.date)}</span>
+                </div> <br />
+                </>
+                  ))}
+
               </div>
             </div>
             <div className="upcoming-bg bg-red birthday-wishes-chart">
@@ -152,23 +183,22 @@ function Sidebar() {
                   />
                   <p>Up Coming Birthdays</p>
                 </div>
-                <ul className="p-0 m-0 list-unstyled">
+                {
+                  birthdays && birthdays.map((bday) => (
+                    <ul className="p-0 m-0 list-unstyled">
                   <li className="text-red">
                     <a href="#">
-                      Kartik Shete
-                      <span>18 June, 2021</span>
-                    </a>
-                  </li>
-                  <li className="text-blue">
-                    <a href="#">
-                      Amit Mohol
-                      <span>1 Jan, 2021</span>
+                     {bday.name}
+                      <span>{customFunctions.getNewFormattedDate(bday.dob)}</span>
                     </a>
                   </li>
                 </ul>
+                    ))
+
+                }
               </div>
             </div>
-          </div> */}
+          </div> 
         </div>
       </div>
     </>

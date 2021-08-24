@@ -29,6 +29,8 @@ function Dashboard() {
   const [morningMail, setMorningMail] = useState(false);
   const [quotesContent, setQuotesContent] = useState('');
   const [totalHrs, setTotalHrs] = useState(null);
+  const [holidays,setHolidays] = useState([]);
+  const [leaves,setLeaves] = useState([]);
   const history = useHistory();
 
   const [pagination, setPagination] = useState({
@@ -153,8 +155,28 @@ const LastDay = customFunctions.getDate(lastday);
     setTime(localTime);
   };
 
-  useEffect(() => {
+ const getUpcomingHoliday = async () => {
+    const endPoint = `${Api.holidayUrl}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if(data) {
+      console.log(data.data);
+      setHolidays(data.data);
+    }
+  }
 
+const getAppliedLeaves = async () => {
+    const endPoint = `${Api.leavesApplied}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if(data) {
+      console.log(data.data);
+      setLeaves(data.data);
+    }
+  }
+
+
+  useEffect(() => {
+    getUpcomingHoliday();
+    getAppliedLeaves();
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
@@ -197,6 +219,7 @@ const LastDay = customFunctions.getDate(lastday);
   };
   return (
     <>
+    {console.log('holidays',leaves)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -379,7 +402,7 @@ const LastDay = customFunctions.getDate(lastday);
               </div>
             </UserRestrictions>
 
-            {/* <div className="holidays-applied">
+            <div className="holidays-applied">
               <div className="row">
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
@@ -391,12 +414,16 @@ const LastDay = customFunctions.getDate(lastday);
                         />
                         <p>Up Coming Holidays</p>
                       </div>
+                      {holidays && holidays.map((hd) => (
+                      <>
                       <div className="event-title">
-                        <p>Monday 25 June, 2021</p>
+                        <p>{hd.date}</p>
                       </div>
                       <div className="date">
-                        <span>Rakshabandhan</span>
+                        <span>{hd.occasion}</span>
                       </div>
+                      </>    
+                        ))}
                     </div>
                   </div>
                 </div>
@@ -410,17 +437,12 @@ const LastDay = customFunctions.getDate(lastday);
                         />
                         <p>Leaves Applied</p>
                       </div>
-                      <div className="event-title">
-                        <p>2 Leaves</p>
-                      </div>
-                      <div className="date">
-                        <span>26, 27 June (Casual)</span>
-                      </div>
+                     
                     </div>
                   </div>
                 </div>
               </div>
-            </div> */}
+            </div>
             {/* <div className="social-media">
               <div className="card flex-fill w-100">
                 <div className="card-body">
