@@ -68,15 +68,15 @@ function Dashboard() {
 
   // console.log('lastDay',lastDayNew);
 
-const curr = new Date; // get current date
-const first = curr.getDate() - curr.getDay() +1; // First day is the day of the month - the day of the week
-const last = first + 4; // last day is the first day + 6
+// const curr = new Date; // get current date
+// const first = curr.getDate() - curr.getDay() +1; // First day is the day of the month - the day of the week
+// const last = first + 4; // last day is the first day + 6
 
-const firstday = new Date(curr.setDate(first)).toUTCString();
-const lastday = new Date(curr.setDate(last)).toUTCString();
+// const firstday = new Date(curr.setDate(first)).toUTCString();
+// const lastday = new Date(curr.setDate(last)).toUTCString();
 
-const FirstDay = customFunctions.getDate(firstday);
-const LastDay = customFunctions.getDate(lastday);
+// const FirstDay = customFunctions.getDate(firstday);
+// const LastDay = customFunctions.getDate(lastday);
 
   const getDailyActivity = async () => {
     setShowLoader(true);
@@ -101,7 +101,7 @@ const LastDay = customFunctions.getDate(lastday);
 
   const getTimeSheetList = async () => {
     // const page = pageNo || pagination.current_page;
-    const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}?start_date=${FirstDay}&end_date=${LastDay}`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}`);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: data.paginator ? Number(data.paginator.current_page) : 0,
