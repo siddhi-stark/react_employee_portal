@@ -100,7 +100,7 @@
 				"validations": [
 					{
 						"type": "required",
-						"applyWhen": [{ "value": "to_date", "condition": "!empty" }],
+						"applyWhen": [{ "name": "to_date", "value": "to_date", "condition": "!empty" }],
 						"applyWhenRelation": "OR"
 					}
 				],
@@ -132,7 +132,7 @@
 				"validations": [
 					{
 						"type": "required",
-						"applyWhen": [{ "value": "from_date", "condition": "!empty" }],
+						"applyWhen": [{ "name": "from_date", "value": "from_date", "condition": "!empty" }],
 						"applyWhenRelation": "OR"
 					}
 				],

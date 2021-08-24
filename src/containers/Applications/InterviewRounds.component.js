@@ -42,7 +42,7 @@ function InterviewRounds() {
 
   const updatedJsonSchema = async () => {
     updateJsonSchema([]);
-    if (Number(currentUser) !== 4 ) {
+    if (Number(currentUser) !== 4 || Number(currentUser) !== 3 ) {
       const formSchema = [...hrInterviewFormSections];
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -60,7 +60,7 @@ function InterviewRounds() {
       return;
     }
 
-    if (Number(currentUser) === 4 || !flag) {
+    if (Number(currentUser) === 4 || Number(currentUser) === 3 || !flag) {
       const formSchema = [...hrInterviewFormSections];
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -84,7 +84,6 @@ function InterviewRounds() {
     const section = hrInterviewFormSections[0].fields[3].options;
     console.log('sections',section);
     const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
-      console.log('data',data);
       if(data) {
         
     const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
@@ -120,14 +119,12 @@ function InterviewRounds() {
 
   // Submit Form
   const submitAddMoreForm = async (formValues) => {
-    console.log('formValues',formValues);
     const postData = {
       int_date: formValues.int_date ? customFunctions.getFormattedDate(formValues.int_date) : '',
       int_time: formValues.int_time ? customFunctions.getTime(formValues.int_time) : '',
       round_status: formValues.round_status ? formValues.round_status.value : '',
       interviewer: formValues.interviewer ? formValues.interviewer.value : '',
     }
-    console.log('postData',postData);
     const { data } = await AuthApi.postDataToServer(
       Api.roundsUrl,
       postData
@@ -233,7 +230,6 @@ function InterviewRounds() {
 
   const OnReschedule = async () => {
     const js = jsonSchema[0].fields;
-    console.log('js',js);
    const updatedSchema = await js.map((item) => {
       const itemData = item;
           if(item.name === 'int_date') itemData.disabled = false;
@@ -261,7 +257,7 @@ function InterviewRounds() {
           defaultFormValues={defaultValues}
           currentUser={currentUser}
           submitBtnText={
-            Number(currentUser) === 4 ? 'Reschedule' : 'Schedule Interview'
+            (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'Reschedule' : 'Schedule Interview'
           }
           showResetBtn={false}
           resetBtnText="Clear"
@@ -296,7 +292,7 @@ function InterviewRounds() {
           }}
         />
       )}
-      <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
+      <UserRestrictions permittedUsers={[4, 3]} roleId={currentUser}>
         <div className="mt-3">
           <Button onClick={() =>{setFlag(true); history.push('/interviewer-round');}}>
             Approval

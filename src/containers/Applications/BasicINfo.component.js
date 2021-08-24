@@ -10,7 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 
 function BasicInformation(props) {
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
+  const [defaultValues, updateDefaultValues] = useState({}); 
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
@@ -23,15 +23,17 @@ function BasicInformation(props) {
   };
 
   useEffect(() => {
+    updateDefaultValues({is_fresher:'0'})
     getUserRole();
     getDesignation();
     getTechnology();
   }, [currentUser]);
 
   useEffect(() => {
-    if (Number(currentUser) !== 4) return;
-    if (Number(currentUser) === 4) {
-      const formSchema = [...FormSections];
+    const formSchema = [...FormSections];
+    // if ((Number(currentUser) !== 4) || (Number(currentUser) !== 3)) return;
+    if ((Number(currentUser) === 4) || (Number(currentUser) === 3)) {
+    console.log('---user---')
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
@@ -43,13 +45,16 @@ function BasicInformation(props) {
             item.name === 'applied_for' ||
             item.name === 'education' ||
             item.name === 'email' ||
-            item.name === 'mobile'
+            item.name === 'mobile' || 
+            item.name === 'is_fresher'
           )
             itemData.disabled = true;
           return itemData;
         });
         return s;
       });
+    console.log('user---',updatedSchema)
+
       updateJsonSchema([...updatedSchema]);
     }
   }, [currentUser]);
@@ -104,6 +109,7 @@ function BasicInformation(props) {
         ...data.data,
         applied_for: ds,
         tech_stack: techStack,
+        is_fresher: (String(data.data.is_fresher) === 'false') ? '0' : '1'
       };
 
       props.onBasicInfo(data.data.id);
@@ -130,6 +136,7 @@ function BasicInformation(props) {
       ...postData,
       tech_stack: formValues.tech_stack ? formValues.tech_stack.value : '',
       applied_for: formValues.applied_for ? formValues.applied_for.value : '',
+      is_fresher: formValues.is_fresher ? Number(formValues.is_fresher) : ''
     };
 
     const callback = appicantId
@@ -241,10 +248,10 @@ function BasicInformation(props) {
         callbacks={{}}
         defaultFormValues={defaultValues}
         currentUser={currentUser}
-        submitBtnText={Number(currentUser) === 4 ? '' : 'Save'}
+        submitBtnText={(Number(currentUser) === 4 || Number(currentUser) === 3) ? '' : 'Save'}
         // btnContainerClass='form-submit-buttons'
-        btnContainerClass={`form-submit-buttons ${
-          Number(currentUser) === 4 ? 'd-none' : ''
+        btnContainerClass={`form-submit-buttons mb-4 ${
+          (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''
         }`}
         showResetBtn={false}
         resetBtnText="Clear"

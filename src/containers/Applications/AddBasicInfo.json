@@ -1,215 +1,268 @@
-[{
-	"sectionName": "basicinformation",
-	"sectionTitle": "Basic Information",
-	"layout": {
-		"label": "2 Column",
-		"value": "2column"
+[
+	{
+		"sectionName": "basicinformation",
+		"sectionTitle": "Basic Information",
+		"layout": {
+			"label": "2 Column",
+			"value": "2column"
+		},
+		"containerClass": "",
+		"displaySection": true,
+		"displaySectionTitle": true,
+		"fields": [
+			{
+				"name": "name",
+				"type": "text",
+				"label": "Applicant Name",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required|alpha_space",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
+				"name": "applied_for",
+				"type": "select",
+				"label": "Position Applied For",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "getDesignation",
+				"options": [],
+				"optionsCallbackUrl": "designationUrl"
+			},
+			{
+				"name": "tech_stack",
+				"type": "select",
+				"label": "Technology Stack",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "getTechnology",
+				"options": []
+			},
+			{
+				"name": "education",
+				"type": "text",
+				"label": "Education",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			}
+		],
+		"allowedUsers": [],
+		"sectionLayout": "2column"
 	},
-	"containerClass": "",
-	"displaySection": true,
-	"displaySectionTitle": true,
-	"fields": [{
-		"name": "name",
-		"type": "text",
-		"label": "Applicant Name",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [{
-			"type": "required|alpha_space",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
+	{
+		"sectionName": "contactdetails",
+		"sectionTitle": "Contact Details",
+		"layout": {
+			"label": "2 Column",
+			"value": "2column"
 		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}, {
-		"name": "applied_for",
-		"type": "select",
-		"label": "Position Applied For",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
 		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
+		"displaySection": true,
+		"displaySectionTitle": true,
+		"fields": [
+			{
+				"name": "email",
+				"type": "email",
+				"label": "Email Id",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
+				"name": "mobile",
+				"type": "number",
+				"label": "Contact Number",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required|min:0|max:10",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					},
+					{ "type": "phone", "applyWhen": [], "applyWhenRelation": "OR" }
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
+				"name": "is_fresher",
+				"type": "radio",
+				"label": "",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"inline":"true",
+				"validations": [],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": [{"label":"Fresher","value":"1"},{"label":"Experience","value":"0"}]
+			}
+		],
 		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "getDesignation",
-		"options": [],
-		"optionsCallbackUrl": "designationUrl"
-	}, {
-		"name": "tech_stack",
-		"type": "select",
-		"label": "Technology Stack",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "getTechnology",
-		"options": []
-	}, {
-		"name": "education",
-		"type": "text",
-		"label": "Education",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [],
-		"displayWhen": {},
-		"haveValidations": "false",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}],
-	"allowedUsers": [],
-	"sectionLayout": "2column"
-}, {
-	"sectionName": "contactdetails",
-	"sectionTitle": "Contact Details",
-	"layout": {
-		"label": "2 Column",
-		"value": "2column"
-	},
-	"containerClass": "",
-	"displaySection": true,
-	"displaySectionTitle": true,
-	"fields": [{
-		"name": "email",
-		"type": "email",
-		"label": "Email Id",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}, {
-		"name": "mobile",
-		"type": "number",
-		"label": "Contact Number",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [
-{ "type": "required|min:0|max:10", "applyWhen": [], "applyWhenRelation": "OR" },
-{ "type": "phone", "applyWhen": [], "applyWhenRelation": "OR" }
-],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}],
-	"allowedUsers": [],
-	"sectionLayout": "2column"
-}]
+		"sectionLayout": "2column"
+	}
+]

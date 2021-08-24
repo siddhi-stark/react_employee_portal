@@ -66,7 +66,7 @@ function RecruitmentApplicationComponent() {
       const date = new Date();
       sectionData.maxDate = date;
     }
-    if (Number(group) !== 6) {
+    if (Number(group) !== 6 && Number(group) !== 1) {
       if (sectionData.name === 'role_id') {
         sectionData.disabled = true;
       }
@@ -111,7 +111,7 @@ function RecruitmentApplicationComponent() {
             <Image src="/images/notes.svg" />
           </a>
         )}
-        {Number(group) === 4 || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'declined' || status_name === 'rejected' ? ( //eslint-disable-line
+        {(Number(group) === 4 || Number(group) === 3) || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'declined' || status_name === 'rejected' ? ( //eslint-disable-line
           ''
         ) : (
           <a
@@ -439,7 +439,7 @@ function RecruitmentApplicationComponent() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.report_head_name, value: op.report_head_id });
+      dpOptions.push({ label: op.employee_name, value: op.employee_id });
       return op;
     });
     const allOptions = {
@@ -548,7 +548,7 @@ function RecruitmentApplicationComponent() {
           </Card.Header>
           <Card.Body>
             <div className="text-end">
-              {!(Number(group) === 4) && (
+              {!(Number(group) === 4 || Number(group) === 3) && (
                 <Button
                   variant="primary"
                   className="mb-2"
@@ -583,7 +583,7 @@ function RecruitmentApplicationComponent() {
               >
                 Selected
               </a>
-              {!(Number(group) === 4) && (
+              {!(Number(group) === 4 || Number(group) === 3) && (
                 <>
                   <a
                     href="#"

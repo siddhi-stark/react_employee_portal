@@ -126,6 +126,12 @@ function TemporaryAccount(props) {
                   <br />
                   <div className="row">
                     <div className="col-md-12 d-flex">
+                     <div className=" col-md-4">
+                      <h6>Offered CTC - {personalInfo.offered_ctc}</h6>
+                    </div>
+                    <div className="col-md-4">
+                      <h6>Joining Date - { personalInfo.joining_date ?customFunctions.getDMYDate(personalInfo.joining_date):''}</h6>
+                    </div>
                       <h6>Profile Completion - &nbsp; &nbsp;</h6> 
                       <ProgressBar
                         bsPrefix="progress pbar"
@@ -187,6 +193,7 @@ function TemporaryAccount(props) {
                       </div>
                     )}
                 </Tab>
+                {!personalInfo.is_fresher &&(
                 <Tab
                   eventKey="employmentHistory"
                   title="Employment History"
@@ -211,6 +218,8 @@ function TemporaryAccount(props) {
                       </div>
                     )}
                 </Tab>
+                )}
+                {!personalInfo.is_fresher &&(
                 <Tab
                   eventKey="previousEmployment"
                   title="Previous Employment"
@@ -233,6 +242,8 @@ function TemporaryAccount(props) {
                       </div>
                     )}
                 </Tab>
+                )}
+
               </Tabs>
             </div>
           </div>

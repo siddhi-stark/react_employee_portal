@@ -186,10 +186,13 @@ const [filterData, setFilterData] = useState({});
 const getRowData = async (pageNo=1) =>{
     const page = pageNo || currentPage;
     const endPoint = Api.offerUrl;
+      const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
+ 
     const params = {
       page,
       limit,
-      sort_by: 'name'
+      sort_by: 'name',
+      ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
@@ -204,7 +207,7 @@ const getRowData = async (pageNo=1) =>{
 
 useEffect(()=>{
   getRowData(1);
-},[]);
+},[filterData]);
 
   const getGraphData = async () => {
     const endPoint = Api.hrReportUrl;
