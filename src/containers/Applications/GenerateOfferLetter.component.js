@@ -231,7 +231,9 @@ return;
           }}
         />
         {document && (
+
           <>
+          <div className="container">
             <iframe
               src={`${document}`}
               title="Offer"
@@ -244,6 +246,7 @@ return;
             >
               Send Mail
             </Button>
+            </div>
           </>
         )}
       </div>

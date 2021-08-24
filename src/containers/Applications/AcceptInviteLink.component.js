@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
@@ -9,11 +9,12 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function AcceptInviteLink(props) {
-
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
-  const [candidateData,setCandidateData] = useState([]);
-  const [hideButtons,setHideButtons] = useState(false);
+  const [candidateData, setCandidateData] = useState([]);
+  const [hideButtons, setHideButtons] = useState(false);
+  const [hideDeclineButton,setHideDeclineButton] = useState(false);
+  const [showButton,isShowButtons] = useState(false);
 
   const verifyToken = async (tkn) => {
     const { data } = await AuthApi.getDataFromServer(
@@ -21,45 +22,47 @@ function AcceptInviteLink(props) {
     );
     if (data) {
       // setEmail(data.data.email);
-      console.log('data',data);
       setCandidateData(data.data);
-      customFunctions.setLocalStorage('candidateData', JSON.stringify(candidateData));
+      customFunctions.setLocalStorage(
+        'candidateData',
+        JSON.stringify(candidateData)
+      );
     }
     if (!data) {
-      console.log('data',data);
       swal('Token is invalid', '', 'error');
       props.history.push('/login');
     }
   };
 
   useEffect(() => {
-    console.log('token',token)
     dispatch({ type: 'LOGIN', value: false });
     const matchUrltoken = props.match.params.offerToken;
-    console.log('matchUrltoken',matchUrltoken);
     setToken(matchUrltoken);
     if (!matchUrltoken) {
       window.location = '/login';
-      console.log('toeknnnnnnnnnn')
     }
     verifyToken(matchUrltoken);
   }, [dispatch]);
 
   const onAcceptBtn = async (type) => {
-    console.log('type',type);
     const postData = {
       token,
-      offer_status: type === 0 ? 1 : 2
-    }
-    console.log('postData',postData);
+      offer_status: type === 0 ? 1 : 2,
+    };
     const { data } = await AuthApi.putDataToServer(
       `${Api.offerStatusUrl}`,
       postData
     );
-    if(data) {
+    if (data) {
       // swal(data.message[0],'','success');
-      console.log('data.data',data.data);
+     await verifyToken(token);
+      isShowButtons(true);
+
+       if(type === 0) {
       setHideButtons(true);
+    }else {
+      setHideDeclineButton(true);
+    }
 
       // swal({
       //   title: data.message[0],
@@ -71,12 +74,11 @@ function AcceptInviteLink(props) {
       //     }
       //   });
     }
-  }
+  };
 
-	return (
+  return (
     <>
-    {console.log('hideButtons',hideButtons)}
-		 <div className="login-page d-flex align-items-center justify-content-center flex-column">
+      <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">
             <img
@@ -86,12 +88,20 @@ function AcceptInviteLink(props) {
             />
           </a>
         </div>
-        {
-          hideButtons === true ? (
-        <p>Thank You for accepting the offer. Please check your email for further process. <br /> for any queries, contact on hr@starkdigital.net </p>
 
-            ) : (
-            <>
+         {hideButtons === true && (
+        <p>Thank You for accepting the offer. Please check your email for further process. <br /> For any queries, contact on hr@starkdigital.net </p>
+
+          )}
+
+        {hideDeclineButton === true && (
+        <p>Thank You for your response.</p>
+        )}  
+
+        {showButton === true ? (
+          ''
+          ) : 
+ <>
         <p>Dear <strong>{candidateData.name}</strong>, please click on accept button to accept the offer for the position of {candidateData.applied_for_name} </p>
          <div className="float-end">
               <Button
@@ -112,12 +122,14 @@ function AcceptInviteLink(props) {
             </div>
 
             </>
-            ) 
         }
-        </div>
-        </>
-    
-		)
+
+
+
+        
+      </div>
+    </>
+  );
 }
 
 export default withRouter(AcceptInviteLink);

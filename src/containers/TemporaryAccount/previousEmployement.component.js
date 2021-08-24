@@ -10,7 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 function PreviousEmployement(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
-  console.log('candidateId',candidateId);
+  const applicantId = accProps.props.applicantId;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -40,14 +40,27 @@ function PreviousEmployement(props) {
     let salary2 = '';
     let salary3 = '';
     let relive = '';
-    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+    let experience = '';
 
-    const { data, message } = await AuthApi.postDataToServer(endPoint);
+    const endPoint = candidateId ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`:`${Api.applicantInfoUrl}`;
+
+    const postData = {
+        email_hash: tokenProps,
+        password: passwordProps,
+      }
+
+    const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
+    await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       data.data &&
+      data.data.applicant_history.map((op) => {
+          obj =  { label: op.company_name, value: op.company_name };
+        return op;
+      });
+
+      data.data &&
         data.data.applicant_documents.map((doc) => {
-          obj =  { label: doc.company_name, value: doc.company_name };
         if(doc.doc_title === 'Salary Slip 1'){
           salary1 = doc.document_url;
         } else if(doc.doc_title === 'Salary Slip 2'){
@@ -56,6 +69,8 @@ function PreviousEmployement(props) {
           salary3 = doc.document_url;
         } else if(doc.doc_title === 'Reliving Letter'){
           relive = doc.document_url;
+        } else if(doc.doc_title === 'Experience Letter'){
+          experience = doc.document_url;
         }
        
           docIdArr.push({ name: doc.doc_title, id: doc.doc_id });
@@ -68,6 +83,7 @@ function PreviousEmployement(props) {
           salary_slip2: salary2,
           salary_slip3: salary3,
           reliving_letter: relive,
+          experience_letter: experience,
         });
       setDocId(docIdArr);
     } else {
@@ -75,9 +91,9 @@ function PreviousEmployement(props) {
       // swal(message, '', 'error');
     }
   };
-
+  console.log('defaultValues',defaultValues)
   useEffect(() => {
-    if (candidateId) {
+    if (candidateId || applicantId) {
       getData();
     }
   }, []);
@@ -93,12 +109,34 @@ function PreviousEmployement(props) {
     formData.append('email_hash', tokenProps);
     formData.append('password', passwordProps);
 
-    const { data } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,
       formData
     );
-    if (data) {
+     if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success) { 
       return data.data.id;
+    }
+  };
+
+  const getApplicantPercentage = async () => { // eslint-disable-line
+    const endPoint = applicantId ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`:`${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
+
+    const { data, message } = await AuthApi.getDataFromServer(endPoint);
+    
+    if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success && data.data ) { 
+      props.getParentsData(data.data.completion);
     }
   };
 
@@ -112,6 +150,8 @@ function PreviousEmployement(props) {
     let slip3fileUrlId = '';
     let relivingfileUrl = '';
     let relivingfileUrlId = '';
+    let experiencefileUrl = '';
+    let experiencefileUrlId = '';
 
     docId &&
       docId.map((document) => {
@@ -123,21 +163,26 @@ function PreviousEmployement(props) {
           slip3fileUrl = { id: document.id, label: document.name };
         } else if (document.name === 'Reliving Letter') {
           relivingfileUrl = { id: document.id, label: document.name };
+        } else if (document.name === 'Experience Letter') {
+          experiencefileUrl = { id: document.id, label: document.name };
         }
         return document;
       });
 
     if (formValues.salary_slip1) {
-      slip1fileUrlId = await fileUpload(formValues.salary_slip1);
+      slip1fileUrlId = (typeof formValues.salary_slip1 === 'object') && await fileUpload(formValues.salary_slip1);
     }
     if (formValues.salary_slip2) {
-      slip2fileUrlId = await fileUpload(formValues.salary_slip2);
+      slip2fileUrlId = (typeof formValues.salary_slip2 === 'object') && await fileUpload(formValues.salary_slip2);
     }
     if (formValues.salary_slip3) {
-      slip3fileUrlId = await fileUpload(formValues.salary_slip3);
+      slip3fileUrlId = (typeof formValues.salary_slip3 === 'object') && await fileUpload(formValues.salary_slip3);
     }
     if (formValues.reliving_letter) {
-      relivingfileUrlId = await fileUpload(formValues.reliving_letter);
+      relivingfileUrlId = (typeof formValues.reliving_letter === 'object') && await fileUpload(formValues.reliving_letter);
+    } 
+    if (formValues.experience_letter) {
+      experiencefileUrlId = (typeof formValues.experience_letter === 'object') && await fileUpload(formValues.experience_letter);
     }
 
     const postData = {
@@ -176,10 +221,19 @@ function PreviousEmployement(props) {
             ? Number(relivingfileUrlId)
             : relivingfileUrl.id,
         },
+        {
+          doc_title: 'Experience Letter',
+          company_name: formValues.employee
+            ? formValues.employee.label
+            : experiencefileUrl.label,
+          doc: experiencefileUrlId
+            ? Number(experiencefileUrlId)
+            : experiencefileUrl.id,
+        },
       ],
     };
 
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data, message } = (!customFunctions.checkIfEmpty(slip1fileUrlId) || slip1fileUrl && !customFunctions.checkIfEmpty(slip2fileUrlId) || slip2fileUrl && !customFunctions.checkIfEmpty(slip3fileUrlId) || slip3fileUrl && !customFunctions.checkIfEmpty(relivingfileUrlId)||relivingfileUrl && !customFunctions.checkIfEmpty(experiencefileUrlId)||experiencefileUrl) && await AuthApi.postDataToServer(
       `${Api.applicantDocumentUrl}`,
       postData
     );
@@ -200,6 +254,7 @@ function PreviousEmployement(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        getApplicantPercentage();
         if(candidateId){
           getData();
         }
@@ -244,7 +299,6 @@ function PreviousEmployement(props) {
   };
 
   useEffect(() => {
-    console.log('fgdgdfgdff');
     getEmployee();
   }, [tokenProps]);
 

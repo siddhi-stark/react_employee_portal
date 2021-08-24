@@ -4,11 +4,11 @@ import { Card, Row, Col } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import {
   EditorState,
-  convertToRaw,
   ContentState,
   convertFromHTML,
 } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
+import { stateToHTML } from 'draft-js-export-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import swal from 'sweetalert';
 import FormSections from './formschema.json';
@@ -78,6 +78,7 @@ function EmailTemplatesComponent() {
       if (i === index) {
         d.content = editorState; //eslint-disable-line
       }
+      console.log('d.content',d.content);
       return d;
     });
     setEmailContent([...data]);
@@ -100,25 +101,22 @@ function EmailTemplatesComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    console.log('emailContent',emailContent);
     emailContent &&
       emailContent.map((emp) => {
         if (emp.id === templateId) {
+
           description = emp.content;
         }
         return emp;
       });
-    let stringDescription = '';
+    const stringDescription = stateToHTML(description.getCurrentContent());
     const payload = {
       id: templateId ? Number(templateId) : '',
       name: formValues.emailName ? formValues.emailName.label : '',
       subject: formValues.emailSubject,
     };
-    convertToRaw(description.getCurrentContent()) &&
-      convertToRaw(description.getCurrentContent()).blocks &&
-      convertToRaw(description.getCurrentContent()).blocks.map((desc) => {
-        stringDescription += `${desc.text}\n`;
-        return desc;
-      });
+
     formValues = stringDescription; //eslint-disable-line
     payload.body = formValues;
     const { data, message } = await AuthApi.putDataToServer(
@@ -213,7 +211,7 @@ function EmailTemplatesComponent() {
           onFormReset={() => {}}
         />
 
-        <p className="mt-3">
+        <p className="mt-3 container">
           <Row>
             <b className="mt-2 mb-2">
               Note:-The given list of words are the dynamic content which will
@@ -236,7 +234,6 @@ function EmailTemplatesComponent() {
                 </Col>
               ))}
           </Row>
-        </p>
         {emailContent &&
           emailContent.map((eml, index) => {
             if (!templateId) return;
@@ -283,6 +280,7 @@ function EmailTemplatesComponent() {
               </>
             );
           })}
+          </p>
       </Card>
     </>
   );

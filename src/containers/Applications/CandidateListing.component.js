@@ -17,7 +17,7 @@ function CandidateListing() {
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [filterData, setFilterData] = useState({}); // eslint-disable-line
- const title = 'Canidates'
+ const title = 'Candidates'
   const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
 const history = useHistory();
 // const isOnBoard = customFunctions.getLocalStorage('isShowOnBoard');
@@ -36,22 +36,19 @@ const actionCallBack = (row) => {
 			>
 				 <Image src="/images/edit-button.svg" />
 			</a>
-
-			{row.employee_id ? '' : (
-
-			 <a
-				href="/"
-				className="pl-2 ms-4"
-				onClick={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					history.push(`/onboard/${row.id}`)
-				}}
-			>
-				on-board
-			</a>
-			)}
-		
+			  {(new Date(row.joining_date).getTime() <= new Date().getTime() && (row.offer_status_name !== 'Declined') && !row.employee_id) && (
+	         <a
+	            href="/"
+	            className="pl-2 ms-4"
+	            onClick={(e) => {
+	                e.preventDefault();
+	                e.stopPropagation();
+	                history.push(`/onboard/${row.id}`)
+	            }}
+	        >
+        	on-board    
+        </a>
+        )}
 
 		</>
 	);
@@ -60,14 +57,15 @@ const actionCallBack = (row) => {
 const handleProgressCallBack = (completion) => {
 	return (
 		<>
-		
-
+		{	
+		(completion.offer_status_name !== 'Declined') && 
 			<ProgressBar
 				bsPrefix="progress pbar"
 				variant="success"
 				now={completion.completion ? completion.completion : 0}
         label={`${completion.completion ? completion.completion : 0}% completed`}
 			/>
+		}
 		</>
 	);
 };
@@ -95,6 +93,17 @@ const columns = [
 		label: 'Offer Status',
 	},
 	{
+		id: 'joining_date',
+		label: 'Joining Date',
+		render: ({ joining_date }) => { // eslint-disable-line
+      return (
+        <>
+          <span>{customFunctions.getDMYDate(joining_date)}</span>
+        </>
+      );
+    },
+	},
+	{
 		id: 'completion',
 		label: 'Progress',
 		render: handleProgressCallBack,
@@ -114,6 +123,7 @@ const columns = [
 		const params = {
 			page,
 			limit,
+			sort_direction: 'descending',
      'status':4
 		};
 		const url = customFunctions.generateUrl(endPoint, params);

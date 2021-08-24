@@ -10,6 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 function Personal(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
+  const applicantId = accProps.props.applicantId;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -32,16 +33,24 @@ function Personal(props) {
   }, []);
 
   const getData = async () => {
+    console.log('applicantId',applicantId);
     let panCard = '';
     let adharCard = '';
     let photo = '';
     const docIdArr = [];
-    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
-   
-    const { data, message } = await AuthApi.postDataToServer(endPoint);
+
+    const endPoint = candidateId ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`:`${Api.applicantInfoUrl}`;
+    
+    const postData = {
+        email_hash: tokenProps,
+        password: passwordProps,
+      }
+
+    const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
+    await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      data.data && data.data.applicant_documents.map((doc)=>{
+      data.data && data.data.applicant_documents && data.data.applicant_documents.map((doc)=>{
         if(doc.doc_title === 'Pan'){
           panCard = doc.document_url;
         } else if(doc.doc_title === 'Aadhar'){
@@ -66,8 +75,9 @@ function Personal(props) {
     }
   };
 
-  useEffect(() => {
-    if(candidateId) {
+  useEffect(async() => {
+
+    if(candidateId || applicantId) {
       getData();
     }
   }, []);
@@ -82,12 +92,35 @@ function Personal(props) {
     formData.append('employee_email', emailProps);
     formData.append('folder_name', 'Personal');
 
-    const { data } = await AuthApi.postDataToServer(
+    const { data, message } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );
-    if (data) {
+    if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success) { 
       return data.data.id;
-    } 
+    }
+  };
+
+
+  const getApplicantPercentage = async () => { // eslint-disable-line
+    const endPoint = applicantId ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`:`${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
+
+    const { data, message } = await AuthApi.getDataFromServer(endPoint);
+    
+    if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success && data.data ) { 
+      props.getParentsData(data.data.completion);
+    }
   };
 
   // Submit Form
@@ -111,13 +144,13 @@ function Personal(props) {
     })
 
     if(formValues.doc_link_pan_card){
-       pancardfileUrlId = await fileUpload(formValues.doc_link_pan_card);
+       pancardfileUrlId = (typeof formValues.doc_link_pan_card === 'object') && await fileUpload(formValues.doc_link_pan_card);
      }
     if(formValues.doc_link_adhar_card){
-      adharfileUrlId = await fileUpload(formValues.doc_link_adhar_card);
+      adharfileUrlId = (typeof formValues.doc_link_adhar_card === 'object') && await fileUpload(formValues.doc_link_adhar_card);
     }
     if(formValues.doc_link_photo){
-      photofileUrlId = await fileUpload(formValues.doc_link_photo);
+      photofileUrlId = (typeof formValues.doc_link_photo === 'object') && await fileUpload(formValues.doc_link_photo);
     }
     
     const postData = {
@@ -141,7 +174,7 @@ function Personal(props) {
       ],
     };
 
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data, message } = (!customFunctions.checkIfEmpty(pancardfileUrlId) ||  pancardfileUrl && !customFunctions.checkIfEmpty(adharfileUrlId) || adharfileUrl && !customFunctions.checkIfEmpty(photofileUrlId) || photofileUrl) && await AuthApi.postDataToServer(
      `${Api.applicantDocumentUrl}`,
       postData
     );
@@ -163,13 +196,13 @@ function Personal(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        getApplicantPercentage();
         if(candidateId){
           getData();
         }
-        props.onPersonalInfo(true);
         swal.close();
       });
-    }
+      }
     // Perform success actions
   };
 

@@ -18,17 +18,14 @@ function TemporaryAccount(props) {
   const tokenProps = accProps.props.token;
   const title = 'Applications';
   const history = useHistory();
-  const [isPersonalId, setPersonalId] = useState(false);
-  const [isEducationalId, setEducationalId] = useState(false);
-  const [isHistoryId, setHistoryId] = useState(false);
-  const [isBI, setIsBI] = useState(true);
-  const [isPD, setIsPD] = useState(true);
-  const [isED, setIsED] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
-  const [personalInfo, setPersonalInfo] = useState(true);
+  const [personalInfo, setPersonalInfo] = useState([]);
+  const [toggle, setToggle] = useState(false);
   const [key, setKey] = useState('Personal');
+  const [completion, setCompletion] = useState(null);
+  const [trigger, setTrigger] = useState(false);
 
   // Get user role
   const getData = async () => {
@@ -45,7 +42,7 @@ function TemporaryAccount(props) {
       setPersonalInfo((data && data.data) || []);
       setName(data.data.name);
       setEmail(data.data.email);
-      setId(data.data.id);
+      await setToggle(true);
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
@@ -64,18 +61,25 @@ function TemporaryAccount(props) {
       setKey('previousEmployment');
     }
   };
+  
+  useEffect(() => {
+    setId(personalInfo.id);
+  }, [personalInfo]);
 
   useEffect(() => {
     getData();
-    if(candidateId) {
-      setIsBI(false);
-      setIsED(false);
-      setIsPD(false);
-      setPersonalId(false);
-      setEducationalId(false);
-      setHistoryId(false);
+  }, []);  
+
+  const getCompletionData =(value) =>{
+    setCompletion(value);
+  };
+
+  useEffect(() => {
+    if(trigger) {
+      getCompletionData();
+      // window.location.reload();
     }
-  }, []);
+  }, [trigger]);
 
   return (
     <>
@@ -121,15 +125,13 @@ function TemporaryAccount(props) {
                   </div>
                   <br />
                   <div className="row">
-                    <div className="col-md-3">
-                      <h6>Profile Completion -</h6>
-                    </div>
-                    <div className="col-md-4">
+                    <div className="col-md-12 d-flex">
+                      <h6>Profile Completion - &nbsp; &nbsp;</h6> 
                       <ProgressBar
                         bsPrefix="progress pbar"
-                        variant="info"
-                        now={personalInfo.completion}
-                        label="completed"
+                        variant="success"
+                        now={personalInfo.completion ? personalInfo.completion : completion}
+                        label={`${personalInfo.completion ? personalInfo.completion : completion}% completed`}
                       />
                     </div>
                   </div>
@@ -142,41 +144,44 @@ function TemporaryAccount(props) {
                 // id="uncontrolled-tab-example"
               >
                 <Tab eventKey="Personal" title="Personal Documents">
+                 {((key === 'Personal') && toggle) && (
                   <div className="row ml-2">
-                 {key === 'Personal' && (
                     <Personal
                       token={tokenProps}
                       password={passwordProps}
                       name={name}
                       email={email}
-                      onPersonalInfo={(value) => {
-                        console.log('value--',value);
-                        setPersonalId(value);
-                        setIsBI(false);
+                      applicantId={id}
+                      getParentsData={(value) => {
+                        if(value){
+                          setTrigger(true);
+                          getCompletionData(value)
+                        }
+                        console.log('value',value);
                       }}
                     />
-                  )}
                   </div>
+                  )}
                 </Tab>
                 <Tab
                   eventKey="educational"
                   title="Educational Documents"
-                  disabled={isBI}
                 >
                
-                  {(isPersonalId ||
-                    (candidateId && String(key) === 'educational' )) && (
+                  {
+                    (String(key) === 'educational' ) && (
                       <div className="row ml-2">
                         <EducationalDetails
                           token={tokenProps}
                           name={name}
                           email={email}
+                          applicantId={id}
                           password={passwordProps}
-                          isPersonalId={isPersonalId}
-                          onEducationalInfo={(value) => {
-                        console.log('setEducationalId--',value);
-                            setEducationalId(value);
-                            setIsPD(false);
+                          getParentsData={(value) => {
+                            if(value){
+                              setTrigger(true);
+                              getCompletionData(value)
+                            }
                           }}
                         />
                       </div>
@@ -185,22 +190,22 @@ function TemporaryAccount(props) {
                 <Tab
                   eventKey="employmentHistory"
                   title="Employment History"
-                  disabled={isPD}
                 >
 
-                  {(isEducationalId ||
-                    candidateId && ( key === 'employmentHistory' )) && (
+                  {( key === 'employmentHistory' ) && (
                       <div className="row ml-2">
                         <EmployementHistory
                           token={tokenProps}
                           name={name}
                           email={email}
                           id={id}
+                          applicantId={id}
                           password={passwordProps}
-                          isEducationalId={isEducationalId}
-                          onHistoryInfo={(value) => {
-                            setHistoryId(value);
-                            setIsED(false);
+                          getParentsData={(value) => {
+                             if(value){
+                              setTrigger(true);
+                              getCompletionData(value)
+                            }
                           }}
                         />
                       </div>
@@ -209,17 +214,21 @@ function TemporaryAccount(props) {
                 <Tab
                   eventKey="previousEmployment"
                   title="Previous Employment"
-                  disabled={isED}
                 >
-                  {(isHistoryId ||
-                    candidateId && ( key === 'previousEmployment')) && (
+                  {(key === 'previousEmployment') && (
                       <div className="row ml-2">
                         <PreviousEmployement
                           name={name}
                           email={email}
+                          applicantId={id}
                           token={tokenProps}
-                          isHistoryId={isHistoryId}
                           password={passwordProps}
+                          getParentsData={(value) => {
+                             if(value){
+                              setTrigger(true);
+                              getCompletionData(value)
+                            }
+                          }}
                         />
                       </div>
                     )}

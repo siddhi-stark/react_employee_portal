@@ -58,6 +58,9 @@ function Quotes() {
       </>
     );
   };
+
+
+
   // Declare columns
   const columns = [
     {
@@ -175,7 +178,7 @@ function Quotes() {
               columns={columns}
               rows={rowData}
               showPagination={true}
-              tableClass="table-striped"
+              tableClass="table-striped quotes-wrapper"
               paginationProps={{
                 totalItems: totalCount,
                 itemsPerPage: limit,

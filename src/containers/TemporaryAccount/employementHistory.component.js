@@ -10,6 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 function EmployementHistory(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
+  const applicantId = accProps.props.applicantId;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const idProps = accProps.props.match.params.ID;
@@ -40,16 +41,36 @@ function EmployementHistory(props) {
   }, []);
 
   const getData = async () => {
+    console.log('candidateId',candidateId);
     const addmoreData = [];
 
-    const endPoint = `${Api.applicantInfoUrl}?applicant_id=${candidateId}`;
+    const endPoint = candidateId ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`:`${Api.applicantInfoUrl}`;
+  
+    const postData = {
+        email_hash: tokenProps,
+        password: passwordProps,
+      }
 
-    const { data, message } = await AuthApi.postDataToServer(endPoint);
+    const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
+    await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      console.log('data.data.applicant_history',data.data && data.data.applicant_history &&
+        (data.data.applicant_history.length > 0));
       data.data && data.data.applicant_history &&
         (data.data.applicant_history.length > 0) &&
         data.data.applicant_history.map((doc) => {
+          if(!doc.reportings || (!doc.reportings.length > 0) || !doc.reportings) {
+           addmoreData.push({
+                company_name: doc.company_name && doc.company_name,
+                designation: doc.designation && doc.designation,
+                company_url: doc.company_url && doc.company_url,
+                start_date: doc.start_date && new Date(doc.start_date),
+                end_date: doc.end_date && new Date(doc.end_date),
+                duration: doc.duration && doc.duration,
+                location: doc.location && doc.location,
+              });
+          }
           doc &&  doc.reportings && (doc.reportings.length > 0) && doc.reportings.map((report) => {
               addmoreData.push({
                 company_name: doc.company_name && doc.company_name,
@@ -79,15 +100,17 @@ function EmployementHistory(props) {
 
           return doc;
         });
+        console.log('addmoreData',addmoreData);
       updateDefaultValues({ addmore: [...addmoreData] });
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
     }
   };
+      console.log('defaultValues',defaultValues);
 
   useEffect(() => {
-    if (candidateId) {
+    if (candidateId || applicantId) {
       getData();
     }
   }, []);
@@ -162,7 +185,6 @@ function EmployementHistory(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        props.onHistoryInfo(true);
         if(candidateId){
           getData();
         }
