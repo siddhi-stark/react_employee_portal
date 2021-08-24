@@ -156,35 +156,6 @@
         "fields": [],
         "optionCallback": "",
         "options": []
-      },
-      {
-        "name": "duration",
-        "type": "text",
-        "label": "Duration",
-        "id": "",
-        "placeholder": "",
-        "inputClass": "",
-        "containerClass": "",
-        "validations": [],
-        "displayWhen": {},
-        "haveValidations": "false",
-        "haveDisplayOptions": "false",
-        "callback": "",
-        "callbackUrl": "",
-        "inputToChange": "",
-        "minDateSelector": "",
-        "maxDateSelector": "",
-        "disabled": true,
-        "isMulti": false,
-        "allowedUsers": [],
-        "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
-        "fields": [],
-        "optionCallback": "",
-        "options": []
       }
     ],
     "allowedUsers": [5],
