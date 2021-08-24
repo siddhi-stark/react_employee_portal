@@ -41,73 +41,68 @@ function EmployementHistory(props) {
   }, []);
 
   const getData = async () => {
-    console.log('candidateId',candidateId);
+    console.log('candidateId', candidateId);
     const addmoreData = [];
 
-    const endPoint = candidateId ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`:`${Api.applicantInfoUrl}`;
-  
-    const postData = {
-        email_hash: tokenProps,
-        password: passwordProps,
-      }
+    const endPoint = candidateId
+      ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
+      : `${Api.applicantInfoUrl}`;
 
-    const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
-    await AuthApi.postDataToServer(endPoint);
+    const postData = {
+      email_hash: tokenProps,
+      password: passwordProps,
+    };
+
+    const { data, message } = applicantId
+      ? await AuthApi.postDataToServer(endPoint, postData)
+      : await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      console.log('data.data.applicant_history',data.data && data.data.applicant_history &&
-        (data.data.applicant_history.length > 0));
-      data.data && data.data.applicant_history &&
-        (data.data.applicant_history.length > 0) &&
+      data.data &&
+        data.data.applicant_history &&
+        data.data.applicant_history.length > 0 &&
         data.data.applicant_history.map((doc) => {
-          if(!doc.reportings || (!doc.reportings.length > 0) || !doc.reportings) {
-           addmoreData.push({
-                company_name: doc.company_name && doc.company_name,
-                designation: doc.designation && doc.designation,
-                company_url: doc.company_url && doc.company_url,
-                start_date: doc.start_date && new Date(doc.start_date),
-                end_date: doc.end_date && new Date(doc.end_date),
-                duration: doc.duration && doc.duration,
-                location: doc.location && doc.location,
-              });
-          }
-          doc &&  doc.reportings && (doc.reportings.length > 0) && doc.reportings.map((report) => {
-              addmoreData.push({
-                company_name: doc.company_name && doc.company_name,
-                designation: doc.designation && doc.designation,
-                company_url: doc.company_url && doc.company_url,
-                start_date: doc.start_date && new Date(doc.start_date),
-                end_date: doc.end_date && new Date(doc.end_date),
-                duration: doc.duration && doc.duration,
-                location: doc.location && doc.location,
-                reporting_person_hr:
-                  String(report.is_hr) === 'true'
-                    ? report.reporting_person
-                    : '',
-                hr_email: String(report.is_hr) === 'true' ? report.email : '',
-                hr_mobile: String(report.is_hr) === 'true' ? report.mobile : '',
-                reporting_person_manager:
-                  String(report.is_hr) === 'false'
-                    ? report.reporting_person
-                    : '',
-                manager_email:
-                  String(report.is_hr) === 'false' ? report.email : '',
-                manager_mobile:
-                  String(report.is_hr) === 'false' ? report.mobile : '',
-              });
+          const reportingData = {};
+          doc.reportings &&
+            doc.reportings.length > 0 &&
+            doc.reportings.map((report) => {
+              if (report.is_hr) {
+                reportingData.reporting_person_hr = report.reporting_person;
+                reportingData.hr_email = report.email;
+                reportingData.hr_mobile = report.mobile;
+              } else {
+                reportingData.reporting_person_manager =
+                  report.reporting_person || '';
+                reportingData.manager_email = report.email || '';
+                reportingData.manager_mobile = report.mobile || '';
+              }
               return report;
             });
 
+          addmoreData.push({
+            company_name: doc.company_name && doc.company_name,
+            designation: doc.designation && doc.designation,
+            company_url: doc.company_url && doc.company_url,
+            start_date: doc.start_date && new Date(doc.start_date),
+            end_date: doc.end_date && new Date(doc.end_date),
+            duration: doc.duration && doc.duration,
+            location: doc.location && doc.location,
+            reporting_person_hr: reportingData.reporting_person_hr,
+
+            hr_email: reportingData.hr_email,
+            hr_mobile: reportingData.hr_mobile,
+            reporting_person_manager: reportingData.reporting_person_manager,
+            manager_email: reportingData.manager_email,
+            manager_mobile: reportingData.manager_mobile,
+          });
           return doc;
         });
-        console.log('addmoreData',addmoreData);
       updateDefaultValues({ addmore: [...addmoreData] });
     } else {
       console.log('error', message);
       // swal(message, '', 'error');
     }
   };
-      console.log('defaultValues',defaultValues);
 
   useEffect(() => {
     if (candidateId || applicantId) {
@@ -135,18 +130,18 @@ function EmployementHistory(props) {
         hrReport.email = rp.hr_email;
         hrReport.mobile = rp.hr_mobile;
         hrReport.is_hr = true;
-      report[i].push(hrReport);
+        report[i].push(hrReport);
       }
 
       if (rp.reporting_person_manager) {
         managerReport.reporting_person = rp.reporting_person_manager;
         managerReport.email = rp.manager_email;
         managerReport.mobile = rp.manager_mobile;
-      report[i].push(managerReport);
+        report[i].push(managerReport);
       }
       return rp;
     });
-    for (const [index, history] of formValues.addmore.entries()) {  // eslint-disable-line
+    for (const [index, history] of formValues.addmore.entries()) { // eslint-disable-line
       const candidateHistory = {
         designation: history.designation,
         company_name: history.company_name,
@@ -185,7 +180,7 @@ function EmployementHistory(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        if(candidateId){
+        if (candidateId) {
           getData();
         }
         swal.close();

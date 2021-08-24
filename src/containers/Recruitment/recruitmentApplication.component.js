@@ -272,6 +272,7 @@ function RecruitmentApplicationComponent() {
       id: 'status_name',
       label: 'Status',
       render: handleStatus,
+      isDisplay: (activeMenu.includes('Pending') || activeMenu.includes('all')) &&  true,
     },
     {
       id: Number(group) === 5 || Number(group) === 6 ? 'round_status_name' : '',
