@@ -49,8 +49,8 @@ function EducationalDetails(props) {
     const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
     await AuthApi.postDataToServer(endPoint);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      data.data && data.data.applicant_documents.map((doc)=>{
+    if (!customFunctions.checkIfEmpty(data, 'A') && data && data.success) {
+       data.data && data.data.applicant_documents.map((doc)=>{
         if(doc.doc_title === 'SSC'){
           ssc = doc.document_url;
         } else if(doc.doc_title === 'HSC'){
