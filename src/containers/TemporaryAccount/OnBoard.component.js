@@ -8,6 +8,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function OnBoard(props) {
   // Variable declarations
@@ -15,9 +16,10 @@ function OnBoard(props) {
   const [options, updateOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [twEmployee,setTwEmployee] = useState([]);
-  const title = 'Add Candidate';  
+  const [loader, setLoader] = useState(false);
+  const [title,setTitle] = useState('');
   const applicantId = props.match.params.ID; //eslint-disable-line
-  const items = [{ to: '/', label: 'Home' }, { label: 'Add Candidate' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Add Employee' }];
 
  const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -39,6 +41,7 @@ function OnBoard(props) {
 
   useEffect(() => {
     getUserRole();
+    setTitle('Add Employee');
   }, []);
 
 
@@ -89,7 +92,9 @@ function OnBoard(props) {
     }
 
       const { data, message } = await AuthApi.postDataToServer(Api.employeeUrl, postData);
+       setLoader(true);
       if(data) {
+        setLoader(false);
         swal({
         title: data.message[0],
         icon: 'success',
@@ -103,6 +108,7 @@ function OnBoard(props) {
 
         // swal(data.message[0],'','success');
       } else {
+         setLoader(false);
           swal(message, '', 'error', {
             closeOnClickOutside: false,
             allowOutsideClick: false,
@@ -284,9 +290,10 @@ function OnBoard(props) {
 
 	return (
 		<>
+    <Loader showLoader={loader} needFullPage={false} />
 		 <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Add Candidate</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Add Employee</h2>
         <Breadcrumb items={items} />
       </div>
 		<div className="mt-5">
