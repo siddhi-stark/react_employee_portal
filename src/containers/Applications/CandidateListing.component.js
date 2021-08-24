@@ -27,7 +27,7 @@ const actionCallBack = (row) => {
 		<>
 			<a
 				href="/"
-				className="pl-2 ms-3"
+				className="pl-2 ms-2"
 				onClick={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
@@ -39,14 +39,15 @@ const actionCallBack = (row) => {
 			  {(new Date(row.joining_date).getTime() <= new Date().getTime() && (row.offer_status_name !== 'Declined') && !row.employee_id) && (
 	         <a
 	            href="/"
-	            className="pl-2 ms-4"
+	            className="pl-2 ms-1"
 	            onClick={(e) => {
 	                e.preventDefault();
 	                e.stopPropagation();
 	                history.push(`/onboard/${row.id}`)
 	            }}
 	        >
-        	on-board    
+        		<Image src="/images/onboard.svg" />
+    
         </a>
         )}
 
