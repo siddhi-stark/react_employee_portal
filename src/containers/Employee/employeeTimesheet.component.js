@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Card, Accordion, Button, Row, Col } from 'react-bootstrap';
+import { withRouter, useHistory } from 'react-router-dom';
+import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
@@ -20,6 +20,7 @@ function EmployeeTimesheet() {
   const [dataShow, setDataShow] = useState(false);
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState({});
+  const history = useHistory();
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -47,29 +48,29 @@ function EmployeeTimesheet() {
     return sectionData;
   });
 
-  // const handleActionCallback = (row) => {
-  //   const userName = customFunctions.getLocalStorage('name');
-  //   return (
-  //     <>
-  //       <a
-  //         href="/"
-  //         className="pl-2"
-  //         onClick={(e) => {
-  //           e.preventDefault();
-  //           e.stopPropagation();
-  //           history.push(`/edit-employee/${row.user_id}`);
-  //           customFunctions.setLocalStorage('employeeName', row.emp_name);
-  //           customFunctions.setLocalStorage('userId', row.user_id);
-  //           customFunctions.setLocalStorage('date', row.date);
-  //         }}
-  //       >
-  //         {!(String(userName) === row.emp_name) && (
-  //           <Image src="/images/edit-button.svg" />
-  //         )}
-  //       </a>
-  //     </>
-  //   );
-  // };
+  const handleActionCallback = (row) => {
+    const userName = customFunctions.getLocalStorage('name');
+    return (
+      <>
+        <a
+          href="/"
+          className="pl-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            history.push(`/edit-employee/${row.user_id}`);
+            customFunctions.setLocalStorage('employeeName', row.emp_name);
+            customFunctions.setLocalStorage('userId', row.user_id);
+            customFunctions.setLocalStorage('date', row.date);
+          }}
+        >
+          {!(String(userName) === row.emp_name) && (
+            <Image src="/images/edit-button.svg" />
+          )}
+        </a>
+      </>
+    );
+  };
 
   // Declare columns
   const columns = [
@@ -179,7 +180,12 @@ function EmployeeTimesheet() {
           </>
         );
       },
-    }
+    },
+     {
+      id: 'action',
+      label: 'Action',
+      render: handleActionCallback,
+    },
   ];
 
   // Declare methods
