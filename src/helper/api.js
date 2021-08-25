@@ -117,6 +117,14 @@ export default class Api extends Component {
 
   static applicantPercentageUrl = `${Api.baseUrl}applicant-percentage/`;
 
+  static birthdayUrl = `${Api.baseUrl}upcoming-birthday/`;
+
+  static holidayUrl = `${Api.baseUrl}upcoming-holiday/`;
+
+  static leavesApplied = `${Api.baseUrl}leave-applied/`;
+  
+  static socialMediaUrl = `${Api.baseUrl}instagram-post/`;
+
 
   // Get base URL of APIs
   static getBaseUrl() {

@@ -191,25 +191,42 @@ function AllReports() {
     // setSearchKeyword('');
     setFromDate('');
     setToDate('');
-    setSelectedEmployee('');
+    setSelectedEmployee([]);
     setCntClearFilter(cntClearFilter + 1);
   };
+
+
+
+
+
 
   const filterSearch = (e) => {
     e.preventDefault();
     let filterSearchErr = '';
     let isValid = true;
 
-    if (
-      customFunctions.checkIfEmpty(fromDate) &&
-      customFunctions.checkIfEmpty(toDate) 
-      // customFunctions.checkIfEmpty(searchKeyword)
-    ) {
-      // searchFormSubmit= false;
-      filterSearchErr = 'Please enter dates';
-      setFilterErr(filterSearchErr);
-      isValid = false;
-    }
+
+   if (
+customFunctions.checkIfEmpty(selectedEmployee) &&
+customFunctions.checkIfEmpty(fromDate) &&
+customFunctions.checkIfEmpty(toDate)
+) {
+filterSearchErr = 'Please select atleast one filter';
+setFilterErr(filterSearchErr);
+isValid = false;
+}
+
+if (!customFunctions.checkIfEmpty(fromDate)) {
+  if (customFunctions.checkIfEmpty(toDate)) {
+    filterSearchErr = 'Please select To date';
+    setFilterErr(filterSearchErr);
+    isValid = false;
+  }
+} else if (!customFunctions.checkIfEmpty(toDate)) {
+  filterSearchErr = 'Please select From date';
+  setFilterErr(filterSearchErr);
+  isValid = false;
+}
     if (isValid) {
       // searchFormSubmit= true;
       setFilterErr('');

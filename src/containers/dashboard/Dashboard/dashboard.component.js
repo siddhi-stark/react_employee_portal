@@ -29,6 +29,9 @@ function Dashboard() {
   const [morningMail, setMorningMail] = useState(false);
   const [quotesContent, setQuotesContent] = useState('');
   const [totalHrs, setTotalHrs] = useState(null);
+  const [holidays,setHolidays] = useState([]);
+  // const [leaves,setLeaves] = useState([]);
+  const [socialMedia,setSocialMediaData] = useState([]);
   const history = useHistory();
 
   const [pagination, setPagination] = useState({
@@ -153,8 +156,37 @@ function Dashboard() {
     setTime(localTime);
   };
 
-  useEffect(() => {
+ const getUpcomingHoliday = async () => {
+    const endPoint = `${Api.holidayUrl}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if(data) {
+      console.log(data.data);
+      setHolidays(data.data);
+    }
+  }
 
+// const getAppliedLeaves = async () => {
+//     const endPoint = `${Api.leavesApplied}`;
+//     const { data } = await AuthApi.getDataFromServer(endPoint);
+//     if(data) {
+//       console.log(data.data);
+//       setLeaves(data.data);
+//     }
+//   }
+
+const getInstagramPost = async () => {
+  const endPoint = `${Api.socialMediaUrl}`;
+  const { data } = await AuthApi.getDataFromServer(endPoint);
+  if(data) {
+    console.log('data',data.data);
+    setSocialMediaData(data.data);
+  }
+}
+
+  useEffect(() => {
+    getUpcomingHoliday();
+    // getAppliedLeaves();
+    getInstagramPost();
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
@@ -197,6 +229,7 @@ function Dashboard() {
   };
   return (
     <>
+    {console.log('socialMedia',socialMedia)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -381,7 +414,7 @@ function Dashboard() {
               </div>
             </UserRestrictions>
 
-            {/* <div className="holidays-applied">
+            <div className="holidays-applied">
               <div className="row">
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
@@ -393,21 +426,25 @@ function Dashboard() {
                         />
                         <p>Up Coming Holidays</p>
                       </div>
+                      {holidays && holidays.map((hd) => (
+                      <>
                       <div className="event-title">
-                        <p>Monday 25 June, 2021</p>
+                        <p>{hd.date}</p>
                       </div>
                       <div className="date">
-                        <span>Rakshabandhan</span>
+                        <span>{hd.occasion}</span>
                       </div>
+                      </>    
+                        ))}
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-6">
+               <div className="col-xl-6">
                   <div className="upcoming-bg faint-orange">
                     <div className="upcoming-event-box">
                       <div className="upcoming-event-img">
                         <img
-                          src="/images/leaves-holiday.svg"
+                          src="images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
                         <p>Leaves Applied</p>
@@ -422,40 +459,35 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
-            </div> */}
-            {/* <div className="social-media">
+            </div>
+            <div className="social-media">
               <div className="card flex-fill w-100">
                 <div className="card-body">
                   <div className="table-title">
                     <h5 className="card-title mb-0">Social Media</h5>
                   </div>
                   <div className="weekly-status">
+
+                    {socialMedia && socialMedia.map((social) => (
+                      <>
+                      {console.log('social',social.post_image)}
                     <ul className="list-unstyled p-0 d-flex align-items-center justify-content-between">
-                      <li>
+                       <li>
                         <a href="#">
-                          <img src="/images/social-media4.png" alt="img" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="/images/social-media4.png" alt="img" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="/images/social-media4.png" alt="img" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="/images/social-media4.png" alt="img" />
+                        {social.post_image ? (
+
+                          <img src={social.post_image} alt="social" />
+                          ) : ''}
+
                         </a>
                       </li>
                     </ul>
+                      </>    
+                        ))}
                   </div>
                 </div>
               </div>
-            </div> */}
+            </div> 
           </Col>
         </Row>
       </section>
