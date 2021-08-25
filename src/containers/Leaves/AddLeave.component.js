@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Button, Row, Col } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -30,7 +30,6 @@ function AddLeave(props) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [status, setStatus] = useState(null); // eslint-disable-line
-  const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   const columns = [
     {
@@ -81,34 +80,6 @@ function AddLeave(props) {
     }
     return sectionData;
   });
-
-  useEffect(() => {
-    const formViewSchema = [...FormSections];
-    if (Number(currentUser) === 3) {
-      const updatedSchema = formViewSchema.map((section) => {
-        const s = { ...section };
-        s.fields = section.fields.map((item) => {
-          const itemData = item;
-          if (
-            item.name === 'leave_type' ||
-            item.name === 'reason' ||
-            item.name === 'leave_from_date' ||
-            item.name === 'leave_from_type' ||
-            item.name === 'leave_from_time' ||
-            item.name === 'leave_to_date' ||
-            item.name === 'leave_to_type' ||
-            item.name === 'leave_to_time'
-          )
-            itemData.disabled = true;
-          return itemData;
-        });
-        return s;
-      });
-      console.log('user---', updatedSchema);
-
-      updateJsonSchema([...updatedSchema]);
-    }
-  }, [currentUser]);
 
   useEffect(() => {
     getUserRole();
@@ -419,9 +390,7 @@ function AddLeave(props) {
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
-              formSections={
-                Number(currentUser) === 4 ? FormSections : jsonSchema
-              }
+              formSections={FormSections}
               formHeading="Leave"
               onFormSubmit={(formValues) => {
                 submitForm(formValues);
@@ -433,13 +402,12 @@ function AddLeave(props) {
               submitBtnText="Check task"
               showResetBtn={true}
               resetBtnText="Cancel"
-              btnContainerClass= {Number(currentUser) === 4 ? 'form-submit-buttons':'d-none'}
+              btnContainerClass= "form-submit-buttons"
               isStepForm={false}
               onFormReset={() => {
                 history.push('/leaves');
               }}
             />
-            {Number(currentUser) === 4 ? (
               <div className="mt-5 mx-4">
                 {!rowData && (
                   <>
@@ -485,32 +453,6 @@ function AddLeave(props) {
                   </Button>
                 )}
               </div>
-            ) : (
-              <Row className="text-center ms-2">
-                <Col sm={2}>
-                  <Button
-                    onClick={() => {
-                      setStatus(2);
-                    }}
-                    variant="primary"
-                    className="mb-4"
-                  >
-                    Approve
-                  </Button>
-                </Col>
-                <Col sm={2} className="ms-2">
-                  <Button
-                    onClick={() => {
-                      setStatus(3);
-                    }}
-                    variant="secondary"
-                    className="mb-4"
-                  >
-                    Decline
-                  </Button>
-                </Col>
-              </Row>
-            )}
           </Card>
         </div>
       </section>

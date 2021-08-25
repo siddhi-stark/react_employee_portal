@@ -1,0 +1,346 @@
+[
+	{
+		"sectionName": "applyleave",
+		"sectionTitle": "Apply Leave",
+		"layout": {
+			"label": "2 Column",
+			"value": "2column"
+		},
+		"containerClass": "mt-4",
+		"displaySection": true,
+		"displaySectionTitle": false,
+		"fields": [
+			{
+				"name": "leave_type",
+				"type": "select",
+				"label": "Leave Type",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "getLeave_type",
+				"optionsCallbackUrl": "employeeUrl",
+				"options": [
+					{
+						"id": "1",
+						"label": "Casual Leave(CL)",
+						"value": "Casual Leave"
+					},
+					{
+						"id": "2",
+						"label": "Sick Leave(SL)",
+						"value": "Sick Leave"
+					},
+					{
+						"id": "3",
+						"label": "Loss Of Pay(LOP)",
+						"value": "Loss Of Pay"
+					}
+				]
+			},
+			{
+				"name": "reason",
+				"type": "text",
+				"label": "Reason",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
+				"name": "leave_from_date",
+				"type": "date",
+				"label": "Leave Date From",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+		        "dateFormat": "dd/MM/yyyy",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
+				"name": "leave_from_type",
+				"type": "select",
+				"label": "Leave From Type",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "onFromLeaveType",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "getLeave_from_type",
+				"optionsCallbackUrl": "employeeUrl",
+				"options": [
+					{
+						"id": "1",
+						"label": "Half Day",
+						"value": "Half Day"
+					},
+					{
+						"id": "2",
+						"label": "Full Day",
+						"value": "Full Day"
+					}
+				]
+			},
+			{
+				"name": "leave_from_time",
+				"type": "select",
+				"label": "Leave From Time",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {
+					"conditions": [
+						{
+							"name": "leave_from_type",
+							"value": "Half Day",
+							"condition": "=="
+						}
+					],
+					"displayWhenRelation": "OR"
+				},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": [{
+						"id": "1",
+						"label": "9:30 AM",
+						"value": "9:30 AM"
+					},
+					{
+						"id": "2",
+						"label": "1:30 PM",
+						"value": "1:30 PM"
+					}]
+			},
+			{
+				"name": "leave_to_date",
+				"type": "date",
+				"label": "Leave Date To",
+				"id": "",
+				"placeholder": "",
+		        "dateFormat": "dd/MM/yyyy",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
+				"name": "leave_to_type",
+				"type": "select",
+				"label": "Leave To Type",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "onToLeaveType",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "getLeave To Type",
+				"optionsCallbackUrl": "employeeUrl",
+				"options": [
+					{
+						"id": "1",
+						"label": "Half Day",
+						"value": "Half Day"
+					},
+					{
+						"id": "2",
+						"label": "Full Day",
+						"value": "Full Day"
+					}
+				]
+			},
+			{
+				"name": "leave_to_time",
+				"type": "select",
+				"label": "Leave To Time",
+				"id": "",
+				"placeholder": "",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {
+					"conditions": [
+						{
+							"name": "leave_to_type",
+							"value": "Half Day",
+							"condition": "=="
+						}
+					],
+					"displayWhenRelation": "OR"
+				},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": [{
+						"id": "1",
+						"label": "9:30 AM",
+						"value": "9:30 AM"
+					},
+					{
+						"id": "2",
+						"label": "1:30 PM",
+						"value": "1:30 PM"
+					}]
+			}
+		],
+		"allowedUsers": [],
+		"sectionLayout": "2column"
+	}
+]

@@ -47,7 +47,9 @@ import AddEvent from './containers/Events/AddEvent.component';
 import Holidays from './containers/Holidays/Holidays.component';
 import AddHoliday from './containers/Holidays/AddHoliday.component';
 import Leaves from './containers/Leaves/Leaves.component';
+import TeamLeaves from './containers/Leaves/TeamLeaves.component';
 import AddLeave from './containers/Leaves/AddLeave.component';
+import ViewLeave from './containers/Leaves/TeamAddLeave.component';
 
 function Routes() {
   return (
@@ -105,6 +107,8 @@ function Routes() {
       <Route path="/leaves" exact component={Leaves} />
       <Route path="/add-leave" exact component={AddLeave} />
       <Route path="/edit-leave/:leaveId" exact component={AddLeave} />
+      <Route path="/view-leave/:leaveId" exact component={ViewLeave} />
+      <Route path="/team-leaves" exact component={TeamLeaves} />
 
 
       <Route component={NotFound} />

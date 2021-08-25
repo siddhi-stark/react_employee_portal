@@ -1,0 +1,387 @@
+import React, { useState, useEffect } from 'react';
+import { withRouter, useHistory } from 'react-router-dom';
+import { Card, Button, Row, Col } from 'react-bootstrap';
+import swal from 'sweetalert';
+import StarkFormBuilder from 'stark-form-builder';
+import FormSections from './AddLeave.json';
+import { Helmet, TextInput } from '../../components/FormInputs';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+import customFunctions from '../../helper/customFunctions';
+
+function AddLeave(props) {
+  const idProps = props;
+  const leaveId = idProps.match.params.leaveId;
+
+  const history = useHistory();
+  // Variable declarations
+  const [defaultValues, updateDefaultValues] = useState({});
+  const [options, updateOptions] = useState({});
+  const [currentUser, updateCurrentUser] = useState(0);
+  const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
+  const [title, setTitle] = useState('');
+  const [reason, setReason] = useState('');
+
+  const [status, setStatus] = useState(null); // eslint-disable-line
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
+
+  // Get user role
+  const getUserRole = async () => {
+    const roleId = await localStorage.getItem('group');
+    updateCurrentUser(Number(roleId));
+  };
+
+  const formSchema = [...FormSections];
+  formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (
+      sectionData.name === 'leave_from_date' ||
+      sectionData.name === 'leave_to_date'
+    ) {
+      const date = new Date();
+      sectionData.minDate = date;
+    }
+    return sectionData;
+  });
+
+  useEffect(() => {
+    const formViewSchema = [...FormSections];
+    if (Number(currentUser) === 3) {
+      const updatedSchema = formViewSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (
+            item.name === 'leave_type' ||
+            item.name === 'reason' ||
+            item.name === 'leave_from_date' ||
+            item.name === 'leave_from_type' ||
+            item.name === 'leave_from_time' ||
+            item.name === 'leave_to_date' ||
+            item.name === 'leave_to_type' ||
+            item.name === 'leave_to_time'
+          )
+            itemData.disabled = true;
+          return itemData;
+        });
+        return s;
+      });
+      console.log('user---', updatedSchema);
+
+      updateJsonSchema([...updatedSchema]);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    getUserRole();
+    setTitle(leaveId ? 'Edit Leaves' : 'Add Leaves');
+  }, []);
+
+  // Submit Form
+  const submitForm = async (formValues) => {
+    const fromType =
+      formValues.leave_from_type &&
+      formValues.leave_from_type.value === 'Full Day'
+        ? 2
+        : 1;
+    const toType =
+      formValues.leave_to_type && formValues.leave_to_type.value === 'Full Day'
+        ? 2
+        : 1;
+    const postData = {
+      leave_type: formValues.leave_type ? formValues.leave_type.value : '',
+      reason: formValues.reason,
+      leave_from_date: formValues.leave_from_date
+        ? customFunctions.getDate(formValues.leave_from_date)
+        : '',
+      leave_from_type: formValues.leave_from_type && fromType,
+      leave_to_type: formValues.leave_to_type.value && toType,
+      leave_to_date: formValues.leave_to_date
+        ? customFunctions.getDate(formValues.leave_to_date)
+        : '',
+      leave_from_time: formValues.leave_from_time
+        ? formValues.leave_from_time.value
+        : '9:30 AM',
+      leave_to_time: formValues.leave_to_time
+        ? formValues.leave_to_time.value
+        : '6:30 PM',
+    };
+    if (leaveId) postData.id = Number(leaveId);
+
+    const callback = leaveId
+      ? AuthApi.putDataToServer
+      : AuthApi.postDataToServer;
+
+    const endPoint = Api.leavesUrl;
+
+    const { data, message } = await callback(endPoint, postData);
+    if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        // updateDefaultValues({});
+        swal.close();
+      });
+      // show error
+      // return;
+    } else {
+      swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(() => {
+        swal.close();
+      });
+    }
+    // Perform success actions
+  };
+
+  // Get data for form
+  const getData = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.leavesUrl}${leaveId}/`
+    );
+    if (!data) {
+      // show error
+      return;
+    }
+
+    updateDefaultValues({
+      leave_type: data.data.leave_type && {
+        label: data.data.leave_type,
+        value: data.data.leave_type,
+      },
+      reason: data.data.reason && data.data.reason,
+      leave_from_date:
+        data.data.leave_from_date &&
+        new Date(customFunctions.getDate(data.data.leave_from_date)),
+      leave_from_type: data.data.leave_from_type_name && {
+        label: data.data.leave_from_type_name,
+        value: data.data.leave_from_type_name,
+      },
+      leave_from_time: data.data.leave_from_time && {
+        label: data.data.leave_from_time,
+        value: data.data.leave_from_time,
+      },
+      leave_to_date:
+        data.data.leave_to_date &&
+        new Date(customFunctions.getDate(data.data.leave_to_date)),
+      leave_to_time: data.data.leave_to_time && {
+        label: data.data.leave_to_time,
+        value: data.data.leave_to_time,
+      },
+      leave_to_type: data.data.leave_to_type_name && {
+        label: data.data.leave_to_type_name,
+        value: data.data.leave_to_type_name,
+      },
+    });
+  };
+
+  // Call get data method on load
+  useEffect(() => {
+    if (leaveId) getData();
+  }, []);
+
+  const getLeaveType = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.title, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      leave_type: dpOptions,
+    };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getLeaveType();
+  }, []);
+
+  const getLeaveFromType = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.title, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      leave_from_type: dpOptions,
+    };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getLeaveFromType();
+  }, []);
+
+  const getLeaveToTime = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.title, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      leave_to_time: dpOptions,
+    };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getLeaveToTime();
+  }, []);
+
+  const getLeaveFromTime = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.title, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      leave_from_time: dpOptions,
+    };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getLeaveFromTime();
+  }, []);
+
+  const getLeaveToType = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.title, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      leave_to_type: dpOptions,
+    };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getLeaveToType();
+  }, []);
+
+  return (
+    <>
+      <Helmet title={title} />
+      <div className="title-breadcrumb-section">
+        <h2 className="main-content-title tx-24 mg-b-5">Leaves</h2>
+        <Breadcrumb items={items} />
+      </div>
+      <section className="content-area">
+        <div className="mt-5">
+          <Card>
+            <StarkFormBuilder
+              containerClass=""
+              formHeaderClass=""
+              formSections={
+                Number(currentUser) === 4 ? FormSections : jsonSchema
+              }
+              formHeading="Leave"
+              onFormSubmit={(formValues) => {
+                submitForm(formValues);
+              }}
+              options={options}
+              callbacks={{}}
+              defaultFormValues={defaultValues}
+              currentUser={currentUser}
+              submitBtnText="Check task"
+              showResetBtn={true}
+              resetBtnText="Cancel"
+              btnContainerClass= {Number(currentUser) === 4 ? 'form-submit-buttons':'d-none'}
+              isStepForm={false}
+              onFormReset={() => {
+                history.push('/leaves');
+              }}
+            />
+              <Row className="text-center ms-2">
+                <Col sm={2}>
+                  <Button
+                    onClick={() => {
+                      setStatus(2);
+                    }}
+                    variant="primary"
+                    className="mb-4"
+                  >
+                    Approve
+                  </Button>
+                </Col>
+                <Col sm={2} className="ms-2">
+                  <Button
+                    onClick={() => {
+                      setStatus(3);
+                    }}
+                    variant="secondary"
+                    className="mb-4"
+                  >
+                    Decline
+                  </Button>
+                </Col>
+              </Row>
+              <Row className="mx-3">
+              <TextInput
+              inputClass="form-control"
+                onInputChange={(e) => {
+                  console.log('e---',e.target.value);
+                  setReason(e.target.value);
+                }
+                }
+                label="Reason"
+                containerClass="form-group"
+                type="textarea"
+                name="reason"
+                value={reason}
+              />
+              </Row>
+          </Card>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default withRouter(AddLeave);

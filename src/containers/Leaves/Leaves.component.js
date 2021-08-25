@@ -25,11 +25,12 @@ function Leaves() {
 						history.push(`/edit-leave/${id}`);
 					}}
 				>
-					{(Number(userRole) === 4) ? <Image src="/images/edit-button.svg" /> :<Image src="/images/edit.png" />}
+					<Image src="/images/edit-button.svg" />
 				</a>
 			</>
 		);
 	};
+	
 	// Declare columns
 	const columns = [
 		{
@@ -42,11 +43,6 @@ function Leaves() {
 			label: 'Sr.No',
 		},
 		{
-			id: 'user_name',
-			label: 'Name',
-			roleAccess: [4],
-		},
-		{
 			id: 'leave_from_date',
 			label: 'From',
 			roleAccess: [4],
@@ -54,22 +50,6 @@ function Leaves() {
 				return (
 					<>
 						<span>{customFunctions.getNewFormattedDate(leave_from_date)}</span>
-					</>
-				);
-			},
-		},
-		{
-			id: 'leave_date',
-			label: 'Leave Date',
-			roleAccess: [3],
-			render: ({ leave_from_date, leave_to_date }) => {
-				return (
-					<>
-						<span>{`${customFunctions.getNewFormattedDate(
-							leave_from_date
-						)} to ${customFunctions.getNewFormattedDate(
-							leave_to_date
-						)}`}</span>
 					</>
 				);
 			},
