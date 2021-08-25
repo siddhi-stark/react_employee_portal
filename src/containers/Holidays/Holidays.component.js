@@ -25,25 +25,7 @@ function Holidays() {
 				>
 					<Image src="/images/edit-button.svg" />
 				</a>
-
-				<a
-					href="/"
-					className="pl-2 ms-4"
-					onClick={(e) => {
-					  e.preventDefault();
-					  e.stopPropagation();
-					  history.push(`/edit-holiday/${row.id}`, {
-isView: true,
-});
-					  customFunctions.setLocalStorage('employeeName', row.emp_name);
-					  customFunctions.setLocalStorage('userId', row.user_id);
-					  customFunctions.setLocalStorage('date', row.date);
-					}}
-				>
-										<Image src="/images/edit.png" />
-
-				</a>
-
+				
 				<a
 					href="/"
 					className="pl-2 ms-4"
