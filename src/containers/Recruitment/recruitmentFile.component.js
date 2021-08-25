@@ -15,7 +15,7 @@ function RecruitmentFileComponent() {
 
   const csvdata = [
     { Candidate_Name: 'Lata Patil', Email: 'lata12@gmail.com', Mobile_No: '9871234587', Locality: 'Pune' , Current_CTC: '200000', Expected_CTC: '300000', Notice_Period: '3', Total_Exp: '3' ,
-     Relevant_Exp: '2', Resume_Source: 'Naukri', Reason_Job_Change: 'Better Opportunity', Resume: '',Gender:'Female' },
+     Relevant_Exp: '2', Resume_Source: 'Naukri', Reason_Job_Change: 'Better Opportunity', Resume: '',Gender:'Female', Fresher : 'Yes' },
   ];
 
    const csvHeader = [
@@ -31,7 +31,8 @@ function RecruitmentFileComponent() {
     { label: 'Resume Source', key: 'Resume_Source' },
     { label: 'Reason Job Change', key: 'Reason_Job_Change' },
     { label: 'Resume', key: 'Resume' },
-    { label: 'Gender', key: 'Gender' }
+    { label: 'Gender', key: 'Gender' },
+    { label: 'Fresher', key: 'Fresher' }
   ];
 
   const csvReport = {

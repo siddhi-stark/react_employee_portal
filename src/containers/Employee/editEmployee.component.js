@@ -35,6 +35,11 @@ function EditEmployee(props) {
   const limit = 10;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
   const history = useHistory();
+
+    const datee = customFunctions.getLocalStorage('date');
+    const dataaa = datee.split('-');
+    const newDate = dataaa[2]+'-'+dataaa[1]+'-'+dataaa[0]; //eslint-disable-line
+    
   const columns = [
     {
       id: 'index',
@@ -82,9 +87,6 @@ function EditEmployee(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    const datee = customFunctions.getLocalStorage('date');
-    const dataaa = datee.split('-');
-    const newDate = dataaa[2]+'-'+dataaa[1]+'-'+dataaa[0]; //eslint-disable-line
     const id = props.match.params.employeeId;
     // const loginDate = formValues.login.replace('T', ' ');
     // const login = loginDate.split('.')[0]
@@ -132,14 +134,14 @@ function EditEmployee(props) {
 
   // Declare methods table
   const getRowData = async (pageNo = 1) => {
-    const date = new Date();
-    const YMDDate = customFunctions.getFormattedDate(date);
+    // const date = new Date();
+    // const YMDDate = customFunctions.getFormattedDate(date);
     // console.log('YMDDate',YMDDate);
     const ID = customFunctions.getLocalStorage('userId');
     // console.log('date',date);
-    const dateNew = YMDDate.split('-');
+    // const dateNew = YMDDate.split('-');
     // console.log('dateNew',dateNew);
-    const FormateedDate = dateNew[2]+'-'+dateNew[1]+'-'+dateNew[0]; //eslint-disable-line
+    // const FormateedDate = dateNew[2]+'-'+dateNew[1]+'-'+dateNew[0]; //eslint-disable-line
     // console.log('FormateedDate',FormateedDate);
     const page = pageNo || currentPage;
     const endPoint = `${Api.dailyReportUrl}`;
@@ -148,7 +150,7 @@ function EditEmployee(props) {
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
-      date: FormateedDate,
+      date: newDate,
       user_id: ID,
       page,
       limit,

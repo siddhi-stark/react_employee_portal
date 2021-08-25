@@ -22,7 +22,6 @@ function AcceptInviteLink(props) {
     );
     if (data) {
       // setEmail(data.data.email);
-      console.log('data', data);
       setCandidateData(data.data);
       customFunctions.setLocalStorage(
         'candidateData',
@@ -30,43 +29,36 @@ function AcceptInviteLink(props) {
       );
     }
     if (!data) {
-      console.log('data', data);
       swal('Token is invalid', '', 'error');
       props.history.push('/login');
     }
   };
 
   useEffect(() => {
-    console.log('token', token);
     dispatch({ type: 'LOGIN', value: false });
     const matchUrltoken = props.match.params.offerToken;
-    console.log('matchUrltoken', matchUrltoken);
     setToken(matchUrltoken);
     if (!matchUrltoken) {
       window.location = '/login';
-      console.log('toeknnnnnnnnnn');
     }
     verifyToken(matchUrltoken);
   }, [dispatch]);
 
   const onAcceptBtn = async (type) => {
-    console.log('type', type);
     const postData = {
       token,
       offer_status: type === 0 ? 1 : 2,
     };
-    console.log('postData', postData);
     const { data } = await AuthApi.putDataToServer(
       `${Api.offerStatusUrl}`,
       postData
     );
     if (data) {
       // swal(data.message[0],'','success');
-      console.log('data.data', data.data);
+     await verifyToken(token);
       isShowButtons(true);
 
        if(type === 0) {
-       console.log('typeeeee'); 
       setHideButtons(true);
     }else {
       setHideDeclineButton(true);
@@ -86,8 +78,6 @@ function AcceptInviteLink(props) {
 
   return (
     <>
-      {console.log('hideButtons', hideButtons)}
-      {console.log('hideDeclineButton', hideDeclineButton)}
       <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">

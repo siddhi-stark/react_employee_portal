@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import {
   Card,
   Row,
@@ -33,6 +33,7 @@ function Designation() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [designation, setDesignation] = useState('');
   const [title, setTitle] = useState('');
+  const history = useHistory();
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -95,8 +96,22 @@ function Designation() {
     },
   ];
 
+//   useEffect(() => {
+// const isAllowed = customFunctions.getLocalStorage('group')
+// if(isAllowed !== 5){
+// history.push('/dashboard');
+// return; // eslint-disable-line
+// }
+// }, []);
+
+
   useEffect(() => {
     async function getData() {
+      const isAllowed = customFunctions.getLocalStorage('group');
+      if(isAllowed !== 1 || isAllowed !== 4) {
+        history.push('/');
+        return; // eslint-disable-line
+      }
       getTableData(pagination.current_page);
       setTitle('Designation');
       const uRole = customFunctions.getLocalStorage('group');

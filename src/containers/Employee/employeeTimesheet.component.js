@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Accordion, Button, Image, Row, Col } from 'react-bootstrap';
+import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
@@ -181,7 +181,7 @@ function EmployeeTimesheet() {
         );
       },
     },
-    {
+     {
       id: 'action',
       label: 'Action',
       render: handleActionCallback,
@@ -418,23 +418,25 @@ function EmployeeTimesheet() {
               </Row>
             )}
 
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              tableClass="table-striped"
-              showPagination={true} // eslint-disable-line
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
-              }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
-            />
+       
+<CustomTable
+columns={columns}
+rows={rowData}
+role={5}
+showPagination={true}
+tableClass="table-striped"
+paginationProps={{
+totalItems: totalCount,
+itemsPerPage: limit,
+activePage: currentPage,
+onPageChange: (pageNo) => {
+getRowData(pageNo);
+},
+}}
+emptyRender={() => {
+return 'No record found.';
+}}
+/>
           </Card.Body>
         </Card>
       </div>
