@@ -5,6 +5,7 @@ import {
   Card,
   Image,
 } from 'react-bootstrap';
+import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -16,7 +17,7 @@ function Events() {
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [userRole, setUserRole] = useState('');
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
@@ -24,20 +25,17 @@ function Events() {
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Events' }];
 
-  const handleActionCallback = () => {
+  const handleActionCallback = (row) => {
     return (
       <>
         <a
           href="/"
           className="pl-2"
-          // onClick={(e) => {
-          //   e.preventDefault();
-          //   e.stopPropagation();
-          //   history.push(`/edit-employee/${row.user_id}`);
-          //   customFunctions.setLocalStorage('employeeName', row.emp_name);
-          //   customFunctions.setLocalStorage('userId', row.user_id);
-          //   customFunctions.setLocalStorage('date', row.date);
-          // }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            history.push(`/edit-event/${row.id}`);
+          }}
         >
           <Image src="/images/edit-button.svg" />
         </a>
@@ -45,14 +43,13 @@ function Events() {
         <a
           href="/"
           className="pl-2 ms-4"
-          // onClick={(e) => {
-          //   e.preventDefault();
-          //   e.stopPropagation();
-          //   history.push(`/edit-employee/${row.user_id}`);
-          //   customFunctions.setLocalStorage('employeeName', row.emp_name);
-          //   customFunctions.setLocalStorage('userId', row.user_id);
-          //   customFunctions.setLocalStorage('date', row.date);
-          // }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+             history.push(`/edit-event/${row.id}`, {
+isView: true,
+});
+          }}
         >
           view
         </a>
@@ -60,14 +57,11 @@ function Events() {
         <a
           href="/"
           className="pl-2 ms-4"
-          // onClick={(e) => {
-          //   e.preventDefault();
-          //   e.stopPropagation();
-          //   history.push(`/edit-employee/${row.user_id}`);
-          //   customFunctions.setLocalStorage('employeeName', row.emp_name);
-          //   customFunctions.setLocalStorage('userId', row.user_id);
-          //   customFunctions.setLocalStorage('date', row.date);
-          // }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            removeHoliday(row.id);
+          }}
         >
           <Image src="/images/delete.png" />
         </a>
@@ -122,6 +116,42 @@ function Events() {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
   }, [filterData]);
+
+    const removeHoliday = (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to delete the event?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.eventsUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getRowData(1);
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
+  };
 
   return (
     <>

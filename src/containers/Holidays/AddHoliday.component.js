@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
-import { Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import FormSections from './holiday.json';
 import AuthApi from '../../helper/authApi';
@@ -11,27 +10,24 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 
 function AddHoliday(props) {
+const viewObj = props;
+const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	// Variable declarations
 	const [defaultValues, updateDefaultValues] = useState({});
 	const [options, updateOptions] = useState({}); // eslint-disable-line
 	const [currentUser, updateCurrentUser] = useState(0);
 	const [holidayId,setHolidayId] = useState('');
-	const [view,setViewID] = useState('');
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-
+  const [title,setTitle] = useState('');
+	const hId = props.match.params.ID; // eslint-disable-line
 	const viewId = props.match.params.viewID; // eslint-disable-line
-	const title = viewId ? 'View Holiday' : 'Add Holiday';
-	const items = [{ to: '/', label: 'Home' }, { label: 'Add Holiday' }];
+	const items = [{ to: '/', label: 'Home' }, { label: hId ? 'Edit Holiday' : 'Add Holiday'   }];
 
 	const history = useHistory();
 
 
 	 useEffect(() => {
-    	console.log('viewIDDDDD');
-	const viewId = props.match.params.viewID; // eslint-disable-line
-	setViewID(viewId);
-    if (view) {
-    	console.log('viewIDDDDD');
+    if (!customFunctions.checkIfEmpty(viewOptions)) {
       const formSchema = [...FormSections];
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -45,8 +41,22 @@ function AddHoliday(props) {
         return s;
       });
       updateJsonSchema([...updatedSchema]);
+    } else {
+    	 const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (item.name === 'occasion' || item.name === 'date'
+          )
+            itemData.disabled = false;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
     }
-  }, [view]);
+  }, []);
 
 
 	// Get user role
@@ -56,7 +66,7 @@ function AddHoliday(props) {
 	};
 
 	useEffect(() => {
-		getUserRole();
+	getUserRole();
 	}, []);
 
 	// Submit Form
@@ -91,28 +101,28 @@ function AddHoliday(props) {
 	// Get data for form
 	const getData = async (id) => {
 		const { data } = await AuthApi.getDataFromServer(`${Api.holidayUrl}${id}/`);
-		console.log('holidaydata',data);
 	   
-	   
-	   data.data.date = data.data.date ? new Date(customFunctions.getDate(data.data.date)) : '';
+	   if(data){
+		   	data.data.date = data.data.date ? new Date(customFunctions.getDate(data.data.date)) : '';
+				updateDefaultValues(data.data);
+	   }
 
-
-		updateDefaultValues(data.data);
 	};
 
 	// Call get data method on load
 	useEffect(() => {
-		const id = props.match.params.ID;
-		setHolidayId(id);
-		if(id || view) {
-
-		getData(id || view);
+		const viewID = props.match.params.viewID;
+		setHolidayId(hId);
+		if(hId || viewID) {
+			setTitle('Edit Holiday');
+		getData(hId || viewID);
+		}else{
+			setTitle('Add Holiday');
 		}
-	}, [holidayId,view]);
+	}, [holidayId]);
 
 	return (
 		<>
-		{console.log('view',view)}
 
 			<Helmet title={title} />
 			<div className="page-header">
@@ -121,16 +131,11 @@ function AddHoliday(props) {
 					<Breadcrumb items={items} />
 				</div>
 			</div>
-			{view ? (
-
-			<Button className="float-end" onClick= {() => {history.push('/holidays');setViewID('')}} >Back</Button>
-				) : ''}
-
-			<div className="mt-5">
+				<div className="mt-5">
 				<StarkFormBuilder
 					containerClass=""
 					formHeaderClass=""
-					formSections={FormSections || jsonSchema}
+					formSections={jsonSchema}
 					onFormSubmit={(formValues) => {
 						submitForm(formValues);
 					}}
@@ -141,7 +146,7 @@ function AddHoliday(props) {
 					submitBtnText="Submit"
 					showResetBtn={true}
 					resetBtnText="Clear"
-					btnContainerClass="form-submit-buttons"
+					btnContainerClass={viewOptions ? 'd-none':'form-submit-buttons'}
 					isStepForm={false}
 					onFormReset={() => {
 						console.log('form reset callback');
