@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Row, Col } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -23,12 +23,14 @@ function AddLeave(props) {
   const [rowData, setRowData] = useState([]);
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [title, setTitle] = useState('');
-  
+
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [status, setStatus] = useState(null); // eslint-disable-line
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   const columns = [
     {
@@ -42,7 +44,7 @@ function AddLeave(props) {
     {
       id: 'task_name',
       label: 'Task',
-    }, 
+    },
     {
       id: 'task_name',
       label: 'Task Start Date',
@@ -63,9 +65,50 @@ function AddLeave(props) {
 
   // Get user role
   const getUserRole = async () => {
-    const roleId = await localStorage.getItem('role');
+    const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
+
+  const formSchema = [...FormSections];
+  formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (
+      sectionData.name === 'leave_from_date' ||
+      sectionData.name === 'leave_to_date'
+    ) {
+      const date = new Date();
+      sectionData.minDate = date;
+    }
+    return sectionData;
+  });
+
+  useEffect(() => {
+    const formViewSchema = [...FormSections];
+    if (Number(currentUser) === 3) {
+      const updatedSchema = formViewSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (
+            item.name === 'leave_type' ||
+            item.name === 'reason' ||
+            item.name === 'leave_from_date' ||
+            item.name === 'leave_from_type' ||
+            item.name === 'leave_from_time' ||
+            item.name === 'leave_to_date' ||
+            item.name === 'leave_to_type' ||
+            item.name === 'leave_to_time'
+          )
+            itemData.disabled = true;
+          return itemData;
+        });
+        return s;
+      });
+      console.log('user---', updatedSchema);
+
+      updateJsonSchema([...updatedSchema]);
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     getUserRole();
@@ -180,15 +223,17 @@ function AddLeave(props) {
         label: data.data.leave_from_type_name,
         value: data.data.leave_from_type_name,
       },
-      leave_from_time:
-        data.data.leave_from_time &&
-        {label:data.data.leave_from_time , value:data.data.leave_from_time},
+      leave_from_time: data.data.leave_from_time && {
+        label: data.data.leave_from_time,
+        value: data.data.leave_from_time,
+      },
       leave_to_date:
         data.data.leave_to_date &&
         new Date(customFunctions.getDate(data.data.leave_to_date)),
-      leave_to_time:
-        data.data.leave_to_time &&
-        {label:data.data.leave_to_time , value:data.data.leave_to_time},
+      leave_to_time: data.data.leave_to_time && {
+        label: data.data.leave_to_time,
+        value: data.data.leave_to_time,
+      },
       leave_to_type: data.data.leave_to_type_name && {
         label: data.data.leave_to_type_name,
         value: data.data.leave_to_type_name,
@@ -249,7 +294,7 @@ function AddLeave(props) {
     getLeaveFromType();
   }, []);
 
-   const getLeaveToTime = async () => {
+  const getLeaveToTime = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.undefined);
     if (!data) {
       // show error
@@ -273,7 +318,7 @@ function AddLeave(props) {
     getLeaveToTime();
   }, []);
 
-   const getLeaveFromTime = async () => {
+  const getLeaveFromTime = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.undefined);
     if (!data) {
       // show error
@@ -321,15 +366,15 @@ function AddLeave(props) {
     getLeaveToType();
   }, []);
 
-    // Declare methods
+  // Declare methods
   const getRowData = async (pageNo = 1) => {
-    console.log('startDate',startDate, endDate);
+    console.log('startDate', startDate, endDate);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeTask}`;
     const params = {
       page,
       limit,
-      user_id:leaveId,
+      user_id: leaveId,
       start_date: startDate && customFunctions.getDate(startDate),
       end_date: endDate && customFunctions.getDate(endDate),
       sort_direction: 'descending',
@@ -356,10 +401,10 @@ function AddLeave(props) {
   };
 
   useEffect(() => {
-    if(startDate && endDate){
+    if (startDate && endDate) {
       getRowData(1);
     }
-  }, [startDate,endDate]);
+  }, [startDate, endDate]);
 
   return (
     <>
@@ -374,7 +419,9 @@ function AddLeave(props) {
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
-              formSections={FormSections}
+              formSections={
+                Number(currentUser) === 4 ? FormSections : jsonSchema
+              }
               formHeading="Leave"
               onFormSubmit={(formValues) => {
                 submitForm(formValues);
@@ -386,51 +433,84 @@ function AddLeave(props) {
               submitBtnText="Check task"
               showResetBtn={true}
               resetBtnText="Cancel"
-              btnContainerClass="form-submit-buttons"
+              btnContainerClass= {Number(currentUser) === 4 ? 'form-submit-buttons':'d-none'}
               isStepForm={false}
               onFormReset={() => {
                 history.push('/leaves');
               }}
             />
-            <div className="mt-5 mx-4">
-            { !rowData && (
-              <>
-                <CustomTable
-                  columns={columns}
-                  rows={rowData}
-                  tableClass="table-striped"
-                  role={5}
-                  showPagination={true}
-                  paginationProps={{
-                    totalItems: totalCount,
-                    itemsPerPage: limit,
-                    activePage: currentPage,
-                    onPageChange: (pageNo) => {
-                      getRowData(pageNo);
-                    },
-                  }}
-                  emptyRender={() => {
-                    return 'No record found.';
-                  }}
-                />
-                <br/>
-                <span className="text-danger">Note: The highlighted task shows the high priority and may affect the project deadline. Kindly look into and the apply for leave</span>
-              </>
-              )}
-            <br/>
-              {!customFunctions.checkIfEmpty(rowData) && (
-                <Button
-                  // href="#"
-                  // onClick={() => {
-                  //   history.push('/add-leave');
-                  // }}
-                  disabled = {!customFunctions.checkIfEmpty(rowData) ? '' : 'disabled'}
-                  className="mb-4"
-                >
-                  Apply Leave
-                </Button>
-              )}
-            </div>
+            {Number(currentUser) === 4 ? (
+              <div className="mt-5 mx-4">
+                {!rowData && (
+                  <>
+                    <CustomTable
+                      columns={columns}
+                      rows={rowData}
+                      tableClass="table-striped"
+                      role={5}
+                      showPagination={true}
+                      paginationProps={{
+                        totalItems: totalCount,
+                        itemsPerPage: limit,
+                        activePage: currentPage,
+                        onPageChange: (pageNo) => {
+                          getRowData(pageNo);
+                        },
+                      }}
+                      emptyRender={() => {
+                        return 'No record found.';
+                      }}
+                    />
+                    <br />
+                    <span className="text-danger">
+                      Note: The highlighted task shows the high priority and may
+                      affect the project deadline. Kindly look into and the
+                      apply for leave
+                    </span>
+                  </>
+                )}
+                <br />
+                {!customFunctions.checkIfEmpty(rowData) && (
+                  <Button
+                    // href="#"
+                    // onClick={() => {
+                    //   history.push('/add-leave');
+                    // }}
+                    disabled={
+                      !customFunctions.checkIfEmpty(rowData) ? '' : 'disabled'
+                    }
+                    className="mb-4"
+                  >
+                    Apply Leave
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <Row className="text-center ms-2">
+                <Col sm={2}>
+                  <Button
+                    onClick={() => {
+                      setStatus(2);
+                    }}
+                    variant="primary"
+                    className="mb-4"
+                  >
+                    Approve
+                  </Button>
+                </Col>
+                <Col sm={2} className="ms-2">
+                  <Button
+                    onClick={() => {
+                      setStatus(3);
+                    }}
+                    variant="secondary"
+                    className="mb-4"
+                  >
+                    Decline
+                  </Button>
+                </Col>
+              </Row>
+            )}
           </Card>
         </div>
       </section>

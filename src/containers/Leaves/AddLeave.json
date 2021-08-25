@@ -104,6 +104,7 @@
 				"id": "",
 				"placeholder": "",
 				"inputClass": "",
+		        "dateFormat": "dd/MM/yyyy",
 				"containerClass": "",
 				"validations": [
 					{
@@ -226,6 +227,7 @@
 				"label": "Leave Date To",
 				"id": "",
 				"placeholder": "",
+		        "dateFormat": "dd/MM/yyyy",
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [],

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Image, Card } from 'react-bootstrap';
+import swal from 'sweetalert';
+import { Image, Card, Button, Accordion } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
+import StarkFormBuilder from 'stark-form-builder';
+import FormSections from './filterFormschema.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -10,7 +13,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function Leaves() {
-	const handleActionCallback = ({id}) => {
+	const handleActionCallback = ({ id }) => {
 		return (
 			<>
 				<a
@@ -22,7 +25,7 @@ function Leaves() {
 						history.push(`/edit-leave/${id}`);
 					}}
 				>
-					<Image src="/images/edit-button.svg" />
+					{(Number(userRole) === 4) ? <Image src="/images/edit-button.svg" /> :<Image src="/images/edit.png" />}
 				</a>
 			</>
 		);
@@ -32,33 +35,56 @@ function Leaves() {
 		{
 			id: 'id',
 			label: 'id',
-			isDisplay: false
+			isDisplay: false,
 		},
 		{
 			id: 'index',
 			label: 'Sr.No',
 		},
 		{
+			id: 'user_name',
+			label: 'Name',
+			roleAccess: [4],
+		},
+		{
 			id: 'leave_from_date',
 			label: 'From',
-			render: ({ leave_from_date }) => { // eslint-disable-line
-        return (
-          <>
-            <span>{customFunctions.getNewFormattedDate(leave_from_date)}</span>
-          </>
-        );
-      },
+			roleAccess: [4],
+			render: ({ leave_from_date }) => {
+				return (
+					<>
+						<span>{customFunctions.getNewFormattedDate(leave_from_date)}</span>
+					</>
+				);
+			},
+		},
+		{
+			id: 'leave_date',
+			label: 'Leave Date',
+			roleAccess: [3],
+			render: ({ leave_from_date, leave_to_date }) => {
+				return (
+					<>
+						<span>{`${customFunctions.getNewFormattedDate(
+							leave_from_date
+						)} to ${customFunctions.getNewFormattedDate(
+							leave_to_date
+						)}`}</span>
+					</>
+				);
+			},
 		},
 		{
 			id: 'leave_to_date',
 			label: 'To',
-			render: ({ leave_to_date }) => { // eslint-disable-line
-        return (
-          <>
-            <span>{customFunctions.getNewFormattedDate(leave_to_date)}</span>
-          </>
-        );
-      },
+			roleAccess: [4],
+			render: ({ leave_to_date }) => {
+				return (
+					<>
+						<span>{customFunctions.getNewFormattedDate(leave_to_date)}</span>
+					</>
+				);
+			},
 		},
 		{
 			id: 'leave_type',
@@ -67,6 +93,7 @@ function Leaves() {
 		{
 			id: 'leave_count',
 			label: 'Days',
+			roleAccess: [4],
 		},
 		{
 			id: 'status_name',
@@ -85,20 +112,41 @@ function Leaves() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(10);
 	const limit = 10;
-	const [filterData, setFilterData] = useState({}); // eslint-disable-line
+	const [filterData, setFilterData] = useState({});
 	const [title, setTitle] = useState('');
 	const [userRole, setUserRole] = useState('');
 	const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
+	let filterOptions = {};
+
+	// Variable declarations Filter
+	// const [defaultValues, updateDefaultValues] = useState({});
+	const [options, updateOptions] = useState({});
 
 	const history = useHistory();
+
+  const formSchema = [...FormSections];
+  formSchema[0].fields.map((section) => {
+    const sectionData = section;
+    if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
+      const date = new Date();
+      sectionData.minDate = date;
+    }
+    return sectionData;
+  });
 
 	const getRowData = async (pageNo = 1) => {
 		const page = pageNo || currentPage;
 		const endPoint = `${Api.leavesUrl}`;
+		 const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
+
 		const params = {
 			page,
 			limit,
-			sort_direction:'descending'
+			sort_direction: 'descending',
+			...filterList
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
@@ -115,7 +163,10 @@ function Leaves() {
 			});
 			setRowData((data && data.data) || []);
 		} else {
-			console.log('error', message);
+			swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
 		}
 	};
 
@@ -126,6 +177,48 @@ function Leaves() {
 		setTitle('Leaves');
 	}, [filterData]);
 
+	// Get user role Filter
+	// Submit Form
+	const submitForm = async (formValues) => {
+		const payload = {
+        employee_id: formValues.employee_id
+          ? formValues.employee_id.value
+          : '',
+        start_date: formValues.start_date
+          ? customFunctions.getDate(formValues.start_date)
+          : '',
+        end_date: formValues.end_date
+          ? customFunctions.getDate(formValues.end_date)
+          : '',
+      };
+		setFilterData(payload);
+	};
+
+	const getEmployee = async () => {
+		const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
+		if (!data) {
+			// show error
+			return;
+		}
+		const dpOptions = [];
+		data.data.map((op) => {
+			// Change appropriate keys
+			dpOptions.push({ label: op.full_name, value: op.id });
+			return op;
+		});
+		const allOptions = {
+			...filterOptions,
+			...options,
+			employee_id: dpOptions,
+		};
+		filterOptions = {...allOptions};
+		updateOptions(allOptions);
+	};
+
+	useEffect(() => {
+		getEmployee();
+	}, []);
+
 	return (
 		<>
 			<Helmet title={title} />
@@ -134,7 +227,45 @@ function Leaves() {
 				<Breadcrumb items={items} />
 			</div>
 			<section className="content-area">
-				<div className="mt-5">
+				<Accordion defaultActiveKey="0">
+					<Card>
+						<Card.Header>
+							<div className="d-flex align-items-center justify-content-between">
+								<h4 className="text-primary m-0">Filters</h4>
+								<div className="d-flex align-items-center justify-content-end">
+									<Accordion.Toggle as={Button} variant="link" eventKey="1">
+										Expand
+									</Accordion.Toggle>
+								</div>
+							</div>
+						</Card.Header>
+						<Accordion.Collapse eventKey="1">
+							<Card.Title>
+								<StarkFormBuilder
+									containerClass=""
+									formHeaderClass=""
+									formSections={FormSections}
+									formHeading="Leaves Filter "
+									onFormSubmit={(formValues) => {
+										submitForm(formValues);
+									}}
+									options={options}
+									callbacks={{}}
+									// defaultFormValues={defaultValues}
+									currentUser={userRole}
+									submitBtnText="Submit"
+									showResetBtn={true}
+									resetBtnText="Cancel"
+									btnContainerClass="form-submit-buttons pull-right mb-3"
+									isStepForm={false}
+									onFormReset={() => {
+										console.log('form reset callback');
+									}}
+								/>
+							</Card.Title>
+						</Accordion.Collapse>
+					</Card>
+				</Accordion>
 					<Card>
 						<Card.Header>
 							<div className="d-flex align-items-center justify-content-between">
@@ -173,7 +304,6 @@ function Leaves() {
 							/>
 						</Card.Body>
 					</Card>
-				</div>
 			</section>
 		</>
 	);

@@ -103,5 +103,6 @@
     "react/no-unescaped-entities":"off",
     "react/jsx-boolean-value":"off",
     "jsx-a11y/aria-role":"off",
+    "camelcase": "off",
   }
 }
