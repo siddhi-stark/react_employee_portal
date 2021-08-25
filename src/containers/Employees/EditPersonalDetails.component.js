@@ -17,21 +17,10 @@ function EditPersonalDetails(props) {
    const [jsonSchema, updateJsonSchema] = useState(FormSections);  
 
 
-// const formSchema = [...FormSections];
-//   formSchema[0].fields.map((section) => {
-//     const sectionData = section;
-//     if (sectionData.name === 'confirmation_date' || sectionData.name === 'relieving_date') {
-//       const date = new Date();
-//       sectionData.minDate = date;
-//     }
-//     return sectionData;
-//   });
-
 useEffect(() => {
   const employeeId = customFunctions.getLocalStorage('id');
     if(employeeId){
       const formSchema = [...FormSections];
-      console.log('formSchema',formSchema);
     const updatedSchema = formSchema.map((section)=>{
       const s = {...section};
       s.fields = section.fields.map((item) => {
@@ -99,7 +88,6 @@ useEffect(() => {
        props.onPersonalDetailChanges();
        
       }
-      // Perform success actions
       
   };
     
@@ -124,7 +112,7 @@ useEffect(() => {
        designation: ds
      };
 
-     updateDefaultValues({...obj})    // updateDefaultValues(data);
+     updateDefaultValues({...obj})    
    }
   };
 

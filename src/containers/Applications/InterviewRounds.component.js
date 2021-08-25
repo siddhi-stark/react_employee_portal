@@ -78,11 +78,8 @@ function InterviewRounds() {
   };
 
   const getData = async () => {
-    // console.log(designation);
-    // const ApplicantId = props.match.params.ID;
 
     const section = hrInterviewFormSections[0].fields[3].options;
-    console.log('sections',section);
     const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
       if(data) {
         
@@ -162,7 +159,6 @@ function InterviewRounds() {
   // Submit Form HR
   const submitForm = async (formValues) => {
     const id = customFunctions.getLocalStorage('applicantId');
-    console.log('formValues',formValues);
     const postData = {
       int_date: formValues.int_date ? customFunctions.getDate(formValues.int_date) : '',
       int_time: formValues.int_time ? customFunctions.getTime(formValues.int_time) : '',
@@ -170,7 +166,6 @@ function InterviewRounds() {
       interviewer: formValues.interviewer ? formValues.interviewer.value : '',
       applicant: id
     }
-    console.log('postData',postData);
     const { data } = await AuthApi.postDataToServer(
       Api.roundsUrl,
       postData

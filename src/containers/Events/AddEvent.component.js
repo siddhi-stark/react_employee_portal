@@ -42,7 +42,6 @@ function AddEvent() {
 
 	// Submit Form
 	const submitForm = async (formValues) => {
-		console.log('formValues',formValues);
 
 		const { data } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
 		if (!data) {

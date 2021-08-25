@@ -99,7 +99,6 @@ function AddTechnologyStack(props) {
       }
       return e;
     });
-    // console.log('techData',techData);
     updateDefaultValues({
       addmore: techData,
       employee:  data.data.id && {

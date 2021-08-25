@@ -49,7 +49,6 @@ function CurrentEmployee() {
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));
-      // console.log('data.paginator', data.paginator);
     }
   };
 
@@ -62,7 +61,6 @@ function CurrentEmployee() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
     setFilterData(formValues); //eslint-disable-line
   };
 

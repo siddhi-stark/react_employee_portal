@@ -127,7 +127,6 @@ function Confirmation() {
     const endPoint = `${Api.generateContentUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
-      console.log('data',data);
       sendConfirmationLetter(data.data.body);
     }
   };

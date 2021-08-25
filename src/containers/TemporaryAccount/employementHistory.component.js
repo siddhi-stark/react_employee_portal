@@ -41,7 +41,6 @@ function EmployementHistory(props) {
   }, []);
 
   const getData = async () => {
-    console.log('candidateId', candidateId);
     const addmoreData = [];
 
     const endPoint = candidateId
@@ -100,7 +99,6 @@ function EmployementHistory(props) {
       updateDefaultValues({ addmore: [...addmoreData] });
     } else {
       console.log('error', message);
-      // swal(message, '', 'error');
     }
   };
 

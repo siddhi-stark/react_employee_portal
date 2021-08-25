@@ -33,7 +33,6 @@ function Personal(props) {
   }, []);
 
   const getData = async () => {
-    console.log('applicantId',applicantId);
     let panCard = '';
     let adharCard = '';
     let photo = '';
@@ -71,7 +70,6 @@ function Personal(props) {
       setDocId(docIdArr);
     } else {
       console.log('error', message);
-      // swal(message, '', 'error');
     }
   };
 
@@ -186,11 +184,8 @@ function Personal(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        // updateDefaultValues({});
         swal.close();
       });
-      // show error
-      // return;
     } else {
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
@@ -203,7 +198,6 @@ function Personal(props) {
         swal.close();
       });
       }
-    // Perform success actions
   };
 
   return (

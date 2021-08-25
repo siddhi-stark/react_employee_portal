@@ -48,7 +48,6 @@ function InterviewerRoundsStatus(props) {
       `${Api.roundsUrl}${id}/`
     );
     if (data) {
-      console.log('data',data);
       setApplicantRoundsId(data.data.applicant_rounds);
       setInterviewData({
         interviewDate: data.data.applicant_rounds[0].int_date,
@@ -56,7 +55,6 @@ function InterviewerRoundsStatus(props) {
         interviewSelector: data.data.applicant_rounds[0].interviewer_name,
         interviewRound: data.data.applicant_rounds[0].status_name,
       });
-      // console.log('obj',{status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
       updateDefaultValues({status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
     }
   };
@@ -68,14 +66,12 @@ function InterviewerRoundsStatus(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('applicantRoundsId',applicantRoundsId);
       const applicantId = customFunctions.getLocalStorage('applicantId');
 
     const postData = [];
     applicantRoundsId.map((intrw,i) => {
       if(i !== 0) {
 
-      // console.log('intrw',intrw);
       postData.push({
         id:intrw.applicant_round_id,
         comments:intrw.comments,
@@ -86,7 +82,6 @@ function InterviewerRoundsStatus(props) {
       return intrw;
     });
 
-    console.log('post',postData)
     const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
     const abc = {
       id:newId ? Number(newId) : Number(interviewId),
@@ -108,8 +103,6 @@ function InterviewerRoundsStatus(props) {
     postData.push( 
       abc
     );
-    console.log('postData',postData);
-    // console.log('NewpostData',postData);
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.roundsUrl}`,
       { 'data':postData}

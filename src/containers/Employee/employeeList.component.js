@@ -77,7 +77,6 @@ yesterday.setDate(today.getDate() - 1);
 // const y = yesterday.getFullYear();
 // const m = yesterday.getMonth();
 // const d = yesterday.getDay();
-// console.log('y',y,m,d);
 const date = customFunctions.getDate(new Date(yesterday));
 const dateNew = customFunctions.getFormattedDate(date);
   const n = weekday[yesterday.getDay()];
@@ -130,7 +129,6 @@ const dateNew = customFunctions.getFormattedDate(date);
       console.log('error', message);
     }
   };
-  // console.log(setFilterData);
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));

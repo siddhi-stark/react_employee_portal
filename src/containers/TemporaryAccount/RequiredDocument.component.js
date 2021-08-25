@@ -11,39 +11,10 @@ import customFunctions from '../../helper/customFunctions';
 function RequiredDocument(props) {
 	const matchUrltoken = props.match.params.token; // eslint-disable-line
 	JSON.parse(customFunctions.getLocalStorage('candidateData'));
-	// const [token, setToken] = useState(null);
-	// const dispatch = useDispatch();
 
 const [isBtnClicked,setIsBtnClicked] = useState(false);
 const [password,setPassword] = useState('');
-	// const verifyToken = async (tkn) => {
-	// 	console.log('tkn',tkn);
-	// 	const { data } = await AuthApi.getDataFromServer(
-	// 		`${Api.temporaryAccountUrl}?token=${tkn}`
-	// 	);
-	// 	if (data) {
-	// 		// setEmail(data.data.email);
-	// 		console.log('data', data);
-	// 	}
-	// 	if (!data) {
-	// 		console.log('data', data);
-	// 		swal('Token is invalid', '', 'error');
-	// 		// props.history.push('/login');
-	// 	}
-	// };
 
-	// useEffect(() => {
-	// 	console.log('token', token);
-	// 	dispatch({ type: 'LOGIN', value: false });
-	// 	const matchUrltoken = props.match.params.token;
-	// 	console.log('matchUrltoken', matchUrltoken);
-	// 	setToken(matchUrltoken);
-	// 	if (!matchUrltoken) {
-	// 		window.location = '/login';
-	// 		console.log('toeknnnnnnnnnn');
-	// 	}
-	// 	verifyToken(matchUrltoken);
-	// }, [dispatch]);
 
 const addPassword = () => {
 	setIsBtnClicked(true);
@@ -51,9 +22,7 @@ const addPassword = () => {
 
  const onSubmit = (e) => {
     e.preventDefault();
-    console.log('inside onsubmit');
     if (password !== '') {
-    console.log('inside if');
       addPassword();
     } else {
     	swal('Please enter the password provided in the link.','','error')

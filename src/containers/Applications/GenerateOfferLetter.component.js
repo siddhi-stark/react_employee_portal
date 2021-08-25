@@ -101,7 +101,6 @@ return;
     );
 
     if (data) {
-      console.log(message);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -126,7 +125,6 @@ return;
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
     const id = customFunctions.getLocalStorage('applicantId');
     // const Applicant = customFunctions.getLocalStorage('applicantName');
     const postData = {
@@ -142,7 +140,6 @@ return;
         : '',
     };
 
-    console.log('data', postData);
     const { data, message } = await AuthApi.postDataToServer(
       Api.generateContentUrl,
       postData

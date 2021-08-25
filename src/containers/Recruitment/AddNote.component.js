@@ -11,11 +11,8 @@ import customFunctions from '../../helper/customFunctions';
 
 function AddNote(props) {
   const note = props.note; //eslint-disable-line
- console.log('noteinside function',note);
 
     const value = customFunctions.getLocalStorage('isClicked');
-    console.log('value',value);
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
@@ -35,7 +32,6 @@ function AddNote(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
 
     const postData = {
     	notes:formValues ? formValues.notes : '',
@@ -63,24 +59,13 @@ function AddNote(props) {
   };
     
 
-  // Get data for form
   const getData = async () => {
-    // const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?is_dropdown=1`);
-    // if(!data) {
-      // show error
-      // return;
-    // const {data } = await AuthApi.getDataFromServer(Api.employeeUrl);
-    // if(!data) {
-    //   // show error
-    //   return;
-    // }
     const NotesData = {
       notes: note && note
     }
     updateDefaultValues(NotesData);
   };
 
-  // Call get data method on load
   useEffect(() => {
     if(value === 'true') {
      getData();
@@ -99,7 +84,6 @@ function AddNote(props) {
 
 	return (
 		<>
-		{console.log('defaultValues',defaultValues)}
        <ModalInput
         size="sm"
         centered

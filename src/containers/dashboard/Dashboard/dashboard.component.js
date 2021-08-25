@@ -66,7 +66,6 @@ function Dashboard() {
   // const lastday = date.getDate() - (date.getDay() - 1) + 6;
   // const lastDayNew =  new Date(date.setDate(lastday));
 
-  // console.log('lastDay',lastDayNew);
 
 // const curr = new Date; // get current date
 // const first = curr.getDate() - curr.getDay() +1; // First day is the day of the month - the day of the week

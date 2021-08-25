@@ -40,7 +40,6 @@ function ProfessionalDetails(props) {
       })
       return s;
     })
-    console.log('user---',updatedSchema)
 
   updateJsonSchema([...updatedSchema]);        
   } 

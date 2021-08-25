@@ -93,8 +93,6 @@ function RecruitmentFileComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    // console.log('formValues',formValues);
-    // console.log('fileValue[0]',fileValue[0]);
     const csvData = fileValue[0];
 
     const formData = new FormData();
@@ -105,12 +103,6 @@ function RecruitmentFileComponent() {
     formData.append('technology_stack',formValues.technology ?
       formValues.technology.value : '');
 
-    // const  payload = {}
-    // payload.applied_for = formValues.applied_for
-    //       ? formValues.applied_for.value
-    //       : ''
-    // payload.file_name = csvData;
-    // console.log('payload',payload);
     const { data, message } = await AuthApi.postDataToServer(
       Api.batchUploadUrl,
       formData
@@ -128,7 +120,6 @@ function RecruitmentFileComponent() {
       swal.close();
       history.push('/recruitment');
     });
-    // Perform success actions
   };
 
   const getPosition = async () => {

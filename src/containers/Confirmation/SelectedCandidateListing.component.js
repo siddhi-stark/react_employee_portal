@@ -150,7 +150,6 @@ function SelectedCandidateListing() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
 
     setFilterData(formValues);
   };

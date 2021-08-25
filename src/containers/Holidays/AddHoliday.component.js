@@ -27,11 +27,9 @@ function AddHoliday(props) {
 
 
 	 useEffect(() => {
-    	console.log('viewIDDDDD');
 	const viewId = props.match.params.viewID; // eslint-disable-line
 	setViewID(viewId);
     if (view) {
-    	console.log('viewIDDDDD');
       const formSchema = [...FormSections];
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -91,7 +89,6 @@ function AddHoliday(props) {
 	// Get data for form
 	const getData = async (id) => {
 		const { data } = await AuthApi.getDataFromServer(`${Api.holidayUrl}${id}/`);
-		console.log('holidaydata',data);
 	   
 	   
 	   data.data.date = data.data.date ? new Date(customFunctions.getDate(data.data.date)) : '';
@@ -112,7 +109,6 @@ function AddHoliday(props) {
 
 	return (
 		<>
-		{console.log('view',view)}
 
 			<Helmet title={title} />
 			<div className="page-header">

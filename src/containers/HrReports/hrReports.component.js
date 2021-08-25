@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import Doughnut from 'stark-doughnut-graph';
 // import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -20,7 +20,7 @@ function HrReports() {
   ];
 
   const title = 'HR Reports';
-
+  const history = useHistory();
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
@@ -90,6 +90,11 @@ const [filterData, setFilterData] = useState({});
   };
 
   useEffect(() => {
+      const isAllowed = customFunctions.getLocalStorage('group');
+      if(isAllowed !== 1) {
+        history.push('/');
+        return; // eslint-disable-line
+      }
     getUserRole();
   }, []);
 
