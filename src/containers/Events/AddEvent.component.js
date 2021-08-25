@@ -171,11 +171,12 @@ const handleImageFileUpload = (e) => {
     if(ID || viewID) {
       getData(ID || viewID)
     }
-    setTitle('Add Event');
-    if(ID) {
+   
+    setTitle('View Event');
+        if(ID) {
     	setTitle('Edit Event');
     }else{
-    	setTitle('View Event');
+    	setTitle('Add Event');
     }
 	}, [eventId]);
 

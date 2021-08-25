@@ -18,10 +18,10 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	const [currentUser, updateCurrentUser] = useState(0);
 	const [holidayId,setHolidayId] = useState('');
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-
+  const [title,setTitle] = useState('');
+	const hId = props.match.params.ID; // eslint-disable-line
 	const viewId = props.match.params.viewID; // eslint-disable-line
-	const title = viewId ? 'View Holiday' : 'Add Holiday';
-	const items = [{ to: '/', label: 'Home' }, { label: 'Add Holiday' }];
+	const items = [{ to: '/', label: 'Home' }, { label: hId ? 'Edit Holiday' : 'Add Holiday'   }];
 
 	const history = useHistory();
 
@@ -66,7 +66,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	};
 
 	useEffect(() => {
-		getUserRole();
+	getUserRole();
 	}, []);
 
 	// Submit Form
@@ -111,12 +111,13 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 
 	// Call get data method on load
 	useEffect(() => {
-		const id = props.match.params.ID;
 		const viewID = props.match.params.viewID;
-		setHolidayId(id);
-		if(id || viewID) {
-
-		getData(id || viewID);
+		setHolidayId(hId);
+		if(hId || viewID) {
+			setTitle('Edit Holiday');
+		getData(hId || viewID);
+		}else{
+			setTitle('Add Holiday');
 		}
 	}, [holidayId]);
 
