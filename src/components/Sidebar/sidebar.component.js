@@ -49,6 +49,13 @@ function Sidebar() {
       onSubActiveClass();
     });
 
+    
+
+    document.addEventListener('ViewHolidayButtonChange', () => {
+      onSubActiveClass();
+      setActiveMenu();
+    });
+
     document.addEventListener('ViewButtonChange', () => {
       onSubActiveClass();
       setActiveMenu();

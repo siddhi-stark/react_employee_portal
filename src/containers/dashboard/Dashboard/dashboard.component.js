@@ -33,6 +33,7 @@ function Dashboard() {
   // const [leaves,setLeaves] = useState([]);
   const [socialMedia,setSocialMediaData] = useState([]);
   const history = useHistory();
+  const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -227,6 +228,16 @@ const getInstagramPost = async () => {
     }
     return true;
   };
+
+   const onViewHoliday = () => {
+
+    
+    document.dispatchEvent(viewHoliday);
+    return true;
+  };
+
+
+
   return (
     <>
     {console.log('socialMedia',socialMedia)}
@@ -436,6 +447,7 @@ const getInstagramPost = async () => {
                       </div>
                       </>    
                         ))}
+                        <Button onClick={() => {history.push('/holidays'); onViewHoliday();}  } >View All</Button>
                     </div>
                   </div>
                 </div>
