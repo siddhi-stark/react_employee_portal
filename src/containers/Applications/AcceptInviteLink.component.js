@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 
 import { Button } from 'react-bootstrap';
 import swal from 'sweetalert';
@@ -10,7 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 
 function AcceptInviteLink(props) {
   const [token, setToken] = useState(null);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [candidateData, setCandidateData] = useState([]);
   const [hideButtons, setHideButtons] = useState(false);
   const [hideDeclineButton,setHideDeclineButton] = useState(false);
