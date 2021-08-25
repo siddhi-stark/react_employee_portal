@@ -88,10 +88,8 @@ function PreviousEmployement(props) {
       setDocId(docIdArr);
     } else {
       console.log('error', message);
-      // swal(message, '', 'error');
     }
   };
-  console.log('defaultValues',defaultValues)
   useEffect(() => {
     if (candidateId || applicantId) {
       getData();

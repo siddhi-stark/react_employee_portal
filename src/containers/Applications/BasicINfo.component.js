@@ -33,7 +33,6 @@ function BasicInformation(props) {
     const formSchema = [...FormSections];
     // if ((Number(currentUser) !== 4) || (Number(currentUser) !== 3)) return;
     if ((Number(currentUser) === 4) || (Number(currentUser) === 3)) {
-    console.log('---user---')
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
@@ -53,7 +52,6 @@ function BasicInformation(props) {
         });
         return s;
       });
-    console.log('user---',updatedSchema)
 
       updateJsonSchema([...updatedSchema]);
     }
@@ -61,33 +59,10 @@ function BasicInformation(props) {
 
   // Get data for form
   const getData = async (technology, id) => {
-    // console.log('technology',technology);
-    // const ApplicantId = id || props.match.params.ID;
     const { data } = await AuthApi.getDataFromServer(
       `${Api.applicantsUrl}${id}/`
     );
-    // console.log('data',data);
-    //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
-    //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
-    //  data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
-    //  data.data.joined_date = data.data.joined_date ? new Date(customFunctions.getDate(data.data.joined_date)) : '';
-
-    // if(data) {
-
-    //  if (data && data.data && data.data.tech_stack_ids && data.data.tech_stack_ids.length > 0 && technology && technology.length > 0) {
-    //    const techStackIds = data.data.tech_stack_ids;
-    //    await technology.map((tech) => {
-    //    if (techStackIds.includes(tech.id)) {
-    //      techStack.push({
-    //        label : tech.name,
-    //          value:  tech.id
-    //      });
-    //    }
-    //    return tech;
-    //  })
-    //  }
-    // }
-
+    
     if (data) {
       customFunctions.setLocalStorage('notes', data.data.notes);
 
@@ -156,12 +131,7 @@ function BasicInformation(props) {
       props.onBasicInfo(data.data.id);
       customFunctions.setLocalStorage('applicantId', data.data.id);
       swal(data && data.message[0], '', 'success');
-      //  const ApplicantId = props.match.params.id;
-      //  console.log('ApplicantId',ApplicantId);
-      //  if(ApplicantId) {
-
-      // await getData(options.technologies_stack, ApplicantId);
-      //  }
+      
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -221,7 +191,6 @@ function BasicInformation(props) {
     options.tech_stack = dpOptions;
     const allOptions = options;
     await updateOptions({ ...allOptions });
-    // console.log('applicantId',appicantId);
     if (appicantId) {
       await getData(data.data, appicantId);
     }

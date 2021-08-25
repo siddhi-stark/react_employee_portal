@@ -77,7 +77,7 @@ function Holidays() {
 	const getRowData = async (pageNo = 1) => {
 		const page = pageNo || currentPage;
 		const endPoint =
-			`${Api.holidayUrl}`
+			`${Api.holidayUrll}`
 		const filterList =
 			filterData && !customFunctions.checkIfEmpty(filterData, 'O')
 				? customFunctions.jsonParse(filterData)
@@ -113,7 +113,7 @@ function Holidays() {
       }).then(async (result) => {
         if (result) {
           const { data, message } = await AuthApi.deleteDataFromServer(
-            `${Api.holidayUrl}${id}/`
+            `${Api.holidayUrll}${id}/`
           );
           if (data) {
             swal(data && data.message[0], '', 'success', {

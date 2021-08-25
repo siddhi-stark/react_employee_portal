@@ -45,7 +45,6 @@ function TemporaryAccount(props) {
       await setToggle(true);
     } else {
       console.log('error', message);
-      // swal(message, '', 'error');
     }
   };
 
@@ -53,7 +52,6 @@ function TemporaryAccount(props) {
     if (emp === 'Personal') {
       setKey('Personal');
     } else if (emp === 'educational') {
-      console.log('emp',emp);
       setKey('educational');
     } else if (emp === 'employmentHistory') {
       setKey('employmentHistory');
@@ -163,7 +161,6 @@ function TemporaryAccount(props) {
                           setTrigger(true);
                           getCompletionData(value)
                         }
-                        console.log('value',value);
                       }}
                     />
                   </div>

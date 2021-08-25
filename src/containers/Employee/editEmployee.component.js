@@ -136,13 +136,9 @@ function EditEmployee(props) {
   const getRowData = async (pageNo = 1) => {
     // const date = new Date();
     // const YMDDate = customFunctions.getFormattedDate(date);
-    // console.log('YMDDate',YMDDate);
     const ID = customFunctions.getLocalStorage('userId');
-    // console.log('date',date);
     // const dateNew = YMDDate.split('-');
-    // console.log('dateNew',dateNew);
     // const FormateedDate = dateNew[2]+'-'+dateNew[1]+'-'+dateNew[0]; //eslint-disable-line
-    // console.log('FormateedDate',FormateedDate);
     const page = pageNo || currentPage;
     const endPoint = `${Api.dailyReportUrl}`;
     const filterList =
@@ -172,16 +168,11 @@ function EditEmployee(props) {
 
       const newData = [...data.data.evening_data];
       await newData.map((item, i) => {
-        // console.log('dsfd',item);
         const newItem = item;
-        // console.log('page',page);
-        // console.log('itemsPerPage',itemsPerPage);
 
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
-        // console.log('newItem.index',newItem.index);
         return newItem;
       });
-      // console.log('newData',newData);
       setRowData((data && data.data && data.data.evening_data) || []);
     } else {
       console.log('error', message);
@@ -192,69 +183,6 @@ function EditEmployee(props) {
     getRowData(1);
   }, [filterData]);
 
-  // const getEndTime = (value) => {
-  //   setEndTime(value);
-  //   getDuration(startTime, value);
-  // };
-
-  // useEffect(() => {
-  //   getDuration(startTime, endTime);
-  // }, [startTime, endTime]);
-
-  // const getDuration = (start, end) => {
-  //   if (start && end) {
-  //     const dur = defaultValues;
-  //     console.log('defaultValues---', defaultValues);
-  //     defaultValues = {};
-  //     updateDefaultValues({});
-  //     const tStartTime = new Date(start);
-  //     const tEndTime = new Date(end);
-  //     const diffMs = tEndTime - tStartTime;
-  //     const timeDiff = customFunctions.msToTime(diffMs);
-  //     // const hr = timeDiff.hours;
-  //     // const min = timeDiff.minutes;
-  //     // const differenceee = `${hr} : ${min}`;
-  //     // dur.duration = differenceee;
-  //     dur.duration = (timeDiff.hours < 10 ? '0' + timeDiff.hours.toString() : timeDiff.hours.toString()) + ':' + (timeDiff.minutes < 10 ? '0' + timeDiff.minutes.toString() : timeDiff.minutes.toString()); //eslint-disable-line
-  //     console.log('dur.duration', dur.duration, dur);
-  //     defaultValues = { ...dur };
-  //     // updateDefaultValues({...dur});
-  //     updateDefaultValues({...dur,login:start, logout:end, task:taskValue, description:descriptionValue });
-
-  //   }
-  // };
-
-  // const getStartTime = async (value) => {
-
-  //   console.log('getStartTime--->', value);
-  //   console.log('e.getHOurs',value.getHours(),value.getMinutes());
-  //   const hrs = value.getHours();
-  //   const minutes = value.getMinutes();
-  //   setFormschema([]);
-  // await formSchema[0].fields.map((section) => {
-  //   const sectionData = section;
-  //   if (sectionData.name === 'logout') {
-  //     const date = new Date(value);
-  //     sectionData.minDate=date
-  //     const time = setHours(
-  //                       setMinutes(date, parseInt(hrs, 10) + 1),
-  //                       parseInt(minutes, 10) > 58 ? parseInt(hrs, 10) + 1 : hrs
-  //                     )
-  //     sectionData.minTime=time;
-  //     const timeNew = setHours(setMinutes(new Date(), 59), 23)
-  //     sectionData.maxTime=timeNew;
-  //   }
-  //   {console.log('formSchema',formSchema)} //eslint-disable-line
-  //   console.log('sectionData',sectionData); //eslint-disable-line
-
-  //   return sectionData;
-  // });
-  //   setFormschema([...formSchema]); //eslint-disable-line
-  //   getDuration(value);
-  //   // time = value;
-  //   setStartTime(value);
-  //   getDuration(value, endTime);
-  // };
 
   return (
     <>
@@ -312,9 +240,6 @@ Date: {customFunctions.getLocalStorage('date')}
             btnContainerClass="form-submit-buttons mt-0"
             isStepForm={false}
 
-            // onFormReset={() => {
-            //   console.log('form reset callback');
-            // }}
           />
           <div className="mt-4">
               <CustomTable

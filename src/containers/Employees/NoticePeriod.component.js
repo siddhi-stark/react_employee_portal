@@ -23,7 +23,6 @@ function NoticePeriodComponent() {
   const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const history = useHistory();
-  // const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
   const getEmployee = async (pageNo = 1) => {
     const page = pageNo || currentPage;
@@ -47,7 +46,6 @@ function NoticePeriodComponent() {
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));
-      // console.log('data.paginator', data.paginator);
     }
   };
 

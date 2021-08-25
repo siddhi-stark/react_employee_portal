@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import {
@@ -16,6 +16,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import customFunctions from '../../helper/customFunctions';
 
 function EmailTemplatesComponent() {
   const title = 'Employees List';
@@ -29,7 +30,7 @@ function EmailTemplatesComponent() {
   const [templateId, setTemplateId] = useState(null);
   const [placeholdersData, setPlaceholdersData] = useState([]);
   const [toggle, setToggle] = useState(false);
-
+  const history = useHistory();
   let [description] = useState(EditorState.createEmpty());
 
   const getEmailTemplateData = async () => {
@@ -38,7 +39,6 @@ function EmailTemplatesComponent() {
     );
     if (data) {
       data.data.map((email) => {
-        // console.log('email', email);
 
         const dp =
           email.body &&
@@ -78,7 +78,6 @@ function EmailTemplatesComponent() {
       if (i === index) {
         d.content = editorState; //eslint-disable-line
       }
-      console.log('d.content',d.content);
       return d;
     });
     setEmailContent([...data]);
@@ -91,6 +90,11 @@ function EmailTemplatesComponent() {
   };
 
   useEffect(() => {
+     const isAllowed = customFunctions.getLocalStorage('group');
+      if(isAllowed !== 1) {
+        history.push('/');
+        return; // eslint-disable-line
+      }
     getUserRole();
     getPlaceholders();
   }, []);
@@ -101,7 +105,6 @@ function EmailTemplatesComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('emailContent',emailContent);
     emailContent &&
       emailContent.map((emp) => {
         if (emp.id === templateId) {

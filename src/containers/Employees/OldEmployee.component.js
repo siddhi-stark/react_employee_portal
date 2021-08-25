@@ -47,7 +47,6 @@ function OldEmployee() {
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));
-      // console.log('data.paginator', data.paginator);
     }
   };
 
@@ -57,11 +56,6 @@ function OldEmployee() {
     getEmployeeName();
     getPosition();
   }, []);
-
-  // const submitForm = async (formValues) => {
-  //   console.log(formValues);
-  //   setFilterData(formValues); //eslint-disable-line
-  // };
 
 
   const getEmployeeName = async () => {

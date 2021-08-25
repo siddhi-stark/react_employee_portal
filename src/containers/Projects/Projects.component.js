@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import {
   Card,
   Row,
@@ -29,6 +29,7 @@ const items = [
 function Projects() {
   let disableButton = false;
   let searchFormSubmit = false;
+  const history = useHistory();
   const [rows, setRows] = useState([]);
   // const [disableButton, setDisableButton] = useState(false);
 
@@ -279,6 +280,11 @@ function Projects() {
   }, []);
 
   useEffect(() => {
+      const isAllowed = customFunctions.getLocalStorage('group');
+      if(isAllowed !== 1 || isAllowed !== 4) {
+        history.push('/');
+        return; // eslint-disable-line
+      }
     getTableData(1);
   }, [cntClearFilter]);
 

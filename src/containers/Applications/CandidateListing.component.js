@@ -139,6 +139,11 @@ function CandidateListing() {
 	};
 
 	useEffect(() => {
+		const isAllowed = customFunctions.getLocalStorage('group');
+      if(isAllowed !== 5) {
+        history.push('/');
+        return; // eslint-disable-line
+      }
 		getRowData(1);
 	}, [filterData]);
 

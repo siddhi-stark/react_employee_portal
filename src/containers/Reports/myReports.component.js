@@ -20,6 +20,8 @@ function AllReports() {
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
+  // const history = useHistory();
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -111,6 +113,11 @@ function AllReports() {
   };
 
   useEffect(() => {
+      // const isAllowed = customFunctions.getLocalStorage('group');
+      // if(isAllowed !== 4 || isAllowed !== 2 || isAllowed !== 3 || isAllowed !== 6 || isAllowed !== 5) {
+      //   history.push('/');
+      //   return; // eslint-disable-line
+      // }
     setTitle('Reports');
   }, []);
 

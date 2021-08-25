@@ -103,7 +103,6 @@ const handleImageFileUpload = (e) => {
 
 	// Submit Form
 	const submitForm = async (formValues) => {
-		console.log('formValues',formValues);
 
 		const postData = {
 			title: formValues.title,

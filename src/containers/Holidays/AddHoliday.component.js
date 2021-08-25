@@ -85,7 +85,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
 
-    const endPoint =  Api.holidayUrl;
+    const endPoint =  Api.holidayUrll;
     const { data } = await callback(endPoint, postData);
 
 
@@ -100,7 +100,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 
 	// Get data for form
 	const getData = async (id) => {
-		const { data } = await AuthApi.getDataFromServer(`${Api.holidayUrl}${id}/`);
+		const { data } = await AuthApi.getDataFromServer(`${Api.holidayUrll}${id}/`);
 	   
 	   if(data){
 		   	data.data.date = data.data.date ? new Date(customFunctions.getDate(data.data.date)) : '';

@@ -29,7 +29,6 @@ function EmployeeProfile(props) {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${employeeId}/`
     );
-    // console.log('data',data.data);
     if (data) {
       setEmployeeDetails(data.data);
     }
@@ -39,8 +38,6 @@ function EmployeeProfile(props) {
     const employeeId = props.match.params.id;
     const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    // customFunctions.setLocalStorage('historyId',data.data.id);
-    // console.log('data',data.data);
     if (data) {
       setCompanyList(data.data);
     }

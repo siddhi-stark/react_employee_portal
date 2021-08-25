@@ -37,10 +37,7 @@ function AddHistory(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
     const employeeId = customFunctions.getLocalStorage('id');
-    console.log('employeeId',employeeId);
-     // const history = customFunctions.getLocalStorage('hisotryID');
     const postData = {
       employee: Number(employeeId),
       designation: formValues.designation ? formValues.designation.label : '',

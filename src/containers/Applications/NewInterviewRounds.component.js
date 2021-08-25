@@ -41,14 +41,9 @@ function NewInterviewRounds(props) {
       s.fields = section.fields.map((item) => {
         item.fields.map((it) => {
           const itemData = it;
-          // if (it.name === 'status_name') itemData.disabled = true;
-          // if (it.name === 'comments') itemData.disabled = true;
           const date = new Date();
           if (it.name === 'int_date') itemData.minDate = date;
           if(it.name === 'id') itemData.disabled = true;
-          // if (it.name === 'int_time') itemData.minTime = setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours());
-          // if (it.name === 'int_time') itemData.minDate = new Date();
-          // console.log('setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours())', setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours()));
 
           return it;
         });
@@ -143,7 +138,6 @@ function NewInterviewRounds(props) {
       const interviewData = [];
 
       data.data.map((dt) => {
-          // console.log('getData after api call',dt);
 
         if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);

@@ -63,16 +63,6 @@ function AcceptInviteLink(props) {
     }else {
       setHideDeclineButton(true);
     }
-
-      // swal({
-      //   title: data.message[0],
-      //   icon: 'success',
-      // })
-      //   .then(okAction => {
-      //     if (okAction) {
-      //       console.log('inside if');
-      //     }
-      //   });
     }
   };
 

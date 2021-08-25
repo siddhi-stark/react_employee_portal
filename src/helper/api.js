@@ -111,7 +111,7 @@ export default class Api extends Component {
 
   static workingHrsUrl = `${Api.baseUrl}working-hours/`;
 
-  static holidayUrl = `${Api.baseUrl}holiday/`;
+  static holidayUrll = `${Api.baseUrl}holiday/`;
 
   static eventsUrl = `${Api.baseUrl}events/`;
 

@@ -49,7 +49,6 @@ function OnBoard(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues.managers);
 
 
     const managerList = [];
@@ -126,7 +125,6 @@ function OnBoard(props) {
   // Get data for form
   const getData = async () => {
     const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${applicantId}/`);
-    console.log('data.data', data);
     if(!data) {
       // show error
       return;
@@ -318,11 +316,6 @@ function OnBoard(props) {
       props.history.push('/candidates');
     }}
   />
-    
-
-
-    
-
 		</div>
     
 
