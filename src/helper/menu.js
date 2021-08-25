@@ -145,7 +145,7 @@ const menu = [
         roleaccess: [2, 3, 6, 5],
       },
       {
-        title: 'Employee Report',
+        title: 'Team Report',
         path: '/team-report',
         icon: 'report.svg',
         roleaccess: [2, 3, 6, 5],
