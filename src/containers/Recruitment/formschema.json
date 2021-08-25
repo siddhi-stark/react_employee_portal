@@ -83,7 +83,7 @@
         "callbackUrl": "",
         "inputToChange": "",
         "minDateSelector": "",
-        "bucketType":"intrernal",
+        "bucketType":"internal",
         "encType": "multipart/form-data",
         "maxDateSelector": "",
         "disabled": false,
