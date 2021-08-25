@@ -39,8 +39,11 @@ function Sidebar() {
   }
 
   useEffect(()=>{
-    getBirthday();
-    getEvents();
+    const LoginToken = customFunctions.getLocalStorage('access_token');
+    if(LoginToken){
+      getBirthday();
+      getEvents();
+    }
     document.addEventListener('MenuChange', () => {
       onSubActiveClass();
     });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
@@ -27,7 +27,6 @@ function Technology() {
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [title, setTitle] = useState('');
-  const history = useHistory();
   const limit = 10;
   const items = [{ to: '/', label: 'Home' }, { label: 'Technology' }];
 
@@ -110,11 +109,7 @@ function Technology() {
   };
 
   useEffect(() => {
-     const isAllowed = customFunctions.getLocalStorage('group');
-      if(isAllowed !== 1) {
-        history.push('/');
-        return; // eslint-disable-line
-      }
+    
     getRowData(1);
     setTitle('Technology');
   }, [filterData]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -7,21 +7,15 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import CurrentEmployee from './CurrentEmployee.component';
 import NoticePeriod from './NoticePeriod.component';
 import OldEmployee from './OldEmployee.component';
-import customFunctions from '../../helper/customFunctions';
 
 function Employees() {
   // const title = 'Employees List';
   const [title, setTitle] = useState('');
   const [key, setKey] = useState('currentEmployee');
-  const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Employees' }];
 
   useEffect(() => {
-      const isAllowed = customFunctions.getLocalStorage('group');
-      if(isAllowed !== 5 || isAllowed !== 6) {
-        history.push('/');
-        return; // eslint-disable-line
-      }
+    
     setTitle('Employees');
   }, []);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Card, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import { Datepicker, Helmet, DropdownInput } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
@@ -26,7 +26,6 @@ function AllReports() {
   const [employeeList, setEmployeeList] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [userRole, setUserRole] = useState('');
-  const history = useHistory();
   
    const [pagination, setPagination] = useState({
     current_page: 1,
@@ -160,12 +159,7 @@ function AllReports() {
 
   useEffect(() => {
     async function getData() {
-      // getReports(1);
-        const isAllowed = customFunctions.getLocalStorage('group');
-      if(isAllowed !== 1) {
-        history.push('/');
-        return; // eslint-disable-line
-      }
+     
       getEmployee();
       setTitle('Reports');
        const uRole = customFunctions.getLocalStorage('group');

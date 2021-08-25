@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import {
   Card,
   Row,
@@ -81,7 +81,6 @@ function Employee() {
   const [employeeData, setEmployeeData] = useState([]);
   const [employeetwId, setEmployeeTwId] = useState('');
   const [joiningDate, setJoiningDate] = useState('');
-  const history = useHistory();
   let timmer = null;
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -373,11 +372,11 @@ function Employee() {
 
   useEffect(() => {
     async function getData() {
-        const isAllowed = customFunctions.getLocalStorage('group');
-      if(isAllowed !== 1) {
-        history.push('/');
-        return; // eslint-disable-line
-      }
+      //   const isAllowed = customFunctions.getLocalStorage('group');
+      // if(isAllowed !== 1) {
+      //   history.push('/');
+      //   return; // eslint-disable-line
+      // }
       const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
       getEmployee();

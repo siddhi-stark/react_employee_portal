@@ -269,13 +269,7 @@ function EmployeeTimesheet() {
   };
 
   useEffect(() => {
-    // const EmployeeType = props.location.state.type;
-    // setEmployeeType(EmployeeType);
-     const isAllowed = customFunctions.getLocalStorage('group');
-      if(isAllowed !== 5 || isAllowed !== 6) {
-        history.push('/');
-        return; // eslint-disable-line
-      }
+   
     if(filterData.is_detail){
       getTimesheetDetails();
       getRowData(1);

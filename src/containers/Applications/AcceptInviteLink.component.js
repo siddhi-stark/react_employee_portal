@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { Button } from 'react-bootstrap';
 import swal from 'sweetalert';
@@ -10,7 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 
 function AcceptInviteLink(props) {
   const [token, setToken] = useState(null);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [candidateData, setCandidateData] = useState([]);
   const [hideButtons, setHideButtons] = useState(false);
   const [hideDeclineButton,setHideDeclineButton] = useState(false);
@@ -28,29 +28,24 @@ function AcceptInviteLink(props) {
         JSON.stringify(candidateData)
       );
     }
+    console.log('data',data);
+
     if (!data) {
       swal('Token is invalid', '', 'error');
       props.history.push('/login');
     }
   };
 
-  // useEffect(() => {
-  //   dispatch({ type: 'LOGIN', value: false });
-  //   const matchUrltoken = props.match.params.offerToken;
-  //   setToken(matchUrltoken);
-  //   if (!matchUrltoken) {
-  //     window.location = '/login';
-  //   }
-  //   verifyToken(matchUrltoken);
-  // }, [dispatch]);
-
-
   useEffect(() => {
-const matchUrltoken = props.match.params.offerToken;
-setToken(matchUrltoken);
-verifyToken(matchUrltoken);
-}, []);
-  
+    dispatch({ type: 'LOGIN', value: false });
+    const matchUrltoken = props.match.params.offerToken;
+    console.log('matchUrltoken',matchUrltoken);
+    setToken(matchUrltoken);
+    if (!matchUrltoken) {
+      window.location = '/login';
+    }
+    verifyToken(matchUrltoken);
+  }, [dispatch]);
 
   const onAcceptBtn = async (type) => {
     const postData = {
