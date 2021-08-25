@@ -34,15 +34,23 @@ function AcceptInviteLink(props) {
     }
   };
 
+  // useEffect(() => {
+  //   dispatch({ type: 'LOGIN', value: false });
+  //   const matchUrltoken = props.match.params.offerToken;
+  //   setToken(matchUrltoken);
+  //   if (!matchUrltoken) {
+  //     window.location = '/login';
+  //   }
+  //   verifyToken(matchUrltoken);
+  // }, [dispatch]);
+
+
   useEffect(() => {
-    dispatch({ type: 'LOGIN', value: false });
-    const matchUrltoken = props.match.params.offerToken;
-    setToken(matchUrltoken);
-    if (!matchUrltoken) {
-      window.location = '/login';
-    }
-    verifyToken(matchUrltoken);
-  }, [dispatch]);
+const matchUrltoken = props.match.params.offerToken;
+setToken(matchUrltoken);
+verifyToken(matchUrltoken);
+}, []);
+  
 
   const onAcceptBtn = async (type) => {
     const postData = {
