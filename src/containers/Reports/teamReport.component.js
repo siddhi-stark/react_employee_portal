@@ -130,7 +130,7 @@ function TeamReport() {
   };
 
   const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.teamUrl}`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setTeam(data.data);
     }
@@ -154,7 +154,7 @@ function TeamReport() {
     const options = [];
     team.map((tm) => {
       return options.push({
-        label: tm.employee_name,
+        label: tm.full_name,
         id: tm.employee_id,
         value: tm.employee_id,
       });
@@ -230,7 +230,7 @@ function TeamReport() {
                           <div className="search-bar-input">
                             <DropdownInput
                               options={getTeamList()}
-                              placeholder="Select team member"
+                              placeholder="Select Employee"
                               defaultValue={selectedEmployee}
                               onSelectHandler={(select) => {
                                 setSelectedEmployee(select);
