@@ -65,10 +65,6 @@ function Leaves() {
 			label: 'Type',
 		},
 		{
-			id: 'reason',
-			label: 'Reason',
-		},
-		{
 			id: 'leave_count',
 			label: 'Days',
 		},

@@ -23,23 +23,41 @@ function AddLeave(props) {
   const [rowData, setRowData] = useState([]);
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [title, setTitle] = useState('');
+  
+  const [totalCount, setTotalCount] = useState(10);
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const columns = [
     {
-      id: 'occasion',
-      label: 'Occasion',
+      id: 'index',
+      label: 'Sr.No',
     },
     {
-      id: 'day',
-      label: 'Day',
+      id: 'project',
+      label: 'Project',
     },
     {
-      id: 'date',
-      label: 'Date',
+      id: 'task_name',
+      label: 'Task',
+    }, 
+    {
+      id: 'task_name',
+      label: 'Task Start Date',
     },
     {
-      id: 'action',
-      label: 'Action',
+      id: 'task_name',
+      label: 'Task Completion Date',
+    },
+    {
+      id: 'task_name',
+      label: 'Overdue Task',
+    },
+    {
+      id: 'Deadline',
+      label: 'Project Deadline',
     },
   ];
 
@@ -95,10 +113,10 @@ function AddLeave(props) {
         ? customFunctions.getDate(formValues.leave_to_date)
         : '',
       leave_from_time: formValues.leave_from_time
-        ? customFunctions.getTime(formValues.leave_from_time)
+        ? formValues.leave_from_time.value
         : '9:30 AM',
       leave_to_time: formValues.leave_to_time
-        ? customFunctions.getTime(formValues.leave_to_time)
+        ? formValues.leave_to_time.value
         : '6:30 PM',
     };
     if (leaveId) postData.id = Number(leaveId);
@@ -146,6 +164,9 @@ function AddLeave(props) {
       // show error
       return;
     }
+    setStartDate(data.data.leave_from_date);
+    setEndDate(data.data.leave_to_date);
+
     updateDefaultValues({
       leave_type: data.data.leave_type && {
         label: data.data.leave_type,
@@ -161,21 +182,13 @@ function AddLeave(props) {
       },
       leave_from_time:
         data.data.leave_from_time &&
-        new Date(`
-          ${customFunctions.getDate(
-            data.data.leave_from_date
-          )} ${customFunctions.convertTime12to24(data.data.leave_from_time)}
-          `),
+        {label:data.data.leave_from_time , value:data.data.leave_from_time},
       leave_to_date:
         data.data.leave_to_date &&
         new Date(customFunctions.getDate(data.data.leave_to_date)),
       leave_to_time:
         data.data.leave_to_time &&
-        new Date(`
-          ${customFunctions.getDate(
-            data.data.leave_to_date
-          )} ${customFunctions.convertTime12to24(data.data.leave_to_time)}
-          `),
+        {label:data.data.leave_to_time , value:data.data.leave_to_time},
       leave_to_type: data.data.leave_to_type_name && {
         label: data.data.leave_to_type_name,
         value: data.data.leave_to_type_name,
@@ -236,6 +249,54 @@ function AddLeave(props) {
     getLeaveFromType();
   }, []);
 
+   const getLeaveToTime = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.title, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      leave_to_time: dpOptions,
+    };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getLeaveToTime();
+  }, []);
+
+   const getLeaveFromTime = async () => {
+    const { data } = await AuthApi.getDataFromServer(Api.undefined);
+    if (!data) {
+      // show error
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({ label: op.title, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      leave_from_time: dpOptions,
+    };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getLeaveFromTime();
+  }, []);
+
   const getLeaveToType = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.undefined);
     if (!data) {
@@ -259,6 +320,46 @@ function AddLeave(props) {
   useEffect(() => {
     getLeaveToType();
   }, []);
+
+    // Declare methods
+  const getRowData = async (pageNo = 1) => {
+    console.log('startDate',startDate, endDate);
+    const page = pageNo || currentPage;
+    const endPoint = `${Api.employeeTask}`;
+    const params = {
+      page,
+      limit,
+      user_id:leaveId,
+      start_date: startDate && customFunctions.getDate(startDate),
+      end_date: endDate && customFunctions.getDate(endDate),
+      sort_direction: 'descending',
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setTotalCount(data.paginator.total_count);
+      setLimit(data.paginator.limit);
+      setCurrentPage(Number(data.paginator.current_page));
+
+      const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.index = (page - 1) * limit + (i + 1);
+        return newItem;
+      });
+
+      setRowData((data && data.data) || []);
+    } else {
+      console.log('error', message);
+    }
+  };
+
+  useEffect(() => {
+    if(startDate && endDate){
+      getRowData(1);
+    }
+  }, [startDate,endDate]);
 
   return (
     <>
@@ -292,21 +393,38 @@ function AddLeave(props) {
               }}
             />
             <div className="mt-5 mx-4">
-              <CustomTable
-                columns={columns}
-                rows={rowData}
-                tableClass="table-striped"
-                role={5}
-                emptyRender={() => {
-                  return 'No record found.';
-                }}
-              />
+            { !rowData && (
+              <>
+                <CustomTable
+                  columns={columns}
+                  rows={rowData}
+                  tableClass="table-striped"
+                  role={5}
+                  showPagination={true}
+                  paginationProps={{
+                    totalItems: totalCount,
+                    itemsPerPage: limit,
+                    activePage: currentPage,
+                    onPageChange: (pageNo) => {
+                      getRowData(pageNo);
+                    },
+                  }}
+                  emptyRender={() => {
+                    return 'No record found.';
+                  }}
+                />
+                <br/>
+                <span className="text-danger">Note: The highlighted task shows the high priority and may affect the project deadline. Kindly look into and the apply for leave</span>
+              </>
+              )}
+            <br/>
               {!customFunctions.checkIfEmpty(rowData) && (
                 <Button
                   // href="#"
                   // onClick={() => {
                   //   history.push('/add-leave');
                   // }}
+                  disabled = {!customFunctions.checkIfEmpty(rowData) ? '' : 'disabled'}
                   className="mb-4"
                 >
                   Apply Leave

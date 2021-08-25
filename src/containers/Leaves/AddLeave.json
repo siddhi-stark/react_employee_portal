@@ -175,7 +175,7 @@
 			},
 			{
 				"name": "leave_from_time",
-				"type": "date",
+				"type": "select",
 				"label": "Leave From Time",
 				"id": "",
 				"placeholder": "",
@@ -197,9 +197,6 @@
 				"callback": "",
 				"callbackUrl": "",
 				"inputToChange": "",
-				"dateFormat": "h:mm aa",
-				"showTimeSelect": "showTimeSelect",
-				"showTimeSelectOnly": "showTimeSelectOnly",
 				"minDateSelector": "",
 				"maxDateSelector": "",
 				"disabled": false,
@@ -212,7 +209,16 @@
 				},
 				"fields": [],
 				"optionCallback": "",
-				"options": []
+				"options": [{
+						"id": "1",
+						"label": "9:30 AM",
+						"value": "9:30 AM"
+					},
+					{
+						"id": "2",
+						"label": "1:30 PM",
+						"value": "1:30 PM"
+					}]
 			},
 			{
 				"name": "leave_to_date",
@@ -286,7 +292,7 @@
 			},
 			{
 				"name": "leave_to_time",
-				"type": "date",
+				"type": "select",
 				"label": "Leave To Time",
 				"id": "",
 				"placeholder": "",
@@ -308,9 +314,6 @@
 				"callback": "",
 				"callbackUrl": "",
 				"inputToChange": "",
-				"dateFormat": "h:mm aa",
-				"showTimeSelect": "showTimeSelect",
-				"showTimeSelectOnly": "showTimeSelectOnly",
 				"minDateSelector": "",
 				"maxDateSelector": "",
 				"disabled": false,
@@ -323,7 +326,16 @@
 				},
 				"fields": [],
 				"optionCallback": "",
-				"options": []
+				"options": [{
+						"id": "1",
+						"label": "9:30 AM",
+						"value": "9:30 AM"
+					},
+					{
+						"id": "2",
+						"label": "1:30 PM",
+						"value": "1:30 PM"
+					}]
 			}
 		],
 		"allowedUsers": [],
