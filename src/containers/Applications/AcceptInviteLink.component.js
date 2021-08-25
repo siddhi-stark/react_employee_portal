@@ -55,7 +55,7 @@ function AcceptInviteLink(props) {
     );
     if (data) {
       // swal(data.message[0],'','success');
-     await verifyToken(token);
+     // await verifyToken(token);
       isShowButtons(true);
 
        if(type === 0) {
