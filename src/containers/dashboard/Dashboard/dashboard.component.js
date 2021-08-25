@@ -30,7 +30,8 @@ function Dashboard() {
   const [quotesContent, setQuotesContent] = useState('');
   const [totalHrs, setTotalHrs] = useState(null);
   const [holidays,setHolidays] = useState([]);
-  const [leaves,setLeaves] = useState([]);
+  // const [leaves,setLeaves] = useState([]);
+  const [socialMedia,setSocialMediaData] = useState([]);
   const history = useHistory();
 
   const [pagination, setPagination] = useState({
@@ -164,19 +165,28 @@ const LastDay = customFunctions.getDate(lastday);
     }
   }
 
-const getAppliedLeaves = async () => {
-    const endPoint = `${Api.leavesApplied}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
-      console.log(data.data);
-      setLeaves(data.data);
-    }
-  }
+// const getAppliedLeaves = async () => {
+//     const endPoint = `${Api.leavesApplied}`;
+//     const { data } = await AuthApi.getDataFromServer(endPoint);
+//     if(data) {
+//       console.log(data.data);
+//       setLeaves(data.data);
+//     }
+//   }
 
+const getInstagramPost = async () => {
+  const endPoint = `${Api.socialMediaUrl}`;
+  const { data } = await AuthApi.getDataFromServer(endPoint);
+  if(data) {
+    console.log('data',data.data);
+    setSocialMediaData(data.data);
+  }
+}
 
   useEffect(() => {
     getUpcomingHoliday();
-    getAppliedLeaves();
+    // getAppliedLeaves();
+    getInstagramPost();
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
@@ -219,7 +229,7 @@ const getAppliedLeaves = async () => {
   };
   return (
     <>
-    {console.log('holidays',leaves)}
+    {console.log('socialMedia',socialMedia)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -427,55 +437,55 @@ const getAppliedLeaves = async () => {
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-6">
+               <div className="col-xl-6">
                   <div className="upcoming-bg faint-orange">
                     <div className="upcoming-event-box">
                       <div className="upcoming-event-img">
                         <img
-                          src="/images/leaves-holiday.svg"
+                          src="images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
                         <p>Leaves Applied</p>
                       </div>
-                     
+                      <div className="event-title">
+                        <p>2 Leaves</p>
+                      </div>
+                      <div className="date">
+                        <span>26, 27 June (Casual)</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            {/* <div className="social-media">
+            <div className="social-media">
               <div className="card flex-fill w-100">
                 <div className="card-body">
                   <div className="table-title">
                     <h5 className="card-title mb-0">Social Media</h5>
                   </div>
                   <div className="weekly-status">
+
+                    {socialMedia && socialMedia.map((social) => (
+                      <>
+                      {console.log('social',social.post_image)}
                     <ul className="list-unstyled p-0 d-flex align-items-center justify-content-between">
-                      <li>
+                       <li>
                         <a href="#">
-                          <img src="/images/social-media4.png" alt="img" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="/images/social-media4.png" alt="img" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="/images/social-media4.png" alt="img" />
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#">
-                          <img src="/images/social-media4.png" alt="img" />
+                        {social.post_image ? (
+
+                          <img src={social.post_image} alt="social" />
+                          ) : ''}
+
                         </a>
                       </li>
                     </ul>
+                      </>    
+                        ))}
                   </div>
                 </div>
               </div>
-            </div> */}
+            </div> 
           </Col>
         </Row>
       </section>

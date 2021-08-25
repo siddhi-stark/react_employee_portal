@@ -122,6 +122,8 @@ export default class Api extends Component {
   static holidayUrl = `${Api.baseUrl}upcoming-holiday/`;
 
   static leavesApplied = `${Api.baseUrl}leave-applied/`;
+  
+  static socialMediaUrl = `${Api.baseUrl}instagram-post/`;
 
 
   // Get base URL of APIs
