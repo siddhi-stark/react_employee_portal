@@ -89,13 +89,13 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [5],
   // },
-  // {
-  //   title: 'Holidays',
-  //   path: '/holidays',
-  //   icon: 'timesheet.svg',
-  //   submenu: [],
-  //   roleaccess: [5],
-  // },
+  {
+    title: 'Holidays',
+    path: '/holidays',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4,5,6],
+  },
   {
     title: 'Employees',
     path: '/employees',
