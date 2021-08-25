@@ -4,7 +4,7 @@ import swal from 'sweetalert';
 import { Image, Card, Button, Accordion } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './filterFormschema.json';
+import FormSections from './formschema.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -96,11 +96,10 @@ function Leaves() {
 	const [title, setTitle] = useState('');
 	const [userRole, setUserRole] = useState('');
 	const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
-	let filterOptions = {};
 
 	// Variable declarations Filter
 	// const [defaultValues, updateDefaultValues] = useState({});
-	const [options, updateOptions] = useState({});
+	// const [options, updateOptions] = useState({});
 
 	const history = useHistory();
 
@@ -111,6 +110,7 @@ function Leaves() {
       const date = new Date();
       sectionData.minDate = date;
     }
+
     return sectionData;
   });
 
@@ -161,9 +161,6 @@ function Leaves() {
 	// Submit Form
 	const submitForm = async (formValues) => {
 		const payload = {
-        employee_id: formValues.employee_id
-          ? formValues.employee_id.value
-          : '',
         start_date: formValues.start_date
           ? customFunctions.getDate(formValues.start_date)
           : '',
@@ -173,31 +170,6 @@ function Leaves() {
       };
 		setFilterData(payload);
 	};
-
-	const getEmployee = async () => {
-		const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
-		if (!data) {
-			// show error
-			return;
-		}
-		const dpOptions = [];
-		data.data.map((op) => {
-			// Change appropriate keys
-			dpOptions.push({ label: op.full_name, value: op.id });
-			return op;
-		});
-		const allOptions = {
-			...filterOptions,
-			...options,
-			employee_id: dpOptions,
-		};
-		filterOptions = {...allOptions};
-		updateOptions(allOptions);
-	};
-
-	useEffect(() => {
-		getEmployee();
-	}, []);
 
 	return (
 		<>
@@ -229,7 +201,7 @@ function Leaves() {
 									onFormSubmit={(formValues) => {
 										submitForm(formValues);
 									}}
-									options={options}
+									// options={options}
 									callbacks={{}}
 									// defaultFormValues={defaultValues}
 									currentUser={userRole}
@@ -239,7 +211,7 @@ function Leaves() {
 									btnContainerClass="form-submit-buttons pull-right mb-3"
 									isStepForm={false}
 									onFormReset={() => {
-										console.log('form reset callback');
+                    setFilterData({});
 									}}
 								/>
 							</Card.Title>
@@ -269,6 +241,7 @@ function Leaves() {
 							<CustomTable
 								columns={columns}
 								rows={rowData}
+								tableClass="table-striped"
 								showPagination={true}
 								paginationProps={{
 									totalItems: totalCount,

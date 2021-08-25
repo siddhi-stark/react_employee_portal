@@ -3,27 +3,25 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './AddLeave.json';
+import FormSections from './TeamAddLeave.json';
 import { Helmet, TextInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
-function AddLeave(props) {
+function TeamAddLeave(props) {
   const idProps = props;
-  const leaveId = idProps.match.params.leaveId;
-
+  const leaveId = idProps.match.params.viewLeaveId;
   const history = useHistory();
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({});
+  // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [title, setTitle] = useState('');
   const [reason, setReason] = useState('');
 
-  const [status, setStatus] = useState(null); // eslint-disable-line
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   // Get user role
@@ -47,14 +45,13 @@ function AddLeave(props) {
 
   useEffect(() => {
     const formViewSchema = [...FormSections];
-    if (Number(currentUser) === 3) {
       const updatedSchema = formViewSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
           const itemData = item;
           if (
-            item.name === 'leave_type' ||
-            item.name === 'reason' ||
+            item.name === 'team_leave_type' ||
+            item.name === 'team_reason' ||
             item.name === 'leave_from_date' ||
             item.name === 'leave_from_type' ||
             item.name === 'leave_from_time' ||
@@ -67,10 +64,8 @@ function AddLeave(props) {
         });
         return s;
       });
-      console.log('user---', updatedSchema);
 
       updateJsonSchema([...updatedSchema]);
-    }
   }, [currentUser]);
 
   useEffect(() => {
@@ -79,43 +74,19 @@ function AddLeave(props) {
   }, []);
 
   // Submit Form
-  const submitForm = async (formValues) => {
-    const fromType =
-      formValues.leave_from_type &&
-      formValues.leave_from_type.value === 'Full Day'
-        ? 2
-        : 1;
-    const toType =
-      formValues.leave_to_type && formValues.leave_to_type.value === 'Full Day'
-        ? 2
-        : 1;
+  const submitForm = async (value) => { // eslint-disable-line
+  
     const postData = {
-      leave_type: formValues.leave_type ? formValues.leave_type.value : '',
-      reason: formValues.reason,
-      leave_from_date: formValues.leave_from_date
-        ? customFunctions.getDate(formValues.leave_from_date)
-        : '',
-      leave_from_type: formValues.leave_from_type && fromType,
-      leave_to_type: formValues.leave_to_type.value && toType,
-      leave_to_date: formValues.leave_to_date
-        ? customFunctions.getDate(formValues.leave_to_date)
-        : '',
-      leave_from_time: formValues.leave_from_time
-        ? formValues.leave_from_time.value
-        : '9:30 AM',
-      leave_to_time: formValues.leave_to_time
-        ? formValues.leave_to_time.value
-        : '6:30 PM',
+      id: leaveId,
+      status: Number(value),
+      declined_reason: reason ? String(reason) :''
     };
-    if (leaveId) postData.id = Number(leaveId);
 
-    const callback = leaveId
-      ? AuthApi.putDataToServer
-      : AuthApi.postDataToServer;
+    const { data, message } = await AuthApi.putDataToServer(
+      Api.leavesUrl,
+      postData
+    );
 
-    const endPoint = Api.leavesUrl;
-
-    const { data, message } = await callback(endPoint, postData);
     if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -133,6 +104,7 @@ function AddLeave(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
+        history.push('/team-leaves');
         swal.close();
       });
     }
@@ -150,33 +122,18 @@ function AddLeave(props) {
     }
 
     updateDefaultValues({
-      leave_type: data.data.leave_type && {
-        label: data.data.leave_type,
-        value: data.data.leave_type,
-      },
+      leave_type: data.data.leave_type && data.data.leave_type,
       reason: data.data.reason && data.data.reason,
       leave_from_date:
         data.data.leave_from_date &&
-        new Date(customFunctions.getDate(data.data.leave_from_date)),
-      leave_from_type: data.data.leave_from_type_name && {
-        label: data.data.leave_from_type_name,
-        value: data.data.leave_from_type_name,
-      },
-      leave_from_time: data.data.leave_from_time && {
-        label: data.data.leave_from_time,
-        value: data.data.leave_from_time,
-      },
+        customFunctions.getDMYDate(data.data.leave_from_date),
+      leave_from_type: data.data.leave_from_type_name && data.data.leave_from_type_name,
+      leave_from_time: data.data.leave_from_time && data.data.leave_from_time,
       leave_to_date:
         data.data.leave_to_date &&
-        new Date(customFunctions.getDate(data.data.leave_to_date)),
-      leave_to_time: data.data.leave_to_time && {
-        label: data.data.leave_to_time,
-        value: data.data.leave_to_time,
-      },
-      leave_to_type: data.data.leave_to_type_name && {
-        label: data.data.leave_to_type_name,
-        value: data.data.leave_to_type_name,
-      },
+        customFunctions.getDMYDate(data.data.leave_to_date),
+      leave_to_time: data.data.leave_to_time && data.data.leave_to_time,
+      leave_to_type: data.data.leave_to_type_name && data.data.leave_to_type_name,
     });
   };
 
@@ -185,125 +142,6 @@ function AddLeave(props) {
     if (leaveId) getData();
   }, []);
 
-  const getLeaveType = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_type: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveType();
-  }, []);
-
-  const getLeaveFromType = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_from_type: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveFromType();
-  }, []);
-
-  const getLeaveToTime = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_to_time: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveToTime();
-  }, []);
-
-  const getLeaveFromTime = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_from_time: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveFromTime();
-  }, []);
-
-  const getLeaveToType = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_to_type: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveToType();
-  }, []);
 
   return (
     <>
@@ -318,14 +156,12 @@ function AddLeave(props) {
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
-              formSections={
-                Number(currentUser) === 4 ? FormSections : jsonSchema
-              }
+              formSections={jsonSchema}
               formHeading="Leave"
-              onFormSubmit={(formValues) => {
-                submitForm(formValues);
-              }}
-              options={options}
+              // onFormSubmit={(formValues) => {
+              //   submitForm(formValues);
+              // }}
+              // options={options}
               callbacks={{}}
               defaultFormValues={defaultValues}
               currentUser={currentUser}
@@ -342,7 +178,7 @@ function AddLeave(props) {
                 <Col sm={2}>
                   <Button
                     onClick={() => {
-                      setStatus(2);
+                      submitForm(2)
                     }}
                     variant="primary"
                     className="mb-4"
@@ -353,7 +189,7 @@ function AddLeave(props) {
                 <Col sm={2} className="ms-2">
                   <Button
                     onClick={() => {
-                      setStatus(3);
+                      submitForm(3)
                     }}
                     variant="secondary"
                     className="mb-4"
@@ -364,9 +200,8 @@ function AddLeave(props) {
               </Row>
               <Row className="mx-3">
               <TextInput
-              inputClass="form-control"
+                inputClass="form-control"
                 onInputChange={(e) => {
-                  console.log('e---',e.target.value);
                   setReason(e.target.value);
                 }
                 }
@@ -384,4 +219,4 @@ function AddLeave(props) {
   );
 }
 
-export default withRouter(AddLeave);
+export default withRouter(TeamAddLeave);

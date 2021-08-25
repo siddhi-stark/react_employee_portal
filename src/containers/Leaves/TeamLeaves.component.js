@@ -236,7 +236,7 @@ function TeamLeaves() {
                   btnContainerClass="form-submit-buttons pull-right mb-3"
                   isStepForm={false}
                   onFormReset={() => {
-                    console.log('form reset callback');
+                    setFilterData({});
                   }}
                 />
               </Card.Title>
@@ -267,6 +267,7 @@ function TeamLeaves() {
                 columns={columns}
                 rows={rowData}
                 showPagination={true}
+                tableClass="table-striped"
                 paginationProps={{
                   totalItems: totalCount,
                   itemsPerPage: limit,

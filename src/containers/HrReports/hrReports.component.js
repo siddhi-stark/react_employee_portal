@@ -105,7 +105,16 @@ const [filterData, setFilterData] = useState({});
   };
 
   const getHrName = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=5&is_dropdown=1`);
+
+  const endPoint = `${Api.employeeUrl}`;
+    const params = {
+      is_dropdown:1,
+      role_id:[5,6]
+    };
+    
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
+
     if (!data) {
       // show error
       return;
