@@ -41,7 +41,6 @@ function AddTechnologyStack(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-     // console.log('formValues',formValues);
     const technologyStack = [];
     // const technoData = {};
 
@@ -62,7 +61,6 @@ function AddTechnologyStack(props) {
       data: technologyStack
     }
 
-    // console.log('postData',postData);
     const payload = customFunctions.cleanObject(postData);
     const callback = 
       AuthApi.postDataToServer;
@@ -74,7 +72,6 @@ function AddTechnologyStack(props) {
       
     } = await callback(endPoint, payload);
     if (data) {
-      // console.log('data', data, message);
       history.push('/emp-stack');
     }
       

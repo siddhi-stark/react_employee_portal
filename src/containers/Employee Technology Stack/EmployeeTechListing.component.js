@@ -82,7 +82,6 @@ function EmployeeTechListing() {
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     let id;
-    console.log('filterData', filterData.employee);
     if (
       toggle &&
       filterData &&
@@ -134,7 +133,6 @@ function EmployeeTechListing() {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues', formValues);
     setToggle(true);
     setFilterData(formValues);
   };
