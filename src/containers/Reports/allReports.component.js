@@ -268,7 +268,7 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
                         </div>
                       )}
                       <Row className="mt-3">
-                       <UserRestrictions permittedUsers={[1,2,3,4]} roleId={userRole}>
+                       <UserRestrictions permittedUsers={[1,2,3,4,6,5]} roleId={userRole}>
                         <Col sm={3}>
                           <div className="search-bar-input">
                              <DropdownInput

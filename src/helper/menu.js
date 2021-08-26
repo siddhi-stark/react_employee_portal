@@ -130,7 +130,7 @@ const menu = [
     path: '/report',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [4,5],
+    roleaccess: [4],
   },
   {
     title: 'Reports',
@@ -142,16 +142,21 @@ const menu = [
         title: 'My Report',
         path: '/report',
         icon: 'report.svg',
-        roleaccess: [2, 3, 6],
+        roleaccess: [2, 3, 6,5],
       },
       {
         title: 'Team Report',
         path: '/team-report',
         icon: 'report.svg',
         roleaccess: [2, 3,6],
+      },{
+        title: 'Employee Report',
+        path: '/reports',
+        icon: 'report.svg',
+        roleaccess: [5,6],
       },
     ],
-    roleaccess: [2, 3, 6],
+    roleaccess: [2, 3, 6, 5],
   },
    {
     title: 'Reports',
