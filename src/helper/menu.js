@@ -112,7 +112,7 @@ const menu = [
   {
     title: 'Holidays',
     path: '/holidays',
-    icon: 'timesheet.svg',
+    icon: 'holiday.svg',
     submenu: [],
     roleaccess: [1,2,3,4,5,6],
   },
