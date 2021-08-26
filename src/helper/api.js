@@ -139,7 +139,7 @@ export default class Api extends Component {
       // Default: development server
       default:
         url =
-          'https://fj67fd3njj.execute-api.ap-south-1.amazonaws.com/production/api/v1/';
+          'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/';
         break;
     }
     return url;
