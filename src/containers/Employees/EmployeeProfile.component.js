@@ -58,10 +58,11 @@ function EmployeeProfile(props) {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {
+      render: ({ document_url }) => { // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank">
+            <a href={document_url} target="_blank" // eslint-disable-line
+            > 
               <Image src="/images/download-file.svg" />
             </a>
           </>
@@ -78,10 +79,11 @@ function EmployeeProfile(props) {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {
+      render: ({ document_url }) => { // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank">
+            <a href={document_url} target="_blank" // eslint-disable-line
+            >
               <Image src="/images/download-file.svg" />
             </a>
           </>
@@ -118,10 +120,11 @@ function EmployeeProfile(props) {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {
+      render: ({ document_url }) => { // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank">
+            <a href={document_url} target="_blank" // eslint-disable-line
+            >
               <Image src="/images/download-file.svg" />
             </a>
           </>
