@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Jumbotron, Card, Button, Row, Col } from 'react-bootstrap';
+import { Jumbotron, Card, Button, Row, Col, Image } from 'react-bootstrap';
 import { Helmet } from '../../../components/FormInputs';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../../helper/authApi';
@@ -435,6 +435,14 @@ const getInstagramPost = async () => {
                           alt="Upcoming event"
                         />
                         <p>Up Coming Holidays</p>
+                        <Image 
+                           src="/images/redirect.png"
+                           onClick={() => {
+                             history.push('/holidays'); 
+                             onViewHoliday();
+                           }}
+
+                          />
                       </div>
                       {holidays && holidays.map((hd) => (
                       <>
@@ -446,7 +454,10 @@ const getInstagramPost = async () => {
                       </div>
                       </>    
                         ))}
-                        <Button onClick={() => {history.push('/holidays'); onViewHoliday();}  } >View All</Button>
+                        {
+
+                        }
+                        
                     </div>
                   </div>
                 </div>
