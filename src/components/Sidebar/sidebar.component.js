@@ -170,7 +170,7 @@ function Sidebar() {
                     src="/images/up-coming-birthday.svg"
                     alt="Upcoming event"
                   />
-                  <p>Up Coming Birthdays</p>
+                  <p>Upcoming Birthdays</p>
                 </div>
                 {
                   birthdays && birthdays.map((bday) => (

@@ -130,7 +130,7 @@ function TeamReport() {
   };
 
   const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.teamUrl}`);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setTeam(data.data);
     }

@@ -13,9 +13,14 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function Holidays() {
-	const handleActionCallback = (row) => {
+  const employeeRole = customFunctions.getLocalStorage('group');
+ 
+	
+  const handleActionCallback = (row) => {
 		return (
 			<>
+      {(Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2) ? '' : (
+        <>
 				<a
 					href="/"
 					className="pl-2"
@@ -39,6 +44,8 @@ function Holidays() {
 				>
 					<Image src="/images/delete.png" />
 				</a>
+        </>
+        )}
 			</>
 		);
 	};
@@ -65,8 +72,8 @@ function Holidays() {
       },
 		},
 		{
-			id: 'action',
-			label: 'Action',
+			id: employeeRole ?  '' : 'action' ,
+			label: employeeRole ?  '' : 'action' ,
 			render: handleActionCallback,
 		},
 	];
@@ -180,6 +187,12 @@ function Holidays() {
 		getRowData(1);
 	}, [filterData]);
 
+  const onResetForm = () => {
+    setFilterData('');
+    getRowData(1);
+    setFilterData(false);
+  };
+
 	return (
 		<>
 
@@ -221,8 +234,7 @@ function Holidays() {
 							    btnContainerClass="form-submit-buttons"
 							    isStepForm={false}
 							    onFormReset={() => {
-							      console.log('form reset callback');
-							      getRowData(1);
+							        onResetForm();
 							    }}
 							  />
                 </Card.Title>
