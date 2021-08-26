@@ -20,7 +20,6 @@ function HrReports() {
   ];
 
   const title = 'HR Reports';
-
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
@@ -90,6 +89,7 @@ const [filterData, setFilterData] = useState({});
   };
 
   useEffect(() => {
+    
     getUserRole();
   }, []);
 
@@ -105,16 +105,7 @@ const [filterData, setFilterData] = useState({});
   };
 
   const getHrName = async () => {
-
-  const endPoint = `${Api.employeeUrl}`;
-    const params = {
-      is_dropdown:1,
-      role_id:[5,6]
-    };
-    
-    const url = customFunctions.generateUrl(endPoint, params);
-    const { data } = await AuthApi.getDataFromServer(url);
-
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=5&is_dropdown=1`);
     if (!data) {
       // show error
       return;

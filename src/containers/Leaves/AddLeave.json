@@ -237,7 +237,7 @@
 				"callback": "",
 				"callbackUrl": "",
 				"inputToChange": "",
-				"minDateSelector": "",
+				"minDateSelector": "leave_from_date",
 				"maxDateSelector": "",
 				"disabled": false,
 				"isMulti": false,

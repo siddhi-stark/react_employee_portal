@@ -30,6 +30,7 @@ function AddLeave(props) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [status, setStatus] = useState(null); // eslint-disable-line
+  const [id, setId] = useState('');
 
   const columns = [
     {
@@ -86,26 +87,31 @@ function AddLeave(props) {
     setTitle(leaveId ? 'Edit Leaves' : 'Add Leaves');
   }, []);
 
-  const getTask = async (fromDate, toDate) => {
-    const userId = customFunctions.getLocalStorage('userId');
-    const endPoint = `${Api.employeeTask}`;
-    const params = {
-      user_id: userId,
-      start_date: fromDate && customFunctions.getDate(fromDate),
-      end_date: toDate && customFunctions.getDate(toDate),
-    };
-    const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await AuthApi.getDataFromServer(url);
+  // const getTask = async (fromDate, toDate) => {
+  //   const userId = customFunctions.getLocalStorage('userId');
+  //   const endPoint = `${Api.employeeTask}`;
+  //   const params = {
+  //     user_id: userId,
+  //     start_date: fromDate && customFunctions.getDate(fromDate),
+  //     end_date: toDate && customFunctions.getDate(toDate),
+  //   };
+  //   const url = customFunctions.generateUrl(endPoint, params);
+  //   const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      setRowData((data && data.data) || []);
-    } else {
-      console.log('error', message);
-    }
-  };
+  //   if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+  //     setRowData((data && data.data) || []);
+  //   } else {
+  //     console.log('error', message);
+  //   }
+  // };
 
   // Submit Form
   const submitForm = async (formValues) => {
+    if(formValues.leave_from_date && formValues.leave_to_date){
+      setStartDate(formValues.leave_from_date);
+      setEndDate(formValues.leave_to_date);
+    }
+
     const fromType =
       formValues.leave_from_type &&
       formValues.leave_from_type.value === 'Full Day'
@@ -134,37 +140,38 @@ function AddLeave(props) {
         : '6:30 PM',
     };
     if (leaveId) postData.id = Number(leaveId);
-    getTask(
-      customFunctions.getDate(formValues.leave_from_date),
-      customFunctions.getDate(formValues.leave_to_date)
-    );
-
+ 
     const callback = leaveId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
 
     const endPoint = Api.leavesUrl;
-
+    if(!customFunctions.checkIfEmpty(rowData)) {
     const { data, message } = await callback(endPoint, postData);
-    if (!data) {
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        // updateDefaultValues({});
-        swal.close();
-      });
-      // show error
-      // return;
-    } else {
-      swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      }).then(() => {
-        swal.close();
-      });
+      if(data){
+        setId(data.data && data.data.id);
+      }
+
+      if (!data) {
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          // updateDefaultValues({});
+          swal.close();
+        });
+        // show error
+        // return;
+      } else {
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+          swal.close();
+        });
+      }
     }
     // Perform success actions
   };
@@ -178,6 +185,12 @@ function AddLeave(props) {
       // show error
       return;
     }
+
+    //  getTask(
+    //   customFunctions.getDate(data.data.leave_from_date),
+    //   customFunctions.getDate(data.data.leave_to_date)
+    // );
+
     setStartDate(data.data.leave_from_date);
     setEndDate(data.data.leave_to_date);
 
@@ -241,102 +254,6 @@ function AddLeave(props) {
     getLeaveType();
   }, []);
 
-  const getLeaveFromType = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_from_type: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveFromType();
-  }, []);
-
-  const getLeaveToTime = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_to_time: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveToTime();
-  }, []);
-
-  const getLeaveFromTime = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_from_time: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveFromTime();
-  }, []);
-
-  const getLeaveToType = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.undefined);
-    if (!data) {
-      // show error
-      return;
-    }
-
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.title, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      leave_to_type: dpOptions,
-    };
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getLeaveToType();
-  }, []);
-
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     console.log('startDate', startDate, endDate);
@@ -345,12 +262,16 @@ function AddLeave(props) {
     const params = {
       page,
       limit,
-      user_id: leaveId,
+      user_id: id ? Number(id) : leaveId,
       start_date: startDate && customFunctions.getDate(startDate),
       end_date: endDate && customFunctions.getDate(endDate),
       sort_direction: 'descending',
     };
     const url = customFunctions.generateUrl(endPoint, params);
+    console.log('id',id);
+    console.log('leaveId',leaveId);
+    if(leaveId || id) {
+
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
@@ -368,6 +289,7 @@ function AddLeave(props) {
       setRowData((data && data.data) || []);
     } else {
       console.log('error', message);
+    }
     }
   };
 
@@ -438,7 +360,7 @@ function AddLeave(props) {
                   </>
                 )}
                 <br />
-                {!customFunctions.checkIfEmpty(rowData) && (
+                {!customFunctions.checkIfEmpty(rowData) && startDate && endDate && (
                   <Button
                     // href="#"
                     // onClick={() => {
