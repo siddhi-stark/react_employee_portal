@@ -125,6 +125,7 @@ export default class Api extends Component {
   
   static socialMediaUrl = `${Api.baseUrl}instagram-post/`;
 
+  static driveUploadDocumentUrl = `${Api.baseUrl}google-drive-list/`;
 
   // Get base URL of APIs
   static getBaseUrl() {

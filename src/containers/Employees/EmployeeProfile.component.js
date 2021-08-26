@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
+import CustomTable from 'stark-custom-datatable';
 import { Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import AddHistory from './AddHistory.component';
@@ -19,6 +20,10 @@ function EmployeeProfile(props) {
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
   const [companyList, setCompanyList] = useState([]);
   const [title, setTitle] = useState('');
+  const [employeeDocument, setEmployeeDocument] = useState([]);
+  const [rowEducationalData, setRowEducationalData] = useState([]);
+  const [rowPersonalData, setRowPersonalData] = useState([]);
+  const [rowOtherData, setRowOtherData] = useState([]);
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
@@ -31,6 +36,7 @@ function EmployeeProfile(props) {
     );
     if (data) {
       setEmployeeDetails(data.data);
+      getEmployeeDocument(data.data && data.data.full_name);
     }
   };
 
@@ -40,6 +46,95 @@ function EmployeeProfile(props) {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
       setCompanyList(data.data);
+    }
+  };
+
+  const personalColumns = [
+    {
+      id: 'title',
+      label: 'Name',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ document_url }) => {
+        return (
+          <>
+            <a href={document_url} target="_blank">
+              <Image src="/images/download-file.svg" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
+  const educationalColumns = [
+    {
+      id: 'title',
+      label: 'Name',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ document_url }) => {
+        return (
+          <>
+            <a href={document_url} target="_blank">
+              <Image src="/images/download-file.svg" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
+  const otherColumns = [
+    {
+      id: 'title',
+      label: 'Name',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ document_url }) => {
+        return (
+          <>
+            <a href={document_url} target="_blank">
+              <Image src="/images/download-file.svg" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
+  const getEmployeeDocument = async (name) => {
+    const formData = new FormData();
+
+    formData.append('employee_name', name);
+
+    const endPoint = `${Api.driveUploadDocumentUrl}`;
+    const { data, message } = await AuthApi.postDataToServer(
+      endPoint,
+      formData
+    );
+    setEmployeeDocument(data.data);
+    if (data) {
+      data.data &&
+        data.data.map((document) => {
+          if (document.title === 'Personal Document') {
+            setRowPersonalData(document.files);
+          } else if (document.title === 'Educational') {
+            setRowEducationalData(document.files);
+          } else if (document.title === 'Other Documents') {
+            setRowOtherData(document.files);
+          }
+          return document;
+        });
+    }
+    if (!data) {
+      swal(message, '', 'error');
     }
   };
 
@@ -258,7 +353,11 @@ function EmployeeProfile(props) {
                           <div className="d-flex align-items-start justify-content-between">
                             <div className="media">
                               <Image
-                                src={(comp.company_name === 'Stark Digital') ? '/images/stark-logo.png':'/images/sample-logo.png'}
+                                src={
+                                  comp.company_name === 'Stark Digital'
+                                    ? '/images/stark-logo.png'
+                                    : '/images/sample-logo.png'
+                                }
                                 className="mr-3"
                                 alt="image"
                               />
@@ -301,6 +400,90 @@ function EmployeeProfile(props) {
                             </div>
                           </div>
                           <hr />
+                        </>
+                      ))}
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="card-header">
+                    <h5>Documents</h5>
+                  </div>
+                  <div className="card-body">
+                    {employeeDocument &&
+                      employeeDocument.map((document) => (
+                        <>
+                          {document.title === 'Personal Document' && (
+                            <div className="row">
+                              <h5 className="mb-3">Personal Document</h5>
+                              <CustomTable
+                                tableContainerClass="mt-2"
+                                columns={personalColumns}
+                                rows={rowPersonalData}
+                                tableClass="table-striped"
+                                showPagination={true}
+                                // paginationProps={{
+                                //   totalItems: totalCount,
+                                //   itemsPerPage: limit,
+                                //   activePage: currentPage,
+                                //   onPageChange: (pageNo) => {
+                                //     getRowData(pageNo);
+                                //   },
+                                // }}
+                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
+                                emptyRender={() => {
+                                  return 'No record found.';
+                                }}
+                              />
+                            </div>
+                          )}
+                          {document.title === 'Educational' && (
+                            <div className="row">
+                              <h5 className="mb-3">Educational</h5>
+                              <CustomTable
+                                tableContainerClass="mt-2"
+                                columns={educationalColumns}
+                                rows={rowEducationalData}
+                                tableClass="table-striped"
+                                showPagination={true}
+                                // paginationProps={{
+                                //   totalItems: totalCount,
+                                //   itemsPerPage: limit,
+                                //   activePage: currentPage,
+                                //   onPageChange: (pageNo) => {
+                                //     getRowData(pageNo);
+                                //   },
+                                // }}
+                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
+                                emptyRender={() => {
+                                  return 'No record found.';
+                                }}
+                              />
+                            </div>
+                          )}
+                          {document.title === 'Other Documents' && (
+                            <div className="row">
+                              <h5 className="mb-3">Other Documents</h5>
+                              <CustomTable
+                                tableContainerClass="mt-2"
+                                columns={otherColumns}
+                                rows={rowOtherData}
+                                tableClass="table-striped"
+                                showPagination={true}
+                                // paginationProps={{
+                                //   totalItems: totalCount,
+                                //   itemsPerPage: limit,
+                                //   activePage: currentPage,
+                                //   onPageChange: (pageNo) => {
+                                //     getRowData(pageNo);
+                                //   },
+                                // }}
+                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
+                                emptyRender={() => {
+                                  return 'No record found.';
+                                }}
+                              />
+                            </div>
+                          )}
                         </>
                       ))}
                   </div>
