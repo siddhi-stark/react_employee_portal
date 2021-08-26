@@ -421,15 +421,6 @@ function EmployeeProfile(props) {
                                 rows={rowPersonalData}
                                 tableClass="table-striped"
                                 showPagination={true}
-                                // paginationProps={{
-                                //   totalItems: totalCount,
-                                //   itemsPerPage: limit,
-                                //   activePage: currentPage,
-                                //   onPageChange: (pageNo) => {
-                                //     getRowData(pageNo);
-                                //   },
-                                // }}
-                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
                                 emptyRender={() => {
                                   return 'No record found.';
                                 }}
@@ -445,15 +436,6 @@ function EmployeeProfile(props) {
                                 rows={rowEducationalData}
                                 tableClass="table-striped"
                                 showPagination={true}
-                                // paginationProps={{
-                                //   totalItems: totalCount,
-                                //   itemsPerPage: limit,
-                                //   activePage: currentPage,
-                                //   onPageChange: (pageNo) => {
-                                //     getRowData(pageNo);
-                                //   },
-                                // }}
-                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
                                 emptyRender={() => {
                                   return 'No record found.';
                                 }}
@@ -469,15 +451,6 @@ function EmployeeProfile(props) {
                                 rows={rowOtherData}
                                 tableClass="table-striped"
                                 showPagination={true}
-                                // paginationProps={{
-                                //   totalItems: totalCount,
-                                //   itemsPerPage: limit,
-                                //   activePage: currentPage,
-                                //   onPageChange: (pageNo) => {
-                                //     getRowData(pageNo);
-                                //   },
-                                // }}
-                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
                                 emptyRender={() => {
                                   return 'No record found.';
                                 }}
