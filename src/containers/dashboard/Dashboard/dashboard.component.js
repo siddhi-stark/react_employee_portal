@@ -390,7 +390,7 @@ const getInstagramPost = async () => {
               <div className="table-projects time-sheet-table">
                 <div className="card">
                   <div className="table-title">
-                    <h5 className="card-title">Time Sheet</h5>
+                    <h5 className="card-title">TimeSheet</h5>
                   </div>
                   <br />
                   <div className="table-responsive">
@@ -434,7 +434,7 @@ const getInstagramPost = async () => {
                           src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
-                        <p>Up Coming Holidays</p>
+                        <p>Upcoming Holidays</p>
                         <Image 
                            src="/images/redirect.png"
                            onClick={() => {

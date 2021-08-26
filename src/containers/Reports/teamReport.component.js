@@ -130,7 +130,7 @@ function TeamReport() {
   };
 
   const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.teamUrl}`);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setTeam(data.data);
     }
@@ -153,10 +153,11 @@ function TeamReport() {
     if (!team) return [];
     const options = [];
     team.map((tm) => {
+      console.log('tm',tm);
       return options.push({
-        label: tm.full_name,
-        id: tm.employee_id,
-        value: tm.employee_id,
+        label: tm.employee_name,
+        id: tm.id,
+        value: tm.id,
       });
     });
     return options;

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
-import { Image, Card } from 'react-bootstrap';
+import StarkFormBuilder from 'stark-form-builder';
+import { Image, Card, Accordion, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
+import FormSections from './HolidaysFilter.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -11,9 +13,14 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function Holidays() {
-	const handleActionCallback = (row) => {
+  const employeeRole = customFunctions.getLocalStorage('group');
+ 
+	
+  const handleActionCallback = (row) => {
 		return (
 			<>
+      {(Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2) ? '' : (
+        <>
 				<a
 					href="/"
 					className="pl-2"
@@ -37,6 +44,8 @@ function Holidays() {
 				>
 					<Image src="/images/delete.png" />
 				</a>
+        </>
+        )}
 			</>
 		);
 	};
@@ -63,8 +72,8 @@ function Holidays() {
       },
 		},
 		{
-			id: 'action',
-			label: 'Action',
+			id: employeeRole ?  '' : 'action' ,
+			label: employeeRole ?  '' : 'action' ,
 			render: handleActionCallback,
 		},
 	];
@@ -80,20 +89,29 @@ function Holidays() {
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Holidays' }];
 
+
+  // Variable declarations
+  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
+  const [options, updateOptions] = useState({}); // eslint-disable-line
+  const [currentUser, updateCurrentUser] = useState(0);
+    
+
+
 	// Declare methods
 	const getRowData = async (pageNo = 1) => {
 		const page = pageNo || currentPage;
 		const endPoint =
 			`${Api.holidayUrll}`
-		const filterList =
-			filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-				? customFunctions.jsonParse(filterData)
-				: {};
+
+		
 		const params = {
 			page,
 			limit,
-			...filterList,
+			sort_direction:'descending',
+			start_date: filterData.start_date ? customFunctions.getDate(filterData.start_date) : '' ,
+			end_date: filterData.end_date ? customFunctions.getDate(filterData.end_date) : '',
 		};
+
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -145,11 +163,35 @@ function Holidays() {
 
 
 
+  // Get user role
+  const getUserRole = async() => {
+    const roleId = await localStorage.getItem('role');
+    updateCurrentUser(Number(roleId));
+  };
+
+  useEffect(() => {
+    getUserRole();
+  }, []);
+
+  // Submit Form
+  const submitForm = async (formValues) => {
+  
+  setFilterData(formValues); //eslint-disable-line
+
+      
+  };
+    
 	useEffect(() => {
 		const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
 		getRowData(1);
 	}, [filterData]);
+
+  const onResetForm = () => {
+    setFilterData('');
+    getRowData(1);
+    setFilterData(false);
+  };
 
 	return (
 		<>
@@ -160,6 +202,47 @@ function Holidays() {
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
+
+      <div className="mt-5">
+          <Accordion defaultActiveKey="0">
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h4 className="text-primary m-0">Filters</h4>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                      Expand
+                    </Accordion.Toggle>
+                  </div>
+                </div>
+              </Card.Header>
+
+              <Accordion.Collapse eventKey="1">
+                <Card.Title>
+                    <StarkFormBuilder
+							    containerClass='mt-5'
+							    formHeaderClass=''
+							    formSections={FormSections}
+							    onFormSubmit={(formValues) => {submitForm(formValues);}}
+							    options={options}
+							    callbacks={{}}
+							    defaultFormValues={defaultValues}
+							    currentUser={currentUser}
+							    submitBtnText="Submit"
+							    showResetBtn={true}
+							    resetBtnText="Clear"
+							    btnContainerClass="form-submit-buttons"
+							    isStepForm={false}
+							    onFormReset={() => {
+							        onResetForm();
+							    }}
+							  />
+                </Card.Title>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        </div>
+
         <div className="mt-5">
           <Card>
             <Card.Header>

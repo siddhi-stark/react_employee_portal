@@ -37,50 +37,50 @@ function AllReports() {
     {
       id: 'id',
       label: 'userId',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
       isDisplay: false,
     },
    {
       id: 'createdDate',
       label: 'date',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
       isDisplay: false,
     },
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'name',
       label: 'Name',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
 
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockin',
       label: 'Clock in',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockout',
       label: 'Clock Out',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'report',
       label: 'View Report',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 6],
       render: ({ id, createdDate }) => {
         const newDate = customFunctions.getDate(createdDate);
         const dt = new Date(newDate).getTime();
@@ -268,7 +268,7 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
                         </div>
                       )}
                       <Row className="mt-3">
-                       <UserRestrictions permittedUsers={[1,2,3,4]} roleId={userRole}>
+                       <UserRestrictions permittedUsers={[1,2,3,4,6,5]} roleId={userRole}>
                         <Col sm={3}>
                           <div className="search-bar-input">
                              <DropdownInput
