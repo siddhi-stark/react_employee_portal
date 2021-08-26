@@ -29,37 +29,62 @@ function AddLeave(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [status, setStatus] = useState(null); // eslint-disable-line
-  const [id, setId] = useState('');
+  const [formValuesData, setFormValuesData] = useState({});
 
   const columns = [
+    {
+      id: 'id',
+      label: 'id',
+      isDisplay:false
+    }, 
     {
       id: 'index',
       label: 'Sr.No',
     },
     {
-      id: 'project',
+      id: 'project_name',
       label: 'Project',
     },
     {
-      id: 'task_name',
+      id: 'content',
       label: 'Task',
     },
     {
-      id: 'task_name',
+      id: 'start_date',
       label: 'Task Start Date',
+      render: ({ start_date }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{customFunctions.getNewFormattedDate(start_date)}</span>
+          </>
+        );
+      },
     },
     {
-      id: 'task_name',
+      id: 'end_date',
       label: 'Task Completion Date',
+      render: ({ end_date }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{customFunctions.getNewFormattedDate(end_date)}</span>
+          </>
+        );
+      },
     },
     {
-      id: 'task_name',
+      id: 'is_overdue',
       label: 'Overdue Task',
     },
     {
-      id: 'Deadline',
+      id: 'project_end_date',
       label: 'Project Deadline',
+      render: ({ project_end_date }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{project_end_date ? customFunctions.getNewFormattedDate(project_end_date) :''}</span>
+          </>
+        );
+      },
     },
   ];
 
@@ -87,30 +112,13 @@ function AddLeave(props) {
     setTitle(leaveId ? 'Edit Leaves' : 'Add Leaves');
   }, []);
 
-  // const getTask = async (fromDate, toDate) => {
-  //   const userId = customFunctions.getLocalStorage('userId');
-  //   const endPoint = `${Api.employeeTask}`;
-  //   const params = {
-  //     user_id: userId,
-  //     start_date: fromDate && customFunctions.getDate(fromDate),
-  //     end_date: toDate && customFunctions.getDate(toDate),
-  //   };
-  //   const url = customFunctions.generateUrl(endPoint, params);
-  //   const { data, message } = await AuthApi.getDataFromServer(url);
-
-  //   if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-  //     setRowData((data && data.data) || []);
-  //   } else {
-  //     console.log('error', message);
-  //   }
-  // };
-
-  // Submit Form
-  const submitForm = async (formValues) => {
+ const ApplyLeave = async (formValues) => {
     if(formValues.leave_from_date && formValues.leave_to_date){
       setStartDate(formValues.leave_from_date);
       setEndDate(formValues.leave_to_date);
     }
+
+    if(rowData && rowData.length > 0) {
 
     const fromType =
       formValues.leave_from_type &&
@@ -148,9 +156,6 @@ function AddLeave(props) {
     const endPoint = Api.leavesUrl;
     if(!customFunctions.checkIfEmpty(rowData)) {
     const { data, message } = await callback(endPoint, postData);
-      if(data){
-        setId(data.data && data.data.id);
-      }
 
       if (!data) {
         swal(message, '', 'error', {
@@ -173,7 +178,17 @@ function AddLeave(props) {
         });
       }
     }
+    }
     // Perform success actions
+  };
+
+  // Submit Form
+  const submitForm = async (formValues) => {
+    if(formValues.leave_from_date && formValues.leave_to_date){
+      setStartDate(formValues.leave_from_date);
+      setEndDate(formValues.leave_to_date);
+    }
+    setFormValuesData(formValues);
   };
 
   // Get data for form
@@ -185,11 +200,6 @@ function AddLeave(props) {
       // show error
       return;
     }
-
-    //  getTask(
-    //   customFunctions.getDate(data.data.leave_from_date),
-    //   customFunctions.getDate(data.data.leave_to_date)
-    // );
 
     setStartDate(data.data.leave_from_date);
     setEndDate(data.data.leave_to_date);
@@ -256,21 +266,18 @@ function AddLeave(props) {
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
-    console.log('startDate', startDate, endDate);
+    const userId = customFunctions.getLocalStorage('userId');
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeTask}`;
     const params = {
       page,
       limit,
-      user_id: id ? Number(id) : leaveId,
+      user_id: userId ? Number(userId) : leaveId,
       start_date: startDate && customFunctions.getDate(startDate),
       end_date: endDate && customFunctions.getDate(endDate),
       sort_direction: 'descending',
     };
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log('id',id);
-    console.log('leaveId',leaveId);
-    if(leaveId || id) {
 
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -288,8 +295,10 @@ function AddLeave(props) {
 
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
-    }
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
     }
   };
 
@@ -331,7 +340,7 @@ function AddLeave(props) {
               }}
             />
               <div className="mt-5 mx-4">
-                {!rowData && (
+                {rowData && rowData.length > 0 && (
                   <>
                     <CustomTable
                       columns={columns}
@@ -352,23 +361,19 @@ function AddLeave(props) {
                       }}
                     />
                     <br />
-                    <span className="text-danger">
+                    <p className="text-danger">
                       Note: The highlighted task shows the high priority and may
                       affect the project deadline. Kindly look into and the
                       apply for leave
-                    </span>
+                    </p>
                   </>
                 )}
                 <br />
-                {!customFunctions.checkIfEmpty(rowData) && startDate && endDate && (
+                {rowData && rowData.length < 0  && (
                   <Button
-                    // href="#"
-                    // onClick={() => {
-                    //   history.push('/add-leave');
-                    // }}
-                    disabled={
-                      !customFunctions.checkIfEmpty(rowData) ? '' : 'disabled'
-                    }
+                    onClick={() => {
+                      ApplyLeave(formValuesData);
+                    }}
                     className="mb-4"
                   >
                     Apply Leave

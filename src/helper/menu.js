@@ -27,7 +27,7 @@ const menu = [
     path: '/leaves',
     icon: 'project.svg',
     submenu: [],
-    roleaccess: [4],
+    roleaccess: [4,5],
   },
    {
     title: 'Leaves',
@@ -39,16 +39,16 @@ const menu = [
         title: 'My Leaves',
         path: '/leaves',
         icon: 'report.svg',
-        roleaccess: [3],
+        roleaccess: [3,6],
       },
       {
         title: 'Team Leaves',
         path: '/team-leaves',
         icon: 'report.svg',
-        roleaccess: [3],
+        roleaccess: [3,6],
       },
     ],
-    roleaccess: [3],
+    roleaccess: [3,6],
   },
    {
     title: 'Quotes',
@@ -159,13 +159,6 @@ const menu = [
     icon: 'report.svg',
     submenu: [],
     roleaccess: [4],
-  },
-  {
-    title: 'Leaves',
-    path: '/leaves',
-    icon: '',
-    submenu: [],
-    roleaccess: [1],
   },
   {
     title: 'Reports',

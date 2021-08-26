@@ -74,7 +74,10 @@ function EducationalDetails(props) {
       
       setDocId(docIdArr);
     } else {
-      console.log('error', message);
+       swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
       // swal(message, '', 'error');
     }
   };
