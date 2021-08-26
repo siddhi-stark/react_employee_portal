@@ -371,7 +371,8 @@ function RecruitmentApplicationComponent() {
 
   // Get user role
   const getUserRole = async () => {
-    const roleId = await localStorage.getItem('role');
+    const roleId = await localStorage.getItem('group');
+    getHrName(roleId);
     updateCurrentUser(Number(roleId));
   };
 
@@ -433,8 +434,10 @@ function RecruitmentApplicationComponent() {
     updateOptions(allOptions);
   };
 
-  const getHrName = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.teamUrl}?type=all`);
+  const getHrName = async (role) => {
+    console.log('currentUser',role);
+    const endPoint = (Number(role) === 1 ) ? `${Api.employeeUrl}?role_id=5&is_dropdown=1` :`${Api.teamUrl}?type=all`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!data) {
       // show error
       return;
@@ -443,7 +446,7 @@ function RecruitmentApplicationComponent() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.employee_name, value: op.employee_id });
+      dpOptions.push({ label: (Number(role) === 1 ) ? op.full_name : op.employee_name, value: op.employee_id });
       return op;
     });
     const allOptions = {
@@ -475,7 +478,6 @@ function RecruitmentApplicationComponent() {
     await updateOptions({ ...allOptions });
   };
   useEffect(() => {
-    getHrName();
     getDesignation();
     getTechnology();
   }, []);
