@@ -328,7 +328,6 @@ function RecruitmentApplicationComponent() {
     const page = pageNo || currentPage;
 
     const endPoint = `${Api.applicantsUrl}`;
-
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
@@ -446,7 +445,7 @@ function RecruitmentApplicationComponent() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: (Number(role) === 1 ) ? op.full_name : op.employee_name, value: op.employee_id });
+      dpOptions.push({ label: (Number(role) === 1 ) ? op.full_name : op.employee_name, value:  (Number(role) === 1 ) ? op.id : op.employee_id });
       return op;
     });
     const allOptions = {
