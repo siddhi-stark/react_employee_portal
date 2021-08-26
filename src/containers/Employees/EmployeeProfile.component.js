@@ -23,6 +23,7 @@ function EmployeeProfile(props) {
   const [employeeDocument, setEmployeeDocument] = useState([]);
   const [rowEducationalData, setRowEducationalData] = useState([]);
   const [rowPersonalData, setRowPersonalData] = useState([]);
+  const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
@@ -91,6 +92,27 @@ function EmployeeProfile(props) {
     },
   ];
 
+  const employmentColumns = [
+    {
+      id: 'title',
+      label: 'Name',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ document_url }) => {  // eslint-disable-line
+        return (
+          <>
+            <a href={document_url} target="_blank"  // eslint-disable-line
+            >
+              <Image src="/images/download-file.svg" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
   const otherColumns = [
     {
       id: 'title',
@@ -126,10 +148,12 @@ function EmployeeProfile(props) {
     if (data) {
       data.data &&
         data.data.map((document) => {
-          if (document.title === 'Personal Document') {
+          if (document.title === 'Personal') {
             setRowPersonalData(document.files);
           } else if (document.title === 'Educational') {
             setRowEducationalData(document.files);
+          } else if (document.title === 'Employment') {
+            setRowEmploymentData(document.files);
           } else if (document.title === 'Other Documents') {
             setRowOtherData(document.files);
           }
@@ -415,24 +439,15 @@ function EmployeeProfile(props) {
                     {employeeDocument &&
                       employeeDocument.map((document) => (
                         <>
-                          {document.title === 'Personal Document' && (
+                          {document.title === 'Personal' && (
                             <div className="row">
-                              <h5 className="mb-3">Personal Document</h5>
+                              <h5 className="mb-3">Personal</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
                                 columns={personalColumns}
                                 rows={rowPersonalData}
                                 tableClass="table-striped"
                                 showPagination={true}
-                                // paginationProps={{
-                                //   totalItems: totalCount,
-                                //   itemsPerPage: limit,
-                                //   activePage: currentPage,
-                                //   onPageChange: (pageNo) => {
-                                //     getRowData(pageNo);
-                                //   },
-                                // }}
-                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
                                 emptyRender={() => {
                                   return 'No record found.';
                                 }}
@@ -448,15 +463,21 @@ function EmployeeProfile(props) {
                                 rows={rowEducationalData}
                                 tableClass="table-striped"
                                 showPagination={true}
-                                // paginationProps={{
-                                //   totalItems: totalCount,
-                                //   itemsPerPage: limit,
-                                //   activePage: currentPage,
-                                //   onPageChange: (pageNo) => {
-                                //     getRowData(pageNo);
-                                //   },
-                                // }}
-                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
+                                emptyRender={() => {
+                                  return 'No record found.';
+                                }}
+                              />
+                            </div>
+                          )}
+                          {document.title === 'Employment' && (
+                            <div className="row">
+                              <h5 className="mb-3">Previous Employment</h5>
+                              <CustomTable
+                                tableContainerClass="mt-2"
+                                columns={employmentColumns}
+                                rows={rowEmploymentData}
+                                tableClass="table-striped"
+                                showPagination={true}
                                 emptyRender={() => {
                                   return 'No record found.';
                                 }}
@@ -472,15 +493,6 @@ function EmployeeProfile(props) {
                                 rows={rowOtherData}
                                 tableClass="table-striped"
                                 showPagination={true}
-                                // paginationProps={{
-                                //   totalItems: totalCount,
-                                //   itemsPerPage: limit,
-                                //   activePage: currentPage,
-                                //   onPageChange: (pageNo) => {
-                                //     getRowData(pageNo);
-                                //   },
-                                // }}
-                                // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
                                 emptyRender={() => {
                                   return 'No record found.';
                                 }}
