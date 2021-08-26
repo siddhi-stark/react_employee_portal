@@ -145,11 +145,11 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 					currentUser={currentUser}
 					submitBtnText="Submit"
 					showResetBtn={true}
-					resetBtnText="Clear"
+					resetBtnText="Cancel"
 					btnContainerClass={viewOptions ? 'd-none':'form-submit-buttons'}
 					isStepForm={false}
 					onFormReset={() => {
-						console.log('form reset callback');
+						history.push('/holidays');
 					}}
 				/>
 			</div>

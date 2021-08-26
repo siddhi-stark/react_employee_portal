@@ -56,6 +56,13 @@ function Holidays() {
 		{
 			id: 'date',
 			label: 'Date',
+			render: ({ date }) => {
+        return (
+          <>
+            <span>{customFunctions.getDMYDate(date)}</span>
+          </>
+        );
+      },
 		},
 		{
 			id: 'action',
