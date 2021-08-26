@@ -115,7 +115,7 @@ function Dashboard() {
 
       data.data.map((timesheet) => {
         const setRowData = {
-          date: customFunctions.getFormattedDate(timesheet.created_at),
+          date: customFunctions.getDMYDate(timesheet.created_at),
           clockin: timesheet.sign_in,
           clockout: timesheet.sign_out,
           total: `${timesheet.estimation} Hrs`,
