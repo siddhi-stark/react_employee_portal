@@ -159,7 +159,7 @@ function Holidays() {
               <div className="d-flex align-items-center justify-content-between">
                 <h4 className="text-primary mt-2 mb-2">Holiday</h4>
                 <div className="d-flex align-items-center justify-content-end">
-                  <UserRestrictions permittedUsers={[1,5]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[1,5,6]} roleId={userRole}>
                     <a
                       href="#"
                         onClick={() => {

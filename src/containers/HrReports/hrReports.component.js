@@ -130,7 +130,7 @@ const [filterData, setFilterData] = useState({});
   }, []);
 
   const getPosition = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if (!data) {
       // show error
       return;
@@ -156,7 +156,7 @@ const [filterData, setFilterData] = useState({});
   }, []);
 
   const getTechnology = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
     if (!data) {
       // show error
       return;

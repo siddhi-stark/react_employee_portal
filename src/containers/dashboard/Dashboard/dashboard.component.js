@@ -461,53 +461,6 @@ const getInstagramPost = async () => {
                     </div>
                   </div>
                 </div>
-               <div className="col-xl-6">
-                  <div className="upcoming-bg faint-orange">
-                    <div className="upcoming-event-box">
-                      <div className="upcoming-event-img">
-                        <img
-                          src="images/leaves-holiday.svg"
-                          alt="Upcoming event"
-                        />
-                        <p>Leaves Applied</p>
-                      </div>
-                      <div className="event-title">
-                        <p>2 Leaves</p>
-                      </div>
-                      <div className="date">
-                        <span>26, 27 June (Casual)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="social-media">
-              <div className="card flex-fill w-100">
-                <div className="card-body">
-                  <div className="table-title">
-                    <h5 className="card-title mb-0">Social Media</h5>
-                  </div>
-                  <div className="weekly-status">
-
-                    {socialMedia && socialMedia.map((social) => (
-                      <>
-                      {console.log('social',social.post_image)}
-                    <ul className="list-unstyled p-0 d-flex align-items-center justify-content-between">
-                       <li>
-                        <a href="#">
-                        {social.post_image ? (
-
-                          <img src={social.post_image} alt="social" />
-                          ) : ''}
-
-                        </a>
-                      </li>
-                    </ul>
-                      </>    
-                        ))}
-                  </div>
-                </div>
               </div>
             </div> 
           </Col>

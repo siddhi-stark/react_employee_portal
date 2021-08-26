@@ -178,7 +178,7 @@ function RecruitmentApplicationComponent() {
   const handleStatus = (status_name) => { // eslint-disable-line
     return (
       <>
-        {status_name.status_name === 'pending' && Number(group) === 5 ? ( // eslint-disable-line
+        {status_name.status_name === 'pending' && (Number(group) === 5 || Number(group) === 6 || Number(group) === 1 ) ? ( // eslint-disable-line
           <DropdownInput
             asterisk="*"
             options={getDepartment()}
@@ -457,7 +457,7 @@ function RecruitmentApplicationComponent() {
 
   const getTechnology = async () => {
     // const id = props.match.params.stackId;
-    const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
+    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
     if (!data) {
       // show error
       return;

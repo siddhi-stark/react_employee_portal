@@ -12,7 +12,6 @@ function Sidebar() {
   const [activeMenu, setActiveMenu] = useState(0);
   const [activeSubPath, setActiveSubPath] = useState(0);
   const [birthdays,setBirthdayData] = useState([]);
-  const [events,setEvents] = useState([]);
 
   const onSubActiveClass = () => {
     if (activeSubPath !== window.location.pathname)
@@ -29,20 +28,20 @@ function Sidebar() {
     }
   }
 
-  const getEvents = async () => {
-    const endPoint = `${Api.eventsUrl}?upcoming=true/`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
-      console.log(data.data);
-      setEvents(data.data);
-    }
-  }
+  // const getEvents = async () => {
+  //   const endPoint = `${Api.eventsUrl}?upcoming=true/`;
+  //   const { data } = await AuthApi.getDataFromServer(endPoint);
+  //   if(data) {
+  //     console.log(data.data);
+  //     setEvents(data.data);
+  //   }
+  // }
 
   useEffect(()=>{
     const LoginToken = customFunctions.getLocalStorage('access_token');
     if(LoginToken){
       getBirthday();
-      getEvents();
+      // getEvents();
     }
     document.addEventListener('MenuChange', () => {
       onSubActiveClass();
@@ -164,26 +163,6 @@ function Sidebar() {
             })}
           </ul>
           <div className="upcoming-events">
-            <div className="upcoming-bg">
-              <div className="upcoming-event-box">
-                <div className="upcoming-event-img">
-                  <img src="/images/up-coming-event.svg" alt="Upcoming event" />
-                  <p>Up Coming Events</p>
-                </div>
-
-                {events && events.map((ev) => (
-               <>
-                <div className="event-title">
-                  <p>{ev.title}</p>
-                </div>
-                <div className="date">
-                  <span> {customFunctions.getNewFormattedDate(ev.date)}</span>
-                </div> <br />
-                </>
-                  ))}
-
-              </div>
-            </div>
             <div className="upcoming-bg bg-red birthday-wishes-chart">
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
