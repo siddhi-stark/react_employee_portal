@@ -174,19 +174,19 @@ function Dashboard() {
 //     }
 //   }
 
-const getInstagramPost = async () => {
-  const endPoint = `${Api.socialMediaUrl}`;
-  const { data } = await AuthApi.getDataFromServer(endPoint);
-  if(data) {
-    console.log('data',data.data);
-    setSocialMediaData(data.data);
-  }
-}
+// const getInstagramPost = async () => {
+//   const endPoint = `${Api.socialMediaUrl}`;
+//   const { data } = await AuthApi.getDataFromServer(endPoint);
+//   if(data) {
+//     console.log('data',data.data);
+//     setSocialMediaData(data.data);
+//   }
+// }
 
   useEffect(() => {
     getUpcomingHoliday();
     // getAppliedLeaves();
-    getInstagramPost();
+    // getInstagramPost();
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
