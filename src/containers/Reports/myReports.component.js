@@ -32,28 +32,28 @@ function AllReports() {
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
       id: 'name',
       label: 'Name',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
       isDisplay: false,
     },
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
       id: 'clockin',
       label: 'Clock in',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
       id: 'clockout',
       label: 'Clock Out',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
       id: 'total',
@@ -72,6 +72,7 @@ function AllReports() {
     const endPoint = `${Api.reportListingUrl}`;
 
     const params = {
+      'my_report':true,
       page,
       limit: pagination.itemsPerPage,
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',

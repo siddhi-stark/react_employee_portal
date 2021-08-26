@@ -7,14 +7,14 @@ const menu = [
     roleaccess: [1, 2, 3, 4, 5, 6],
   },
 
-  {
-    title: 'Employees',
-    path: '/employee',
-    icon: 'Employee.svg',
-    submenu: [],
-    roleaccess: [1, 2, 3],
-  },
 
+   {
+    title: 'Quotes',
+    path: '/quotes',
+    icon: 'quote.svg',
+    submenu: [],
+    roleaccess: [1,5],
+  },
   {
     title: 'Projects',
     path: '/projects',
@@ -22,12 +22,12 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4],
   },
-   {
-    title: 'Quotes',
-    path: '/quotes',
-    icon: 'quote.svg',
+  {
+    title: 'Employees',
+    path: '/employee',
+    icon: 'Employee.svg',
     submenu: [],
-    roleaccess: [1,5],
+    roleaccess: [1, 2, 3],
   },
 
   {
@@ -46,13 +46,6 @@ const menu = [
     roleaccess: [1],
   },
 
-  {
-    title: 'Email Templates',
-    path: '/email-templates',
-    icon: 'template.svg',
-    submenu: [],
-    roleaccess: [1],
-  },
   
   {
     title: 'HR Activity',
@@ -76,6 +69,13 @@ const menu = [
     roleaccess: [1,2,6],
   },
   {
+    title: 'Email Templates',
+    path: '/email-templates',
+    icon: 'template.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  {
     title: 'Employee Timesheet',
     path: '/emp-timesheet',
     icon: 'timesheet.svg',
@@ -90,13 +90,6 @@ const menu = [
   //   roleaccess: [5],
   // },
   {
-    title: 'Holidays',
-    path: '/holidays',
-    icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [1,2,3,4,5,6],
-  },
-  {
     title: 'Employees',
     path: '/employees',
     icon: 'Employee.svg',
@@ -109,6 +102,20 @@ const menu = [
     icon: 'recruitement.svg',
     roleaccess: [5,4,3],
   }, 
+  {
+    title: 'Candidates',
+    path: '/candidates',
+    icon: 'candidate.svg',
+    submenu: [],
+    roleaccess: [5],
+  },
+  {
+    title: 'Holidays',
+    path: '/holidays',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4,5,6],
+  },
   // {
   //   title: 'Employee Technology Stack',
   //   path: '/emp-stack',
@@ -164,13 +171,6 @@ const menu = [
     icon: 'report.svg',
     submenu: [],
     roleaccess: [1],
-  },
-  {
-    title: 'Candidates',
-    path: '/candidates',
-    icon: 'candidate.svg',
-    submenu: [],
-    roleaccess: [5],
   },
   {
     title: 'Logout',

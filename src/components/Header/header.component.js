@@ -210,16 +210,7 @@ function Header() {
                     { notification.map((note,i) => ( //eslint-disable-line
                       <>
                   <div className="media new"> 
-                    <div className="main-img-user online">
-                    {note.profile_image_url && (
-                       <img alt="avatar" src={note.profile_image_url} />
-                      )}
-
-                      {!note.profile_image_url && (
-                      <img alt="avatar" src="/images/5.jpg"/>
-                      )}
-
-                    </div> 
+                   
                     <div className="media-body"> 
                      <p onClick={() => {onMessageClick(note.id); onNotification(1);}} className= {note.is_read === false ? "active-media" : ''}  // eslint-disable-line
                       >
