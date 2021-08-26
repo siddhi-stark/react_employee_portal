@@ -344,6 +344,7 @@
 		"type": "date",
 		"label": "DOB",
 		"id": "",
+		"dateFormat": "dd/MM/yyyy",
 		"placeholder": "DOB",
 		"inputClass": "",
 		"containerClass": "",
