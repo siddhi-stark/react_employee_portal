@@ -153,10 +153,11 @@ function TeamReport() {
     if (!team) return [];
     const options = [];
     team.map((tm) => {
+      console.log('tm',tm);
       return options.push({
-        label: tm.full_name,
-        id: tm.employee_id,
-        value: tm.employee_id,
+        label: tm.employee_name,
+        id: tm.id,
+        value: tm.id,
       });
     });
     return options;
