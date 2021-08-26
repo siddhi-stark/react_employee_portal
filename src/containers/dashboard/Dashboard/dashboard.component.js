@@ -31,7 +31,6 @@ function Dashboard() {
   const [totalHrs, setTotalHrs] = useState(null);
   const [holidays,setHolidays] = useState([]);
   // const [leaves,setLeaves] = useState([]);
-  const [socialMedia,setSocialMediaData] = useState([]);
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
 
@@ -239,7 +238,6 @@ function Dashboard() {
 
   return (
     <>
-    {console.log('socialMedia',socialMedia)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -447,7 +445,7 @@ function Dashboard() {
                       {holidays && holidays.map((hd) => (
                       <>
                       <div className="event-title">
-                        <p>{hd.date}</p>
+                        <p>{customFunctions.getDMYDate(hd.date)}</p>
                       </div>
                       <div className="date">
                         <span>{hd.occasion}</span>
