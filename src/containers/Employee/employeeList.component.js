@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import { Card, Button } from 'react-bootstrap';
+import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
-// Declare columns
 const columns = [
   {
     id: 'index',
@@ -16,14 +16,15 @@ const columns = [
   {
     id: 'emp_id',
     label: 'Employee ID',
-     render: ({ emp_id }) => { // eslint-disable-line
-        return (
-          <>
-            <span>{`SDMS ${emp_id}` // eslint-disable-line
+    render: ({ emp_id }) => { // eslint-disable-line
+      return (
+        <>
+          <span>{
+            `SDMS ${emp_id}` // eslint-disable-line
           }</span>
-          </>
-        );
-      },
+        </>
+      );
+    },
   },
   {
     id: 'emp_name',
@@ -55,8 +56,6 @@ const columns = [
 ];
 
 function EmployeeListComponent() {
-
-
   const weekday = new Array(7);
   weekday[0] = 'Sunday';
   weekday[1] = 'Monday';
@@ -65,25 +64,16 @@ function EmployeeListComponent() {
   weekday[4] = 'Thursday';
   weekday[5] = 'Friday';
   weekday[6] = 'Saturday';
-const today = new Date();
-const yesterday = new Date();
-if(weekday[yesterday.getDay()] === 'Monday') {
-yesterday.setDate(today.getDate() - 3);
-
-}else {
-
-yesterday.setDate(today.getDate() - 1);
-}
-// const y = yesterday.getFullYear();
-// const m = yesterday.getMonth();
-// const d = yesterday.getDay();
-const date = customFunctions.getDate(new Date(yesterday));
-const dateNew = customFunctions.getFormattedDate(date);
+  const today = new Date();
+  const yesterday = new Date();
+  if (weekday[yesterday.getDay()] === 'Monday') {
+    yesterday.setDate(today.getDate() - 3);
+  } else {
+    yesterday.setDate(today.getDate() - 1);
+  }
+  const date = customFunctions.getDate(new Date(yesterday));
+  const dateNew = customFunctions.getFormattedDate(date);
   const n = weekday[yesterday.getDay()];
-
-
-
-  // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
@@ -94,24 +84,13 @@ const dateNew = customFunctions.getFormattedDate(date);
 
   const ViewButtonMenu = new Event('ViewButtonChange', { isUpdated: true });
 
-
-  // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
 
-    const endPoint = `${Api.employeeTimesheet}?sort_by=user__full_name&sort_direction=ascending&start_date=${date}&limit=${5}&page=${page}`;
-    // const filterList =
-    //   filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-    //     ? customFunctions.jsonParse(filterData)
-    //     : {};
-    // const params = {
-    //   page,
-    //   limit:5,
-    //   ...filterList,
-    // };
-    // const url = customFunctions.generateUrl(endPoint, params);
+    const endPoint = `${
+      Api.employeeTimesheet
+    }?sort_by=user__full_name&sort_direction=ascending&start_date=${date}&limit=${5}&page=${page}`;
     const { data, message } = await AuthApi.getDataFromServer(endPoint);
-
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
@@ -126,7 +105,7 @@ const dateNew = customFunctions.getFormattedDate(date);
       });
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message, 'error', '');
     }
   };
   useEffect(() => {
@@ -136,25 +115,24 @@ const dateNew = customFunctions.getFormattedDate(date);
   }, [filterData]);
 
   const onViewBtnChange = () => {
-
-    
     document.dispatchEvent(ViewButtonMenu);
     return true;
   };
-
 
   return (
     <>
       <Card>
         <Card.Header>
           {' '}
-          <h4 className="text-primary mt-2 mb-2">Employee List - {n}({dateNew})</h4>
+          <h4 className="text-primary mt-2 mb-2">
+            Employee List - {n}({dateNew})
+          </h4>
         </Card.Header>
         <Card.Body>
           <CustomTable
             columns={columns}
             rows={rowData}
-            showPagination={false} 
+            showPagination={false}
             role={5}
             tableClass="table-striped"
             paginationProps={{
@@ -171,11 +149,12 @@ const dateNew = customFunctions.getFormattedDate(date);
           />
           <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
             <div className="d-flex justify-content-end mr-3">
-              <Button onClick={() => {
-                history.push('/emp-timesheet');
-                onViewBtnChange(); 
-
-              }}>
+              <Button
+                onClick={() => {
+                  history.push('/emp-timesheet');
+                  onViewBtnChange();
+                }}
+              >
                 View All
               </Button>
             </div>
