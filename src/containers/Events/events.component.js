@@ -230,7 +230,7 @@ function Events() {
                     submitBtnText="Apply"
                     showResetBtn={true}
                     resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
+                    btnContainerClass="form-submit-buttons pull-right mb-3"
                     isStepForm={false}
                     
                     onFormReset={() => {

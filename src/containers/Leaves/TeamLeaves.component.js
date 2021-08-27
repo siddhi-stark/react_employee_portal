@@ -221,9 +221,9 @@ function TeamLeaves() {
                   callbacks={{}}
                   // defaultFormValues={defaultValues}
                   currentUser={currentUser}
-                  submitBtnText="Submit"
+                  submitBtnText="Apply"
                   showResetBtn={true}
-                  resetBtnText="Cancel"
+                  resetBtnText="Clear"
                   btnContainerClass="form-submit-buttons pull-right mb-3"
                   isStepForm={false}
                   onFormReset={() => {
