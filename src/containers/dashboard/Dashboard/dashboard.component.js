@@ -478,7 +478,7 @@ if (LoginToken) {
                     <div className="upcoming-event-box">
                       <div className="upcoming-event-img">
                         <img
-                          src="images/leaves-holiday.svg"
+                          src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
                         <p>Leaves Applied</p>
@@ -496,7 +496,7 @@ if (LoginToken) {
                         <>
 
                       <div className="date">
-                        <span>{customFunctions.getNewFormattedDate(lv.leave_from_date)} To {customFunctions.getNewFormattedDate(lv.leave_to_date)}</span>
+                        <span>{lv.leave_from_date} To {lv.leave_to_date}</span>
                       </div>
                       <div className="event-title">
                         <p> {lv.leave_type}</p>

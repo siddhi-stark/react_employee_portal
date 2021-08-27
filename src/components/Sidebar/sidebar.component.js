@@ -224,7 +224,7 @@ function Sidebar() {
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
                   <img
-                    src="images/up-coming-birthday.svg"
+                    src="/images/up-coming-birthday.svg"
                     alt="Upcoming event"
                   />
                   <p>Upcoming Birthdays</p>
