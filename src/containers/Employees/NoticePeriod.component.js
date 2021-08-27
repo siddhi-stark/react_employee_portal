@@ -129,7 +129,7 @@ function NoticePeriodComponent() {
                     callbacks={{}}
                     defaultFormValues={defaultValues}
                     // currentUser={currentUser}
-                    submitBtnText="Submit"
+                    submitBtnText="Apply"
                     showResetBtn={true}
                     resetBtnText="Clear"
                     btnContainerClass="form-submit-buttons pull-right mb-3"

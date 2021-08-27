@@ -227,7 +227,7 @@ function Events() {
                     callbacks={{}}
                     defaultFormValues={defaultValues}
                     currentUser={currentUser}
-                    submitBtnText="Submit"
+                    submitBtnText="Apply"
                     showResetBtn={true}
                     resetBtnText="Clear"
                     btnContainerClass="form-submit-buttons"

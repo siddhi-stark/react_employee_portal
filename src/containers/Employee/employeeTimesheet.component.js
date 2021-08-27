@@ -366,7 +366,7 @@ function EmployeeTimesheet() {
                 callbacks={{}}
                 defaultFormValues={defaultValues}
                 currentUser={currentUser}
-                submitBtnText="Submit"
+                submitBtnText="Apply"
                 showResetBtn={true} // eslint-disable-line
                 resetBtnText="Clear"
                 btnContainerClass="form-submit-buttons pull-right mb-3"
