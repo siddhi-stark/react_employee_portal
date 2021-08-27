@@ -95,8 +95,8 @@ function Events() {
       label: 'Date',
     },
     {
-      id: (Number(employeeRole) === 4 || Number(employeeRole) === 3) ?  '' : 'action',
-      label: (Number(employeeRole) === 4 || Number(employeeRole) === 3) ?  '' : 'Action',
+      id: 'action',
+      label: 'Action',
       render: handleActionCallback,
     },
   ];
