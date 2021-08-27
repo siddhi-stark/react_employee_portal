@@ -46,7 +46,7 @@ function Leaves() {
 			id: 'leave_from_date',
 			label: 'From',
 			roleAccess: [4],
-			render: ({ leave_from_date }) => {
+			render: ({ leave_from_date }) => { // eslint-disable-line
 				return (
 					<>
 						<span>{customFunctions.getNewFormattedDate(leave_from_date)}</span>
@@ -58,7 +58,7 @@ function Leaves() {
 			id: 'leave_to_date',
 			label: 'To',
 			roleAccess: [4],
-			render: ({ leave_to_date }) => {
+			render: ({ leave_to_date }) => { // eslint-disable-line
 				return (
 					<>
 						<span>{customFunctions.getNewFormattedDate(leave_to_date)}</span>

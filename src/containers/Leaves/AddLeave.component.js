@@ -81,7 +81,8 @@ function AddLeave(props) {
       render: ({ project_end_date }) => { // eslint-disable-line
         return (
           <>
-            <span>{project_end_date ? customFunctions.getNewFormattedDate(project_end_date) :''}</span>
+            <span>{project_end_date ? customFunctions.getNewFormattedDate(project_end_date) :'' // eslint-disable-line
+            }</span>
           </>
         );
       },

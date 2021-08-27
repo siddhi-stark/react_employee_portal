@@ -50,7 +50,7 @@ function TeamLeaves() {
       id: 'leave_date',
       label: 'Leave Date',
       roleAccess: [3],
-      render: ({ leave_from_date, leave_to_date }) => {
+      render: ({ leave_from_date, leave_to_date }) => { // eslint-disable-line
         return (
           <>
             <span>{`${customFunctions.getNewFormattedDate(
