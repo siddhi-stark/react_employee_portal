@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { Image } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import menu from '../../helper/menu';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
@@ -9,6 +10,8 @@ import AuthApi from '../../helper/authApi';
 
 function Sidebar() {
   const history = useHistory();
+  const viewEvent = new Event('ViewEventButtonChange', { isUpdated: true });
+
   const [activeMenu, setActiveMenu] = useState(0);
   const [activeSubPath, setActiveSubPath] = useState(0);
 
@@ -66,11 +69,22 @@ function Sidebar() {
       onSubActiveClass();
       setActiveMenu();
     });
+
+    document.addEventListener('ViewEventButtonChange', () => {
+      onSubActiveClass();
+      setActiveMenu();
+    });
     
   },[]);
 
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
+
+  const onViewEvent = () => {
+  document.dispatchEvent(viewEvent);
+  return true;
+};
+
 
   return (
     <>
@@ -176,7 +190,16 @@ function Sidebar() {
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
                   <img src="images/up-coming-event.svg" alt="Upcoming event" />
-                  <p>Up Coming Events</p>
+                  <p>Upcoming Events</p>
+                   <Image 
+                           src="/images/redirect.png"
+                           className="ms-3"
+                           onClick={() => {
+                             history.push('/event'); 
+                             onViewEvent();
+                           }}
+
+                          />
                 </div>
 
                 {events && events.map((ev) => (
@@ -185,7 +208,7 @@ function Sidebar() {
                   <p>{ev.title}</p>
                 </div>
                 <div className="date">
-                  <span>{customFunctions.getNewFormattedDate(ev.date)}</span>
+                  <span>{ev.datetime}</span>
                 </div> 
                         </>
                       ))}
@@ -207,9 +230,10 @@ function Sidebar() {
                   birthdays && birthdays.map((bday) => (
                     <ul className="p-0 m-0 list-unstyled">
                   <li className="text-red">
-                    <a href="#">
-                     {bday.name}
-                      <span>{customFunctions.getNewFormattedDate(bday.dob)}</span>
+                    <a 
+                    href="#">
+                     <p><span>{bday.dob}</span></p> 
+                     <p className="ms-3">{bday.name}</p>
                     </a>
                   </li>
                 </ul>
