@@ -24,10 +24,13 @@ function Events() {
   const title = 'Events';
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Events' }];
+  const employeeRole = customFunctions.getLocalStorage('group');
 
   const handleActionCallback = (row) => {
     return (
       <>
+       {(Number(employeeRole) === 4 || Number(employeeRole) === 3? '' : (
+         <>
         <a
           href="/"
           className="pl-2"
@@ -65,6 +68,8 @@ isView: true,
         >
           <Image src="/images/delete.png" />
         </a>
+        </>
+        ))}
       </>
     );
   };
@@ -83,8 +88,8 @@ isView: true,
       label: 'Date',
     },
     {
-      id: 'Action',
-      label: 'Action',
+      id: employeeRole ?  '' : 'action',
+      label: employeeRole ?  '' : 'action',
       render: handleActionCallback,
     },
   ];
@@ -167,7 +172,7 @@ isView: true,
               <div className="d-flex align-items-center justify-content-between">
                 <h4 className="text-primary mt-2 mb-2">Events</h4>
                 <div className="d-flex align-items-center justify-content-end">
-                  <UserRestrictions permittedUsers={[5]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[1,5,6]} roleId={userRole}>
                     <a
                       href="#"
                         onClick={() => {

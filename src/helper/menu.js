@@ -110,13 +110,13 @@ const menu = [
     submenu: [],
     roleaccess: [5, 6],
   },
-  //  {
-  //   title: 'Event',
-  //   path: '/event',
-  //   icon: 'timesheet.svg',
-  //   submenu: [],
-  //   roleaccess: [5],
-  // },
+   {
+    title: 'Event',
+    path: '/event',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [5,6,1,2,3,4],
+  },
   {
     title: 'Employees',
     path: '/employees',
