@@ -359,7 +359,6 @@ function RecruitmentApplicationComponent() {
   const submitForm = async (formValue) => {
     let payload = {};
     const formValues = (typeof formValue === 'object' && Object.keys(formValue).length) ? formValue : allData;
-      
       payload = {
         keyword: formValues && formValues.keyword ? formValues.keyword : formValues.keyword,
         designation_id: formValues && formValues.designation_id && formValues.designation_id.value
@@ -374,7 +373,7 @@ function RecruitmentApplicationComponent() {
         end_date: formValues && formValues.end_date
           ? customFunctions.getDate(formValues.end_date)
           : formValues.end_date,
-        created_by_id: formValues && formValues.role_id && formValues.role_id.value ? formValues.role_id.value : formValues.role_id,
+        created_by_id: formValues && formValues.role_id && formValues.role_id.value ? formValues.role_id.value : formValues.created_by_id,
       };
       
       payload.status = status;
@@ -418,7 +417,6 @@ function RecruitmentApplicationComponent() {
   };
 
   const getHrName = async (role) => {
-    console.log('currentUser',role);
     const endPoint = (Number(role) === 1 ) ? `${Api.employeeUrl}?role_id=5&is_dropdown=1` :`${Api.teamUrl}?type=all`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!data) {
