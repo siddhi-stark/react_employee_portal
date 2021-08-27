@@ -71,6 +71,7 @@ function TeamReport() {
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.reportListingUrl}?my_team=true`;
 
+    console.log('searchKeyword',searchKeyword)
     const params = {
       limit: pagination.itemsPerPage,
       page,
@@ -82,12 +83,18 @@ function TeamReport() {
 
     let postData = {};
     const employeeList = [];
-    if (selectedEmployee && selectedEmployee.length > 0) {
-      selectedEmployee.map((emp) => {
-        employeeList.push(emp.id);
+    console.log('selectedEmployee',selectedEmployee);
+   if (selectedEmployee && selectedEmployee.length > 0) {
+        selectedEmployee.map((emp) => {
+        team.map((tem) => {
+        if(tem.id === emp.id) {
+          employeeList.push(tem.employee_id);
+        }
+        return tem;
+        });
         return emp;
-      });
-    }
+        });
+        }
 
     postData = {
       users: employeeList,
@@ -153,7 +160,6 @@ function TeamReport() {
     if (!team) return [];
     const options = [];
     team.map((tm) => {
-      console.log('tm',tm);
       return options.push({
         label: tm.employee_name,
         id: tm.id,

@@ -209,12 +209,11 @@ function Sidebar() {
 
                 {events && events.map((ev) => (
                         <>
-                          <div className="event-title">
+                          <div className="event-title date">
                   <p>{ev.title}</p>
-                </div>
-                <div className="date">
                   <span>{ev.datetime}</span>
-                </div> 
+                </div> <br />
+                
                         </>
                       ))}
 

@@ -496,7 +496,7 @@ if (LoginToken) {
                         <>
 
                       <div className="date">
-                        <span>{customFunctions.getNewFormattedDate(lv.leave_from_date)}To{customFunctions.getNewFormattedDate(lv.leave_to_date)}</span>
+                        <span>{customFunctions.getNewFormattedDate(lv.leave_from_date)} To {customFunctions.getNewFormattedDate(lv.leave_to_date)}</span>
                       </div>
                       <div className="event-title">
                         <p> {lv.leave_type}</p>
