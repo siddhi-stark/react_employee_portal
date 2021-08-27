@@ -39,6 +39,7 @@ function Profile() {
   const [imageProfile, setImageProfile] = useState('');
   // const [image, setImage] = useState('');
   const [profileId, setProfileId] = useState('');
+  const [companyList,setCompanyList] = useState([]);
 
   const Department = [
     {
@@ -104,6 +105,18 @@ function Profile() {
     return depart;
   };
 
+   const getEmployeeHIstory = async () => {
+    const employeeId = customFunctions.getLocalStorage('userId');
+    console.log('employeeId',employeeId);
+    const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    // customFunctions.setLocalStorage('historyId',data.data.id);
+    // console.log('data',data.data);
+    if (data) {
+      setCompanyList(data.data);
+    }
+  };
+
   useEffect(() => {
     async function getData() {
       const uRole = customFunctions.getLocalStorage('group');
@@ -111,6 +124,7 @@ function Profile() {
       setRole(Number(uRole));
       getDepartment();
       getProfile();
+      getEmployeeHIstory();
     }
     getData();
   }, []);
@@ -367,6 +381,48 @@ function Profile() {
             </Row>
           </Form>
         </Card.Body>
+      </Card>
+      <Card>
+      <div className="profile-details">
+            <div className="row">
+              <div className="col-sm-12">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex align-items-start justify-content-between mb-4">
+                      
+                        <h5 className="card-title">Employment History</h5>
+                    
+                    </div>
+                    {companyList &&
+                      companyList.map((comp) => (
+                        <>
+                          <div className="d-flex align-items-start justify-content-between">
+                            <div className="media">
+                              <Image
+                                src={(comp.company_name === 'Stark Digital') ? '/images/stark-logo.png':'/images/sample-logo.png'}
+                                className="mr-3"
+                                alt="image"
+                              />
+                              <div className="media-body">
+                                <h5 className="mt-0">{comp.designation}</h5>
+                                <p>{comp.company_name}</p>
+                                <p>
+                                  {comp.start_date_formate} -{' '}
+                                  {comp.end_date_formate} {comp.date}|{' '}
+                                  {comp.duration}
+                                </p>
+                                <h6>{comp.location}</h6>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+                        </>
+                      ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
       </Card>
       <ModalInput
         size="md"

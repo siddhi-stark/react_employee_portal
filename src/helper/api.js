@@ -132,6 +132,7 @@ export default class Api extends Component {
 
   static leavesUrl = `${Api.baseUrl}leave/`;
 
+  static birthdayUrl =  `${Api.baseUrl}upcoming-birthday/`;
 
   // Get base URL of APIs
   static getBaseUrl() {
