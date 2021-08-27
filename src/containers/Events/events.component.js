@@ -51,7 +51,7 @@ function Events() {
              history.push(`/edit-event/${row.id}`, { isView: 'true' });
           }}
         >
-          view
+          <Image alt="view" src="/images/eye.svg" />
         </a>
        {(Number(employeeRole) === 4 || Number(employeeRole) === 3 ? '' : (
          <>

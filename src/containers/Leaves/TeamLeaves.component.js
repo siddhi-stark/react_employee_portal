@@ -13,6 +13,8 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function TeamLeaves() {
+  const [currentUser, updateCurrentUser] = useState(0);
+
   const handleActionCallback = ({ id }) => {
     return (
       <>
@@ -63,15 +65,6 @@ function TeamLeaves() {
       },
     },
     {
-      id: 'leave_type',
-      label: 'Type',
-    },
-    {
-      id: 'leave_count',
-      label: 'Days',
-      roleAccess: [4],
-    },
-    {
       id: 'status_name',
       label: 'Status',
     },
@@ -90,7 +83,6 @@ function TeamLeaves() {
   const limit = 10;
   const [filterData, setFilterData] = useState({});
   const [title, setTitle] = useState('');
-  const [userRole, setUserRole] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   let filterOptions = {};
 
@@ -137,9 +129,17 @@ function TeamLeaves() {
     }
   };
 
+  // Get user role
+  const getUserRole = async() => {
+    const roleId = await localStorage.getItem('group');
+    updateCurrentUser(Number(roleId));
+  };
+
   useEffect(() => {
-    const uRole = customFunctions.getLocalStorage('group');
-    setUserRole(Number(uRole));
+    getUserRole();
+  }, []);
+
+  useEffect(() => {
     getRowData(1);
     setTitle('Leaves');
   }, [filterData]);
@@ -162,7 +162,7 @@ function TeamLeaves() {
   };
 
   const getEmployee = async () => {
-    const endPoint = (Number(userRole) === 3 || Number(userRole) === 6 || Number(userRole) === 2) ? `${Api.teamUrl}?type=all` : `${Api.employeeUrl}?type=all&is_dropdown=1`;
+    const endPoint = (Number(currentUser) === 3 || Number(currentUser) === 6 || Number(currentUser) === 2) ? `${Api.teamUrl}?type=all` : `${Api.employeeUrl}?type=all&is_dropdown=1`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!data) {
       // show error
@@ -171,7 +171,7 @@ function TeamLeaves() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: (Number(userRole) === 3 || Number(userRole) === 6 || Number(userRole) === 2) ? op.employee_name : op.full_name, value: (Number(userRole) === 3 || Number(userRole) === 6 || Number(userRole) === 2) ? op.employee_id :op.id });
+      dpOptions.push({ label: (Number(currentUser) === 3 || Number(currentUser) === 6 || Number(currentUser) === 2) ? op.employee_name : op.full_name, value: (Number(currentUser) === 3 || Number(currentUser) === 6 || Number(currentUser) === 2) ? op.employee_id :op.id });
       return op;
     });
     const allOptions = {
@@ -185,7 +185,7 @@ function TeamLeaves() {
 
   useEffect(() => {
     getEmployee();
-  }, [userRole]);
+  }, [currentUser]);
 
   return (
     <>
@@ -220,7 +220,7 @@ function TeamLeaves() {
                   options={options}
                   callbacks={{}}
                   // defaultFormValues={defaultValues}
-                  currentUser={userRole}
+                  currentUser={currentUser}
                   submitBtnText="Submit"
                   showResetBtn={true}
                   resetBtnText="Cancel"
@@ -239,7 +239,7 @@ function TeamLeaves() {
               <div className="d-flex align-items-center justify-content-between">
                 <h4 className="text-primary mt-2 mb-2">Leaves</h4>
                 <div className="d-flex align-items-center justify-content-end">
-                  <UserRestrictions permittedUsers={[4]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
                     <a
                       href="#"
                       onClick={() => {

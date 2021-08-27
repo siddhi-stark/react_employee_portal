@@ -13,6 +13,7 @@ import customFunctions from '../../helper/customFunctions';
 function TeamAddLeave(props) {
   const idProps = props;
   const leaveId = idProps.match.params.viewLeaveId;
+  const employeeOptions = idProps.location.state ? idProps.location.state.employee : '';
   const history = useHistory();
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
@@ -105,7 +106,7 @@ function TeamAddLeave(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        history.push('/team-leaves');
+        history.push('/leaves');
         swal.close();
       });
     }
@@ -155,7 +156,8 @@ function TeamAddLeave(props) {
       </div>
       <section className="content-area">
         <div className="mt-5">
-          <Card>
+          <Card body>
+            <Button className="float-end" onClick= {() => employeeOptions ? history.push('/employee-leaves') : history.push('/team-leaves')} >Back</Button>
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
@@ -177,7 +179,7 @@ function TeamAddLeave(props) {
                 history.push('/leaves');
               }}
             />
-              <Row className="text-center ms-2">
+              <Row className="text-center ms-4">
                 { status === 'Pending' && (
                   <>
                 <Col sm={2}>
@@ -197,7 +199,7 @@ function TeamAddLeave(props) {
                       submitForm(3)
                     }}
                     variant="secondary"
-                    className="mb-4"
+                    className="mb-4 ms-2"
                   >
                     Decline
                   </Button>
@@ -205,7 +207,7 @@ function TeamAddLeave(props) {
                 </>
                 )}
               </Row>
-              <Row className="mx-3">
+              <Row className="ms-4 w-80">
 
               <TextInput
                 inputClass="form-control"

@@ -22,7 +22,7 @@ function EmployeeTeamLeaves() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/view-leave/${id}`);
+            history.push(`/view-leave/${id}`,{ employee: true });
           }}
         >
           <Image src="/images/edit.png" />
@@ -65,6 +65,7 @@ function EmployeeTeamLeaves() {
     {
       id: 'leave_type',
       label: 'Type',
+      roleAccess: [4],
     },
     {
       id: 'leave_count',
