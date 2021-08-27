@@ -56,9 +56,6 @@ function Holidays() {
 		{
 			id: 'occasion',
 			label: 'Occasion',
-		},{
-			id: 'day',
-			label: 'Day',
 		},
 		{
 			id: 'date',

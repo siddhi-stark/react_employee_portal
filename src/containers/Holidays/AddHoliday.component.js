@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
+import { Card } from 'react-bootstrap';
 import swal from 'sweetalert';
 import FormSections from './holiday.json';
 import AuthApi from '../../helper/authApi';
@@ -131,9 +132,11 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 					<Breadcrumb items={items} />
 				</div>
 			</div>
+			<Card>
+
 				<div className="mt-5">
 				<StarkFormBuilder
-					containerClass=""
+					containerClass="mb-5"
 					formHeaderClass=""
 					formSections={jsonSchema}
 					onFormSubmit={(formValues) => {
@@ -153,6 +156,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 					}}
 				/>
 			</div>
+			</Card>
 		</>
 	);
 }
