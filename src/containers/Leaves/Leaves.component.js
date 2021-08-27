@@ -103,17 +103,6 @@ function Leaves() {
 
 	const history = useHistory();
 
-  const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
-    const sectionData = section;
-    if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
-      const date = new Date();
-      sectionData.minDate = date;
-    }
-
-    return sectionData;
-  });
-
 	const getRowData = async (pageNo = 1) => {
 		const page = pageNo || currentPage;
 		const endPoint = `${Api.leavesUrl}`;
