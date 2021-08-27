@@ -22,6 +22,22 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4],
   },
+
+  {
+    title: 'Employee Timesheet',
+    path: '/emp-timesheet',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [1,5, 6],
+  },
+  
+  {
+    title: 'Employees',
+    path: '/employee',
+    icon: 'Employee.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
    {
     title: 'Quotes',
     path: '/quotes',
@@ -57,16 +73,16 @@ const menu = [
         title: 'HR Report',
         path: '/hr-reports',
         icon: 'report.svg',
-        roleaccess: [1, 2],
+        roleaccess: [1],
       },
       {
         title: 'Recruitment',
         path: '/recruitment',
         icon: 'recruitement.svg',
-        roleaccess: [1, 2,6],
+        roleaccess: [1,6],
       },
     ],
-    roleaccess: [1,2,6],
+    roleaccess: [1,6],
   },
   {
     title: 'Email Templates',
@@ -74,13 +90,6 @@ const menu = [
     icon: 'template.svg',
     submenu: [],
     roleaccess: [1],
-  },
-  {
-    title: 'Employee Timesheet',
-    path: '/emp-timesheet',
-    icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [5, 6],
   },
   {
     title: 'Employees',
@@ -93,7 +102,7 @@ const menu = [
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'recruitement.svg',
-    roleaccess: [5,4,3],
+    roleaccess: [5,4,3,2],
   }, 
   {
     title: 'Candidates',

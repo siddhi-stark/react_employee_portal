@@ -382,7 +382,7 @@ function Profile() {
           </Form>
         </Card.Body>
       </Card>
-      <Card>
+     
       <div className="profile-details">
             <div className="row">
               <div className="col-sm-12">
@@ -423,7 +423,6 @@ function Profile() {
               </div>
             </div>
           </div>
-      </Card>
       <ModalInput
         size="md"
         centered
