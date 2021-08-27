@@ -256,6 +256,7 @@ function EmailTemplatesComponent() {
                           'textAlign',
                           'link',
                           'history',
+                          'image',
                         ],
                         fontSize: {
                           options: [
