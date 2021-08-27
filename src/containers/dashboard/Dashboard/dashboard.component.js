@@ -30,9 +30,10 @@ function Dashboard() {
   const [quotesContent, setQuotesContent] = useState('');
   const [totalHrs, setTotalHrs] = useState(null);
   const [holidays,setHolidays] = useState([]);
-  // const [leaves,setLeaves] = useState([]);
+  const [leaves,setLeaves] = useState([]);
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
+  const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -164,14 +165,14 @@ function Dashboard() {
     }
   }
 
-// const getAppliedLeaves = async () => {
-//     const endPoint = `${Api.leavesApplied}`;
-//     const { data } = await AuthApi.getDataFromServer(endPoint);
-//     if(data) {
-//       console.log(data.data);
-//       setLeaves(data.data);
-//     }
-//   }
+const getAppliedLeaves = async () => {
+    const endPoint = `${Api.leavesApplied}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if(data) {
+      console.log(data.data);
+      setLeaves(data.data);
+    }
+  }
 
 // const getInstagramPost = async () => {
 //   const endPoint = `${Api.socialMediaUrl}`;
@@ -183,8 +184,11 @@ function Dashboard() {
 // }
 
   useEffect(() => {
-    getUpcomingHoliday();
-    // getAppliedLeaves();
+   const LoginToken = customFunctions.getLocalStorage('access_token');
+if (LoginToken) {
+  getUpcomingHoliday();
+  getAppliedLeaves();
+}
     // getInstagramPost();
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
@@ -234,10 +238,20 @@ function Dashboard() {
     return true;
   };
 
+  const onViewLeaves = () => {
+
+    
+    document.dispatchEvent(viewLeaves);
+    return true;
+  };
+
+
+
 
 
   return (
     <>
+    {console.log('leaves',leaves)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -456,6 +470,40 @@ function Dashboard() {
 
                         }
                         
+                    </div>
+                  </div>
+                </div>
+                 <div className="col-xl-6">
+                  <div className="upcoming-bg faint-orange">
+                    <div className="upcoming-event-box">
+                      <div className="upcoming-event-img">
+                        <img
+                          src="images/leaves-holiday.svg"
+                          alt="Upcoming event"
+                        />
+                        <p>Leaves Applied</p>
+                         <Image 
+                         className="ms-3"
+                           src="/images/redirect.png"
+                           onClick={() => {
+                             history.push('/leaves'); 
+                             onViewLeaves();
+                           }}
+                           />
+                      </div>
+
+                      {leaves && leaves.map((lv) => (
+                        <>
+
+                      <div className="date">
+                        <span>{customFunctions.getNewFormattedDate(lv.leave_from_date)}To{customFunctions.getNewFormattedDate(lv.leave_to_date)}</span>
+                      </div>
+                      <div className="event-title">
+                        <p> {lv.leave_type}</p>
+                      </div>
+                        </>
+                        ))}
+
                     </div>
                   </div>
                 </div>

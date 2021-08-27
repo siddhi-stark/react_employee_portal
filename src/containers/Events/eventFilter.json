@@ -61,7 +61,7 @@
 		"callback": "",
 		"callbackUrl": "",
 		"inputToChange": "",
-		"minDateSelector": "",
+		"minDateSelector": "start_date",
 		"maxDateSelector": "",
 		"disabled": false,
 		"isMulti": false,

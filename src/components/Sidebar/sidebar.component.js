@@ -74,6 +74,11 @@ function Sidebar() {
       onSubActiveClass();
       setActiveMenu();
     });
+
+    document.addEventListener('ViewLeavesButtonChange', () => {
+      onSubActiveClass();
+      setActiveMenu();
+    });
     
   },[]);
 
