@@ -323,7 +323,7 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
                               type="submit"
                               className="ms-4"
                             >
-                              Submit
+                              Apply
                             </Button>
                             <Button
                               variant="secondary"
