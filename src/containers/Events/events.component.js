@@ -48,7 +48,7 @@ function Events() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-             history.push(`/edit-event/${row.id}`, { isView: true });
+             history.push(`/edit-event/${row.id}`, { isView: 'true' });
           }}
         >
           view

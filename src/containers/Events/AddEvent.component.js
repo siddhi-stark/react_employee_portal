@@ -12,27 +12,23 @@ import customFunctions from '../../helper/customFunctions';
 
 function AddEvent(props) {
   const viewObj = props;
-  // console.log('viewObj',viewObj);
   const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
-  console.log('viewOptions',viewOptions);
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [imageUrl, setImageUrl] = useState('');
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState('Add Event');
   const history = useHistory();
   const ID = props.match.params.id; // eslint-disable-line
-  const viewID = props.match.params.viewEvent; // eslint-disable-line
-  const items = [{ to: '/', label: 'Home' }, { label: ID ? 'Event' : 'Add Event' }]; 
-  // console.log('items',items);
+  // const viewID = props.match.params.viewEvent; // eslint-disable-line
+  const items = [{ to: '/', label: 'Home' }, { label: ID ? 'Edit Event' : 'Add Event' }]; 
   const [eventId, setEventId] = useState('');
 
   items.map((it) => {
     if(viewOptions) {
       items[1].label = 'View Event';
     }
-    console.log('it',it);
     return it;
   })
 
@@ -172,18 +168,24 @@ function AddEvent(props) {
   };
 
   useEffect(() => {
+    
     setEventId(ID);
-    if (ID || viewID) {
-      getData(ID || viewID);
+    if (ID) {
+      getData(ID);
     }
 
-    setTitle('View Event');
+    if(viewOptions === 'true')  setTitle('View Event');
+
     if (ID) {
-      setTitle('Event');
-    } else {
-      setTitle('Add Event');
+      setTitle('Edit Event');
+      console.log('if first condition');
     }
-  }, [eventId]);
+    
+    if(ID && viewOptions === 'true'){
+      console.log('------',ID,ID && viewOptions === 'true')
+      setTitle('View Event');
+    }
+  }, []);
 
   return (
     <>
@@ -203,7 +205,7 @@ function AddEvent(props) {
         <Button className="float-end" onClick= {() => history.push('/event')} >Back</Button>
           ) : ''}
         <StarkFormBuilder
-          containerClass=""
+          containerClass="mt-5"
           formHeaderClass=""
           formSections={FormSections || jsonSchema}
           formHeading="Event Form"

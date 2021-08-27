@@ -526,7 +526,7 @@ function RecruitmentApplicationComponent() {
                   }}
                   className="btn-link"
                 >
-                  {Number(group) === 4 || Number(group) === 3
+                  {Number(group) === 4 || Number(group) === 3 ||  Number(group) === 2
                     ? ''
                     : 'Add Applicant'}
                 </a>
@@ -535,7 +535,7 @@ function RecruitmentApplicationComponent() {
           </Card.Header>
           <Card.Body>
             <div className="text-end">
-              {!(Number(group) === 4 || Number(group) === 3) && (
+              {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
                 <Button
                   variant="primary"
                   className="mb-2"
