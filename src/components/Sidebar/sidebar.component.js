@@ -128,7 +128,7 @@ function Sidebar() {
               );
             })}
           </ul>
-          {/* <div className="upcoming-events">
+          <div className="upcoming-events">
             <div className="upcoming-bg">
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
@@ -168,7 +168,7 @@ function Sidebar() {
                 </ul>
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </>
