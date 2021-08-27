@@ -42,8 +42,6 @@ function Events() {
   const handleActionCallback = (row) => {
     return (
       <>
-       {(Number(employeeRole) === 4 || Number(employeeRole) === 3 ? '' : (
-         <>
         <a
           href="/"
           className="pl-2"
@@ -55,6 +53,8 @@ function Events() {
         >
           view
         </a>
+       {(Number(employeeRole) === 4 || Number(employeeRole) === 3 ? '' : (
+         <>
         <a
           href="/"
           className="pl-2 ms-4"
