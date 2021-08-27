@@ -21,6 +21,7 @@ function TeamAddLeave(props) {
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [title, setTitle] = useState('');
   const [reason, setReason] = useState('');
+  const [status, setStatus] = useState('');
 
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
@@ -120,7 +121,10 @@ function TeamAddLeave(props) {
       // show error
       return;
     }
-
+    if(data && data.data){
+      setReason(data.data.declined_reason);
+      setStatus(data.data.status_name);
+    }
     updateDefaultValues({
       leave_type: data.data.leave_type && data.data.leave_type,
       reason: data.data.reason && data.data.reason,
@@ -141,7 +145,6 @@ function TeamAddLeave(props) {
   useEffect(() => {
     if (leaveId) getData();
   }, []);
-
 
   return (
     <>
@@ -175,6 +178,8 @@ function TeamAddLeave(props) {
               }}
             />
               <Row className="text-center ms-2">
+                { status === 'Pending' && (
+                  <>
                 <Col sm={2}>
                   <Button
                     onClick={() => {
@@ -197,17 +202,21 @@ function TeamAddLeave(props) {
                     Decline
                   </Button>
                 </Col>
+                </>
+                )}
               </Row>
               <Row className="mx-3">
+
               <TextInput
                 inputClass="form-control"
                 onInputChange={(e) => {
                   setReason(e.target.value);
                 }
                 }
-                label="Reason"
+                label="Declined Reason"
                 containerClass="form-group"
                 type="textarea"
+                disabled={status !== 'Pending' && true}
                 name="reason"
                 value={reason}
               />
