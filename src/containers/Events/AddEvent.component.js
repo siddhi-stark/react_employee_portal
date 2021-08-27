@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
+import { Card, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import FormSections from './event.json';
 import AuthApi from '../../helper/authApi';
@@ -11,9 +12,9 @@ import customFunctions from '../../helper/customFunctions';
 
 function AddEvent(props) {
   const viewObj = props;
-  const viewOptions = viewObj.location.state
-    ? viewObj.location.state.isView
-    : '';
+  // console.log('viewObj',viewObj);
+  const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
+  console.log('viewOptions',viewOptions);
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
@@ -21,8 +22,29 @@ function AddEvent(props) {
   const [imageUrl, setImageUrl] = useState('');
   const [title, setTitle] = useState('');
   const history = useHistory();
-  const items = [{ to: '/', label: 'Home' }, { label: 'Add Event' }];
+  const ID = props.match.params.id; // eslint-disable-line
+  const viewID = props.match.params.viewEvent; // eslint-disable-line
+  const items = [{ to: '/', label: 'Home' }, { label: ID ? 'Event' : 'Add Event' }]; 
+  // console.log('items',items);
   const [eventId, setEventId] = useState('');
+
+  items.map((it) => {
+    if(viewOptions) {
+      items[1].label = 'View Event';
+    }
+    console.log('it',it);
+    return it;
+  })
+
+   const formSchemaNew = [...FormSections];
+  formSchemaNew[0].fields.map((section) => {
+    const sectionData = section;
+    if (sectionData.name === 'date') {
+      const date = new Date();
+      sectionData.minDate = date;
+    }
+    return sectionData;
+  });
 
   useEffect(() => {
     if (!customFunctions.checkIfEmpty(viewOptions)) {
@@ -119,12 +141,15 @@ function AddEvent(props) {
       : AuthApi.postDataToServer;
 
     const endPoint = Api.eventsUrl;
-    const { data } = await callback(endPoint, postData);
+    const { data, message } = await callback(endPoint, postData);
 
     if (data) {
       swal(data.message[0], '', 'success');
       setEventId('');
       history.push('/event');
+    }else{
+      console.log('data.message[0]',message);
+       swal(message, '', 'error');
     }
   };
 
@@ -147,8 +172,6 @@ function AddEvent(props) {
   };
 
   useEffect(() => {
-    const ID = props.match.params.id;
-    const viewID = props.match.params.viewEvent;
     setEventId(ID);
     if (ID || viewID) {
       getData(ID || viewID);
@@ -156,7 +179,7 @@ function AddEvent(props) {
 
     setTitle('View Event');
     if (ID) {
-      setTitle('Edit Event');
+      setTitle('Event');
     } else {
       setTitle('Add Event');
     }
@@ -172,7 +195,13 @@ function AddEvent(props) {
         </div>
       </div>
 
-      <div className="mt-5">
+    
+       <div className="mt-4 edit-timelog">
+        <Card body>
+        {viewOptions ? (
+
+        <Button className="float-end" onClick= {() => history.push('/event')} >Back</Button>
+          ) : ''}
         <StarkFormBuilder
           containerClass=""
           formHeaderClass=""
@@ -198,6 +227,7 @@ function AddEvent(props) {
             history.push('/event');
           }}
         />
+      </Card>
       </div>
     </>
   );

@@ -19,6 +19,7 @@ import UserRestrictions from '../../components/UserRestrictions/userrestrictions
 
 function Events() {
   // Declare variable
+
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
@@ -41,11 +42,22 @@ function Events() {
   const handleActionCallback = (row) => {
     return (
       <>
-       {(Number(employeeRole) === 4 || Number(employeeRole) === 3? '' : (
+       {(Number(employeeRole) === 4 || Number(employeeRole) === 3 ? '' : (
          <>
         <a
           href="/"
           className="pl-2"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+             history.push(`/edit-event/${row.id}`, { isView: true });
+          }}
+        >
+          view
+        </a>
+        <a
+          href="/"
+          className="pl-2 ms-4"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -55,19 +67,6 @@ function Events() {
           <Image src="/images/edit-button.svg" />
         </a>
 
-        <a
-          href="/"
-          className="pl-2 ms-4"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-             history.push(`/edit-event/${row.id}`, {
-isView: true,
-});
-          }}
-        >
-          view
-        </a>
 
         <a
           href="/"
@@ -96,8 +95,8 @@ isView: true,
       label: 'Date',
     },
     {
-      id: employeeRole ?  '' : 'action',
-      label: employeeRole ?  '' : 'action',
+      id: (Number(employeeRole) === 4 || Number(employeeRole) === 3) ?  '' : 'action',
+      label: (Number(employeeRole) === 4 || Number(employeeRole) === 3) ?  '' : 'Action',
       render: handleActionCallback,
     },
   ];
