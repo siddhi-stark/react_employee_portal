@@ -114,6 +114,7 @@ function Leaves() {
 		const params = {
 			page,
 			limit,
+      my_leaves: true,
 			sort_direction: 'descending',
 			...filterList
 		};

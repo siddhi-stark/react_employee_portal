@@ -111,7 +111,6 @@ function EmployeeTeamLeaves() {
     const params = {
       page,
       limit,
-      my_team:true,
       sort_direction: 'descending',
       ...filterList
     };
