@@ -64,46 +64,46 @@ function ToDoList(props) {
     {
       id: 'id',
       label: 'Id',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
       isDisplay: false,
     },
     {
       id: 'twId',
       label: 'twId',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
       isDisplay: false,
     },
     {
       id: 'taskType',
       label: 'taskType',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
       isDisplay: false,
     },
 
     {
       id: 'todo',
       label: 'To Do Tasks',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
       id: 'projects',
       label: 'Projects',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
       id: 'status',
       label: 'Status',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
       id: 'eta',
       label: 'ETA',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
       id: 'action',
       label: 'Action',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5,6],
       render: ({ id, twId, taskType }) => {
         return (
           <>

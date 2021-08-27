@@ -388,7 +388,7 @@ function Dashboard() {
               <div className="table-projects time-sheet-table">
                 <div className="card">
                   <div className="table-title">
-                    <h5 className="card-title">TimeSheet</h5>
+                    <h5 className="card-title">Timesheet</h5>
                   </div>
                   <br />
                   <div className="table-responsive">
