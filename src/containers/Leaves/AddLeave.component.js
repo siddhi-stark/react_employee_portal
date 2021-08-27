@@ -24,12 +24,13 @@ function AddLeave(props) {
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [title, setTitle] = useState('');
 
-  const [totalCount, setTotalCount] = useState(10);
+  const [totalCount, setTotalCount] = useState(null);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [formValuesData, setFormValuesData] = useState({});
+  const [changeDate, setChangeDate] = useState(true);
 
   const columns = [
     {
@@ -114,42 +115,50 @@ function AddLeave(props) {
   }, []);
 
  const ApplyLeave = async (formValues) => {
-    if(formValues.leave_from_date && formValues.leave_to_date){
-      setStartDate(formValues.leave_from_date);
-      setEndDate(formValues.leave_to_date);
-    }
+   console.log('formValues',formValues);
+    const defaultValuesFromType = 
+    defaultValues.leave_from_type && (defaultValues.leave_from_type === 'Full Day')
+        ? 2
+        : 1;
 
-    if(rowData && rowData.length > 0) {
+    const defaultValuesToType =
+      defaultValues.leave_to_type && (defaultValues.leave_to_type.value === 'Full Day')
+        ? 2
+        : 1;
 
     const fromType =
       formValues.leave_from_type &&
-      formValues.leave_from_type.value === 'Full Day'
+      (formValues.leave_from_type.value === 'Full Day') 
         ? 2
         : 1;
     const toType =
-      formValues.leave_to_type && formValues.leave_to_type.value === 'Full Day'
+      formValues.leave_to_type && (formValues.leave_to_type.value === 'Full Day') || defaultValues.leave_to_type && (defaultValues.leave_to_type === 'Full Day')
         ? 2
         : 1;
+   console.log('defaultValues',toType, fromType);
     const postData = {
-      leave_type: formValues.leave_type ? formValues.leave_type.value : '',
-      reason: formValues.reason,
+      leave_type: formValues.leave_type ? formValues.leave_type.value : defaultValues.leave_type.value,
+      reason: formValues.reason ? formValues.reason : defaultValues.reason,
       leave_from_date: formValues.leave_from_date
         ? customFunctions.getDate(formValues.leave_from_date)
-        : '',
-      leave_from_type: formValues.leave_from_type && fromType,
-      leave_to_type: formValues.leave_to_type.value && toType,
+        : customFunctions.getDate(defaultValues.leave_from_date),
+      leave_from_type: formValues.leave_from_type ? fromType : defaultValuesFromType,
+      leave_to_type: formValues.leave_to_type ? toType : defaultValuesToType,
       leave_to_date: formValues.leave_to_date
         ? customFunctions.getDate(formValues.leave_to_date)
-        : '',
-      leave_from_time: formValues.leave_from_time
+        : customFunctions.getDate(defaultValues.leave_to_date),
+      leave_from_time: formValues.leave_from_time && formValues.leave_from_time.value
         ? formValues.leave_from_time.value
         : '9:30 AM',
-      leave_to_time: formValues.leave_to_time
+      leave_to_time: formValues.leave_to_time && formValues.leave_to_time.value 
         ? formValues.leave_to_time.value
         : '6:30 PM',
     };
     if (leaveId) postData.id = Number(leaveId);
- 
+    if (defaultValues.leave_from_time && defaultValues.leave_to_time) {
+      postData.leave_to_time = defaultValues.leave_to_time && defaultValues.leave_to_time.value;
+      postData.leave_from_time = defaultValues.leave_from_time && defaultValues.leave_from_time.value;
+    }
     const callback = leaveId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
@@ -175,12 +184,12 @@ function AddLeave(props) {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         }).then(() => {
+          history.push('/leaves');
           swal.close();
         });
       }
     }
-    }
-    // Perform success actions
+      // Perform success actions
   };
 
   // Submit Form
@@ -313,7 +322,7 @@ function AddLeave(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Leaves</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Leave application</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
@@ -323,12 +332,20 @@ function AddLeave(props) {
               containerClass=""
               formHeaderClass=""
               formSections={FormSections}
-              formHeading="Leave"
+              formHeading="Leave application"
               onFormSubmit={(formValues) => {
                 submitForm(formValues);
+                setChangeDate(true);
               }}
               options={options}
-              callbacks={{}}
+              callbacks={{
+                getHandleFromDate : () => {
+                  setChangeDate(false);
+                },
+                getHandleToDate: () => {
+                  setChangeDate(false);
+                },
+              }}
               defaultFormValues={defaultValues}
               currentUser={currentUser}
               submitBtnText="Check task"
@@ -341,36 +358,49 @@ function AddLeave(props) {
               }}
             />
               <div className="mt-5 mx-4">
-                {rowData && rowData.length > 0 && (
+                { (totalCount > 0) &&  (
                   <>
-                    <CustomTable
-                      columns={columns}
-                      rows={rowData}
-                      tableClass="table-striped"
-                      role={5}
-                      showPagination={true}
-                      paginationProps={{
-                        totalItems: totalCount,
-                        itemsPerPage: limit,
-                        activePage: currentPage,
-                        onPageChange: (pageNo) => {
-                          getRowData(pageNo);
-                        },
-                      }}
-                      emptyRender={() => {
-                        return 'No record found.';
-                      }}
-                    />
-                    <br />
-                    <p className="text-danger">
-                      Note: The highlighted task shows the high priority and may
-                      affect the project deadline. Kindly look into and the
-                      apply for leave
-                    </p>
+
+                    <Card.Header>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <h4 className="text-primary mt-2 mb-2">Employee Task List</h4>
+                      </div>
+                    </Card.Header>
+                      <Card.Body>
+                          <CustomTable
+                            columns={columns}
+                            rows={rowData}
+                            tableClass="table-striped"
+                            role={5}
+                            showPagination={true}
+                            paginationProps={{
+                              totalItems: totalCount,
+                              itemsPerPage: limit,
+                              activePage: currentPage,
+                              onPageChange: (pageNo) => {
+                                getRowData(pageNo);
+                              },
+                            }}
+                            emptyRender={() => {
+                              return 'No task available.';
+                            }}
+                          />
+                          <br />
+                      </Card.Body>
+
                   </>
-                )}
-                <br />
-                {rowData && rowData.length < 0  && (
+                      )}
+                   { (totalCount > 0)  && (
+                    <p className="text-danger ms-3">
+                    Note: The highlighted task shows the high priority and may
+                    affect the project deadline. Kindly look into and the
+                    apply for leave </p>
+                  )}
+                   { (totalCount === 0)  && (
+                    <p className="text-success"> Note: Make sure No task affecting the project deadline and associated task are taken care. </p>
+                  )}
+                   {console.log('changeDate',changeDate)}
+                { (totalCount === 0) && changeDate &&  (
                   <Button
                     onClick={() => {
                       ApplyLeave(formValuesData);

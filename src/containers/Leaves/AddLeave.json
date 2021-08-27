@@ -15,7 +15,7 @@
 				"type": "select",
 				"label": "Leave Type",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Select Leave Type",
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [
@@ -64,7 +64,7 @@
 			},
 			{
 				"name": "reason",
-				"type": "text",
+				"type": "textarea",
 				"label": "Reason",
 				"id": "",
 				"placeholder": "",
@@ -102,7 +102,7 @@
 				"type": "date",
 				"label": "Leave Date From",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Select Date From",
 				"inputClass": "",
 		        "dateFormat": "dd/MM/yyyy",
 				"containerClass": "",
@@ -116,7 +116,7 @@
 				"displayWhen": {},
 				"haveValidations": "true",
 				"haveDisplayOptions": "false",
-				"callback": "",
+				"callback": "getHandleFromDate",
 				"callbackUrl": "",
 				"inputToChange": "",
 				"minDateSelector": "",
@@ -138,10 +138,16 @@
 				"type": "select",
 				"label": "Leave From Type",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Select Leave Type",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [],
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
 				"displayWhen": {},
 				"haveValidations": "false",
 				"haveDisplayOptions": "false",
@@ -179,10 +185,16 @@
 				"type": "select",
 				"label": "Leave From Time",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Select From Time",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [],
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
 				"displayWhen": {
 					"conditions": [
 						{
@@ -226,15 +238,21 @@
 				"type": "date",
 				"label": "Leave Date To",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Select Date To",
 		        "dateFormat": "dd/MM/yyyy",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [],
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
 				"displayWhen": {},
 				"haveValidations": "false",
 				"haveDisplayOptions": "false",
-				"callback": "",
+				"callback": "getHandleToDate",
 				"callbackUrl": "",
 				"inputToChange": "",
 				"minDateSelector": "leave_from_date",
@@ -256,10 +274,16 @@
 				"type": "select",
 				"label": "Leave To Type",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Select Leave Type",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [],
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
 				"displayWhen": {},
 				"haveValidations": "false",
 				"haveDisplayOptions": "false",
@@ -297,10 +321,16 @@
 				"type": "select",
 				"label": "Leave To Time",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Select Leave Time",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [],
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
 				"displayWhen": {
 					"conditions": [
 						{

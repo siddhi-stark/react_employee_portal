@@ -100,16 +100,6 @@ function TeamLeaves() {
 
   const history = useHistory();
 
-  const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
-    const sectionData = section;
-    if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
-      const date = new Date();
-      sectionData.minDate = date;
-    }
-    return sectionData;
-  });
-
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     const endPoint = `${Api.leavesUrl}`;
@@ -172,7 +162,8 @@ function TeamLeaves() {
   };
 
   const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
+    const endPoint = (Number(userRole) === 3 || Number(userRole) === 6 || Number(userRole) === 2) ? `${Api.teamUrl}?type=all` : `${Api.employeeUrl}?type=all&is_dropdown=1`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!data) {
       // show error
       return;
@@ -180,7 +171,7 @@ function TeamLeaves() {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({ label: op.full_name, value: op.id });
+      dpOptions.push({ label: (Number(userRole) === 3 || Number(userRole) === 6 || Number(userRole) === 2) ? op.employee_name : op.full_name, value: (Number(userRole) === 3 || Number(userRole) === 6 || Number(userRole) === 2) ? op.employee_id :op.id });
       return op;
     });
     const allOptions = {
@@ -194,7 +185,7 @@ function TeamLeaves() {
 
   useEffect(() => {
     getEmployee();
-  }, []);
+  }, [userRole]);
 
   return (
     <>
