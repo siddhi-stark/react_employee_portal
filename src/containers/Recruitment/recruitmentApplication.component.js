@@ -35,6 +35,7 @@ function RecruitmentApplicationComponent() {
   const [statusId, setStatusId] = useState('');
   const [note, setNote] = useState('');
   const [statusData, setStatusData] = useState('');
+  const [allData, setAllData] = useState({});
   // const [statusLabel,setStatusLabel] = useState('');
   // const [selectedStatusOption,setSelectedStatusOption] = useState(null);
   let filterOptions = {};
@@ -285,31 +286,6 @@ function RecruitmentApplicationComponent() {
     },
   ];
 
-  //  const onStatusClick = async (statusData,statusId,status_name) => { //eslint-disable-line
-  //   const postData = {
-  //     ids:[statusId],
-  //     status: statusData.label === 'declined' ? 6 : 2
-  //   }
-  //   // setStatusLabel(status_name.status_name);
-
-  //   const { data } = await AuthApi.putDataToServer(
-  //     `${Api.bulkStatusUrl}`,
-  //     postData
-  //   );
-  //   if(data) {
-  //      swal({
-  //       title: data.message[0],
-  //       icon: 'success',
-  //     })
-  //       .then(okAction => {
-  //         if (okAction) {
-  //           getRowData(currentPage);
-  //           if(postData.status === 6 || statusData.label === 'shortlisted'){ setStatusId(statusId); setModalShow(true); }
-  //         }
-  //       });
-  //   }
-  // };
-
   const getDepartment = () => {
     if (!ApplicantStatus) return [];
     const depart = [];
@@ -380,28 +356,36 @@ function RecruitmentApplicationComponent() {
   }, []);
 
   // Submit Form
-  const submitForm = async (formValues) => {
+  const submitForm = async (formValue) => {
     let payload = {};
-
-    if (formValues) {
+    const formValues = (typeof formValue === 'object' && Object.keys(formValue).length) ? formValue : allData;
+      
       payload = {
-        keyword: formValues.keyword ? formValues.keyword : '',
-        designation_id: formValues.designation_id
+        keyword: formValues && formValues.keyword ? formValues.keyword : formValues.keyword,
+        designation_id: formValues && formValues.designation_id && formValues.designation_id.value
           ? formValues.designation_id.value
-          : '',
-        technology_stack_id: formValues.technology_stack_id
+          : formValues.designation_id,
+        technology_stack_id: formValues && formValues.technology_stack_id && formValues.technology_stack_id.value
           ? formValues.technology_stack_id.value
-          : '',
-        start_date: formValues.start_date
+          : formValues.technology_stack_id,
+        start_date: formValues && formValues.start_date
           ? customFunctions.getDate(formValues.start_date)
-          : '',
-        end_date: formValues.end_date
+          : formValues.start_date,
+        end_date: formValues && formValues.end_date
           ? customFunctions.getDate(formValues.end_date)
-          : '',
-        created_by_id: formValues.role_id ? formValues.role_id.value : '',
+          : formValues.end_date,
+        created_by_id: formValues && formValues.role_id && formValues.role_id.value ? formValues.role_id.value : formValues.role_id,
       };
+      
+      payload.status = status;
+      
+      if(Number(status) === 0){
+        payload.status = '';
+      }
+    
+    if(formValues) {
+      setAllData(payload);
     }
-    payload.status = status;
     setFilterData(payload);
   };
 
@@ -571,7 +555,7 @@ function RecruitmentApplicationComponent() {
                 className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
                 onClick={() => {
                   setActiveMenu('all');
-                  setFilterData();
+                  setStatus(0);
                 }}
               >
                 All

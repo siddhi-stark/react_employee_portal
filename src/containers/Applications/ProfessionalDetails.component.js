@@ -64,13 +64,13 @@ function ProfessionalDetails(props) {
      };
      props.onProfDetInfo(data.data.id);
    
-       if (data.data.resume_source === 'naukri'){
+       if (data.data.resume_source === 'Naukri' || data.data.resume_source === 'naukri'){
           obj.resume_source = {label:'Naukri' ,value:data.data.resume_source}
-       } else if (data.data.resume_source === 'indeed'){
+       } else if (data.data.resume_source === 'indeed' || data.data.resume_source === 'Indeed'){
           obj.resume_source = {label:'Indeed' ,value:data.data.resume_source}
-       } else if (data.data.resume_source === 'linkedin'){
+       } else if (data.data.resume_source === 'linkedin' || data.data.resume_source === 'Linkedin'){
           obj.resume_source = {label:'Linkedin' ,value:data.data.resume_source}
-       } else if (data.data.resume_source === 'referal'){
+       } else if (data.data.resume_source === 'referal' || data.data.resume_source === 'Referal'){
           obj.resume_source = {label:'Referal' ,value:data.data.resume_source}
        }
      updateDefaultValues({...obj})    // updateDefaultValues(data);

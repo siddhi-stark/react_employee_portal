@@ -116,6 +116,8 @@ export default class Api extends Component {
 
   static eventsUrl = `${Api.baseUrl}events/`;
 
+  static employeeTask = `${Api.baseUrl}employee-task/`;
+
   static applicantPercentageUrl = `${Api.baseUrl}applicant-percentage/`;
 
   static birthdayUrl = `${Api.baseUrl}upcoming-birthday/`;
@@ -127,6 +129,9 @@ export default class Api extends Component {
   static socialMediaUrl = `${Api.baseUrl}instagram-post/`;
 
   static driveUploadDocumentUrl = `${Api.baseUrl}google-drive-list/`;
+
+  static leavesUrl = `${Api.baseUrl}leave/`;
+
 
   // Get base URL of APIs
   static getBaseUrl() {
