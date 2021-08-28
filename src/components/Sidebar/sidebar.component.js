@@ -37,7 +37,6 @@ function Sidebar() {
     const endPoint = `${Api.eventsUrl}?upcoming=true&sort_by=event_time`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
-      console.log(data.data);
       setEvents(data.data);
     }
   }
@@ -93,8 +92,6 @@ function Sidebar() {
 
   return (
     <>
-    {console.log('events',events)}
-    {console.log('events',birthdays)}
       <div className="main-sidebar main-sidebar-sticky side-menu ps">
         <div className="sidemenu-logo">
           <a className="main-logo" href="/">
@@ -198,7 +195,7 @@ function Sidebar() {
 
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
-                  <img src="images/up-coming-event.svg" alt="Upcoming event" />
+                  <img src="/images/up-coming-event.svg" alt="Upcoming event" />
                   <p>Upcoming Events</p>
                    <Image 
                            src="/images/redirect.png"

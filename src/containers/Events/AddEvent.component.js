@@ -144,7 +144,6 @@ function AddEvent(props) {
       setEventId('');
       history.push('/event');
     }else{
-      console.log('data.message[0]',message);
        swal(message, '', 'error');
     }
   };
@@ -178,11 +177,9 @@ function AddEvent(props) {
 
     if (ID) {
       setTitle('Edit Event');
-      console.log('if first condition');
     }
     
     if(ID && viewOptions === 'true'){
-      console.log('------',ID,ID && viewOptions === 'true')
       setTitle('View Event');
     }
   }, []);

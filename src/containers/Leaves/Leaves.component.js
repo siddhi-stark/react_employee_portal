@@ -13,8 +13,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function Leaves() {
-	const handleActionCallback = ({ id, status_name }) => { // eslint-disable-line
-		console.log('----',(status_name !== 'Pending' && status_name === 'Approved'))
+	const handleActionCallback = ({ id, status_name, leave_from_date }) => { // eslint-disable-line
 		return (
 			<>
 				<a
@@ -31,7 +30,7 @@ function Leaves() {
 					<Image src="/images/eye.svg" />
 					:  <Image alt="view" src="/images/edit-button.svg" />}
 				</a>
-
+				{ new Date(leave_from_date).getTime() >= new Date().getTime() && (
 				<a
 					href="/"
 					className="ms-2 pl-2"
@@ -46,6 +45,7 @@ function Leaves() {
 					<Image src="/images/fail.svg" />
 				)}
 				</a>
+				)}
 			</>
 		);
 	};

@@ -122,7 +122,10 @@ function Events() {
       setCurrentPage(Number(data.paginator.current_page));
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
     }
   };
 
