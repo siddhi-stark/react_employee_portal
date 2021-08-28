@@ -106,7 +106,11 @@ function TeamAddLeave(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        history.push('/leaves');
+        if(employeeOptions) {
+          history.push('/employee-leaves') 
+        } else {
+          history.push('/team-leaves');
+        }
         swal.close();
       });
     }
