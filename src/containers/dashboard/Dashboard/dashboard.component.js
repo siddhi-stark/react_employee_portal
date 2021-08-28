@@ -157,7 +157,7 @@ function Dashboard() {
   };
 
  const getUpcomingHoliday = async () => {
-    const endPoint = `${Api.holidayUrl}`;
+    const endPoint = `${Api.holidayUrl}?sort_by=date`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
       console.log(data.data);
@@ -438,6 +438,8 @@ if (LoginToken) {
 
             <div className="holidays-applied">
               <div className="row">
+              {holidays && holidays.length >= 1 ? (
+
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
                     <div className="upcoming-event-box">
@@ -458,12 +460,10 @@ if (LoginToken) {
                       </div>
                       {holidays && holidays.map((hd) => (
                       <>
-                      <div className="event-title">
-                        <p>{customFunctions.getDMYDate(hd.date)}</p>
-                      </div>
-                      <div className="date">
-                        <span>{hd.occasion}</span>
-                      </div>
+                      <div className="event-title date">
+                        <p>{hd.date}</p>
+                       <p><span>{hd.occasion}</span></p>
+                      </div> <br />
                       </>    
                         ))}
                         {
@@ -473,6 +473,12 @@ if (LoginToken) {
                     </div>
                   </div>
                 </div>
+                ) : ''}
+
+                 <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
+
+                {leaves && leaves.length >= 1 ? (
+
                  <div className="col-xl-6">
                   <div className="upcoming-bg faint-orange">
                     <div className="upcoming-event-box">
@@ -507,6 +513,10 @@ if (LoginToken) {
                     </div>
                   </div>
                 </div>
+                  ) : ''}
+                 </UserRestrictions>
+
+
               </div>
             </div> 
           </Col>

@@ -34,7 +34,7 @@ function Sidebar() {
   }
 
   const getEvents = async () => {
-    const endPoint = `${Api.eventsUrl}?upcoming=true/`;
+    const endPoint = `${Api.eventsUrl}?upcoming=true&sort_by=event_time`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
       console.log(data.data);
@@ -192,6 +192,10 @@ function Sidebar() {
 
          <div className="upcoming-events">
             <div className="upcoming-bg">
+
+
+            {events && events.length >=1 ? (
+
               <div className="upcoming-event-box">
                 <div className="upcoming-event-img">
                   <img src="images/up-coming-event.svg" alt="Upcoming event" />
@@ -218,7 +222,11 @@ function Sidebar() {
                       ))}
 
               </div>
+              ) : ''}
+
             </div>
+
+            {birthdays && birthdays.length >= 1 ? (
 
             <div className="upcoming-bg bg-red birthday-wishes-chart">
               <div className="upcoming-event-box">
@@ -246,6 +254,8 @@ function Sidebar() {
                 }
               </div>
             </div>
+              ) : ''}
+
           </div> 
 
             </div>
