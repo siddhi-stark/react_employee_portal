@@ -160,16 +160,14 @@ function Dashboard() {
     const endPoint = `${Api.holidayUrl}?sort_by=date`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
-      console.log(data.data);
       setHolidays(data.data);
     }
   }
 
 const getAppliedLeaves = async () => {
-    const endPoint = `${Api.leavesApplied}`;
+    const endPoint = `${Api.leavesApplied}?sort_by=date`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
-      console.log(data.data);
       setLeaves(data.data);
     }
   }
@@ -251,7 +249,6 @@ if (LoginToken) {
 
   return (
     <>
-    {console.log('leaves',leaves)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
