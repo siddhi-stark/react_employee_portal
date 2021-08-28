@@ -31,7 +31,7 @@ function AddLeave(props) {
   const [endDate, setEndDate] = useState('');
   const [formValuesData, setFormValuesData] = useState({});
   const [changeDate, setChangeDate] = useState(true);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('Pending');
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   const columns = [
@@ -94,7 +94,7 @@ function AddLeave(props) {
 
  useEffect(() => {
     const formViewSchema = [...FormSections];
-   console.log('status',typeof status);
+   console.log('status',status);
    let updatedSchema = [];
    if(status !== 'Pending') {
      updatedSchema = formViewSchema.map((section) => {
@@ -122,7 +122,7 @@ function AddLeave(props) {
      
      else{
 
-   console.log('status',status);
+   console.log('formViewSchema',formViewSchema);
        updatedSchema = formViewSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
@@ -380,12 +380,15 @@ function AddLeave(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Leave application</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Leave Application</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
         <div className="mt-5">
-          <Card>
+          <Card body>
+          { (status !== 'Pending') &&
+           <Button className="float-end" onClick= {() =>  history.push('/leaves')} >Back</Button>
+          }
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
