@@ -207,7 +207,7 @@ function TeamAddLeave(props) {
                 </>
                 )}
               </Row>
-              <Row className="ms-4 w-80">
+              <Row className="ms-4">
 
               <TextInput
                 inputClass="form-control"

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Row } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './AddLeave.json';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, TextInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -33,6 +33,7 @@ function AddLeave(props) {
   const [changeDate, setChangeDate] = useState(true);
   const [status, setStatus] = useState('Pending');
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
+  const [reason, setReason] = useState('');
 
   const columns = [
     {
@@ -94,7 +95,6 @@ function AddLeave(props) {
 
  useEffect(() => {
     const formViewSchema = [...FormSections];
-   console.log('status',status);
    let updatedSchema = [];
    if(status !== 'Pending') {
      updatedSchema = formViewSchema.map((section) => {
@@ -122,7 +122,6 @@ function AddLeave(props) {
      
      else{
 
-   console.log('formViewSchema',formViewSchema);
        updatedSchema = formViewSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
@@ -146,7 +145,6 @@ function AddLeave(props) {
       updateJsonSchema([...updatedSchema]);
   }, [status]);
 
- console.log('jsonSchema',jsonSchema);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
@@ -172,7 +170,6 @@ function AddLeave(props) {
   }, []);
 
  const ApplyLeave = async (formValues) => {
-   console.log('formValues',formValues);
     const defaultValuesFromType = 
     defaultValues.leave_from_type && (defaultValues.leave_from_type === 'Full Day')
         ? 2
@@ -270,6 +267,7 @@ function AddLeave(props) {
       setStartDate(data.data.leave_from_date);
       setEndDate(data.data.leave_to_date);
       setStatus(data.data.status_name);
+      setReason(data.data.declined_reason);
     }
 
     updateDefaultValues({
@@ -389,10 +387,12 @@ function AddLeave(props) {
           { (status !== 'Pending') &&
            <Button className="float-end" onClick= {() =>  history.push('/leaves')} >Back</Button>
           }
+            <Row className="ms-3">
+
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
-              formSections={FormSections}
+              formSections={jsonSchema}
               formHeading="Leave application"
               onFormSubmit={(formValues) => {
                 submitForm(formValues);
@@ -418,6 +418,21 @@ function AddLeave(props) {
                 history.push('/leaves');
               }}
             />
+              </Row>
+              <Row className="ms-3">
+            {(status === 'Declined') && (
+            <TextInput
+                inputClass="form-control"
+                label="Declined Reason"
+                containerClass="form-group"
+                type="textarea"
+                disabled
+                name="reason"
+                value={reason}
+              />
+             )}
+              </Row>
+
               <div className="mt-5 mx-4">
                 { (totalCount > 0) && (status === 'Pending') &&  (
                   <>
@@ -446,7 +461,7 @@ function AddLeave(props) {
                               return 'No task available.';
                             }}
                           />
-                          <br />
+                          <br />         
                       </Card.Body>
 
                   </>

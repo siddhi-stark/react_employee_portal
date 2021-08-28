@@ -13,19 +13,22 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function EmployeeTeamLeaves() {
-  const handleActionCallback = ({ id }) => {
+  const handleActionCallback = ({ id, status_name }) => {
     return (
       <>
         <a
           href="/"
           className="pl-2"
+          title={(status_name !== 'Pending') ? 'View Leave':'Edit Leave'}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             history.push(`/view-leave/${id}`,{ employee: true });
           }}
         >
-          <Image src="/images/edit.png" />
+        {(status_name !== 'Pending') ?
+          <Image src="/images/eye.svg" />
+          :  <Image alt="view" src="/images/edit-button.svg" />}
         </a>
       </>
     );

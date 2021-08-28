@@ -15,19 +15,22 @@ import UserRestrictions from '../../components/UserRestrictions/userrestrictions
 function TeamLeaves() {
   const [currentUser, updateCurrentUser] = useState(0);
 
-  const handleActionCallback = ({ id }) => {
+  const handleActionCallback = ({ id, status_name }) => {
     return (
       <>
         <a
           href="/"
           className="pl-2"
+          title={(status_name !== 'Pending') ? 'View Leave':'Edit Leave'}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             history.push(`/view-leave/${id}`);
           }}
         >
-          <Image src="/images/edit.png" />
+           {(status_name !== 'Pending') ?
+          <Image src="/images/eye.svg" />
+          :  <Image alt="view" src="/images/edit-button.svg" />}
         </a>
       </>
     );
@@ -63,6 +66,15 @@ function TeamLeaves() {
           </>
         );
       },
+    },
+    {
+      id: 'leave_type',
+      label: 'Type',
+    },
+    {
+      id: 'leave_count',
+      label: 'Days',
+      roleAccess: [4],
     },
     {
       id: 'status_name',

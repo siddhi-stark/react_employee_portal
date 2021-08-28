@@ -14,25 +14,37 @@ import UserRestrictions from '../../components/UserRestrictions/userrestrictions
 
 function Leaves() {
 	const handleActionCallback = ({ id, status_name }) => { // eslint-disable-line
+		console.log('----',(status_name !== 'Pending' && status_name === 'Approved'))
 		return (
 			<>
 				<a
 					href="/"
 					className="pl-2"
+					title={(status_name !== 'Pending' || status_name === 'Approved') ? 'View Leave':'Edit Leave'}
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						if(status_name === 'Approved'){
-							changeStatus(id);
-						} else {
 							history.push(`/edit-leave/${id}`);
-						}
-
 					}}
 				>
-					{(status_name === 'Approved') ?
+					{(status_name !== 'Pending' || status_name === 'Approved') ?
+					<Image src="/images/eye.svg" />
+					:  <Image alt="view" src="/images/edit-button.svg" />}
+				</a>
+
+				<a
+					href="/"
+					className="ms-2 pl-2"
+					title="Cancel Leave"
+					onClick={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+							changeStatus(id);
+						}}
+				>
+				{(status_name === 'Approved') && (
 					<Image src="/images/fail.svg" />
-					: <Image src="/images/edit-button.svg" />}
+				)}
 				</a>
 			</>
 		);
@@ -50,29 +62,21 @@ function Leaves() {
 			label: 'Sr.No',
 		},
 		{
-			id: 'leave_from_date',
-			label: 'From',
-			roleAccess: [4],
-			render: ({ leave_from_date }) => { // eslint-disable-line
-				return (
-					<>
-						<span>{customFunctions.getNewFormattedDate(leave_from_date)}</span>
-					</>
-				);
-			},
-		},
-		{
-			id: 'leave_to_date',
-			label: 'To',
-			roleAccess: [4],
-			render: ({ leave_to_date }) => { // eslint-disable-line
-				return (
-					<>
-						<span>{customFunctions.getNewFormattedDate(leave_to_date)}</span>
-					</>
-				);
-			},
-		},
+      id: 'leave_date',
+      label: 'Leave Date',
+      roleAccess: [3],
+      render: ({ leave_from_date, leave_to_date }) => { // eslint-disable-line
+        return (
+          <>
+            <span>{`${customFunctions.getNewFormattedDate(
+              leave_from_date
+            )} to ${customFunctions.getNewFormattedDate(
+              leave_to_date
+            )}`}</span>
+          </>
+        );
+      },
+    },
 		{
 			id: 'leave_type',
 			label: 'Type',
