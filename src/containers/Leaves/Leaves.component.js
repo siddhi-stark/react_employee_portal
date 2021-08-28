@@ -13,7 +13,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function Leaves() {
-	const handleActionCallback = ({ id }) => {
+	const handleActionCallback = ({ id, status_name }) => { // eslint-disable-line
 		return (
 			<>
 				<a
@@ -22,10 +22,17 @@ function Leaves() {
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						history.push(`/edit-leave/${id}`);
+						if(status_name === 'Approved'){
+							changeStatus(id);
+						} else {
+							history.push(`/edit-leave/${id}`);
+						}
+
 					}}
 				>
-					<Image src="/images/edit-button.svg" />
+					{(status_name === 'Approved') ?
+					<Image src="/images/fail.svg" />
+					: <Image src="/images/edit-button.svg" />}
 				</a>
 			</>
 		);
@@ -132,6 +139,33 @@ function Leaves() {
 				return newItem;
 			});
 			setRowData((data && data.data) || []);
+		} else {
+			swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+		}
+	};
+
+	const changeStatus = async (id) => {
+		const endPoint = `${Api.leavesUrl}${id}/`;
+
+		const postData = {
+			status: 4,
+		};
+
+   	const callback = AuthApi.putDataToServer;
+
+    const { data, message } = await callback(endPoint, postData);
+
+		if (data) {
+			swal(data && data.message[0], '', 'success', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(() => {
+ 				getRowData(1);
+        swal.close();
+      });
 		} else {
 			swal(message, '', 'error', {
         closeOnClickOutside: false,

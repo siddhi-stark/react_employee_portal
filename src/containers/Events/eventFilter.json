@@ -11,9 +11,9 @@
 	"fields": [{
 		"name": "start_date",
 		"type": "date",
-		"label": "Start Date",
+		"label": "",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Select from date",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -44,9 +44,9 @@
 	}, {
 		"name": "end_date",
 		"type": "date",
-		"label": "End Date",
+		"label": "",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Select to date",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{

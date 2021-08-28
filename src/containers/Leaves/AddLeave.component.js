@@ -31,6 +31,8 @@ function AddLeave(props) {
   const [endDate, setEndDate] = useState('');
   const [formValuesData, setFormValuesData] = useState({});
   const [changeDate, setChangeDate] = useState(true);
+  const [status, setStatus] = useState('Pending');
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   const columns = [
     {
@@ -90,6 +92,61 @@ function AddLeave(props) {
     },
   ];
 
+ useEffect(() => {
+    const formViewSchema = [...FormSections];
+   console.log('status',status);
+   let updatedSchema = [];
+   if(status !== 'Pending') {
+     updatedSchema = formViewSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (
+            item.name === 'leave_type' ||
+            item.name === 'reason' ||
+            item.name === 'leave_from_date' ||
+            item.name === 'leave_from_type' ||
+            item.name === 'leave_from_time' ||
+            item.name === 'leave_to_date' ||
+            item.name === 'leave_to_type' ||
+            item.name === 'leave_to_time'
+          )
+            itemData.disabled = true;
+          return itemData;
+        });
+        return s;
+      });
+
+      updateJsonSchema([...updatedSchema]);
+   }
+     
+     else{
+
+   console.log('formViewSchema',formViewSchema);
+       updatedSchema = formViewSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (
+            item.name === 'leave_type' ||
+            item.name === 'reason' ||
+            item.name === 'leave_from_date' ||
+            item.name === 'leave_from_type' ||
+            item.name === 'leave_from_time' ||
+            item.name === 'leave_to_date' ||
+            item.name === 'leave_to_type' ||
+            item.name === 'leave_to_time'
+          )
+            itemData.disabled = false;
+          return itemData;
+        });
+        return s;
+      });
+}  
+      updateJsonSchema([...updatedSchema]);
+  }, [status]);
+
+ console.log('jsonSchema',jsonSchema);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
@@ -135,7 +192,6 @@ function AddLeave(props) {
       formValues.leave_to_type && (formValues.leave_to_type.value === 'Full Day') || defaultValues.leave_to_type && (defaultValues.leave_to_type === 'Full Day')
         ? 2
         : 1;
-   console.log('defaultValues',toType, fromType);
     const postData = {
       leave_type: formValues.leave_type ? formValues.leave_type.value : defaultValues.leave_type.value,
       reason: formValues.reason ? formValues.reason : defaultValues.reason,
@@ -210,9 +266,11 @@ function AddLeave(props) {
       // show error
       return;
     }
-
-    setStartDate(data.data.leave_from_date);
-    setEndDate(data.data.leave_to_date);
+    if(data && data.data){
+      setStartDate(data.data.leave_from_date);
+      setEndDate(data.data.leave_to_date);
+      setStatus(data.data.status_name);
+    }
 
     updateDefaultValues({
       leave_type: data.data.leave_type && {
@@ -248,7 +306,7 @@ function AddLeave(props) {
   // Call get data method on load
   useEffect(() => {
     if (leaveId) getData();
-  }, []);
+  }, [status]);
 
   const getLeaveType = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.undefined);
@@ -322,12 +380,15 @@ function AddLeave(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Leave application</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Leave Application</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
         <div className="mt-5">
-          <Card>
+          <Card body>
+          { (status !== 'Pending') &&
+           <Button className="float-end" onClick= {() =>  history.push('/leaves')} >Back</Button>
+          }
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
@@ -351,14 +412,14 @@ function AddLeave(props) {
               submitBtnText="Check task"
               showResetBtn={true}
               resetBtnText="Cancel"
-              btnContainerClass= "form-submit-buttons"
+              btnContainerClass= {(status === 'Pending') ? 'form-submit-buttons':'d-none'}
               isStepForm={false}
               onFormReset={() => {
                 history.push('/leaves');
               }}
             />
               <div className="mt-5 mx-4">
-                { (totalCount > 0) &&  (
+                { (totalCount > 0) && (status === 'Pending') &&  (
                   <>
 
                     <Card.Header>
@@ -390,17 +451,16 @@ function AddLeave(props) {
 
                   </>
                       )}
-                   { (totalCount > 0)  && (
+                   { (totalCount > 0) && (
                     <p className="text-danger ms-3">
                     Note: The highlighted task shows the high priority and may
                     affect the project deadline. Kindly look into and the
                     apply for leave </p>
                   )}
-                   { (totalCount === 0)  && (
+                   { (totalCount === 0) && (status === 'Pending') && (
                     <p className="text-success"> Note: Make sure No task affecting the project deadline and associated task are taken care. </p>
                   )}
-                   {console.log('changeDate',changeDate)}
-                { (totalCount === 0) && changeDate &&  (
+                { (totalCount === 0) && changeDate && (status === 'Pending') &&  (
                   <Button
                     onClick={() => {
                       ApplyLeave(formValuesData);
