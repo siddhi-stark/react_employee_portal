@@ -193,7 +193,7 @@ function EmployeeTeamLeaves() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Leaves</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Employee Leaves</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">

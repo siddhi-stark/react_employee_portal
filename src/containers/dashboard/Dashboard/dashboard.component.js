@@ -312,7 +312,7 @@ if (LoginToken) {
                     </div>
                   </UserRestrictions>
                   <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
-                    <p className="text-primary mt-4"><i>Total Working Hrs: {totalHrs}</i></p>
+                    <p className="text-primary mt-4"><i>Total Working Time: {totalHrs}</i></p>
                   </UserRestrictions>
 
                 </Col>

@@ -77,43 +77,55 @@ function TeamAddLeave(props) {
 
   // Submit Form
   const submitForm = async (value) => { // eslint-disable-line
-  
+    const reasonLabel = (Number(value) === 2) ? 'accept': 'declined'; 
     const postData = {
       id: leaveId,
       status: Number(value),
       declined_reason: reason ? String(reason) :''
     };
 
-    const { data, message } = await AuthApi.putDataToServer(
-      Api.leavesUrl,
-      postData
-    );
+    swal({
+      title: 'Are you sure?',
+      text: `You want to ${reasonLabel} the leave ?`,
+      icon: 'warning',
+      dangerMode: true,
+      buttons: true,
+      closeOnClickOutside: false,
+      allowOutsideClick: false,
+    }).then(async (result) => {
+      if (result) {
+      const { data, message } = await AuthApi.putDataToServer(
+        Api.leavesUrl,
+        postData
+      );
 
-    if (!data) {
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        // updateDefaultValues({});
-        swal.close();
-      });
-      // show error
-      // return;
-    } else {
-      swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      }).then(() => {
-        if(employeeOptions) {
-          history.push('/employee-leaves') 
-        } else {
-          history.push('/team-leaves');
-        }
-        swal.close();
-      });
-    }
+      if (!data) {
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          // updateDefaultValues({});
+          swal.close();
+        });
+        // show error
+        // return;
+      } else {
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+          if(employeeOptions) {
+            history.push('/employee-leaves') 
+          } else {
+            history.push('/team-leaves');
+          }
+          swal.close();
+        });
+       }
+      }
+    });
     // Perform success actions
   };
 
@@ -219,7 +231,7 @@ function TeamAddLeave(props) {
                   setReason(e.target.value);
                 }
                 }
-                label="Declined Reason"
+                label="Note"
                 containerClass="form-group"
                 type="textarea"
                 disabled={status !== 'Pending' && true}

@@ -96,7 +96,7 @@ const menu = [
     path: '/employees',
     icon: 'Employee.svg',
     submenu: [],
-    roleaccess: [5, 6],
+    roleaccess: [2, 5, 6],
   },
   {
     title: 'Recruitment',
