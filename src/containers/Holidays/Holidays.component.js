@@ -104,7 +104,6 @@ function Holidays() {
 		const params = {
 			page,
 			limit,
-			sort_direction:'descending',
 			start_date: filterData.start_date ? customFunctions.getDate(filterData.start_date) : '' ,
 			end_date: filterData.end_date ? customFunctions.getDate(filterData.end_date) : '',
 		};
