@@ -1,40 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Image, Card, Button, Accordion } from 'react-bootstrap';
+import { Image, Card } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
-import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './filterFormschema.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import AddNote from './AddNote.component';
 
 function TeamLeaves() {
   const [currentUser, updateCurrentUser] = useState(0);
 
-  const handleActionCallback = ({ id, status_name }) => {
-    return (
-      <>
-        <a
-          href="/"
-          className="pl-2"
-          title={(status_name !== 'Pending') ? 'View Leave':'Edit Leave'}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/view-leave/${id}`);
-          }}
-        >
-           {(status_name !== 'Pending') ?
-          <Image src="/images/eye.svg" />
-          :  <Image alt="view" src="/images/edit-button.svg" />}
-        </a>
-      </>
-    );
-  };
   // Declare columns
   const columns = [
     {
@@ -50,6 +29,29 @@ function TeamLeaves() {
       id: 'user_name',
       label: 'Name',
       roleAccess: [4],
+      render: ({ user_name, id, status_name }) => { // eslint-disable-line
+        return (
+          <>
+          {(status_name !== 'Pending') ? (
+           <a
+          href="/"
+          className="pl-2"
+          title={(status_name !== 'Pending') && 'View Leave'}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+             if(status_name !== 'Pending'){
+              history.push(`/view-leave/${id}`, { isView: 'true' });
+            }
+          }}
+        >
+        {user_name}
+           </a>) :(
+            <span>{user_name}</span> 
+      )}
+          </>
+        );
+      },
     },
     {
       id: 'leave_date',
@@ -79,12 +81,38 @@ function TeamLeaves() {
     {
       id: 'status_name',
       label: 'Status',
-    },
-    {
-      id: 'action',
-      label: 'Action',
-      render: handleActionCallback,
-    },
+       render: ({ id, status_name }) => { // eslint-disable-line
+        return (
+          <>
+         
+         { status_name === 'Pending' ? (
+                <>
+                  <Image
+                    title = "Accept"
+                    onClick={() => {
+                      submitForm(2);
+                    }}
+                    alt="Accept"
+                    src="/images/success.svg"
+                  />
+                  <Image
+                    title = "Declined"
+                    onClick={() => {
+                      setStatusId(id);
+                      setModalShow(true);
+                    }}
+                    alt="Declined"
+                    src="/images/fail.svg"
+                    className="ms-2"
+                  />
+                </>
+                ) :(
+           <span> {status_name} </span>
+           )}
+          </>
+        );
+      }
+      }
   ];
 
   // Declare variable
@@ -93,10 +121,11 @@ function TeamLeaves() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const limit = 10;
-  const [filterData, setFilterData] = useState({});
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   let filterOptions = {};
+  const [modalShow, setModalShow] = useState(false);
+  const [statusId, setStatusId] = useState('');
 
   // Variable declarations Filter
   // const [defaultValues, updateDefaultValues] = useState({});
@@ -107,17 +136,12 @@ function TeamLeaves() {
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     const endPoint = `${Api.leavesUrl}`;
-     const filterList =
-      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-        ? customFunctions.jsonParse(filterData)
-        : {};
 
     const params = {
       page,
       limit,
       my_team:true,
       sort_direction: 'descending',
-      ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -154,24 +178,7 @@ function TeamLeaves() {
   useEffect(() => {
     getRowData(1);
     setTitle('Leaves');
-  }, [filterData]);
-
-  // Get user role Filter
-  // Submit Form
-  const submitForm = async (formValues) => {
-    const payload = {
-        employee_id: formValues.employee_id
-          ? formValues.employee_id.value
-          : '',
-        start_date: formValues.start_date
-          ? customFunctions.getDate(formValues.start_date)
-          : '',
-        end_date: formValues.end_date
-          ? customFunctions.getDate(formValues.end_date)
-          : '',
-      };
-    setFilterData(payload);
-  };
+  }, []);
 
   const getEmployee = async () => {
     const endPoint = (Number(currentUser) === 3 || Number(currentUser) === 6 || Number(currentUser) === 2) ? `${Api.teamUrl}?type=all` : `${Api.employeeUrl}?type=all&is_dropdown=1`;
@@ -199,6 +206,53 @@ function TeamLeaves() {
     getEmployee();
   }, [currentUser]);
 
+    // Submit Form
+  const submitForm = async (value) => { // eslint-disable-line
+    const postData = {
+      // id: leaveId,
+      status: 2,
+    };
+
+    swal({
+      title: 'Are you sure?',
+      text: `You want to accept the leave ?`,
+      icon: 'warning',
+      dangerMode: true,
+      buttons: true,
+      closeOnClickOutside: false,
+      allowOutsideClick: false,
+    }).then(async (result) => {
+      if (result) {
+      const { data, message } = await AuthApi.putDataToServer(
+        Api.leavesUrl,
+        postData
+      );
+
+      if (!data) {
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          // updateDefaultValues({});
+          swal.close();
+        });
+        // show error
+        // return;
+      } else {
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+          swal.close();
+        });
+       }
+      }
+    });
+    // Perform success actions
+  };
+
   return (
     <>
       <Helmet title={title} />
@@ -207,45 +261,6 @@ function TeamLeaves() {
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
-        <Accordion defaultActiveKey="0">
-          <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Filters</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                    Expand
-                  </Accordion.Toggle>
-                </div>
-              </div>
-            </Card.Header>
-            <Accordion.Collapse eventKey="1">
-              <Card.Title>
-                <StarkFormBuilder
-                  containerClass=""
-                  formHeaderClass=""
-                  formSections={FormSections}
-                  formHeading="Leaves Filter "
-                  onFormSubmit={(formValues) => {
-                    submitForm(formValues);
-                  }}
-                  options={options}
-                  callbacks={{}}
-                  // defaultFormValues={defaultValues}
-                  currentUser={currentUser}
-                  submitBtnText="Apply"
-                  showResetBtn={true}
-                  resetBtnText="Clear"
-                  btnContainerClass="form-submit-buttons pull-right mb-3"
-                  isStepForm={false}
-                  onFormReset={() => {
-                    setFilterData({});
-                  }}
-                />
-              </Card.Title>
-            </Accordion.Collapse>
-          </Card>
-        </Accordion>
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
@@ -284,6 +299,19 @@ function TeamLeaves() {
                 }}
               />
             </Card.Body>
+
+            {modalShow && (
+              <AddNote
+                show={modalShow}
+                statusId={statusId}
+                // statusData={statusData}
+                // note={note}
+                handleModalCLose={(e) => setModalShow(e)}
+                // onStatusUpdate={() => {
+                //   getApplicantListing();
+                // }}
+              />
+            )}
           </Card>
       </section>
     </>

@@ -14,6 +14,8 @@ import customFunctions from '../../helper/customFunctions';
 function AddLeave(props) {
   const idProps = props;
   const leaveId = idProps.match.params.leaveId;
+  const viewOptions = idProps.location.state ? idProps.location.state.isView : '';
+  const employeeId = customFunctions.getLocalStorage('userId');
 
   const history = useHistory();
   // Variable declarations
@@ -34,6 +36,9 @@ function AddLeave(props) {
   const [status, setStatus] = useState('Pending');
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [reason, setReason] = useState('');
+  const [name, setName] = useState('');
+  const [id, setId] = useState(null);
+  const [fromDateValue, setFromDateValue] = useState('');
 
   const columns = [
     {
@@ -106,10 +111,8 @@ function AddLeave(props) {
             item.name === 'reason' ||
             item.name === 'leave_from_date' ||
             item.name === 'leave_from_type' ||
-            item.name === 'leave_from_time' ||
             item.name === 'leave_to_date' ||
-            item.name === 'leave_to_type' ||
-            item.name === 'leave_to_time'
+            item.name === 'leave_to_type'
           )
             itemData.disabled = true;
           return itemData;
@@ -131,10 +134,8 @@ function AddLeave(props) {
             item.name === 'reason' ||
             item.name === 'leave_from_date' ||
             item.name === 'leave_from_type' ||
-            item.name === 'leave_from_time' ||
             item.name === 'leave_to_date' ||
-            item.name === 'leave_to_type' ||
-            item.name === 'leave_to_time'
+            item.name === 'leave_to_type'
           )
             itemData.disabled = false;
           return itemData;
@@ -152,7 +153,7 @@ function AddLeave(props) {
   };
 
   const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
+  formSchema[1].fields.map((section) => {
     const sectionData = section;
     if (
       sectionData.name === 'leave_from_date' ||
@@ -166,27 +167,26 @@ function AddLeave(props) {
 
   useEffect(() => {
     getUserRole();
+    if(!leaveId){
+      updateDefaultValues({leave_from_type:{label:'Full Day', value:'Full Day'}})
+    }
     setTitle(leaveId ? 'Edit Leaves' : 'Add Leaves');
   }, []);
 
  const ApplyLeave = async (formValues) => {
+   let valid = false;
+   if(formValues.leave_from_type.value === 'Half Day'){
+     valid = true;
+   }
+
     const defaultValuesFromType = 
     defaultValues.leave_from_type && (defaultValues.leave_from_type === 'Full Day')
-        ? 2
-        : 1;
-
-    const defaultValuesToType =
-      defaultValues.leave_to_type && (defaultValues.leave_to_type.value === 'Full Day')
         ? 2
         : 1;
 
     const fromType =
       formValues.leave_from_type &&
       (formValues.leave_from_type.value === 'Full Day') 
-        ? 2
-        : 1;
-    const toType =
-      formValues.leave_to_type && (formValues.leave_to_type.value === 'Full Day') || defaultValues.leave_to_type && (defaultValues.leave_to_type === 'Full Day')
         ? 2
         : 1;
     const postData = {
@@ -196,27 +196,20 @@ function AddLeave(props) {
         ? customFunctions.getDate(formValues.leave_from_date)
         : customFunctions.getDate(defaultValues.leave_from_date),
       leave_from_type: formValues.leave_from_type ? fromType : defaultValuesFromType,
-      leave_to_type: formValues.leave_to_type ? toType : defaultValuesToType,
-      leave_to_date: formValues.leave_to_date
-        ? customFunctions.getDate(formValues.leave_to_date)
-        : customFunctions.getDate(defaultValues.leave_to_date),
-      leave_from_time: formValues.leave_from_time && formValues.leave_from_time.value
-        ? formValues.leave_from_time.value
-        : '9:30 AM',
-      leave_to_time: formValues.leave_to_time && formValues.leave_to_time.value 
-        ? formValues.leave_to_time.value
-        : '6:30 PM',
+      leave_to_date: valid
+        ? customFunctions.getDate(formValues.leave_from_date)
+        : customFunctions.getDate(formValues.leave_to_date),
     };
     if (leaveId) postData.id = Number(leaveId);
-    if (defaultValues.leave_from_time && defaultValues.leave_to_time) {
-      postData.leave_to_time = defaultValues.leave_to_time && defaultValues.leave_to_time.value;
-      postData.leave_from_time = defaultValues.leave_from_time && defaultValues.leave_from_time.value;
-    }
+    if (defaultValues && defaultValues.leave_to_date) {
+      postData.leave_to_date = defaultValues.leave_to_date ? customFunctions.getDate(defaultValues.leave_to_date):'';
+    } 
     const callback = leaveId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
 
     const endPoint = Api.leavesUrl;
+    console.log('postData',postData);
     if(!customFunctions.checkIfEmpty(rowData)) {
     const { data, message } = await callback(endPoint, postData);
 
@@ -247,7 +240,8 @@ function AddLeave(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    if(formValues.leave_from_date && formValues.leave_to_date){
+   
+    if(formValues.leave_from_date){
       setStartDate(formValues.leave_from_date);
       setEndDate(formValues.leave_to_date);
     }
@@ -268,6 +262,8 @@ function AddLeave(props) {
       setEndDate(data.data.leave_to_date);
       setStatus(data.data.status_name);
       setReason(data.data.declined_reason);
+      setName(data.data.user_name);
+      setId(data.data.user_id);
     }
 
     updateDefaultValues({
@@ -340,7 +336,7 @@ function AddLeave(props) {
       limit,
       user_id: userId ? Number(userId) : leaveId,
       start_date: startDate && customFunctions.getDate(startDate),
-      end_date: endDate && customFunctions.getDate(endDate),
+      end_date: (fromDateValue.value === 'Half Day') ? customFunctions.getDate(startDate) :customFunctions.getDate(endDate),
       sort_direction: 'descending',
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -385,8 +381,12 @@ function AddLeave(props) {
         <div className="mt-5">
           <Card body>
           { (status !== 'Pending') &&
-           <Button className="float-end" onClick= {() =>  history.push('/leaves')} >Back</Button>
+           <Button className="float-end" onClick= {() => viewOptions ? history.push('/employee-leaves') :history.push('/leaves')} >Back</Button>
           }
+          { (Number(id) !== Number(employeeId)) && leaveId && (
+            <p className="ms-4">Employee Name: {name} ({status})</p>
+          )}
+
             <Row className="ms-3">
 
             <StarkFormBuilder
@@ -406,6 +406,9 @@ function AddLeave(props) {
                 getHandleToDate: () => {
                   setChangeDate(false);
                 },
+                onFromLeaveType: (value) => {
+                  setFromDateValue(value);
+                }
               }}
               defaultFormValues={defaultValues}
               currentUser={currentUser}

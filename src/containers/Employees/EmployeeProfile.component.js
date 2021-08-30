@@ -144,8 +144,8 @@ function EmployeeProfile(props) {
       endPoint,
       formData
     );
-    setEmployeeDocument(data.data);
     if (data) {
+      setEmployeeDocument(data.data);
       data.data &&
         data.data.map((document) => {
           if (document.title === 'Personal') {

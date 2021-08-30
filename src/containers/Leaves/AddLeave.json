@@ -3,8 +3,8 @@
 		"sectionName": "applyleave",
 		"sectionTitle": "Apply Leave",
 		"layout": {
-			"label": "2 Column",
-			"value": "2column"
+			"label": "1 Column",
+			"value": "1column"
 		},
 		"containerClass": "mt-4",
 		"displaySection": true,
@@ -13,7 +13,7 @@
 			{
 				"name": "leave_type",
 				"type": "select",
-				"label": "Leave Type",
+				"label": "Type",
 				"id": "",
 				"placeholder": "Select Leave Type",
 				"inputClass": "",
@@ -54,11 +54,6 @@
 						"id": "2",
 						"label": "Sick Leave(SL)",
 						"value": "Sick Leave"
-					},
-					{
-						"id": "3",
-						"label": "Loss Of Pay(LOP)",
-						"value": "Loss Of Pay"
 					}
 				]
 			},
@@ -70,13 +65,7 @@
 				"placeholder": "",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [
-					{
-						"type": "required",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
+				"validations": [],
 				"displayWhen": {},
 				"haveValidations": "true",
 				"haveDisplayOptions": "false",
@@ -96,47 +85,26 @@
 				"fields": [],
 				"optionCallback": "",
 				"options": []
-			},
-			{
-				"name": "leave_from_date",
-				"type": "date",
-				"label": "Leave Date From",
-				"id": "",
-				"placeholder": "Select Date From",
-				"inputClass": "",
-		        "dateFormat": "dd/MM/yyyy",
-				"containerClass": "",
-				"validations": [
-					{
-						"type": "required",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "getHandleFromDate",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			},
+			}
+		],
+		"allowedUsers": [],
+		"sectionLayout": "2column"
+	},
+	{
+		"sectionName": "From",
+		"sectionTitle": "From",
+		"layout": {
+			"label": "3 Column",
+			"value": "3column"
+		},
+		"containerClass": "mt-4",
+		"displaySection": true,
+		"displaySectionTitle": false,
+		"fields": [
 			{
 				"name": "leave_from_type",
 				"type": "select",
-				"label": "Leave From Type",
+				"label": "Duration Type",
 				"id": "",
 				"placeholder": "Select Leave Type",
 				"inputClass": "",
@@ -181,12 +149,13 @@
 				]
 			},
 			{
-				"name": "leave_from_time",
-				"type": "select",
-				"label": "Leave From Time",
+				"name": "leave_from_date",
+				"type": "date",
+				"label": "From Date",
 				"id": "",
-				"placeholder": "Select From Time",
+				"placeholder": "Select Date From",
 				"inputClass": "",
+		        "dateFormat": "dd/MM/yyyy",
 				"containerClass": "",
 				"validations": [
 					{
@@ -195,19 +164,10 @@
 						"applyWhenRelation": "OR"
 					}
 				],
-				"displayWhen": {
-					"conditions": [
-						{
-							"name": "leave_from_type",
-							"value": "Half Day",
-							"condition": "=="
-						}
-					],
-					"displayWhenRelation": "OR"
-				},
-				"haveValidations": "false",
+				"displayWhen": {},
+				"haveValidations": "true",
 				"haveDisplayOptions": "false",
-				"callback": "",
+				"callback": "getHandleFromDate",
 				"callbackUrl": "",
 				"inputToChange": "",
 				"minDateSelector": "",
@@ -222,21 +182,12 @@
 				},
 				"fields": [],
 				"optionCallback": "",
-				"options": [{
-						"id": "1",
-						"label": "9:30 AM",
-						"value": "9:30 AM"
-					},
-					{
-						"id": "2",
-						"label": "1:30 PM",
-						"value": "1:30 PM"
-					}]
+				"options": []
 			},
 			{
 				"name": "leave_to_date",
 				"type": "date",
-				"label": "Leave Date To",
+				"label": "To Date",
 				"id": "",
 				"placeholder": "Select Date To",
 		        "dateFormat": "dd/MM/yyyy",
@@ -249,7 +200,16 @@
 						"applyWhenRelation": "OR"
 					}
 				],
-				"displayWhen": {},
+				"displayWhen": {
+					"conditions": [
+						{
+							"name": "leave_from_type",
+							"value": "Full Day",
+							"condition": "=="
+						}
+					],
+					"displayWhenRelation": "OR"
+				},
 				"haveValidations": "false",
 				"haveDisplayOptions": "false",
 				"callback": "getHandleToDate",
@@ -268,110 +228,9 @@
 				"fields": [],
 				"optionCallback": "",
 				"options": []
-			},
-			{
-				"name": "leave_to_type",
-				"type": "select",
-				"label": "Leave To Type",
-				"id": "",
-				"placeholder": "Select Leave Type",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{
-						"type": "required",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "false",
-				"haveDisplayOptions": "false",
-				"callback": "onToLeaveType",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "getLeave To Type",
-				"optionsCallbackUrl": "employeeUrl",
-				"options": [
-					{
-						"id": "1",
-						"label": "Half Day",
-						"value": "Half Day"
-					},
-					{
-						"id": "2",
-						"label": "Full Day",
-						"value": "Full Day"
-					}
-				]
-			},
-			{
-				"name": "leave_to_time",
-				"type": "select",
-				"label": "Leave To Time",
-				"id": "",
-				"placeholder": "Select Leave Time",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{
-						"type": "required",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {
-					"conditions": [
-						{
-							"name": "leave_to_type",
-							"value": "Half Day",
-							"condition": "=="
-						}
-					],
-					"displayWhenRelation": "OR"
-				},
-				"haveValidations": "false",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "",
-				"options": [
-					{
-						"id": "2",
-						"label": "1:30 PM",
-						"value": "1:30 PM"
-					},
-					{
-						"id": "2",
-						"label": "6:30 PM",
-						"value": "6:30 PM"
-					}]
 			}
 		],
 		"allowedUsers": [],
-		"sectionLayout": "2column"
+		"sectionLayout": "3column"
 	}
 ]
