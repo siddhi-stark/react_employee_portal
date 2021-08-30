@@ -31,9 +31,11 @@ function Dashboard() {
   const [totalHrs, setTotalHrs] = useState(null);
   const [holidays,setHolidays] = useState([]);
   const [leaves,setLeaves] = useState([]);
+  const [socialMedia,setSocialMediaData] = useState([]);
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
+  // const employeeGroup = customFunctions.getLocalStorage('group');
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -70,7 +72,6 @@ function Dashboard() {
   // const lastday = date.getDate() - (date.getDay() - 1) + 6;
   // const lastDayNew =  new Date(date.setDate(lastday));
 
-
 // const curr = new Date; // get current date
 // const first = curr.getDate() - curr.getDay() +1; // First day is the day of the month - the day of the week
 // const last = first + 4; // last day is the first day + 6
@@ -104,7 +105,7 @@ function Dashboard() {
 
   const getTimeSheetList = async () => {
     // const page = pageNo || pagination.current_page;
-    const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}`);
+    const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}?limit=5`);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: data.paginator ? Number(data.paginator.current_page) : 0,
@@ -162,7 +163,7 @@ function Dashboard() {
     if(data) {
       setHolidays(data.data);
     }
-  }
+  };
 
 const getAppliedLeaves = async () => {
     const endPoint = `${Api.leavesApplied}?sort_by=date`;
@@ -170,24 +171,24 @@ const getAppliedLeaves = async () => {
     if(data) {
       setLeaves(data.data);
     }
-  }
+  };
 
-// const getInstagramPost = async () => {
-//   const endPoint = `${Api.socialMediaUrl}`;
-//   const { data } = await AuthApi.getDataFromServer(endPoint);
-//   if(data) {
-//     console.log('data',data.data);
-//     setSocialMediaData(data.data);
-//   }
-// }
+const getInstagramPost = async () => {
+  const endPoint = `${Api.socialMediaUrl}`;
+  const { data } = await AuthApi.getDataFromServer(endPoint);
+  if(data) {
+    console.log('data',data.data);
+    setSocialMediaData(data.data);
+  }
+}
 
   useEffect(() => {
    const LoginToken = customFunctions.getLocalStorage('access_token');
 if (LoginToken) {
   getUpcomingHoliday();
   getAppliedLeaves();
+  getInstagramPost();
 }
-    // getInstagramPost();
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
@@ -229,23 +230,15 @@ if (LoginToken) {
     return true;
   };
 
-   const onViewHoliday = () => {
-
-    
+   const onViewHoliday = () => {  
     document.dispatchEvent(viewHoliday);
     return true;
   };
 
-  const onViewLeaves = () => {
-
-    
+  const onViewLeaves = () => {   
     document.dispatchEvent(viewLeaves);
     return true;
   };
-
-
-
-
 
   return (
     <>
@@ -421,11 +414,12 @@ if (LoginToken) {
                       )}
                     />
                   </div>
-                  <UserRestrictions permittedUsers={[5,6]} roleId={userRole}>
+                  <UserRestrictions permittedUsers={[1,2,3,4,5,6]} roleId={userRole}>
                   <div className="d-flex justify-content-end mr-3">
                     <Button onClick={()=> 
-                      {history.push('/hr-listing',customFunctions.setLocalStorage('type','EmpType'));
-                      onViewButtonClick();
+                      {
+                        history.push('/report');
+                        onViewButtonClick();
                     }}>View All</Button>
                  </div>
                   </UserRestrictions>
@@ -440,13 +434,15 @@ if (LoginToken) {
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
                     <div className="upcoming-event-box">
-                      <div className="upcoming-event-img">
+                      <div className="upcoming-event-img upcoming-event-img-edit">
                         <img
+
                           src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
                         <p>Upcoming Holidays</p>
                         <Image 
+                           className="up-holday"
                            src="/images/redirect.png"
                            onClick={() => {
                              history.push('/holidays'); 
@@ -479,14 +475,15 @@ if (LoginToken) {
                  <div className="col-xl-6">
                   <div className="upcoming-bg faint-orange">
                     <div className="upcoming-event-box">
-                      <div className="upcoming-event-img">
+                      <div className="upcoming-event-img upcoming-event-img-edit">
                         <img
+                          className="up-leaves1"
                           src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
                         <p>Leaves Applied</p>
                          <Image 
-                         className="ms-3"
+                         className="up-leaves"
                            src="/images/redirect.png"
                            onClick={() => {
                              history.push('/leaves'); 
@@ -512,10 +509,34 @@ if (LoginToken) {
                 </div>
                   ) : ''}
                  </UserRestrictions>
-
-
               </div>
             </div> 
+
+              <div className="social-media">
+                <div className="card flex-fill w-100">
+                  <div className="card-body">
+                    <div className="table-title">
+                      <h5 className="card-title mb-0">Social Media</h5>                  
+                    </div>
+                    <div className="weekly-status">
+                     <ul className="list-unstyled p-0 d-flex align-items-center justify-content-start">
+                      {socialMedia && socialMedia.map((sm) => (
+                      <>
+                      <li>
+                        <a href="#">
+                          <img src={sm.post_image} alt="img" />
+                        </a>
+                      </li>
+                      
+                      </>    
+                        ))}
+                    </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
           </Col>
         </Row>
       </section>

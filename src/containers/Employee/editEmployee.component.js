@@ -27,7 +27,7 @@ function EditEmployee(props) {
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   // const [startTime, setStartTime] = useState(null);
   // const [endTime, setEndTime] = useState(null);
@@ -36,10 +36,10 @@ function EditEmployee(props) {
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
   const history = useHistory();
 
-    const datee = customFunctions.getLocalStorage('date');
-    const dataaa = datee.split('-');
-    const newDate = dataaa[2]+'-'+dataaa[1]+'-'+dataaa[0]; //eslint-disable-line
-    
+  const datee = customFunctions.getLocalStorage('date');
+  const dataaa = datee.split('-');
+  const newDate = dataaa[2] + '-' + dataaa[1] + '-' + dataaa[0]; //eslint-disable-line
+
   const columns = [
     {
       id: 'index',
@@ -98,10 +98,10 @@ function EditEmployee(props) {
       //   .toISOString()
       //   .replace('T', ' ')
       //   .substr(0, 19),
-      end_time:  `${newDate} ${customFunctions.getTime(formValues.logout)}`,
-        // .toISOString()
-        // .replace('T', ' ')
-        // .substr(0, 19),
+      end_time: `${newDate} ${customFunctions.getTime(formValues.logout)}`,
+      // .toISOString()
+      // .replace('T', ' ')
+      // .substr(0, 19),
       description: formValues.description,
     };
     const { data } = await AuthApi.postDataToServer(
@@ -110,10 +110,10 @@ function EditEmployee(props) {
     );
     if (data) {
       swal(data && data.message[0], '', 'success').then((result) => {
-          if(result){
-            getRowData(1);
-          }
-        });
+        if (result) {
+          getRowData(1);
+        }
+      });
     }
   };
 
@@ -159,12 +159,13 @@ function EditEmployee(props) {
       // setLimit(data.paginator.limit);
       // setItemsPerPage(data.paginator.limit);
       // setCurrentPage(Number(data.paginator.current_page));
-      if (data.paginator) { 
-       setTotalCount(data.paginator.total_count || 10);
-      setItemsPerPage(data.paginator.limit || 10);
-      setCurrentPage(data.paginator.current_page ? Number(data.paginator.current_page) : 1);
+      if (data.paginator) {
+        setTotalCount(data.paginator.total_count || 10);
+        setItemsPerPage(data.paginator.limit || 10);
+        setCurrentPage(
+          data.paginator.current_page ? Number(data.paginator.current_page) : 1
+        );
       }
-
 
       const newData = [...data.data.evening_data];
       await newData.map((item, i) => {
@@ -183,7 +184,6 @@ function EditEmployee(props) {
     getRowData(1);
   }, [filterData]);
 
-
   return (
     <>
       <Helmet title={title} />
@@ -195,20 +195,28 @@ function EditEmployee(props) {
       </div>
       <div className="mt-4 edit-timelog">
         <Card body>
-        <Button className="float-end" onClick= {() => history.push('/emp-timesheet')} >Back</Button>
-          
-
-          <div className="row ms-3 mt-4">
-<p className="col">
-Employee Name: {customFunctions.getLocalStorage('employeeName')}
-</p>
-<p className="col">
-Date: {customFunctions.getLocalStorage('date')}
-</p>
-</div>
-
-
-
+        <div className="edit-timelog-btn text-end">
+          <Button
+            className="float-end"
+            onClick={() => history.push('/emp-timesheet')}
+          >
+            Back
+          </Button>
+          </div>
+          <div className="container">
+            <div className="row  mt-4 w-100">
+            <div className="col-md-6">
+              <p>
+                Employee Name: {customFunctions.getLocalStorage('employeeName')}
+              </p>
+              </div>
+              <div className="col-md-6">
+              <p>
+                Date: {customFunctions.getLocalStorage('date')}
+              </p>
+              </div>
+            </div>
+          </div>
 
           <StarkFormBuilder
             containerClass=""
@@ -218,20 +226,22 @@ Date: {customFunctions.getLocalStorage('date')}
               submitForm(formValues);
             }}
             options={options}
-            callbacks={{
-              // onTaskName: (value) => {
-              //   setTaskValue(value);
-              // },
-              // onDescription: (value) => {
-              //   setDescriptionValue(value);
-              // }, 
-              // onDurationCallback: (value) => {
-              //   getEndTime(value);
-              // },
-              // onStartTimeCallback: (value) => {
-              //   getStartTime(value);
-              // },
-            }}
+            callbacks={
+              {
+                // onTaskName: (value) => {
+                //   setTaskValue(value);
+                // },
+                // onDescription: (value) => {
+                //   setDescriptionValue(value);
+                // },
+                // onDurationCallback: (value) => {
+                //   getEndTime(value);
+                // },
+                // onStartTimeCallback: (value) => {
+                //   getStartTime(value);
+                // },
+              }
+            }
             defaultFormValues={defaultValues}
             currentUser={currentUser}
             submitBtnText="Save"
@@ -239,9 +249,9 @@ Date: {customFunctions.getLocalStorage('date')}
             // resetBtnText="Clear"
             btnContainerClass="form-submit-buttons mt-0"
             isStepForm={false}
-
           />
-          <div className="mt-4">
+          <div className="container">
+            <div className="mt-4">
               <CustomTable
                 columns={columns}
                 rows={rowData}
@@ -260,6 +270,7 @@ Date: {customFunctions.getLocalStorage('date')}
                   return 'No record found.';
                 }}
               />
+            </div>
           </div>
         </Card>
       </div>

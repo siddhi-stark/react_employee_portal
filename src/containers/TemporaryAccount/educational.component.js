@@ -44,7 +44,7 @@ function EducationalDetails(props) {
     const postData = {
         email_hash: tokenProps,
         password: passwordProps,
-      }
+      };
 
     const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
     await AuthApi.postDataToServer(endPoint);
@@ -64,7 +64,7 @@ function EducationalDetails(props) {
         docIdArr.push({name: doc.doc_title, id:doc.doc_id});
 
         return doc;
-      })
+      });
       updateDefaultValues({
         doc_link_ssc: ssc,
         doc_link_hsc:hsc,
@@ -154,7 +154,7 @@ function EducationalDetails(props) {
         postfileUrl = document.id;
       }
       return document;
-    })
+    });
 
     if(formValues.doc_link_graduate){
       graduatefileUrlId =  (typeof formValues.doc_link_graduate === 'object') && await fileUpload(formValues.doc_link_graduate);
@@ -244,9 +244,6 @@ function EducationalDetails(props) {
         resetBtnText="Clear"
         btnContainerClass="form-submit-buttons mb-4"
         isStepForm={false}
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
       />
     </>
   );

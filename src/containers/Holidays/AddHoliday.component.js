@@ -23,9 +23,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	const hId = props.match.params.ID; // eslint-disable-line
 	const viewId = props.match.params.viewID; // eslint-disable-line
 	const items = [{ to: '/', label: 'Home' }, { label: hId ? 'Edit Holiday' : 'Add Holiday'   }];
-
-	const history = useHistory();
-
+  const history = useHistory();
 
 	 useEffect(() => {
     if (!customFunctions.checkIfEmpty(viewOptions)) {
@@ -59,8 +57,6 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
     }
   }, []);
 
-
-	// Get user role
 	const getUserRole = async () => {
 		const roleId = await localStorage.getItem('role');
 		updateCurrentUser(Number(roleId));
@@ -88,9 +84,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 
     const endPoint =  Api.holidayUrll;
     const { data } = await callback(endPoint, postData);
-
-
-		
+	
 		if (data) {
 			swal(data.message[0],'','success');
 			history.push('/holidays');

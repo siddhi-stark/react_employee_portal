@@ -57,12 +57,11 @@ function AddNote(props) {
       }
       
   };
-    
 
   const getData = async () => {
     const NotesData = {
       notes: note && note
-    }
+    };
     updateDefaultValues(NotesData);
   };
 
@@ -79,8 +78,7 @@ function AddNote(props) {
   const onCancelButton = () => {
   	props.handleModalCLose(false);
     customFunctions.removeLocalStorage('isClicked');
-  }
-      
+  };  
 
 	return (
 		<>
@@ -109,17 +107,13 @@ function AddNote(props) {
     resetBtnText="Cancel"
     btnContainerClass={!value ? 'form-submit-buttons' : 'd-none'}
     isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-    }}
   />
     </>
 
         }
         />
 		</>
-		)
+		);
 }
 
 export default withRouter(AddNote);

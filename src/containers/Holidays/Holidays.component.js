@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
-import StarkFormBuilder from 'stark-form-builder';
-import { Image, Card, Accordion, Button } from 'react-bootstrap';
+import { Image, Card } from 'react-bootstrap';
 import swal from 'sweetalert';
-import FormSections from './HolidaysFilter.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -15,7 +13,6 @@ import UserRestrictions from '../../components/UserRestrictions/userrestrictions
 function Holidays() {
   const employeeRole = customFunctions.getLocalStorage('group');
  
-	
   const handleActionCallback = (row) => {
 		return (
 			<>
@@ -35,7 +32,7 @@ function Holidays() {
 				
 				<a
 					href="/"
-					className="pl-2 ms-4"
+					className="pl-2 ms-2"
 					onClick={(e) => {
 					  e.preventDefault();
 					  e.stopPropagation();
@@ -75,7 +72,6 @@ function Holidays() {
 		},
 	];
 
-	// Declare variable
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
 	const [limit, setLimit] = useState(10);
@@ -85,30 +81,14 @@ function Holidays() {
 	const title = 'Holidays';
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Holidays' }];
-
-
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
-  const [currentUser, updateCurrentUser] = useState(0);
-    
 
-
-	// Declare methods
-	const getRowData = async (pageNo = 1) => {
-		const page = pageNo || currentPage;
+	const getRowData = async () => {
 		const endPoint =
-			`${Api.holidayUrll}`
+			`${Api.holidayUrll}?type=all`;
 
-		
-		const params = {
-			page,
-			limit,
-			start_date: filterData.start_date ? customFunctions.getDate(filterData.start_date) : '' ,
-			end_date: filterData.end_date ? customFunctions.getDate(filterData.end_date) : '',
-		};
-
-		const url = customFunctions.generateUrl(endPoint, params);
+		const url = customFunctions.generateUrl(endPoint);
 		const { data, message } = await AuthApi.getDataFromServer(url);
 
 		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
@@ -159,38 +139,12 @@ function Holidays() {
       });
     }
   };
-
-
-
-  // Get user role
-  const getUserRole = async() => {
-    const roleId = await localStorage.getItem('role');
-    updateCurrentUser(Number(roleId));
-  };
-
-  useEffect(() => {
-    getUserRole();
-  }, []);
-
-  // Submit Form
-  const submitForm = async (formValues) => {
-  
-  setFilterData(formValues); //eslint-disable-line
-
-      
-  };
     
 	useEffect(() => {
 		const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
 		getRowData(1);
 	}, [filterData]);
-
-  const onResetForm = () => {
-    setFilterData('');
-    getRowData(1);
-    setFilterData(false);
-  };
 
 	return (
 		<>
@@ -201,46 +155,6 @@ function Holidays() {
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
-
-      <div className="mt-5">
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-
-              <Accordion.Collapse eventKey="1">
-                <Card.Title>
-                    <StarkFormBuilder
-							    containerClass='mt-5'
-							    formHeaderClass=''
-							    formSections={FormSections}
-							    onFormSubmit={(formValues) => {submitForm(formValues);}}
-							    options={options}
-							    callbacks={{}}
-							    defaultFormValues={defaultValues}
-							    currentUser={currentUser}
-							    submitBtnText="Apply"
-							    showResetBtn={true}
-							    resetBtnText="Clear"
-							    btnContainerClass="form-submit-buttons pull-right mb-3"
-							    isStepForm={false}
-							    onFormReset={() => {
-							        onResetForm();
-							    }}
-							  />
-                </Card.Title>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-        </div>
 
         <div className="mt-5">
           <Card>

@@ -13,10 +13,10 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 function AddQuotes(props) {
   const history = useHistory();
   const [title, setTitle] = useState('');
-  const items = [{ to: '/', label: 'Home' }, { label: 'Quotes' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'Add Quote' }];
 
   useEffect(() => {
-    setTitle('Quotes');
+    setTitle('Add Quote');
   }, []);
 
   // Variable declarations
@@ -83,7 +83,7 @@ function AddQuotes(props) {
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Quotes</h2>
+          <h2 className="main-content-title tx-24 mg-b-5">Add Quote</h2>
           <Breadcrumb items={items} />
         </div>
       </div>
@@ -91,7 +91,7 @@ function AddQuotes(props) {
         <Card>
           <Card.Header>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Quotes</h4>
+              <h4 className="text-primary mt-2 mb-2">Add Quote</h4>
             </div>
           </Card.Header>
           <Card.Body>

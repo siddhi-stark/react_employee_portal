@@ -30,7 +30,7 @@ function AddEvent(props) {
       items[1].label = 'View Event';
     }
     return it;
-  })
+  });
 
    const formSchemaNew = [...FormSections];
   formSchemaNew[0].fields.map((section) => {
@@ -192,9 +192,7 @@ function AddEvent(props) {
           <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
           <Breadcrumb items={items} />
         </div>
-      </div>
-
-    
+      </div>  
        <div className="mt-4 edit-timelog">
         <Card body>
         {viewOptions ? (

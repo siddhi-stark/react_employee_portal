@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { withRouter, useHistory } from 'react-router-dom';
+import swal from 'sweetalert';
 import { Card, Image, Button, Accordion } from 'react-bootstrap';
 import FormSections from './applicationformschema.json';
 import customFunctions from '../../helper/customFunctions';
@@ -332,7 +333,7 @@ function RecruitmentApplicationComponent() {
 
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message,'','error');
     }
   };
 
@@ -548,6 +549,8 @@ function RecruitmentApplicationComponent() {
               )}
             </div>
             <div className="recruitment-links-wrapper">
+            {!(Number(group) === 2 || Number(group) === 3) && (
+              <>
               <a
                 href="#"
                 className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
@@ -570,7 +573,9 @@ function RecruitmentApplicationComponent() {
               >
                 Selected
               </a>
-              {!(Number(group) === 4 || Number(group) === 3) && (
+              </>
+              )}
+              {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
                 <>
                   <a
                     href="#"

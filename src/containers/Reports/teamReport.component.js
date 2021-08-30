@@ -71,7 +71,6 @@ function TeamReport() {
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.reportListingUrl}?my_team=true`;
 
-    console.log('searchKeyword',searchKeyword)
     const params = {
       limit: pagination.itemsPerPage,
       page,
@@ -83,7 +82,6 @@ function TeamReport() {
 
     let postData = {};
     const employeeList = [];
-    console.log('selectedEmployee',selectedEmployee);
    if (selectedEmployee && selectedEmployee.length > 0) {
         selectedEmployee.map((emp) => {
         team.map((tem) => {
@@ -119,7 +117,7 @@ function TeamReport() {
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,
-          date: customFunctions.getFormattedDate(report.created_at),
+          date: customFunctions.getDMYDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,

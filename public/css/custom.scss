@@ -690,6 +690,7 @@ select {
                     font-weight: 400;
                     color: $lightgray;
                     border-color: transparent;
+
                 }   
                 .link {
                     color: $info-blue;
@@ -993,6 +994,9 @@ select {
                     font-size: 14px;
                     margin-left: 15px;
                     font-weight: 400;
+                    @media (max-width: 1366px) {
+                        font-size: 12px !important;
+                    }
                 }
                 svg {
                     width: 25px;
@@ -1179,16 +1183,19 @@ select {
         }
     }
     .date {
-       span {
-        color: $gray4;
+        span {
+            color: $gray4;
+        }
     }
-}
+    .btn {
+        min-width: 80px;
+    }
 }
 .birthday-wishes-chart {
     ul {
         li {
             position: relative;
-            padding-left: 15px;
+            /*padding-left: 15px;*/
             a {
                 display: flex;
                 align-items: center;
@@ -1196,10 +1203,13 @@ select {
                 letter-spacing: 0.35px;
                 span {
                     color: $gray4;
-                    margin-left: 8px;
+                    margin-left: 2px;
+                    &.badge-warning {
+                        color: #ffffff;
+                    }
                 }
             }
-            &:before {
+            /*&:before {
                 content: "";
                 background-color: #E4595D;
                 height: 6px;
@@ -1208,7 +1218,7 @@ select {
                 top: 9px;
                 position: absolute;
                 border-radius: 100%;
-            }
+            }*/
             &.text-red {
                 a {
                     color: #E4595D;
@@ -1218,14 +1228,24 @@ select {
                 a {
                     color: $info-blue;
                 }
-                &:before {
+                /*&:before {
                     background-color: $info-blue;
-                }
+                }*/
             }
         }
     }
     .upcoming-event-box {
-        padding-left: 12px;
+        padding-left: 16px;
+        ul {
+            max-height: 96px;
+            overflow-y: auto;
+            li {
+                p {
+                    font-size: 14px;
+                    margin-left: 4px;
+                }
+            }
+        }
     }
 }
 .ml-3{
@@ -1714,12 +1734,14 @@ select {
     ul {
         margin-top: 15px;
         margin-bottom: 0;
-        flex-wrap: wrap;
+        overflow-x: auto;
         li {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 9px;
+            padding: 0 3px;
+            min-width: 65px;
             span {
                 max-width: 51px;
                 width: 100%;
@@ -1742,6 +1764,8 @@ select {
             }
             img {
                 border: 1px solid $gray;
+                max-width: 65px;
+                width: 100%;
             }
             .status-label {
                 min-width: 85px;
@@ -2156,6 +2180,9 @@ table {
         font-weight: 400 !important;
         color: $lightgray !important;
         border-color: transparent !important;
+        @media (max-width: 1366px) {
+            font-size: 11px !important;
+        }
     }  
     th{
         &:nth-child(2n) {
@@ -3278,6 +3305,8 @@ span.np-sup {
     overflow: hidden;
     margin-bottom: 20px;
 }
+
+
 /*Pre Code View end*/
 
 
@@ -3317,13 +3346,97 @@ span.np-sup {
     }
 }
 @media (max-width: 1366px) {
+    body {
+        font-size: 14px;
+    }
+    .main-sidebar {
+        max-width: 270px;
+    }
+    .main-content.side-content {
+        margin-left: 268px;
+    }
+    .main-content {
+        .col-xl-8 {
+            width: 64.666667%;
+        }
+        .col-xl-4 {
+            width: 35.333333%;
+        }
+    }
+    .upcoming-event-box .upcoming-event-img .up-holday {
+        max-width: 15px;
+        margin-left: 20px;
+    }
+
+    .birthday-wishes-chart {
+        ul {
+            li {
+                a {
+                    font-size: 11px;
+                }
+            }
+        }
+        .upcoming-event-box {
+            ul {
+                max-height: 96px;
+                overflow-y: auto;
+                li {
+                    p {
+                        font-size: 11px;
+                        margin-left: 4px;
+                    }
+                }
+            }
+        }
+    }
+
+    .upcoming-event-box {
+        .upcoming-event-img {
+            p {
+                font-size: 12px;
+            }
+            .up-holday, .up-leaves {
+                float: right;
+                max-width: 15px;
+                margin-left: 20px;
+            }
+        }
+    }
+    .check-in {
+        .time-count {
+            h4 {
+                font-size: 14px;
+                margin-bottom: 0;
+                padding: 0 10px;
+            }
+        }
+    }
+    table {
+        thead {
+            th {
+                font-size: 11px !important;
+            }
+        }
+    }
+    .table-projects {
+        .card {
+            padding: 30px 20px;
+        }
+    }
+    table {
+        thead {
+            th {
+                font-size: 11px !important;
+            }
+        }
+    }
     .weekly-status-box .row .col-md-6 {
         width: 100%;
     }
     .check-in {
         .time-count {
             span {
-                font-size: 26px;
+                font-size: 24px;
             }
         }
     }
@@ -3333,13 +3446,13 @@ span.np-sup {
     .welcome-box {
         .welcome-text {
             h1 {
-                font-size: 28px;
+                font-size: 24px;
             }
         }
     } 
     .blockquote {
         p {
-            font-size: 14px;
+            font-size: 12px;
             max-width: 230px;
         }
     }

@@ -6,14 +6,12 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6],
   },
-
-
    {
     title: 'Quotes',
     path: '/quotes',
     icon: 'quote.svg',
     submenu: [],
-    roleaccess: [1,5],
+    roleaccess: [1,3,5],
   },
   {
     title: 'Projects',
@@ -61,8 +59,6 @@ const menu = [
     submenu: [],
     roleaccess: [1],
   },
-
-  
   {
     title: 'HR Activity',
     path: '#',
@@ -215,7 +211,7 @@ const menu = [
     roleaccess: [1],
   },
   {
-    title: 'Logout',
+    title: 'Log Out',
     path: '#',
     icon: 'logout.svg',
     submenu: [],
