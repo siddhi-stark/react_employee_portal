@@ -217,7 +217,7 @@ const n = m_names[d.getMonth()];
                   <p>Upcoming Events</p>
                    <Image 
                            src="/images/redirect.png"
-                           className="ms-3"
+                           className="ms-3 up-leaves"
                            onClick={() => {
                              history.push('/event'); 
                              onViewEvent();
@@ -228,9 +228,12 @@ const n = m_names[d.getMonth()];
 
                 {events && events.map((ev) => (
                         <>
-                          <div className="event-title date">
-                  <p>{ev.title}</p>
-                  <span>{ev.datetime}</span>
+                          <div className="event-title date d-flex align-items-center">
+                           <p className="bday-date">
+                       <img src="/images/calendar-img.png"  alt="Upcoming event"/>
+                       <span>{ev.datetime}</span>
+                     </p> 
+                            <p className="ms-1">{ev.title}</p>
                 </div> <br />
                 
                         </>
@@ -260,8 +263,9 @@ const n = m_names[d.getMonth()];
                   <li className="text-red">
                     <a 
                     href="#">
-                     <p>
-                       <span className="badge badge-warning">{bday.dob}</span>
+                     <p className="bday-date">
+                       <img src="/images/calendar-img.png"  alt="Upcoming event"/>
+                       <span>{bday.dob}</span>
                      </p> 
                      <p>{bday.name}</p>
                     </a>

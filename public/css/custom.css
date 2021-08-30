@@ -9638,6 +9638,10 @@ p:empty {
         background-color: transparent; }
       .main-sidebar-body .nav-item.active.show .nav-sub li.submenu-active a {
         background-color: #2D2E61; }
+  .main-sidebar-body .upcoming-bg {
+    max-width: 238px; }
+    .main-sidebar-body .upcoming-bg .upcoming-event-box {
+      max-width: 238px; }
 
 .my-error-class, .invalid-feedback {
   color: #f00 !important;
@@ -9684,6 +9688,10 @@ p:empty {
       margin-left: 14px;
       margin-bottom: 0;
       font-weight: 600; }
+    .upcoming-event-box .upcoming-event-img.upcoming-event-img-edit {
+      -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+      justify-content: space-between; }
   .upcoming-event-box .event-title p {
     font-size: 14px;
     letter-spacing: 0.35px;
@@ -9691,7 +9699,8 @@ p:empty {
     margin-bottom: 0;
     line-height: 1; }
   .upcoming-event-box .date span {
-    color: #BBBBBB; }
+    /*color: $gray4;*/
+    color: #000000; }
   .upcoming-event-box .btn {
     min-width: 80px; }
 
@@ -10194,7 +10203,7 @@ p:empty {
     justify-content: space-between;
     margin-bottom: 9px;
     padding: 0 3px;
-    min-width: 65px; }
+    min-width: 73px; }
     .weekly-status ul li span {
       max-width: 51px;
       width: 100%;
@@ -11469,6 +11478,40 @@ span.np-sup {
   overflow: hidden;
   margin-bottom: 20px; }
 
+.bday-date {
+  position: relative; }
+  .bday-date span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    color: #000000 !important;
+    top: 7px;
+    font-size: 9px !important;
+    text-align: center;
+    margin-left: 0 !important; }
+  .bday-date img {
+    max-width: 20px; }
+  .bday-date .bday-date-title {
+    margin-top: 2px; }
+
+.text-red p {
+  color: #E4595D !important; }
+  .text-red p span {
+    color: #E4595D !important; }
+
+.holidays-applied .upcoming-event-box .event-title p span {
+  color: #000000 !important; }
+
+.birthday-wishes-chart ul li a .bday-date span {
+  color: #000000 !important; }
+
+.holidays-applied .upcoming-event-box .event-title.text-red p span {
+  color: #E4595D !important; }
+
+.holidays-applied .upcoming-event-box .event-title.text-red p.ms-1 span {
+  color: #000000 !important; }
+
 /*Pre Code View end*/
 @media (min-width: 992px) {
   .main-sidebar {
@@ -11512,6 +11555,15 @@ span.np-sup {
   .upcoming-event-box .upcoming-event-img .up-holday {
     max-width: 15px;
     margin-left: 20px; }
+  .upcoming-event-box .event-title p, .upcoming-event-box .date span {
+    font-size: 11px;
+    line-height: 1.5; }
+  .bday-date {
+    font-size: 11px !important; }
+  .upcoming-event-box .upcoming-event-img.upcoming-event-img-edit {
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between; }
   .birthday-wishes-chart ul li a {
     font-size: 11px; }
   .birthday-wishes-chart .upcoming-event-box ul {
@@ -11530,6 +11582,10 @@ span.np-sup {
     font-size: 14px;
     margin-bottom: 0;
     padding: 0 10px; }
+  .upcoming-bg {
+    max-width: 100%; }
+    .upcoming-bg .upcoming-event-box {
+      max-width: 100%; }
   table thead th {
     font-size: 11px !important; }
   .table-projects .card {

@@ -453,9 +453,11 @@ if (LoginToken) {
                       </div>
                       {holidays && holidays.map((hd) => (
                       <>
-                      <div className="event-title date">
-                        <p>{hd.date}</p>
-                       <p><span>{hd.occasion}</span></p>
+                      <div className="event-title date d-flex align-items-center text-red">
+                       <p>
+                       <span>{hd.date}</span>
+                     </p> 
+                       <p className="ms-1"><span>{hd.occasion}</span></p>
                       </div> <br />
                       </>    
                         ))}

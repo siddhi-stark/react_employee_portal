@@ -1128,6 +1128,12 @@ select {
             }
         }
     }
+    .upcoming-bg {
+        max-width: 238px;
+        .upcoming-event-box {
+            max-width: 238px;
+        }
+    }
 }
 .my-error-class , .invalid-feedback{
     color: #f00 !important;
@@ -1172,6 +1178,9 @@ select {
             margin-bottom: 0;
             font-weight: 600;
         }
+        &.upcoming-event-img-edit {
+            justify-content: space-between;
+        }
     }
     .event-title {
         p {
@@ -1184,7 +1193,8 @@ select {
     }
     .date {
         span {
-            color: $gray4;
+            /*color: $gray4;*/
+            color: #000000;
         }
     }
     .btn {
@@ -1741,7 +1751,7 @@ select {
             justify-content: space-between;
             margin-bottom: 9px;
             padding: 0 3px;
-            min-width: 65px;
+            min-width: 73px;
             span {
                 max-width: 51px;
                 width: 100%;
@@ -3306,7 +3316,46 @@ span.np-sup {
     margin-bottom: 20px;
 }
 
-
+.bday-date {
+    position: relative;
+    span {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        color: #000000 !important;
+        top: 7px;
+        font-size: 9px !important;
+        text-align: center;
+        margin-left: 0 !important;
+    }
+    img {
+        max-width: 20px;
+    }
+    .bday-date-title {
+        margin-top: 2px;
+    }
+}
+.text-red {
+    p {
+        color: #E4595D !important;
+        span {
+            color: #E4595D !important;
+        }
+    }
+}
+.holidays-applied .upcoming-event-box .event-title p span {
+    color: #000000 !important;
+}
+.birthday-wishes-chart ul li a .bday-date span {
+    color: #000000 !important;
+}
+.holidays-applied .upcoming-event-box .event-title.text-red p span {
+    color: #E4595D !important;
+}
+.holidays-applied .upcoming-event-box .event-title.text-red p.ms-1 span {
+    color: #000000 !important;
+}
 /*Pre Code View end*/
 
 
@@ -3367,6 +3416,21 @@ span.np-sup {
         max-width: 15px;
         margin-left: 20px;
     }
+    .upcoming-event-box .event-title p, .upcoming-event-box .date span {
+        font-size: 11px;
+        line-height: 1.5;
+    }
+    .bday-date {
+        font-size:11px !important;
+    }
+
+    .upcoming-event-box {
+        .upcoming-event-img{
+            &.upcoming-event-img-edit {
+                justify-content: space-between;
+            }
+        }
+    }
 
     .birthday-wishes-chart {
         ul {
@@ -3409,6 +3473,12 @@ span.np-sup {
                 margin-bottom: 0;
                 padding: 0 10px;
             }
+        }
+    }
+    .upcoming-bg {
+        max-width: 100%;
+        .upcoming-event-box {
+            max-width: 100%;
         }
     }
     table {
