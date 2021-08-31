@@ -230,7 +230,8 @@ function TeamAddLeave(props) {
                 </>
                 )}
               </Row>
-              <Row className="ms-3">
+              <div className="container">
+              <Row className="">
 
               <TextInput
                 inputClass="form-control"
@@ -246,6 +247,7 @@ function TeamAddLeave(props) {
                 value={reason}
               />
               </Row>
+             </div>      
           </Card>
         </div>
       </section>
