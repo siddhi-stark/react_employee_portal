@@ -47,7 +47,7 @@ function PreviousEmployement(props) {
     const postData = {
         email_hash: tokenProps,
         password: passwordProps,
-      }
+      };
 
     const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
     await AuthApi.postDataToServer(endPoint);
@@ -87,7 +87,7 @@ function PreviousEmployement(props) {
         });
       setDocId(docIdArr);
     } else {
-      console.log('error', message);
+      swal(message,'','error');
     }
   };
   useEffect(() => {
@@ -319,9 +319,6 @@ function PreviousEmployement(props) {
         resetBtnText="Clear"
         btnContainerClass="form-submit-buttons mb-4"
         isStepForm={false}
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
       />
     </>
   );

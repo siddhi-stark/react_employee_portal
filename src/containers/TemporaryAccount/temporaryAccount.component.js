@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 
 import { Tabs, Tab, Image, ProgressBar, Button } from 'react-bootstrap';
+import swal from 'sweetalert';
 import { Helmet } from '../../components/FormInputs';
 import Personal from './personal.component';
 import EducationalDetails from './educational.component';
@@ -44,7 +45,7 @@ function TemporaryAccount(props) {
       setEmail(data.data.email);
       await setToggle(true);
     } else {
-      console.log('error', message);
+      swal(message,'','error');
     }
   };
 
@@ -159,7 +160,7 @@ function TemporaryAccount(props) {
                       getParentsData={(value) => {
                         if(value){
                           setTrigger(true);
-                          getCompletionData(value)
+                          getCompletionData(value);
                         }
                       }}
                     />
@@ -183,7 +184,7 @@ function TemporaryAccount(props) {
                           getParentsData={(value) => {
                             if(value){
                               setTrigger(true);
-                              getCompletionData(value)
+                              getCompletionData(value);
                             }
                           }}
                         />
@@ -208,8 +209,8 @@ function TemporaryAccount(props) {
                           getParentsData={(value) => {
                              if(value){
                               setTrigger(true);
-                              getCompletionData(value)
-                            }
+                              getCompletionData(value);
+                            };
                           }}
                         />
                       </div>
@@ -232,7 +233,7 @@ function TemporaryAccount(props) {
                           getParentsData={(value) => {
                              if(value){
                               setTrigger(true);
-                              getCompletionData(value)
+                              getCompletionData(value);
                             }
                           }}
                         />

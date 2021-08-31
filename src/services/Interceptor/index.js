@@ -27,13 +27,11 @@ export default {
       (response) => response,
       async (error) => {
         const data = await error.response;
-        console.log('data',data);
         if (
           data &&
           (data.status === 401 || data.statusText === 'Unauthorized')
         ) {
           customFucntions.localStorageClear();
-        console.log('window.location.href', window.location.href);
         if (window.location.pathname !== '/login') {
           localStorage.clear();
           window.location.href = '/login';

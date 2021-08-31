@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import { Card } from 'react-bootstrap';
@@ -32,9 +32,7 @@ function OnBoard(props) {
     }
     return sectionData;
   });
-
   
-  // Get user role
   const getUserRole = async() => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -45,25 +43,16 @@ function OnBoard(props) {
     setTitle('Add Employee');
   }, []);
 
-
-
-
-  // Submit Form
   const submitForm = async (formValues) => {
-
-
     const managerList = [];
       formValues.managers && formValues.managers.map((mngr) => {
         managerList.push(mngr.value);
         return mngr;
       });
-
        const teamIdList = [];
     if (formValues.team_leads) {
       teamIdList.push(formValues.team_leads.value);
     }
-    
-
     const postData = {
       date_joined: formValues.date_joined ? customFunctions.getDate(formValues.date_joined) : '',
       full_name: formValues.full_name,
@@ -81,7 +70,7 @@ function OnBoard(props) {
       is_onboard: true,
       applicant_id: Number(applicantId)
 
-    }
+    };
 
     const isFind = twEmployee.find(
       (item) => formValues.tw_emp && formValues.tw_emp.label && item.full_name === formValues.tw_emp.label
@@ -121,9 +110,7 @@ function OnBoard(props) {
       }
       
   };
-    
 
-  // Get data for form
   const getData = async () => {
     const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${applicantId}/`);
     if(!data) {
@@ -138,9 +125,7 @@ function OnBoard(props) {
             value: data.data.applied_for_id,
           }
         : '';
-    
-
-     if (!customFunctions.checkIfEmpty(data.data.joining_date)) {
+         if (!customFunctions.checkIfEmpty(data.data.joining_date)) {
           newDate = new Date(data.data.joining_date);
         }
 
@@ -174,7 +159,7 @@ function OnBoard(props) {
     const allOptions = options;
     await updateOptions({...allOptions});
     await setTwEmployee(data.data);
-  }
+  };
 
   useEffect(() => {
     getTwEmp();
@@ -185,9 +170,7 @@ function OnBoard(props) {
     if(!data) {
       // show error
       return;
-    }
-    
-     
+    }   
    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
       return { label: op.name, value: op.id };
     });
@@ -195,7 +178,7 @@ function OnBoard(props) {
     options.designation = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-  }
+  };
 
   useEffect(() => {
     getDesignation();
@@ -215,7 +198,7 @@ function OnBoard(props) {
     options.role = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-  }
+  };
 
   useEffect(() => {
     getRole();
@@ -235,7 +218,7 @@ function OnBoard(props) {
     options.managers = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-  }
+  };
 
   useEffect(() => {
     getManagers();
@@ -255,7 +238,7 @@ function OnBoard(props) {
     options.team_leads = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-  }
+  };
 
   useEffect(() => {
     getTeamLeads();
@@ -284,9 +267,7 @@ function OnBoard(props) {
   // useEffect(() => {
   //   getDepartment();
   // }, []);
-      
-
-
+ 
 	return (
 		<>
     <Loader showLoader={loader} needFullPage={false} />
@@ -311,18 +292,14 @@ function OnBoard(props) {
     resetBtnText="Cancel"
     btnContainerClass="form-submit-buttons"
     isStepForm={false}
-    
     onFormReset={() => {
-      console.log('form reset callback');
       props.history.push('/candidates');
     }}
   />
   </Card>
 		</div>
-    
-
-		</>
-		)
+    </>
+		);
 }
 
 export default withRouter(OnBoard);

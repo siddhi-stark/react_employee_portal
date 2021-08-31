@@ -121,7 +121,7 @@ function TeamAddLeave(props) {
           allowOutsideClick: false,
         }).then(() => {
           if(employeeOptions) {
-            history.push('/employee-leaves') 
+            history.push('/employee-leaves'); 
           } else {
             history.push('/team-leaves');
           }
@@ -208,7 +208,7 @@ function TeamAddLeave(props) {
                 <Col sm={2}>
                   <Button
                     onClick={() => {
-                      submitForm(2)
+                      submitForm(2);
                     }}
                     variant="primary"
                     className="mb-4"
@@ -219,7 +219,7 @@ function TeamAddLeave(props) {
                 <Col sm={2} className="ms-2">
                   <Button
                     onClick={() => {
-                      submitForm(3)
+                      submitForm(3);
                     }}
                     variant="secondary"
                     className="mb-4 ms-2"

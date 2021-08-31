@@ -133,10 +133,11 @@ function AllReports() {
       const row = [];
 
       data.data.map((report, i) => {
+        console.log('customFunctions.getDDMMYYYYDate(report.created_at)',customFunctions.getDDMMYYYYDate(report.created_at));
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,
-          date: customFunctions.getNewFormattedDate(report.created_at),
+          date: customFunctions.getDMYDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,
@@ -195,17 +196,10 @@ function AllReports() {
     setCntClearFilter(cntClearFilter + 1);
   };
 
-
-
-
-
-
   const filterSearch = (e) => {
     e.preventDefault();
     let filterSearchErr = '';
     let isValid = true;
-
-
    if (
 customFunctions.checkIfEmpty(selectedEmployee) &&
 customFunctions.checkIfEmpty(fromDate) &&

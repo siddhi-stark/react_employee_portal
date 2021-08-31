@@ -221,7 +221,7 @@ function ToDoList(props) {
           projects: task.project_name,
           status: task.status,
           eta: task.estimation,
-          rowClass: morningSelected ? 'morning-mail-sent' : ''
+          // rowClass: morningSelected ? 'morning-mail-sent' : ''
         };
         row.push(setRowData);
         return task;
@@ -672,7 +672,7 @@ function ToDoList(props) {
             <Card>
               <Card.Header>
                 <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary mt-2 mb-2">Add Task</h4>
+                  <h4 className="text-primary mt-2 mb-2">To Do</h4>
                   <div className="d-flex align-items-center justify-content-end">
                     <Button
                       size="sm"
@@ -684,7 +684,7 @@ function ToDoList(props) {
                         forceUpdate(count + 1);
                       }}
                     >
-                      Add Task
+                      Add Task 
                     </Button>
                   </div>
                 </div>

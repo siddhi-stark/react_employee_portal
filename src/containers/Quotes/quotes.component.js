@@ -59,9 +59,6 @@ function Quotes() {
     );
   };
 
-
-
-  // Declare columns
   const columns = [
     {
       id: 'index',
@@ -138,7 +135,7 @@ function Quotes() {
       });
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message,'','error');
     }
   };
 

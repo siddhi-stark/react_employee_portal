@@ -98,7 +98,7 @@ function EmployementHistory(props) {
         });
       updateDefaultValues({ addmore: [...addmoreData] });
     } else {
-      console.log('error', message);
+      swal(message,'','error');
     }
   };
 
@@ -206,9 +206,6 @@ function EmployementHistory(props) {
         resetBtnText="Clear"
         btnContainerClass="form-submit-buttons mb-4"
         isStepForm={false}
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
       />
     </>
   );

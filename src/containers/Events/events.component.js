@@ -1,15 +1,11 @@
 import CustomTable from 'stark-custom-datatable';
 import React, { useState, useEffect } from 'react';
-  import StarkFormBuilder from 'stark-form-builder';
 import { withRouter, useHistory } from 'react-router-dom';
 import {
   Card,
   Image,
-  Button,
-  Accordion
 } from 'react-bootstrap';
 import swal from 'sweetalert';
-  import FormSections from './eventFilter.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -30,15 +26,9 @@ function Events() {
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Events' }];
   const employeeRole = customFunctions.getLocalStorage('group');
-
-
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
-  const [currentUser, updateCurrentUser] = useState(0);
-    
-
-
+  
   const handleActionCallback = (row) => {
     return (
       <>
@@ -57,7 +47,7 @@ function Events() {
          <>
         <a
           href="/"
-          className="pl-2 ms-4"
+          className="pl-2 ms-1"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -66,11 +56,9 @@ function Events() {
         >
           <Image src="/images/edit-button.svg" />
         </a>
-
-
         <a
           href="/"
-          className="pl-2 ms-4"
+          className="pl-2 ms-1"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -102,18 +90,10 @@ function Events() {
   ];
 
   // Declare methods
-  const getRowData = async (pageNo = 1) => {
-    const page = pageNo || currentPage;
+  const getRowData = async () => {
     const endPoint =
-      `${Api.eventsUrl}`
-    const params = {
-      page,
-      limit,
-      sort_direction:'descending',
-      start_date: filterData.start_date ? customFunctions.getDate(filterData.start_date) : '' ,
-      end_date: filterData.end_date ? customFunctions.getDate(filterData.end_date) : '',
-    };
-    const url = customFunctions.generateUrl(endPoint, params);
+      `${Api.eventsUrl}?type=all`;
+    const url = customFunctions.generateUrl(endPoint);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
@@ -171,32 +151,6 @@ function Events() {
     }
   };
 
-
-  // Get user role
-  const getUserRole = async() => {
-    const roleId = await localStorage.getItem('role');
-    updateCurrentUser(Number(roleId));
-  };
-
-  useEffect(() => {
-    getUserRole();
-  }, []);
-
-  // Submit Form
-  const submitForm = async (formValues) => {
-     setFilterData(formValues); //eslint-disable-line
-
-      
-  };
-
-  const onResetForm = () => {
-    setFilterData('');
-    getRowData(1);
-    setFilterData(false);
-  };
-    
-
-
   return (
     <>
       <Helmet title={title} />
@@ -205,48 +159,6 @@ function Events() {
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
-       <div className="mt-5">
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-
-              <Accordion.Collapse eventKey="1">
-                <Card.Title>
-                  <StarkFormBuilder
-                    containerClass='mt-5'
-                    formHeaderClass=''
-                    formSections={FormSections}
-                    onFormSubmit={(formValues) => {submitForm(formValues);}}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    currentUser={currentUser}
-                    submitBtnText="Apply"
-                    showResetBtn={true}
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons pull-right mb-3"
-                    isStepForm={false}
-                    
-                    onFormReset={() => {
-                       onResetForm();
-                    }}
-                  />
-    
-
-                </Card.Title>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-        </div>
         <div className="mt-5">
           <Card>
             <Card.Header>

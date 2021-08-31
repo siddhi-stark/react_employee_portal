@@ -43,7 +43,7 @@ function Personal(props) {
     const postData = {
         email_hash: tokenProps,
         password: passwordProps,
-      }
+      };
 
     const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
     await AuthApi.postDataToServer(endPoint);
@@ -61,7 +61,7 @@ function Personal(props) {
         docIdArr.push({name: doc.doc_title, id:doc.doc_id});
 
         return doc;
-      })
+      });
       updateDefaultValues({
         doc_link_pan_card: panCard,
         doc_link_adhar_card:adharCard,
@@ -69,7 +69,7 @@ function Personal(props) {
       });
       setDocId(docIdArr);
     } else {
-      console.log('error', message);
+      swal(message,'','error');
     }
   };
 
@@ -103,7 +103,6 @@ function Personal(props) {
       return data.data.id;
     }
   };
-
 
   const getApplicantPercentage = async () => { // eslint-disable-line
     const endPoint = applicantId ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`:`${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
@@ -139,7 +138,7 @@ function Personal(props) {
         photofileUrl = document.id;
       }
       return document;
-    })
+    });
 
     if(formValues.doc_link_pan_card){
        pancardfileUrlId = (typeof formValues.doc_link_pan_card === 'object') && await fileUpload(formValues.doc_link_pan_card);
@@ -219,9 +218,6 @@ function Personal(props) {
         resetBtnText="Clear"
         btnContainerClass="form-submit-buttons mb-4"
         isStepForm={false}
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
       />
     </>
   );

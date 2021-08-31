@@ -15,17 +15,16 @@ function RequiredDocument(props) {
 const [isBtnClicked,setIsBtnClicked] = useState(false);
 const [password,setPassword] = useState('');
 
-
 const addPassword = () => {
 	setIsBtnClicked(true);
-}
+};
 
  const onSubmit = (e) => {
     e.preventDefault();
     if (password !== '') {
       addPassword();
     } else {
-    	swal('Please enter the password provided in the link.','','error')
+    	swal('Please enter the password provided in the link.','','error');
     }
   };
 

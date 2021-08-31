@@ -18,6 +18,24 @@ function Sidebar() {
   const [events,setEvents] = useState([]);
   const [birthdays,setBirthdayData] = useState([]);
 
+ const m_names = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const d = new Date();
+const n = m_names[d.getMonth()];
+
   const onSubActiveClass = () => {
     if (activeSubPath !== window.location.pathname)
       setActiveSubPath(window.location.pathname);
@@ -25,7 +43,7 @@ function Sidebar() {
 
 
   const getBirthday = async () => {
-     const endPoint = `${Api.birthdayUrl}`;
+     const endPoint = `${Api.birthdayUrl}?limit=3`;
      const url = customFunctions.generateUrl(endPoint);
     const { data } = await AuthApi.getDataFromServer(url);
     if(data) {
@@ -134,7 +152,7 @@ function Sidebar() {
                           : menuItem.path
                       }
                       onClick={() => {
-                        if (menuItem.title === 'Logout') {
+                        if (menuItem.title === 'Log Out') {
                           // customFunctions.clearLocalStorage();
                           customFunctions.onLogout();
                           document.dispatchEvent(event);
@@ -193,13 +211,13 @@ function Sidebar() {
 
             {events && events.length >=1 ? (
 
-              <div className="upcoming-event-box">
+              <div className="upcoming-event-box up-event ">
                 <div className="upcoming-event-img">
                   <img src="/images/up-coming-event.svg" alt="Upcoming event" />
-                  <p>Upcoming Events</p>
+                  <p>Events In {n}</p>
                    <Image 
                            src="/images/redirect.png"
-                           className="ms-3"
+                           className="ms-3 up-leaves"
                            onClick={() => {
                              history.push('/event'); 
                              onViewEvent();
@@ -210,9 +228,12 @@ function Sidebar() {
 
                 {events && events.map((ev) => (
                         <>
-                          <div className="event-title date">
-                  <p>{ev.title}</p>
-                  <span>{ev.datetime}</span>
+                          <div className="event-title date d-flex align-items-center">
+                           <p className="bday-date">
+                       <img src="/images/calendar-img.png"  alt="Upcoming event"/>
+                       <span>{ev.datetime}</span>
+                     </p> 
+                            <p className="ms-1">{ev.title}</p>
                 </div> <br />
                 
                         </>
@@ -226,29 +247,34 @@ function Sidebar() {
             {birthdays && birthdays.length >= 1 ? (
 
             <div className="upcoming-bg bg-red birthday-wishes-chart">
-              <div className="upcoming-event-box">
+              <div className="upcoming-event-box up-event">
                 <div className="upcoming-event-img">
                   <img
                     src="/images/up-coming-birthday.svg"
                     alt="Upcoming event"
                   />
-                  <p>Upcoming Birthdays</p>
+                  <p>Birthdays in {n}</p>
                 </div>
 
+                    <ul className="p-0 m-0 list-unstyled">
                 {
                   birthdays && birthdays.map((bday) => (
-                    <ul className="p-0 m-0 list-unstyled">
+                    <>
                   <li className="text-red">
                     <a 
                     href="#">
-                     <p><span>{bday.dob}</span></p> 
-                     <p className="ms-3">{bday.name}</p>
+                     <p className="bday-date">
+                       <img src="/images/calendar-img.png"  alt="Upcoming event"/>
+                       <span>{bday.dob}</span>
+                     </p> 
+                     <p>{bday.name}</p>
                     </a>
                   </li>
-                </ul>
+                  </>
                     ))
 
                 }
+                </ul>     
               </div>
             </div>
               ) : ''}

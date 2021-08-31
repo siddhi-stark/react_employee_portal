@@ -113,8 +113,6 @@ function Routes() {
       <Route path="/view-leave/:viewLeaveId" exact component={TeamAddLeave} />
       <Route path="/team-leaves" exact component={TeamLeaves} />
       <Route path="/employee-leaves" exact component={EmployeeTeamLeaves} />
-
-
       <Route component={NotFound} />
     </Switch>
   );

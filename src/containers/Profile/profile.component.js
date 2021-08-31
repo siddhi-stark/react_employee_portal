@@ -107,11 +107,8 @@ function Profile() {
 
    const getEmployeeHIstory = async () => {
     const employeeId = customFunctions.getLocalStorage('userId');
-    console.log('employeeId',employeeId);
     const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    // customFunctions.setLocalStorage('historyId',data.data.id);
-    // console.log('data',data.data);
     if (data) {
       setCompanyList(data.data);
     }

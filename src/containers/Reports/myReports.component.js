@@ -91,12 +91,12 @@ function AllReports() {
 
       const row = [];
       data.data.map((report, i) => {
-        const date = customFunctions.getDate(report.created_at);
+        const date = customFunctions.getDMYDate(report.created_at);
         const dt = new Date(date).getTime();
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,
-          date: customFunctions.getFormattedDate(report.created_at),
+          date: customFunctions.getDMYDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,

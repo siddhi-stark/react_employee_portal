@@ -104,7 +104,7 @@ function Technology() {
 
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message,'','error');
     }
   };
 
