@@ -11520,11 +11520,11 @@ span.np-sup {
     .holidays-applied .upcoming-event-box .event-title.text-red p span {
       color: #E4595D !important; }
     .holidays-applied .upcoming-event-box .event-title p.ms-1 {
-      /*margin-left: 0 !important;*/ }
+      margin-left: 0 !important; }
 
 table tbody tr td a:hover {
   color: #3e41b1;
-  text-decoration: underline; }
+  /*text-decoration: underline;*/ }
 
 .leave-app-button {
   overflow: hidden; }
