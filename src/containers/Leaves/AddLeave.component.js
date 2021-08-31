@@ -15,6 +15,7 @@ function AddLeave(props) {
   const idProps = props;
   const leaveId = idProps.match.params.leaveId;
   const viewOptions = idProps.location.state ? idProps.location.state.isView : '';
+  const viewLeaveOptions = idProps.location.state ? idProps.location.state.isViewLeave : '';
   const employeeId = customFunctions.getLocalStorage('userId');
 
   const history = useHistory();
@@ -170,7 +171,7 @@ function AddLeave(props) {
     if(!leaveId){
       updateDefaultValues({leave_from_type:{label:'Full Day', value:'Full Day'}})
     }
-    setTitle(leaveId ? 'Edit Leaves' : 'Add Leaves');
+    setTitle((viewLeaveOptions || viewOptions) ? 'View Leaves' : 'Edit Leaves');
   }, []);
 
  const ApplyLeave = async (formValues) => {
@@ -365,10 +366,12 @@ function AddLeave(props) {
   };
 
   useEffect(() => {
-    if (startDate && endDate) {
+    if (startDate && !leaveId) {
+      getRowData(1);
+    } else if(startDate && endDate && leaveId) {
       getRowData(1);
     }
-  }, [startDate, endDate]);
+  }, [startDate,endDate]);
 
   return (
     <>
