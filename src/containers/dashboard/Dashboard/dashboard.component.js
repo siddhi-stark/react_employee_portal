@@ -41,7 +41,16 @@ function Dashboard() {
 
   const d = new Date();
   const day = d.getDate();
-  console.log('day',day);
+
+  const m_names = ['January', 'February', 'March', 
+               'April', 'May', 'June', 'July', 
+               'August', 'September', 'October', 'November', 'December'];
+
+  const n = m_names[d.getMonth()]; 
+
+  const DayMonth = day + ' ' + n ; // eslint-disable-line
+
+  console.log('day',DayMonth);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -439,6 +448,9 @@ if (LoginToken) {
             <div className="holidays-applied">
               <div className="row">
               {holidays && holidays.length >= 1 ? (
+                <>
+                {console.log('DayMonth',DayMonth,holidays)}
+                
 
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
@@ -462,22 +474,19 @@ if (LoginToken) {
                       </div>
                       {holidays && holidays.map((hd) => (
                       <>
-                      {console.log('hd',hd.date)}
-                      <div className="event-title d-flex align-items-center date text-red">
+                      <div className="event-title align-items-center date text-red">
                        <p>
                        <span>{hd.date}</span>
                      </p> 
                        <p className="ms-1"><span>{hd.occasion}</span></p>
                       </div>
-                      </>    
+                      </> 
                         ))}
-                        {
-
-                        }
                         
                     </div>
                   </div>
                 </div>
+                </>
                 ) : ''}
 
                  <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
