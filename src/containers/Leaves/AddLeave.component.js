@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Button, Row } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -383,18 +383,20 @@ function AddLeave(props) {
       <section className="content-area">
         <div className="mt-5">
           <Card body>
+          <div className="container">
+          <div className="leave-app-button">
           { (status !== 'Pending') &&
            <Button className="float-end" onClick= {() => viewOptions ? history.push('/employee-leaves') :history.push('/leaves')} >Back</Button>
           }
           { (Number(id) !== Number(employeeId)) && leaveId && (
             <p>Employee Name: {name} ({status})</p>
           )}
-
-            <Row className="">
+          </div>
+          </div>
 
             <StarkFormBuilder
-              containerClass=""
-              formHeaderClass=""
+              containerClass="add-lv"
+              formHeaderClass="add-lv"
               formSections={jsonSchema}
               formHeading="Leave application"
               onFormSubmit={(formValues) => {
@@ -424,8 +426,8 @@ function AddLeave(props) {
                 history.push('/leaves');
               }}
             />
-              </Row>
   
+            <div className="container">
             {(status === 'Declined') && (
             <TextInput
                 inputClass="form-control"
@@ -490,6 +492,7 @@ function AddLeave(props) {
                     Apply Leave
                   </Button>
                 )}
+              </div>
               </div>
           </Card>
         </div>
