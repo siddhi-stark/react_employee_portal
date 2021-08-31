@@ -90,7 +90,7 @@ function TeamLeaves() {
                   <Image
                     title = "Accept"
                     onClick={() => {
-                      submitForm(2);
+                      submitForm(id);
                     }}
                     alt="Accept"
                     src="/images/success.svg"
@@ -128,7 +128,6 @@ function TeamLeaves() {
   const [statusId, setStatusId] = useState('');
 
   // Variable declarations Filter
-  // const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
 
   const history = useHistory();
@@ -141,7 +140,7 @@ function TeamLeaves() {
       page,
       limit,
       my_team:true,
-      sort_direction: 'descending',
+      sort_by: 'leave_from_date',
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -207,9 +206,9 @@ function TeamLeaves() {
   }, [currentUser]);
 
     // Submit Form
-  const submitForm = async (value) => { // eslint-disable-line
+  const submitForm = async (idValue) => {
     const postData = {
-      // id: leaveId,
+      id: idValue,
       status: 2,
     };
 
@@ -235,7 +234,7 @@ function TeamLeaves() {
           buttons: false,
           timer: 2000,
         }).then(() => {
-          // updateDefaultValues({});
+          getRowData(1);
           swal.close();
         });
         // show error
@@ -245,6 +244,7 @@ function TeamLeaves() {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         }).then(() => {
+          getRowData(1);
           swal.close();
         });
        }
@@ -304,12 +304,10 @@ function TeamLeaves() {
               <AddNote
                 show={modalShow}
                 statusId={statusId}
-                // statusData={statusData}
-                // note={note}
                 handleModalCLose={(e) => setModalShow(e)}
-                // onStatusUpdate={() => {
-                //   getApplicantListing();
-                // }}
+                onStatusUpdate={() => {
+                  getRowData(1);
+                }}
               />
             )}
           </Card>

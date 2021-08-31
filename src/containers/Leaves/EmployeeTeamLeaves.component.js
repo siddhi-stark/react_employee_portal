@@ -83,13 +83,12 @@ function EmployeeTeamLeaves() {
        render: ({ id, status_name }) => { // eslint-disable-line
         return (
           <>
-         
          { status_name === 'Pending' ? (
                 <>
                   <Image
                     title = "Accept"
                     onClick={() => {
-                      submitForm(2);
+                      submitForm(id);
                     }}
                     alt="Accept"
                     src="/images/success.svg"
@@ -129,7 +128,6 @@ function EmployeeTeamLeaves() {
   let filterOptions = {};
 
   // Variable declarations Filter
-  // const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
 
   const history = useHistory();
@@ -141,7 +139,7 @@ function EmployeeTeamLeaves() {
     const params = {
       page,
       limit,
-      sort_direction: 'descending',
+      sort_by: 'leave_from_date',
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -199,9 +197,9 @@ function EmployeeTeamLeaves() {
   }, []);
 
     // Submit Form
-  const submitForm = async (value) => { // eslint-disable-line
+  const submitForm = async (idValue) => {
     const postData = {
-      // id: leaveId,
+      id: idValue,
       status: 2,
     };
 
@@ -227,7 +225,7 @@ function EmployeeTeamLeaves() {
           buttons: false,
           timer: 2000,
         }).then(() => {
-          // updateDefaultValues({});
+          getRowData(1);
           swal.close();
         });
         // show error
@@ -237,6 +235,7 @@ function EmployeeTeamLeaves() {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         }).then(() => {
+          getRowData(1);
           swal.close();
         });
        }
@@ -296,12 +295,10 @@ function EmployeeTeamLeaves() {
               <AddNote
                 show={modalShow}
                 statusId={statusId}
-                // statusData={statusData}
-                // note={note}
                 handleModalCLose={(e) => setModalShow(e)}
-                // onStatusUpdate={() => {
-                //   getApplicantListing();
-                // }}
+                onStatusUpdate={() => {
+                  getRowData(1);
+                }}
               />
             )}
           </Card>

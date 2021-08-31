@@ -109,10 +109,6 @@ function Leaves() {
 	const [userRole, setUserRole] = useState('');
 	const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
 
-	// Variable declarations Filter
-	// const [defaultValues, updateDefaultValues] = useState({});
-	// const [options, updateOptions] = useState({});
-
 	const history = useHistory();
 
 	const getRowData = async (pageNo = 1) => {
