@@ -11522,6 +11522,10 @@ span.np-sup {
     .holidays-applied .upcoming-event-box .event-title p.ms-1 {
       /*margin-left: 0 !important;*/ }
 
+table tbody tr td a:hover {
+  color: #3e41b1;
+  text-decoration: underline; }
+
 /*Pre Code View end*/
 @media (min-width: 992px) {
   .main-sidebar {
