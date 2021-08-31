@@ -142,11 +142,15 @@ export default class Api extends Component {
     switch (env) {
       case 'production':
         url = 'https://fj67fd3njj.execute-api.ap-south-1.amazonaws.com/production/api/v1/';
+        break; 
+
+      case 'dev':
+        url = 'https://liveapi.starkdigital.in/api/v1/';
         break;
       // Default: development server
       default:
         url =
-          'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/';
+          'https://liveapi.starkdigital.in/api/v1/';
         break;
     }
     return url;
