@@ -164,7 +164,7 @@ function Dashboard() {
   };
 
  const getUpcomingHoliday = async () => {
-    const endPoint = `${Api.holidayUrl}?sort_by=date`;
+    const endPoint = `${Api.holidayUrl}?sort_by=date&limit=2`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
       setHolidays(data.data);
