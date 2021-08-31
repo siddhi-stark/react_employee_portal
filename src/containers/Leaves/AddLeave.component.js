@@ -390,7 +390,7 @@ function AddLeave(props) {
             <p>Employee Name: {name} ({status})</p>
           )}
 
-            <Row className="w-100">
+            <Row className="">
 
             <StarkFormBuilder
               containerClass=""
