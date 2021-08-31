@@ -123,12 +123,10 @@ function TeamLeaves() {
   const limit = 10;
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
-  let filterOptions = {};
   const [modalShow, setModalShow] = useState(false);
   const [statusId, setStatusId] = useState('');
 
   // Variable declarations Filter
-  const [options, updateOptions] = useState({});
 
   const history = useHistory();
 
@@ -178,32 +176,6 @@ function TeamLeaves() {
     getRowData(1);
     setTitle('Leaves');
   }, []);
-
-  const getEmployee = async () => {
-    const endPoint = (Number(currentUser) === 3 || Number(currentUser) === 6 || Number(currentUser) === 2) ? `${Api.teamUrl}?type=all` : `${Api.employeeUrl}?type=all&is_dropdown=1`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (!data) {
-      // show error
-      return;
-    }
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: (Number(currentUser) === 3 || Number(currentUser) === 6 || Number(currentUser) === 2) ? op.employee_name : op.full_name, value: (Number(currentUser) === 3 || Number(currentUser) === 6 || Number(currentUser) === 2) ? op.employee_id :op.id });
-      return op;
-    });
-    const allOptions = {
-      ...filterOptions,
-      ...options,
-      employee_id: dpOptions,
-    };
-    filterOptions = {...allOptions};
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getEmployee();
-  }, [currentUser]);
 
     // Submit Form
   const submitForm = async (idValue) => {

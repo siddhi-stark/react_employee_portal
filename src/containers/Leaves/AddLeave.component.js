@@ -40,6 +40,7 @@ function AddLeave(props) {
   const [name, setName] = useState('');
   const [id, setId] = useState(null);
   const [fromDateValue, setFromDateValue] = useState('');
+  const [flag, setFlag] = useState(false);
 
   const columns = [
     {
@@ -175,10 +176,6 @@ function AddLeave(props) {
   }, []);
 
  const ApplyLeave = async (formValues) => {
-   let valid = false;
-   if(formValues.leave_from_type.value === 'Half Day'){
-     valid = true;
-   }
 
     const defaultValuesFromType = 
     defaultValues.leave_from_type && (defaultValues.leave_from_type === 'Full Day')
@@ -197,12 +194,12 @@ function AddLeave(props) {
         ? customFunctions.getDate(formValues.leave_from_date)
         : customFunctions.getDate(defaultValues.leave_from_date),
       leave_from_type: formValues.leave_from_type ? fromType : defaultValuesFromType,
-      leave_to_date: valid
+      leave_to_date: (formValues.leave_from_type && formValues.leave_from_type.value === 'Half Day')
         ? customFunctions.getDate(formValues.leave_from_date)
         : customFunctions.getDate(formValues.leave_to_date),
     };
     if (leaveId) postData.id = Number(leaveId);
-    if (defaultValues && defaultValues.leave_to_date) {
+    if (defaultValues && defaultValues.leave_to_date && customFunctions.getDate(defaultValues.leave_to_date) === customFunctions.getDate(formValues.leave_to_date)) {
       postData.leave_to_date = defaultValues.leave_to_date ? customFunctions.getDate(defaultValues.leave_to_date):'';
     } 
     const callback = leaveId
@@ -210,7 +207,6 @@ function AddLeave(props) {
       : AuthApi.postDataToServer;
 
     const endPoint = Api.leavesUrl;
-    console.log('postData',postData);
     if(!customFunctions.checkIfEmpty(rowData)) {
     const { data, message } = await callback(endPoint, postData);
 
@@ -244,8 +240,12 @@ function AddLeave(props) {
    
     if(formValues.leave_from_date){
       setStartDate(formValues.leave_from_date);
-      setEndDate(formValues.leave_to_date);
+      setFlag(true);
     }
+
+    if(formValues.leave_to_date) {
+      setEndDate(formValues.leave_to_date);
+    } 
     setFormValuesData(formValues);
   };
 
@@ -366,9 +366,11 @@ function AddLeave(props) {
   };
 
   useEffect(() => {
-    if (startDate && !leaveId) {
+    if (startDate && flag && !leaveId) {
       getRowData(1);
     } else if(startDate && endDate && leaveId) {
+      getRowData(1);
+    } else if(startDate && leaveId && flag) {
       getRowData(1);
     }
   }, [startDate,endDate]);
@@ -473,13 +475,14 @@ function AddLeave(props) {
 
                   </>
                       )}
-                   { (totalCount > 0) && (
+                {console.log('viewOptions',!customFunctions.checkIfEmpty(viewOptions),customFunctions.checkIfEmpty(viewLeaveOptions))}
+                   { (totalCount > 0) || !customFunctions.checkIfEmpty(viewOptions) || !viewLeaveOptions && (
                     <p className="text-danger">
                     Note: The highlighted task shows the high priority and may
                     affect the project deadline. Kindly look into and the
                     apply for leave </p>
                   )}
-                   { (totalCount === 0) && (status === 'Pending') && (
+                   { (totalCount === 0) && (status === 'Pending') || !customFunctions.checkIfEmpty(viewOptions) || !viewLeaveOptions && (
                     <p className="text-success"> Note: Make sure No task affecting the project deadline and associated task are taken care. </p>
                   )}
                 { (totalCount === 0) && changeDate && (status === 'Pending') &&  (

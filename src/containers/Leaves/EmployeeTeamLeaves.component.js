@@ -125,11 +125,6 @@ function EmployeeTeamLeaves() {
   const [modalShow, setModalShow] = useState(false);
   const [statusId, setStatusId] = useState('');
 
-  let filterOptions = {};
-
-  // Variable declarations Filter
-  const [options, updateOptions] = useState({});
-
   const history = useHistory();
 
   const getRowData = async (pageNo = 1) => {
@@ -169,31 +164,6 @@ function EmployeeTeamLeaves() {
     setUserRole(Number(uRole));
     getRowData(1);
     setTitle('Leaves');
-  }, []);
-
-  const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
-    if (!data) {
-      // show error
-      return;
-    }
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({ label: op.full_name, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...filterOptions,
-      ...options,
-      employee_id: dpOptions,
-    };
-    filterOptions = {...allOptions};
-    updateOptions(allOptions);
-  };
-
-  useEffect(() => {
-    getEmployee();
   }, []);
 
     // Submit Form

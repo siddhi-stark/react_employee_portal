@@ -239,7 +239,7 @@ function TeamAddLeave(props) {
                   setReason(e.target.value);
                 }
                 }
-                label="Note"
+                label="Declined Reason"
                 containerClass="form-group"
                 type="textarea"
                 disabled={status !== 'Pending' && true}
