@@ -3356,9 +3356,7 @@ span.np-sup {
 }
 .holidays-applied {
     .upcoming-event-box {
-        /*max-height: 195px;*/
         min-height: 156px;
-        /*overflow: auto;*/
         .event-title {
             flex-wrap: wrap;
             &.text-red {
@@ -3477,6 +3475,9 @@ span.np-sup {
                     p {
                         font-size: 11px;
                         margin-left: 4px;
+                        &.bday-date {
+                            margin-left: 0;
+                        }
                     }
                 }
             }

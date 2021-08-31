@@ -11511,9 +11511,7 @@ span.np-sup {
   color: #000000 !important; }
 
 .holidays-applied .upcoming-event-box {
-  /*max-height: 195px;*/
-  min-height: 156px;
-  /*overflow: auto;*/ }
+  min-height: 156px; }
   .holidays-applied .upcoming-event-box .event-title {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap; }
@@ -11586,6 +11584,8 @@ span.np-sup {
     .birthday-wishes-chart .upcoming-event-box ul li p {
       font-size: 11px;
       margin-left: 4px; }
+      .birthday-wishes-chart .upcoming-event-box ul li p.bday-date {
+        margin-left: 0; }
   .upcoming-event-box .upcoming-event-img p {
     font-size: 12px; }
   .upcoming-event-box .upcoming-event-img .up-holday, .upcoming-event-box .upcoming-event-img .up-leaves {
