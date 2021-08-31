@@ -2458,6 +2458,9 @@ table {
     ul.thumbnails.image_picker_selector li .thumbnail img {
         max-width: 100%;
     }    
+    img.up-leaves {
+        max-width: 100%;
+    }
 }
 
 /*15-04-2021*/
@@ -3351,20 +3354,28 @@ span.np-sup {
 .birthday-wishes-chart ul li a .bday-date span {
     color: #000000 !important;
 }
-.holidays-applied .upcoming-event-box .event-title.text-red p span {
-    color: #E4595D !important;
-}
-.holidays-applied .upcoming-event-box .event-title.text-red p.ms-1 span {
-    color: #000000 !important;
-}
 .holidays-applied {
     .upcoming-event-box {
-        max-height: 195px;
-        overflow: auto;
+        /*max-height: 195px;*/
+        min-height: 156px;
+        /*overflow: auto;*/
         .event-title {
+            flex-wrap: wrap;
+            &.text-red {
+                p.ms-1 {
+                    span {
+                        color: #000000 !important;
+                    }
+                }
+                p {
+                    span {
+                        color: #E4595D !important;
+                    }
+                }
+            }
             p {
                 &.ms-1 {
-                    margin-left: 0 !important;
+                    /*margin-left: 0 !important;*/
                 }
             }
         }
@@ -3554,11 +3565,11 @@ span.np-sup {
                     margin-left: 4px;
                 }
             }
-            .event-title {
+            /*.event-title {
                 p {
                     margin-left: 0 !important;
                 }
-            }
+            }*/
         }        
     }
 }

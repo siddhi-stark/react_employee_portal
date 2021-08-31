@@ -10784,6 +10784,9 @@ table tfoot {
 .modal-body ul.thumbnails.image_picker_selector li .thumbnail img {
   max-width: 100%; }
 
+.modal-body img.up-leaves {
+  max-width: 100%; }
+
 /*15-04-2021*/
 .sa-button-container .sa-confirm-button-container button {
   background-color: #303160 !important; }
@@ -11507,17 +11510,19 @@ span.np-sup {
 .birthday-wishes-chart ul li a .bday-date span {
   color: #000000 !important; }
 
-.holidays-applied .upcoming-event-box .event-title.text-red p span {
-  color: #E4595D !important; }
-
-.holidays-applied .upcoming-event-box .event-title.text-red p.ms-1 span {
-  color: #000000 !important; }
-
 .holidays-applied .upcoming-event-box {
-  max-height: 195px;
-  overflow: auto; }
-  .holidays-applied .upcoming-event-box .event-title p.ms-1 {
-    margin-left: 0 !important; }
+  /*max-height: 195px;*/
+  min-height: 156px;
+  /*overflow: auto;*/ }
+  .holidays-applied .upcoming-event-box .event-title {
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap; }
+    .holidays-applied .upcoming-event-box .event-title.text-red p.ms-1 span {
+      color: #000000 !important; }
+    .holidays-applied .upcoming-event-box .event-title.text-red p span {
+      color: #E4595D !important; }
+    .holidays-applied .upcoming-event-box .event-title p.ms-1 {
+      /*margin-left: 0 !important;*/ }
 
 /*Pre Code View end*/
 @media (min-width: 992px) {
@@ -11612,12 +11617,16 @@ span.np-sup {
   .blockquote p {
     font-size: 12px;
     max-width: 230px; }
-  .holidays-applied .upcoming-event-box .upcoming-event-img p {
-    margin-left: 4px; }
-  .holidays-applied .upcoming-event-box .upcoming-event-img .up-holday, .holidays-applied .upcoming-event-box .upcoming-event-img .up-leaves {
-    margin-left: 4px; }
-  .holidays-applied .upcoming-event-box .event-title p {
-    margin-left: 0 !important; } }
+  .holidays-applied .upcoming-event-box {
+    /*.event-title {
+                p {
+                    margin-left: 0 !important;
+                }
+            }*/ }
+    .holidays-applied .upcoming-event-box .upcoming-event-img p {
+      margin-left: 4px; }
+    .holidays-applied .upcoming-event-box .upcoming-event-img .up-holday, .holidays-applied .upcoming-event-box .upcoming-event-img .up-leaves {
+      margin-left: 4px; } }
 
 @media (max-width: 1280px) {
   .content-area .row [class*="col"] {

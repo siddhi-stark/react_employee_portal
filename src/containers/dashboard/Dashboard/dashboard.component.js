@@ -168,7 +168,7 @@ function Dashboard() {
   };
 
 const getAppliedLeaves = async () => {
-    const endPoint = `${Api.leavesApplied}?sort_by=date`;
+    const endPoint = `${Api.leavesApplied}?sort_by=date&limit=2`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
       setLeaves(data.data);
@@ -458,12 +458,12 @@ if (LoginToken) {
                       </div>
                       {holidays && holidays.map((hd) => (
                       <>
-                      <div className="event-title date text-red">
+                      <div className="event-title d-flex align-items-center date text-red">
                        <p>
                        <span>{hd.date}</span>
                      </p> 
                        <p className="ms-1"><span>{hd.occasion}</span></p>
-                      </div> <br />
+                      </div>
                       </>    
                         ))}
                         {

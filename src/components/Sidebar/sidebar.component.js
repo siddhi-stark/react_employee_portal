@@ -246,7 +246,7 @@ console.log('day',day);
 
             </div>
 
-            {birthdays && birthdays.length >= 1 ? (
+            {birthdays && birthdays.length >= 1 && day === Number(birthdays.dob) ? (
 
             <div className="upcoming-bg bg-red birthday-wishes-chart">
               <div className="upcoming-event-box up-event">
@@ -262,6 +262,7 @@ console.log('day',day);
                 {
                   birthdays && birthdays.map((bday) => (
                     <>
+                    {console.log('day === Number(birthdays.dob)',day === Number(bday.dob))}
                   <li className="text-red">
                     <a 
                     href="#">

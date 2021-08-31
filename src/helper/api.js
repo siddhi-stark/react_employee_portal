@@ -145,12 +145,12 @@ export default class Api extends Component {
         break; 
 
       case 'dev':
-        url = 'https://liveapi.starkdigital.in/api/v1/';
+        url = 'http://devapi.starkdigital.in/api/v1/';
         break;
       // Default: development server
       default:
         url =
-          'https://liveapi.starkdigital.in/api/v1/';
+          'http://devapi.starkdigital.in/api/v1/';
         break;
     }
     return url;
