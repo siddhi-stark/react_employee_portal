@@ -41,7 +41,7 @@ const menu = [
     path: '/quotes',
     icon: 'quote.svg',
     submenu: [],
-    roleaccess: [2, 3],
+    roleaccess: [2],
   },
 
   {
