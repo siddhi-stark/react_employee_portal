@@ -387,10 +387,10 @@ function AddLeave(props) {
            <Button className="float-end" onClick= {() => viewOptions ? history.push('/employee-leaves') :history.push('/leaves')} >Back</Button>
           }
           { (Number(id) !== Number(employeeId)) && leaveId && (
-            <p className="ms-4">Employee Name: {name} ({status})</p>
+            <p>Employee Name: {name} ({status})</p>
           )}
 
-            <Row className="ms-3">
+            <Row className="w-100">
 
             <StarkFormBuilder
               containerClass=""
@@ -425,7 +425,7 @@ function AddLeave(props) {
               }}
             />
               </Row>
-              <Row className="ms-3">
+  
             {(status === 'Declined') && (
             <TextInput
                 inputClass="form-control"
@@ -437,9 +437,8 @@ function AddLeave(props) {
                 value={reason}
               />
              )}
-              </Row>
 
-              <div className="mt-5 mx-4">
+              <div className="mt-3">
                 { (totalCount > 0) && (status === 'Pending') &&  (
                   <>
 
@@ -473,7 +472,7 @@ function AddLeave(props) {
                   </>
                       )}
                    { (totalCount > 0) && (
-                    <p className="text-danger ms-3">
+                    <p className="text-danger">
                     Note: The highlighted task shows the high priority and may
                     affect the project deadline. Kindly look into and the
                     apply for leave </p>

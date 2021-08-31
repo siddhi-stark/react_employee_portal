@@ -32,7 +32,7 @@ function Quotes() {
 
   const handleActionCallback = ({ id }) => {
     return (
-      <>
+      <span className ="d-flex">
         <a
           href="javascript:void(0)"
           className=""
@@ -42,7 +42,7 @@ function Quotes() {
             history.push(`/edit-quotes/${id}`);
           }}
         >
-          <Image src="/images/edit-button.svg" alt="Edit Quotes" />
+          <Image src="/images/edit-button.svg" className="delete-edit-view" alt="Edit Quotes" />
         </a>
         <a
           href="javascript:void(0)"
@@ -53,9 +53,9 @@ function Quotes() {
             deleteQuotes(id);
           }}
         >
-          <Image src="/images/delete.png" alt="Delete Quotes" />
+          <Image src="/images/delete.png" className="" alt="Delete Quotes" />
         </a>
-      </>
+      </span>
     );
   };
 
