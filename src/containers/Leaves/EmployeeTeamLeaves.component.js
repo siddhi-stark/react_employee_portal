@@ -231,7 +231,7 @@ function EmployeeTeamLeaves() {
                     <a
                       href="#"
                       onClick={() => {
-                        history.push('/add-leave');
+                        history.push('/add-leave',{ isView : 'true' });
                       }}
                       className="btn-link"
                     >

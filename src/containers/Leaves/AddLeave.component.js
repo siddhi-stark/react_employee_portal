@@ -475,17 +475,17 @@ function AddLeave(props) {
 
                   </>
                       )}
-                {console.log('viewOptions',!customFunctions.checkIfEmpty(viewOptions),customFunctions.checkIfEmpty(viewLeaveOptions))}
-                   { (totalCount > 0) || !customFunctions.checkIfEmpty(viewOptions) || !viewLeaveOptions && (
+
+                   { (totalCount > 0 && flag)  && (
                     <p className="text-danger">
                     Note: The highlighted task shows the high priority and may
                     affect the project deadline. Kindly look into and the
                     apply for leave </p>
                   )}
-                   { (totalCount === 0) && (status === 'Pending') || !customFunctions.checkIfEmpty(viewOptions) || !viewLeaveOptions && (
+                   { (totalCount === 0 && flag && status === 'Pending') && (
                     <p className="text-success"> Note: Make sure No task affecting the project deadline and associated task are taken care. </p>
                   )}
-                { (totalCount === 0) && changeDate && (status === 'Pending') &&  (
+                { (totalCount === 0 && flag) && changeDate && (status === 'Pending') &&  (
                   <Button
                     onClick={() => {
                       ApplyLeave(formValuesData);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Button, Row, Col } from 'react-bootstrap';
+import { Card, Button, Row } from 'react-bootstrap';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './TeamAddLeave.json';
@@ -28,51 +28,12 @@ function TeamAddLeave(props) {
   const [status, setStatus] = useState('');
   const [name, setName] = useState('');
 
-  const [jsonSchema, updateJsonSchema] = useState(FormSections);
-
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
 
-  const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
-    const sectionData = section;
-    if (
-      sectionData.name === 'leave_from_date' ||
-      sectionData.name === 'leave_to_date'
-    ) {
-      const date = new Date();
-      sectionData.minDate = date;
-    }
-    return sectionData;
-  });
-
-  useEffect(() => {
-    const formViewSchema = [...FormSections];
-      const updatedSchema = formViewSchema.map((section) => {
-        const s = { ...section };
-        s.fields = section.fields.map((item) => {
-          const itemData = item;
-          if (
-            item.name === 'team_leave_type' ||
-            item.name === 'team_reason' ||
-            item.name === 'leave_from_date' ||
-            item.name === 'leave_from_type' ||
-            item.name === 'leave_from_time' ||
-            item.name === 'leave_to_date' ||
-            item.name === 'leave_to_type' ||
-            item.name === 'leave_to_time'
-          )
-            itemData.disabled = true;
-          return itemData;
-        });
-        return s;
-      });
-
-      updateJsonSchema([...updatedSchema]);
-  }, [currentUser]);
 
   useEffect(() => {
     getUserRole();
@@ -184,7 +145,7 @@ function TeamAddLeave(props) {
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
-              formSections={jsonSchema}
+              formSections={FormSections}
               formHeading="Leave"
               // onFormSubmit={(formValues) => {
               //   submitForm(formValues);
@@ -202,34 +163,7 @@ function TeamAddLeave(props) {
                 history.push('/leaves');
               }}
             />
-              <Row className="text-center ms-4">
-                { status === 'Pending' && (
-                  <>
-                <Col sm={2}>
-                  <Button
-                    onClick={() => {
-                      submitForm(2);
-                    }}
-                    variant="primary"
-                    className="mb-4"
-                  >
-                    Approve
-                  </Button>
-                </Col>
-                <Col sm={2} className="ms-2">
-                  <Button
-                    onClick={() => {
-                      submitForm(3);
-                    }}
-                    variant="secondary"
-                    className="mb-4 ms-2"
-                  >
-                    Decline
-                  </Button>
-                </Col>
-                </>
-                )}
-              </Row>
+             
               <div className="container">
               <Row className="">
 
