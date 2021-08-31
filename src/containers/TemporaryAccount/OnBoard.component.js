@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
+import { Card } from 'react-bootstrap';
 import FormSections from './onboard.json';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -276,9 +277,9 @@ function OnBoard(props) {
         <Breadcrumb items={items} />
       </div>
 		<div className="mt-5">
-
+    <Card body>
   <StarkFormBuilder
-    containerClass='mb-4'
+    containerClass='mb-4 mt-4'
     formHeaderClass=''
     formSections={FormSections}
     onFormSubmit={(formValues) => {submitForm(formValues);}}
@@ -295,6 +296,7 @@ function OnBoard(props) {
       props.history.push('/candidates');
     }}
   />
+  </Card>
 		</div>
     </>
 		);

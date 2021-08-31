@@ -12,8 +12,11 @@ import customFunctions from '../../helper/customFunctions';
 
 function TeamAddLeave(props) {
   const idProps = props;
+  console.log('idProps',idProps);
   const leaveId = idProps.match.params.viewLeaveId;
   const employeeOptions = idProps.location.state ? idProps.location.state.employee : '';
+  const viewOptions = idProps.location.state ? idProps.location.state.isView : '';
+
   const history = useHistory();
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
@@ -23,6 +26,7 @@ function TeamAddLeave(props) {
   const [title, setTitle] = useState('');
   const [reason, setReason] = useState('');
   const [status, setStatus] = useState('');
+  const [name, setName] = useState('');
 
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
@@ -72,7 +76,7 @@ function TeamAddLeave(props) {
 
   useEffect(() => {
     getUserRole();
-    setTitle(leaveId ? 'Edit Leaves' : 'Add Leaves');
+    setTitle(!viewOptions ? 'Edit Leaves' : 'View Leaves');
   }, []);
 
   // Submit Form
@@ -141,6 +145,7 @@ function TeamAddLeave(props) {
     if(data && data.data){
       setReason(data.data.declined_reason);
       setStatus(data.data.status_name);
+      setName(data.data.user_name);
     }
     updateDefaultValues({
       leave_type: data.data.leave_type && data.data.leave_type,
@@ -165,6 +170,7 @@ function TeamAddLeave(props) {
 
   return (
     <>
+    {console.log('viewOptions',viewOptions)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Leaves</h2>
@@ -173,7 +179,8 @@ function TeamAddLeave(props) {
       <section className="content-area">
         <div className="mt-5">
           <Card body>
-            <Button className="float-end" onClick= {() => employeeOptions ? history.push('/employee-leaves') : history.push('/team-leaves')} >Back</Button>
+            <Button className="float-end" onClick= {() => viewOptions ? history.push('/team-leaves') : history.push('/employee-leaves')} >Back</Button>
+          <p className="ms-4">Employee Name: {name} ({status})</p>
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
@@ -223,7 +230,7 @@ function TeamAddLeave(props) {
                 </>
                 )}
               </Row>
-              <Row className="ms-4">
+              <Row className="ms-3">
 
               <TextInput
                 inputClass="form-control"

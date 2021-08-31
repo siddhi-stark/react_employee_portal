@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Image, Card, Button, Accordion } from 'react-bootstrap';
+import { Image, Card } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
-import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './formschema.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -23,7 +21,11 @@ function Leaves() {
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-							history.push(`/edit-leave/${id}`);
+							if(status_name !== 'Pending' || status_name === 'Approved'){
+								history.push(`/edit-leave/${id}`, { isViewLeave : 'true' });
+							} else {
+								history.push(`/edit-leave/${id}`);
+							}
 					}}
 				>
 					{(status_name !== 'Pending' || status_name === 'Approved') ?
@@ -41,7 +43,7 @@ function Leaves() {
 							changeStatus(id);
 						}}
 				>
-				{(status_name === 'Approved') && (
+				{(status_name === 'Approved' || status_name === 'Pending') && (
 					<Image src="/images/fail.svg" />
 				)}
 				</a>
@@ -103,31 +105,21 @@ function Leaves() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage, setItemsPerPage] = useState(10);
 	const limit = 10;
-	const [filterData, setFilterData] = useState({});
 	const [title, setTitle] = useState('');
 	const [userRole, setUserRole] = useState('');
 	const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
-
-	// Variable declarations Filter
-	// const [defaultValues, updateDefaultValues] = useState({});
-	// const [options, updateOptions] = useState({});
 
 	const history = useHistory();
 
 	const getRowData = async (pageNo = 1) => {
 		const page = pageNo || currentPage;
 		const endPoint = `${Api.leavesUrl}`;
-		 const filterList =
-      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-        ? customFunctions.jsonParse(filterData)
-        : {};
 
 		const params = {
 			page,
 			limit,
       my_leaves: true,
-			sort_direction: 'descending',
-			...filterList
+			sort_by: 'leave_from_date',
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
@@ -183,21 +175,7 @@ function Leaves() {
 		setUserRole(Number(uRole));
 		getRowData(1);
 		setTitle('Leaves');
-	}, [filterData]);
-
-	// Get user role Filter
-	// Submit Form
-	const submitForm = async (formValues) => {
-		const payload = {
-        start_date: formValues.start_date
-          ? customFunctions.getDate(formValues.start_date)
-          : '',
-        end_date: formValues.end_date
-          ? customFunctions.getDate(formValues.end_date)
-          : '',
-      };
-		setFilterData(payload);
-	};
+	}, []);
 
 	return (
 		<>
@@ -207,45 +185,6 @@ function Leaves() {
 				<Breadcrumb items={items} />
 			</div>
 			<section className="content-area">
-				<Accordion defaultActiveKey="0">
-					<Card>
-						<Card.Header>
-							<div className="d-flex align-items-center justify-content-between">
-								<h4 className="text-primary m-0">Filters</h4>
-								<div className="d-flex align-items-center justify-content-end">
-									<Accordion.Toggle as={Button} variant="link" eventKey="1">
-										Expand
-									</Accordion.Toggle>
-								</div>
-							</div>
-						</Card.Header>
-						<Accordion.Collapse eventKey="1">
-							<Card.Title>
-								<StarkFormBuilder
-									containerClass=""
-									formHeaderClass=""
-									formSections={FormSections}
-									formHeading="Leaves Filter "
-									onFormSubmit={(formValues) => {
-										submitForm(formValues);
-									}}
-									// options={options}
-									callbacks={{}}
-									// defaultFormValues={defaultValues}
-									currentUser={userRole}
-									submitBtnText="Apply"
-									showResetBtn={true}
-									resetBtnText="Clear"
-									btnContainerClass="form-submit-buttons pull-right mb-3"
-									isStepForm={false}
-									onFormReset={() => {
-                    setFilterData({});
-									}}
-								/>
-							</Card.Title>
-						</Accordion.Collapse>
-					</Card>
-				</Accordion>
 					<Card>
 						<Card.Header>
 							<div className="d-flex align-items-center justify-content-between">

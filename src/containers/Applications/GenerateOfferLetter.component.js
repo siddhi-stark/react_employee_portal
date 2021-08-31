@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Button } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './offerletter.json';
 import Api from '../../helper/api';
@@ -206,8 +206,9 @@ return;
       </div>
 
       <div className="mt-5">
+      <Card body>
         <StarkFormBuilder
-          containerClass=""
+          containerClass="mt-4"
           formHeaderClass=""
           formSections={jsonSchema}
           onFormSubmit={(formValues) => {
@@ -219,12 +220,12 @@ return;
           defaultFormValues={defaultValues}
           currentUser={currentUser}
           submitBtnText="Submit"
-          showResetBtn={false}
-          resetBtnText="Clear"
+          showResetBtn={true}
+          resetBtnText="Cancel"
           btnContainerClass="form-submit-buttons mb-4"
           isStepForm={false}
           onFormReset={() => {
-            console.log('form reset callback');
+            history.push('/recruitment');
           }}
         />
         {document && (
@@ -246,6 +247,7 @@ return;
             </div>
           </>
         )}
+      </Card>
       </div>
     </>
   );

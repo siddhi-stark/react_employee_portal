@@ -158,12 +158,12 @@ const menu = [
       {
         title: 'Team Leaves',
         path: '/team-leaves',
-        roleaccess: [3,6],
+        roleaccess: [2,3,6],
       }, 
       {
         title: 'Employee Leaves',
         path: '/employee-leaves',
-        roleaccess: [1,2,6,5],
+        roleaccess: [1,6,5],
       },
     ],
     roleaccess: [1,2,3,6,5],
