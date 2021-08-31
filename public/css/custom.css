@@ -11524,7 +11524,7 @@ span.np-sup {
 
 table tbody tr td a:hover {
   color: #3e41b1;
-  text-decoration: underline; }
+  /*text-decoration: underline;*/ }
 
 .leave-app-button {
   overflow: hidden; }
