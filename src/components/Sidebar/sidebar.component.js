@@ -34,7 +34,9 @@ function Sidebar() {
 ];
 
 const d = new Date();
+const day = d.getDate();
 const n = m_names[d.getMonth()];
+console.log('day',day); 
 
   const onSubActiveClass = () => {
     if (activeSubPath !== window.location.pathname)
@@ -265,7 +267,7 @@ const n = m_names[d.getMonth()];
                     href="#">
                      <p className="bday-date">
                        <img src="/images/calendar-img.png"  alt="Upcoming event"/>
-                       <span>{bday.dob}</span>
+                       <span>{day === Number(bday.dob) ? bday.dob : ''}</span>
                      </p> 
                      <p>{bday.name}</p>
                     </a>

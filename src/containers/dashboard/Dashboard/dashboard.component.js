@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Jumbotron, Card, Button, Row, Col, Image } from 'react-bootstrap';
-import { Helmet } from '../../../components/FormInputs';
+import { Helmet, ModalInput } from '../../../components/FormInputs';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
@@ -32,6 +32,8 @@ function Dashboard() {
   const [holidays,setHolidays] = useState([]);
   const [leaves,setLeaves] = useState([]);
   const [socialMedia,setSocialMediaData] = useState([]);
+  const [modalShow,setModalShow] = useState(false);
+  const [image,setImage] = useState('');
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
@@ -177,7 +179,6 @@ const getInstagramPost = async () => {
   const endPoint = `${Api.socialMediaUrl}`;
   const { data } = await AuthApi.getDataFromServer(endPoint);
   if(data) {
-    console.log('data',data.data);
     setSocialMediaData(data.data);
   }
 }
@@ -238,6 +239,10 @@ if (LoginToken) {
   const onViewLeaves = () => {   
     document.dispatchEvent(viewLeaves);
     return true;
+  };
+
+  const onCancel = () => {
+    setModalShow(false);
   };
 
   return (
@@ -440,7 +445,7 @@ if (LoginToken) {
                           src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
-                        <p>Upcoming Holidays</p>
+                        <p>Holidays</p>
                         <Image 
                            className="up-holday"
                            src="/images/redirect.png"
@@ -453,7 +458,7 @@ if (LoginToken) {
                       </div>
                       {holidays && holidays.map((hd) => (
                       <>
-                      <div className="event-title date d-flex align-items-center text-red">
+                      <div className="event-title date text-red">
                        <p>
                        <span>{hd.date}</span>
                      </p> 
@@ -483,7 +488,7 @@ if (LoginToken) {
                           src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
-                        <p>Leaves Applied</p>
+                        <p>Leaves</p>
                          <Image 
                          className="up-leaves"
                            src="/images/redirect.png"
@@ -526,7 +531,15 @@ if (LoginToken) {
                       <>
                       <li>
                         <a href="#">
-                          <img src={sm.post_image} alt="img" />
+                        <Image 
+                         className="up-leaves"
+                           src={sm.post_image}
+                           onClick={() => {
+                             setModalShow(true);
+                             setImage(sm.post_image);
+                           }}
+                           />
+
                         </a>
                       </li>
                       
@@ -542,6 +555,22 @@ if (LoginToken) {
           </Col>
         </Row>
       </section>
+       <ModalInput
+        size="md"
+        centered
+        show={modalShow}
+        onHide={onCancel}
+        id="contained-modal-title-vcenter"
+        modalBody={
+          <>
+       <Image
+        className="up-leaves"
+        src={image}
+        />;
+          </>
+
+        }
+        />
     </>
   );
 }

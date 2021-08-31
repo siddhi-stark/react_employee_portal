@@ -1195,6 +1195,7 @@ select {
         span {
             /*color: $gray4;*/
             color: #000000;
+            font-size: 14px;
         }
     }
     .btn {
@@ -3356,6 +3357,19 @@ span.np-sup {
 .holidays-applied .upcoming-event-box .event-title.text-red p.ms-1 span {
     color: #000000 !important;
 }
+.holidays-applied {
+    .upcoming-event-box {
+        max-height: 195px;
+        overflow: auto;
+        .event-title {
+            p {
+                &.ms-1 {
+                    margin-left: 0 !important;
+                }
+            }
+        }
+    }
+}
 /*Pre Code View end*/
 
 
@@ -3383,7 +3397,7 @@ span.np-sup {
     .holidays-applied {
         .row {
             [class*="col"] {
-                width: 100%;
+                /*width: 100%;*/
             }
         }
     }
@@ -3423,11 +3437,15 @@ span.np-sup {
     .bday-date {
         font-size:11px !important;
     }
-
     .upcoming-event-box {
         .upcoming-event-img{
             &.upcoming-event-img-edit {
                 justify-content: space-between;
+            }
+        }
+        .date {
+            span {
+                font-size: 11px;
             }
         }
     }
@@ -3525,6 +3543,23 @@ span.np-sup {
             font-size: 12px;
             max-width: 230px;
         }
+    }
+    .holidays-applied {
+        .upcoming-event-box {
+            .upcoming-event-img {
+                p {
+                    margin-left: 4px;
+                }
+                .up-holday, .up-leaves {
+                    margin-left: 4px;
+                }
+            }
+            .event-title {
+                p {
+                    margin-left: 0 !important;
+                }
+            }
+        }        
     }
 }
 @media (max-width: 1280px) {

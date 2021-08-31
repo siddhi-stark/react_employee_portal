@@ -9700,7 +9700,8 @@ p:empty {
     line-height: 1; }
   .upcoming-event-box .date span {
     /*color: $gray4;*/
-    color: #000000; }
+    color: #000000;
+    font-size: 14px; }
   .upcoming-event-box .btn {
     min-width: 80px; }
 
@@ -11512,6 +11513,12 @@ span.np-sup {
 .holidays-applied .upcoming-event-box .event-title.text-red p.ms-1 span {
   color: #000000 !important; }
 
+.holidays-applied .upcoming-event-box {
+  max-height: 195px;
+  overflow: auto; }
+  .holidays-applied .upcoming-event-box .event-title p.ms-1 {
+    margin-left: 0 !important; }
+
 /*Pre Code View end*/
 @media (min-width: 992px) {
   .main-sidebar {
@@ -11534,7 +11541,7 @@ span.np-sup {
 
 @media (max-width: 1860px) {
   .holidays-applied .row [class*="col"] {
-    width: 100%; } }
+    /*width: 100%;*/ } }
 
 @media (max-width: 1440px) {
   .welcome-box.jumbotron {
@@ -11564,6 +11571,8 @@ span.np-sup {
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between; }
+  .upcoming-event-box .date span {
+    font-size: 11px; }
   .birthday-wishes-chart ul li a {
     font-size: 11px; }
   .birthday-wishes-chart .upcoming-event-box ul {
@@ -11602,7 +11611,13 @@ span.np-sup {
     font-size: 24px; }
   .blockquote p {
     font-size: 12px;
-    max-width: 230px; } }
+    max-width: 230px; }
+  .holidays-applied .upcoming-event-box .upcoming-event-img p {
+    margin-left: 4px; }
+  .holidays-applied .upcoming-event-box .upcoming-event-img .up-holday, .holidays-applied .upcoming-event-box .upcoming-event-img .up-leaves {
+    margin-left: 4px; }
+  .holidays-applied .upcoming-event-box .event-title p {
+    margin-left: 0 !important; } }
 
 @media (max-width: 1280px) {
   .content-area .row [class*="col"] {
