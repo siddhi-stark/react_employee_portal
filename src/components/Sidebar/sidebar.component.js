@@ -246,7 +246,7 @@ console.log('day',day);
 
             </div>
 
-            {birthdays && birthdays.length >= 1 && day === Number(birthdays.dob) ? (
+            {birthdays && birthdays.length >= 1 ? (
 
             <div className="upcoming-bg bg-red birthday-wishes-chart">
               <div className="upcoming-event-box up-event">
@@ -266,11 +266,16 @@ console.log('day',day);
                   <li className="text-red">
                     <a 
                     href="#">
+                    {day === Number(bday.dob) ? (
+                      <>
+
                      <p className="bday-date">
                        <img src="/images/calendar-img.png"  alt="Upcoming event"/>
                        <span>{day === Number(bday.dob) ? bday.dob : ''}</span>
                      </p> 
                      <p>{bday.name}</p>
+                      </>
+                      ) : ''}
                     </a>
                   </li>
                   </>

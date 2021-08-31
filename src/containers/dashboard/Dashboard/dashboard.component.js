@@ -39,6 +39,10 @@ function Dashboard() {
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
   // const employeeGroup = customFunctions.getLocalStorage('group');
 
+  const d = new Date();
+  const day = d.getDate();
+  console.log('day',day);
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -458,6 +462,7 @@ if (LoginToken) {
                       </div>
                       {holidays && holidays.map((hd) => (
                       <>
+                      {console.log('hd',hd.date)}
                       <div className="event-title d-flex align-items-center date text-red">
                        <p>
                        <span>{hd.date}</span>
@@ -566,7 +571,7 @@ if (LoginToken) {
        <Image
         className="up-leaves"
         src={image}
-        />;
+        />
           </>
 
         }
