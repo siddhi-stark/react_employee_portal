@@ -35,7 +35,7 @@ function ProfessionalDetails(props) {
       const s = {...section};
       s.fields = section.fields.map((item) => {
         const itemData = item;
-         if(item.name === 'total_exp' || item.name === 'rel_exp' || item.name === 'current_ctc' || item.name === 'expected_ctc' || item.name === 'resume' || item.name === 'reference'|| item.name === 'resume_source' || item.name === 'upload') itemData.disabled = true;
+         if(item.name === 'total_exp' || item.name === 'rel_exp' || item.name === 'current_ctc' || item.name === 'expected_ctc' || item.name === 'resume' || item.name === 'reference'|| item.name === 'resume_source' || item.name === 'upload' || item.name === 'notice_period') itemData.disabled = true;
          return itemData;
       })
       return s;
