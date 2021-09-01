@@ -81,6 +81,35 @@
         "fields": [],
         "optionCallback": "",
         "options": []
+      },
+      {
+        "name": "notice_period",
+        "type": "text",
+        "label": "Notice Period",
+        "id": "",
+        "placeholder": "eg.2 Months",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
       }
     ],
     "allowedUsers": [],
