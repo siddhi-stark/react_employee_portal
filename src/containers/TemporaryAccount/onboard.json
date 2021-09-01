@@ -398,34 +398,10 @@
 			"value": "1column"
 		},
 		"fields": [],
-		"optionCallback": "",
-		"optionsCallbackUrl": "",
+		"optionCallback": "getDepartment",
+		"optionsCallbackUrl": "InterviewRoundsUrl",
 		"options": [
-			         {
-			         	"id":"1",
-                        "label": "Management",
-                        "value": "Management"
-                    },
-                    {
-                    	"id":"2",
-                        "label": "Development",
-                        "value": "Development"
-                    },
-                    {
-                    	"id":"3",
-                        "label": "Design",
-                        "value": "Design"
-                    },
-                    {
-                    	"id":"4",
-                        "label": "Quality Analyst",
-                        "value": "Quality Analyst"
-                    },
-                    {
-                    	"id":"5",
-                        "label": "Other",
-                        "value": "Other"
-                    }
+			         
 		]
 	}],
 	"allowedUsers": [],

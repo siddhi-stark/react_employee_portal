@@ -59,7 +59,7 @@ function OnBoard(props) {
       email: formValues.email,
       mobile: formValues.mobile,
       password: formValues.password,
-      department: formValues.department ? Number(formValues.department.id) : '',
+      department: formValues.department ? Number(formValues.department.value) : '',
       designation: formValues.designation ? formValues.designation.value : '',
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : '',
       role: formValues.role ? formValues.role.value : '',
@@ -243,30 +243,23 @@ function OnBoard(props) {
   useEffect(() => {
     getTeamLeads();
   }, []);
-      
-  // const getDepartment = async () => {
-  //   const {data} = await AuthApi.getDataFromServer(Api.designationUrl);
-  //   if(!data) {
-  //     // show error
-  //     return;
-  //   }
-    
-  //   const dpOptions = [];
-  //   data.data.map((op) => {
-  //     // Change appropriate keys
-  //     dpOptions.push({label: op.title, value: op.id});
-  //     return op;
-  //   });
-  //   const allOptions = {
-  //     ...options,
-  //     department: dpOptions
-  //   };
-  //   updateOptions(allOptions);
-  // }
 
-  // useEffect(() => {
-  //   getDepartment();
-  // }, []);
+
+  const getDepartment = async () => {
+    const {data} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=department`);
+    
+    const dpOptions = await data && data.data.department.length > 0 && data.data.department.map((op) => {
+      return { label: op.name, value: op.id };
+    });
+
+    options.department = dpOptions;
+    const allOptions = options;
+    await updateOptions({...allOptions});
+  };
+
+  useEffect(() => {
+    getDepartment();
+  }, []);
  
 	return (
 		<>
