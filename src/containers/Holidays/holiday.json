@@ -59,6 +59,7 @@
 		"callback": "",
 		"callbackUrl": "",
 		"inputToChange": "",
+        "dateFormat": "dd/MM/yyyy",
 		"minDateSelector": "",
 		"maxDateSelector": "",
 		"disabled": false,

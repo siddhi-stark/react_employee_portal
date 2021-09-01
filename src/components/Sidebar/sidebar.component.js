@@ -36,12 +36,11 @@ function Sidebar() {
 const d = new Date();
 const day = d.getDate();
 const n = m_names[d.getMonth()];
-console.log('day',day); 
 
-const time = new Date();
-console.log(
-  time.toLocaleString('en-US', { hour: 'numeric', hour12: true })
-); 
+// const time = new Date();
+// console.log(
+//   time.toLocaleString('en-US', { hour: 'numeric', hour12: true })
+// ); 
 
 
   const onSubActiveClass = () => {
@@ -115,23 +114,22 @@ console.log(
   return true;
 };
 
-function formatAMPM(date) {
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ampm = hours >= 12 ? 'pm' : 'am';
-  const hoursNew = hours % 12; // eslint-disable-line
-  const hoursN = hoursNew ? hoursNew : 12; //  eslint-disable-line
-  const minutesN = minutes < 10 ? '0'+minutes : minutes; //  eslint-disable-line
-  const strTime = hoursN + ':' + minutesN + ' ' + ampm; //  eslint-disable-line
-  return strTime;
-}
+// function formatAMPM(date) {
+//   const hours = date.getHours();
+//   const minutes = date.getMinutes();
+//   const ampm = hours >= 12 ? 'pm' : 'am';
+//   const hoursNew = hours % 12; // eslint-disable-line
+//   const hoursN = hoursNew ? hoursNew : 12; //  eslint-disable-line
+//   const minutesN = minutes < 10 ? '0'+minutes : minutes; //  eslint-disable-line
+//   const strTime = hoursN + ':' + minutesN + ' ' + ampm; //  eslint-disable-line
+//   return strTime;
+// }
 
 // console.log(formatAMPM(new Date));
 
 
   return (
     <>
-    {console.log('time',formatAMPM(new Date))}
       <div className="main-sidebar main-sidebar-sticky side-menu ps">
         <div className="sidemenu-logo">
           <a className="main-logo" href="/">
@@ -282,7 +280,6 @@ function formatAMPM(date) {
                 {
                   birthdays && birthdays.map((bday) => (
                     <>
-                    {console.log('day === Number(birthdays.dob)',bday.dob,Number(bday.dob) >= day)}
                   <li className="text-red">
                     <a 
                     href="#">

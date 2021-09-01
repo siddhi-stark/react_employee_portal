@@ -81,39 +81,14 @@ function Employee() {
   const [employeeData, setEmployeeData] = useState([]);
   const [employeetwId, setEmployeeTwId] = useState('');
   const [joiningDate, setJoiningDate] = useState('');
+  const [newDepartment,setNewDepartment] = useState([]);
   let timmer = null;
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
-  const Department = [
-    {
-      id: 1,
-      value: 'Management',
-      label: 'Management',
-    },
-    {
-      id: 2,
-      value: 'Development',
-      label: 'Development',
-    },
-    {
-      id: 3,
-      value: 'Design',
-      label: 'Design',
-    },
-    {
-      id: 4,
-      value: 'Quality Analyst',
-      label: 'Quality Analyst',
-    },
-    {
-      id: 5,
-      value: 'Other',
-      label: 'Other',
-    },
-  ];
+ 
 
   const columns = [
     {
@@ -279,9 +254,12 @@ function Employee() {
         return tw;
       });
 
-      Department.map((dept) => {
+      newDepartment.map((dept) => {
         if (data.data.department_id === dept.id) {
-          setSelectedDepartment(dept);
+           setSelectedDepartment({
+              id: dept.id,
+              label: dept.name,
+            });
         }
         return dept;
       });
@@ -315,6 +293,17 @@ function Employee() {
       setDesignation(data.data);
     }
   };
+
+  const getNewDapartment = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=department`
+      
+    );
+    if (data && data.data) {
+      setNewDepartment(data.data.department);
+    }
+  };
+
 
   const getTwEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -350,19 +339,7 @@ function Employee() {
     }
   };
 
-  const getDepartment = () => {
-    if (!Department) return [];
-    const depart = [];
-    Department.map((dep) => {
-      return depart.push({
-        label: dep.label,
-        id: dep.id,
-        value: dep.value,
-      });
-    });
-    return depart;
-  };
-
+  
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
@@ -392,7 +369,8 @@ function Employee() {
       getRole();
       getManager();
       getTeamLead();
-      getDepartment();
+      // getDepartment();
+      getNewDapartment();
     }
   }, [addButton]);
 
@@ -633,6 +611,20 @@ function Employee() {
     });
     return options;
   };
+
+  const getDepartment = () => {
+    if (!newDepartment) return [];
+    const depart = [];
+    newDepartment.map((dep) => {
+      return depart.push({
+        label: dep.name,
+        id: dep.id,
+        value: dep.name,
+      });
+    });
+    return depart;
+  };
+
 
   const getTeamLeadList = () => {
     if (!teamLead) return [];
@@ -1115,7 +1107,7 @@ function Employee() {
                   options={getDepartment()}
                   placeholder="Select Department"
                   defaultValue={selectedDepartment}
-                  onSelectHandler={(select) => setSelectedDepartment(select)}
+                  onSelectHandler={(select) => {setSelectedDepartment(select);console.log('select',select)}}
                   isMulti={false}
                   errorMessage={validator.message(
                     'Department',
