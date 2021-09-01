@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
-import { Image } from 'react-bootstrap';
+import { Image, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
@@ -225,6 +225,8 @@ function EmployeeProfile(props) {
           <Breadcrumb items={items} />
         </div>
       </div>
+
+      <Button className="float-end mt-2 mb-2 mr-3" onClick={() => history.push('/employees')} >Back</Button>
       <div className="col-xl-12" id="main-content">
         <div className="employee-new-profile">
           <div className="profile-bg">
