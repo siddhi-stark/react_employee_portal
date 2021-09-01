@@ -24,7 +24,7 @@ function Leaves() {
 							if(status_name !== 'Pending' || status_name === 'Approved'){
 								history.push(`/edit-leave/${id}`, { isViewLeave : 'true' });
 							} else {
-								history.push(`/edit-leave/${id}`);
+								history.push(`/edit-leave/${id}`,{ isViewLeave : 'false', isView: 'false' });
 							}
 					}}
 				>
@@ -194,7 +194,7 @@ function Leaves() {
 										<a
 											href="#"
 											onClick={() => {
-												history.push('/add-leave');
+												history.push('/add-leave',{ isViewLeave : 'true' });
 											}}
 											className="btn-link"
 										>
