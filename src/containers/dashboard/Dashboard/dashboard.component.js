@@ -181,7 +181,7 @@ function Dashboard() {
   };
 
 const getAppliedLeaves = async () => {
-    const endPoint = `${Api.leavesApplied}?sort_by=date&limit=2`;
+    const endPoint = `${Api.leavesApplied}?sort_by=leave_from_date&limit=2`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
       setLeaves(data.data);
