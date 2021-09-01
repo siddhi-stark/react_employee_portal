@@ -28,7 +28,7 @@ function ProfessionalDetails(props) {
 
   useEffect(() => {
     // if(Number(currentUser) !== 4 || Number(currentUser) !== 3) return; 
-    if(Number(currentUser) === 4 || Number(currentUser) === 3){
+    if((Number(currentUser) === 2) || Number(currentUser) === 4 || Number(currentUser) === 3){
       const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section)=>{
 
@@ -166,7 +166,7 @@ function ProfessionalDetails(props) {
       submitBtnText="Save"
       showResetBtn={false}
       resetBtnText="Clear"
-      btnContainerClass={`form-submit-buttons mb-5 ${(Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''}`}
+      btnContainerClass={`form-submit-buttons mb-5 ${(Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''}`}
       // btnContainerClass={`form-submit-buttons ${id ? 'd-none' : ''}`}
       isStepForm={false}
       onFormReset={() => {}}
