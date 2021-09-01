@@ -561,6 +561,11 @@ function RecruitmentApplicationComponent() {
               >
                 All
               </a>
+              </>
+              )}
+            
+              {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
+                <>
               <a
                 href="#"
                 className={`ml-2 mb-2 ${
@@ -573,10 +578,6 @@ function RecruitmentApplicationComponent() {
               >
                 Selected
               </a>
-              </>
-              )}
-              {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
-                <>
                   <a
                     href="#"
                     className={`ml-2 mb-2 ${

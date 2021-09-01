@@ -173,7 +173,7 @@ function Dashboard() {
   };
 
  const getUpcomingHoliday = async () => {
-    const endPoint = `${Api.holidayUrl}?sort_by=date&limit=2`;
+    const endPoint = `${Api.holidayUrl}?sort_by=date&sort_direction=ascending&limit=2`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
       setHolidays(data.data);
@@ -411,6 +411,14 @@ if (LoginToken) {
                 <div className="card">
                   <div className="table-title">
                     <h5 className="card-title">Timesheet</h5>
+                      <Image 
+                         className="up-leaves"
+                           src="/images/redirect.png"
+                           onClick={() => {
+                             history.push('/report');
+                             onViewButtonClick();
+                           }}
+                           />
                   </div>
                   <br />
                   <div className="table-responsive">
@@ -432,15 +440,6 @@ if (LoginToken) {
                       )}
                     />
                   </div>
-                  <UserRestrictions permittedUsers={[1,2,3,4,5,6]} roleId={userRole}>
-                  <div className="d-flex justify-content-end mr-3">
-                    <Button onClick={()=> 
-                      {
-                        history.push('/report');
-                        onViewButtonClick();
-                    }}>View All</Button>
-                 </div>
-                  </UserRestrictions>
                 </div>
               </div>
             </UserRestrictions>
@@ -491,7 +490,7 @@ if (LoginToken) {
 
                  <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
 
-                {leaves && leaves.length >= 1 ? (
+                
 
                  <div className="col-xl-6">
                   <div className="upcoming-bg faint-orange">
@@ -503,6 +502,9 @@ if (LoginToken) {
                           alt="Upcoming event"
                         />
                         <p>Leaves</p>
+
+                 
+
                          <Image 
                          className="up-leaves"
                            src="/images/redirect.png"
@@ -512,6 +514,9 @@ if (LoginToken) {
                            }}
                            />
                       </div>
+
+                       {leaves && leaves.length >= 1 ? (
+                         <>
 
                       {leaves && leaves.map((lv) => (
                         <>
@@ -524,11 +529,13 @@ if (LoginToken) {
                       </div>
                         </>
                         ))}
+                         </>
+                    ) : 'Thank you, No leave applied yet.'}
+
 
                     </div>
                   </div>
                 </div>
-                  ) : ''}
                  </UserRestrictions>
               </div>
             </div> 

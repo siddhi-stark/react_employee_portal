@@ -219,7 +219,7 @@ function Leaves() {
 									},
 								}}
 								emptyRender={() => {
-									return 'No record found.';
+									return 'No Leaves Applied Yet.';
 								}}
 							/>
 						</Card.Body>
