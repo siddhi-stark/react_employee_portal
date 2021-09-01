@@ -32,7 +32,7 @@ function BasicInformation(props) {
   useEffect(() => {
     const formSchema = [...FormSections];
     // if ((Number(currentUser) !== 4) || (Number(currentUser) !== 3)) return;
-    if ((Number(currentUser) === 4) || (Number(currentUser) === 3)) {
+    if ((Number(currentUser) === 2) || (Number(currentUser) === 4) || (Number(currentUser) === 3)) {
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
@@ -217,10 +217,10 @@ function BasicInformation(props) {
         callbacks={{}}
         defaultFormValues={defaultValues}
         currentUser={currentUser}
-        submitBtnText={(Number(currentUser) === 4 || Number(currentUser) === 3) ? '' : 'Save'}
+        submitBtnText={(Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? '' : 'Save'}
         // btnContainerClass='form-submit-buttons'
         btnContainerClass={`form-submit-buttons mb-4 ${
-          (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''
+          (Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''
         }`}
         showResetBtn={false}
         resetBtnText="Clear"
