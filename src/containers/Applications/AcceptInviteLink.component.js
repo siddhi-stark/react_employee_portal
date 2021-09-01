@@ -28,7 +28,6 @@ function AcceptInviteLink(props) {
         JSON.stringify(candidateData)
       );
     }
-    console.log('data',data);
 
     if (!data) {
       swal('Token is invalid', '', 'error');
@@ -39,7 +38,6 @@ function AcceptInviteLink(props) {
   useEffect(() => {
     dispatch({ type: 'LOGIN', value: false });
     const matchUrltoken = props.match.params.offerToken;
-    console.log('matchUrltoken',matchUrltoken);
     setToken(matchUrltoken);
     if (!matchUrltoken) {
       window.location = '/login';

@@ -1107,7 +1107,7 @@ function Employee() {
                   options={getDepartment()}
                   placeholder="Select Department"
                   defaultValue={selectedDepartment}
-                  onSelectHandler={(select) => {setSelectedDepartment(select);console.log('select',select)}}
+                  onSelectHandler={(select) => setSelectedDepartment(select)}
                   isMulti={false}
                   errorMessage={validator.message(
                     'Department',
