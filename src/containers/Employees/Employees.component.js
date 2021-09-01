@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import customFunctions from '../../helper/customFunctions';
 
 import CurrentEmployee from './CurrentEmployee.component';
 import NoticePeriod from './NoticePeriod.component';
@@ -13,6 +14,8 @@ function Employees() {
   const [title, setTitle] = useState('');
   const [key, setKey] = useState('currentEmployee');
   const items = [{ to: '/', label: 'Home' }, { label: 'Employees' }];
+
+  const group = customFunctions.getLocalStorage('group');
 
   useEffect(() => {
     
@@ -51,17 +54,23 @@ function Employees() {
             )}
             </Tab>
 
+            {Number(group) !== 2 ? (
+
             <Tab eventKey="noticePeriod" title="Serving Notice Period">
             { (key ==='noticePeriod') && (
               <NoticePeriod key={key}/>
             )}
             </Tab>
+              ) : ''}
+
+              {Number(group) !== 2 ? (
 
             <Tab eventKey="oldEmployee" title="Old Employee">
             { (key ==='oldEmployee') && (
               <OldEmployee />
             )}
             </Tab>
+                ) : ''}
           </Tabs>
         </div>
       </section>

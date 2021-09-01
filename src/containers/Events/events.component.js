@@ -32,6 +32,8 @@ function Events() {
   const handleActionCallback = (row) => {
     return (
       <>
+      {Number(employeeRole) !== 2 && (
+
         <a
           href="/"
           className="pl-2"
@@ -43,7 +45,8 @@ function Events() {
         >
           <Image alt="view" src="/images/eye.svg" />
         </a>
-       {(Number(employeeRole) === 4 || Number(employeeRole) === 3 ? '' : (
+        ) }
+       {(Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2 ? '' : (
          <>
         <a
           href="/"
@@ -83,8 +86,8 @@ function Events() {
       label: 'Date',
     },
     {
-      id: 'action',
-      label: 'Action',
+      id: Number(employeeRole) !== 2 ? 'action' : '',
+      label: Number(employeeRole) !== 2 ? 'Action' : '',
       render: handleActionCallback,
     },
   ];
