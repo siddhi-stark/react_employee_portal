@@ -282,20 +282,20 @@ function formatAMPM(date) {
                 {
                   birthdays && birthdays.map((bday) => (
                     <>
-                    {console.log('day === Number(birthdays.dob)',day === Number(bday.dob))}
+                    {console.log('day === Number(birthdays.dob)',bday.dob,Number(bday.dob) >= day)}
                   <li className="text-red">
                     <a 
                     href="#">
-                    {day === Number(bday.dob) ? (
+             
                       <>
 
                      <p className="bday-date">
                        <img src="/images/calendar-img.png"  alt="Upcoming event"/>
-                       <span>{day === Number(bday.dob) ? bday.dob : ''}</span>
+                       <span>{Number(bday.dob) >= day ? bday.dob : ''}</span>
                      </p> 
                      <p>{bday.name}</p>
                       </>
-                      ) : ''}
+                    
                     </a>
                   </li>
                   </>
