@@ -549,8 +549,10 @@ function RecruitmentApplicationComponent() {
               )}
             </div>
             <div className="recruitment-links-wrapper">
-            {!(Number(group) === 2 || Number(group) === 3) && (
-              <>
+           
+            
+              {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
+                <>
               <a
                 href="#"
                 className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
@@ -561,11 +563,6 @@ function RecruitmentApplicationComponent() {
               >
                 All
               </a>
-              </>
-              )}
-            
-              {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
-                <>
               <a
                 href="#"
                 className={`ml-2 mb-2 ${
