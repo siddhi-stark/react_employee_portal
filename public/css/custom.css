@@ -10871,6 +10871,22 @@ p.employee-details {
 table.quotes-wrapper thead th {
   white-space: nowrap; }
 
+.table-projects.time-sheet-table .table-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+  .table-projects.time-sheet-table .table-title h5, .table-projects.time-sheet-table .table-title .h5 {
+    font-size: 12px !important; }
+  .table-projects.time-sheet-table .table-title img.up-leaves {
+    max-width: 15px;
+    width: 100%; }
+
 /*@media (min-width: 576px){
     .bd-content .highlight {
         margin-right: 0;
@@ -11583,6 +11599,9 @@ table tbody tr td a:hover {
     justify-content: space-between; }
   .upcoming-event-box .date span {
     font-size: 11px; }
+  .change-password-type .input-group-append {
+    right: 2px;
+    top: 30px; }
   .birthday-wishes-chart ul li a {
     font-size: 11px; }
   .birthday-wishes-chart .upcoming-event-box ul {
@@ -11633,11 +11652,25 @@ table tbody tr td a:hover {
     .holidays-applied .upcoming-event-box .upcoming-event-img p {
       margin-left: 4px; }
     .holidays-applied .upcoming-event-box .upcoming-event-img .up-holday, .holidays-applied .upcoming-event-box .upcoming-event-img .up-leaves {
-      margin-left: 4px; } }
+      margin-left: 4px; }
+  .holidays-applied .upcoming-event-box {
+    font-size: 11px; }
+  .card-title {
+    font-size: 12px !important; }
+  .weekly-status ul li .status-label {
+    font-size: 11px; } }
 
 @media (max-width: 1280px) {
   .content-area .row [class*="col"] {
-    width: 100%; } }
+    width: 100%; }
+  table thead th {
+    font-size: 11px !important; }
+  table th, table td {
+    font-size: 11px !important; }
+  .content-area .row td {
+    width: auto !important; }
+  .card-title {
+    font-size: 11px !important; } }
 
 @media (max-width: 1280px) {
   .weekly-status-box .card-body {

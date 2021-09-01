@@ -91,7 +91,7 @@ function AllReports() {
 
       const row = [];
       data.data.map((report, i) => {
-        const date = customFunctions.getDMYDate(report.created_at);
+        const date = report.created_at;
         const dt = new Date(date).getTime();
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),

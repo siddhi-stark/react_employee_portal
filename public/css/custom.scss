@@ -2593,6 +2593,23 @@ table.quotes-wrapper {
     }
 }
 
+.table-projects{
+    &.time-sheet-table {
+        .table-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            h5 {
+                font-size: 12px !important;
+            }
+            img.up-leaves {
+                max-width: 15px;
+                width: 100%;
+            }
+        }
+    }
+}
+
 
 
 
@@ -3465,7 +3482,12 @@ table tbody tr td a:hover {
             }
         }
     }
-
+    .change-password-type {
+        .input-group-append {
+            right: 2px;
+            top: 30px;
+        }
+    }
     .birthday-wishes-chart {
         ul {
             li {
@@ -3580,6 +3602,17 @@ table tbody tr td a:hover {
             }*/
         }        
     }
+    .holidays-applied {
+        .upcoming-event-box {
+            font-size: 11px;
+        }
+    }
+    .card-title {
+        font-size: 12px !important;
+    }
+    .weekly-status ul li .status-label {
+        font-size: 11px;
+    }
 }
 @media (max-width: 1280px) {
     .content-area {
@@ -3588,6 +3621,18 @@ table tbody tr td a:hover {
                 width: 100%;
             }
         }
+    }
+    table thead th {
+        font-size: 11px !important;
+    }
+    table th, table td {
+        font-size: 11px !important;
+    }
+    .content-area .row td {
+        width: auto !important;
+    }
+    .card-title {
+        font-size: 11px !important;
     }
 }
 

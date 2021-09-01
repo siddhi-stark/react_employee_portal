@@ -390,9 +390,9 @@
 					{
 						"name": "manager_mobile",
 						"type": "number",
-						"label": "Manager Mobile",
+						"label": "Manager Contact No",
 						"id": "",
-						"placeholder": "Manager Mobile",
+						"placeholder": "HR Contact No",
 						"inputClass": "",
 						"containerClass": "",
 						"validations": [],
