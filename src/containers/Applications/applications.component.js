@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Tabs, Tab } from 'react-bootstrap';
+import { withRouter, useHistory } from 'react-router-dom';
+import { Tabs, Tab, Button } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import BasicInformation from './BasicINfo.component';
@@ -22,6 +22,7 @@ function Applications(props) {
   const [isBI, setIsBI] = useState(true);
   const [isPD, setIsPD] = useState(true);
   const [key, setKey] = useState('currentEmployee');
+  const history = useHistory();
 
   const group = customFunctions.getLocalStorage('group');
 
@@ -44,6 +45,7 @@ function Applications(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
+        <Button className="float-end" onClick={()=>history.push('/recruitment')}>Back</Button>
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
         <Breadcrumb items={items} />
         <section className="content-area">

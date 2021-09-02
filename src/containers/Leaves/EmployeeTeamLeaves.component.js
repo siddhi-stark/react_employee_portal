@@ -85,10 +85,12 @@ function EmployeeTeamLeaves() {
           <>
          { status_name === 'Pending' ? (
                 <>
-                  <Image
+                 <Image
                     title = "Accept"
                     onClick={() => {
-                      submitForm(id);
+                      setLeaveId(id);
+                      setStatusId(2);
+                      setModalShow(true);
                     }}
                     alt="Accept"
                     src="/images/success.svg"
@@ -96,7 +98,8 @@ function EmployeeTeamLeaves() {
                   <Image
                     title = "Declined"
                     onClick={() => {
-                      setStatusId(id);
+                      setLeaveId(id);
+                      setStatusId(3);
                       setModalShow(true);
                     }}
                     alt="Declined"
@@ -124,6 +127,7 @@ function EmployeeTeamLeaves() {
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [modalShow, setModalShow] = useState(false);
   const [statusId, setStatusId] = useState('');
+  const [leaveId, setLeaveId] = useState('');
 
   const history = useHistory();
 
@@ -165,54 +169,6 @@ function EmployeeTeamLeaves() {
     getRowData(1);
     setTitle('Leaves');
   }, []);
-
-    // Submit Form
-  const submitForm = async (idValue) => {
-    const postData = {
-      id: idValue,
-      status: 2,
-    };
-
-    swal({
-      title: 'Are you sure?',
-      text: `You want to accept the leave ?`,
-      icon: 'warning',
-      dangerMode: true,
-      buttons: true,
-      closeOnClickOutside: false,
-      allowOutsideClick: false,
-    }).then(async (result) => {
-      if (result) {
-      const { data, message } = await AuthApi.putDataToServer(
-        Api.leavesUrl,
-        postData
-      );
-
-      if (!data) {
-        swal(message, '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          getRowData(1);
-          swal.close();
-        });
-        // show error
-        // return;
-      } else {
-        swal(data && data.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-        }).then(() => {
-          getRowData(1);
-          swal.close();
-        });
-       }
-      }
-    });
-    // Perform success actions
-  };
 
   return (
     <>
@@ -265,6 +221,7 @@ function EmployeeTeamLeaves() {
               <AddNote
                 show={modalShow}
                 statusId={statusId}
+                leaveId={leaveId}
                 handleModalCLose={(e) => setModalShow(e)}
                 onStatusUpdate={() => {
                   getRowData(1);

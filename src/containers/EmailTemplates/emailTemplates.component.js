@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import {
@@ -30,6 +30,14 @@ function EmailTemplatesComponent() {
   const [placeholdersData, setPlaceholdersData] = useState([]);
   const [toggle, setToggle] = useState(false);
   let [description] = useState(EditorState.createEmpty());
+  const history = useHistory();
+
+  useEffect( async () => {
+    const roleId = await localStorage.getItem('group');
+    if (Number(roleId) !== 1) {
+      history.push('/');
+    }
+  }, []);
 
   const getEmailTemplateData = async () => {
     const { data, message } = await AuthApi.getDataFromServer(

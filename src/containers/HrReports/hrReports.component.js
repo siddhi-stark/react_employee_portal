@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import Doughnut from 'stark-doughnut-graph';
 // import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -33,13 +33,13 @@ function HrReports() {
     }
     return sectionData;
   });
-
  
 const [rowData, setRowData] = useState([]);
 const [totalCount, setTotalCount] = useState(10);
 const [limit, setLimit] = useState(10);
 const [currentPage, setCurrentPage] = useState(1);
 const [filterData, setFilterData] = useState({});
+const history = useHistory();
 
   const columns = [
     {
@@ -73,7 +73,13 @@ const [filterData, setFilterData] = useState({});
   const [legendSelectedData, setLegendSelectedData] = useState([]); // eslint-disable-line
   const graphref = useRef();
 
-  
+  useEffect( async () => {
+    const roleId = await localStorage.getItem('group');
+    if (Number(roleId) !== 1) {
+      history.push('/');
+    }
+  }, []);
+
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));

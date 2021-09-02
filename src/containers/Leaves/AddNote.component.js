@@ -16,6 +16,7 @@ function AddNote(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote, setShowNote] = useState(false);
   const [leaveId, setLeaveId] = useState(null);
+  const [statusId, setStatusId] = useState(null);
 
   // Get user role
   const getUserRole = async () => {
@@ -29,9 +30,11 @@ function AddNote(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    console.log('statusId',statusId);
+    const reasonLabel = (statusId === 2) ? 'approve' : 'decline';
     const postData = {
       id: leaveId,
-      status: 3,
+      status: Number(statusId),
       declined_reason: formValues ? formValues.notes : '',
     };
 
@@ -39,7 +42,7 @@ function AddNote(props) {
 
     swal({
       title: 'Are you sure?',
-      text: `You want to declined the leave ?`,
+      text: `You want to ${reasonLabel} the leave ?`,
       icon: 'warning',
       dangerMode: true,
       buttons: true,
@@ -90,7 +93,8 @@ function AddNote(props) {
       getData();
     }
     setShowNote(props.show);
-    setLeaveId(props.statusId);
+    setLeaveId(props.leaveId);
+    setStatusId(props.statusId);
   }, []);
 
   const onCancelButton = () => {
