@@ -287,10 +287,6 @@ if (LoginToken) {
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
                        "{quotesContent}" <br />
-                       "Today is your birthday."
-                       <Button onClick={() => {
-                             history.push('/birthday-wishes');
-                           }} >Click Here</Button>
                       </p>
                     </blockquote>
                   </div>
