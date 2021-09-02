@@ -33,7 +33,6 @@ function Header() {
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
 
     if (data && data.data) {
-      customFunctions.setLocalStorage('department',data.data.department_id);
 
       setDesignation(data.data.designation_name);
       setEmpId(data.data.emp_code);
