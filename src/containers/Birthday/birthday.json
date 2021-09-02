@@ -1,0 +1,201 @@
+[{
+	"sectionName": "birthdayform",
+	"sectionTitle": "Birthday Form",
+	"layout": {
+		"label": "2 Column",
+		"value": "2column"
+	},
+	"containerClass": "",
+	"displaySection": true,
+	"displaySectionTitle": false,
+	"fields": [{
+		"name": "type",
+		"type": "select",
+		"label": "Type",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "getType",
+		"optionsCallbackUrl": "employeeUrl",
+		"options": []
+	}, {
+		"name": "message",
+		"type": "text",
+		"label": "Message",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "employee",
+		"type": "select",
+		"label": "Employee",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "getEmployee",
+		"optionsCallbackUrl": "employeeUrl",
+		"options": []
+	}, {
+		"name": "notifyEmployee",
+		"type": "text",
+		"label": "NotifyEmployee",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [],
+		"displayWhen": {},
+		"haveValidations": "false",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "notifyall",
+		"type": "checkbox",
+		"label": "Notifyall",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [],
+		"displayWhen": {},
+		"haveValidations": "false",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": [
+			 		{
+                        "label": "",
+                        "value": "true"
+                    }
+		]
+	}, {
+		"name": "image",
+		"type": "file",
+		"label": "Image",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "",
+		"validations": [],
+		"displayWhen": {},
+		"haveValidations": "false",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}],
+	"allowedUsers": [],
+	"sectionLayout": "2column"
+}]

@@ -285,12 +285,15 @@ const n = m_names[d.getMonth()];
                     href="#">
              
                       <>
-
+                      {Number(bday.dob) >= day ? (
+                        <>
                      <p className="bday-date">
                        <img src="/images/calendar-img.png"  alt="Upcoming event"/>
                        <span>{Number(bday.dob) >= day ? bday.dob : ''}</span>
                      </p> 
                      <p>{bday.name}</p>
+                     </>
+                        ) : ''}
                       </>
                     
                     </a>

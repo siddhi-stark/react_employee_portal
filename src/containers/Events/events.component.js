@@ -14,7 +14,6 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 function Events() {
-  // Declare variable
 
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -92,7 +91,6 @@ function Events() {
     },
   ];
 
-  // Declare methods
   const getRowData = async () => {
     const endPoint =
       `${Api.eventsUrl}?type=all`;

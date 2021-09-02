@@ -47,7 +47,6 @@ function Holidays() {
 		);
 	};
 
-	// Declare columns
 	const columns = [
 
 		{

@@ -20,11 +20,10 @@ function HrReports() {
   ];
 
   const title = 'HR Reports';
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-  // const [allDate, setAllDate] = useState('');
+
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
     const sectionData = section;
@@ -35,7 +34,6 @@ function HrReports() {
     return sectionData;
   });
 
-  // Declare variable
  
 const [rowData, setRowData] = useState([]);
 const [totalCount, setTotalCount] = useState(10);
@@ -43,7 +41,6 @@ const [limit, setLimit] = useState(10);
 const [currentPage, setCurrentPage] = useState(1);
 const [filterData, setFilterData] = useState({});
 
-  // Declare columns Upcoming
   const columns = [
     {
       id: 'name',
@@ -68,21 +65,15 @@ const [filterData, setFilterData] = useState({});
       selectedCount:null,
       finalCount:null
   };
-  // declare state graph
+
   const [shortlistedGraph, setShortlistedGraph] = useState(initialState);
   const [graphData, setGraphData] = useState([]);
   const [shortlistedData, setShortlistedData] = useState([]);
   const [legendData, setLegendData] = useState([]); // eslint-disable-line
   const [legendSelectedData, setLegendSelectedData] = useState([]); // eslint-disable-line
-  // const [centerPercentage, setCenterPercentage] = useState(null);
-  // const [centerShortlistPercentage, setCenterShortlistPercentage] = useState(null);
   const graphref = useRef();
 
-  // some code
-
-  // Get user role Filter
-
-  // Get user role
+  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -93,7 +84,6 @@ const [filterData, setFilterData] = useState({});
     getUserRole();
   }, []);
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setFilterData({
       hr_id: formValues.hr_name && formValues.hr_name.value,
@@ -107,7 +97,6 @@ const [filterData, setFilterData] = useState({});
   const getHrName = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=5&is_dropdown=1`);
     if (!data) {
-      // show error
       return;
     }
 
@@ -132,13 +121,11 @@ const [filterData, setFilterData] = useState({});
   const getPosition = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
@@ -158,13 +145,11 @@ const [filterData, setFilterData] = useState({});
   const getTechnology = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
@@ -181,7 +166,6 @@ const [filterData, setFilterData] = useState({});
     getTechnology();
   }, []);
 
-  // Declare methods Up coming
 
 const getRowData = async (pageNo=1) =>{
     const page = pageNo || currentPage;
@@ -219,8 +203,6 @@ useEffect(()=>{
     const { data } = await AuthApi.getDataFromServer(url);
 
     if(data){
-      // const percentage = (data.data.shortlisted + data.data.pending + data.data.declined) / 3;
-      // const per = (data.data.selected + data.data.rejected) / 2;
       const graph = [
         { x: 'Shortlisted', y: data.data.shortlisted_percentage },
         { x: 'Rejected', y: data.data.declined_percentage },
@@ -256,8 +238,6 @@ useEffect(()=>{
       setLegendData([...legData]);
       setLegendSelectedData([...selectedlegData]);
       setGraphData([...graph]);
-      // setCenterShortlistPercentage(per.toFixed(2));
-      // setCenterPercentage(percentage.toFixed(2));
     }
   };
 

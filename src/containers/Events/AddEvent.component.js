@@ -21,7 +21,6 @@ function AddEvent(props) {
   const [title, setTitle] = useState('Add Event');
   const history = useHistory();
   const ID = props.match.params.id; // eslint-disable-line
-  // const viewID = props.match.params.viewEvent; // eslint-disable-line
   const items = [{ to: '/', label: 'Home' }, { label: ID ? 'Edit Event' : 'Add Event' }]; 
   const [eventId, setEventId] = useState('');
 

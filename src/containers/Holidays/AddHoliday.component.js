@@ -13,7 +13,7 @@ import customFunctions from '../../helper/customFunctions';
 function AddHoliday(props) {
 const viewObj = props;
 const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
-	// Variable declarations
+
 	const [defaultValues, updateDefaultValues] = useState({});
 	const [options, updateOptions] = useState({}); // eslint-disable-line
 	const [currentUser, updateCurrentUser] = useState(0);
@@ -66,7 +66,6 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	getUserRole();
 	}, []);
 
-	// Submit Form
 	const submitForm = async (formValues) => {
 
 		const postData = {
@@ -90,10 +89,8 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 			history.push('/holidays');
 			setHolidayId('');
 		}
-		// Perform success actions
 	};
 
-	// Get data for form
 	const getData = async (id) => {
 		const { data } = await AuthApi.getDataFromServer(`${Api.holidayUrll}${id}/`);
 	   
@@ -104,7 +101,6 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 
 	};
 
-	// Call get data method on load
 	useEffect(() => {
 		const viewID = props.match.params.viewID;
 		setHolidayId(hId);

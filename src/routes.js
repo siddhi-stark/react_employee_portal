@@ -51,6 +51,7 @@ import TeamLeaves from './containers/Leaves/TeamLeaves.component';
 import AddLeave from './containers/Leaves/AddLeave.component';
 import TeamAddLeave from './containers/Leaves/TeamAddLeave.component';
 import EmployeeTeamLeaves from './containers/Leaves/EmployeeTeamLeaves.component';
+import AddBirthday from './containers/Birthday/AddBirthday.component';
 
 function Routes() {
   return (
@@ -113,6 +114,7 @@ function Routes() {
       <Route path="/view-leave/:viewLeaveId" exact component={TeamAddLeave} />
       <Route path="/team-leaves" exact component={TeamLeaves} />
       <Route path="/employee-leaves" exact component={EmployeeTeamLeaves} />
+      <Route path="/add-birthday" exact component={AddBirthday} />
       <Route component={NotFound} />
     </Switch>
   );
