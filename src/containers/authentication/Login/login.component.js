@@ -105,6 +105,7 @@ function Login(props) {
       CustomFunctions.setLocalStorage('userId', data.data.id);
       CustomFunctions.setLocalStorage('password', envryptedPassword.toString());
       CustomFunctions.setLocalStorage('group', data.data.group);
+      CustomFunctions.setLocalStorage('department',data.data.department_id);
       CustomFunctions.setLocalStorage('name', data.data.full_name);
       setDisableButton(false);
       dispatch({ type: 'LOGIN', value: true });
