@@ -111,13 +111,6 @@ function Quotes() {
     }
   };
 
-  useEffect( async () => {
-    const roleId = await localStorage.getItem('group');
-    if (Number(roleId) !== 1 && Number(roleId) !== 3 && Number(roleId) !== 5) {
-      history.push('/');
-    }
-  }, []);
-
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
