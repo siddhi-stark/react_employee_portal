@@ -38,6 +38,7 @@ function Header() {
       setEmpId(data.data.emp_code);
       setEmployeeName(data.data.full_name);
       setImageProfile(data.data.profile_image_url);
+      customFunctions.setLocalStorage('greetingId',data.data.greeting);
     }
     return true;
   };

@@ -135,6 +135,8 @@ export default class Api extends Component {
 
   static greetingsUrl =  `${Api.baseUrl}greetings/`;
 
+  static greetingWishesUrl =  `${Api.baseUrl}greeting-wishes/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 

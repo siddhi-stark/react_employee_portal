@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import { Image, Card } from 'react-bootstrap';
+import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -9,7 +10,7 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 function Greetings() {
-	const handleActionCallback = () => {
+	const handleActionCallback = (row) => {
 		return (
 			<>
 				<a
@@ -18,7 +19,7 @@ function Greetings() {
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						// history.push(`/edit-event/${row.id}`, { isView: 'true' });
+						history.push(`/edit-birthday/${row.id}`, { isView: 'true' });
 					}}
 				>
 					<Image alt="view" src="/images/eye.svg" />
@@ -29,7 +30,7 @@ function Greetings() {
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						// history.push(`/edit-event/${row.id}`);
+						history.push(`/edit-birthday/${row.id}`);
 					}}
 				>
 					<Image src="/images/edit-button.svg" />
@@ -40,7 +41,7 @@ function Greetings() {
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						// removeHoliday(row.id);
+						deleteBirthday(row.id);
 					}}
 				>
 					<Image src="/images/delete.png" />
@@ -49,7 +50,6 @@ function Greetings() {
 		);
 	};
 
-	// Declare columns
 	const columns = [
 		{
 			id: 'greet_type_name',
@@ -62,6 +62,17 @@ function Greetings() {
 		{
 			id: 'comment_allow',
 			label: 'Comments',
+			render: ({ comment_allow }) => { // eslint-disable-line
+        return (
+          <>
+            <span>
+              {
+                comment_allow ? 'True' : 'False' // eslint-disable-line
+              }
+            </span>
+          </>
+        );
+      }, 
 		},
 		{
 			id: 'action',
@@ -76,6 +87,7 @@ function Greetings() {
 	const [limit, setLimit] = useState(5);
 	const [currentPage, setCurrentPage] = useState(1);
 	const title = 'Greetings';
+	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
 	// Declare methods
@@ -103,11 +115,47 @@ function Greetings() {
 		getRowData(1);
 	}, []);
 
+	 const deleteBirthday = (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to delete the birthday?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.greetingsUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getRowData(1);
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
+  };
+
 	return (
 		<>
 			<Helmet title={title} />
 			<div className="title-breadcrumb-section">
-				<h2 className="main-content-title tx-24 mg-b-5">Events</h2>
+				<h2 className="main-content-title tx-24 mg-b-5">Greetings</h2>
 				<Breadcrumb items={items} />
 			</div>
 			<section className="content-area">
@@ -115,17 +163,17 @@ function Greetings() {
 					<Card>
 						<Card.Header>
 							<div className="d-flex align-items-center justify-content-between">
-								<h4 className="text-primary mt-2 mb-2">Events</h4>
+								<h4 className="text-primary mt-2 mb-2">Greetings</h4>
 								<div className="d-flex align-items-center justify-content-end">
 									
 										<a
 											href="#"
-											// onClick={() => {
-											// 	history.push('/add-event');
-											// }}
+											onClick={() => {
+												history.push('/add-birthday');
+											}}
 											className="btn-link"
 										>
-											Add Event
+											Add Greeting
 										</a>
 								</div>
 							</div>

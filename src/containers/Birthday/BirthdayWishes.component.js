@@ -1,9 +1,29 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { withRouter } from 'react-router-dom';
 import { Image, Col, Button, Row } from 'react-bootstrap';
 import { TextInput } from '../../components/FormInputs';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function BirthdayWishes() {
+const id = customFunctions.getLocalStorage('greetingId');
+
+const getBirthdayWishes = () => {
+	const endPoint = `${Api.greetingsUrl}${id}/`; 
+
+	const { data } = AuthApi.getDataFromServer(endPoint);
+	if(data) {
+		console.log('data',data);
+	}
+}
+
+
+useEffect(() => {
+getBirthdayWishes();
+},[])
+
+
 	return (
 		<>
 			<div className="profile-bg mt-3">

@@ -290,8 +290,9 @@ const n = m_names[d.getMonth()];
                      <p className="bday-date">
                        <img src="/images/calendar-img.png"  alt="Upcoming event"/>
                        <span>{Number(bday.dob) >= day ? bday.dob : ''}</span>
-                     </p> 
-                     <p>{bday.name}</p>
+                     </p>
+
+                      <p>{bday.name}</p> 
                      </>
                         ) : ''}
                       </>
@@ -319,3 +320,6 @@ const n = m_names[d.getMonth()];
 }
 
 export default Sidebar;
+
+ // <p onClick={() => {customFunctions.setLocalStorage('employeeId',bday.id); history.push('/birthday-wishes')}} // eslint-disable-line 
+ //                      >{bday.name}</p> 
