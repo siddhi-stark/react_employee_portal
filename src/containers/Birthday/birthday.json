@@ -40,7 +40,9 @@
 		"fields": [],
 		"optionCallback": "getType",
 		"optionsCallbackUrl": "employeeUrl",
-		"options": []
+		"options": [
+			
+		]
 	}, {
 		"name": "message",
 		"type": "text",
@@ -107,37 +109,9 @@
 		"optionsCallbackUrl": "employeeUrl",
 		"options": []
 	}, {
-		"name": "notifyEmployee",
-		"type": "text",
-		"label": "NotifyEmployee",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [],
-		"displayWhen": {},
-		"haveValidations": "false",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}, {
-		"name": "notifyall",
-		"type": "checkbox",
-		"label": "Notifyall",
+		"name": "comments",
+		"type": "radio",
+		"label": "Comments",
 		"id": "",
 		"placeholder": "",
 		"inputClass": "",
@@ -163,8 +137,11 @@
 		"optionCallback": "",
 		"options": [
 			 		{
-                        "label": "",
+                        "label": "On",
                         "value": "true"
+                    },{
+                        "label": "Off",
+                        "value": "false"
                     }
 		]
 	}, {

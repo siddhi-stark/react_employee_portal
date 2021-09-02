@@ -84,23 +84,17 @@ function AddBirthday() {
   }, []);
       
   const getEmployee = async () => {
-    const {data} = await AuthApi.getDataFromServer(Api.employeeUrl);
-    if(!data) {
-      // show error
-      return;
-    }
+    // const id = props.match.params.stackId;
+    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
     
-    const dpOptions = [];
-    data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
-      return op;
+    
+     const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.full_name, value: op.id };
+
     });
-    const allOptions = {
-      ...options,
-      employee: dpOptions
-    };
-    updateOptions(allOptions);
+    options.employee = dpOptions;
+    const allOptions = options;
+    await updateOptions({...allOptions});
   }
 
   useEffect(() => {

@@ -11545,6 +11545,15 @@ table tbody tr td a:hover {
 .leave-app-button {
   overflow: hidden; }
 
+.birthday-media-section {
+  padding: 10px; }
+  .birthday-media-section img {
+    max-width: 50px;
+    width: 100%; }
+
+.birthday-block .card {
+  height: calc(100% - 22px); }
+
 /*Pre Code View end*/
 @media (min-width: 992px) {
   .main-sidebar {

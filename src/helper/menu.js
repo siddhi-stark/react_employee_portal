@@ -208,7 +208,7 @@ const menu = [
     path: '/add-birthday',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1],
+    roleaccess: [1,3,5,6],
   },
   {
     title: 'Log Out',
