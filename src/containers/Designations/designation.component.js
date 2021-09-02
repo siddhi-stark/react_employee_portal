@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import {
   Card,
   Row,
@@ -41,6 +41,7 @@ function Designation() {
   const [filterErr, setFilterErr] = useState('');
   const [disableButton, setDisableButton] = useState(false);
   const [cntClearFilter, setCntClearFilter] = useState(0);
+  const history = useHistory();
   let timmer = null;
   const columns = [
     {
@@ -95,14 +96,12 @@ function Designation() {
     },
   ];
 
-//   useEffect(() => {
-// const isAllowed = customFunctions.getLocalStorage('group')
-// if(isAllowed !== 5){
-// history.push('/dashboard');
-// return; // eslint-disable-line
-// }
-// }, []);
-
+ useEffect( async () => {
+    const roleId = await localStorage.getItem('group');
+    if (Number(roleId) !== 1) {
+      history.push('/');
+    }
+  }, []);
 
   useEffect(() => {
     async function getData() {

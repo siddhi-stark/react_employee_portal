@@ -430,18 +430,17 @@ function AddLeave(props) {
             />
   
             <div className="container">
-            {(status === 'Declined') && (
-            <TextInput
-                inputClass="form-control"
-                label="Declined Reason"
-                containerClass="form-group"
-                type="textarea"
-                disabled
-                name="reason"
-                value={reason}
-              />
-             )}
-
+            { leaveId && (
+              <TextInput
+                  inputClass="form-control"
+                  label="Note"
+                  containerClass="form-group"
+                  type="textarea"
+                  disabled
+                  name="reason"
+                  value={reason}
+                />
+            )}
               <div className="mt-3">
                 { (totalCount > 0) && (status === 'Pending') &&  (
                   <>

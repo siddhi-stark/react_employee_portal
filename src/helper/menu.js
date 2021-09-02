@@ -26,7 +26,7 @@ const menu = [
     path: '/emp-timesheet',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1,5, 6],
+    roleaccess: [1,5,4, 6],
   },
   
   {

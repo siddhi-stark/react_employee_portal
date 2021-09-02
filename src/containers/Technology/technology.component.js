@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
@@ -29,6 +29,7 @@ function Technology() {
   const [title, setTitle] = useState('');
   const limit = 10;
   const items = [{ to: '/', label: 'Home' }, { label: 'Technology' }];
+  const history = useHistory();
 
   const handleActionCallback = ({ id }) => {
     return (
@@ -114,9 +115,16 @@ function Technology() {
     setTitle('Technology');
   }, [filterData]);
 
+  useEffect( async () => {
+    const roleId = await localStorage.getItem('group');
+    if (Number(roleId) !== 1) {
+      history.push('/');
+    }
+  }, []);
+
   // Get user role
   const getUserRole = async () => {
-    const roleId = await localStorage.getItem('role');
+    const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
 
