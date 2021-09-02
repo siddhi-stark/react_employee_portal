@@ -203,13 +203,13 @@ const menu = [
     submenu: [],
     roleaccess: [1],
   },
-   {
-    title: 'Birthday',
-    path: '/add-birthday',
-    icon: 'report.svg',
-    submenu: [],
-    roleaccess: [1,3,5,6],
-  },
+  //  {
+  //   title: 'Birthday',
+  //   path: '/greetings',
+  //   icon: 'report.svg',
+  //   submenu: [],
+  //   roleaccess: [1,3,5,6],
+  // },
   {
     title: 'Log Out',
     path: '#',

@@ -15,7 +15,7 @@ export default function UserRestrictions(props) {
     permittedUsers.includes(Number(roleId));
 
 
-  if(Number(roleId) === Number(4) && Number(departmentId) !== Number(7) && childRoute === '/emp-timesheet'){
+  if(Number(roleId) === Number(4) && Number(departmentId) !== Number(7) && Number(departmentId) !== Number(8) && childRoute === '/emp-timesheet'){
     return <></>;
   }
 

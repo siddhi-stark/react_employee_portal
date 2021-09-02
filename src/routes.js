@@ -53,6 +53,7 @@ import TeamAddLeave from './containers/Leaves/TeamAddLeave.component';
 import EmployeeTeamLeaves from './containers/Leaves/EmployeeTeamLeaves.component';
 import AddBirthday from './containers/Birthday/AddBirthday.component';
 import BirthdayWishes from './containers/Birthday/BirthdayWishes.component';
+import Greetings from './containers/Birthday/Greetings.component';
 
 function Routes() {
   return (
@@ -117,6 +118,7 @@ function Routes() {
       <Route path="/employee-leaves" exact component={EmployeeTeamLeaves} />
       <Route path="/add-birthday" exact component={AddBirthday} />
       <Route path="/birthday-wishes" exact component={BirthdayWishes} />
+      <Route path="/greetings" exact component={Greetings} />
       <Route component={NotFound} />
     </Switch>
   );

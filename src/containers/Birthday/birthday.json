@@ -9,7 +9,7 @@
 	"displaySection": true,
 	"displaySectionTitle": false,
 	"fields": [{
-		"name": "type",
+		"name": "greet_type",
 		"type": "select",
 		"label": "Type",
 		"id": "",
@@ -109,7 +109,7 @@
 		"optionsCallbackUrl": "employeeUrl",
 		"options": []
 	}, {
-		"name": "comments",
+		"name": "comment_allow",
 		"type": "radio",
 		"label": "Comments",
 		"id": "",
@@ -145,7 +145,7 @@
                     }
 		]
 	}, {
-		"name": "image",
+		"name": "file",
 		"type": "file",
 		"label": "Image",
 		"id": "",
@@ -156,7 +156,7 @@
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
-		"callback": "",
+		"callback": "handleimage",
 		"callbackUrl": "",
 		"inputToChange": "",
 		"minDateSelector": "",
