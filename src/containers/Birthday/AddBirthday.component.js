@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './birthday.json';
@@ -17,8 +17,6 @@ function AddBirthday() {
   const [currentUser, updateCurrentUser] = useState(0);
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Add Birthday' }]; 
-  const history = useHistory();
-    
 
   // Get user role
   const getUserRole = async() => {
@@ -26,13 +24,6 @@ function AddBirthday() {
     updateCurrentUser(Number(roleId));
   };
 
-  useEffect( async () => {
-    const roleId = await localStorage.getItem('group');
-    if (Number(roleId) !== 1) {
-      history.push('/');
-    }
-  }, []);
-  
   useEffect(() => {
     getUserRole();
     setTitle('Add Birthday');
