@@ -62,7 +62,7 @@ const menu = [
         title: 'HR Report',
         path: '/hr-reports',
         icon: 'report.svg',
-        roleaccess: [1],
+        roleaccess: [1,6],
       },
       {
         title: 'Recruitment',
@@ -98,7 +98,7 @@ const menu = [
     path: '/candidates',
     icon: 'candidate.svg',
     submenu: [],
-    roleaccess: [5],
+    roleaccess: [5,1,6],
   },
    {
     title: 'Event',
