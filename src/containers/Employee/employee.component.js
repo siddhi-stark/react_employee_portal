@@ -521,9 +521,8 @@ function Employee() {
       });
     } else {
       setModalShow(false);
-      const errorData = message.split(':');
       swal({
-        title: errorData[1],
+        title: message,
         icon: 'error',
       })
         .then(okAction => {
