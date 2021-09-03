@@ -54,6 +54,8 @@ import EmployeeTeamLeaves from './containers/Leaves/EmployeeTeamLeaves.component
 import AddBirthday from './containers/Birthday/AddBirthday.component';
 import BirthdayWishes from './containers/Birthday/BirthdayWishes.component';
 import Greetings from './containers/Birthday/Greetings.component';
+import MyInterviews from './containers/Recruitment/MyInterviews.component';
+ 
 
 function Routes() {
   return (
@@ -120,6 +122,7 @@ function Routes() {
       <Route path="/edit-birthday/:bdayId" exact component={AddBirthday} />
       <Route path="/birthday-wishes" exact component={BirthdayWishes} />
       <Route path="/greetings" exact component={Greetings} />
+      <Route path="/interview-listing" exact component={MyInterviews} />
       <Route component={NotFound} />
     </Switch>
   );

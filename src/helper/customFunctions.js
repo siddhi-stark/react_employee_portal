@@ -399,6 +399,7 @@ class CustomFunctions extends Component {
     const pass = this.getLocalStorage('password');
     const emailAddress = this.getLocalStorage('email');
     localStorage.clear();
+    localStorage.removeItem('greetingId');
     if(check){
       this.setLocalStorage('checkbox',check);
       this.setLocalStorage('password',pass);

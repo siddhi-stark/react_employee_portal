@@ -37,7 +37,7 @@ function Dashboard() {
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
-  // const employeeGroup = customFunctions.getLocalStorage('group');
+  const isBirthday = customFunctions.getLocalStorage('birthday');
 
   const d = new Date();
   const day = d.getDate();
@@ -50,7 +50,6 @@ function Dashboard() {
 
   const DayMonth = day + ' ' + n ; // eslint-disable-line
 
-  console.log('day',DayMonth);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -286,11 +285,27 @@ if (LoginToken) {
                     </h1>
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
-                       "{quotesContent}" <br />
-                       "Today is your birthday."
+
+                      {isBirthday === 'true' && (
+
+                     <> 
+                     {console.log('idf condition',isBirthday === 'true')}
+                      'Today is your birthday.'
                        <Button onClick={() => {
                              history.push('/birthday-wishes');
                            }} >Click Here</Button>
+                      </>
+                        )}
+
+
+                      {isBirthday === 'false' && (
+
+                     <>
+                     {console.log('elese block',isBirthday === false)}
+                      {quotesContent} </>
+                        )}
+                     
+                    
                       </p>
                     </blockquote>
                   </div>
@@ -452,9 +467,6 @@ if (LoginToken) {
               <div className="row">
               {holidays && holidays.length >= 1 ? (
                 <>
-                {console.log('DayMonth',DayMonth,holidays)}
-                
-
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
                     <div className="upcoming-event-box">
