@@ -38,6 +38,8 @@ function Dashboard() {
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
   const isBirthday = customFunctions.getLocalStorage('birthday');
+  
+  // const employeeGroup = customFunctions.getLocalStorage('group');
 
   const d = new Date();
   const day = d.getDate();
@@ -50,6 +52,7 @@ function Dashboard() {
 
   const DayMonth = day + ' ' + n ; // eslint-disable-line
 
+  console.log('day',DayMonth);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -283,8 +286,10 @@ if (LoginToken) {
                         ,
                       </strong>
                     </h1>
+
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
+
 
                       {isBirthday === 'true' && (
 
@@ -308,6 +313,7 @@ if (LoginToken) {
                     
                       </p>
                     </blockquote>
+
                   </div>
                 </Col>
                 <Col md={3} className='d-flex justify-content-space-between flex-wrap'>
@@ -467,6 +473,9 @@ if (LoginToken) {
               <div className="row">
               {holidays && holidays.length >= 1 ? (
                 <>
+                {console.log('DayMonth',DayMonth,holidays)}
+                
+
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
                     <div className="upcoming-event-box">
