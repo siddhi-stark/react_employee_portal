@@ -15,7 +15,7 @@
         "type": "date",
         "label": "",
         "id": "",
-        "placeholder": "Form date",
+        "placeholder": "From date",
         "inputClass": "",
         "containerClass": "mt-3",
         "validations": [
