@@ -33,6 +33,7 @@ function EmployeeTimesheet() {
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
+  const departmentId = customFunctions.getLocalStorage('departmentId');
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -52,6 +53,7 @@ function EmployeeTimesheet() {
     const userName = customFunctions.getLocalStorage('name');
     return (
       <>
+      { (Number(departmentId) !== Number(7) || Number(departmentId) !== Number(8)) && (
         <a
           href="/"
           className="pl-2"
@@ -68,6 +70,8 @@ function EmployeeTimesheet() {
             <Image src="/images/edit-button.svg" />
           )}
         </a>
+        )
+      }
       </>
     );
   };
@@ -183,7 +187,7 @@ function EmployeeTimesheet() {
     },
      {
       id: 'action',
-      label: 'Action',
+      label: (Number(departmentId) !== Number(7) || Number(departmentId) !== Number(8)) ?'Action':'',
       render: handleActionCallback,
     },
   ];
@@ -282,7 +286,7 @@ function EmployeeTimesheet() {
 
   // Get user role
   const getUserRole = async () => {
-    const roleId = await localStorage.getItem('role');
+    const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
 

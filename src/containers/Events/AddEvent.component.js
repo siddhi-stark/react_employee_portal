@@ -53,7 +53,8 @@ function AddEvent(props) {
             item.name === 'date' ||
             item.name === 'time' ||
             item.name === 'description' ||
-            item.name === 'theme'
+            item.name === 'theme' || 
+            item.name === 'image'  
           )
             itemData.disabled = true;
           return itemData;
@@ -72,7 +73,8 @@ function AddEvent(props) {
             item.name === 'date' ||
             item.name === 'time' ||
             item.name === 'description' ||
-            item.name === 'theme'
+            item.name === 'theme' ||
+            item.name === 'image'
           )
             itemData.disabled = false;
           return itemData;

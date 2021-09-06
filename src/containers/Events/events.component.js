@@ -31,7 +31,6 @@ function Events() {
   const handleActionCallback = (row) => {
     return (
       <>
-      {Number(employeeRole) !== 2 && (
 
         <a
           href="/"
@@ -44,7 +43,6 @@ function Events() {
         >
           <Image alt="view" src="/images/eye.svg" />
         </a>
-        ) }
        {(Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2 ? '' : (
          <>
         <a

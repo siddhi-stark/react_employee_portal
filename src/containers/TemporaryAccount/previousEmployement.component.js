@@ -53,13 +53,13 @@ function PreviousEmployement(props) {
     await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      data.data &&
+      data.data && data.data.applicant_history &&
       data.data.applicant_history.map((op) => {
           obj =  { label: op.company_name, value: op.company_name };
         return op;
       });
 
-      data.data &&
+      data.data && data.data.applicant_documents && 
         data.data.applicant_documents.map((doc) => {
         if(doc.doc_title === 'Salary Slip 1'){
           salary1 = doc.document_url;
@@ -281,7 +281,7 @@ function PreviousEmployement(props) {
     }
 
     const dpOptions = [];
-    data.data &&
+    data && data.data && data.data.applicant_history && 
       data.data.applicant_history.map((op) => {
         // Change appropriate keys
           dpOptions.push({ label: op.company_name, value: op.company_name });
