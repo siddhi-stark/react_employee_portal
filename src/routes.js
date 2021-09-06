@@ -65,12 +65,14 @@ function Routes() {
       <Route path="/forget-password" exact component={ForgetPassword} />
       <Route path="/password/reset/:token" exact component={ResetPassword} />
       <Route path="/reports" exact component={AllReports} />
+      <Route path="/employee-report" exact component={AllReports} />
       <Route path="/daily-report/:date/:id" exact component={Reports} />
       <Route path="/right" exact component={RightContainer} />
       <Route path="/projects" exact component={Projects} />
       <Route path="/designation" exact component={Designation} />
       <Route path="/employee" exact component={Employee} />
       <Route path="/report" exact component={MyReports} />
+      <Route path="/my-report" exact component={MyReports} />
       <Route path="/profile" exact component={Profile} />
       <Route path="/manage-password" exact component={ManagePassword} />
       <Route path="/team-report" exact component={TeamReport} />

@@ -3,7 +3,7 @@ import customFucntions from '../../helper/customFunctions';
 
 export default {
   setupInterceptors: async () => {
-    await axios.interceptors.request.use(
+    axios.interceptors.request.use(
       async (config) => {
         // const requestConfig = config;
         // requestConfig.headers['Content-Type'] = 'application/json';
@@ -23,18 +23,21 @@ export default {
       }
     );
 
-    await axios.interceptors.response.use(
+    axios.interceptors.response.use(
       (response) => response,
       async (error) => {
         const data = await error.response;
         if (
           data &&
-          (data.status === 401 || data.statusText === 'Unauthorized')
+          (data.status === 401 || data.status === 403 || data.statusText === 'Unauthorized')
         ) {
+
           customFucntions.localStorageClear();
         if (window.location.pathname !== '/login') {
+
           localStorage.clear();
-          window.location.href = '/login';
+          // window.location.replace = '/login';
+          window.location.reload();
         }
           return Promise.reject(error.response.data);
         }
