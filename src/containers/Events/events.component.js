@@ -83,8 +83,8 @@ function Events() {
       label: 'Date',
     },
     {
-      id: Number(employeeRole) !== 2 ? 'action' : '',
-      label: Number(employeeRole) !== 2 ? 'Action' : '',
+      id: 'action',
+      label: 'Action',
       render: handleActionCallback,
     },
   ];
