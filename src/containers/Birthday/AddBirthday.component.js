@@ -124,7 +124,7 @@ function AddBirthday(props) {
         greet_type: gt,
         employee: bEmp,
         file: data.data.file_name,
-        comment_allow: data.data.comment_allow === true ? true : false //eslint-disable-line
+        comment_allow: data.data.comment_allow === true ? 'true' : 'false'
       };
 
      updateDefaultValues({ ...obj }); 
@@ -214,7 +214,7 @@ function AddBirthday(props) {
     isStepForm={false}
     
     onFormReset={() => {
-      console.log('form reset callback')
+      history.push('/greetings');
     }}
   />
 		</Card>
