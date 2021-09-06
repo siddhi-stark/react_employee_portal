@@ -289,8 +289,7 @@ if (LoginToken) {
 
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
-                     <>{quotesContent} </>
-                    
+                       "{quotesContent}" <br />
                       </p>
                     </blockquote>
 
