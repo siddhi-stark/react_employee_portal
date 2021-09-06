@@ -84,7 +84,7 @@ function Greetings() {
 	// Declare variable
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
-	const [limit, setLimit] = useState(5);
+	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const title = 'Greetings';
 	const history = useHistory();

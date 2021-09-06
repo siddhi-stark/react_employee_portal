@@ -17,6 +17,7 @@ const isBirthday = customFunctions.getLocalStorage('birthday');
 const id = customFunctions.getLocalStorage('greetingId');
 const GreetingId = customFunctions.getLocalStorage('gId');
 const [greetingMsg,setGreetingMessage] = useState('');
+// const [BkImage,setBackgroundImage] = useState('');
 console.log('GreetingId.......',GreetingId);
 
 const getBirthdayWishes = async (GrtId) => {
@@ -26,6 +27,7 @@ const getBirthdayWishes = async (GrtId) => {
     if(data) {
       setBirthdayWishes(data.data);
       setGreetingMessage(data.data[0].greeting_message);
+      // setBackgroundImage(data.data[0].file_name);
     }
 };
 
@@ -97,7 +99,7 @@ const addMeaage = async () => {
 
 				{birthdayWishes && birthdayWishes.map((bd) => (
 
-								<div className="col-md-6">
+								<div className="col-md-12">
 									<div className="card">
 										<Image className="float-end" src="/images/edit-button.svg" />
 										<div className="media birthday-media-section">
