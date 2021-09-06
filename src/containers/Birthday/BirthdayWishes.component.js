@@ -20,12 +20,14 @@ const [greetingMsg,setGreetingMessage] = useState('');
 console.log('GreetingId.......',GreetingId);
 
 const getBirthdayWishes = async (GrtId) => {
-	console.log('after submitting form');
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
-      setBirthdayWishes(data.data);
-      setGreetingMessage(data.data[0].greeting_message);
+    if(data && data.data) {
+      setBirthdayWishes(data && data.data.length > 0 && data.data);
+      setGreetingMessage(data && data.data && data.data.length > 0 && data.data[0].greeting_message && data.data[0].greeting_message);
+    } else {
+    	setBirthdayWishes([]);
+    	setGreetingMessage('');
     }
 };
 
