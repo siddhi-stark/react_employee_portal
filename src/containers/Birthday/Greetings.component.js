@@ -159,7 +159,7 @@ function Greetings() {
 				<h2 className="main-content-title tx-24 mg-b-5">Greetings</h2>
 				<Breadcrumb items={items} />
 			</div>
-			<section className="content-area">
+			<section className="content-area greeting-list">
 				<div className="mt-5">
 					<Card>
 						<Card.Header>

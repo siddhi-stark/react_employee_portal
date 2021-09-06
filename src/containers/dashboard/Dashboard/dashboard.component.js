@@ -38,8 +38,12 @@ function Dashboard() {
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
   const isBirthday = customFunctions.getLocalStorage('birthday');
+  const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
+  const UserID = customFunctions.getLocalStorage('userId');
+  // const IsBirthday = customFunctions.getLocalStorage('birthday');
+  // let IsUserId = false;
+  console.log('EmployeeID',EmployeeID);
   
-  // const employeeGroup = customFunctions.getLocalStorage('group');
 
   const d = new Date();
   const day = d.getDate();
@@ -52,7 +56,6 @@ function Dashboard() {
 
   const DayMonth = day + ' ' + n ; // eslint-disable-line
 
-  console.log('day',DayMonth);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -294,7 +297,6 @@ if (LoginToken) {
                       {isBirthday === 'true' && (
 
                      <> 
-                     {console.log('idf condition',isBirthday === 'true')}
                       'Today is your birthday.'
                        <Button onClick={() => {
                              history.push('/birthday-wishes');
@@ -306,7 +308,6 @@ if (LoginToken) {
                       {isBirthday === 'false' && (
 
                      <>
-                     {console.log('elese block',isBirthday === false)}
                       {quotesContent} </>
                         )}
                      
@@ -359,6 +360,25 @@ if (LoginToken) {
                 </Col>
               </Row>
             </Jumbotron>
+                <Card className="mt-3 birthday-list">
+                <Card.Body>
+                   <p>Today's Birthdays</p>
+
+            {
+              EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
+                <>
+                {console.log('emp',emp.name)}
+                <div className="birth-name d-flex align-items-center">
+                   <img src="/images/birthday-cake.png" alt="img" />
+                   <div className="birthday-employees">
+                     <h6>{emp.name}</h6>
+                   </div>
+                </div>
+                </>
+                ))
+            }            
+                </Card.Body>
+                 </Card>
             <UserRestrictions permittedUsers={[5,6]} roleId={userRole}>
             <div className="mt-4">
               <EmployeeListComponent />
@@ -473,7 +493,6 @@ if (LoginToken) {
               <div className="row">
               {holidays && holidays.length >= 1 ? (
                 <>
-                {console.log('DayMonth',DayMonth,holidays)}
                 
 
                 <div className="col-xl-6">

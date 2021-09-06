@@ -58,6 +58,8 @@ const n = m_names[d.getMonth()];
     const { data } = await AuthApi.getDataFromServer(url);
     if(data) {
       setBirthdayData(data.data);
+      customFunctions.setLocalStorage('Employee',JSON.stringify(data.data));
+
     }
   }
 
@@ -296,11 +298,11 @@ const n = m_names[d.getMonth()];
                      </p>
 
                       <p onClick={() => { // eslint-disable-line 
-                      document.dispatchEvent(BirthdayEvent);
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
                       console.log('gId',bday.greeting);
                       Number(bday.dob) > day ? ''  : history.push('/birthday-wishes') // eslint-disable-line 
+                      document.dispatchEvent(BirthdayEvent);
 
                     }}
 

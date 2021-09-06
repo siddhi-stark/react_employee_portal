@@ -21,13 +21,14 @@ const [greetingMsg,setGreetingMessage] = useState('');
 console.log('GreetingId.......',GreetingId);
 
 const getBirthdayWishes = async (GrtId) => {
-	console.log('after submitting form');
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
-      setBirthdayWishes(data.data);
-      setGreetingMessage(data.data[0].greeting_message);
-      // setBackgroundImage(data.data[0].file_name);
+    if(data && data.data) {
+      setBirthdayWishes(data && data.data.length > 0 && data.data);
+      setGreetingMessage(data && data.data && data.data.length > 0 && data.data[0].greeting_message && data.data[0].greeting_message);
+    } else {
+    	setBirthdayWishes([]);
+    	setGreetingMessage('');
     }
 };
 
@@ -86,7 +87,7 @@ const addMeaage = async () => {
 			</div>
 
 			<Row className="birthday-block">
-			<div className="col-md-6">
+			<div className="col-md-12">
 									<div className="card">
 										<div className="media birthday-media-section">
 											<div className="media-body">
@@ -101,12 +102,17 @@ const addMeaage = async () => {
 
 								<div className="col-md-12">
 									<div className="card">
-										<Image className="float-end" src="/images/edit-button.svg" />
 										<div className="media birthday-media-section">
 											<Image className="mr-3" src= {bd.wish_from_profile ? bd.wish_from_profile : '/images/profile-img.png'}  alt="Generic placeholder image" />
 											<div className="media-body">
 												<h6 className="mt-0">{bd.wish_from_full_name}</h6>{bd.message}
 											</div>
+										  <div className="float-end edit-wishes">
+                              <a href="javascript:void()">
+                              <Image className="float-end" src="/images/edit-button.svg" />
+
+                              </a>
+                            </div>
 										</div>
 									</div>
 								</div>

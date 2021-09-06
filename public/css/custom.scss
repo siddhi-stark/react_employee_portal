@@ -776,7 +776,13 @@ select {
         /*background-size: 16% 75%;*/
         background-size: contain;
         background-position: top left;
-        background-repeat: no-repeat;       
+        background-repeat: no-repeat;     
+        .blockquote {
+            .btn {
+                min-width: 100px;
+                margin-top: 10px;
+            }
+        }  
     }
     .welcome-img {
         img {
@@ -2610,9 +2616,33 @@ table.quotes-wrapper {
     }
 }
 
+.birthday-list {
+    .card-body {
+        background-color: #f0faff;
+    }
+    .birth-name {
+        margin-bottom: 10px;
+        min-height: 30px;
+        img {
+            max-width: 20px;
+            margin-right: 10px;
+        }
+        h6 {
+            margin-bottom: 0;
+        }
+    }
+}
 
+.birthday-media-section {
+    .edit-wishes {
+        position: absolute;
+        right: 15px;
+    }
+}
 
-
+.greeting-list table tbody tr td:nth-child(2n) {
+    max-width: 650px;
+}
 /*@media (min-width: 576px){
     .bd-content .highlight {
         margin-right: 0;
