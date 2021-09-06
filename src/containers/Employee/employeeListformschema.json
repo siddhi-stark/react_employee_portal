@@ -155,7 +155,7 @@
         "options": [{"label":"Detailed View", "value":"true"}]
       }
     ],
-    "allowedUsers": [5],
+    "allowedUsers": [],
     "sectionLayout": "3column"
   }
 ]
