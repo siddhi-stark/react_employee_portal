@@ -114,13 +114,13 @@ const menu = [
     submenu: [],
     roleaccess: [1,2,3,4,5,6],
   },
-  // {
-  //   title: 'My Interviews',
-  //   path: '/interview-listing',
-  //   icon: 'holiday.svg',
-  //   submenu: [],
-  //   roleaccess: [1,2,3,4,5,6],
-  // },
+  {
+    title: 'My Interviews',
+    path: '/interview-listing',
+    icon: 'holiday.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4,5,6],
+  },
   // {
   //   title: 'Employee Technology Stack',
   //   path: '/emp-stack',

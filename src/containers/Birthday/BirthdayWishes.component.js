@@ -75,7 +75,6 @@ const addMeaage = async () => {
 
 	return (
 		<>
-		{console.log('profileImage',profileImage)}
 			<div className="profile-bg mt-3">
 				<Image src="/images/image.png" alt="image" />
 				<div className="profile-img">
