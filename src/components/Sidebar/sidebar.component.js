@@ -18,6 +18,9 @@ function Sidebar() {
   const [events,setEvents] = useState([]);
   const [birthdays,setBirthdayData] = useState([]);
 
+  const BirthdayEvent = new Event('BirthdayUpdate', { isUpdated: true });
+
+
  const m_names = [
   'January',
   'February',
@@ -292,7 +295,14 @@ const n = m_names[d.getMonth()];
                        <span>{Number(bday.dob) >= day ? bday.dob : ''}</span>
                      </p>
 
-                      <p>{bday.name}</p> 
+                      <p onClick={() => { // eslint-disable-line 
+                        console.log('bday',bday.greeting);
+                      document.dispatchEvent(BirthdayEvent);
+                      customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
+                      customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
+                      history.push('/birthday-wishes')}}
+
+                      >{bday.name}</p> 
                      </>
                         ) : ''}
                       </>

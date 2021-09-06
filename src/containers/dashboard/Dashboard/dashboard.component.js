@@ -37,6 +37,8 @@ function Dashboard() {
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
+  const isBirthday = customFunctions.getLocalStorage('birthday');
+  
   // const employeeGroup = customFunctions.getLocalStorage('group');
 
   const d = new Date();
@@ -284,15 +286,34 @@ if (LoginToken) {
                         ,
                       </strong>
                     </h1>
-                   <blockquote className="blockquote quote">
+
+                    <blockquote className="blockquote quote">
                       <p className="mb-0">
-                       "{quotesContent}" <br />
-                   {/*     "Today is your birthday."
+
+
+                      {isBirthday === 'true' && (
+
+                     <> 
+                     {console.log('idf condition',isBirthday === 'true')}
+                      'Today is your birthday.'
                        <Button onClick={() => {
                              history.push('/birthday-wishes');
-                           }} >Click Here</Button>  */}
-                      </p> 
+                           }} >Click Here</Button>
+                      </>
+                        )}
+
+
+                      {isBirthday === 'false' && (
+
+                     <>
+                     {console.log('elese block',isBirthday === false)}
+                      {quotesContent} </>
+                        )}
+                     
+                    
+                      </p>
                     </blockquote>
+
                   </div>
                 </Col>
                 <Col md={3} className='d-flex justify-content-space-between flex-wrap'>
