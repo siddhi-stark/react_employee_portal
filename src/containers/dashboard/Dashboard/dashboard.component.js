@@ -37,7 +37,7 @@ function Dashboard() {
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
-  const isBirthday = customFunctions.getLocalStorage('birthday');
+  // const isBirthday = customFunctions.getLocalStorage('birthday');
   
   // const employeeGroup = customFunctions.getLocalStorage('group');
 
@@ -289,27 +289,7 @@ if (LoginToken) {
 
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
-
-
-                      {isBirthday === 'true' && (
-
-                     <> 
-                     {console.log('idf condition',isBirthday === 'true')}
-                      'Today is your birthday.'
-                       <Button onClick={() => {
-                             history.push('/birthday-wishes');
-                           }} >Click Here</Button>
-                      </>
-                        )}
-
-
-                      {isBirthday === 'false' && (
-
-                     <>
-                     {console.log('elese block',isBirthday === false)}
-                      {quotesContent} </>
-                        )}
-                     
+                     <>{quotesContent} </>
                     
                       </p>
                     </blockquote>

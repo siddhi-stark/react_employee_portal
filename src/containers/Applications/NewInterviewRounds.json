@@ -221,7 +221,11 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [{
+				"type": "required",
+				"applyWhen": [],
+				"applyWhenRelation": "OR"
+			}],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",

@@ -33,7 +33,7 @@ function EmployeeTimesheet() {
   // const [options, updateOptions] = useState({});
   // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
-  const departmentId = customFunctions.getLocalStorage('departmentId');
+  const departmentId = customFunctions.getLocalStorage('department');
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -53,7 +53,7 @@ function EmployeeTimesheet() {
     const userName = customFunctions.getLocalStorage('name');
     return (
       <>
-      { (Number(departmentId) !== Number(7) || Number(departmentId) !== Number(8)) && (
+      { (Number(departmentId) !== Number(7) && Number(departmentId) !== Number(8)) && (
         <a
           href="/"
           className="pl-2"
@@ -187,7 +187,7 @@ function EmployeeTimesheet() {
     },
      {
       id: 'action',
-      label: (Number(departmentId) !== Number(7) || Number(departmentId) !== Number(8)) ?'Action':'',
+      label: (Number(departmentId) !== 7 && Number(departmentId) !== 8) ?'Action':'',
       render: handleActionCallback,
     },
   ];

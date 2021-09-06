@@ -300,7 +300,8 @@ const n = m_names[d.getMonth()];
                       document.dispatchEvent(BirthdayEvent);
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
-                      history.push('/birthday-wishes')}}
+                      // history.push('/birthday-wishes')
+                    }}
 
                       >{bday.name}</p> 
                      </>

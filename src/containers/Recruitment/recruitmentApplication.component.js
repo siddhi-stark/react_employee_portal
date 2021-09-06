@@ -277,8 +277,8 @@ function RecruitmentApplicationComponent() {
       isDisplay: (activeMenu.includes('Pending') || activeMenu.includes('all')) &&  true,
     },
     {
-      id: Number(group) === 5 || Number(group) === 6 ? 'round_status_name' : '',
-      label: Number(group) === 5 || Number(group) === 6 ? 'Round Status' : '',
+      id:  'round_status_name',
+      label: 'Round Status',
     },
     {
       id: 'action',
