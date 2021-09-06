@@ -211,7 +211,7 @@ const menu = [
     roleaccess: [1],
   },
    {
-    title: 'Birthday',
+    title: 'Greetings',
     path: '/greetings',
     icon: 'report.svg',
     submenu: [],

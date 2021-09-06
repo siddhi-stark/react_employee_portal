@@ -14,28 +14,28 @@ const [message,setMessage] = useState('');
 const ID =  customFunctions.getLocalStorage('employeeId');
 const [birthdayWishes,setBirthdayWishes] = useState([]);
 const isBirthday = customFunctions.getLocalStorage('birthday');
-const [profileImage,setProfileImage] = useState('');
 const id = customFunctions.getLocalStorage('greetingId');
 const GreetingId = customFunctions.getLocalStorage('gId');
 const [greetingMsg,setGreetingMessage] = useState('');
+console.log('GreetingId.......',GreetingId);
 
 const getBirthdayWishes = async (GrtId) => {
-
+	console.log('after submitting form');
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data) {
-		console.log('data',data.data[0].wish_to_profile);
       setBirthdayWishes(data.data);
-      setProfileImage(data.data[0].wish_to_profile);
       setGreetingMessage(data.data[0].greeting_message);
     }
 };
 
 
 	useEffect(() => {
-		 document.addEventListener('BirthdayUpdate', () => {
-      console.log('event calling');
-      getBirthdayWishes(GreetingId || id);
+		  document.addEventListener('BirthdayUpdate', () => {
+      // console.log('event calling');
+      const GreetingID = customFunctions.getLocalStorage('gId');
+      console.log('-------GID-------',GreetingId);
+      getBirthdayWishes(GreetingID);
     });
 
 		if(GreetingId) {
@@ -59,6 +59,7 @@ const addMeaage = async () => {
  const { data } = await AuthApi.postDataToServer(endPoint, postData);
  if(data) {
  	swal(data.message[0],'','success');
+ 		getBirthdayWishes(GreetingId);
  }
 }
 
@@ -78,7 +79,7 @@ const addMeaage = async () => {
 			<div className="profile-bg mt-3">
 				<Image src="/images/image.png" alt="image" />
 				<div className="profile-img">
-					<Image src={profileImage} alt="Card image cap" />
+					<Image src="/images/image.png" alt="Card image cap" />
 				</div>
 			</div>
 
@@ -98,6 +99,7 @@ const addMeaage = async () => {
 
 								<div className="col-md-6">
 									<div className="card">
+										<Image className="float-end" src="/images/edit-button.svg" />
 										<div className="media birthday-media-section">
 											<Image className="mr-3" src= {bd.wish_from_profile ? bd.wish_from_profile : '/images/profile-img.png'}  alt="Generic placeholder image" />
 											<div className="media-body">

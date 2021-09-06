@@ -296,11 +296,13 @@ const n = m_names[d.getMonth()];
                      </p>
 
                       <p onClick={() => { // eslint-disable-line 
-                        console.log('bday',bday.greeting);
                       document.dispatchEvent(BirthdayEvent);
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
-                      history.push('/birthday-wishes')}}
+                      console.log('gId',bday.greeting);
+                      Number(bday.dob) > day ? ''  : history.push('/birthday-wishes') // eslint-disable-line 
+
+                    }}
 
                       >{bday.name}</p> 
                      </>

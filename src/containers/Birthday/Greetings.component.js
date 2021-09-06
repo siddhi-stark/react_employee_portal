@@ -97,6 +97,7 @@ function Greetings() {
 		const params = {
 			page,
 			limit,
+			sort_by: 'date',
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);

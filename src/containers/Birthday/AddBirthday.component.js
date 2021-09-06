@@ -8,19 +8,22 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-
+import customFunctions from '../../helper/customFunctions';
 
 function AddBirthday(props) {
 
   const BirthdayId = props.match.params.bdayId; //eslint-disable-line
   // Variable declarations
+  const viewObj = props;
+  const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [imageUrl, setImageUrl] = useState('');
   const [title, setTitle] = useState('');
   const [bId, setbirthdayID] = useState('');
-  const items = [{ to: '/', label: 'Home' }, { label: 'Add Birthday' }]; 
+  const items = [{ to: '/', label: 'Home' }, { label: BirthdayId ? 'Edit Birthday' : 'Add Birthday' }]; 
   const history = useHistory();  
 
   // Get user role
@@ -29,12 +32,12 @@ function AddBirthday(props) {
     updateCurrentUser(Number(roleId));
   };
 
-  // useEffect( async () => {
-  //   const roleId = await localStorage.getItem('group');
-  //   if (Number(roleId) !== 1) {
-  //     history.push('/');
-  //   }
-  // }, []);
+  items.map((it) => {
+    if(viewOptions) {
+      items[1].label = 'View Birthday';
+    }
+    return it;
+  });
   
   useEffect(() => {
     getUserRole();
@@ -65,13 +68,14 @@ function AddBirthday(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    
+    console.log('formValues.comment_allow',formValues.comment_allow);
     const postData = {
       message: formValues.message,
       greet_type: formValues.greet_type ? formValues.greet_type.value : '',
       employee: formValues.employee ? [formValues.employee.value] : '',
-      comment_allow: formValues.comment_allow ? Boolean(formValues.comment_allow) : ''
+      comment_allow: formValues.comment_allow ? formValues.comment_allow : ''
     }
+    console.log('postData',postData);
 
      if (imageUrl) {
       postData.file = await uploadFile();
@@ -136,6 +140,63 @@ function AddBirthday(props) {
     
 
   }, []);
+
+   useEffect(() => {
+    
+    // setEventId(ID);
+    // if (ID) {
+    //   getData(ID);
+    // }
+
+    if(viewOptions === 'true')  setTitle('View Birthday');
+
+    if (BirthdayId) {
+      setTitle('Edit Birthday');
+    }
+    
+    if(BirthdayId && viewOptions === 'true'){
+      setTitle('View Birthday');
+    }
+  }, []);
+
+
+    useEffect(() => {
+    if (!customFunctions.checkIfEmpty(viewOptions)) {
+      const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (
+            item.name === 'greet_type' ||
+            item.name === 'message' ||
+            item.name === 'employee' 
+          )
+            itemData.disabled = true;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+    } else {
+      const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (
+            item.name === 'greet_type' ||
+            item.name === 'message' ||
+            item.name === 'employee' 
+          )
+            itemData.disabled = false;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+    }
+  }, []);
       
   const getType = async () => {
     const {data} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=greet_type`);
@@ -196,7 +257,7 @@ function AddBirthday(props) {
   <StarkFormBuilder
     containerClass='mt-4 mb-4'
     formHeaderClass=''
-    formSections={FormSections}
+    formSections={FormSections || jsonSchema}
     formHeading="tbirthday"
     onFormSubmit={(formValues) => {submitForm(formValues);}}
     options={options}
