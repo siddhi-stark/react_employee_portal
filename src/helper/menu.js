@@ -74,13 +74,6 @@ const menu = [
     roleaccess: [1,6],
   },
   {
-    title: 'Email Templates',
-    path: '/email-templates',
-    icon: 'template.svg',
-    submenu: [],
-    roleaccess: [1],
-  },
-  {
     title: 'Employees',
     path: '/employees',
     icon: 'Employee.svg',
@@ -100,7 +93,14 @@ const menu = [
     submenu: [],
     roleaccess: [5,1,6],
   },
-   {
+  {
+    title: 'Email Templates',
+    path: '/email-templates',
+    icon: 'template.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  {
     title: 'Event',
     path: '/event',
     icon: 'timesheet.svg',
