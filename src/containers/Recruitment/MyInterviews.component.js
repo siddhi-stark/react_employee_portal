@@ -258,14 +258,14 @@ function MyInterviews() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">MyInterview</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">My Interview</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
         <Card>
           <Card.Header>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">MyInterview</h4>
+              <h4 className="text-primary mt-2 mb-2">My Interview</h4>
             </div>
           </Card.Header>
           <Card.Body>

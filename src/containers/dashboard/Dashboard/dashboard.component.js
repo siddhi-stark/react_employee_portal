@@ -396,7 +396,7 @@ if (LoginToken) {
 
             <Card className="mt-3 birthday-list">
                 <Card.Body>
-                   <p>Today's Anniversary</p>
+                   <p>Work Anniversary</p>
 
             {
               anniversary && anniversary.map(emp => (
