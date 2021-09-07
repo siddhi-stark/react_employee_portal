@@ -92,9 +92,18 @@ const addMeaage = async () => {
 		{console.log('wisherProfile',bannerImage)}
 			<div className="profile-bg mt-3">
 				<Image src="/images/image.png" alt="image" />
+				{
+					wisherProfile ? (
+
 				<div className="profile-img">
 					<Image src={wisherProfile} alt="Card image cap" />
 				</div>
+						) : (
+         <div className="profile-img">
+					<Image src="/images/noProfile.jpeg" alt="Card image cap" />
+				</div>
+						)
+				}
 			</div>
 
 			<Row className="birthday-block">

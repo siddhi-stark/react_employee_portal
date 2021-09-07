@@ -12,7 +12,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 function MyInterviews() {
 	const group = customFunctions.getLocalStorage('group');
-  const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'My Interview' }];
   const history = useHistory();
 
   // Variable declarations Filter Form
@@ -265,14 +265,14 @@ function MyInterviews() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Recruitment</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">MyInterview</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
         <Card>
           <Card.Header>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Recruitment</h4>
+              <h4 className="text-primary mt-2 mb-2">MyInterview</h4>
             </div>
           </Card.Header>
           <Card.Body>

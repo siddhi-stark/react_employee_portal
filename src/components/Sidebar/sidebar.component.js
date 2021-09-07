@@ -302,8 +302,8 @@ const n = m_names[d.getMonth()];
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
                       history.push('/birthday-wishes')
-                      console.log('gId',bday.greeting);
-                      Number(bday.dob) > day ? ''  : history.push('/birthday-wishes') // eslint-disable-line 
+                      console.log('gId',Number(bday.dob),day);
+                      Number(bday.dob) > day ? '' : history.push('/birthday-wishes') // eslint-disable-line 
                       document.dispatchEvent(BirthdayEvent);
 
                     }}
