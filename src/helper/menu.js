@@ -222,7 +222,7 @@ const menu = [
     path: '/greetings',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1,3,5,6],
+    roleaccess: [5,6],
   },
   {
     title: 'Log Out',
