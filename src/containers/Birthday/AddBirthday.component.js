@@ -23,7 +23,7 @@ function AddBirthday(props) {
   const [imageUrl, setImageUrl] = useState('');
   const [title, setTitle] = useState('');
   const [bId, setbirthdayID] = useState('');
-  const items = [{ to: '/', label: 'Home' }, { label: BirthdayId ? 'Edit Birthday' : 'Add Birthday' }]; 
+  const items = [{ to: '/', label: 'Home' }, { label: BirthdayId ? 'Edit Greeting' : 'Add Greeting' }]; 
   const history = useHistory();  
 
   // Get user role
@@ -34,14 +34,14 @@ function AddBirthday(props) {
 
   items.map((it) => {
     if(viewOptions) {
-      items[1].label = 'View Birthday';
+      items[1].label = 'View Greeting';
     }
     return it;
   });
   
   useEffect(() => {
     getUserRole();
-    setTitle('Add Birthday');
+    setTitle('Add Greeting');
   }, []);
 
    const handleImageFileUpload = (e) => {
@@ -68,14 +68,12 @@ function AddBirthday(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('formValues.comment_allow',formValues.comment_allow);
     const postData = {
       message: formValues.message,
       greet_type: formValues.greet_type ? formValues.greet_type.value : '',
       employee: formValues.employee ? [formValues.employee.value] : '',
       comment_allow: formValues.comment_allow ? formValues.comment_allow : ''
     }
-    console.log('postData',postData);
 
      if (imageUrl) {
       postData.file = await uploadFile();
@@ -101,7 +99,6 @@ function AddBirthday(props) {
     const {data } = await AuthApi.getDataFromServer(`${Api.greetingsUrl}${id}/`);
 
     let bEmp = {};
-    console.log('comment_allow',data.data.comment_allow);
 
     empList.map((em) => {
       data.data.employee.map((emd) => {
@@ -148,14 +145,14 @@ function AddBirthday(props) {
     //   getData(ID);
     // }
 
-    if(viewOptions === 'true')  setTitle('View Birthday');
+    if(viewOptions === 'true')  setTitle('View Greeting');
 
     if (BirthdayId) {
-      setTitle('Edit Birthday');
+      setTitle('Edit Greeting');
     }
     
     if(BirthdayId && viewOptions === 'true'){
-      setTitle('View Birthday');
+      setTitle('View Greeting');
     }
   }, []);
 
@@ -243,7 +240,6 @@ function AddBirthday(props) {
 
 	return (
 		<>
-    {console.log('bId',bId)}
 		 <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">

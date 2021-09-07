@@ -18,9 +18,10 @@ const isBirthday = customFunctions.getLocalStorage('birthday');
 const id = customFunctions.getLocalStorage('greetingId');
 const GreetingId = customFunctions.getLocalStorage('gId');
 const [greetingMsg,setGreetingMessage] = useState('');
-const [showMessage,setShowMessage] = useState(true);
+const [showMessage,setShowMessage] = useState(false);
 const [wisherProfile,setWisherToProfile] = useState('');
 const [bannerImage,setBannerImage] = useState('');
+const [showWish,setShowWish] = useState('');
 const userID = customFunctions.getLocalStorage('userId');
 
 
@@ -30,6 +31,12 @@ const getBirthdayWishes = async (GrtId) => {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data && data.data) {
       setBirthdayWishes(data && data.data.length > 0 && data.data);
+      data.data.map((bd) => {
+      	if(Number(userID) === Number(bd.wish_from_id)) {
+      		setShowWish(bd.is_wish);
+      	}
+      	return bd;
+      })
       setGreetingMessage(data && data.data && data.data.length > 0 && data.data[0].greeting_message && data.data[0].greeting_message);
       setWisherToProfile(data && data.data && data.data.length > 0 && data.data[0].wish_to_profile && data.data[0].wish_to_profile);
    		setBannerImage(data && data.data && data.data.length > 0 && data.data[0].file_name && data.data[0].file_name);
@@ -159,7 +166,7 @@ const addMeaage = async () => {
 
 				{isBirthday !== 'true' && (
 				<>
-				{showMessage === true ? (
+				{(!showWish || showMessage) ? (
 
 					<Form
             onSubmit={(e) => {
