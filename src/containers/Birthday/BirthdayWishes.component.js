@@ -22,6 +22,7 @@ const [showMessage,setShowMessage] = useState(false);
 const [wisherProfile,setWisherToProfile] = useState('');
 const [bannerImage,setBannerImage] = useState('');
 const [showWish,setShowWish] = useState('');
+const [employeeMessage,setEmployeeMessage] = useState('');
 const userID = customFunctions.getLocalStorage('userId');
 
 
@@ -34,6 +35,7 @@ const getBirthdayWishes = async (GrtId) => {
       data.data.map((bd) => {
       	if(Number(userID) === Number(bd.wish_from_id)) {
       		setShowWish(bd.is_wish);
+      		setEmployeeMessage(bd.message);
       	}
       	return bd;
       })
@@ -80,6 +82,7 @@ const addMeaage = async () => {
  	setMessage('');
   getBirthdayWishes(GreetingId);
   setShowMessage(false);
+  setEmployeeMessage('');
  }
 }
 
@@ -149,6 +152,7 @@ const addMeaage = async () => {
 					                              src="/images/edit-button.svg"
 					                              onClick={() => {
 					                              setShowMessage(true);
+					                              setMessage(employeeMessage);
 					                           }} 
 					                              />
 
@@ -175,7 +179,7 @@ const addMeaage = async () => {
           >
 				<Col sm={12}>
 					<TextInput
-                        onInputChange={(e) => setMessage(e.target.value)}
+            onInputChange={(e) => setMessage(e.target.value)}
 						label="Message"
 						containerClass="form-group"
 						type="text"

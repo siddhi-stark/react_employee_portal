@@ -161,15 +161,8 @@ function MyInterviews() {
       isDisplay: false,
     },
     {
-      id: `{{'int_date'} ? 'int_date': 'created_at'}`, // eslint-disable-line
-      label: 'Date',
-      render: ({ created_at }) => { // eslint-disable-line
-        return (
-          <>
-            <span>{customFunctions.getNewFormattedDate(created_at)}</span>
-          </>
-        );
-      },
+      id: 'interview_date', // eslint-disable-line
+      label: 'Interview Date',
     },
     {
       id: 'name',
