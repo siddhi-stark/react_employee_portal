@@ -56,8 +56,8 @@ function App() {
       }
       return role;
     });
- 
-    if(result.length > 0 && result[0].submenu.length === 0){
+     console.log('result.length',result);
+    if(result && result.length > 0 && result[0].submenu && result[0].submenu.length === 0){
       const access = result[0].roleaccess.includes(Number(roleId));
       if(!access){
           history.push('/');

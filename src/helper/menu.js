@@ -66,7 +66,7 @@ const menu = [
       },
       {
         title: 'Recruitment',
-        path: '/recruitment',
+        path: '/recruitments',
         icon: 'recruitement.svg',
         roleaccess: [1,6],
       },
@@ -152,7 +152,7 @@ const menu = [
     submenu: [
       {
         title: 'My Leaves',
-        path: '/leaves',
+        path: '/my-leaves',
         roleaccess: [2,3,6,5],
       },
       {

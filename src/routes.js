@@ -103,6 +103,8 @@ function Routes() {
       <Route path="/email-templates" exact component={EmailTemplates} />
       <Route path="/recruitment" exact component={RecruitmentApplication} />
        <Route path="/recruitment/:id" exact component={Applications} />
+      <Route path="/recruitments" exact component={RecruitmentApplication} />
+       <Route path="/recruitments/:id" exact component={Applications} />
        <Route path="/hr-reports" exact component={HrReports} />
        <Route path='/hr-listing' exact component={HRListing} />
        <Route path='/quotes' exact component={Quotes} />
@@ -115,6 +117,7 @@ function Routes() {
       <Route path="/candidates/:ID" exact component={TemporaryAccount} />
       <Route path="/onboard/:ID" exact component={OnBoard} />
       <Route path="/leaves" exact component={Leaves} />
+      <Route path="/my-leaves" exact component={Leaves} />
       <Route path="/add-leave" exact component={AddLeave} />
       <Route path="/edit-leave/:leaveId" exact component={AddLeave} />
       <Route path="/view-leave/:viewLeaveId" exact component={TeamAddLeave} />
