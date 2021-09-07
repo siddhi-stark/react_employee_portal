@@ -46,10 +46,3 @@ export default {
     );
   },
 };
-
-// const configuration = config;
-// if (configuration.url.indexOf('upload') > -1) {
-// configuration.headers['Content-Type'] = 'multipart/form-data'; // eslint-disable-line
-// } else {
-// configuration.headers['Content-Type'] = 'application/json'; // eslint-disable-line
-// }

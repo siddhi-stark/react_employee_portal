@@ -84,7 +84,7 @@ function Greetings() {
 	// Declare variable
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
-	const [limit, setLimit] = useState(5);
+	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const title = 'Greetings';
 	const history = useHistory();
@@ -97,6 +97,7 @@ function Greetings() {
 		const params = {
 			page,
 			limit,
+			sort_by: 'date',
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
@@ -158,7 +159,7 @@ function Greetings() {
 				<h2 className="main-content-title tx-24 mg-b-5">Greetings</h2>
 				<Breadcrumb items={items} />
 			</div>
-			<section className="content-area">
+			<section className="content-area greeting-list">
 				<div className="mt-5">
 					<Card>
 						<Card.Header>

@@ -12,30 +12,41 @@ function BirthdayWishes() {
 const validator = new SimpleReactValidator({ autoForceUpdate: this });
 const [message,setMessage] = useState('');
 const ID =  customFunctions.getLocalStorage('employeeId');
+// const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
 const [birthdayWishes,setBirthdayWishes] = useState([]);
 const isBirthday = customFunctions.getLocalStorage('birthday');
-const [profileImage,setProfileImage] = useState('');
 const id = customFunctions.getLocalStorage('greetingId');
 const GreetingId = customFunctions.getLocalStorage('gId');
 const [greetingMsg,setGreetingMessage] = useState('');
+const [showMessage,setShowMessage] = useState(true);
+const [wisherProfile,setWisherToProfile] = useState('');
+const [bannerImage,setBannerImage] = useState('');
+const userID = customFunctions.getLocalStorage('userId');
+
+
 
 const getBirthdayWishes = async (GrtId) => {
-
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
-		console.log('data',data.data[0].wish_to_profile);
-      setBirthdayWishes(data.data);
-      setProfileImage(data.data[0].wish_to_profile);
-      setGreetingMessage(data.data[0].greeting_message);
+    if(data && data.data) {
+      setBirthdayWishes(data && data.data.length > 0 && data.data);
+      setGreetingMessage(data && data.data && data.data.length > 0 && data.data[0].greeting_message && data.data[0].greeting_message);
+      setWisherToProfile(data && data.data && data.data.length > 0 && data.data[0].wish_to_profile && data.data[0].wish_to_profile);
+   		setBannerImage(data && data.data && data.data.length > 0 && data.data[0].file_name && data.data[0].file_name);
+   		
+    } else {
+    	setBirthdayWishes([]);
+    	setGreetingMessage('');
+    	setWisherToProfile('');
+    	setBannerImage('');
     }
 };
 
 
 	useEffect(() => {
-		 document.addEventListener('BirthdayUpdate', () => {
-      console.log('event calling');
-      getBirthdayWishes(GreetingId || id);
+		  document.addEventListener('BirthdayUpdate', () => {
+      const GreetingID = customFunctions.getLocalStorage('gId');
+      getBirthdayWishes(GreetingID);
     });
 
 		if(GreetingId) {
@@ -59,6 +70,9 @@ const addMeaage = async () => {
  const { data } = await AuthApi.postDataToServer(endPoint, postData);
  if(data) {
  	swal(data.message[0],'','success');
+ 	setMessage('');
+  getBirthdayWishes(GreetingId);
+  setShowMessage(false);
  }
 }
 
@@ -75,15 +89,20 @@ const addMeaage = async () => {
 
 	return (
 		<>
+		{console.log('wisherProfile',bannerImage)}
 			<div className="profile-bg mt-3">
 				<Image src="/images/image.png" alt="image" />
 				<div className="profile-img">
-					<Image src={profileImage} alt="Card image cap" />
+					<Image src={wisherProfile} alt="Card image cap" />
 				</div>
 			</div>
 
 			<Row className="birthday-block">
-			<div className="col-md-6">
+								{birthdayWishes && birthdayWishes.length >= 1 ? (
+									<>
+
+			<p><strong>Employees Wishes</strong></p>
+			<div className="col-md-12">
 									<div className="card">
 										<div className="media birthday-media-section">
 											<div className="media-body">
@@ -92,24 +111,46 @@ const addMeaage = async () => {
 										</div>
 									</div>
 								</div>
-			<p><strong>Employees Wishes</strong></p>
+									</>
+									) : ''}
 
 				{birthdayWishes && birthdayWishes.map((bd) => (
-
-								<div className="col-md-6">
+								<>
+								<div className="col-md-12">
 									<div className="card">
 										<div className="media birthday-media-section">
 											<Image className="mr-3" src= {bd.wish_from_profile ? bd.wish_from_profile : '/images/profile-img.png'}  alt="Generic placeholder image" />
 											<div className="media-body">
 												<h6 className="mt-0">{bd.wish_from_full_name}</h6>{bd.message}
 											</div>
-										</div>
-									</div>
-								</div>
-								))}
+
+											{Number(userID) === Number(bd.wish_from_id) ? (
+												<>
+												<div className="float-end edit-wishes">
+					                              <a href="javascript:void()">
+					                              <Image 
+					                              className="float-end" 
+					                              src="/images/edit-button.svg"
+					                              onClick={() => {
+					                              setShowMessage(true);
+					                           }} 
+					                              />
+
+					                              </a>
+					                            </div>
+												</>
+												
+					                            ) : ''}		
+					                  </div>
+														</div>
+													</div>
+													</>
+													))}
+												
 
 				{isBirthday !== 'true' && (
 				<>
+				{showMessage === true ? (
 
 					<Form
             onSubmit={(e) => {
@@ -136,6 +177,9 @@ const addMeaage = async () => {
 					<Button className="mb-4" type="submit">Submit</Button>
 				</Col>
 				</Form>
+
+					) : ''}
+
 				</>
 				)}	
 			</Row>

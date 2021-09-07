@@ -216,6 +216,8 @@ function MyInterviews() {
     const endPoint = `${Api.applicantsUrl}`;
 
     const params = {
+      
+      my_interview:true,
       page,
       limit,
       sort_direction: 'descending',

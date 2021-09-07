@@ -33,13 +33,18 @@ function Dashboard() {
   const [leaves,setLeaves] = useState([]);
   const [socialMedia,setSocialMediaData] = useState([]);
   const [modalShow,setModalShow] = useState(false);
+  const [anniversary,setAnniversary] = useState([]);
   const [image,setImage] = useState('');
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
-  // const isBirthday = customFunctions.getLocalStorage('birthday');
-  
-  // const employeeGroup = customFunctions.getLocalStorage('group');
+  const isBirthday = customFunctions.getLocalStorage('birthday');
+  const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
+  const UserID = customFunctions.getLocalStorage('userId');
+  // const IsBirthday = customFunctions.getLocalStorage('birthday');
+  // let IsUserId = false;
+
+  console.log('EmployeeID',EmployeeID);
 
   const d = new Date();
   const day = d.getDate();
@@ -52,7 +57,6 @@ function Dashboard() {
 
   const DayMonth = day + ' ' + n ; // eslint-disable-line
 
-  console.log('day',DayMonth);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -157,6 +161,18 @@ function Dashboard() {
     }
   };
 
+  const getAnniversary = async () => {
+    const endPoint = `${Api.birthdayUrl}?is_anniversary=true`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+
+    if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
+      console.log('data.data',data.data);
+      setAnniversary(data.data);
+    }
+  };
+
+
+
   const getProfile = async () => {
     const userToken = customFunctions.getLocalStorage('access_token');
     if (!userToken) return false;
@@ -204,6 +220,7 @@ if (LoginToken) {
   getUpcomingHoliday();
   getAppliedLeaves();
   getInstagramPost();
+  getAnniversary();
 }
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
@@ -289,7 +306,26 @@ if (LoginToken) {
 
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
-                       "{quotesContent}" <br />
+
+
+                      {isBirthday === 'true' && (
+
+                     <> 
+                      'Today is your birthday.'
+                       <Button onClick={() => {
+                             history.push('/birthday-wishes');
+                           }} >Click Here</Button>
+                      </>
+                        )}
+
+
+                      {isBirthday === 'false' && (
+
+                     <>
+                      {quotesContent} </>
+                        )}
+                     
+                    
                       </p>
                     </blockquote>
 
@@ -338,6 +374,45 @@ if (LoginToken) {
                 </Col>
               </Row>
             </Jumbotron>
+                <Card className="mt-3 birthday-list">
+                <Card.Body>
+                   <p>Today's Birthdays</p>
+
+            {
+              EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
+                <>
+                <div className="birth-name d-flex align-items-center">
+                   <img src="/images/birthday-cake.png" alt="img" />
+                   <div className="birthday-employees">
+                     <h6>{emp.name}</h6>
+                   </div>
+                </div>
+                </>
+                ))
+            }            
+                </Card.Body>
+                 </Card>
+
+
+            <Card className="mt-3 birthday-list">
+                <Card.Body>
+                   <p>Today's Anniversary</p>
+
+            {
+              anniversary && anniversary.map(emp => (
+                <>
+                <div className="birth-name d-flex align-items-center">
+                   <img src="/images/working.png" alt="img" />
+                   <div className="birthday-employees">
+                     <h6>{emp.name}</h6>
+                   </div>
+                </div>
+                </>
+                ))
+            }            
+                </Card.Body>
+                 </Card>     
+
             <UserRestrictions permittedUsers={[5,6]} roleId={userRole}>
             <div className="mt-4">
               <EmployeeListComponent />
@@ -452,7 +527,6 @@ if (LoginToken) {
               <div className="row">
               {holidays && holidays.length >= 1 ? (
                 <>
-                {console.log('DayMonth',DayMonth,holidays)}
                 
 
                 <div className="col-xl-6">
