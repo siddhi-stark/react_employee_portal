@@ -69,18 +69,10 @@ function AddBirthday(props) {
   // Submit Form
   const submitForm = async (formValues) => {
 
-     const EmployeeList = [];
-    if (formValues.employee && formValues.employee.length > 0) {
-      formValues.employee.map((mngr) => {
-        EmployeeList.push(mngr.value);
-        return mngr;
-      });
-    }
-
     const postData = {
       message: formValues.message,
       greet_type: formValues.greet_type ? formValues.greet_type.value : '',
-      employee: formValues.employee ? EmployeeList : '',
+      employee: formValues.employee ? [formValues.employee.value] : '',
       comment_allow: formValues.comment_allow ? formValues.comment_allow : ''
     }
 
