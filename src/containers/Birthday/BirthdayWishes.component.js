@@ -120,7 +120,6 @@ const addMeaage = async () => {
 								{birthdayWishes && birthdayWishes.length >= 1 ? (
 									<>
 
-			<p><strong>Employees Wishes</strong></p>
 			<div className="col-md-12">
 									<div className="card">
 										<div className="media birthday-media-section">
@@ -130,6 +129,7 @@ const addMeaage = async () => {
 										</div>
 									</div>
 								</div>
+			<p><strong>Employees Wishes</strong></p>
 									</>
 									) : ''}
 
