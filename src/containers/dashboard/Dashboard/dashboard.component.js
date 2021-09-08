@@ -377,12 +377,13 @@ if (LoginToken) {
                 <Card className="mt-3 birthday-list">
 
             <Card.Body>
-              <p>Today's Birthdays</p>
                 <>
                   {
                     EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
                       <>
                         {Number(emp.dob) >= day ? (
+                          <>
+              <p>Today's Birthdays</p>
 
                         <div className="birth-name d-flex align-items-center">
                            <img src="/images/birthday-cake.png" alt="img" />
@@ -390,6 +391,7 @@ if (LoginToken) {
                              <h6>{emp.name}</h6>
                            </div>
                         </div>
+                        </>
                           ) : ''}
                       </>
                     ))
