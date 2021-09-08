@@ -67,7 +67,7 @@ function Greetings() {
           <>
             <span>
               {
-                comment_allow ? 'True' : 'False' // eslint-disable-line
+                comment_allow ? 'On' : 'Off' // eslint-disable-line
               }
             </span>
           </>
