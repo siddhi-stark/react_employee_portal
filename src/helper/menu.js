@@ -119,7 +119,7 @@ const menu = [
     path: '/interview-listing',
     icon: 'holiday.svg',
     submenu: [],
-    roleaccess: [1,2,3,4,5,6],
+    roleaccess: [1,2,3,5,6],
   },
   // {
   //   title: 'Employee Technology Stack',
@@ -222,7 +222,7 @@ const menu = [
     path: '/greetings',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [5,6],
+    roleaccess: [2,3,5,6],
   },
   {
     title: 'Log Out',

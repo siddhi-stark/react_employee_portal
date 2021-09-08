@@ -86,7 +86,7 @@ function Greetings() {
 	const [totalCount, setTotalCount] = useState(10);
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
-	const title = 'Greetings';
+	const [title, setTitle] = useState('');
 	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
@@ -114,6 +114,7 @@ function Greetings() {
 
 	useEffect(() => {
 		getRowData(1);
+		setTitle('Greetings');
 	}, []);
 
 	 const deleteBirthday = (id) => {

@@ -44,10 +44,10 @@ function Dashboard() {
   // const IsBirthday = customFunctions.getLocalStorage('birthday');
   // let IsUserId = false;
 
-  console.log('EmployeeID',EmployeeID);
 
   const d = new Date();
   const day = d.getDate();
+
 
   const m_names = ['January', 'February', 'March', 
                'April', 'May', 'June', 'July', 
@@ -375,28 +375,42 @@ if (LoginToken) {
               </Row>
             </Jumbotron>
                 <Card className="mt-3 birthday-list">
-                <Card.Body>
+
+
+                 {
+              EmployeeID && EmployeeID.map(employee => (
+                <>
+                {Number(employee.dob) === day ? (
+
+                   <Card.Body>
                    <p>Today's Birthdays</p>
 
             {
               EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
                 <>
+                {Number(emp.dob) >= day ? (
+
                 <div className="birth-name d-flex align-items-center">
                    <img src="/images/birthday-cake.png" alt="img" />
                    <div className="birthday-employees">
                      <h6>{emp.name}</h6>
                    </div>
                 </div>
+                  ) : ''}
                 </>
                 ))
-            }            
-                </Card.Body>
-                 </Card>
+            }
 
+             </Card.Body>
 
-            <Card className="mt-3 birthday-list">
-                <Card.Body>
-                   <p>Today's Work Anniversary</p>
+                  ) : ''}
+                </>
+                ))
+            } 
+
+              <Card.Body className="work-anniversary-box">
+            
+            <p>Today's Work Anniversary</p>
 
             {
               anniversary && anniversary.map(emp => (
@@ -404,14 +418,21 @@ if (LoginToken) {
                 <div className="birth-name d-flex align-items-center">
                    <img src="/images/working.png" alt="img" />
                    <div className="birthday-employees">
-                     <h6>{emp.name}</h6>
+                     <h6 onClick={() => { // eslint-disable-line 
+                        
+                      history.push('/birthday-wishes');
+
+                    }}
+                     >{emp.name}</h6>
                    </div>
                 </div>
                 </>
                 ))
-            }            
+            }     
                 </Card.Body>
-                 </Card>     
+                 </Card>
+
+
 
             <UserRestrictions permittedUsers={[5,6]} roleId={userRole}>
             <div className="mt-4">

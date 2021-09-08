@@ -15303,6 +15303,7 @@ span.np-sup {
   margin-bottom: 30px;
   overflow: hidden;
   width: 100%;
+  max-height: 350px;
 }
 .profile-bg img {
   width: 100%;
@@ -15395,6 +15396,10 @@ table tbody tr td a:hover {
 
 .birthday-block .card {
   height: calc(100% - 22px);
+}
+
+.work-anniversary-box {
+  border-top: 1px solid #333333;
 }
 
 /*Pre Code View end*/

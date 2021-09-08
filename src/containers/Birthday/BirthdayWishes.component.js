@@ -101,7 +101,7 @@ const addMeaage = async () => {
 		<>
 		{console.log('wisherProfile',bannerImage)}
 			<div className="profile-bg mt-3">
-				<Image src="/images/image.png" alt="image" />
+				<Image src={bannerImage} alt="image" />
 				{
 					wisherProfile ? (
 
