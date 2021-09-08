@@ -377,36 +377,27 @@ if (LoginToken) {
                 <Card className="mt-3 birthday-list">
 
 
-                 {
-              EmployeeID && EmployeeID.map(employee => (
+
+            <Card.Body>
+              <p>Today's Birthdays</p>
                 <>
-                {Number(employee.dob) === day ? (
+                  {
+                    EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
+                      <>
+                        {Number(emp.dob) >= day ? (
 
-                   <Card.Body>
-                   <p>Today's Birthdays</p>
-
-            {
-              EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
-                <>
-                {Number(emp.dob) >= day ? (
-
-                <div className="birth-name d-flex align-items-center">
-                   <img src="/images/birthday-cake.png" alt="img" />
-                   <div className="birthday-employees">
-                     <h6>{emp.name}</h6>
-                   </div>
-                </div>
-                  ) : ''}
+                        <div className="birth-name d-flex align-items-center">
+                           <img src="/images/birthday-cake.png" alt="img" />
+                           <div className="birthday-employees">
+                             <h6>{emp.name}</h6>
+                           </div>
+                        </div>
+                          ) : ''}
+                      </>
+                    ))
+                  }
                 </>
-                ))
-            }
-
              </Card.Body>
-
-                  ) : ''}
-                </>
-                ))
-            } 
 
               <Card.Body className="work-anniversary-box">
             
