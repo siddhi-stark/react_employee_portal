@@ -388,7 +388,6 @@ if (LoginToken) {
             {
               EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
                 <>
-                {Number(emp.dob) >= day ? (
 
                 <div className="birth-name d-flex align-items-center">
                    <img src="/images/birthday-cake.png" alt="img" />
@@ -396,7 +395,6 @@ if (LoginToken) {
                      <h6>{emp.name}</h6>
                    </div>
                 </div>
-                  ) : ''}
                 </>
                 ))
             }
@@ -415,11 +413,13 @@ if (LoginToken) {
             {
               anniversary && anniversary.map(emp => (
                 <>
+                {console.log('emp',emp)}
                 <div className="birth-name d-flex align-items-center">
                    <img src="/images/working.png" alt="img" />
                    <div className="birthday-employees">
                      <h6 onClick={() => { // eslint-disable-line 
-                        
+                      customFunctions.setLocalStorage('employeeId',emp.id); // eslint-disable-line 
+                      customFunctions.setLocalStorage('gId',emp.greeting); // eslint-disable-line  
                       history.push('/birthday-wishes');
 
                     }}

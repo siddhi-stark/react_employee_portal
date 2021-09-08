@@ -97,7 +97,7 @@
 		"minDateSelector": "",
 		"maxDateSelector": "",
 		"disabled": false,
-		"isMulti": false,
+		"isMulti": true,
 		"allowedUsers": [],
 		"fieldsToReset": [],
 		"fieldLayout": {
