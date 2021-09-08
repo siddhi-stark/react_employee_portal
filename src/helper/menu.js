@@ -84,7 +84,7 @@ const menu = [
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'recruitement.svg',
-    roleaccess: [5,4,3,2],
+    roleaccess: [5,2],
   }, 
   {
     title: 'Candidates',
@@ -119,7 +119,7 @@ const menu = [
     path: '/interview-listing',
     icon: 'holiday.svg',
     submenu: [],
-    roleaccess: [1,2,3,5,6],
+    roleaccess: [1,2,3,4,5,6],
   },
   // {
   //   title: 'Employee Technology Stack',
