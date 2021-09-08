@@ -400,7 +400,7 @@ if (LoginToken) {
                 <>
                  {isShowBdayHeading ? (
 
-                  <p>Today's Birthdays</p>
+                  <p>Today's Birthday</p>
                    ) : ''}
                   {
                     EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
