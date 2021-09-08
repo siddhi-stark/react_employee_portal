@@ -376,8 +376,6 @@ if (LoginToken) {
             </Jumbotron>
                 <Card className="mt-3 birthday-list">
 
-
-
             <Card.Body>
               <p>Today's Birthdays</p>
                 <>
@@ -410,7 +408,8 @@ if (LoginToken) {
                    <img src="/images/working.png" alt="img" />
                    <div className="birthday-employees">
                      <h6 onClick={() => { // eslint-disable-line 
-                        
+                      customFunctions.setLocalStorage('employeeId',emp.id); // eslint-disable-line 
+                      customFunctions.setLocalStorage('gId',emp.greeting); // eslint-disable-line  
                       history.push('/birthday-wishes');
 
                     }}
@@ -420,10 +419,8 @@ if (LoginToken) {
                 </>
                 ))
             }     
-                </Card.Body>
-                 </Card>
-
-
+            </Card.Body>
+            </Card>
 
             <UserRestrictions permittedUsers={[5,6]} roleId={userRole}>
             <div className="mt-4">
