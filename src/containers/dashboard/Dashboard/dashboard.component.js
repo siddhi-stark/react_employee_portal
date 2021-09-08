@@ -46,6 +46,7 @@ function Dashboard() {
 
 
   const d = new Date();
+  const formattedDate = customFunctions.getDate(d);
   const day = d.getDate();
 
 
@@ -407,12 +408,13 @@ if (LoginToken) {
             {
               anniversary && anniversary.map(emp => (
                 <>
+                { console.log('emp',formattedDate===emp.date_of_joined) }
                 <div className="birth-name d-flex align-items-center">
                    <img src="/images/working.png" alt="img" />
                    <div className="birthday-employees">
                      <h6 onClick={() => { // eslint-disable-line 
                       customFunctions.setLocalStorage('employeeId',emp.id); // eslint-disable-line 
-                      customFunctions.setLocalStorage('gId',emp.greeting); // eslint-disable-line  
+                      customFunctions.setLocalStorage('gId',emp.greeting_anniversary); // eslint-disable-line  
                       history.push('/birthday-wishes');
 
                     }}
