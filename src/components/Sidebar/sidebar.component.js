@@ -290,7 +290,6 @@ const n = m_names[d.getMonth()];
                     href="#">
              
                       <>
-                        {console.log('UserId',bday.id)}
                       {Number(bday.dob) >= day ? (
                         <>
                      <p className="bday-date">

@@ -41,13 +41,16 @@ function Dashboard() {
   const isBirthday = customFunctions.getLocalStorage('birthday');
   const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
   const UserID = customFunctions.getLocalStorage('userId');
+  let isShowBdayHeading = false;
+  let isShowAnniversaryHeading = false;
   // const IsBirthday = customFunctions.getLocalStorage('birthday');
   // let IsUserId = false;
 
+  
 
   const d = new Date();
   const formattedDate = customFunctions.getDate(d);
-  const day = d.getDate();
+  const day = '0'+d.getDate(); // eslint-disable-line
 
 
   const m_names = ['January', 'February', 'March', 
@@ -57,6 +60,23 @@ function Dashboard() {
   const n = m_names[d.getMonth()]; 
 
   const DayMonth = day + ' ' + n ; // eslint-disable-line
+
+  EmployeeID.map((empl) => {
+    if(empl.dob === day) {
+
+    isShowBdayHeading = true;
+    }
+    return empl;
+  })
+
+  anniversary.map((anvs) => {
+    if(anvs.date_of_joined === formattedDate) {
+    isShowAnniversaryHeading = true;
+
+    }
+    return anvs;
+  })
+
 
 
   const [pagination, setPagination] = useState({
@@ -167,7 +187,6 @@ function Dashboard() {
     const { data } = await AuthApi.getDataFromServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
-      console.log('data.data',data.data);
       setAnniversary(data.data);
     }
   };
@@ -379,8 +398,10 @@ if (LoginToken) {
 
             <Card.Body>
                 <>
-               
+                 {isShowBdayHeading ? (
+
                   <p>Today's Birthdays</p>
+                   ) : ''}
                   {
                     EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
                       <>
@@ -403,12 +424,17 @@ if (LoginToken) {
 
               <Card.Body className="work-anniversary-box">
             
+            {isShowAnniversaryHeading ? (
+
             <p>Today's Work Anniversary</p>
+              ) : ''}
+
 
             {
               anniversary && anniversary.map(emp => (
                 <>
-                { console.log('emp',formattedDate===emp.date_of_joined) }
+                {formattedDate===emp.date_of_joined ? (
+
                 <div className="birth-name d-flex align-items-center">
                    <img src="/images/working.png" alt="img" />
                    <div className="birthday-employees">
@@ -421,6 +447,7 @@ if (LoginToken) {
                      >{emp.name}</h6>
                    </div>
                 </div>
+                  ) : ''}
                 </>
                 ))
             }     
