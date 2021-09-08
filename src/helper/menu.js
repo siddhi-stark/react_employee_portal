@@ -177,6 +177,13 @@ const menu = [
     roleaccess: [4],
   },
   {
+    title: 'Project',
+    path: '/project',
+    icon: 'leaves.svg',
+    submenu: [],
+    roleaccess: [1, 4],
+  },
+  {
     title: 'Reports',
     path: '#',
     redirect: false,

@@ -18,6 +18,10 @@ export default function UserRestrictions(props) {
 
   if(Number(roleId) === 4 && Number(departmentId) !== 7 && Number(departmentId) !== 8 && childRoute === '/emp-timesheet'){
     return <></>;
+  }  
+
+  if(Number(roleId) === 4 && Number(departmentId) !== 8 && childRoute === '/project'){
+    return <></>;
   }
   
   if(Number(roleId) === 4 && Number(departmentId) === 7 && childrenArr.includes(childRoute)){

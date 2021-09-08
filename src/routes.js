@@ -55,7 +55,9 @@ import AddBirthday from './containers/Birthday/AddBirthday.component';
 import BirthdayWishes from './containers/Birthday/BirthdayWishes.component';
 import Greetings from './containers/Birthday/Greetings.component';
 import MyInterviews from './containers/Recruitment/MyInterviews.component';
- 
+import Project from './containers/Project/project.component';
+import EditProject from './containers/Project/EditProject.component';
+import TeamProject from './containers/Project/teamProject.component';
 
 function Routes() {
   return (
@@ -128,6 +130,9 @@ function Routes() {
       <Route path="/birthday-wishes" exact component={BirthdayWishes} />
       <Route path="/greetings" exact component={Greetings} />
       <Route path="/interview-listing" exact component={MyInterviews} />
+      <Route path="/project" exact component={Project} />
+      <Route path="/edit-project/:projectId" exact component={EditProject} />
+      <Route path="/team-project" exact component={TeamProject} />
       <Route component={NotFound} />
     </Switch>
   );
