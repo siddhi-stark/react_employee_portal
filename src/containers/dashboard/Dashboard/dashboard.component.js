@@ -61,7 +61,7 @@ function Dashboard() {
 
   const DayMonth = day + ' ' + n ; // eslint-disable-line
 
-  EmployeeID.map((empl) => {
+ EmployeeID && EmployeeID.map((empl) => {
     if(empl.dob === day) {
 
     isShowBdayHeading = true;
@@ -69,7 +69,7 @@ function Dashboard() {
     return empl;
   })
 
-  anniversary.map((anvs) => {
+  anniversary && anniversary.map((anvs) => {
     if(anvs.date_of_joined === formattedDate) {
     isShowAnniversaryHeading = true;
 
