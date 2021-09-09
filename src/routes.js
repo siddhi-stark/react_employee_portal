@@ -58,6 +58,9 @@ import MyInterviews from './containers/Recruitment/MyInterviews.component';
 import Project from './containers/Project/project.component';
 import EditProject from './containers/Project/EditProject.component';
 import TeamProject from './containers/Project/teamProject.component';
+import Team from './containers/Project/team.component';
+import TeamMemberProject from './containers/Project/teamMemberProject.component';
+import ProjectScheduler from './containers/ProjectScheduler/projectScheduler.component';
 
 function Routes() {
   return (
@@ -132,7 +135,11 @@ function Routes() {
       <Route path="/interview-listing" exact component={MyInterviews} />
       <Route path="/project" exact component={Project} />
       <Route path="/edit-project/:projectId" exact component={EditProject} />
-      <Route path="/team-project" exact component={TeamProject} />
+      <Route path="/view-project/:projectId" exact component={EditProject} />
+      <Route path="/team-project/:teamProjectId" exact component={TeamProject} />
+      <Route path="/team/:teamId" exact component={Team} />
+      <Route path="/my-project/:teamMemberId" exact component={TeamMemberProject} />
+      <Route path="/scheduler" exact component={ProjectScheduler} />
       <Route component={NotFound} />
     </Switch>
   );

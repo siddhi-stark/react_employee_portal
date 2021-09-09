@@ -20,7 +20,7 @@ export default function UserRestrictions(props) {
     return <></>;
   }  
 
-  if(Number(roleId) === 4 && Number(departmentId) !== 8 && childRoute === '/project'){
+  if(Number(roleId) === 4 && Number(departmentId) === 7 && childRoute === '/project' && childRoute === '/scheduler'){
     return <></>;
   }
   

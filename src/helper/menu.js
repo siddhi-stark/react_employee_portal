@@ -168,7 +168,6 @@ const menu = [
     ],
     roleaccess: [1,2,3,6,5],
   },
-
   {
     title: 'Reports',
     path: '/report',
@@ -177,11 +176,18 @@ const menu = [
     roleaccess: [4],
   },
   {
+    title: 'Project scheduler',
+    path: '/scheduler',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4,5],
+  },
+  {
     title: 'Project',
     path: '/project',
     icon: 'leaves.svg',
     submenu: [],
-    roleaccess: [1, 4],
+    roleaccess: [1,2,3,4,5],
   },
   {
     title: 'Reports',

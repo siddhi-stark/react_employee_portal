@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -17,21 +17,31 @@ const items = [
 ];
 
 function Project() {
-  const title = 'Project';
+  const history = useHistory();
   // Declare variable
+  const [title, setTitle] = useState('');
   const [rowData, setRowData] = useState([]);
-  const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(5);
+  const [totalCount, setTotalCount] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
   const [activeMenu, setActiveMenu] = useState('all');
   const [status, setStatus] = useState(null); // eslint-disable-line
+  const departmentId = customFunctions.getLocalStorage('department');
 
   // Variable declarations Filter State
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   
-  const handleActionCallback = () => {
+  const projectData = [{
+    id:1,name:'LXD',completion:50,start_date:'2021-09-11',end_date:'2021-09-11',hourly_rate:20,estimate_hrs:1,hours_allocated:55,cost_allocated:5555,status:'active'
+  },{
+        id:2,name:'Employee Portal',completion:50,start_date:'2021-09-12',end_date:'2021-09-12',hourly_rate:20,estimate_hrs:1,hours_allocated:55,cost_allocated:5555,status:'active'
+  },{
+        name:'Total',completion:100,hourly_rate:2000,estimate_hrs:500,hours_allocated:505,cost_allocated:55550
+  }]
+
+  const handleActionCallback = ({id}) => {
     return (
       <>
         <a
@@ -40,7 +50,7 @@ function Project() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-             // history.push(`/edit-event/${row.id}`, { isView: 'true' });
+             history.push(`/view-project/${id}`,{isView:true});
           }}
         >
           <Image alt="view" src="/images/eye.svg" />
@@ -51,7 +61,7 @@ function Project() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            // history.push(`/edit-event/${row.id}`);
+            history.push(`/edit-project/${id}`,{isView:false});
           }}
         >
           <Image src="/images/edit-button.svg" />
@@ -68,9 +78,26 @@ function Project() {
       roleAccess: [4],
     },
     {
-      id: 'project_name',
+      id: 'name',
       label: 'Project Name',
       roleAccess: [4],
+      render: ({ id, name }) => {
+        return (
+          <>
+            <a
+              href="/"
+              className="pl-2 ms-1"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/team-project/${id}`);
+              }}
+            >
+             {name} 
+            </a>
+          </>
+        );
+      },
     },
     {
       id: 'completion',
@@ -84,10 +111,10 @@ function Project() {
       render: ({ start_date }) => {
         return (
           <>
-            <span>{customFunctions.getNewFormattedDate(start_date)}</span>
+            <span>{start_date && customFunctions.getDMYDate(start_date)}</span>
           </>
         );
-      },
+      }, 
     },
     {
       id: 'end_date',
@@ -96,14 +123,14 @@ function Project() {
       render: ({ end_date }) => {
         return (
           <>
-            <span>{customFunctions.getNewFormattedDate(end_date)}</span>
+            <span>{end_date && customFunctions.getDMYDate(end_date)}</span>
           </>
         );
       },
     },
     {
-      id: 'rate',
-      label: 'Hourly Rate',
+      id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'hourly_rate',
+      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Hourly Rate',
       roleAccess: [1],
     },
     {
@@ -112,12 +139,12 @@ function Project() {
       roleAccess: [4],
     },
     {
-      id: 'allocated_hrs',
+      id: 'hours_allocated',
       label: 'Allocated Hrs',
     },
     {
-      id: 'project_cost',
-      label: 'Project Cost',
+      id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'cost_allocated',
+      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Project Cost',
       roleAccess: [1],
     },
     {
@@ -126,13 +153,12 @@ function Project() {
     },
     {
       id: 'Action',
-      label: 'Action',
-      render:handleActionCallback
+      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Action',
+      render: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && handleActionCallback
     },
   ];
 
-  // Declare methods
-  const getRowData = async (pageNo = 1) => {
+  const getRowData = async (pageNo = 1) => { // eslint-disable-line
     const page = pageNo || currentPage;
     const endPoint = `${Api.applicantPercentageUrl}`; 
     const filterList =
@@ -146,12 +172,12 @@ function Project() {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-
+    console.log('data');
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setRowData((data && data.data) || []);
+      // setRowData((data && data.data) || []);
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -161,7 +187,9 @@ function Project() {
   };
 
   useEffect(() => {
-    getRowData(1);
+    // getRowData(1);
+    setTitle('Project');
+    setRowData(projectData || []);
   }, [filterData]);
 
 
@@ -233,6 +261,7 @@ function Project() {
             </Card.Header>
             <Card.Body>
             <div className="recruitment-links-wrapper">
+            {(Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && (
               <>
               <a
                 href="#"
@@ -305,6 +334,7 @@ function Project() {
                     Upcoming
                   </a>
                 </>
+             )}
             </div>
               <CustomTable
                 columns={columns}
