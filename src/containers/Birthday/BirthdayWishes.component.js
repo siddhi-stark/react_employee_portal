@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Image, Col, Button, Row, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
@@ -24,7 +24,7 @@ const [bannerImage,setBannerImage] = useState('');
 const [showWish,setShowWish] = useState('');
 const [employeeMessage,setEmployeeMessage] = useState('');
 const userID = customFunctions.getLocalStorage('userId');
-
+const history = useHistory();
 
 
 const getBirthdayWishes = async (GrtId) => {
@@ -196,7 +196,8 @@ const addMeaage = async () => {
                   'required'
                 )}
 					/>
-					<Button className="mb-4" type="submit">Submit</Button>
+					<Button className="mb-4" type="submit">{!showMessage ? 'Submit' : 'Update'}</Button>
+					<Button className="mb-4 ms-3" variant="secondary" type="submit" onClick={() => history.push('/')} >Cancel</Button>
 				</Col>
 				</Form>
 
