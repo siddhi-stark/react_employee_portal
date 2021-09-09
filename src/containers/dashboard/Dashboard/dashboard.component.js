@@ -43,10 +43,10 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
   let isShowBdayHeading = false;
   let isShowAnniversaryHeading = false;
+  const EmployeeJoiningDate = '';
 
   const d = new Date();
   const ToDayDate = d.getDate();
-  const formattedDate = customFunctions.getDate(d);
   const day = '0'+d.getDate(); // eslint-disable-line
   const m_names = ['January', 'February', 'March', 
                'April', 'May', 'June', 'July', 
@@ -67,9 +67,7 @@ function Dashboard() {
   anniversary && anniversary.map((anvs) => {
     const JoiningDate = new Date(anvs.date_of_joined);
     const NewJoiningDate = JoiningDate.getDate();
-      console.log('anvs',NewJoiningDate,ToDayDate,NewJoiningDate===ToDayDate);
     if(NewJoiningDate === ToDayDate) {
-      console.log('inside if condtion');
     isShowAnniversaryHeading = true;
 
     }
@@ -433,11 +431,12 @@ if (LoginToken) {
             <p>Today's Work Anniversary</p>
               ) : ''}
             {
-              anniversary && anniversary.map(emp => (
+              anniversary && anniversary.map(emp => {
                 <>
-                {formattedDate===emp.date_of_joined ? (
+                const JoiningOfDate = new Date(emp.date_of_joined);
+                EmployeeJoiningDate = JoiningOfDate.getDate();
+                {EmployeeJoiningDate===ToDayDate ? (
                   <>
-                  {console.log('formattedDate===emp.date_of_joined',formattedDate,emp.date_of_joined)}
                 <div className="birth-name d-flex align-items-center">
                    <img src="/images/working.png" alt="img" />
                    <div className="birthday-employees">
@@ -453,7 +452,7 @@ if (LoginToken) {
                   </>
                   ) : ''}
                 </>
-                ))
+                })
             }     
             </Card.Body>
             </Card>
