@@ -213,9 +213,7 @@ function MyInterviews() {
       
       my_interview:true,
       page,
-      limit,
-      sort_direction: 'descending',
-      sort_by: 'updated_at',
+      limit
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);

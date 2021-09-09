@@ -17,7 +17,7 @@ function Applications(props) {
     ? statusObj.location.state.statusObj
     : '';
   const Interview = statusObj.location.state
-    ? statusObj.location.state.IsInterview
+    ? statusObj.location.state.isInterview
     : '';
   const items = [{ to: '/', label: 'Home' }, { label: 'Applications' }];
   const [isBasicInfoId, setBasicInfo] = useState(null);

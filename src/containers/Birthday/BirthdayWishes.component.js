@@ -28,6 +28,7 @@ const userID = customFunctions.getLocalStorage('userId');
 
 
 const getBirthdayWishes = async (GrtId) => {
+	console.log('Inside Birthday wishes method',GrtId);
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data && data.data) {
@@ -55,10 +56,12 @@ const getBirthdayWishes = async (GrtId) => {
 	useEffect(() => {
 		  document.addEventListener('BirthdayUpdate', () => {
       const GreetingID = customFunctions.getLocalStorage('gId');
+			console.log('GreetingID outside if condition',GreetingID);
       getBirthdayWishes(GreetingID);
     });
 
 		if(GreetingId) {
+			console.log('GreetingID inside if condition',GreetingId);
 			getBirthdayWishes(GreetingId);
 
 		}
@@ -99,7 +102,6 @@ const addMeaage = async () => {
 
 	return (
 		<>
-		{console.log('wisherProfile',bannerImage)}
 			<div className="profile-bg mt-3">
 				<Image src={bannerImage} alt="image" />
 				{

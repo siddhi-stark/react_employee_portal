@@ -45,6 +45,7 @@ function Dashboard() {
   let isShowAnniversaryHeading = false;
 
   const d = new Date();
+  const ToDayDate = d.getDate();
   const formattedDate = customFunctions.getDate(d);
   const day = '0'+d.getDate(); // eslint-disable-line
   const m_names = ['January', 'February', 'March', 
@@ -64,7 +65,11 @@ function Dashboard() {
   });
 
   anniversary && anniversary.map((anvs) => {
-    if(anvs.date_of_joined === formattedDate) {
+    const JoiningDate = new Date(anvs.date_of_joined);
+    const NewJoiningDate = JoiningDate.getDate();
+      console.log('anvs',NewJoiningDate,ToDayDate,NewJoiningDate===ToDayDate);
+    if(NewJoiningDate === ToDayDate) {
+      console.log('inside if condtion');
     isShowAnniversaryHeading = true;
 
     }
@@ -383,6 +388,7 @@ if (LoginToken) {
                 </Col>
               </Row>
             </Jumbotron>
+
                 <Card className="mt-3 birthday-list">
 
                 {isShowBdayHeading ? (
@@ -401,7 +407,13 @@ if (LoginToken) {
                         <div className="birth-name d-flex align-items-center">
                            <img src="/images/birthday-cake.png" alt="img" />
                            <div className="birthday-employees">
-                             <h6>{emp.name}</h6>
+                             <h6 onClick={() => { // eslint-disable-line 
+                      customFunctions.setLocalStorage('employeeId',emp.id); // eslint-disable-line 
+                      customFunctions.setLocalStorage('gId',emp.greeting); // eslint-disable-line  
+                      history.push('/birthday-wishes');
+
+                    }}
+                             >{emp.name}</h6>
                            </div>
                         </div>
                         </>
@@ -414,7 +426,7 @@ if (LoginToken) {
                   
                   ) : ''}         
 
-              <Card.Body className= {!isShowBdayHeading ? 'birth-box-remove' : 'work-anniversary-box'} >
+              <Card.Body className= {isShowBdayHeading ? 'birth-box-remove' : 'work-anniversary-box'} >
             
             {isShowAnniversaryHeading ? (
 
@@ -424,7 +436,8 @@ if (LoginToken) {
               anniversary && anniversary.map(emp => (
                 <>
                 {formattedDate===emp.date_of_joined ? (
-
+                  <>
+                  {console.log('formattedDate===emp.date_of_joined',formattedDate,emp.date_of_joined)}
                 <div className="birth-name d-flex align-items-center">
                    <img src="/images/working.png" alt="img" />
                    <div className="birthday-employees">
@@ -437,6 +450,7 @@ if (LoginToken) {
                      >{emp.name}</h6>
                    </div>
                 </div>
+                  </>
                   ) : ''}
                 </>
                 ))
