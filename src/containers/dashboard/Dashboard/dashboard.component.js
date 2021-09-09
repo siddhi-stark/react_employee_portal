@@ -43,16 +43,10 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
   let isShowBdayHeading = false;
   let isShowAnniversaryHeading = false;
-  // const IsBirthday = customFunctions.getLocalStorage('birthday');
-  // let IsUserId = false;
-
-  
 
   const d = new Date();
   const formattedDate = customFunctions.getDate(d);
   const day = '0'+d.getDate(); // eslint-disable-line
-
-
   const m_names = ['January', 'February', 'March', 
                'April', 'May', 'June', 'July', 
                'August', 'September', 'October', 'November', 'December'];
@@ -67,7 +61,7 @@ function Dashboard() {
     isShowBdayHeading = true;
     }
     return empl;
-  })
+  });
 
   anniversary && anniversary.map((anvs) => {
     if(anvs.date_of_joined === formattedDate) {
@@ -75,9 +69,7 @@ function Dashboard() {
 
     }
     return anvs;
-  })
-
-
+  });
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -146,7 +138,6 @@ function Dashboard() {
   };
 
   const getTimeSheetList = async () => {
-    // const page = pageNo || pagination.current_page;
     const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}?limit=5`);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
@@ -191,8 +182,6 @@ function Dashboard() {
     }
   };
 
-
-
   const getProfile = async () => {
     const userToken = customFunctions.getLocalStorage('access_token');
     if (!userToken) return false;
@@ -232,7 +221,7 @@ const getInstagramPost = async () => {
   if(data) {
     setSocialMediaData(data.data);
   }
-}
+};
 
   useEffect(() => {
    const LoginToken = customFunctions.getLocalStorage('access_token');
@@ -396,7 +385,8 @@ if (LoginToken) {
             </Jumbotron>
                 <Card className="mt-3 birthday-list">
 
-            <Card.Body>
+                {isShowBdayHeading ? (
+                    <Card.Body>
                 <>
                  {isShowBdayHeading ? (
 
@@ -421,15 +411,15 @@ if (LoginToken) {
                   }
                 </>
              </Card.Body>
+                  
+                  ) : ''}         
 
-              <Card.Body className="work-anniversary-box">
+              <Card.Body className= {!isShowBdayHeading ? 'birth-box-remove' : 'work-anniversary-box'} >
             
             {isShowAnniversaryHeading ? (
 
             <p>Today's Work Anniversary</p>
               ) : ''}
-
-
             {
               anniversary && anniversary.map(emp => (
                 <>
@@ -568,8 +558,6 @@ if (LoginToken) {
               <div className="row">
               {holidays && holidays.length >= 1 ? (
                 <>
-                
-
                 <div className="col-xl-6">
                   <div className="upcoming-bg">
                     <div className="upcoming-event-box">
@@ -607,9 +595,7 @@ if (LoginToken) {
                 </>
                 ) : ''}
 
-                 <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
-
-                
+                 <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>             
 
                  <div className="col-xl-6">
                   <div className="upcoming-bg faint-orange">
@@ -620,10 +606,7 @@ if (LoginToken) {
                           src="/images/leaves-holiday.svg"
                           alt="Upcoming event"
                         />
-                        <p>Leaves</p>
-
-                 
-
+                        <p>Leaves</p>               
                          <Image 
                          className="up-leaves"
                            src="/images/redirect.png"
@@ -650,7 +633,6 @@ if (LoginToken) {
                         ))}
                          </>
                     ) : 'Thank you, No leave applied yet.'}
-
 
                     </div>
                   </div>
@@ -690,9 +672,7 @@ if (LoginToken) {
                   </div>
                 </div>
               </div>
-
-
-          </Col>
+              </Col>
         </Row>
       </section>
        <ModalInput

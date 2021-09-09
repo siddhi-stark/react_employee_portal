@@ -55,7 +55,6 @@ import AddBirthday from './containers/Birthday/AddBirthday.component';
 import BirthdayWishes from './containers/Birthday/BirthdayWishes.component';
 import Greetings from './containers/Birthday/Greetings.component';
 import MyInterviews from './containers/Recruitment/MyInterviews.component';
- 
 
 function Routes() {
   return (

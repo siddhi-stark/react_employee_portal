@@ -55,6 +55,7 @@ function MyInterviews() {
               e.stopPropagation();
               history.push(`/applications/${id}`, {
                 statusObj: status_name,
+                isInterview: true
               });
 
               // history.push('/edit-employee');

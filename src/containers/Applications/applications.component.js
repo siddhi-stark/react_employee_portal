@@ -16,6 +16,9 @@ function Applications(props) {
   const paginationOptions = statusObj.location.state
     ? statusObj.location.state.statusObj
     : '';
+  const Interview = statusObj.location.state
+    ? statusObj.location.state.IsInterview
+    : '';
   const items = [{ to: '/', label: 'Home' }, { label: 'Applications' }];
   const [isBasicInfoId, setBasicInfo] = useState(null);
   const [isProfessionalInfoId, setProfessionalInfo] = useState(null);
@@ -45,7 +48,8 @@ function Applications(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <Button className="float-end" onClick={()=>history.push('/recruitment')}>Back</Button>
+        <Button className="float-end" onClick={()=> {Interview ? history.push('/interview-listing') : history.push('/recruitment')}} // eslint-disable-line 
+        >Back</Button>
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
         <Breadcrumb items={items} />
         <section className="content-area">
