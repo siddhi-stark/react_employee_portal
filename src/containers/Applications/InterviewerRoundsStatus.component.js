@@ -33,6 +33,13 @@ function InterviewerRoundsStatus(props) {
   const history = useHistory();
   const { isProfessionalInfoId } = props;
 
+  const statusObj = props;
+
+  const Interview = statusObj.location.state
+    ? statusObj.location.state.isInterview
+    : '';
+
+
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -116,7 +123,13 @@ function InterviewerRoundsStatus(props) {
       }).then(() => {
         swal.close();
       });
-        history.push('/recruitment');
+
+      {Interview ? // eslint-disable-line
+        history.push('/interview-listing') : 
+        history.push('/recruitment')
+      }
+
+
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
