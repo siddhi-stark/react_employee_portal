@@ -428,9 +428,8 @@ function AddLeave(props) {
                 history.push('/leaves');
               }}
             />
-  
             <div className="container">
-            { leaveId && (
+            { (leaveId && Boolean(viewLeaveOptions)) && (
               <TextInput
                   inputClass="form-control"
                   label="Note"

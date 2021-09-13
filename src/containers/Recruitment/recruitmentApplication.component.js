@@ -165,7 +165,7 @@ function RecruitmentApplicationComponent() {
       <>
       {resume.resume ? (
 
-        <a href={resume.resume} className="pl-2" target="_Blank">
+        <a href={resume.resume} className="pl-2" title="View Resume" target="_Blank">
           <Image src="/images/download-file.svg" />
         </a>
         ) : ''}

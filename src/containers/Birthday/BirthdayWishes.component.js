@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Image, Col, Button, Row, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
@@ -24,10 +24,11 @@ const [bannerImage,setBannerImage] = useState('');
 const [showWish,setShowWish] = useState('');
 const [employeeMessage,setEmployeeMessage] = useState('');
 const userID = customFunctions.getLocalStorage('userId');
-
+const history = useHistory();
 
 
 const getBirthdayWishes = async (GrtId) => {
+	console.log('Inside Birthday wishes method',GrtId);
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data && data.data) {
@@ -55,10 +56,12 @@ const getBirthdayWishes = async (GrtId) => {
 	useEffect(() => {
 		  document.addEventListener('BirthdayUpdate', () => {
       const GreetingID = customFunctions.getLocalStorage('gId');
+			console.log('GreetingID outside if condition',GreetingID);
       getBirthdayWishes(GreetingID);
     });
 
 		if(GreetingId) {
+			console.log('GreetingID inside if condition',GreetingId);
 			getBirthdayWishes(GreetingId);
 
 		}
@@ -99,7 +102,6 @@ const addMeaage = async () => {
 
 	return (
 		<>
-		{console.log('wisherProfile',bannerImage)}
 			<div className="profile-bg mt-3">
 				<Image src={bannerImage} alt="image" />
 				{
@@ -194,7 +196,8 @@ const addMeaage = async () => {
                   'required'
                 )}
 					/>
-					<Button className="mb-4" type="submit">Submit</Button>
+					<Button className="mb-4" type="submit">{!showMessage ? 'Submit' : 'Update'}</Button>
+					<Button className="mb-4 ms-3" variant="secondary" type="submit" onClick={() => history.push('/')} >Cancel</Button>
 				</Col>
 				</Form>
 

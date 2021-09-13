@@ -55,6 +55,7 @@ function MyInterviews() {
               e.stopPropagation();
               history.push(`/applications/${id}`, {
                 statusObj: status_name,
+                isInterview: true
               });
 
               // history.push('/edit-employee');
@@ -76,49 +77,6 @@ function MyInterviews() {
             <Image src="/images/notes.svg" />
           </a>
         )}
-        {(Number(group) === 4 || Number(group) === 3) || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'declined' || status_name === 'rejected' ? ( //eslint-disable-line
-          ''
-        ) : (
-          <a
-            href="/"
-            className="p-r-2 text-info ms-2"
-            title="Send Offer"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              history.push('/generate-offerletter');
-              customFunctions.setLocalStorage('applicantId', id);
-              rowData &&
-                rowData.map((dt) => {
-                  if (id === dt.id) {
-                    customFunctions.setLocalStorage(
-                      'applicantName',
-                      dt.name && dt.name
-                    );
-                    customFunctions.setLocalStorage(
-                      'designation',
-                      dt.applied_for_name && dt.applied_for_name
-                    );
-                    customFunctions.setLocalStorage(
-                      'offerctc',
-                      dt.offered_ctc && dt.offered_ctc
-                    );
-                    customFunctions.setLocalStorage(
-                      'joiningdate',
-                      dt.joining_date && dt.joining_date
-                    );
-                    customFunctions.setLocalStorage(
-                      'pfInclude',
-                      dt.pf_included && dt.pf_included
-                    );
-                  }
-                  return dt;
-                });
-            }}
-          >
-            <Image src="/images/offer.svg" />
-          </a>
-        )}
       </>
     );
   };
@@ -128,7 +86,7 @@ function MyInterviews() {
       <>
       {resume.resume ? (
 
-        <a href={resume.resume} className="pl-2" target="_Blank">
+        <a href={resume.resume} className="pl-2" title="View Resume" target="_Blank">
           <Image src="/images/download-file.svg" />
         </a>
         ) : ''}
@@ -214,7 +172,6 @@ function MyInterviews() {
       page,
       limit,
       sort_direction: 'descending',
-      sort_by: 'updated_at',
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);

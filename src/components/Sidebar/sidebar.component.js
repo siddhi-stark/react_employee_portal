@@ -40,11 +40,6 @@ const d = new Date();
 const day = d.getDate();
 const n = m_names[d.getMonth()];
 
-// const time = new Date();
-// console.log(
-//   time.toLocaleString('en-US', { hour: 'numeric', hour12: true })
-// ); 
-
 
   const onSubActiveClass = () => {
     if (activeSubPath !== window.location.pathname)
@@ -118,19 +113,6 @@ const n = m_names[d.getMonth()];
   document.dispatchEvent(viewEvent);
   return true;
 };
-
-// function formatAMPM(date) {
-//   const hours = date.getHours();
-//   const minutes = date.getMinutes();
-//   const ampm = hours >= 12 ? 'pm' : 'am';
-//   const hoursNew = hours % 12; // eslint-disable-line
-//   const hoursN = hoursNew ? hoursNew : 12; //  eslint-disable-line
-//   const minutesN = minutes < 10 ? '0'+minutes : minutes; //  eslint-disable-line
-//   const strTime = hoursN + ':' + minutesN + ' ' + ampm; //  eslint-disable-line
-//   return strTime;
-// }
-
-// console.log(formatAMPM(new Date));
 
 
   return (
@@ -302,8 +284,6 @@ const n = m_names[d.getMonth()];
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
                       history.push('/birthday-wishes')
-                      console.log('gId',Number(bday.dob),day);
-                      history.push('/birthday-wishes');
                       document.dispatchEvent(BirthdayEvent);
 
                     }}

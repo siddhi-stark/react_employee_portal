@@ -29,12 +29,13 @@ function Dashboard() {
   const [morningMail, setMorningMail] = useState(false);
   const [quotesContent, setQuotesContent] = useState('');
   const [totalHrs, setTotalHrs] = useState(null);
-  const [holidays,setHolidays] = useState([]);
-  const [leaves,setLeaves] = useState([]);
-  const [socialMedia,setSocialMediaData] = useState([]);
-  const [modalShow,setModalShow] = useState(false);
-  const [anniversary,setAnniversary] = useState([]);
-  const [image,setImage] = useState('');
+  const [holidays, setHolidays] = useState([]);
+  const [leaves, setLeaves] = useState([]);
+  const [socialMedia, setSocialMediaData] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
+  const [anniversary, setAnniversary] = useState([]);
+  const [appreciationData,setAppriciation] = useState([]);
+  const [image, setImage] = useState('');
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
@@ -43,41 +44,46 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
   let isShowBdayHeading = false;
   let isShowAnniversaryHeading = false;
-  // const IsBirthday = customFunctions.getLocalStorage('birthday');
-  // let IsUserId = false;
-
-  
 
   const d = new Date();
-  const formattedDate = customFunctions.getDate(d);
-  const day = '0'+d.getDate(); // eslint-disable-line
+  const ToDayDate = d.getDate();
+  const day = '0' + d.getDate(); // eslint-disable-line
+  const m_names = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
+  const n = m_names[d.getMonth()];
 
-  const m_names = ['January', 'February', 'March', 
-               'April', 'May', 'June', 'July', 
-               'August', 'September', 'October', 'November', 'December'];
+  const DayMonth = day + ' ' + n; // eslint-disable-line
 
-  const n = m_names[d.getMonth()]; 
+  EmployeeID &&
+    EmployeeID.map((empl) => {
+      if (empl.dob === day) {
+        isShowBdayHeading = true;
+      }
+      return empl;
+    });
 
-  const DayMonth = day + ' ' + n ; // eslint-disable-line
-
- EmployeeID && EmployeeID.map((empl) => {
-    if(empl.dob === day) {
-
-    isShowBdayHeading = true;
-    }
-    return empl;
-  })
-
-  anniversary && anniversary.map((anvs) => {
-    if(anvs.date_of_joined === formattedDate) {
-    isShowAnniversaryHeading = true;
-
-    }
-    return anvs;
-  })
-
-
+  anniversary &&
+    anniversary.map((anvs) => {
+      const JoiningDate = new Date(anvs.date_of_joined);
+      const NewJoiningDate = JoiningDate.getDate();
+      if (NewJoiningDate === ToDayDate) {
+        isShowAnniversaryHeading = true;
+      }
+      return anvs;
+    });
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -114,15 +120,15 @@ function Dashboard() {
   // const lastday = date.getDate() - (date.getDay() - 1) + 6;
   // const lastDayNew =  new Date(date.setDate(lastday));
 
-// const curr = new Date; // get current date
-// const first = curr.getDate() - curr.getDay() +1; // First day is the day of the month - the day of the week
-// const last = first + 4; // last day is the first day + 6
+  // const curr = new Date; // get current date
+  // const first = curr.getDate() - curr.getDay() +1; // First day is the day of the month - the day of the week
+  // const last = first + 4; // last day is the first day + 6
 
-// const firstday = new Date(curr.setDate(first)).toUTCString();
-// const lastday = new Date(curr.setDate(last)).toUTCString();
+  // const firstday = new Date(curr.setDate(first)).toUTCString();
+  // const lastday = new Date(curr.setDate(last)).toUTCString();
 
-// const FirstDay = customFunctions.getDate(firstday);
-// const LastDay = customFunctions.getDate(lastday);
+  // const FirstDay = customFunctions.getDate(firstday);
+  // const LastDay = customFunctions.getDate(lastday);
 
   const getDailyActivity = async () => {
     setShowLoader(true);
@@ -131,9 +137,9 @@ function Dashboard() {
       setMorningMail(data.data.morning_mail);
       if (data.data.clock_in_time && data.data.clocked_in) {
         customFunctions.setLocalStorage('clockinTime', data.data.clock_in_time);
-        customFunctions.setLocalStorage('userclockedin',true);
+        customFunctions.setLocalStorage('userclockedin', true);
         setSignInTime(data.data.clock_in_time);
-        customFunctions.setLocalStorage('clockInDate',data.data.clock_in_date);
+        customFunctions.setLocalStorage('clockInDate', data.data.clock_in_date);
         setShowClockIn(true);
         SharedService.clockIn.next(true);
         setShowLoader(false);
@@ -146,8 +152,9 @@ function Dashboard() {
   };
 
   const getTimeSheetList = async () => {
-    // const page = pageNo || pagination.current_page;
-    const { data } = await AuthApi.getDataFromServer(`${Api.timeSheetUrl}?limit=5`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.timeSheetUrl}?limit=5`
+    );
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setPagination({
         current_page: data.paginator ? Number(data.paginator.current_page) : 0,
@@ -189,9 +196,16 @@ function Dashboard() {
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
       setAnniversary(data.data);
     }
+  }; 
+
+  const getAppreciation = async () => {
+    const endPoint = `${Api.birthdayUrl}?is_appreciation=true`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+
+    if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
+      setAppriciation(data.data);
+    }
   };
-
-
 
   const getProfile = async () => {
     const userToken = customFunctions.getLocalStorage('access_token');
@@ -210,38 +224,39 @@ function Dashboard() {
     setTime(localTime);
   };
 
- const getUpcomingHoliday = async () => {
+  const getUpcomingHoliday = async () => {
     const endPoint = `${Api.holidayUrl}?sort_by=date&sort_direction=ascending&limit=2`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
+    if (data) {
       setHolidays(data.data);
     }
   };
 
-const getAppliedLeaves = async () => {
+  const getAppliedLeaves = async () => {
     const endPoint = `${Api.leavesApplied}?sort_by=leave_from_date&limit=2`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
+    if (data) {
       setLeaves(data.data);
     }
   };
 
-const getInstagramPost = async () => {
-  const endPoint = `${Api.socialMediaUrl}`;
-  const { data } = await AuthApi.getDataFromServer(endPoint);
-  if(data) {
-    setSocialMediaData(data.data);
-  }
-}
+  const getInstagramPost = async () => {
+    const endPoint = `${Api.socialMediaUrl}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
+      setSocialMediaData(data.data);
+    }
+  };
 
   useEffect(() => {
-   const LoginToken = customFunctions.getLocalStorage('access_token');
-if (LoginToken) {
-  getUpcomingHoliday();
-  getAppliedLeaves();
-  getInstagramPost();
-  getAnniversary();
-}
+    const LoginToken = customFunctions.getLocalStorage('access_token');
+    if (LoginToken) {
+      getUpcomingHoliday();
+      getAppliedLeaves();
+      getInstagramPost();
+      getAnniversary();
+      getAppreciation();
+    }
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
     });
@@ -264,16 +279,14 @@ if (LoginToken) {
     const quote = customFunctions.getLocalStorage('quote');
     setQuotesContent(quote);
     const userclockedin = customFunctions.getLocalStorage('userclockedin');
-    if (userclockedin)
-      setShowClockIn(userclockedin);
+    if (userclockedin) setShowClockIn(userclockedin);
   }, []);
 
   const onViewButtonClick = () => {
-    
     document.dispatchEvent(viewButton);
     return true;
   };
-  
+
   const getWorkingHrs = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.workingHrsUrl}`);
 
@@ -283,12 +296,12 @@ if (LoginToken) {
     return true;
   };
 
-   const onViewHoliday = () => {  
+  const onViewHoliday = () => {
     document.dispatchEvent(viewHoliday);
     return true;
   };
 
-  const onViewLeaves = () => {   
+  const onViewLeaves = () => {
     document.dispatchEvent(viewLeaves);
     return true;
   };
@@ -296,9 +309,10 @@ if (LoginToken) {
   const onCancel = () => {
     setModalShow(false);
   };
-  
+
   return (
     <>
+    {console.log('appreciationData',appreciationData)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -326,45 +340,50 @@ if (LoginToken) {
 
                     <blockquote className="blockquote quote">
                       <p className="mb-0">
-
-
-                      {isBirthday === 'true' && (
-
-                     <> 
-                      'Today is your birthday.'
-                       <Button onClick={() => {
-                             history.push('/birthday-wishes');
-                           }} >Click Here</Button>
-                      </>
+                        {isBirthday === 'true' && (
+                          <>
+                            'Today is your birthday.'
+                            <Button
+                              onClick={() => {
+                                history.push('/birthday-wishes');
+                              }}
+                            >
+                              Click Here
+                            </Button>
+                          </>
                         )}
 
-
-                      {isBirthday === 'false' && (
-
-                     <>
-                      {quotesContent} </>
-                        )}
-                     
-                    
+                        {isBirthday === 'false' && <>{quotesContent} </>}
                       </p>
                     </blockquote>
-
                   </div>
                 </Col>
-                <Col md={3} className='d-flex justify-content-space-between flex-wrap'>
-                  <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
+                <Col
+                  md={3}
+                  className="d-flex justify-content-space-between flex-wrap"
+                >
+                  <UserRestrictions
+                    permittedUsers={[2, 3, 4, 5, 6]}
+                    roleId={userRole}
+                  >
                     <div className="check-in">
-                      {
-                        showClockIn && (
-                          <div className="time-count text-center">
-                            <span><h4>ClockIn Time<br />{signInTime || '00:00'}</h4></span>
-                          </div>
-                        )
-                      }
+                      {showClockIn && (
+                        <div className="time-count text-center">
+                          <span>
+                            <h4>
+                              ClockIn Time
+                              <br />
+                              {signInTime || '00:00'}
+                            </h4>
+                          </span>
+                        </div>
+                      )}
 
                       {time && (
                         <div className="time-count text-center">
-                          <span><h4>Clockout Time{time || '00:00'}</h4></span>
+                          <span>
+                            <h4>Clockout Time{time || '00:00'}</h4>
+                          </span>
                         </div>
                       )}
 
@@ -374,7 +393,10 @@ if (LoginToken) {
                           className="btn btn-primary"
                           onClick={() => {
                             setShowClockIn(true);
-                            customFunctions.setLocalStorage('userclockedin', true);
+                            customFunctions.setLocalStorage(
+                              'userclockedin',
+                              true
+                            );
                           }}
                         >
                           Clock In
@@ -382,10 +404,14 @@ if (LoginToken) {
                       )}
                     </div>
                   </UserRestrictions>
-                  <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
-                    <p className="text-primary mt-4"><i>Total Working Time: {totalHrs}</i></p>
+                  <UserRestrictions
+                    permittedUsers={[2, 3, 4, 5, 6]}
+                    roleId={userRole}
+                  >
+                    <p className="text-primary mt-4">
+                      <i>Total Working Time: {totalHrs}</i>
+                    </p>
                   </UserRestrictions>
-
                 </Col>
                 <Col md={4}>
                   <div className="welcome-img text-right">
@@ -394,151 +420,194 @@ if (LoginToken) {
                 </Col>
               </Row>
             </Jumbotron>
-                <Card className="mt-3 birthday-list">
 
-            <Card.Body>
-                <>
-                 {isShowBdayHeading ? (
-
-                  <p>Today's Birthday</p>
-                   ) : ''}
-                  {
-                    EmployeeID && EmployeeID.filter(e => ((Number(e.id) !== Number(UserID)) && e.is_birthday)).map(emp => (
-                      <>
-                        {Number(emp.dob) >= day ? (
-                          <>
-
-                        <div className="birth-name d-flex align-items-center">
-                           <img src="/images/birthday-cake.png" alt="img" />
-                           <div className="birthday-employees">
-                             <h6>{emp.name}</h6>
-                           </div>
-                        </div>
+            <Card className="mt-3 birthday-list">
+              {isShowBdayHeading ? (
+                <Card.Body>
+                  <>
+                    {isShowBdayHeading ? <p>Today's Birthday</p> : ''}
+                    {EmployeeID &&
+                      EmployeeID.filter(
+                        (e) => Number(e.id) !== Number(UserID) && e.is_birthday
+                      ).map((emp) => (
+                        <>
+                          {Number(emp.dob) >= day ? (
+                            <>
+                              <div className="birth-name d-flex align-items-center">
+                                <img
+                                  src="/images/birthday-cake.png"
+                                  alt="img"
+                                />
+                                <div className="birthday-employees">
+                                  <h6  onClick={() => { // eslint-disable-line
+                                      customFunctions.setLocalStorage(
+                                        'employeeId',
+                                        emp.id
+                                      ); // eslint-disable-line
+                                      customFunctions.setLocalStorage(
+                                        'gId',
+                                        emp.greeting
+                                      ); // eslint-disable-line
+                                      history.push('/birthday-wishes');
+                                    }}
+                                  >
+                                    {emp.name}
+                                  </h6>
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            ''
+                          )}
                         </>
-                          ) : ''}
-                      </>
-                    ))
-                  }
-                </>
-             </Card.Body>
+                      ))}
+                  </>
+                </Card.Body>
+              ) : (
+                ''
+              )}
 
-              <Card.Body className="work-anniversary-box">
-            
-            {isShowAnniversaryHeading ? (
-
-            <p>Today's Work Anniversary</p>
-              ) : ''}
-
-
-            {
-              anniversary && anniversary.map(emp => (
-                <>
-                {formattedDate===emp.date_of_joined ? (
-
-                <div className="birth-name d-flex align-items-center">
-                   <img src="/images/working.png" alt="img" />
-                   <div className="birthday-employees">
-                     <h6 onClick={() => { // eslint-disable-line 
-                      customFunctions.setLocalStorage('employeeId',emp.id); // eslint-disable-line 
-                      customFunctions.setLocalStorage('gId',emp.greeting_anniversary); // eslint-disable-line  
-                      history.push('/birthday-wishes');
-
-                    }}
-                     >{emp.name}</h6>
-                   </div>
-                </div>
-                  ) : ''}
-                </>
-                ))
-            }     
-            </Card.Body>
-            </Card>
-
-            <UserRestrictions permittedUsers={[5,6]} roleId={userRole}>
-            <div className="mt-4">
-              <EmployeeListComponent />
-            </div>
-            </UserRestrictions>
-
-            <UserRestrictions permittedUsers={[2,3,4,5,6]} roleId={userRole}>
-            {
-              showClockIn && !morningMail && (
-                <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
-                  <div className="img-text">
-                    <img src="/images/fail.svg" alt="Success" /> Please select below task and send morning scrum.
-                </div>
-                </div>
-              )
-            }
-            </UserRestrictions>
-
-            {showClockIn && <ToDoList onMorningSendScrum={getDailyActivity} onClockoutReport={getTimeSheetList} />}
-          </Col>
-          <Col xl={4} id="right-sidebar">
-          <UserRestrictions permittedUsers={[1, 2, 3, 4]} roleId={userRole}>
-            <Card className="flex-fill w-100 weekly-status-box">
-              <Card.Body>
-                <Row>
-                  <Col md>
-                    <h5 className="card-title mb-0">Weekly Status</h5>
-                    <div className="weekly-status">
-                      <ul className="list-unstyled p-0">
-                        <li>
-                          <p className="status-label">Completed</p>
-                          <span className="bluebg">{completed}%</span>
-                        </li>
-                        <li>
-                          <p className="status-label">Pending</p>
-                          <span className="pinkbg"> {pending}% </span>
-                        </li>
-                        <li>
-                          <p className="status-label">Remaining</p>
-                          <span className="yellowbg">{remaining}% </span>
-                        </li>
-                      </ul>
-                    </div>
-                  </Col>
-                  <div className="last-week">
-                    {!show ? (
-                      <a
-                        href="javascript:void()"
-                        onClick={() => {
-                          setShow(true);
-                          getWeeklyStatus('last_week');
-                        }}
-                      >
-                        <img src="/images/previous.svg" alt="week" /> Last Week
-                      </a>
-                    ) : (
-                      <a
-                        href="javascript:void()"
-                        onClick={() => {
-                          setShow(false);
-                          getWeeklyStatus('this_week');
-                        }}
-                      >
-                        <img src="/images/previous.svg" alt="week" /> This Week
-                      </a>
-                    )}
-                  </div>
-                </Row>
+              <Card.Body
+                className={
+                  !isShowBdayHeading
+                    ? 'birth-box-remove'
+                    : 'work-anniversary-box'
+                }
+              >
+                {isShowAnniversaryHeading ? (
+                  <p>Today's Work Anniversary</p>
+                ) : (
+                  ''
+                )}
+                {anniversary &&
+                  anniversary.map((emp) => (
+                    <>
+                      {new Date(emp.date_of_joined).getDate() === ToDayDate ? (
+                        <>
+                          <div className="birth-name d-flex align-items-center">
+                            <img src="/images/working.png" alt="img" />
+                            <div className="birthday-employees">
+                              <h6 onClick={() => {  // eslint-disable-line
+                                  customFunctions.setLocalStorage(
+                                    'employeeId',
+                                    emp.id
+                                  ); // eslint-disable-line
+                                  customFunctions.setLocalStorage(
+                                    'gId',
+                                    emp.greeting_anniversary
+                                  ); // eslint-disable-line
+                                  history.push('/birthday-wishes');
+                                }}
+                              >
+                                {emp.name}
+                              </h6>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </>
+                  ))}
               </Card.Body>
             </Card>
-            </UserRestrictions>
-            <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
 
+            <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
+              <div className="mt-4">
+                <EmployeeListComponent />
+              </div>
+            </UserRestrictions>
+
+            <UserRestrictions
+              permittedUsers={[2, 3, 4, 5, 6]}
+              roleId={userRole}
+            >
+              {showClockIn && !morningMail && (
+                <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
+                  <div className="img-text">
+                    <img src="/images/fail.svg" alt="Success" /> Please select
+                    below task and send morning scrum.
+                  </div>
+                </div>
+              )}
+            </UserRestrictions>
+
+            {showClockIn && (
+              <ToDoList
+                onMorningSendScrum={getDailyActivity}
+                onClockoutReport={getTimeSheetList}
+              />
+            )}
+          </Col>
+          <Col xl={4} id="right-sidebar">
+            <UserRestrictions permittedUsers={[1, 2, 3, 4]} roleId={userRole}>
+              <Card className="flex-fill w-100 weekly-status-box">
+                <Card.Body>
+                  <Row>
+                    <Col md>
+                      <h5 className="card-title mb-0">Weekly Status</h5>
+                      <div className="weekly-status">
+                        <ul className="list-unstyled p-0">
+                          <li>
+                            <p className="status-label">Completed</p>
+                            <span className="bluebg">{completed}%</span>
+                          </li>
+                          <li>
+                            <p className="status-label">Pending</p>
+                            <span className="pinkbg"> {pending}% </span>
+                          </li>
+                          <li>
+                            <p className="status-label">Remaining</p>
+                            <span className="yellowbg">{remaining}% </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </Col>
+                    <div className="last-week">
+                      {!show ? (
+                        <a
+                          href="javascript:void()"
+                          onClick={() => {
+                            setShow(true);
+                            getWeeklyStatus('last_week');
+                          }}
+                        >
+                          <img src="/images/previous.svg" alt="week" /> Last
+                          Week
+                        </a>
+                      ) : (
+                        <a
+                          href="javascript:void()"
+                          onClick={() => {
+                            setShow(false);
+                            getWeeklyStatus('this_week');
+                          }}
+                        >
+                          <img src="/images/previous.svg" alt="week" /> This
+                          Week
+                        </a>
+                      )}
+                    </div>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </UserRestrictions>
+            <UserRestrictions
+              permittedUsers={[2, 3, 4, 5, 6]}
+              roleId={userRole}
+            >
               <div className="table-projects time-sheet-table">
                 <div className="card">
                   <div className="table-title">
                     <h5 className="card-title">Timesheet</h5>
-                      <Image 
-                         className="up-leaves"
-                           src="/images/redirect.png"
-                           onClick={() => {
-                             history.push('/report');
-                             onViewButtonClick();
-                           }}
-                           />
+                    <Image
+                      className="up-leaves"
+                      src="/images/redirect.png"
+                      onClick={() => {
+                        history.push('/report');
+                        onViewButtonClick();
+                      }}
+                    />
                   </div>
                   <br />
                   <div className="table-responsive">
@@ -566,136 +635,131 @@ if (LoginToken) {
 
             <div className="holidays-applied">
               <div className="row">
-              {holidays && holidays.length >= 1 ? (
-                <>
-                
+                {holidays && holidays.length >= 1 ? (
+                  <>
+                    <div className="col-xl-6">
+                      <div className="upcoming-bg">
+                        <div className="upcoming-event-box">
+                          <div className="upcoming-event-img upcoming-event-img-edit">
+                            <img
+                              src="/images/leaves-holiday.svg"
+                              alt="Upcoming event"
+                            />
+                            <p>Holidays</p>
+                            <Image
+                              className="up-holday"
+                              src="/images/redirect.png"
+                              onClick={() => {
+                                history.push('/holidays');
+                                onViewHoliday();
+                              }}
+                            />
+                          </div>
+                          {holidays &&
+                            holidays.map((hd) => (
+                              <>
+                                <div className="event-title align-items-center date text-red">
+                                  <p>
+                                    <span>{hd.date}</span>
+                                  </p>
+                                  <p className="ms-1">
+                                    <span>{hd.occasion}</span>
+                                  </p>
+                                </div>
+                              </>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  ''
+                )}
 
-                <div className="col-xl-6">
-                  <div className="upcoming-bg">
-                    <div className="upcoming-event-box">
-                      <div className="upcoming-event-img upcoming-event-img-edit">
-                        <img
-
-                          src="/images/leaves-holiday.svg"
-                          alt="Upcoming event"
-                        />
-                        <p>Holidays</p>
-                        <Image 
-                           className="up-holday"
-                           src="/images/redirect.png"
-                           onClick={() => {
-                             history.push('/holidays'); 
-                             onViewHoliday();
-                           }}
-
+                <UserRestrictions
+                  permittedUsers={[2, 3, 4, 5, 6]}
+                  roleId={userRole}
+                >
+                  <div className="col-xl-6">
+                    <div className="upcoming-bg faint-orange">
+                      <div className="upcoming-event-box">
+                        <div className="upcoming-event-img upcoming-event-img-edit">
+                          <img
+                            className="up-leaves1"
+                            src="/images/leaves-holiday.svg"
+                            alt="Upcoming event"
                           />
+                          <p>Leaves</p>
+                          <Image
+                            className="up-leaves"
+                            src="/images/redirect.png"
+                            onClick={() => {
+                              history.push('/leaves');
+                              onViewLeaves();
+                            }}
+                          />
+                        </div>
+
+                        {leaves && leaves.length >= 1 ? (
+                          <>
+                            {leaves &&
+                              leaves.map((lv) => (
+                                <>
+                                  <div className="date">
+                                    <span>
+                                      {lv.leave_from_date} To {lv.leave_to_date}
+                                    </span>
+                                  </div>
+                                  <div className="event-title">
+                                    <p> {lv.leave_type}</p>
+                                  </div>
+                                </>
+                              ))}
+                          </>
+                        ) : (
+                          'Thank you, No leave applied yet.'
+                        )}
                       </div>
-                      {holidays && holidays.map((hd) => (
-                      <>
-                      <div className="event-title align-items-center date text-red">
-                       <p>
-                       <span>{hd.date}</span>
-                     </p> 
-                       <p className="ms-1"><span>{hd.occasion}</span></p>
-                      </div>
-                      </> 
-                        ))}
-                        
                     </div>
                   </div>
-                </div>
-                </>
-                ) : ''}
-
-                 <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
-
-                
-
-                 <div className="col-xl-6">
-                  <div className="upcoming-bg faint-orange">
-                    <div className="upcoming-event-box">
-                      <div className="upcoming-event-img upcoming-event-img-edit">
-                        <img
-                          className="up-leaves1"
-                          src="/images/leaves-holiday.svg"
-                          alt="Upcoming event"
-                        />
-                        <p>Leaves</p>
-
-                 
-
-                         <Image 
-                         className="up-leaves"
-                           src="/images/redirect.png"
-                           onClick={() => {
-                             history.push('/leaves'); 
-                             onViewLeaves();
-                           }}
-                           />
-                      </div>
-
-                       {leaves && leaves.length >= 1 ? (
-                         <>
-
-                      {leaves && leaves.map((lv) => (
-                        <>
-
-                      <div className="date">
-                        <span>{lv.leave_from_date} To {lv.leave_to_date}</span>
-                      </div>
-                      <div className="event-title">
-                        <p> {lv.leave_type}</p>
-                      </div>
-                        </>
-                        ))}
-                         </>
-                    ) : 'Thank you, No leave applied yet.'}
-
-
-                    </div>
-                  </div>
-                </div>
-                 </UserRestrictions>
+                </UserRestrictions>
               </div>
-            </div> 
+            </div>
 
-              <div className="social-media">
-                <div className="card flex-fill w-100">
-                  <div className="card-body">
-                    <div className="table-title">
-                      <h5 className="card-title mb-0">Social Media</h5>                  
-                    </div>
-                    <div className="weekly-status">
-                     <ul className="list-unstyled p-0 d-flex align-items-center justify-content-start">
-                      {socialMedia && socialMedia.map((sm) => (
-                      <>
-                      <li>
-                        <a href="#">
-                        <Image 
-                         className="up-leaves"
-                           src={sm.post_image}
-                           onClick={() => {
-                             setModalShow(true);
-                             setImage(sm.post_image);
-                           }}
-                           />
-
-                        </a>
-                      </li>
-                      
-                      </>    
+            <div className="social-media">
+              <div className="card flex-fill w-100">
+                <div className="card-body">
+                  <div className="table-title">
+                    <h5 className="card-title mb-0">Social Media</h5>
+                  </div>
+                  <div className="weekly-status">
+                    <ul className="list-unstyled p-0 d-flex align-items-center justify-content-start">
+                      {socialMedia &&
+                        socialMedia.map((sm) => (
+                          <>
+                            <li>
+                              <a href="#">
+                                <Image
+                                  className="up-leaves"
+                                  src={sm.post_image}
+                                  onClick={() => {
+                                    setModalShow(true);
+                                    setImage(sm.post_image);
+                                  }}
+                                />
+                              </a>
+                            </li>
+                          </>
                         ))}
                     </ul>
-                    </div>
                   </div>
                 </div>
               </div>
-
-
+            </div>
           </Col>
         </Row>
       </section>
-       <ModalInput
+      <ModalInput
         size="md"
         centered
         show={modalShow}
@@ -703,14 +767,10 @@ if (LoginToken) {
         id="contained-modal-title-vcenter"
         modalBody={
           <>
-       <Image
-        className="up-leaves"
-        src={image}
-        />
+            <Image className="up-leaves" src={image} />
           </>
-
         }
-        />
+      />
     </>
   );
 }

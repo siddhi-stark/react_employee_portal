@@ -149,12 +149,12 @@ export default class Api extends Component {
         break; 
 
       case 'dev':
-        url = 'https://devapi.starkdigital.in/api/v1/';
+        url = 'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/';
         break;
       // Default: development server
       default:
         url =
-          'https://devapi.starkdigital.in/api/v1/';
+          'https://mvwnj2rhk7.execute-api.ap-south-1.amazonaws.com/dev/api/v1/';
         break;
     }
     return url;

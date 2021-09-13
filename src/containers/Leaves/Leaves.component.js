@@ -22,9 +22,9 @@ function Leaves() {
 						e.preventDefault();
 						e.stopPropagation();
 							if(status_name !== 'Pending' || status_name === 'Approved'){
-								history.push(`/edit-leave/${id}`, { isViewLeave : 'true' });
+								history.push(`/edit-leave/${id}`, { isViewLeave : true });
 							} else {
-								history.push(`/edit-leave/${id}`,{ isViewLeave : 'false', isView: 'false' });
+								history.push(`/edit-leave/${id}`,{ isViewLeave : false, isView: 'false' });
 							}
 					}}
 				>
@@ -194,7 +194,7 @@ function Leaves() {
 										<a
 											href="#"
 											onClick={() => {
-												history.push('/add-leave',{ isViewLeave : 'true' });
+												history.push('/add-leave',{ isViewLeave : false });
 											}}
 											className="btn-link"
 										>

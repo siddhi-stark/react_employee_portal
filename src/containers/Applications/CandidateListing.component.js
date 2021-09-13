@@ -25,6 +25,7 @@ function CandidateListing() {
 			<>
 				<a
 					href="/"
+					title="Edit Candidate"
 					className="pl-2 ms-2"
 					onClick={(e) => {
 						e.preventDefault();
@@ -39,6 +40,7 @@ function CandidateListing() {
 					!row.employee_id && (
 						<a
 							href="/"
+							title="Onboard Candidate"
 							className="pl-2 ms-1"
 							onClick={(e) => {
 								e.preventDefault();
