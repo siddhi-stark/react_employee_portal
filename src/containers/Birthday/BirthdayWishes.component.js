@@ -12,7 +12,6 @@ function BirthdayWishes() {
 const validator = new SimpleReactValidator({ autoForceUpdate: this });
 const [message,setMessage] = useState('');
 const ID =  customFunctions.getLocalStorage('employeeId');
-console.log('Employee ID for appreciation',ID);
 // const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
 const [birthdayWishes,setBirthdayWishes] = useState([]);
 const isBirthday = customFunctions.getLocalStorage('birthday');
@@ -29,7 +28,7 @@ const history = useHistory();
 
 
 const getBirthdayWishes = async (GrtId) => {
-	console.log('Inside Birthday wishes method',GrtId);
+	console.log('GrtId',GrtId);
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data && data.data) {
@@ -67,6 +66,7 @@ const getBirthdayWishes = async (GrtId) => {
 
 		}
 		else {
+			console.log('inside else condition');
 			getBirthdayWishes(id);
 		}
 	}, [])

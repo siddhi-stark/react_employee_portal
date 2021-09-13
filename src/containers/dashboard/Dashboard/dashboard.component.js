@@ -204,7 +204,6 @@ function Dashboard() {
 
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
       setAppriciation(data.data);
-      console.log('data.data',data.data);
     }
   };
 
@@ -313,7 +312,6 @@ function Dashboard() {
 
   return (
     <>
-    {console.log('appreciationData',appreciationData)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -513,6 +511,8 @@ function Dashboard() {
               </Card.Body>
             </Card>
 
+            {appreciationData && appreciationData.length >= 1 ? (
+
              <Card className="mt-3 birthday-list">
              {appreciationData &&
                   appreciationData.map((appr) => (
@@ -522,7 +522,6 @@ function Dashboard() {
 
                             {appr.employee_data && appr.employee_data.map((empdata) => (
                               <>
-                              {console.log('empdata',empdata)}
                             <div className="birthday-employees">
                               <h6 onClick={() => {  // eslint-disable-line
                                   customFunctions.setLocalStorage(
@@ -531,7 +530,7 @@ function Dashboard() {
                                   ); // eslint-disable-line
                                   customFunctions.setLocalStorage(
                                     'gId',
-                                    appr.greet_type
+                                    appr.id
                                   ); // eslint-disable-line
                                   history.push('/birthday-wishes');
                                 }}
@@ -551,6 +550,7 @@ function Dashboard() {
                         </>
                   ))}
              </Card>
+              ) : ''}
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">
