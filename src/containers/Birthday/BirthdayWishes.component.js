@@ -12,6 +12,7 @@ function BirthdayWishes() {
 const validator = new SimpleReactValidator({ autoForceUpdate: this });
 const [message,setMessage] = useState('');
 const ID =  customFunctions.getLocalStorage('employeeId');
+console.log('Employee ID for appreciation',ID);
 // const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
 const [birthdayWishes,setBirthdayWishes] = useState([]);
 const isBirthday = customFunctions.getLocalStorage('birthday');
@@ -104,18 +105,11 @@ const addMeaage = async () => {
 		<>
 			<div className="profile-bg mt-3">
 				<Image src={bannerImage} alt="image" />
-				{
-					wisherProfile ? (
+				
 
 				<div className="profile-img">
 					<Image src={wisherProfile} alt="Card image cap" />
 				</div>
-						) : (
-         <div className="profile-img">
-					<Image src="/images/noProfile.jpeg" alt="Card image cap" />
-				</div>
-						)
-				}
 			</div>
 
 			<Row className="birthday-block">

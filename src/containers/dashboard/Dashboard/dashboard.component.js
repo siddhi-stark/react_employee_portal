@@ -204,6 +204,7 @@ function Dashboard() {
 
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
       setAppriciation(data.data);
+      console.log('data.data',data.data);
     }
   };
 
@@ -511,6 +512,45 @@ function Dashboard() {
                   ))}
               </Card.Body>
             </Card>
+
+             <Card className="mt-3 birthday-list">
+             {appreciationData &&
+                  appreciationData.map((appr) => (
+                        <>
+                          <div className="birth-name d-flex align-items-center">
+                            <img src="/images/appreciation.svg" alt="img" />
+
+                            {appr.employee_data && appr.employee_data.map((empdata) => (
+                              <>
+                              {console.log('empdata',empdata)}
+                            <div className="birthday-employees">
+                              <h6 onClick={() => {  // eslint-disable-line
+                                  customFunctions.setLocalStorage(
+                                    'employeeId',
+                                    empdata.id
+                                  ); // eslint-disable-line
+                                  customFunctions.setLocalStorage(
+                                    'gId',
+                                    appr.greet_type
+                                  ); // eslint-disable-line
+                                  history.push('/birthday-wishes');
+                                }}
+                              >
+
+                                {empdata.full_name}
+
+
+                              </h6>
+                            </div>
+                              </>
+
+                              ))}
+
+
+                          </div>
+                        </>
+                  ))}
+             </Card>
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">
