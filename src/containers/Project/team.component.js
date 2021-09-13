@@ -11,19 +11,15 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 
-function Team() {
+function Team(props) {
+  const teamid = props;
+  const teamId = teamid.match.params.teamId;
+  const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
+
   const items = [
     { to: '/', label: 'Home' },
     { to: '/project', label: 'Project' },
   ];
-
-  const projectData = [{
-    id:1,team:'Kailas',spend_hrs:50,remaining_hrs:500,allocated_hrs:55,task_status: '3/2'
-  },{
-      id:2,team:'Shubham',spend_hrs:50,remaining_hrs:500,allocated_hrs:55,task_status:'4/5'
-  },{
-      team:'Total',spend_hrs:100,remaining_hrs:200,estimate_hrs:500,allocated_hrs:505,task_status:'400%'
-  }];
 
   const history = useHistory();
   const [title, setTitle] = useState('');
@@ -44,9 +40,9 @@ function Team() {
       isDisplay: false
     },
     {
-      id: 'emp_name',
+      id: 'name',
       label: 'Team',
-      render: ({ id, team }) => {
+      render: ({ id, name }) => {
         return (
           <>
             <a
@@ -55,29 +51,60 @@ function Team() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                customFunctions.setLocalStorage('teamMemberId',id);
                 history.push(`/my-project/${id}`);
               }}
             >
-             {team} 
+             {name} 
             </a>
           </>
         );
       },
     },
     {
-      id: 'spend_hrs',
+      id: 'spend',
       label: 'Spend Hours',
+      render: ({ spend }) => {
+        return (
+          <>
+           { Math.sign(spend) === 1 ||
+            Math.sign(spend) === 0 ? (
+              <span>
+                {spend}{' '}
+                {Math.sign(spend) === 0 ? 'Hr' : 'Hrs'}
+              </span>
+            ) : (
+              <span className="text-danger">{spend} Hrs</span>
+            )}
+          </>
+        );
+      },
     },
     {
-      id: 'allocated_hrs',
+      id: 'allocated',
       label: 'Allocated Hours',
     },
     {
-      id: 'remaining_hrs',
+      id: 'remaining',
       label: 'Remaining Hours',
+      render: ({ remaining }) => {
+        return (
+          <>
+           { Math.sign(remaining) === 1 ||
+            Math.sign(remaining) === 0 ? (
+              <span>
+                {remaining}{' '}
+                {Math.sign(remaining) === 0 ? 'Hr' : 'Hrs'}
+              </span>
+            ) : (
+              <span className="text-danger">{remaining} Hrs</span>
+            )}
+          </>
+        );
+      },
     },
     {
-      id: 'task_status',
+      id: 'completed',
       label: 'Task Completed',
     },
   ];
@@ -85,24 +112,19 @@ function Team() {
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeUrl}`;
-    // const filterList =
-    //   filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-    //     ? customFunctions.jsonParse(filterData)
-    //     : {};
+    const endPoint = `${Api.departmentReportUrl}`;
     const params = {
+      department: teamId,
       page,
-      limit,
-      // ...filterList,
+      limit
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      // setRowData((data && data.data) || []);
+      setRowData((data && data.data && data.data.employees_data) || []);
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -113,7 +135,6 @@ function Team() {
 
   useEffect(() => {
     setTitle('Team Project');
-    setRowData(projectData);
     getRowData(1);
   }, []);
 
@@ -125,7 +146,7 @@ function Team() {
         <Breadcrumb items={items} />
       </div>
       <Card body className="mt-4">
-         <Button className="float-end mb-3" onClick= {() => history.push('/project')} >Back</Button>
+         <Button className="float-end mb-3" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
             <CustomTable
               columns={columns}
               rows={rowData}

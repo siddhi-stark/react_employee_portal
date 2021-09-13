@@ -66,6 +66,12 @@ function Project() {
   const columns = [
     {
       id: 'id',
+      label: 'Id',
+      roleAccess: [4],
+      isDisplay: false
+    },
+    {
+      id: 'index',
       label: 'Sr.No',
       roleAccess: [4],
     },
@@ -175,6 +181,14 @@ function Project() {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
+      
+      const newData = [...data.data];
+      newData.map((item, i) => {
+        const newItem = item;
+        newItem.index = (page - 1) * limit + (i + 1);
+        return newItem;
+      });
+
       setRowData((data && data.data) || []);
     } else {
       swal(message, '', 'error', {

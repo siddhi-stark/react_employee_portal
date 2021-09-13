@@ -11,7 +11,7 @@ import Api from '../../helper/api';
 
 function EditProject(props) {
   const idProps = props;
-  // const projectId = idProps.match.params.projectId;
+  const projectId = idProps.match.params.projectId;
   const viewOptions = idProps.location.state ? idProps.location.state.isView : '';
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
@@ -42,11 +42,11 @@ function EditProject(props) {
           s.fields = section.fields.map((item) => {
             const itemData = item;
             if (
-              item.name === 'project_name' ||
+              item.name === 'name' ||
               item.name === 'completion' ||
               item.name === 'start_date' ||
               item.name === 'end_date' ||
-              item.name === 'allocated_hrs' ||
+              item.name === 'allocated' ||
               item.name === 'hourly_rate' ||
               item.name === 'estimate_hrs' ||
               item.name === 'project_cost' ||
@@ -65,7 +65,7 @@ function EditProject(props) {
           s.fields = section.fields.map((item) => {
             const itemData = item;
             if (
-              item.name === 'allocated_hrs' ||
+              item.name === 'allocated' ||
               item.name === 'hourly_rate' ||
               item.name === 'project_cost' ||
               item.name === 'coordinator'
@@ -83,7 +83,7 @@ function EditProject(props) {
   const submitForm = async (formValues) => {
     console.log(formValues);
     
-      const { data, message } = await AuthApi.putDataToServer(Api.employeeUrl, formValues);
+      const { data, message } = await AuthApi.putDataToServer(Api.getProjects, formValues);
       if(!data) {
         swal(message, '', 'error', {
           closeOnClickOutside: false,
@@ -95,14 +95,34 @@ function EditProject(props) {
     
   // Get data for form
   const getData = async () => {
-    const { data, message } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    const { data, message } = await AuthApi.getDataFromServer(`${Api.getProjects}${projectId}/`);
     if(!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    updateDefaultValues(data);
+    
+    if (data) {
+      console.log('data',data.data)
+      const start = data && data.data && data.data.start_date  
+      const end = data && data.data && data.data.end_date  
+      const coordinatorValue = data.data.applied_for_id
+        ? {
+            label: data.data.applied_for_name,
+            value: data.data.applied_for_id,
+          }
+        : '';
+
+      const obj = {
+        ...data.data,
+        start_date:start,
+        end_date:end,
+        coordinator: coordinatorValue,
+      };
+
+      updateDefaultValues({ ...obj }); // updateDefaultValues(data);
+    };
   };
 
   // Call get data method on load

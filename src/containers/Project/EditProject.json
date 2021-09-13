@@ -11,9 +11,9 @@
 		"displaySectionTitle": false,
 		"fields": [
 			{
-				"name": "project_name",
+				"name": "name",
 				"type": "text",
-				"label": "Projec Name",
+				"label": "Project Name",
 				"id": "",
 				"placeholder": "",
 				"inputClass": "",
@@ -127,7 +127,7 @@
 				"options": []
 			},
 			{
-				"name": "allocated_hrs",
+				"name": "allocated",
 				"type": "text",
 				"label": "Allocated Hours",
 				"id": "",
