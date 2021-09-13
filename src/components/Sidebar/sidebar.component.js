@@ -227,6 +227,10 @@ const n = m_names[d.getMonth()];
 
                 {events && events.map((ev) => (
                         <>
+
+                        {console.log('ev',ev.date)}
+
+
                           <div className="event-title date d-flex align-items-center">
                            <p className="bday-date">
                        <img src="/images/calendar-img.png"  alt="Upcoming event"/>
@@ -244,7 +248,7 @@ const n = m_names[d.getMonth()];
             </div>
 
             {birthdays && birthdays.length >= 1 ? (
-
+              <>
             <div className="upcoming-bg bg-red birthday-wishes-chart">
               <div className="upcoming-event-box up-event">
                 <div className="upcoming-event-img">
@@ -294,6 +298,8 @@ const n = m_names[d.getMonth()];
                 </ul>     
               </div>
             </div>
+              </>
+
               ) : ''}
 
           </div> 
