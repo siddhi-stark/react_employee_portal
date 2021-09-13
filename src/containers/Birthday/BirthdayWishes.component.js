@@ -28,7 +28,7 @@ const history = useHistory();
 
 
 const getBirthdayWishes = async (GrtId) => {
-	console.log('Inside Birthday wishes method',GrtId);
+	console.log('GrtId',GrtId);
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data && data.data) {
@@ -66,6 +66,7 @@ const getBirthdayWishes = async (GrtId) => {
 
 		}
 		else {
+			console.log('inside else condition');
 			getBirthdayWishes(id);
 		}
 	}, [])
@@ -104,18 +105,11 @@ const addMeaage = async () => {
 		<>
 			<div className="profile-bg mt-3">
 				<Image src={bannerImage} alt="image" />
-				{
-					wisherProfile ? (
+				
 
 				<div className="profile-img">
 					<Image src={wisherProfile} alt="Card image cap" />
 				</div>
-						) : (
-         <div className="profile-img">
-					<Image src="/images/noProfile.jpeg" alt="Card image cap" />
-				</div>
-						)
-				}
 			</div>
 
 			<Row className="birthday-block">
@@ -189,7 +183,7 @@ const addMeaage = async () => {
                         value={message}
 						Row={5}
 						name="firstNameTitle"
-						placeholder="Birthday Wishes..."
+						placeholder="Enter your message here..."
 						errorMessage={validator.message(
                   'Message',
                   message,

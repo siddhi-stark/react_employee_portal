@@ -47,7 +47,7 @@ function Dashboard() {
 
   const d = new Date();
   const ToDayDate = d.getDate();
-  const day = '0' + d.getDate(); // eslint-disable-line
+  const day = d.getDate(); // eslint-disable-line
   const m_names = [
     'January',
     'February',
@@ -69,7 +69,7 @@ function Dashboard() {
 
   EmployeeID &&
     EmployeeID.map((empl) => {
-      if (empl.dob === day) {
+      if (Number(empl.dob) === Number(day)) {
         isShowBdayHeading = true;
       }
       return empl;
@@ -80,6 +80,7 @@ function Dashboard() {
       const JoiningDate = new Date(anvs.date_of_joined);
       const NewJoiningDate = JoiningDate.getDate();
       if (NewJoiningDate === ToDayDate) {
+
         isShowAnniversaryHeading = true;
       }
       return anvs;
@@ -312,7 +313,6 @@ function Dashboard() {
 
   return (
     <>
-    {console.log('appreciationData',appreciationData)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -421,6 +421,7 @@ function Dashboard() {
               </Row>
             </Jumbotron>
 
+              {(isShowBdayHeading || isShowAnniversaryHeading) && (
             <Card className="mt-3 birthday-list">
               {isShowBdayHeading ? (
                 <Card.Body>
@@ -511,6 +512,46 @@ function Dashboard() {
                   ))}
               </Card.Body>
             </Card>
+              )}
+
+             <Card className="mt-3 birthday-list">
+             {appreciationData &&
+                  appreciationData.map((appr) => (
+                        <>
+                          <div className="birth-name d-flex align-items-center">
+                            <img src="/images/appreciation.svg" alt="img" />
+
+                            {appr.employee_data && appr.employee_data.map((empdata) => (
+                              <>
+                              {console.log('empdata',empdata)}
+                            <div className="birthday-employees">
+                              <h6 onClick={() => {  // eslint-disable-line
+                                  customFunctions.setLocalStorage(
+                                    'employeeId',
+                                    empdata.id
+                                  ); // eslint-disable-line
+                                  customFunctions.setLocalStorage(
+                                    'gId',
+                                    appr.greet_type
+                                  ); // eslint-disable-line
+                                  history.push('/birthday-wishes');
+                                }}
+                              >
+
+                                {empdata.full_name}
+
+
+                              </h6>
+                            </div>
+                              </>
+
+                              ))}
+
+
+                          </div>
+                        </>
+                  ))}
+             </Card>
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">

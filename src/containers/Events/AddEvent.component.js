@@ -152,7 +152,7 @@ function AddEvent(props) {
   const getData = async (id) => {
     const { data } = await AuthApi.getDataFromServer(`${Api.eventsUrl}${id}/`);
 
-    data.data.time = data.data.time
+    data.data.time = data && data.data &&  data.data.time
       ? new Date(
           `${customFunctions.getDate(
             data.data.date
@@ -160,7 +160,7 @@ function AddEvent(props) {
         )
       : '';
 
-    data.data.date = data.data.date
+    data.data.date = data && data.data && data.data.date
       ? new Date(customFunctions.getDate(data.data.date))
       : '';
 
