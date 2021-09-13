@@ -183,7 +183,7 @@ const addMeaage = async () => {
                         value={message}
 						Row={5}
 						name="firstNameTitle"
-						placeholder="Birthday Wishes..."
+						placeholder="Enter your message here..."
 						errorMessage={validator.message(
                   'Message',
                   message,
