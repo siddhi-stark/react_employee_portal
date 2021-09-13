@@ -17,6 +17,8 @@ function Sidebar() {
 
   const [events,setEvents] = useState([]);
   const [birthdays,setBirthdayData] = useState([]);
+  const [isBirthDayPresent, setIsBirthDayPresent] = useState(false);
+
 
   const BirthdayEvent = new Event('BirthdayUpdate', { isUpdated: true });
 
@@ -49,7 +51,11 @@ const n = m_names[d.getMonth()];
      const url = customFunctions.generateUrl(endPoint);
     const { data } = await AuthApi.getDataFromServer(url);
     if(data) {
+      const bdayData = data.data;
       setBirthdayData(data.data);
+      if(bdayData.length > 0) {
+      setIsBirthDayPresent((bdayData.filter((e) => Number(e.dob) >= day)).length > 0 ? true : false); // eslint-disable-line
+      }
       customFunctions.setLocalStorage('Employee',JSON.stringify(data.data));
 
     }
@@ -228,7 +234,6 @@ const n = m_names[d.getMonth()];
                 {events && events.map((ev) => (
                         <>
 
-                        {console.log('ev',ev.date)}
 
 
                           <div className="event-title date d-flex align-items-center">
@@ -247,7 +252,7 @@ const n = m_names[d.getMonth()];
 
             </div>
 
-            {birthdays && birthdays.length >= 1 ? (
+            {(isBirthDayPresent && birthdays && birthdays.length >= 1) ? (
               <>
             <div className="upcoming-bg bg-red birthday-wishes-chart">
               <div className="upcoming-event-box up-event">
@@ -279,7 +284,7 @@ const n = m_names[d.getMonth()];
                         if(Number(bday.dob) > day) return false;
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
-                      history.push('/birthday-wishes');
+                      history.push('/wishes');
                       document.dispatchEvent(BirthdayEvent);
 
                     }}

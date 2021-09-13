@@ -24,6 +24,7 @@ const [bannerImage,setBannerImage] = useState('');
 const [showWish,setShowWish] = useState('');
 const [employeeMessage,setEmployeeMessage] = useState('');
 const userID = customFunctions.getLocalStorage('userId');
+const showComment = customFunctions.getLocalStorage('ShowComment');
 const history = useHistory();
 
 
@@ -103,6 +104,7 @@ const addMeaage = async () => {
 
 	return (
 		<>
+		{console.log('showComment',showComment)}
 			<div className="profile-bg mt-3">
 				<Image src={bannerImage} alt="image" />
 				

@@ -130,7 +130,7 @@ function Routes() {
       <Route path="/employee-leaves" exact component={EmployeeTeamLeaves} />
       <Route path="/add-birthday" exact component={AddBirthday} />
       <Route path="/edit-birthday/:bdayId" exact component={AddBirthday} />
-      <Route path="/birthday-wishes" exact component={BirthdayWishes} />
+      <Route path="/wishes" exact component={BirthdayWishes} />
       <Route path="/greetings" exact component={Greetings} />
       <Route path="/interview-listing" exact component={MyInterviews} />
       <Route path="/project" exact component={Project} />

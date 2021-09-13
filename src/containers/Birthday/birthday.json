@@ -120,7 +120,7 @@
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
-		"callback": "",
+		"callback": "handleComments",
 		"callbackUrl": "",
 		"inputToChange": "",
 		"minDateSelector": "",
