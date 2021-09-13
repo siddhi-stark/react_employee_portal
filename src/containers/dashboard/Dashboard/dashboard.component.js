@@ -514,6 +514,13 @@ function Dashboard() {
             {appreciationData && appreciationData.length >= 1 ? (
 
              <Card className="mt-3 birthday-list">
+             <Card.Body>
+              {appreciationData ? (
+                  <p> Work Appreciation</p>
+                ) : (
+                  ''
+                )}
+
              {appreciationData &&
                   appreciationData.map((appr) => (
                         <>
@@ -549,6 +556,7 @@ function Dashboard() {
                           </div>
                         </>
                   ))}
+             </Card.Body>
              </Card>
               ) : ''}
 
