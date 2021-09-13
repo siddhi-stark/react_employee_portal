@@ -284,7 +284,7 @@ const n = m_names[d.getMonth()];
                         if(Number(bday.dob) > day) return false;
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
-                      history.push('/birthday-wishes');
+                      history.push('/wishes');
                       document.dispatchEvent(BirthdayEvent);
 
                     }}

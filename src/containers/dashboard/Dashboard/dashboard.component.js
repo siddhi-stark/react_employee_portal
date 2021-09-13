@@ -345,7 +345,7 @@ function Dashboard() {
                             'Today is your birthday.'
                             <Button
                               onClick={() => {
-                                history.push('/birthday-wishes');
+                                history.push('wishes');
                               }}
                             >
                               Click Here
@@ -449,7 +449,7 @@ function Dashboard() {
                                         'gId',
                                         emp.greeting
                                       ); // eslint-disable-line
-                                      history.push('/birthday-wishes');
+                                      history.push('/wishes');
                                     }}
                                   >
                                     {emp.name}
@@ -497,7 +497,7 @@ function Dashboard() {
                                     'gId',
                                     emp.greeting_anniversary
                                   ); // eslint-disable-line
-                                  history.push('/birthday-wishes');
+                                  history.push('/wishes');
                                 }}
                               >
                                 {emp.name}
@@ -539,7 +539,7 @@ function Dashboard() {
                                     'gId',
                                     appr.greet_type
                                   ); // eslint-disable-line
-                                  history.push('/birthday-wishes');
+                                  history.push('/wishes');
                                 }}
                               >
 

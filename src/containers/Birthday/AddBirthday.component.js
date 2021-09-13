@@ -236,6 +236,10 @@ function AddBirthday(props) {
     getEmployee();
   }, []);
 
+ const onCommentsChange = (value) => {
+   console.log('value',value);
+   customFunctions.setLocalStorage('ShowComment',value);
+ } 
   
       
 
@@ -262,6 +266,10 @@ function AddBirthday(props) {
             handleimage: (value) => {
               handleImageFileUpload(value);
             },
+
+            handleComments:(value) => {
+              onCommentsChange(value);
+            }
           }}
     defaultFormValues={defaultValues}
     currentUser={currentUser}
