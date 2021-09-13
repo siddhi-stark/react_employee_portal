@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { ProgressBar, Card, Image } from 'react-bootstrap';
+import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
@@ -136,7 +137,10 @@ function CandidateListing() {
 			setCurrentPage(Number(data.paginator.current_page));
 			setRowData((data && data.data) || []);
 		} else {
-			console.log('error', message);
+			swal(message, '', 'error', {
+		        closeOnClickOutside: false,
+		        allowOutsideClick: false,
+		    });
 		}
 	};
 

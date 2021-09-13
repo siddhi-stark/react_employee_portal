@@ -28,14 +28,6 @@ function ProjectScheduler() {
 
   // Variable declarations Filter State
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  
-  const projectData = [{
-    id:1,name:'LXD',completion:50,start_date:'2021-09-11',end_date:'2021-09-11',hourly_rate:20,estimate_hrs:1,hours_allocated:55,project_cost:5555,status:'active'
-  },{
-        id:2,name:'Employee Portal',completion:50,start_date:'2021-09-12',end_date:'2021-09-12',hourly_rate:20,estimate_hrs:1,hours_allocated:55,project_cost:5555,status:'active'
-  },{
-        name:'Total',completion:100,hourly_rate:2000,estimate_hrs:500,hours_allocated:505,project_cost:55550
-  }]
 
   const handleActionCallback = ({id}) => {
     return (
@@ -127,9 +119,9 @@ function ProjectScheduler() {
     },
   ];
 
-  const getRowData = async (pageNo = 1) => { // eslint-disable-line
+  const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.applicantPercentageUrl}`; 
+    const endPoint = `${Api.projectSchedularUrl}`; 
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
@@ -141,12 +133,11 @@ function ProjectScheduler() {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data');
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setRowData((data && data.data) || []);
+      setRowData((data && data.data && data.data.employees_data) || []);
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -156,9 +147,8 @@ function ProjectScheduler() {
   };
 
   useEffect(() => {
-    // getRowData(1);
+    getRowData(1);
     setTitle('Project Scheduler');
-    setRowData(projectData || []);
   }, [filterData]);
 
   return (
@@ -192,7 +182,7 @@ function ProjectScheduler() {
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Project</h4>
+                <h4 className="text-primary mt-2 mb-2">Project Scheduler</h4>
               </div>
             </Card.Header>
             <Card.Body>

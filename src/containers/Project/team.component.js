@@ -23,7 +23,7 @@ function Team() {
       id:2,team:'Shubham',spend_hrs:50,remaining_hrs:500,allocated_hrs:55,task_status:'4/5'
   },{
       team:'Total',spend_hrs:100,remaining_hrs:200,estimate_hrs:500,allocated_hrs:505,task_status:'400%'
-  }]
+  }];
 
   const history = useHistory();
   const [title, setTitle] = useState('');

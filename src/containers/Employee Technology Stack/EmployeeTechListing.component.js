@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Row, Image } from 'react-bootstrap';
+import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './EmployeeTechFilter.json';
@@ -113,7 +114,10 @@ function EmployeeTechListing() {
 
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+      });
     }
   };
 

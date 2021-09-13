@@ -4,7 +4,6 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Row, Col, Card, Button, Image } from 'react-bootstrap';
 // import FormSections from './EmployeeFilterSchema.json';
 import { Helmet } from '../../components/FormInputs';
-
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
@@ -56,7 +55,6 @@ function OldEmployee() {
     getEmployeeName();
     getPosition();
   }, []);
-
 
   const getEmployeeName = async () => {
     // const id = props.match.params.stackId;

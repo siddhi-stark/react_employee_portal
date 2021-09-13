@@ -57,7 +57,6 @@ function Reports(props) {
     const dt = customFunctions.getDate(
       new Date(Number(props.match.params.date))
     );
-    console.log('dt',props.match.params.date);
     const userId = props.match.params.id;
     setReportDate(customFunctions.getFormattedDate(dt));
     const endPoint = `${Api.dailyReportUrl}`;

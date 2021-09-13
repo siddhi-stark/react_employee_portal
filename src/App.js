@@ -45,11 +45,11 @@ function App() {
     const roleId = customFunctions.getLocalStorage('group');
     const path = window.location.pathname;
 
-    const result = Menu && Menu.filter((role)=>{return (path === role.path)});
+    const result = Menu && Menu.filter((role)=>{return (path === role.path);});
     
     Menu && Menu.map((role)=> {
       if(role.path === '#' && role.submenu && role.submenu.length > 0 ){
-        const subResult = role && role.submenu.filter((sub)=>{return (path === sub.path)});
+        const subResult = role && role.submenu.filter((sub)=>{return (path === sub.path);});
         if(subResult && subResult.length > 0 && !subResult[0].roleaccess.includes(Number(roleId))){
             history.push('/');
         }

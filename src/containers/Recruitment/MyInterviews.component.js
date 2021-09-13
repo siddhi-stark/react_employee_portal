@@ -24,7 +24,6 @@ function MyInterviews() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState('');
-  
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -93,8 +92,6 @@ function MyInterviews() {
       </>
     );
   };
-
-  
 
   // Declare columns
   const columns = [

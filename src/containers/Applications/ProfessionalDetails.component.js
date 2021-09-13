@@ -37,9 +37,9 @@ function ProfessionalDetails(props) {
         const itemData = item;
          if(item.name === 'total_exp' || item.name === 'rel_exp' || item.name === 'current_ctc' || item.name === 'expected_ctc' || item.name === 'resume' || item.name === 'reference'|| item.name === 'resume_source' || item.name === 'upload' || item.name === 'notice_period') itemData.disabled = true;
          return itemData;
-      })
+      });
       return s;
-    })
+    });
 
   updateJsonSchema([...updatedSchema]);        
   } 
@@ -65,15 +65,15 @@ function ProfessionalDetails(props) {
      props.onProfDetInfo(data.data.id);
    
        if (data.data.resume_source === 'Naukri' || data.data.resume_source === 'naukri'){
-          obj.resume_source = {label:'Naukri' ,value:data.data.resume_source}
+          obj.resume_source = {label:'Naukri' ,value:data.data.resume_source};
        } else if (data.data.resume_source === 'indeed' || data.data.resume_source === 'Indeed'){
-          obj.resume_source = {label:'Indeed' ,value:data.data.resume_source}
+          obj.resume_source = {label:'Indeed' ,value:data.data.resume_source};
        } else if (data.data.resume_source === 'linkedin' || data.data.resume_source === 'Linkedin'){
-          obj.resume_source = {label:'Linkedin' ,value:data.data.resume_source}
+          obj.resume_source = {label:'Linkedin' ,value:data.data.resume_source};
        } else if (data.data.resume_source === 'referal' || data.data.resume_source === 'Referal'){
-          obj.resume_source = {label:'Referal' ,value:data.data.resume_source}
+          obj.resume_source = {label:'Referal' ,value:data.data.resume_source};
        }
-     updateDefaultValues({...obj})    // updateDefaultValues(data);
+     updateDefaultValues({...obj});   // updateDefaultValues(data);
       } 
 
   };
@@ -81,8 +81,7 @@ function ProfessionalDetails(props) {
   useEffect(() => {
     const appId = props.isBasicInfoId;
     getData(appId);
-  },[])
-
+  },[]);
 
   // Submit Form
    const submitForm = async (formValues) => {
@@ -90,12 +89,12 @@ function ProfessionalDetails(props) {
 
     let postData = {
       ...formValues
-    }
+    };
 
     postData ={
       ...postData,
       resume_source: formValues.resume_source ? formValues.resume_source.value : '',
-    }
+    };
 
     const { data, message } = await AuthApi.putDataToServer(
       `${Api.applicantsUrl}${applicantId}/`,

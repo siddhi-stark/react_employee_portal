@@ -176,7 +176,10 @@ function EditEmployee(props) {
       });
       setRowData((data && data.data && data.data.evening_data) || []);
     } else {
-      console.log('error', message);
+       swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+      });
     }
   };
 

@@ -549,7 +549,6 @@ function RecruitmentApplicationComponent() {
               )}
             </div>
             <div className="recruitment-links-wrapper">
-           
             
               {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
                 <>

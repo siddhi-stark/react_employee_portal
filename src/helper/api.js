@@ -137,6 +137,8 @@ export default class Api extends Component {
 
   static greetingWishesUrl =  `${Api.baseUrl}greeting-wishes/`;
 
+  static projectSchedularUrl =  `${Api.baseUrl}project-schedular/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 

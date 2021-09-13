@@ -133,7 +133,6 @@ function AllReports() {
       const row = [];
 
       data.data.map((report, i) => {
-        console.log('customFunctions.getDDMMYYYYDate(report.created_at)',customFunctions.getDDMMYYYYDate(report.created_at));
         const setRowData = {
           no: (page - 1) * pagination.itemsPerPage + (i + 1),
           name: report.user,

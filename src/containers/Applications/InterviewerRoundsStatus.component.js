@@ -39,7 +39,6 @@ function InterviewerRoundsStatus(props) {
     ? statusObj.location.state.isInterview
     : '';
 
-
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -62,7 +61,7 @@ function InterviewerRoundsStatus(props) {
         interviewSelector: data.data.applicant_rounds[0].interviewer_name,
         interviewRound: data.data.applicant_rounds[0].status_name,
       });
-      updateDefaultValues({status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments})
+      updateDefaultValues({status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments});
     }
   };
 
@@ -126,9 +125,8 @@ function InterviewerRoundsStatus(props) {
 
       {Interview ? // eslint-disable-line
         history.push('/interview-listing') : 
-        history.push('/recruitment')
+        history.push('/recruitment');
       }
-
 
     } else {
       swal(message, '', 'error', {
@@ -138,7 +136,6 @@ function InterviewerRoundsStatus(props) {
     }
     // Perform success actions
   };
-
  
   return (
     <>
@@ -191,7 +188,6 @@ function InterviewerRoundsStatus(props) {
          ))
        }
 
-       
       <Card body className="mt-4">
         <Row className="mt-3">
           <Col>
@@ -202,7 +198,6 @@ function InterviewerRoundsStatus(props) {
           </Col>
         </Row>
        
-
         <StarkFormBuilder
           containerClass=""
           formHeaderClass=""
@@ -220,9 +215,7 @@ function InterviewerRoundsStatus(props) {
           resetBtnText="Clear"
           btnContainerClass='form-submit-buttons'
           isStepForm={false}
-          onFormReset={() => {
-            console.log('form reset callback');
-          }}
+          onFormReset={() => {}}
         />
       </Card>
     </>

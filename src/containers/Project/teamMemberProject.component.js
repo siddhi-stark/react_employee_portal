@@ -21,7 +21,7 @@ function TeamMemberProject() {
     id:1,project_name:'LXD',spend_hrs:50,remaining_hrs:500,allocated_hrs:55,task_status: '3/2',project_status:'55%',support:'No'
   },{
       id:2,project_name:'Employee Portal',spend_hrs:50,remaining_hrs:500,allocated_hrs:55,task_status:'4/5',project_status:'55%',support:'Yes'
-  }]
+  }];
 
   const history = useHistory();
   const [title, setTitle] = useState('');

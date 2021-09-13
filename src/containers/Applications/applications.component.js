@@ -42,7 +42,7 @@ function Applications(props) {
   useEffect(()=>{
     if(id)
       setIsPD(false); 
-  },[])
+  },[]);
 
   return (
     <>
