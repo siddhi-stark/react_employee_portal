@@ -30,19 +30,22 @@ function Team(props) {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [departmentName, setDepartmentName] = useState('');
+  const [projectName, setProjectName] = useState('');
+
   // const [filterData, setFilterData] = useState({});
 
   // Declare columns
   const columns = [
     {
-      id: 'id',
+      id: 'emp_id',
       label: 'Id',
       isDisplay: false
     },
     {
-      id: 'name',
+      id: 'emp_name',
       label: 'Team',
-      render: ({ id, name }) => {
+      render: ({ emp_id, emp_name }) => {
         return (
           <>
             <a
@@ -51,30 +54,30 @@ function Team(props) {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                customFunctions.setLocalStorage('teamMemberId',id);
-                history.push(`/my-project/${id}`);
+                customFunctions.setLocalStorage('teamMemberId',emp_id);
+                history.push(`/my-project/${emp_id}`);
               }}
             >
-             {name} 
+             {emp_name} 
             </a>
           </>
         );
       },
     },
     {
-      id: 'spend',
+      id: 'spends',
       label: 'Spend Hours',
-      render: ({ spend }) => {
+      render: ({ spends }) => {
         return (
           <>
-           { Math.sign(spend) === 1 ||
-            Math.sign(spend) === 0 ? (
+           { Math.sign(spends) === 1 ||
+            Math.sign(spends) === 0 ? (
               <span>
-                {spend}{' '}
-                {Math.sign(spend) === 0 ? 'Hr' : 'Hrs'}
+                {spends}{' '}
+                {Math.sign(spends) === 0 ? 'Hr' : 'Hrs'}
               </span>
             ) : (
-              <span className="text-danger">{spend} Hrs</span>
+              <span className="text-danger">{spends} Hrs</span>
             )}
           </>
         );
@@ -115,6 +118,7 @@ function Team(props) {
     const endPoint = `${Api.departmentReportUrl}`;
     const params = {
       department: teamId,
+      project_id: teamProjectId,
       page,
       limit
     };
@@ -124,6 +128,8 @@ function Team(props) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
+      setDepartmentName(data && data.data && data.data.department);
+      setProjectName(data && data.data && data.data.project_name);
       setRowData((data && data.data && data.data.employees_data) || []);
     } else {
       swal(message, '', 'error', {
@@ -146,7 +152,10 @@ function Team(props) {
         <Breadcrumb items={items} />
       </div>
       <Card body className="mt-4">
-         <Button className="float-end mb-3" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
+      <div className="mb-3">
+          <span>{`${projectName} ${departmentName} Team`}</span>
+         <Button className="float-end" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
+        </div>
             <CustomTable
               columns={columns}
               rows={rowData}
