@@ -450,6 +450,7 @@ function Dashboard() {
                                         emp.greeting
                                       ); // eslint-disable-line
                                       customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
+                                      customFunctions.setLocalStorage('EmpID',emp.id);
                                       history.push('/wishes');
                                     }}
                                   >
@@ -498,6 +499,10 @@ function Dashboard() {
                                     'gId',
                                     emp.greeting_anniversary
                                   ); // eslint-disable-line
+                                   customFunctions.setLocalStorage(
+                                    'EmpID',
+                                    emp.id
+                                  ); // eslint-disable-line
                                   customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
                                   history.push('/wishes');
                                 }}
@@ -513,14 +518,9 @@ function Dashboard() {
                     </>
                   ))}
               </Card.Body>
-            </Card>
-              )}
-
-              {appreciationData && appreciationData.length > 0 ? (
-                <>
-                 <Card className="mt-3 birthday-list">
-             <Card.Body>
-             {appreciationData ? (
+              
+              <Card.Body className={isShowAnniversaryHeading ? 'work-anniversary-box' : 'birth-box-remove'}>
+              {appreciationData ? (
                   <p>Work Appreciation</p>
                 ) : (
                   ''
@@ -529,7 +529,13 @@ function Dashboard() {
                   appreciationData.map((appr) => (
                         <>
                           <div className="birth-name d-flex align-items-center">
-                            <img src="/images/appreciation.svg" alt="img" />
+                          {appr.employee_data[0].profile_url ? (
+
+                            <img src={appr.employee_data[0].profile_url} alt="img" />
+                            ) : 
+                          <img src='/images/appreciation.svg' alt="img" />
+
+                          }
 
                             {appr.employee_data && appr.employee_data.map((empdata) => (
                               <>
@@ -537,11 +543,15 @@ function Dashboard() {
                               <h6 onClick={() => {  // eslint-disable-line
                                   customFunctions.setLocalStorage(
                                     'employeeId',
-                                    empdata.id
+                                    appr.id
                                   ); // eslint-disable-line
                                   customFunctions.setLocalStorage(
                                     'gId',
                                     appr.id
+                                  ); // eslint-disable-line
+                                  customFunctions.setLocalStorage(
+                                    'EmpID',
+                                    empdata.id
                                   ); // eslint-disable-line
                                   customFunctions.setLocalStorage('comment-allow',appr.comment_allow);
                                   history.push('/wishes');
@@ -557,10 +567,9 @@ function Dashboard() {
                           </div>
                         </>
                   ))}
-             </Card.Body>
-             </Card>
-                </>
-                ) : ''}
+              </Card.Body>
+            </Card>
+              )}
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">
