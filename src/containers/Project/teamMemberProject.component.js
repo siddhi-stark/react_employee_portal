@@ -53,6 +53,21 @@ function TeamMemberProject(props) {
     {
       id: 'remaining',
       label: 'Remaining Hours',
+      render: ({ remaining }) => {
+        return (
+          <>
+           { Math.sign(remaining) === 1 ||
+            Math.sign(remaining) === 0 ? (
+              <span>
+                {remaining}{' '}
+                {Math.sign(remaining) === 0 ? 'Hr' : 'Hrs'}
+              </span>
+            ) : (
+              <span className="text-danger">{remaining} Hrs</span>
+            )}
+          </>
+        );
+      },
     },
     {
       id: 'completed',
