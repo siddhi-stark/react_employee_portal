@@ -13,7 +13,6 @@ const validator = new SimpleReactValidator({ autoForceUpdate: this });
 const [message,setMessage] = useState('');
 const ID =  customFunctions.getLocalStorage('employeeId');
 const EmpId = customFunctions.getLocalStorage('EmpID');
-// const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
 const [birthdayWishes,setBirthdayWishes] = useState([]);
 const isBirthday = customFunctions.getLocalStorage('birthday');
 const id = customFunctions.getLocalStorage('greetingId');
