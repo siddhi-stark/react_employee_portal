@@ -29,7 +29,6 @@ const history = useHistory();
 
 
 const getBirthdayWishes = async (GrtId) => {
-	console.log('GrtId',GrtId);
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data && data.data) {
@@ -57,17 +56,14 @@ const getBirthdayWishes = async (GrtId) => {
 	useEffect(() => {
 		  document.addEventListener('BirthdayUpdate', () => {
       const GreetingID = customFunctions.getLocalStorage('gId');
-			console.log('GreetingID outside if condition',GreetingID);
       getBirthdayWishes(GreetingID);
     });
 
 		if(GreetingId) {
-			console.log('GreetingID inside if condition',GreetingId);
 			getBirthdayWishes(GreetingId);
 
 		}
 		else {
-			console.log('inside else condition');
 			getBirthdayWishes(id);
 		}
 	}, [])
@@ -104,7 +100,6 @@ const addMeaage = async () => {
 
 	return (
 		<>
-		{console.log('showComment',showComment)}
 			<div className="profile-bg mt-3">
 			{bannerImage ? (
 				<Image src={bannerImage} alt="image" />
@@ -114,7 +109,14 @@ const addMeaage = async () => {
 				
 
 				<div className="profile-img">
+				{wisherProfile ? (
+
 					<Image src={wisherProfile} alt="Card image cap" />
+					) : 
+					<Image src='/images/noProfile.jpeg' alt="Card image cap" />
+			}
+
+
 				</div>
 			</div>
 
@@ -168,8 +170,8 @@ const addMeaage = async () => {
 													</div>
 													</>
 													))}
-			
-				{showComment === true ? (
+			{console.log('showComment',showComment,showComment==='true')}
+				{showComment === 'true' ? (
 					<>
 				{isBirthday !== 'true' && (
 				<>
