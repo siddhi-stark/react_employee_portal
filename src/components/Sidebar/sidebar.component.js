@@ -19,7 +19,6 @@ function Sidebar() {
   const [birthdays,setBirthdayData] = useState([]);
   const [isBirthDayPresent, setIsBirthDayPresent] = useState(false);
 
-
   const BirthdayEvent = new Event('BirthdayUpdate', { isUpdated: true });
 
  const m_names = [
@@ -233,9 +232,6 @@ const n = m_names[d.getMonth()];
 
                 {events && events.map((ev) => (
                         <>
-
-
-
                           <div className="event-title date d-flex align-items-center">
                            <p className="bday-date">
                        <img src="/images/calendar-img.png"  alt="Upcoming event"/>

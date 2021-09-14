@@ -164,7 +164,6 @@ const [filterData, setFilterData] = useState({});
     getTechnology();
   }, []);
 
-
 const getRowData = async (pageNo=1) =>{
     const page = pageNo || currentPage;
     const endPoint = Api.offerUrl;

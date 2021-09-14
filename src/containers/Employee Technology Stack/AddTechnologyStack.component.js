@@ -17,8 +17,6 @@ function AddTechnologyStack(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const history = useHistory();
 
-
-  
   // Get user role
   const getUserRole = async() => {
     const roleId = await localStorage.getItem('role');
@@ -37,7 +35,7 @@ function AddTechnologyStack(props) {
     if(id) {
     await getData(id);
     }
-  }
+  };
 
   // Submit Form
   const submitForm = async (formValues) => {
@@ -50,16 +48,15 @@ function AddTechnologyStack(props) {
 
       techstack: tech.technology.value ? tech.technology.value : '',
       is_interviewer: tech.isINterviewer.toString() === 'Yes' ? true : false, // eslint-disable-line
-      }
+      };
     technologyStack.push(obj);
       return tech;
-    })
-   
+    });
 
     const postData = {
       employee: formValues.employee && Boolean(formValues.employee.value) ? formValues.employee.value : '',
       data: technologyStack
-    }
+    };
 
     const payload = customFunctions.cleanObject(postData);
     const callback = 
@@ -69,19 +66,16 @@ function AddTechnologyStack(props) {
 
     const {
       data,
-      
     } = await callback(endPoint, payload);
     if (data) {
       history.push('/emp-stack');
     }
-      
   };
 
    const getData = async (stackId) => {
     const techId = stackId;
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeStack}${techId}/`);
     if(data.data) {
-
 
     const techData = [];
 
@@ -113,16 +107,13 @@ function AddTechnologyStack(props) {
   const getEmployee = async () => {
     // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
-    
-    
      const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
       return { label: op.full_name, value: op.id };
-
     });
     options.employee = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-  }
+  };
       
    const getTechnology = async () => {
       // const id = props.match.params.stackId;
@@ -140,34 +131,28 @@ function AddTechnologyStack(props) {
     const allOptions = options;
     await updateOptions({...allOptions});
 
-  }   
+  }; 
   return (
     <>
     <div className="mt-5">
 
-  <StarkFormBuilder
-    containerClass=''
-    formHeaderClass=''
-    formSections={FormSections}
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true}
-    resetBtnText="Cancel"
-    btnContainerClass="form-submit-buttons"
-    isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-    }}
-  />
+      <StarkFormBuilder
+        containerClass=''
+        formHeaderClass=''
+        formSections={FormSections}
+        onFormSubmit={(formValues) => {submitForm(formValues);}}
+        options={options}
+        callbacks={{}}
+        defaultFormValues={defaultValues}
+        currentUser={currentUser}
+        submitBtnText="Submit"
+        showResetBtn={true}
+        resetBtnText="Cancel"
+        btnContainerClass="form-submit-buttons"
+        isStepForm={false}
+        onFormReset={() => {}}
+      />
     </div>
-    
-
-
     </>
   );
 }

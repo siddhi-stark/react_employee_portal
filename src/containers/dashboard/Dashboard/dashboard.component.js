@@ -545,17 +545,13 @@ function Dashboard() {
                                   history.push('/wishes');
                                 }}
                               >
-
                                 {empdata.full_name}
-
 
                               </h6>
                             </div>
                               </>
 
                               ))}
-
-
                           </div>
                         </>
                   ))}
@@ -563,8 +559,6 @@ function Dashboard() {
              </Card>
                 </>
                 ) : ''}
-
-            
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">

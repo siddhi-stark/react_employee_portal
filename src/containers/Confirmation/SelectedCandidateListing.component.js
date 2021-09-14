@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
+import swal from 'sweetalert';
 import { Image, Accordion, Card, Button } from 'react-bootstrap';
 import FormSections from './filter.json';
 import customFunctions from '../../helper/customFunctions';
@@ -130,7 +131,10 @@ function SelectedCandidateListing() {
 
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+      });
     }
   };
 
@@ -244,9 +248,7 @@ function SelectedCandidateListing() {
                     resetBtnText="Clear"
                     btnContainerClass="form-submit-buttons"
                     isStepForm={false}
-                    onFormReset={() => {
-                      console.log('form reset callback');
-                    }}
+                    onFormReset={() => {}}
                   />
                 </Card.Title>
               </Card.Body>

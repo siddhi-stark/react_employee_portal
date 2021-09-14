@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import { Card } from 'react-bootstrap';
+import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -57,7 +58,10 @@ function HRListing() {
       setCurrentPage(Number(data.paginator.current_page));
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+      });
     }
   };
 

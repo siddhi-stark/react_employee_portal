@@ -88,7 +88,6 @@ function Employee() {
     itemsPerPage: 10,
     totalItems: 10,
   });
- 
 
   const columns = [
     {
@@ -304,7 +303,6 @@ function Employee() {
     }
   };
 
-
   const getTwEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
@@ -338,7 +336,6 @@ function Employee() {
       setTeamLead(data.data);
     }
   };
-
   
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
@@ -623,7 +620,6 @@ function Employee() {
     });
     return depart;
   };
-
 
   const getTeamLeadList = () => {
     if (!teamLead) return [];

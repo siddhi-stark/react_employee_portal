@@ -170,7 +170,7 @@ function AddLeave(props) {
   useEffect(() => {
     getUserRole();
     if(!leaveId){
-      updateDefaultValues({leave_from_type:{label:'Full Day', value:'Full Day'}})
+      updateDefaultValues({leave_from_type:{label:'Full Day', value:'Full Day'}});
     }
     setTitle((viewLeaveOptions || viewOptions) ? 'View Leaves' : 'Edit Leaves');
   }, []);

@@ -46,11 +46,6 @@ function EmployeeTechListing() {
             e.preventDefault();
             e.stopPropagation();
             history.push(`/edit-technology-stack/${id}`);
-            // setModalShow(true);
-            // setEmployeeId(id);
-            // getRowData(1,index);
-            // setAddButton(true);
-            // setCntClearFilter(cntClearFilter + 1);
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Designation" />
@@ -224,9 +219,7 @@ function EmployeeTechListing() {
                       resetBtnText="Clear"
                       btnContainerClass="form-submit-buttons"
                       isStepForm={false}
-                      onFormReset={() => {
-                        console.log('form reset callback');
-                      }}
+                      onFormReset={() => {}}
                     />
                   </Card.Title>
                 </Card.Body>

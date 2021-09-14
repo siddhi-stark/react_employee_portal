@@ -30,7 +30,6 @@ function AddNote(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log('statusId',statusId);
     const reasonLabel = (statusId === 2) ? 'approve' : 'decline';
     const postData = {
       id: leaveId,

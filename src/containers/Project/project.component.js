@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Accordion, Button, Image } from 'react-bootstrap';
+import { Card, Accordion, Button, Image, ProgressBar } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -104,10 +104,33 @@ function Project() {
       render: ({ completion }) => {
         return (
           <>
-            <span>{completion && completion} %</span>
+            {completion <= 50 && (
+              <ProgressBar
+                bsPrefix="progress pbar"
+                variant="danger"
+                now={completion}
+                label={`${completion}% completed`}
+              />
+            )}
+            {completion > 50 && completion <= 80 && (
+              <ProgressBar
+                bsPrefix="progress pbar"
+                variant="info"
+                now={completion}
+                label={`${completion}% completed`}
+              />
+            )}
+            {completion > 80 && (
+              <ProgressBar
+                bsPrefix="progress pbar"
+                variant="success"
+                now={completion}
+                label={`${completion}% completed`}
+              />
+            )}
           </>
         );
-      }, 
+      },
     },
     {
       id: 'start_date',

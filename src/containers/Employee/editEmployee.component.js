@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
-// import { setHours, setMinutes } from 'date-fns';
 import StarkFormBuilder from 'stark-form-builder';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
@@ -19,9 +18,6 @@ function EditEmployee(props) {
   let [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-  // const [formSchema, setFormschema] = useState(FormSections);
-  // const [taskValue, setTaskValue] = useState('');
-  // const [descriptionValue, setDescriptionValue] = useState('');
 
   // Declare variable Table
   const [rowData, setRowData] = useState([]);
@@ -88,20 +84,11 @@ function EditEmployee(props) {
   // Submit Form
   const submitForm = async (formValues) => {
     const id = props.match.params.employeeId;
-    // const loginDate = formValues.login.replace('T', ' ');
-    // const login = loginDate.split('.')[0]
     const postData = {
       user_id: Number(id),
       content: formValues.task,
       start_time: `${newDate} ${customFunctions.getTime(formValues.login)}`,
-      // start_time: new Date(formValues.login)
-      //   .toISOString()
-      //   .replace('T', ' ')
-      //   .substr(0, 19),
       end_time: `${newDate} ${customFunctions.getTime(formValues.logout)}`,
-      // .toISOString()
-      // .replace('T', ' ')
-      // .substr(0, 19),
       description: formValues.description,
     };
     const { data } = await AuthApi.postDataToServer(
@@ -117,28 +104,9 @@ function EditEmployee(props) {
     }
   };
 
-  // // Get data for form
-  // const getData = async () => {
-  //   const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?is_dropdown=1`);
-  //   if (!data) {
-  //     // show error
-  //     return;
-  //   }
-  //   updateDefaultValues(data);
-  // };
-
-  // // Call get data method on load
-  // useEffect(() => {
-  //   getData();
-  // }, []);
-
   // Declare methods table
   const getRowData = async (pageNo = 1) => {
-    // const date = new Date();
-    // const YMDDate = customFunctions.getFormattedDate(date);
     const ID = customFunctions.getLocalStorage('userId');
-    // const dateNew = YMDDate.split('-');
-    // const FormateedDate = dateNew[2]+'-'+dateNew[1]+'-'+dateNew[0]; //eslint-disable-line
     const page = pageNo || currentPage;
     const endPoint = `${Api.dailyReportUrl}`;
     const filterList =
@@ -155,10 +123,6 @@ function EditEmployee(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      // setTotalCount(data.paginator.total_count);
-      // setLimit(data.paginator.limit);
-      // setItemsPerPage(data.paginator.limit);
-      // setCurrentPage(Number(data.paginator.current_page));
       if (data.paginator) {
         setTotalCount(data.paginator.total_count || 10);
         setItemsPerPage(data.paginator.limit || 10);

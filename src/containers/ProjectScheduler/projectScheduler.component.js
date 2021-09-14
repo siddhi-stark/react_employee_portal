@@ -67,8 +67,9 @@ function ProjectScheduler() {
   const columns = [
     {
       id: 'id',
-      label: 'Sr.No',
+      label: 'id',
       roleAccess: [4],
+      isDisplay:false
     },
     {
       id: 'coordinator',
@@ -215,7 +216,7 @@ function ProjectScheduler() {
     const dpOptions = [];
     data && data.data && data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
+      dpOptions.push({label: op.full_name, value: op.id});
       return op;
     });
     const allOptions = {

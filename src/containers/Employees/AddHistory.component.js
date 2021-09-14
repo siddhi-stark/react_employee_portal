@@ -13,7 +13,6 @@ function AddHistory(props) {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-  const [designationn,setDesignation] = useState([]);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -34,7 +33,6 @@ function AddHistory(props) {
     getUserRole();
   }, []);
 
-
   // Submit Form
   const submitForm = async (formValues) => {
     const employeeId = customFunctions.getLocalStorage('id');
@@ -44,7 +42,7 @@ function AddHistory(props) {
       company_name: formValues.company_name,
       start_date: formValues.start_date ? customFunctions.getDate(formValues.start_date) : '',
       end_date: formValues.end_date ? customFunctions.getDate(formValues.end_date) : '',
-    }
+    };
      const callback = history
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
@@ -76,7 +74,6 @@ function AddHistory(props) {
 
   // Get data for form
   const getData = async (id, designation) => {
-    console.log('designation',designationn);
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
      let des = {};
      if(data){
@@ -85,7 +82,7 @@ function AddHistory(props) {
          des = {
            label: ds.name,
            value: ds.id
-         }
+         };
        }
        return ds;
      });
@@ -95,10 +92,9 @@ function AddHistory(props) {
        ...data.data,
        designation: des
      };
-     updateDefaultValues({...obj})    // updateDefaultValues(data);
+     updateDefaultValues({...obj});    // updateDefaultValues(data);
      }
   };
-
 
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
@@ -116,7 +112,6 @@ function AddHistory(props) {
     await updateOptions({...allOptions});
 
     if(history) {
-      setDesignation(data.data);
     getData(history,data.data);
     }
   };
