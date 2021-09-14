@@ -168,13 +168,10 @@ function ProjectScheduler() {
 
   // Submit Form Filter
   const submitForm = async (formValues) => {
-    console.log('formValues',formValues);
     const payload ={
       date: formValues.month && customFunctions.getDate(formValues.month),
       team_id: formValues.team_id && Number(formValues.team_id),
-
-    }
-    console.log('payload',payload);
+    };
     setFilterData(payload);
   };
     

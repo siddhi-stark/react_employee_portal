@@ -34,8 +34,9 @@ function TeamProjectScheduler() {
   const columns = [
     {
       id: 'id',
-      label: 'Sr.No',
+      label: 'id',
       roleAccess: [4],
+      isDisplay:false
     },
     {
       id: 'name',
@@ -111,7 +112,6 @@ function TeamProjectScheduler() {
     getRowData(1);
     setTitle('Project Scheduler');
   }, [filterData]);
-
   
   // Get user role Filter
   const getUserRole = async() => {
@@ -128,7 +128,7 @@ function TeamProjectScheduler() {
     const payload ={
       date: formValues.month && customFunctions.getDate(formValues.month),
       team_id: formValues.team_id && Number(formValues.team_id),
-    }
+    };
     setFilterData(payload);
   };
     
@@ -164,7 +164,7 @@ function TeamProjectScheduler() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Project Scheduler</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Team Project Scheduler</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">

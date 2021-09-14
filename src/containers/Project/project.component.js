@@ -175,14 +175,16 @@ function Project() {
     },
   ];
 
-  const getRowData = async (pageNo = 1) => { // eslint-disable-line
+  const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.getProjects}?sort_by=name&sort_direction=ascending`; 
+    const endPoint = `${Api.getProjects}`; 
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
+      sort_by:'name',
+      sort_direction:'ascending',
       page,
       limit,
       ...filterList,
