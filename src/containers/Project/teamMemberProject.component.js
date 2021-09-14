@@ -11,21 +11,18 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 
-function TeamMemberProject() {
+function TeamMemberProject(props) {
+  const teamid = props;
+  const teamMemberId = teamid.match.params.teamMemberId;
+  const getTeamId = customFunctions.getLocalStorage('teamMemberId');
+
   const items = [
     { to: '/', label: 'Home' },
     { to: '/project', label: 'Project' },
   ];
 
-  const projectData = [{
-    id:1,project_name:'LXD',spend_hrs:50,remaining_hrs:500,allocated_hrs:55,task_status: '3/2',project_status:'55%',support:'No'
-  },{
-      id:2,project_name:'Employee Portal',spend_hrs:50,remaining_hrs:500,allocated_hrs:55,task_status:'4/5',project_status:'55%',support:'Yes'
-  }];
-
   const history = useHistory();
   const [title, setTitle] = useState('');
-  // const [legendData, setLegendData] = useState([]);
 
   // Declare variable column state
   const [rowData, setRowData] = useState([]);
@@ -42,23 +39,23 @@ function TeamMemberProject() {
       isDisplay: false
     },
     {
-      id: 'project_name',
+      id: 'name',
       label: 'Project',
     },
     {
-      id: 'spend_hrs',
+      id: 'spend',
       label: 'Spend Hours',
     },
     {
-      id: 'allocated_hrs',
+      id: 'allocated',
       label: 'Allocated Hours',
     },
     {
-      id: 'remaining_hrs',
+      id: 'remaining',
       label: 'Remaining Hours',
     },
     {
-      id: 'task_status',
+      id: 'completed',
       label: 'Task Completed',
     },
     {
@@ -66,7 +63,7 @@ function TeamMemberProject() {
       label: 'Project Completed',
     }, 
     {
-      id: 'support',
+      id: 'rt_support',
       label: 'Runtime Support',
     },
   ];
@@ -74,15 +71,11 @@ function TeamMemberProject() {
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
-    const endPoint = `${Api.employeeUrl}`;
-    // const filterList =
-    //   filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-    //     ? customFunctions.jsonParse(filterData)
-    //     : {};
+    const endPoint = `${Api.departmentReportUrl}`;
     const params = {
+      employee_id: teamMemberId,
       page,
       limit,
-      // ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -91,7 +84,7 @@ function TeamMemberProject() {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      // setRowData((data && data.data) || []);
+      setRowData((data && data.data && data.data.employees_data) || []);
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -102,7 +95,6 @@ function TeamMemberProject() {
 
   useEffect(() => {
     setTitle('Team Project');
-    setRowData(projectData);
     getRowData(1);
   }, []);
 
@@ -114,7 +106,7 @@ function TeamMemberProject() {
         <Breadcrumb items={items} />
       </div>
       <Card body className="mt-4">
-         <Button className="float-end mb-3" onClick= {() => history.push('/project')} >Back</Button>
+         <Button className="float-end mb-3" onClick= {() => history.push(`/team/${getTeamId}`)} >Back</Button>
             <CustomTable
               columns={columns}
               rows={rowData}
