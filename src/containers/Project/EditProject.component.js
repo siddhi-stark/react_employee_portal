@@ -81,7 +81,7 @@ function EditProject(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-      const { data, message } = await AuthApi.putDataToServer(Api.getProjects, formValues);
+      const { data, message } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, formValues);
       if(!data) {
         swal(message, '', 'error', {
           closeOnClickOutside: false,

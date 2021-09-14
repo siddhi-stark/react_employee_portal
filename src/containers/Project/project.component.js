@@ -163,7 +163,7 @@ function Project() {
       roleAccess: [1],
     },
     {
-      id: 'hours_allocated',
+      id: 'allocated_est',
       label: 'Estimated Hrs',
       roleAccess: [4],
     },
