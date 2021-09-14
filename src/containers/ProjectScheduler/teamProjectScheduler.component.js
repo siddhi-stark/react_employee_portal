@@ -39,30 +39,30 @@ function TeamProjectScheduler() {
       isDisplay:false
     },
     {
-      id: 'name',
+      id: 'emp_name',
       label: 'Name',
       roleAccess: [4],
     },
     {
-      id: 'name',
+      id: '0-25',
       label: '0-25',
       roleAccess: [4],
     },
     {
-      id: 'status',
+      id: '25-75',
       label: '25-75',
     },
     {
-      id: 'developer',
+      id: '75-95',
       label: '75-95',
       roleAccess: [4],
     },
     {
-      id: 'status',
+      id: '100',
       label: '100',
     },
     {
-      id: 'developer',
+      id: 'total_open',
       label: 'Total open project',
       roleAccess: [4],
     },
@@ -88,7 +88,7 @@ function TeamProjectScheduler() {
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
-      department_id: 2,
+      show_percentage:1, 
       page,
       limit,
       ...filterList,
@@ -133,27 +133,28 @@ function TeamProjectScheduler() {
   };
     
   const getTeam = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}`);
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
     if(!data) {
      swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    
-    const dpOptions = [];
-    data && data.data && data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      ...filterOptions,
-      team_id: dpOptions
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      const dpOptions = [];
+      data && data.data && data.data.employees_data && data.data.employees_data.map((op) => { // eslint-disable-line
+        // Change appropriate keys
+        dpOptions.push({label: op.title, value: op.id});
+        return op;
+      });
+      const allOptions = {
+        ...options,
+        ...filterOptions,
+        team_id: dpOptions
+      };
+      filterOptions = {...allOptions};
+      updateOptions(allOptions);
     };
-    filterOptions = {...allOptions};
-    updateOptions(allOptions);
   };
 
   useEffect(() => {

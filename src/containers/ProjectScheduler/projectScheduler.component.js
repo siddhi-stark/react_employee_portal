@@ -169,35 +169,47 @@ function ProjectScheduler() {
 
   // Submit Form Filter
   const submitForm = async (formValues) => {
+    const coordinator = [];
+    const developer = [];
+    formValues && formValues.coordinator && formValues.coordinator.map((co)=>{
+      return coordinator.push(co.value);
+    }); 
+
+    formValues && formValues.developer && formValues.developer.map((dev)=>{
+      return developer.push(dev.value);
+    });
     const payload ={
       date: formValues.month && customFunctions.getDate(formValues.month),
       team_id: formValues.team_id && Number(formValues.team_id),
+      coordinator_id: coordinator,
+      developer_id: developer
     };
     setFilterData(payload);
   };
     
   const getTeam = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}`);
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
     if(!data) {
      swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    
-    const dpOptions = [];
-    data && data.data && data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
-      return op;
-    });
-    const allOptions = {
-      ...options,
-      ...filterOptions,
-      team_id: dpOptions
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      const dpOptions = [];
+      data && data.data && data.data.employees_data && data.data.employees_data.map((op) => { // eslint-disable-line
+        // Change appropriate keys
+        dpOptions.push({label: op.title, value: op.id});
+        return op;
+      });
+      const allOptions = {
+        ...options,
+        ...filterOptions,
+        team_id: dpOptions
+      };
+      filterOptions = {...allOptions};
+      updateOptions(allOptions);
     };
-    filterOptions = {...allOptions};
-    updateOptions(allOptions);
   };
 
   useEffect(() => {
@@ -232,8 +244,8 @@ function ProjectScheduler() {
     getCoordinator();
   }, []);
       
-  const getDeveloper = async () => {
-    const {data,message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?department_id=2`);
+  const getDeveloper = async (value) => {
+    const {data,message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?department_id=${value.value}`);
     if(!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -242,7 +254,7 @@ function ProjectScheduler() {
     }
     
     const dpOptions = [];
-    data && data.data && data.data.map((op) => {
+    data && data.data && data.data.employees_data && data.data.employees_data.map((op) => {
       // Change appropriate keys
       dpOptions.push({label: op.full_name, value: op.id});
       return op;
@@ -255,10 +267,6 @@ function ProjectScheduler() {
     filterOptions = {...allOptions};
     updateOptions(allOptions);
   };
-
-  useEffect(() => {
-    getDeveloper();
-  }, []);
 
   return (
     <>
@@ -290,7 +298,11 @@ function ProjectScheduler() {
                       formHeading="Filter"
                       onFormSubmit={(formValues) => {submitForm(formValues);}}
                       options={options}
-                      callbacks={{}}
+                      callbacks={{
+                        getDeveloper: (value) => {
+                          getDeveloper(value);
+                        },
+                      }}
                       defaultFormValues={defaultValues}
                       currentUser={currentUser}
                       submitBtnText="Apply"

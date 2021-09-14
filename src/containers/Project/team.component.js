@@ -28,7 +28,7 @@ function Team(props) {
   // Declare variable column state
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(10);
+  // const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [departmentName, setDepartmentName] = useState('');
   const [projectName, setProjectName] = useState('');
@@ -120,13 +120,13 @@ function Team(props) {
       department: teamId,
       project_id: teamProjectId,
       page,
-      limit
+      limit:1000
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
+      // setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setDepartmentName(data && data.data && data.data.department);
       setProjectName(data && data.data && data.data.project_name);
@@ -159,10 +159,10 @@ function Team(props) {
             <CustomTable
               columns={columns}
               rows={rowData}
-              showPagination={true}
+              showPagination={false}
               paginationProps={{
                 totalItems: totalCount,
-                itemsPerPage: limit,
+                // itemsPerPage: limit,
                 activePage: currentPage,
                 onPageChange: (pageNo) => {
                   getRowData(pageNo);
