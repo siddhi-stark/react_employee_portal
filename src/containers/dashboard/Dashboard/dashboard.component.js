@@ -449,6 +449,7 @@ function Dashboard() {
                                         'gId',
                                         emp.greeting
                                       ); // eslint-disable-line
+                                      customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
                                       history.push('/wishes');
                                     }}
                                   >
@@ -497,6 +498,7 @@ function Dashboard() {
                                     'gId',
                                     emp.greeting_anniversary
                                   ); // eslint-disable-line
+                                  customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
                                   history.push('/wishes');
                                 }}
                               >
