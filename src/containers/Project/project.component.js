@@ -35,7 +35,7 @@ function Project() {
 
   const handleActionCallback = ({id}) => {
     return (
-      <>
+      <span className ="d-flex">
         <a
           href="/"
           className="pl-2"
@@ -58,7 +58,7 @@ function Project() {
         >
           <Image src="/images/edit-button.svg" />
         </a>
-      </>
+      </span>
     );
   };    
 
