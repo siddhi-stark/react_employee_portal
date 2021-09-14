@@ -4,7 +4,7 @@ import { Card, Accordion, Button, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './FilterFormschema.json';
+import FormSections from './filterFormschema.json';
 import { Helmet } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -28,7 +28,7 @@ function ProjectScheduler() {
   const [status, setStatus] = useState(null); // eslint-disable-line
   // const departmentId = customFunctions.getLocalStorage('department');
 
-  // Variable declarations Fikter
+  // Variable declarations Filter
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
@@ -36,7 +36,7 @@ function ProjectScheduler() {
 
   const handleActionCallback = ({id}) => {
     return (
-      <>
+       <span className ="d-flex">
         <a
           href="/"
           className="pl-2"
@@ -59,7 +59,7 @@ function ProjectScheduler() {
         >
           <Image src="/images/edit-button.svg" />
         </a>
-      </>
+      </span>
     );
   };    
 
@@ -168,7 +168,11 @@ function ProjectScheduler() {
 
   // Submit Form Filter
   const submitForm = async (formValues) => {
-    setFilterData(formValues);
+    const payload ={
+      date: formValues.month && customFunctions.getDate(formValues.month),
+      team_id: formValues.team_id && Number(formValues.team_id),
+    };
+    setFilterData(payload);
   };
     
   const getTeam = async () => {
@@ -288,10 +292,10 @@ function ProjectScheduler() {
                       callbacks={{}}
                       defaultFormValues={defaultValues}
                       currentUser={currentUser}
-                      submitBtnText="Submit"
-                      showResetBtn={false}
+                      submitBtnText="Apply"
+                      showResetBtn={true}
                       resetBtnText="Clear"
-                      btnContainerClass="form-submit-buttons"
+                      btnContainerClass="form-submit-buttons pull-right mb-3"
                       isStepForm={false}
                       
                       onFormReset={() => {}}
