@@ -26,8 +26,9 @@ function Project() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
   const [activeMenu, setActiveMenu] = useState('all');
-  const [status, setStatus] = useState(null); // eslint-disable-line
+  const [status, setStatus] = useState('all');
   const departmentId = customFunctions.getLocalStorage('department');
+  const [allData, setAllData] = useState({});
 
   // Variable declarations Filter State
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -162,7 +163,7 @@ function Project() {
       roleAccess: [1],
     },
     {
-      id: 'estimate_hrs',
+      id: 'hours_allocated',
       label: 'Estimated Hrs',
       roleAccess: [4],
     },
@@ -251,9 +252,30 @@ function Project() {
   }, []);
 
   // Submit Form
-  const submitForm = async (formValues) => {
-    setFilterData(formValues);
+  const submitForm = async (formValue) => {
+    let payload ={};
+    const formValues = (typeof formValue === 'object' && Object.keys(formValue).length) ? formValue : allData;
+      payload = {
+        keyword: formValues && formValues.keyword,
+      };
+    
+    if(String(status) === 'active' || String(status) === 'inactive'){
+      payload.status = status;
+    } else if(String(status) === 'late' || String(status) === 'current'){
+      payload.sub_status = String(status) === 'late' ? 'late' :'current';
+    } else if(String(status) === 'all'){
+      payload.status = '';
+    }
+
+    if(formValues) {
+      setAllData(payload);
+    }
+    setFilterData(payload);
   };
+  
+  useEffect(() => {
+    submitForm();
+  }, [status]);
 
   return (
     <>
@@ -311,74 +333,62 @@ function Project() {
             {(Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && (
               <>
               <a
-                href="#"
+                href="javascript:void(0)"
                 className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
                 onClick={() => {
                   setActiveMenu('all');
-                  setStatus(0);
+                  setStatus('all');
                 }}
               >
                 All
               </a>
               <a
-                href="#"
+                href="javascript:void(0)"
                 className={`ml-2 mb-2 ${
                   activeMenu === 'Active' ? 'active' : ''
                 }`}
                 onClick={() => {
                   setActiveMenu('Active');
-                  setStatus(1);
+                  setStatus('active');
                 }}
               >
                 Active
               </a>
                   <a
-                    href="#"
+                    href="javascript:void(0)"
                     className={`ml-2 mb-2 ${
                       activeMenu === 'Inactive' ? 'active' : ''
                     }`}
                     onClick={() => {
                       setActiveMenu('Inactive');
-                      setStatus(2);
+                      setStatus('inactive');
                     }}
                   >
                     Inactive
                   </a>
                   <a
-                    href="#"
-                    className={`ml-2 mb-2 ${
-                      activeMenu === 'archive' ? 'active' : ''
-                    }`}
-                    onClick={() => {
-                      setActiveMenu('archive');
-                      setStatus(3);
-                    }}
-                  >
-                    Archive
-                  </a>
-                  <a
-                    href="#"
+                    href="javascript:void(0)"
                     className={`ml-2 mb-2 ${
                       activeMenu === 'late' ? 'active' : ''
                     }`}
                     onClick={() => {
                       setActiveMenu('late');
-                      setStatus(6);
+                      setStatus('late');
                     }}
                   >
                     Late
                   </a>
                   <a
-                    href="#"
+                    href="javascript:void(0)"
                     className={`ml-2 mb-2 ${
-                      activeMenu === 'upcoming' ? 'active' : ''
+                      activeMenu === 'current' ? 'active' : ''
                     }`}
                     onClick={() => {
-                      setActiveMenu('upcoming');
-                      setStatus(4);
+                      setActiveMenu('current');
+                      setStatus('current');
                     }}
                   >
-                    Upcoming
+                    Current
                   </a>
                 </>
              )}

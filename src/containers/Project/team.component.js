@@ -23,7 +23,6 @@ function Team(props) {
 
   const history = useHistory();
   const [title, setTitle] = useState('');
-  // const [legendData, setLegendData] = useState([]);
 
   // Declare variable column state
   const [rowData, setRowData] = useState([]);

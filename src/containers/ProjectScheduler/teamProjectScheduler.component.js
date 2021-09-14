@@ -89,6 +89,7 @@ function TeamProjectScheduler() {
         : {};
     const params = {
       show_percentage:1, 
+      team_id: !filterList ? '' :7,
       page,
       limit,
       ...filterList,
@@ -127,13 +128,13 @@ function TeamProjectScheduler() {
   const submitForm = async (formValues) => {
     const payload ={
       date: formValues.month && customFunctions.getDate(formValues.month),
-      team_id: formValues.team_id && Number(formValues.team_id),
+      team_id: formValues.team_id && formValues.team_id.value && Number(formValues.team_id.value),
     };
     setFilterData(payload);
   };
     
   const getTeam = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
+  const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
     if(!data) {
      swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -142,9 +143,9 @@ function TeamProjectScheduler() {
     }
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       const dpOptions = [];
-      data && data.data && data.data.employees_data && data.data.employees_data.map((op) => { // eslint-disable-line
+      data && data.data && data.data.team && data.data.team.map((op) => {
         // Change appropriate keys
-        dpOptions.push({label: op.title, value: op.id});
+        dpOptions.push({label: op.name, value: op.id});
         return op;
       });
       const allOptions = {
@@ -199,8 +200,9 @@ function TeamProjectScheduler() {
                     resetBtnText="Clear"
                     btnContainerClass="form-submit-buttons pull-right mb-3"
                     isStepForm={false}
-                    
-                    onFormReset={() => {}}
+                    onFormReset={() => {
+                      setFilterData();
+                    }}
                   />
                 </Card.Body>
               </Accordion.Collapse>

@@ -104,10 +104,10 @@ function EditProject(props) {
     if (data) {
       const start = data && data.data && data.data.start_date;
       const end = data && data.data && data.data.end_date;
-      const coordinatorValue = data.data.applied_for_id
+      const coordinatorValue = data.data.coordinator_name
         ? {
-            label: data.data.applied_for_name,
-            value: data.data.applied_for_id,
+            label: data.data.coordinator_name,
+            value: data.data.coordinator_id,
           }
         : '';
 
@@ -129,7 +129,7 @@ function EditProject(props) {
   }, []);
       
   const getCoordinator = async () => {
-    const { data, message } = await AuthApi.getDataFromServer(Api.employeeUrl);
+    const { data, message } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?department_id=9`);
     if(!data) {
        swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -140,7 +140,7 @@ function EditProject(props) {
     const dpOptions = [];
     data.data.map((op) => {
       // Change appropriate keys
-      dpOptions.push({label: op.title, value: op.id});
+      dpOptions.push({label: op.full_name, value: op.id});
       return op;
     });
     const allOptions = {

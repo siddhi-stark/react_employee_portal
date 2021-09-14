@@ -60,6 +60,7 @@ function TeamProject(props) {
               href="/"
               className="pl-2 ms-1"
               onClick={(e) => {
+                customFunctions.setLocalStorage('departmentType',team);
                 e.preventDefault();
                 e.stopPropagation();
                 history.push(`/team/${team}`);

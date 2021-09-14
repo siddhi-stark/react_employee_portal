@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Card, Accordion, Button, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -10,6 +10,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
+import constants from '../../helper/constants';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -17,7 +18,7 @@ const items = [
 ];
 
 function ProjectScheduler() {
-  const history = useHistory();
+  // const history = useHistory();
   // Declare variable
   const [title, setTitle] = useState('');
   const [rowData, setRowData] = useState([]);
@@ -34,30 +35,13 @@ function ProjectScheduler() {
   const [currentUser, updateCurrentUser] = useState(0);
   let filterOptions = {};
 
-  const handleActionCallback = ({id}) => {
+  const handleActionCallback = ({tw_id}) => {
     return (
        <span className ="d-flex">
-        <a
-          href="/"
-          className="pl-2"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-             history.push(`/view-project/${id}`,{isView:true});
-          }}
-        >
-          <Image alt="view" src="/images/eye.svg" />
-        </a>
-        <a
-          href="/"
-          className="pl-2 ms-1"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/edit-project/${id}`,{isView:false});
-          }}
-        >
-          <Image src="/images/edit-button.svg" />
+        <a href={`${constants.project}${tw_id}`} target="_blank" >
+          <span>
+            <Image src="/images/redirect.png" />
+          </span>
         </a>
       </span>
     );
@@ -77,31 +61,38 @@ function ProjectScheduler() {
       roleAccess: [4],
     },
     {
-      id: 'name',
+      id: 'project_name',
       label: 'Project Name',
       roleAccess: [4],
     },
     {
-      id: 'status',
+      id: 'completion',
       label: 'Status',
+      render: ({ completion }) => {
+        return (
+          <>
+            <span>{completion} %</span>
+          </>
+        );
+      }, 
     },
     {
       id: 'developer',
       label: 'Developer',
       roleAccess: [4],
     },
-    {
-      id: 'rt_support',
-      label: 'UI Support',
-      roleAccess: [4],
-      render: ({ rt_support }) => {
-        return (
-          <>
-            <span>{rt_support ? 'Yes':'No'}</span>
-          </>
-        );
-      }, 
-    },
+    // {
+    //   id: 'rt_support',
+    //   label: 'UI Support',
+    //   roleAccess: [4],
+    //   render: ({ rt_support }) => {
+    //     return (
+    //       <>
+    //         <span>{rt_support ? 'Yes':'No'}</span>
+    //       </>
+    //     );
+    //   }, 
+    // },
     {
       id: 'expected_clc',
       label: 'Expected CLC',
@@ -119,7 +110,7 @@ function ProjectScheduler() {
       label: 'Comments',
     },
     {
-      id: 'link',
+      id: 'tw_id',
       label: 'Teamwork Project Link',
       render: handleActionCallback
     },
@@ -135,6 +126,7 @@ function ProjectScheduler() {
     const params = {
       page,
       limit,
+      team_id: !filterList ? '' :7,
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -180,9 +172,9 @@ function ProjectScheduler() {
     });
     const payload ={
       date: formValues.month && customFunctions.getDate(formValues.month),
-      team_id: formValues.team_id && Number(formValues.team_id),
-      coordinator_id: coordinator,
-      developer_id: developer
+      team_id: formValues.team_id && formValues.team_id.value && Number(formValues.team_id.value),
+      coordinator_id: coordinator && coordinator,
+      developer_id: developer && developer
     };
     setFilterData(payload);
   };
@@ -197,9 +189,9 @@ function ProjectScheduler() {
     }
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       const dpOptions = [];
-      data && data.data && data.data.employees_data && data.data.employees_data.map((op) => { // eslint-disable-line
+      data && data.data && data.data.team && data.data.team.map((op) => {
         // Change appropriate keys
-        dpOptions.push({label: op.title, value: op.id});
+        dpOptions.push({label: op.name, value: op.id});
         return op;
       });
       const allOptions = {
@@ -217,7 +209,7 @@ function ProjectScheduler() {
   }, []);
       
   const getCoordinator = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}`);
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?department_id=9`);
     if(!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -245,7 +237,7 @@ function ProjectScheduler() {
   }, []);
       
   const getDeveloper = async (value) => {
-    const {data,message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?department_id=${value.value}`);
+    const {data,message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?team_id=${value.value}`);
     if(!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -254,7 +246,7 @@ function ProjectScheduler() {
     }
     
     const dpOptions = [];
-    data && data.data && data.data.employees_data && data.data.employees_data.map((op) => {
+    data && data.data && data.data.map((op) => {
       // Change appropriate keys
       dpOptions.push({label: op.full_name, value: op.id});
       return op;
@@ -310,8 +302,9 @@ function ProjectScheduler() {
                       resetBtnText="Clear"
                       btnContainerClass="form-submit-buttons pull-right mb-3"
                       isStepForm={false}
-                      
-                      onFormReset={() => {}}
+                      onFormReset={() => {
+                        setFilterData();
+                      }}
                     />
                 </Card.Body>
               </Accordion.Collapse>

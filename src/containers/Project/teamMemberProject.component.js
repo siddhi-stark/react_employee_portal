@@ -14,7 +14,7 @@ import customFunctions from '../../helper/customFunctions';
 function TeamMemberProject(props) {
   const teamid = props;
   const teamMemberId = teamid.match.params.teamMemberId;
-  const getTeamId = customFunctions.getLocalStorage('teamMemberId');
+  const getTeamId = customFunctions.getLocalStorage('departmentType');
 
   const items = [
     { to: '/', label: 'Home' },
@@ -39,11 +39,11 @@ function TeamMemberProject(props) {
       isDisplay: false
     },
     {
-      id: 'name',
+      id: 'project_name',
       label: 'Project',
     },
     {
-      id: 'spend',
+      id: 'spends',
       label: 'Spend Hours',
     },
     {
@@ -59,12 +59,20 @@ function TeamMemberProject(props) {
       label: 'Task Completed',
     },
     {
-      id: 'project_status',
+      id: 'completion',
       label: 'Project Completed',
     }, 
-    {
+   {
       id: 'rt_support',
       label: 'Runtime Support',
+      roleAccess: [4],
+      render: ({ rt_support }) => {
+        return (
+          <>
+            <span>{rt_support ? 'Yes':'No'}</span>
+          </>
+        );
+      }, 
     },
   ];
 
@@ -84,7 +92,7 @@ function TeamMemberProject(props) {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setRowData((data && data.data && data.data.employees_data) || []);
+      setRowData((data && data.data && data.data.project_data) || []);
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
