@@ -65,7 +65,6 @@ function AddBirthday(props) {
     return imgId;
   };
 
-
   // Submit Form
   const submitForm = async (formValues) => {
 
@@ -74,7 +73,7 @@ function AddBirthday(props) {
       greet_type: formValues.greet_type ? formValues.greet_type.value : '',
       employee: formValues.employee ? [formValues.employee.value] : '',
       comment_allow: formValues.comment_allow ? formValues.comment_allow : ''
-    }
+    };
 
      if (imageUrl) {
       postData.file = await uploadFile();
@@ -93,7 +92,6 @@ function AddBirthday(props) {
     }
       
   };
-    
 
   // Get data for form
   const getData = async (id,empList) => {
@@ -107,12 +105,12 @@ function AddBirthday(props) {
           bEmp = {
             label: em.full_name,
             value: em.id
-          }
+          };
         }
         return emd;
-      })
+      });
       return em;
-    })
+    });
    
     const gt = data.data.greet_type
         ? {
@@ -135,9 +133,7 @@ function AddBirthday(props) {
   // Call get data method on load
   useEffect(() => {
     setbirthdayID(BirthdayId);
-    
-
-  }, []);
+    }, []);
 
    useEffect(() => {
     
@@ -156,7 +152,6 @@ function AddBirthday(props) {
       setTitle('View Greeting');
     }
   }, []);
-
 
     useEffect(() => {
     if (!customFunctions.checkIfEmpty(viewOptions)) {
@@ -209,7 +204,7 @@ function AddBirthday(props) {
     options.greet_type = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-  }
+  };
 
   useEffect(() => {
     getType();
@@ -217,9 +212,7 @@ function AddBirthday(props) {
       
   const getEmployee = async () => {
     // const id = props.match.params.stackId;
-    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
-    
-    
+    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);   
      const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
       return { label: op.full_name, value: op.id };
 
@@ -230,18 +223,15 @@ function AddBirthday(props) {
     if(BirthdayId) {
     getData(BirthdayId,data.data);
     }
-  }
+  };
 
   useEffect(() => {
     getEmployee();
   }, []);
 
  const onCommentsChange = (value) => {
-   console.log('value',value);
    customFunctions.setLocalStorage('ShowComment',value);
- } 
-  
-      
+ };     
 
 	return (
 		<>
@@ -288,7 +278,7 @@ function AddBirthday(props) {
     
 		</>
 
-		)
+		);
 }
 
 export default withRouter(AddBirthday);

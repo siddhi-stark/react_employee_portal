@@ -27,7 +27,6 @@ const userID = customFunctions.getLocalStorage('userId');
 const showComment = customFunctions.getLocalStorage('comment-allow');
 const history = useHistory();
 
-
 const getBirthdayWishes = async (GrtId) => {
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
@@ -39,7 +38,7 @@ const getBirthdayWishes = async (GrtId) => {
       		setEmployeeMessage(bd.message);
       	}
       	return bd;
-      })
+      });
       setGreetingMessage(data && data.data && data.data.length > 0 && data.data[0].greeting_message && data.data[0].greeting_message);
       setWisherToProfile(data && data.data && data.data.length > 0 && data.data[0].wish_to_profile && data.data[0].wish_to_profile);
    		setBannerImage(data && data.data && data.data.length > 0 && data.data[0].file_name && data.data[0].file_name);
@@ -51,7 +50,6 @@ const getBirthdayWishes = async (GrtId) => {
     	setBannerImage('');
     }
 };
-
 
 	useEffect(() => {
 		  document.addEventListener('BirthdayUpdate', () => {
@@ -66,7 +64,7 @@ const getBirthdayWishes = async (GrtId) => {
 		else {
 			getBirthdayWishes(id);
 		}
-	}, [])
+	}, []);
 
 const addMeaage = async () => {
 
@@ -74,7 +72,7 @@ const addMeaage = async () => {
 		wish_to: Number(ID),
 		message,
 		greeting: GreetingId
-	}
+	};
 
  const endPoint = Api.greetingWishesUrl;
  const { data } = await AuthApi.postDataToServer(endPoint, postData);
@@ -85,8 +83,7 @@ const addMeaage = async () => {
   setShowMessage(false);
   setEmployeeMessage('');
  }
-}
-
+};
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -105,9 +102,7 @@ const addMeaage = async () => {
 				<Image src={bannerImage} alt="image" />
 				) : 
 							<Image src='/images/login-img.png' alt="image" />
-		}
-				
-
+		}		
 				<div className="profile-img">
 				{wisherProfile ? (
 
@@ -115,8 +110,6 @@ const addMeaage = async () => {
 					) : 
 					<Image src='/images/noProfile.jpeg' alt="Card image cap" />
 			}
-
-
 				</div>
 			</div>
 
@@ -170,7 +163,6 @@ const addMeaage = async () => {
 													</div>
 													</>
 													))}
-			{console.log('showComment',showComment,showComment==='true')}
 				{showComment === 'true' ? (
 					<>
 				{isBirthday !== 'true' && (
@@ -214,8 +206,6 @@ const addMeaage = async () => {
 					) : ''}
 
 			</Row>
-
-
 		</>
 	);
 }
