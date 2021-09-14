@@ -61,6 +61,7 @@ import TeamProject from './containers/Project/teamProject.component';
 import Team from './containers/Project/team.component';
 import TeamMemberProject from './containers/Project/teamMemberProject.component';
 import ProjectScheduler from './containers/ProjectScheduler/projectScheduler.component';
+import TeamProjectScheduler from './containers/ProjectScheduler/teamProjectScheduler.component';
 
 function Routes() {
   return (
@@ -140,6 +141,7 @@ function Routes() {
       <Route path="/team/:teamId" exact component={Team} />
       <Route path="/my-project/:teamMemberId" exact component={TeamMemberProject} />
       <Route path="/scheduler" exact component={ProjectScheduler} />
+      <Route path="/team-scheduler" exact component={TeamProjectScheduler} />
       <Route component={NotFound} />
     </Switch>
   );
