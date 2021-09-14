@@ -3,6 +3,8 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
+import StarkFormBuilder from 'stark-form-builder';
+import FormSections from './FilterFormschema.json';
 import { Helmet } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -22,12 +24,15 @@ function ProjectScheduler() {
   const [totalCount, setTotalCount] = useState(1);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [filterData, setFilterData] = useState({});
   const [status, setStatus] = useState(null); // eslint-disable-line
   // const departmentId = customFunctions.getLocalStorage('department');
 
-  // Variable declarations Filter State
+  // Variable declarations Fikter
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
+  const [options, updateOptions] = useState({});
+  const [currentUser, updateCurrentUser] = useState(0);
+  let filterOptions = {};
 
   const handleActionCallback = ({id}) => {
     return (
@@ -151,6 +156,105 @@ function ProjectScheduler() {
     setTitle('Project Scheduler');
   }, [filterData]);
 
+  // Get user role Filter
+  const getUserRole = async() => {
+    const roleId = await localStorage.getItem('group');
+    updateCurrentUser(Number(roleId));
+  };
+
+  useEffect(() => {
+    getUserRole();
+  }, []);
+
+  // Submit Form Filter
+  const submitForm = async (formValues) => {
+    setFilterData(formValues);
+  };
+    
+  const getTeam = async () => {
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}`);
+    if(!data) {
+     swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({label: op.title, value: op.id});
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      ...filterOptions,
+      team_id: dpOptions
+    };
+    filterOptions = {...allOptions};
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getTeam();
+  }, []);
+      
+  const getCoordinator = async () => {
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}`);
+    if(!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({label: op.title, value: op.id});
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      ...filterOptions,
+      coordinator: dpOptions
+    };
+    filterOptions = {...allOptions};
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getCoordinator();
+  }, []);
+      
+  const getDeveloper = async () => {
+    const {data,message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?department_id=2`);
+    if(!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    
+    const dpOptions = [];
+    data.data.map((op) => {
+      // Change appropriate keys
+      dpOptions.push({label: op.full_name, value: op.id});
+      return op;
+    });
+    const allOptions = {
+      ...options,
+      ...filterOptions,
+      developer: dpOptions
+    };
+    filterOptions = {...allOptions};
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getDeveloper();
+  }, []);
+
   return (
     <>
       <Helmet title={title} />
@@ -174,7 +278,24 @@ function ProjectScheduler() {
               </Card.Header>
               <Accordion.Collapse eventKey="1">
                 <Card.Body>
-                  <p>Filter</p>
+                    <StarkFormBuilder
+                      containerClass=''
+                      formHeaderClass=''
+                      formSections={FormSections}
+                      formHeading="Filter"
+                      onFormSubmit={(formValues) => {submitForm(formValues);}}
+                      options={options}
+                      callbacks={{}}
+                      defaultFormValues={defaultValues}
+                      currentUser={currentUser}
+                      submitBtnText="Submit"
+                      showResetBtn={false}
+                      resetBtnText="Clear"
+                      btnContainerClass="form-submit-buttons"
+                      isStepForm={false}
+                      
+                      onFormReset={() => {}}
+                    />
                 </Card.Body>
               </Accordion.Collapse>
             </Card>

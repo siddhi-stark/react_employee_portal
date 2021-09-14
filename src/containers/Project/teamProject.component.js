@@ -133,30 +133,12 @@ function TeamProject(props) {
       { x: 'Pending Work', y: data && data.data && data.data.remaining },
       { x: 'Complete Work', y: data && data.data && data.data.allocated },
     ];
-    // const legData = [
-    //   { name: `Total Hours Spend 188` },
-    //   { name: `Total Hrs Allocated 425`},
-    //   { name: `Project Completion 45%`},
-    //   { name: `Team work URL`},
-    // ];
-    //     const selectedGraph = [
-    //       { x: 'Selected', y: data.data.shortlisted_final_percentage },
-    //       { x: 'Rejected', y: data.data.rejected_final_percentage },
-    //     ];
-    //     const selectedlegData = [
-    //       { name: `Selected ${data.data.shortlisted_final_percentage}%`, symbol: { fill: 'green' } },
-    //       { name: `Rejected ${data.data.rejected_final_percentage}%`, symbol: { fill: 'red' } },
-    //       { name: `Shortlisted ${data.data.total_final_percentage}%`, symbol: { fill: 'none' } },
-    //     ];
     setGraphDetails({
       totalHrsSpend: data && data.data && data.data.spend,
       totalHrsAllocated: data && data.data && data.data.allocated,
       projectCompletion: data && data.data && data.data.completion,
       url: data && data.data && data.data.tw_id,
     });
-    //     setShortlistedData([...selectedGraph]);
-    // setLegendData([...legData]);
-    //     setLegendSelectedData([...selectedlegData]);
     setGraphData([...graph]);
       }
   };
@@ -171,14 +153,9 @@ function TeamProject(props) {
     const newData = []; 
     const page = pageNo || currentPage;
     const endPoint = `${Api.getProjects}${teamProjectId}/`;
-    // const filterList =
-    //   filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-    //     ? customFunctions.jsonParse(filterData)
-    //     : {};
     const params = {
       page,
       limit,
-      // ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -218,7 +195,7 @@ function TeamProject(props) {
         allocated:data && data.data && data.data.total && data.data.total.allocated,
         remaining:data && data.data && data.data.total && data.data.total.remaining,
         status:data && data.data && data.data.total && data.data.total.status
-      })
+      });
       setRowData(newData || []);
     } else {
       swal(message, '', 'error', {

@@ -153,6 +153,18 @@ function Project() {
       roleAccess: [1],
     },
     {
+      id: 'rt_support',
+      label: 'RT Support',
+      roleAccess: [4],
+      render: ({ rt_support }) => {
+        return (
+          <>
+            <span>{rt_support ? 'Yes':'No'}</span>
+          </>
+        );
+      }, 
+    },
+    {
       id: 'status',
       label: 'Status',
     },

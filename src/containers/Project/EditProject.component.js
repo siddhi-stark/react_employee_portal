@@ -81,8 +81,6 @@ function EditProject(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    console.log(formValues);
-    
       const { data, message } = await AuthApi.putDataToServer(Api.getProjects, formValues);
       if(!data) {
         swal(message, '', 'error', {
@@ -104,9 +102,8 @@ function EditProject(props) {
     }
     
     if (data) {
-      console.log('data',data.data)
-      const start = data && data.data && data.data.start_date  
-      const end = data && data.data && data.data.end_date  
+      const start = data && data.data && data.data.start_date;
+      const end = data && data.data && data.data.end_date;
       const coordinatorValue = data.data.applied_for_id
         ? {
             label: data.data.applied_for_name,
@@ -151,12 +148,11 @@ function EditProject(props) {
       coordinator: dpOptions
     };
     updateOptions(allOptions);
-  }
+  };
 
   useEffect(() => {
     getCoordinator();
   }, []);
-      
 
 	return (
 		<>
@@ -192,7 +188,7 @@ function EditProject(props) {
 		</div>
 		</>
 
-		)
+		);
 }
 
 export default withRouter(EditProject);
