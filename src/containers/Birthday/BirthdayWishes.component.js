@@ -12,6 +12,7 @@ function BirthdayWishes() {
 const validator = new SimpleReactValidator({ autoForceUpdate: this });
 const [message,setMessage] = useState('');
 const ID =  customFunctions.getLocalStorage('employeeId');
+const EmpId = customFunctions.getLocalStorage('EmpID');
 // const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
 const [birthdayWishes,setBirthdayWishes] = useState([]);
 const isBirthday = customFunctions.getLocalStorage('birthday');
@@ -39,12 +40,21 @@ const getBirthdayWishes = async (GrtId) => {
       	}
       	return bd;
       });
-      setGreetingMessage(data && data.data && data.data.length > 0 && data.data[0].greeting_message && data.data[0].greeting_message);
-      setWisherToProfile(data && data.data && data.data.length > 0 && data.data[0].wish_to_profile && data.data[0].wish_to_profile);
-   		setBannerImage(data && data.data && data.data.length > 0 && data.data[0].file_name && data.data[0].file_name);
-   		
+      
     } else {
     	setBirthdayWishes([]);
+    }
+};
+
+const getGreetingById = async (GrtId) => {
+	const endPoint = `${Api.greetingsUrl}${GrtId}/?employee_id=${EmpId}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if(data && data.data) {
+      console.log('data',data.data.message);
+      setWisherToProfile(data && data.data && data.data.employee_data.profile_url);
+   		setBannerImage(data && data.data && data.data.file_name);
+      setGreetingMessage(data && data.data && data.data.message);
+    } else {
     	setGreetingMessage('');
     	setWisherToProfile('');
     	setBannerImage('');
@@ -55,14 +65,17 @@ const getBirthdayWishes = async (GrtId) => {
 		  document.addEventListener('BirthdayUpdate', () => {
       const GreetingID = customFunctions.getLocalStorage('gId');
       getBirthdayWishes(GreetingID);
+      getGreetingById(GreetingID);
     });
 
 		if(GreetingId) {
 			getBirthdayWishes(GreetingId);
+			getGreetingById(GreetingId);
 
 		}
 		else {
 			getBirthdayWishes(id);
+		getGreetingById(id);
 		}
 	}, []);
 
@@ -97,6 +110,8 @@ const addMeaage = async () => {
 
 	return (
 		<>
+		{console.log('bannerImage',bannerImage)}
+		{console.log('wisherProfile',wisherProfile)}
 			<div className="profile-bg mt-3">
 			{bannerImage ? (
 				<Image src={bannerImage} alt="image" />
@@ -114,9 +129,6 @@ const addMeaage = async () => {
 			</div>
 
 			<Row className="birthday-block">
-								{birthdayWishes && birthdayWishes.length >= 1 ? (
-									<>
-
 			<div className="col-md-12">
 									<div className="card">
 										<div className="media birthday-media-section">
@@ -126,6 +138,9 @@ const addMeaage = async () => {
 										</div>
 									</div>
 								</div>
+								{birthdayWishes && birthdayWishes.length >= 1 ? (
+									<>
+
 			<p><strong>Employees Wishes</strong></p>
 									</>
 									) : ''}

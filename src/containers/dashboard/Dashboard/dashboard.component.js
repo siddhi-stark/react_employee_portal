@@ -537,11 +537,15 @@ function Dashboard() {
                               <h6 onClick={() => {  // eslint-disable-line
                                   customFunctions.setLocalStorage(
                                     'employeeId',
-                                    empdata.id
+                                    appr.id
                                   ); // eslint-disable-line
                                   customFunctions.setLocalStorage(
                                     'gId',
                                     appr.id
+                                  ); // eslint-disable-line
+                                  customFunctions.setLocalStorage(
+                                    'EmpID',
+                                    empdata.id
                                   ); // eslint-disable-line
                                   customFunctions.setLocalStorage('comment-allow',appr.comment_allow);
                                   history.push('/wishes');
