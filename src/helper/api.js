@@ -145,7 +145,7 @@ export default class Api extends Component {
     let url = '';
     switch (env) {
       case 'production':
-        url = 'http://devapi.starkdigital.in/api/v1/';
+        url = 'https://liveapi.starkdigital.in/api/v1/';
         break; 
 
       case 'dev':
