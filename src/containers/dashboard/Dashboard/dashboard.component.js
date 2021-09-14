@@ -514,7 +514,7 @@ function Dashboard() {
                   ))}
               </Card.Body>
               
-              <Card.Body>
+              <Card.Body className='work-anniversary-box'>
               {appreciationData ? (
                   <p>Work Appreciation</p>
                 ) : (
