@@ -36,7 +36,6 @@ function Dashboard() {
   const [anniversary, setAnniversary] = useState([]);
   const [appreciationData,setAppriciation] = useState([]);
   const [image, setImage] = useState('');
-  const [appreciation,setIsAppreciation] = useState(false);
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
@@ -206,10 +205,6 @@ function Dashboard() {
 
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
       setAppriciation(data.data);
-      const showAppreciation = data.data;
-      if(showAppreciation.length > 0) {
-        setIsAppreciation(true);
-      }
     }
   };
 
@@ -519,7 +514,7 @@ function Dashboard() {
                   ))}
               </Card.Body>
               
-              <Card.Body className={appreciation ? 'work-anniversary-box' : 'birth-box-remove'}>
+              <Card.Body className={isShowAnniversaryHeading ? 'work-anniversary-box' : 'birth-box-remove'}>
               {appreciationData ? (
                   <p>Work Appreciation</p>
                 ) : (
