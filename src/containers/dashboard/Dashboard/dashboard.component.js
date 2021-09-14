@@ -524,7 +524,13 @@ function Dashboard() {
                   appreciationData.map((appr) => (
                         <>
                           <div className="birth-name d-flex align-items-center">
-                            <img src="/images/appreciation.svg" alt="img" />
+                          {appr.employee_data[0].profile_url ? (
+
+                            <img src={appr.employee_data[0].profile_url} alt="img" />
+                            ) : 
+                          <img src='/images/appreciation.svg' alt="img" />
+
+                          }
 
                             {appr.employee_data && appr.employee_data.map((empdata) => (
                               <>
