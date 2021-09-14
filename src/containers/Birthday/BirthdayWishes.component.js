@@ -24,7 +24,7 @@ const [bannerImage,setBannerImage] = useState('');
 const [showWish,setShowWish] = useState('');
 const [employeeMessage,setEmployeeMessage] = useState('');
 const userID = customFunctions.getLocalStorage('userId');
-const showComment = customFunctions.getLocalStorage('ShowComment');
+const showComment = customFunctions.getLocalStorage('comment-allow');
 const history = useHistory();
 
 
@@ -106,7 +106,11 @@ const addMeaage = async () => {
 		<>
 		{console.log('showComment',showComment)}
 			<div className="profile-bg mt-3">
+			{bannerImage ? (
 				<Image src={bannerImage} alt="image" />
+				) : 
+							<Image src='/images/login-img.png' alt="image" />
+		}
 				
 
 				<div className="profile-img">
@@ -164,8 +168,9 @@ const addMeaage = async () => {
 													</div>
 													</>
 													))}
-												
-
+			
+				{showComment === true ? (
+					<>
 				{isBirthday !== 'true' && (
 				<>
 				{(!showWish || showMessage) ? (
@@ -200,7 +205,12 @@ const addMeaage = async () => {
 					) : ''}
 
 				</>
-				)}	
+				)}				
+
+					</>
+
+					) : ''}
+
 			</Row>
 
 

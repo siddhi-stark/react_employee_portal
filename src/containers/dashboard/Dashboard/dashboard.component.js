@@ -537,8 +537,9 @@ function Dashboard() {
                                   ); // eslint-disable-line
                                   customFunctions.setLocalStorage(
                                     'gId',
-                                    appr.greet_type
+                                    appr.id
                                   ); // eslint-disable-line
+                                  customFunctions.setLocalStorage('comment-allow',appr.comment_allow);
                                   history.push('/wishes');
                                 }}
                               >
