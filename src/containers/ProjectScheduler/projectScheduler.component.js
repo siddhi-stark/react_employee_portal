@@ -181,7 +181,7 @@ function ProjectScheduler() {
     }
     
     const dpOptions = [];
-    data.data.map((op) => {
+    data && data.data && data.data.map((op) => {
       // Change appropriate keys
       dpOptions.push({label: op.title, value: op.id});
       return op;
@@ -209,7 +209,7 @@ function ProjectScheduler() {
     }
     
     const dpOptions = [];
-    data.data.map((op) => {
+    data && data.data && data.data.map((op) => {
       // Change appropriate keys
       dpOptions.push({label: op.title, value: op.id});
       return op;
@@ -237,7 +237,7 @@ function ProjectScheduler() {
     }
     
     const dpOptions = [];
-    data.data.map((op) => {
+    data && data.data && data.data.map((op) => {
       // Change appropriate keys
       dpOptions.push({label: op.full_name, value: op.id});
       return op;
