@@ -49,7 +49,7 @@ const getGreetingById = async (GrtId) => {
 	const endPoint = `${Api.greetingsUrl}${GrtId}/?employee_id=${EmpId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data && data.data) {
-      setWisherToProfile(data && data.data && data.data.employee_data.profile_url);
+      setWisherToProfile(data && data.data && data.data.length > 0 && data.data.employee_data.profile_url);
    		setBannerImage(data && data.data && data.data.file_name);
       setGreetingMessage(data && data.data && data.data.message);
     } else {
@@ -62,6 +62,7 @@ const getGreetingById = async (GrtId) => {
 	useEffect(() => {
 		  document.addEventListener('BirthdayUpdate', () => {
       const GreetingID = customFunctions.getLocalStorage('gId');
+      // const EmpID = customFunctions.getLocalStorage('EmpID');
       getBirthdayWishes(GreetingID);
       getGreetingById(GreetingID);
     });

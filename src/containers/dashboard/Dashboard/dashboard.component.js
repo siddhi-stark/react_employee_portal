@@ -450,6 +450,7 @@ function Dashboard() {
                                         emp.greeting
                                       ); // eslint-disable-line
                                       customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
+                                      customFunctions.setLocalStorage('EmpID',emp.id);
                                       history.push('/wishes');
                                     }}
                                   >
@@ -497,6 +498,10 @@ function Dashboard() {
                                   customFunctions.setLocalStorage(
                                     'gId',
                                     emp.greeting_anniversary
+                                  ); // eslint-disable-line
+                                   customFunctions.setLocalStorage(
+                                    'EmpID',
+                                    emp.id
                                   ); // eslint-disable-line
                                   customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
                                   history.push('/wishes');
