@@ -513,14 +513,9 @@ function Dashboard() {
                     </>
                   ))}
               </Card.Body>
-            </Card>
-              )}
-
-              {appreciationData && appreciationData.length > 0 ? (
-                <>
-                 <Card className="mt-3 birthday-list">
-             <Card.Body>
-             {appreciationData ? (
+              
+              <Card.Body>
+              {appreciationData ? (
                   <p>Work Appreciation</p>
                 ) : (
                   ''
@@ -561,10 +556,9 @@ function Dashboard() {
                           </div>
                         </>
                   ))}
-             </Card.Body>
-             </Card>
-                </>
-                ) : ''}
+              </Card.Body>
+            </Card>
+              )}
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">
