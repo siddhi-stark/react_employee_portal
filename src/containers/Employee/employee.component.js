@@ -82,6 +82,9 @@ function Employee() {
   const [employeetwId, setEmployeeTwId] = useState('');
   const [joiningDate, setJoiningDate] = useState('');
   const [newDepartment,setNewDepartment] = useState([]);
+  const [projectTeam,setProjectTeam] = useState([]);
+  const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
+
   let timmer = null;
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -336,6 +339,15 @@ function Employee() {
       setTeamLead(data.data);
     }
   };
+
+  const getTeam = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
+    console.log('data',data);
+    if(data && data.data) {
+      console.log('data.data.team',data.data.team);
+      setProjectTeam(data.data.team);
+    }
+  };
   
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
@@ -368,6 +380,7 @@ function Employee() {
       getTeamLead();
       // getDepartment();
       getNewDapartment();
+      getTeam();
     }
   }, [addButton]);
 
@@ -440,6 +453,7 @@ function Employee() {
   };
 
   const addEmployee = async () => {
+    console.log('selectedProjectTeam.id',selectedProjectTeam.id);
     const teamIdList = [];
     if (selectedTeamLead) {
       teamIdList.push(selectedTeamLead.id);
@@ -458,6 +472,7 @@ function Employee() {
       email,
       mobile,
       role: selectedRole.id,
+      team: selectedProjectTeam.id,
       password,
       emp_code: empCode && !employeeId  ? Number(empCode.split('-')[1]) : '',
       team_leads: teamIdList,
@@ -629,6 +644,19 @@ function Employee() {
         label: data.full_name,
         id: data.id,
         value: data.full_name,
+      });
+    });
+    return options;
+  };
+
+  const getProjectTeam = () => {
+    if (!teamLead) return [];
+    const options = [];
+    projectTeam.map((data) => {
+      return options.push({
+        label: data.name,
+        id: data.id,
+        value: data.name,
       });
     });
     return options;
@@ -1109,6 +1137,15 @@ function Employee() {
                     selectedDepartment,
                     'required'
                   )}
+                />
+              </Col>
+              <Col sm={6}>
+                <DropdownInput
+                  label="Team"
+                  options={getProjectTeam()}
+                  placeholder="Select Team"
+                  defaultValue={selectedProjectTeam}
+                  onSelectHandler={(select) => setSelectedProjectTeam(select)}
                 />
               </Col>
             </Row>
