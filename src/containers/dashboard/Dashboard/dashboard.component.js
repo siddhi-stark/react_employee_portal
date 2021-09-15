@@ -518,8 +518,10 @@ function Dashboard() {
                     </>
                   ))}
               </Card.Body>
-              
-              <Card.Body className={isShowAnniversaryHeading ? 'work-anniversary-box' : 'birth-box-remove'}>
+
+
+              {appreciationData && appreciationData.length > 0 ? (
+                 <Card.Body className={isShowAnniversaryHeading ? 'work-anniversary-box' : 'birth-box-remove'}>
               {appreciationData ? (
                   <p>Work Appreciation</p>
                 ) : (
@@ -568,6 +570,9 @@ function Dashboard() {
                         </>
                   ))}
               </Card.Body>
+                ) : ''}
+              
+             
             </Card>
               )}
 
