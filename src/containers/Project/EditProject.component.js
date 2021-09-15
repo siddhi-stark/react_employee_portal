@@ -101,8 +101,8 @@ function EditProject(props) {
 
     const postData = {
       allocated: formValues.allocated,
-      hourly_rate: Number(formValues.hourly_rate),
-      project_cost: Number(formValues.project_cost),
+      hourly_cost: Number(formValues.hourly_cost),
+      cost_allocated: Number(formValues.cost_allocated),
       coordinator: formValues.coordinator ? Number(formValues.coordinator.value) : '',
       comments: formValues.comments
     };
