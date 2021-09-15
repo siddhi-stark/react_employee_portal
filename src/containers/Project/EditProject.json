@@ -127,9 +127,9 @@
 				"options": []
 			},
 			{
-				"name": "allocated",
+				"name": "hours_allocated",
 				"type": "text",
-				"label": "Allocated Hours",
+				"label": "Hours Allocated",
 				"id": "",
 				"placeholder": "",
 				"inputClass": "",
@@ -185,7 +185,7 @@
 				"options": []
 			},
 			{
-				"name": "estimate_hrs",
+				"name": "allocated",
 				"type": "text",
 				"label": "Estimate Hours",
 				"id": "",

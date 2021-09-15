@@ -67,7 +67,7 @@ function EditProject(props) {
           s.fields = section.fields.map((item) => {
             const itemData = item;
             if (
-              item.name === 'allocated' ||
+              item.name === 'estimate_hrs' ||
               item.name === 'hourly_rate' ||
               item.name === 'project_cost' ||
               item.name === 'coordinator' ||
@@ -100,7 +100,7 @@ function EditProject(props) {
   const submitForm = async (formValues) => {
 
     const postData = {
-      allocated: formValues.allocated,
+      hours_allocated: Number(formValues.hours_allocated),
       hourly_cost: Number(formValues.hourly_cost),
       cost_allocated: Number(formValues.cost_allocated),
       coordinator: formValues.coordinator ? Number(formValues.coordinator.value) : '',
@@ -118,6 +118,7 @@ function EditProject(props) {
     
   // Get data for form
   const getData = async () => {
+    console.log('inside getData');
     const { data, message } = await AuthApi.getDataFromServer(`${Api.projectDetails}${projectId}/`);
     // console.log('data',data);
 

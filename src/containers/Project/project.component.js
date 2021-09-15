@@ -158,18 +158,18 @@ function Project() {
       },
     },
     {
-      id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'hourly_rate',
+      id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'hourly_cost',
       label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Hourly Rate',
       roleAccess: [1],
     },
     {
-      id: 'allocated_est',
+      id: 'allocated',
       label: 'Estimated Hrs',
       roleAccess: [4],
     },
     {
-      id: 'allocated',
-      label: 'Allocated Hrs',
+      id: 'hours_allocated',
+      label: 'Hours Allocated',
     },
     {
       id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'cost_allocated',
