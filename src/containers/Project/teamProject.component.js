@@ -131,11 +131,10 @@ function TeamProject(props) {
 
       const url = customFunctions.generateUrl(endPoint);
       const { data } = await AuthApi.getDataFromServer(url);
-
       if(data){
     const graph = [
       { x: 'Pending Work', y: data && data.data && data.data.remaining },
-      { x: 'Complete Work', y: data && data.data && data.data.allocated },
+      { x: 'Complete Work', y: data && data.data && data.data.completion },
     ];
     setGraphDetails({
       totalHrsSpend: data && data.data && data.data.spend,
