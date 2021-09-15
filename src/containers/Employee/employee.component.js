@@ -233,6 +233,16 @@ function Employee() {
         return team;
       });
 
+      projectTeam.map((pt) => {
+        if(pt.id === data.data.team_id) {
+          setSelectedProjectTeam({
+          id: pt.id,
+          label: pt.name,
+          })
+        }
+        return pt;
+      });
+
       manager.map((mngr) => {
         data.data.assigned_managers.map((assgnmgmr) => {
           if (mngr.id === assgnmgmr) {
@@ -342,9 +352,7 @@ function Employee() {
 
   const getTeam = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
-    console.log('data',data);
     if(data && data.data) {
-      console.log('data.data.team',data.data.team);
       setProjectTeam(data.data.team);
     }
   };
@@ -453,7 +461,6 @@ function Employee() {
   };
 
   const addEmployee = async () => {
-    console.log('selectedProjectTeam.id',selectedProjectTeam.id);
     const teamIdList = [];
     if (selectedTeamLead) {
       teamIdList.push(selectedTeamLead.id);
