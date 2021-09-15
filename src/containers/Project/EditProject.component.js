@@ -8,11 +8,13 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import FormSections from './EditProject.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import customFunctions from '../../helper/customFunctions';
 
 function EditProject(props) {
   const idProps = props;
   const projectId = idProps.match.params.projectId;
   const viewOptions = idProps.location.state ? idProps.location.state.isView : '';
+  const userGroup = customFunctions.getLocalStorage('group');
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
@@ -31,7 +33,7 @@ function EditProject(props) {
 
   useEffect(() => {
     getUserRole();
-  }, []);
+  }, [projectId]);
 
    useEffect(() => {
     const formViewSchema = [...FormSections];
@@ -80,16 +82,29 @@ function EditProject(props) {
      }
  }, []);
 
+   useEffect(() => {
+     if(Number(userGroup) === 2) {
+      const formSchema = [...FormSections];
+    const updatedSchema = formSchema.map((section)=>{
+      const s = {...section};
+      s.fields = section.fields.filter((item) => {
+        return !['hourly_rate','project_cost','coordinator'].includes(item.name);
+      });
+      return s;
+    });
+  updateJsonSchema([...updatedSchema]);
+     }
+   },[projectId]);
+
   // Submit Form
   const submitForm = async (formValues) => {
-    // console.log('formValues',formValues);
 
     const postData = {
       allocated: formValues.allocated,
       hourly_rate: formValues.hourly_rate,
       project_cost: formValues.project_cost,
       coordinator: formValues.coordinator ? Number(formValues.coordinator.value) : '',
-      commetns: formValues.comments
+      comments: formValues.comments
     };
       const { data } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, postData);
       if(data) {
@@ -99,7 +114,6 @@ function EditProject(props) {
         });
       }
       history.push('/project');
-      // Perform success actions
   };
     
   // Get data for form
