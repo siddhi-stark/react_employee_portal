@@ -3487,6 +3487,34 @@
      }
  }
  
+ .doughnut-graph-section {
+     p {
+         max-width: 200px;
+         width: 100%;
+     }
+     ul {
+         max-width: 280px;
+         margin: 20px auto 0;
+         padding-left: 0;
+         li {
+             display: flex;
+             align-items: center;
+             justify-content: space-between;
+             margin-bottom: 10px;
+         }
+     }
+ }
+ 
+ .birthday-list {
+     .work-anniversary-box {
+         .birth-name {
+             img {
+                 border-radius: 100%;
+             }
+         }
+     }
+ }
+ 
  @media (min-width: 576px) {
      .bd-content .highlight {
          margin-right: 0;
@@ -3640,9 +3668,49 @@
  
  .work-anniversary-box {
      border-top: 1px solid #333333;
+     display: flex;
+     align-items: flex-start;
+     flex-wrap: wrap;
+     p {
+         margin: 0;
+         line-height: 1;
+         max-width: 140px;
+         width: 100%;
+     }
      &.birth-box-remove {
          border-top: 0;
      }
+ }
+ 
+ .work-anniversary-box-user {
+     max-width: 70%;
+     display: flex;
+     align-items: flex-start;
+     flex-wrap: wrap;
+ }
+ 
+ .birthday-list {
+     .birth-name {
+         padding: 0px 10px;
+     }
+     .work-anniversary-box {
+         .birth-name {
+             margin-bottom: 0;
+             padding: 0px 10px;
+             border: 1px solid #cccc;
+             border-radius: 64px;
+             margin-left: 10px;
+             margin-bottom: 5px;
+         }
+     }
+ }
+ 
+ .birthday-list .birth-name h6 {
+     cursor: pointer;
+ }
+ 
+ .employee-new-profile .profile-details .card .card-body .btn {
+     margin-left: auto;
  }
  
  .install-model-tag {

@@ -454,7 +454,9 @@ function Dashboard() {
                                       history.push('/wishes');
                                     }}
                                   >
+                                  <a>
                                     {emp.name}
+                                  </a>
                                   </h6>
                                 </div>
                               </div>
@@ -530,6 +532,8 @@ function Dashboard() {
              {appreciationData &&
                   appreciationData.map((appr) => (
                         <>
+                        <div className="work-anniversary-box-user">
+
                           <div className="birth-name d-flex align-items-center">
                           {appr.employee_data[0].profile_url ? (
 
@@ -567,6 +571,7 @@ function Dashboard() {
 
                               ))}
                           </div>
+                        </div>
                         </>
                   ))}
               </Card.Body>

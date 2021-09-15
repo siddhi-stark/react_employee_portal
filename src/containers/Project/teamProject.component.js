@@ -52,17 +52,17 @@ function TeamProject(props) {
     {
       id: 'team',
       label: 'Team',
-      render: ({ team }) => {
+      render: ({ team, department }) => {
         return (
           <>
           {(team !== 'Total') ? (
             <>
-            {console.log('condirion',team !== 'Total')}
+            {console.log('condirion',department)}
             <a
               href="/"
               className="pl-2 ms-1"
               onClick={(e) => {
-                customFunctions.setLocalStorage('departmentType',team);
+                customFunctions.setLocalStorage('departmentType',department);
                 e.preventDefault();
                 e.stopPropagation();
                 history.push(`/team/${team}`);
@@ -173,25 +173,33 @@ function TeamProject(props) {
         spend:data && data.data && data.data.design && data.data.design.spends,
         allocated:data && data.data && data.data.design && data.data.design.allocated,
         remaining:data && data.data && data.data.design && data.data.design.remaining,
-        status:data && data.data && data.data.design && data.data.design.status
+        status:data && data.data && data.data.design && data.data.design.status,
+        department: data && data.data && data.data.design && data.data.design.dept_id
+
       },{
         team: 'Development',
         spend:data && data.data && data.data.development && data.data.development.spends,
         allocated:data && data.data && data.data.development && data.data.development.allocated,
         remaining:data && data.data && data.data.development && data.data.development.remaining,
-        status:data && data.data && data.data.development && data.data.development.status
+        status:data && data.data && data.data.development && data.data.development.status,
+        department: data && data.data && data.data.development && data.data.development.dept_id
+
       },{
         team: 'QA',
         spend:data && data.data && data.data.quality_analyst && data.data.quality_analyst.spends,
         allocated:data && data.data && data.data.quality_analyst && data.data.quality_analyst.allocated,
         remaining:data && data.data && data.data.quality_analyst && data.data.quality_analyst.remaining,
-        status:data && data.data && data.data.quality_analyst && data.data.quality_analyst.status
+        status:data && data.data && data.data.quality_analyst && data.data.quality_analyst.status,
+        department: data && data.data && data.data.quality_analyst && data.data.quality_analyst.dept_id
+
       },{
         team:'Project Management',
         spend:data && data.data && data.data.project_management && data.data.project_management.spends,
         allocated:data && data.data && data.data.project_management && data.data.project_management.allocated,
         remaining:data && data.data && data.data.project_management && data.data.project_management.remaining,
-        status:data && data.data && data.data.project_management && data.data.project_management.status
+        status:data && data.data && data.data.project_management && data.data.project_management.status,
+        department: data && data.data && data.data.project_management && data.data.project_management.dept_id
+
       },{
         team:'Total',
         spend:data && data.data && data.data.total && data.data.total.spends,
@@ -251,20 +259,24 @@ function TeamProject(props) {
             />
           </Col>
           <Col>
-            <p>
-              Total Hours Spend: {graphDetails.totalHrsSpend}
-              <br />
-              Total Hrs Allocated: {graphDetails.totalHrsAllocated}
-              <br />
-              Project Completion: {graphDetails.projectCompletion}%<br />
-              Team work URL:{' '}
-              <a href={`${constants.project}${graphDetails.url}`} target="_blank" >
+          <ul>
+            <li>
+            Total Hours Spend: <span>{graphDetails.totalHrsSpend}</span>
+            </li>
+            <li>
+            Total Hrs Allocated: <span>{graphDetails.totalHrsAllocated}</span>
+            </li>
+            <li>
+            Project Completion: <span>{graphDetails.projectCompletion}%</span>
+            </li>
+            <li>
+            Team work URL:  <a href={`${constants.project}${graphDetails.url}`} target="_blank" >
                 <span>
                   <Image src="/images/redirect.png" />
                 </span>
               </a>
-              <br />
-            </p>
+            </li>
+            </ul>
           </Col>
         </Row>
         <hr />

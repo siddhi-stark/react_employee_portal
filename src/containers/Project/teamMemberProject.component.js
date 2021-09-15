@@ -15,7 +15,7 @@ function TeamMemberProject(props) {
   const teamid = props;
   const teamMemberId = teamid.match.params.teamMemberId;
   const getTeamId = customFunctions.getLocalStorage('departmentType');
-
+  console.log('getTeamId',getTeamId);
   const items = [
     { to: '/', label: 'Home' },
     { to: '/project', label: 'Project' },
