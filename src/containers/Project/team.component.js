@@ -47,7 +47,8 @@ function Team(props) {
       render: ({ emp_id, emp_name }) => {
         return (
           <>
-            <a
+          {(emp_name !== 'Total') ? (
+              <a
               href="/"
               className="pl-2 ms-1"
               onClick={(e) => {
@@ -59,6 +60,9 @@ function Team(props) {
             >
              {emp_name} 
             </a>
+            ) : (
+                <span>{emp_name}</span>
+            )}
           </>
         );
       },

@@ -56,6 +56,8 @@ function TeamProject(props) {
         return (
           <>
           {(team !== 'Total') ? (
+            <>
+            {console.log('condirion',team !== 'Total')}
             <a
               href="/"
               className="pl-2 ms-1"
@@ -68,6 +70,7 @@ function TeamProject(props) {
             >
              {team} 
             </a>
+            </>
             ):(
                 <span>{team}</span>
             )}
