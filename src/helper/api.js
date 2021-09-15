@@ -141,6 +141,8 @@ export default class Api extends Component {
 
   static departmentReportUrl =  `${Api.baseUrl}department-report/`;
 
+  static projectDetails = `${Api.baseUrl}projects-details/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 

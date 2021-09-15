@@ -106,11 +106,11 @@ function Project() {
         return (
           <>
             {completion <= 50 && (
-              <ProgressBar
+               <ProgressBar
                 bsPrefix="progress pbar"
                 variant="danger"
                 now={completion}
-                label={`${completion}% completed`}
+                label={`${completion}%completed`}
               />
             )}
             {completion > 50 && completion <= 80 && (
@@ -118,7 +118,7 @@ function Project() {
                 bsPrefix="progress pbar"
                 variant="info"
                 now={completion}
-                label={`${completion}% completed`}
+                label={`${completion}%completed`}
               />
             )}
             {completion > 80 && (
@@ -126,7 +126,7 @@ function Project() {
                 bsPrefix="progress pbar"
                 variant="success"
                 now={completion}
-                label={`${completion}% completed`}
+                label={`${completion}%completed`}
               />
             )}
           </>

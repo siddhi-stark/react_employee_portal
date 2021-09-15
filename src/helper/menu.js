@@ -13,13 +13,13 @@ const menu = [
     submenu: [],
     roleaccess: [1,3,5,6],
   },
-  {
-    title: 'Projects',
-    path: '/projects',
-    icon: 'project.svg',
-    submenu: [],
-    roleaccess: [1, 2, 3, 4],
-  },
+  // {
+  //   title: 'Projects',
+  //   path: '/projects',
+  //   icon: 'project.svg',
+  //   submenu: [],
+  //   roleaccess: [1, 2, 3, 4],
+  // },
   {
     title: 'Employee Timesheet',
     path: '/emp-timesheet',

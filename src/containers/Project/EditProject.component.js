@@ -68,7 +68,8 @@ function EditProject(props) {
               item.name === 'allocated' ||
               item.name === 'hourly_rate' ||
               item.name === 'project_cost' ||
-              item.name === 'coordinator'
+              item.name === 'coordinator' ||
+              item.name === 'comments'
             )
               itemData.disabled = false;
             return itemData;
@@ -81,19 +82,31 @@ function EditProject(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-      const { data, message } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, formValues);
-      if(!data) {
-        swal(message, '', 'error', {
+    // console.log('formValues',formValues);
+
+    const postData = {
+      allocated: formValues.allocated,
+      hourly_rate: formValues.hourly_rate,
+      project_cost: formValues.project_cost,
+      coordinator: formValues.coordinator ? Number(formValues.coordinator.value) : '',
+      commetns: formValues.comments
+    };
+      const { data } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, postData);
+      if(data) {
+        swal(data.message[0], '', 'success', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         });
       }
+      history.push('/project');
       // Perform success actions
   };
     
   // Get data for form
   const getData = async () => {
-    const { data, message } = await AuthApi.getDataFromServer(`${Api.getProjects}${projectId}/`);
+    const { data, message } = await AuthApi.getDataFromServer(`${Api.projectDetails}${projectId}/`);
+    // console.log('data',data);
+
     if(!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
