@@ -349,7 +349,7 @@ function EmployeeProfile(props) {
                   <div className="card-body">
                     <div className="d-flex align-items-start justify-content-between mb-4">
                       {!companyList.length < 1 && (
-                        <h5 className="card-title">Employment History</h5>
+                        <h5 className="card-title">Experience</h5>
                       )}
 
                       {!employeeDetails.relieved && (
