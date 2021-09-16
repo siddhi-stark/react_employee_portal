@@ -433,7 +433,9 @@ function EmployeeProfile(props) {
                       ))}
                   </div>
                 </div>
-                <div className="card">
+                {employeeDocument && employeeDocument.length > 0 ? (
+                  <>
+                  <div className="card">
                   <div className="card-header">
                     <h5>Documents</h5>
                   </div>
@@ -505,6 +507,8 @@ function EmployeeProfile(props) {
                       ))}
                   </div>
                 </div>
+                  </>
+                  ) : ''}
               </div>
             </div>
           </div>

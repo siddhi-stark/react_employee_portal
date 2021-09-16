@@ -118,7 +118,6 @@ function EditProject(props) {
     
   // Get data for form
   const getData = async () => {
-    console.log('inside getData');
     const { data, message } = await AuthApi.getDataFromServer(`${Api.projectDetails}${projectId}/`);
     // console.log('data',data);
 

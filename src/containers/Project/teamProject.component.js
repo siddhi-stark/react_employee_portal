@@ -57,7 +57,6 @@ function TeamProject(props) {
           <>
           {(team !== 'Total') ? (
             <>
-            {console.log('condirion',department)}
             <a
               href="/"
               className="pl-2 ms-1"

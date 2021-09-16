@@ -238,7 +238,7 @@ function Employee() {
           setSelectedProjectTeam({
           id: pt.id,
           label: pt.name,
-          })
+          });
         }
         return pt;
       });
