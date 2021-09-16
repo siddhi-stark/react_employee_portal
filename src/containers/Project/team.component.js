@@ -16,6 +16,8 @@ function Team(props) {
   const teamId = teamid.match.params.teamId;
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
 
+  const DepartmentID = customFunctions.getLocalStorage('departmentType');
+
   const items = [
     { to: '/', label: 'Home' },
     { to: '/project', label: 'Project' },
@@ -120,7 +122,7 @@ function Team(props) {
     const page = pageNo || currentPage;
     const endPoint = `${Api.departmentReportUrl}`;
     const params = {
-      department: teamId,
+      department: DepartmentID,
       project_id: teamProjectId,
       page,
       limit:1000
@@ -149,6 +151,7 @@ function Team(props) {
 
   return (
     <>
+    {console.log('teamId',teamId)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>

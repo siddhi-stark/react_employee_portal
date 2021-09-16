@@ -52,7 +52,7 @@ function TeamProject(props) {
     {
       id: 'team',
       label: 'Team',
-      render: ({ team, department }) => {
+      render: ({ team,department }) => {
         return (
           <>
           {(team !== 'Total') ? (
