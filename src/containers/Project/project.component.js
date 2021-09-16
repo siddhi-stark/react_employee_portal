@@ -194,8 +194,8 @@ function Project() {
     },
     {
       id: 'Action',
-      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Action',
-      render: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && handleActionCallback
+      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Action',
+      render: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && handleActionCallback
     },
   ];
 
