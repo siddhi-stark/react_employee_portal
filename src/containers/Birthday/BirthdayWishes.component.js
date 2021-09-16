@@ -49,7 +49,7 @@ const getGreetingById = async (GrtId) => {
 	const endPoint = `${Api.greetingsUrl}${GrtId}/?employee_id=${EmpId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if(data && data.data) {
-      setWisherToProfile(data && data.data && data.data.length > 0 && data.data.employee_data.profile_url);
+      setWisherToProfile(data && data.data  && data.data.employee_data.profile_url && data.data.employee_data.profile_url);
    		setBannerImage(data && data.data && data.data.file_name);
       setGreetingMessage(data && data.data && data.data.message);
     } else {
@@ -109,6 +109,7 @@ const addMeaage = async () => {
 
 	return (
 		<>
+		{console.log('wisherProfile',wisherProfile)}
 			<div className="profile-bg mt-3">
 			{bannerImage ? (
 				<Image src={bannerImage} alt="image" />
