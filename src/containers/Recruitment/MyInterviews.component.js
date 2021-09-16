@@ -147,8 +147,8 @@ function MyInterviews() {
       label: 'Status',
     },
     {
-      id: Number(group) === 5 || Number(group) === 6 ? 'round_status_name' : '',
-      label: Number(group) === 5 || Number(group) === 6 ? 'Round Status' : '',
+      id: Number(group) === 5 || Number(group) === 6 || Number(group) === 2 ? 'round_status_name' : '',
+      label: Number(group) === 5 || Number(group) === 6 || Number(group) === 2 ? 'Round Status' : '',
     },
     {
       id: 'action',
