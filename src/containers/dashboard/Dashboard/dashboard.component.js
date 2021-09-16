@@ -796,7 +796,7 @@ function Dashboard() {
                               ))}
                           </>
                         ) : (
-                          'Thank you, No leave applied yet.'
+                          'No leave applied yet.'
                         )}
                       </div>
                     </div>
