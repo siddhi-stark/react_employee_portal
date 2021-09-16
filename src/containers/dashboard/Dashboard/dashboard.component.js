@@ -36,12 +36,14 @@ function Dashboard() {
   const [anniversary, setAnniversary] = useState([]);
   const [appreciationData,setAppriciation] = useState([]);
   const [image, setImage] = useState('');
+  const [birthdayArr,setBirthdayArray] =useState([]);
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
   const isBirthday = customFunctions.getLocalStorage('birthday');
   const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
   const UserID = customFunctions.getLocalStorage('userId');
+
   let isShowBdayHeading = false;
   let isShowAnniversaryHeading = false;
 
@@ -281,6 +283,8 @@ function Dashboard() {
     setQuotesContent(quote);
     const userclockedin = customFunctions.getLocalStorage('userclockedin');
     if (userclockedin) setShowClockIn(userclockedin);
+    const birthdayArrr = EmployeeID && EmployeeID.filter((e) => ((Number(e.id) !== Number(UserID)) && e.is_birthday && Number(e.dob) >= day));
+    setBirthdayArray(birthdayArrr);
   }, []);
 
   const onViewButtonClick = () => {
@@ -346,6 +350,7 @@ function Dashboard() {
                             <Button
                               onClick={() => {
                                 history.push('wishes');
+                                customFunctions.setLocalStorage('EmpID',UserID);
                               }}
                             >
                               Click Here
@@ -426,15 +431,11 @@ function Dashboard() {
               {isShowBdayHeading ? (
                 <Card.Body className="todays-birthday-member-main">
                   <>
-                    {isShowBdayHeading ? <p>Today's Birthday</p> : ''}
+                    {isShowBdayHeading ? <p>Today's Birthday</p> : ''} <br />
                     <div className="todays-birthday-member">
-                    {EmployeeID &&
-                      EmployeeID.filter(
-                        (e) => Number(e.id) !== Number(UserID) && e.is_birthday
-                      ).map((emp) => (
+                    {
+                      birthdayArr && birthdayArr.length >0 && birthdayArr.map((emp) => (
                         <>
-                          {Number(emp.dob) >= day ? (
-                            <>
 
                               <div className="birth-name d-flex align-items-center">
                                 <img
@@ -443,6 +444,8 @@ function Dashboard() {
                                 />
                                 <div className="birthday-employees">
                                   <h6  onClick={() => { // eslint-disable-line
+                                      if(emp.greeting) {
+
                                       customFunctions.setLocalStorage(
                                         'employeeId',
                                         emp.id
@@ -454,6 +457,7 @@ function Dashboard() {
                                       customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
                                       customFunctions.setLocalStorage('EmpID',emp.id);
                                       history.push('/wishes');
+                                      }
                                     }}
                                   >
                                   <a>
@@ -463,11 +467,9 @@ function Dashboard() {
                                 </div>
                               </div>
                             </>
-                          ) : (
-                            ''
-                          )}
-                        </>
-                      ))}
+                        ))
+                    }
+                    
                       </div>
                   </>
                 </Card.Body>
@@ -477,9 +479,9 @@ function Dashboard() {
 
               <Card.Body
                 className={
-                  !isShowBdayHeading
-                    ? 'birth-box-remove'
-                    : 'work-anniversary-box'
+                  birthdayArr && birthdayArr.length > 0 
+                    ? 'work-anniversary-box'
+                    : 'birth-box-remove'
                 }
               >
                 {isShowAnniversaryHeading ? (
@@ -496,6 +498,7 @@ function Dashboard() {
                             <img src="/images/working.png" alt="img" />
                             <div className="birthday-employees">
                               <h6 onClick={() => {  // eslint-disable-line
+                                 if(emp.greeting_anniversary) {
                                   customFunctions.setLocalStorage(
                                     'employeeId',
                                     emp.id
@@ -511,6 +514,7 @@ function Dashboard() {
                                   customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
                                   history.push('/wishes');
                                 }}
+                                 }
                               >
                                 {emp.name}
                               </h6>
@@ -526,7 +530,7 @@ function Dashboard() {
 
 
               {appreciationData && appreciationData.length > 0 ? (
-                 <Card.Body className={isShowAnniversaryHeading ? 'work-anniversary-box' : 'birth-box-remove'}>
+                 <Card.Body className={((birthdayArr && birthdayArr.length > 0) || (anniversary && anniversary.length > 0)) ? 'work-anniversary-box' : 'birth-box-remove'}>
               {appreciationData ? (
                   <p>Work Appreciation</p>
                 ) : (
@@ -550,6 +554,8 @@ function Dashboard() {
                               <>
                             <div className="birthday-employees">
                               <h6 onClick={() => {  // eslint-disable-line
+                                if(appr.id) {
+
                                   customFunctions.setLocalStorage(
                                     'employeeId',
                                     appr.id
@@ -565,6 +571,7 @@ function Dashboard() {
                                   customFunctions.setLocalStorage('comment-allow',appr.comment_allow);
                                   history.push('/wishes');
                                 }}
+                                }
                               >
                                 {empdata.full_name}
 
