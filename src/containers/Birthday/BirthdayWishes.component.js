@@ -163,6 +163,7 @@ const addMeaage = async () => {
 					                              onClick={() => {
 					                              setShowMessage(true);
 					                              setMessage(employeeMessage);
+					                              document.getElementById('msgbox').focus();
 					                           }} 
 					                              />
 
@@ -191,6 +192,7 @@ const addMeaage = async () => {
 					<TextInput
             onInputChange={(e) => setMessage(e.target.value)}
 						label="Message"
+						id="msgbox"
 						containerClass="form-group"
 						type="text"
 						as="textarea"

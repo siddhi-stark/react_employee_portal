@@ -424,9 +424,10 @@ function Dashboard() {
               {(isShowBdayHeading || isShowAnniversaryHeading) && (
             <Card className="mt-3 birthday-list">
               {isShowBdayHeading ? (
-                <Card.Body>
+                <Card.Body className="todays-birthday-member-main">
                   <>
                     {isShowBdayHeading ? <p>Today's Birthday</p> : ''}
+                    <div className="todays-birthday-member">
                     {EmployeeID &&
                       EmployeeID.filter(
                         (e) => Number(e.id) !== Number(UserID) && e.is_birthday
@@ -434,6 +435,7 @@ function Dashboard() {
                         <>
                           {Number(emp.dob) >= day ? (
                             <>
+
                               <div className="birth-name d-flex align-items-center">
                                 <img
                                   src="/images/birthday-cake.png"
@@ -466,6 +468,7 @@ function Dashboard() {
                           )}
                         </>
                       ))}
+                      </div>
                   </>
                 </Card.Body>
               ) : (
