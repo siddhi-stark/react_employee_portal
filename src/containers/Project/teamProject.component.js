@@ -131,6 +131,8 @@ function TeamProject(props) {
       const url = customFunctions.generateUrl(endPoint);
       const { data } = await AuthApi.getDataFromServer(url);
       if(data){
+        console.log('data.data.remaining',data.data.remaining)
+        console.log('data.data.completion',data.data.completion)
     const graph = [
       { x: 'Pending Work', y: data && data.data && data.data.remaining },
       { x: 'Complete Work', y: data && data.data && data.data.completion },
@@ -223,7 +225,7 @@ function TeamProject(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">HR Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
       <Card body className="mt-4">
