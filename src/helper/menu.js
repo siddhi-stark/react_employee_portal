@@ -187,14 +187,14 @@ const menu = [
     path: '/scheduler',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1,2,3,4,5],
+    roleaccess: [1,4],
   },
   {
     title: 'Team Project Scheduler',
     path: '/team-scheduler',
     icon: 'leaves.svg',
     submenu: [],
-    roleaccess: [1,2,3,4,5],
+    roleaccess: [1,4],
   },
   {
     title: 'Reports',
