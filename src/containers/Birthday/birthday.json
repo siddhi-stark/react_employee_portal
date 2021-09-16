@@ -45,7 +45,7 @@
 		]
 	}, {
 		"name": "message",
-		"type": "text",
+		"type": "textarea",
 		"label": "Message",
 		"id": "",
 		"placeholder": "",
@@ -78,7 +78,7 @@
 	}, {
 		"name": "employee",
 		"type": "select",
-		"label": "Employee",
+		"label": "Employee Name",
 		"id": "",
 		"placeholder": "",
 		"inputClass": "",
@@ -120,7 +120,7 @@
 		"displayWhen": {},
 		"haveValidations": "false",
 		"haveDisplayOptions": "false",
-		"callback": "",
+		"callback": "handleComments",
 		"callbackUrl": "",
 		"inputToChange": "",
 		"minDateSelector": "",

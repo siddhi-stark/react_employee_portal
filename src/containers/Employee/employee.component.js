@@ -82,13 +82,15 @@ function Employee() {
   const [employeetwId, setEmployeeTwId] = useState('');
   const [joiningDate, setJoiningDate] = useState('');
   const [newDepartment,setNewDepartment] = useState([]);
+  const [projectTeam,setProjectTeam] = useState([]);
+  const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
+
   let timmer = null;
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
- 
 
   const columns = [
     {
@@ -231,6 +233,16 @@ function Employee() {
         return team;
       });
 
+      projectTeam.map((pt) => {
+        if(pt.id === data.data.team_id) {
+          setSelectedProjectTeam({
+          id: pt.id,
+          label: pt.name,
+          })
+        }
+        return pt;
+      });
+
       manager.map((mngr) => {
         data.data.assigned_managers.map((assgnmgmr) => {
           if (mngr.id === assgnmgmr) {
@@ -304,7 +316,6 @@ function Employee() {
     }
   };
 
-
   const getTwEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
@@ -339,6 +350,12 @@ function Employee() {
     }
   };
 
+  const getTeam = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
+    if(data && data.data) {
+      setProjectTeam(data.data.team);
+    }
+  };
   
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
@@ -371,6 +388,7 @@ function Employee() {
       getTeamLead();
       // getDepartment();
       getNewDapartment();
+      getTeam();
     }
   }, [addButton]);
 
@@ -461,6 +479,7 @@ function Employee() {
       email,
       mobile,
       role: selectedRole.id,
+      team: selectedProjectTeam.id,
       password,
       emp_code: empCode && !employeeId  ? Number(empCode.split('-')[1]) : '',
       team_leads: teamIdList,
@@ -624,7 +643,6 @@ function Employee() {
     return depart;
   };
 
-
   const getTeamLeadList = () => {
     if (!teamLead) return [];
     const options = [];
@@ -633,6 +651,19 @@ function Employee() {
         label: data.full_name,
         id: data.id,
         value: data.full_name,
+      });
+    });
+    return options;
+  };
+
+  const getProjectTeam = () => {
+    if (!teamLead) return [];
+    const options = [];
+    projectTeam.map((data) => {
+      return options.push({
+        label: data.name,
+        id: data.id,
+        value: data.name,
       });
     });
     return options;
@@ -1113,6 +1144,15 @@ function Employee() {
                     selectedDepartment,
                     'required'
                   )}
+                />
+              </Col>
+              <Col sm={6}>
+                <DropdownInput
+                  label="Team"
+                  options={getProjectTeam()}
+                  placeholder="Select Team"
+                  defaultValue={selectedProjectTeam}
+                  onSelectHandler={(select) => setSelectedProjectTeam(select)}
                 />
               </Col>
             </Row>

@@ -30,7 +30,7 @@ function Employees() {
     } else if(emp === 'oldEmployee'){
       setKey('oldEmployee');
     }
-  }
+  };
 
   return (
     <>

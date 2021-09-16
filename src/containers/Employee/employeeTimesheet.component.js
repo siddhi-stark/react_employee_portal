@@ -421,25 +421,24 @@ function EmployeeTimesheet() {
               </Row>
             )}
 
-       
-<CustomTable
-columns={columns}
-rows={rowData}
-role={5}
-showPagination={true}
-tableClass="table-striped"
-paginationProps={{
-totalItems: totalCount,
-itemsPerPage: limit,
-activePage: currentPage,
-onPageChange: (pageNo) => {
-getRowData(pageNo);
-},
-}}
-emptyRender={() => {
-return 'No record found.';
-}}
-/>
+              <CustomTable
+                columns={columns}
+                rows={rowData}
+                role={5}
+                showPagination={true}
+                tableClass="table-striped"
+                paginationProps={{
+                totalItems: totalCount,
+                itemsPerPage: limit,
+                activePage: currentPage,
+                onPageChange: (pageNo) => {
+                getRowData(pageNo);
+                },
+                }}
+                emptyRender={() => {
+                return 'No record found.';
+                }}
+              />
           </Card.Body>
         </Card>
       </div>

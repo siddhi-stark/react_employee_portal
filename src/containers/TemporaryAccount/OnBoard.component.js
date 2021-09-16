@@ -108,7 +108,6 @@ function OnBoard(props) {
             swal.close();
           });
       }
-      
   };
 
   const getData = async () => {
@@ -244,7 +243,6 @@ function OnBoard(props) {
     getTeamLeads();
   }, []);
 
-
   const getDepartment = async () => {
     const {data} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=department`);
     
@@ -271,25 +269,25 @@ function OnBoard(props) {
       </div>
 		<div className="mt-5">
     <Card body>
-  <StarkFormBuilder
-    containerClass='mb-4 mt-4'
-    formHeaderClass=''
-    formSections={FormSections}
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true}
-    resetBtnText="Cancel"
-    btnContainerClass="form-submit-buttons"
-    isStepForm={false}
-    onFormReset={() => {
-      props.history.push('/candidates');
-    }}
-  />
-  </Card>
+      <StarkFormBuilder
+        containerClass='mb-4 mt-4'
+        formHeaderClass=''
+        formSections={FormSections}
+        onFormSubmit={(formValues) => {submitForm(formValues);}}
+        options={options}
+        callbacks={{}}
+        defaultFormValues={defaultValues}
+        currentUser={currentUser}
+        submitBtnText="Submit"
+        showResetBtn={true}
+        resetBtnText="Cancel"
+        btnContainerClass="form-submit-buttons"
+        isStepForm={false}
+        onFormReset={() => {
+          props.history.push('/candidates');
+        }}
+      />
+    </Card>
 		</div>
     </>
 		);

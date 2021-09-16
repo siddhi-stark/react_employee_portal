@@ -20,7 +20,6 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4],
   },
-
   {
     title: 'Employee Timesheet',
     path: '/emp-timesheet',
@@ -66,7 +65,7 @@ const menu = [
       },
       {
         title: 'Recruitment',
-        path: '/recruitment',
+        path: '/recruitments',
         icon: 'recruitement.svg',
         roleaccess: [1,6],
       },
@@ -80,11 +79,19 @@ const menu = [
     submenu: [],
     roleaccess: [2, 5, 6],
   },
+  
+  {
+    title: 'My Interviews',
+    path: '/interview-listing',
+    icon: 'recruitement.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4,5,6],
+  },
   {
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'recruitement.svg',
-    roleaccess: [5,4,3,2],
+    roleaccess: [5,2],
   }, 
   {
     title: 'Candidates',
@@ -114,13 +121,6 @@ const menu = [
     submenu: [],
     roleaccess: [1,2,3,4,5,6],
   },
-  // {
-  //   title: 'My Interviews',
-  //   path: '/interview-listing',
-  //   icon: 'holiday.svg',
-  //   submenu: [],
-  //   roleaccess: [1,2,3,4,5,6],
-  // },
   // {
   //   title: 'Employee Technology Stack',
   //   path: '/emp-stack',
@@ -152,7 +152,7 @@ const menu = [
     submenu: [
       {
         title: 'My Leaves',
-        path: '/leaves',
+        path: '/my-leaves',
         roleaccess: [2,3,6,5],
       },
       {
@@ -168,7 +168,6 @@ const menu = [
     ],
     roleaccess: [1,2,3,6,5],
   },
-
   {
     title: 'Reports',
     path: '/report',
@@ -176,6 +175,27 @@ const menu = [
     submenu: [],
     roleaccess: [4],
   },
+  // {
+  //   title: 'Project',
+  //   path: '/project',
+  //   icon: 'leaves.svg',
+  //   submenu: [],
+  //   roleaccess: [1,2,3,4,5],
+  // },
+  // {
+  //   title: 'Project Scheduler',
+  //   path: '/scheduler',
+  //   icon: 'report.svg',
+  //   submenu: [],
+  //   roleaccess: [1,2,3,4,5],
+  // },
+  // {
+  //   title: 'Team Project Scheduler',
+  //   path: '/team-scheduler',
+  //   icon: 'leaves.svg',
+  //   submenu: [],
+  //   roleaccess: [1,2,3,4,5],
+  // },
   {
     title: 'Reports',
     path: '#',
@@ -184,7 +204,7 @@ const menu = [
     submenu: [
       {
         title: 'My Report',
-        path: '/report',
+        path: '/my-report',
         icon: 'report.svg',
         roleaccess: [2, 3, 6,5],
       },
@@ -195,7 +215,7 @@ const menu = [
         roleaccess: [2,3,6],
       },{
         title: 'Employee Report',
-        path: '/reports',
+        path: '/employee-report',
         icon: 'report.svg',
         roleaccess: [5,6],
       },
@@ -217,6 +237,13 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1,3,5,6],
   // },
+   {
+    title: 'Greetings',
+    path: '/greetings',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [2,3,5,6],
+  },
   {
     title: 'Log Out',
     path: '#',

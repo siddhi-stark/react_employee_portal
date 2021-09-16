@@ -165,7 +165,7 @@ function RecruitmentApplicationComponent() {
       <>
       {resume.resume ? (
 
-        <a href={resume.resume} className="pl-2" target="_Blank">
+        <a href={resume.resume} className="pl-2" title="View Resume" target="_Blank">
           <Image src="/images/download-file.svg" />
         </a>
         ) : ''}
@@ -549,7 +549,6 @@ function RecruitmentApplicationComponent() {
               )}
             </div>
             <div className="recruitment-links-wrapper">
-           
             
               {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
                 <>

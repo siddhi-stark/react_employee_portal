@@ -67,7 +67,7 @@ function Greetings() {
           <>
             <span>
               {
-                comment_allow ? 'True' : 'False' // eslint-disable-line
+                comment_allow ? 'On' : 'Off' // eslint-disable-line
               }
             </span>
           </>
@@ -84,9 +84,9 @@ function Greetings() {
 	// Declare variable
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
-	const [limit, setLimit] = useState(5);
+	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
-	const title = 'Greetings';
+	const [title, setTitle] = useState('');
 	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
@@ -97,6 +97,7 @@ function Greetings() {
 		const params = {
 			page,
 			limit,
+			sort_by: 'date',
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
@@ -107,12 +108,20 @@ function Greetings() {
 			setCurrentPage(Number(data.paginator.current_page));
 			setRowData((data && data.data) || []);
 		} else {
-			console.log('error', message);
+			 swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+      });
 		}
 	};
 
 	useEffect(() => {
 		getRowData(1);
+		setTitle('Greetings');
 	}, []);
 
 	 const deleteBirthday = (id) => {
@@ -158,7 +167,7 @@ function Greetings() {
 				<h2 className="main-content-title tx-24 mg-b-5">Greetings</h2>
 				<Breadcrumb items={items} />
 			</div>
-			<section className="content-area">
+			<section className="content-area greeting-list">
 				<div className="mt-5">
 					<Card>
 						<Card.Header>

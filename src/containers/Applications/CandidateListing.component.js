@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { ProgressBar, Card, Image } from 'react-bootstrap';
+import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
@@ -25,6 +26,7 @@ function CandidateListing() {
 			<>
 				<a
 					href="/"
+					title="Edit Candidate"
 					className="pl-2 ms-2"
 					onClick={(e) => {
 						e.preventDefault();
@@ -39,6 +41,7 @@ function CandidateListing() {
 					!row.employee_id && (
 						<a
 							href="/"
+							title="Onboard Candidate"
 							className="pl-2 ms-1"
 							onClick={(e) => {
 								e.preventDefault();
@@ -134,7 +137,10 @@ function CandidateListing() {
 			setCurrentPage(Number(data.paginator.current_page));
 			setRowData((data && data.data) || []);
 		} else {
-			console.log('error', message);
+			swal(message, '', 'error', {
+		        closeOnClickOutside: false,
+		        allowOutsideClick: false,
+		    });
 		}
 	};
 

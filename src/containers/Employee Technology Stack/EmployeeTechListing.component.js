@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Row, Image } from 'react-bootstrap';
+import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './EmployeeTechFilter.json';
@@ -45,11 +46,6 @@ function EmployeeTechListing() {
             e.preventDefault();
             e.stopPropagation();
             history.push(`/edit-technology-stack/${id}`);
-            // setModalShow(true);
-            // setEmployeeId(id);
-            // getRowData(1,index);
-            // setAddButton(true);
-            // setCntClearFilter(cntClearFilter + 1);
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Designation" />
@@ -113,7 +109,10 @@ function EmployeeTechListing() {
 
       setRowData((data && data.data) || []);
     } else {
-      console.log('error', message);
+      swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+      });
     }
   };
 
@@ -220,9 +219,7 @@ function EmployeeTechListing() {
                       resetBtnText="Clear"
                       btnContainerClass="form-submit-buttons"
                       isStepForm={false}
-                      onFormReset={() => {
-                        console.log('form reset callback');
-                      }}
+                      onFormReset={() => {}}
                     />
                   </Card.Title>
                 </Card.Body>

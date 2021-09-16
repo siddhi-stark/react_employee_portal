@@ -17,9 +17,9 @@ function Sidebar() {
 
   const [events,setEvents] = useState([]);
   const [birthdays,setBirthdayData] = useState([]);
+  const [isBirthDayPresent, setIsBirthDayPresent] = useState(false);
 
   const BirthdayEvent = new Event('BirthdayUpdate', { isUpdated: true });
-
 
  const m_names = [
   'January',
@@ -40,26 +40,25 @@ const d = new Date();
 const day = d.getDate();
 const n = m_names[d.getMonth()];
 
-// const time = new Date();
-// console.log(
-//   time.toLocaleString('en-US', { hour: 'numeric', hour12: true })
-// ); 
-
-
   const onSubActiveClass = () => {
     if (activeSubPath !== window.location.pathname)
       setActiveSubPath(window.location.pathname);
   };
-
 
   const getBirthday = async () => {
      const endPoint = `${Api.birthdayUrl}?limit=3`;
      const url = customFunctions.generateUrl(endPoint);
     const { data } = await AuthApi.getDataFromServer(url);
     if(data) {
+      const bdayData = data.data;
       setBirthdayData(data.data);
+      if(bdayData.length > 0) {
+      setIsBirthDayPresent((bdayData.filter((e) => Number(e.dob) >= day)).length > 0 ? true : false); // eslint-disable-line
+      }
+      customFunctions.setLocalStorage('Employee',JSON.stringify(data.data));
+
     }
-  }
+  };
 
   const getEvents = async () => {
     const endPoint = `${Api.eventsUrl}?upcoming=true&sort_by=event_time`;
@@ -67,7 +66,7 @@ const n = m_names[d.getMonth()];
     if(data) {
       setEvents(data.data);
     }
-  }
+  };
 
   useEffect(()=>{
     const LoginToken = customFunctions.getLocalStorage('access_token');
@@ -75,7 +74,6 @@ const n = m_names[d.getMonth()];
       getBirthday();
       getEvents();
     }
- 
 
     document.addEventListener('MenuChange', () => {
       onSubActiveClass();
@@ -84,8 +82,6 @@ const n = m_names[d.getMonth()];
     document.addEventListener('ViewBtnChange', () => {
       onSubActiveClass();
     });
-
-    
 
     document.addEventListener('ViewHolidayButtonChange', () => {
       onSubActiveClass();
@@ -116,20 +112,6 @@ const n = m_names[d.getMonth()];
   document.dispatchEvent(viewEvent);
   return true;
 };
-
-// function formatAMPM(date) {
-//   const hours = date.getHours();
-//   const minutes = date.getMinutes();
-//   const ampm = hours >= 12 ? 'pm' : 'am';
-//   const hoursNew = hours % 12; // eslint-disable-line
-//   const hoursN = hoursNew ? hoursNew : 12; //  eslint-disable-line
-//   const minutesN = minutes < 10 ? '0'+minutes : minutes; //  eslint-disable-line
-//   const strTime = hoursN + ':' + minutesN + ' ' + ampm; //  eslint-disable-line
-//   return strTime;
-// }
-
-// console.log(formatAMPM(new Date));
-
 
   return (
     <>
@@ -231,7 +213,6 @@ const n = m_names[d.getMonth()];
          <div className="upcoming-events">
             <div className="upcoming-bg">
 
-
             {events && events.length >=1 ? (
 
               <div className="upcoming-event-box up-event ">
@@ -267,8 +248,8 @@ const n = m_names[d.getMonth()];
 
             </div>
 
-            {birthdays && birthdays.length >= 1 ? (
-
+            {(isBirthDayPresent && birthdays && birthdays.length >= 1) ? (
+              <>
             <div className="upcoming-bg bg-red birthday-wishes-chart">
               <div className="upcoming-event-box up-event">
                 <div className="upcoming-event-img">
@@ -296,11 +277,13 @@ const n = m_names[d.getMonth()];
                      </p>
 
                       <p onClick={() => { // eslint-disable-line 
-                        console.log('bday',bday.greeting);
-                      document.dispatchEvent(BirthdayEvent);
+                        if(Number(bday.dob) > day) return false;
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
-                      // history.push('/birthday-wishes')
+                      customFunctions.setLocalStorage('comment-allow',bday.comment_allow);
+                      history.push('/wishes');
+                      document.dispatchEvent(BirthdayEvent);
+
                     }}
 
                       >{bday.name}</p> 
@@ -317,20 +300,17 @@ const n = m_names[d.getMonth()];
                 </ul>     
               </div>
             </div>
+              </>
+
               ) : ''}
 
           </div> 
 
             </div>
           </div>
-
-        
       </div>
     </>
   );
 }
 
 export default Sidebar;
-
- // <p onClick={() => {customFunctions.setLocalStorage('employeeId',bday.id); history.push('/birthday-wishes')}} // eslint-disable-line 
- //                      >{bday.name}</p> 

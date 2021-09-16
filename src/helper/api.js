@@ -137,10 +137,16 @@ export default class Api extends Component {
 
   static greetingWishesUrl =  `${Api.baseUrl}greeting-wishes/`;
 
+  static projectSchedularUrl =  `${Api.baseUrl}project-schedular/`;
+
+  static departmentReportUrl =  `${Api.baseUrl}department-report/`;
+
+  static projectDetails = `${Api.baseUrl}projects-details/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 
-    const env = 'production';
+    const env = 'dev';
 
     let url = '';
     switch (env) {
@@ -149,12 +155,12 @@ export default class Api extends Component {
         break; 
 
       case 'dev':
-        url = 'https://devapi.starkdigital.in/api/v1/';
+        url = 'https://developmentapi.starkdigital.in/api/v1/';
         break;
       // Default: development server
       default:
         url =
-          'https://devapi.starkdigital.in/api/v1/';
+          'https://developmentapi.starkdigital.in/api/v1/';
         break;
     }
     return url;

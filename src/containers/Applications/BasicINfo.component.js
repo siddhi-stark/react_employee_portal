@@ -23,7 +23,7 @@ function BasicInformation(props) {
   };
 
   useEffect(() => {
-    updateDefaultValues({is_fresher:'0'})
+    updateDefaultValues({is_fresher:'0'});
     getUserRole();
     getDesignation();
     getTechnology();
@@ -225,9 +225,7 @@ function BasicInformation(props) {
         showResetBtn={false}
         resetBtnText="Clear"
         isStepForm={false}
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
+        onFormReset={() => {}}
       />
     </>
   );

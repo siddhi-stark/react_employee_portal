@@ -12,7 +12,6 @@ import customFunctions from '../../helper/customFunctions';
 
 function TeamAddLeave(props) {
   const idProps = props;
-  console.log('idProps',idProps);
   const leaveId = idProps.match.params.viewLeaveId;
   const employeeOptions = idProps.location.state ? idProps.location.state.employee : '';
   const viewOptions = idProps.location.state ? idProps.location.state.isView : '';
@@ -33,7 +32,6 @@ function TeamAddLeave(props) {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
-
 
   useEffect(() => {
     getUserRole();
@@ -131,7 +129,6 @@ function TeamAddLeave(props) {
 
   return (
     <>
-    {console.log('viewOptions',viewOptions)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Leaves</h2>

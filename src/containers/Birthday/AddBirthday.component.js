@@ -8,19 +8,22 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-
+import customFunctions from '../../helper/customFunctions';
 
 function AddBirthday(props) {
 
   const BirthdayId = props.match.params.bdayId; //eslint-disable-line
   // Variable declarations
+  const viewObj = props;
+  const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [imageUrl, setImageUrl] = useState('');
   const [title, setTitle] = useState('');
   const [bId, setbirthdayID] = useState('');
-  const items = [{ to: '/', label: 'Home' }, { label: 'Add Birthday' }]; 
+  const items = [{ to: '/', label: 'Home' }, { label: BirthdayId ? 'Edit Greeting' : 'Add Greeting' }]; 
   const history = useHistory();  
 
   // Get user role
@@ -29,16 +32,16 @@ function AddBirthday(props) {
     updateCurrentUser(Number(roleId));
   };
 
-  // useEffect( async () => {
-  //   const roleId = await localStorage.getItem('group');
-  //   if (Number(roleId) !== 1) {
-  //     history.push('/');
-  //   }
-  // }, []);
+  items.map((it) => {
+    if(viewOptions) {
+      items[1].label = 'View Greeting';
+    }
+    return it;
+  });
   
   useEffect(() => {
     getUserRole();
-    setTitle('Add Birthday');
+    setTitle('Add Greeting');
   }, []);
 
    const handleImageFileUpload = (e) => {
@@ -62,16 +65,15 @@ function AddBirthday(props) {
     return imgId;
   };
 
-
   // Submit Form
   const submitForm = async (formValues) => {
-    
+
     const postData = {
       message: formValues.message,
       greet_type: formValues.greet_type ? formValues.greet_type.value : '',
       employee: formValues.employee ? [formValues.employee.value] : '',
-      comment_allow: formValues.comment_allow ? Boolean(formValues.comment_allow) : ''
-    }
+      comment_allow: formValues.comment_allow ? formValues.comment_allow : ''
+    };
 
      if (imageUrl) {
       postData.file = await uploadFile();
@@ -90,14 +92,12 @@ function AddBirthday(props) {
     }
       
   };
-    
 
   // Get data for form
   const getData = async (id,empList) => {
     const {data } = await AuthApi.getDataFromServer(`${Api.greetingsUrl}${id}/`);
 
     let bEmp = {};
-    console.log('comment_allow',data.data.comment_allow);
 
     empList.map((em) => {
       data.data.employee.map((emd) => {
@@ -105,12 +105,12 @@ function AddBirthday(props) {
           bEmp = {
             label: em.full_name,
             value: em.id
-          }
+          };
         }
         return emd;
-      })
+      });
       return em;
-    })
+    });
    
     const gt = data.data.greet_type
         ? {
@@ -133,8 +133,62 @@ function AddBirthday(props) {
   // Call get data method on load
   useEffect(() => {
     setbirthdayID(BirthdayId);
-    
+    }, []);
 
+   useEffect(() => {
+    
+    // setEventId(ID);
+    // if (ID) {
+    //   getData(ID);
+    // }
+
+    if(viewOptions === 'true')  setTitle('View Greeting');
+
+    if (BirthdayId) {
+      setTitle('Edit Greeting');
+    }
+    
+    if(BirthdayId && viewOptions === 'true'){
+      setTitle('View Greeting');
+    }
+  }, []);
+
+    useEffect(() => {
+    if (!customFunctions.checkIfEmpty(viewOptions)) {
+      const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (
+            item.name === 'greet_type' ||
+            item.name === 'message' ||
+            item.name === 'employee' 
+          )
+            itemData.disabled = true;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+    } else {
+      const formSchema = [...FormSections];
+      const updatedSchema = formSchema.map((section) => {
+        const s = { ...section };
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (
+            item.name === 'greet_type' ||
+            item.name === 'message' ||
+            item.name === 'employee' 
+          )
+            itemData.disabled = false;
+          return itemData;
+        });
+        return s;
+      });
+      updateJsonSchema([...updatedSchema]);
+    }
   }, []);
       
   const getType = async () => {
@@ -150,7 +204,7 @@ function AddBirthday(props) {
     options.greet_type = dpOptions;
     const allOptions = options;
     await updateOptions({...allOptions});
-  }
+  };
 
   useEffect(() => {
     getType();
@@ -158,9 +212,7 @@ function AddBirthday(props) {
       
   const getEmployee = async () => {
     // const id = props.match.params.stackId;
-    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
-    
-    
+    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);   
      const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
       return { label: op.full_name, value: op.id };
 
@@ -171,18 +223,18 @@ function AddBirthday(props) {
     if(BirthdayId) {
     getData(BirthdayId,data.data);
     }
-  }
+  };
 
   useEffect(() => {
     getEmployee();
   }, []);
 
-  
-      
+ const onCommentsChange = (value) => {
+   customFunctions.setLocalStorage('ShowComment',value);
+ };     
 
 	return (
 		<>
-    {console.log('bId',bId)}
 		 <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -196,7 +248,7 @@ function AddBirthday(props) {
   <StarkFormBuilder
     containerClass='mt-4 mb-4'
     formHeaderClass=''
-    formSections={FormSections}
+    formSections={FormSections || jsonSchema}
     formHeading="tbirthday"
     onFormSubmit={(formValues) => {submitForm(formValues);}}
     options={options}
@@ -204,6 +256,10 @@ function AddBirthday(props) {
             handleimage: (value) => {
               handleImageFileUpload(value);
             },
+
+            handleComments:(value) => {
+              onCommentsChange(value);
+            }
           }}
     defaultFormValues={defaultValues}
     currentUser={currentUser}
@@ -222,7 +278,7 @@ function AddBirthday(props) {
     
 		</>
 
-		)
+		);
 }
 
 export default withRouter(AddBirthday);

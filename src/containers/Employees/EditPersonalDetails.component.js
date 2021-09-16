@@ -7,7 +7,6 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';    
 import customFunctions from '../../helper/customFunctions';
 
-
 function EditPersonalDetails(props) {
 
   // Variable declarations
@@ -15,7 +14,6 @@ function EditPersonalDetails(props) {
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
    const [jsonSchema, updateJsonSchema] = useState(FormSections);  
-
 
 useEffect(() => {
   const employeeId = customFunctions.getLocalStorage('id');
@@ -40,13 +38,12 @@ useEffect(() => {
       itemData.minDate = date;
     }
          return itemData;
-      })
+      });
       return s;
-    })
+    });
   updateJsonSchema([...updatedSchema]);        
   } 
   }, []);
-
 
   // Get user role
   const getUserRole = async() => {
@@ -66,7 +63,6 @@ useEffect(() => {
       ...formValues,
     };
 
-
     postData = {
       ...postData,
       designation: formValues.designation ? formValues.designation.value : null,
@@ -76,22 +72,16 @@ useEffect(() => {
       relieving_date: formValues.relieving_date ? customFunctions.getDate(formValues.relieving_date) : null,
       relieved: formValues.relieving_date ? true : false, // eslint-disable-line
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : null,
-      
-    }
-
-
+    };
     
-      const { data } = await AuthApi.putDataToServer(`${Api.employeeUrl}${id}/`, postData);
-      if(data) {
-       swal(data && data.message[0]);
-       props.handleModalCLose(false);
-       props.onPersonalDetailChanges();
-       
-      }
-      
+    const { data } = await AuthApi.putDataToServer(`${Api.employeeUrl}${id}/`, postData);
+    if(data) {
+     swal(data && data.message[0]);
+     props.handleModalCLose(false);
+     props.onPersonalDetailChanges();
+    }
   };
     
-
   // Get data for form
   const getData = async () => {
     const id = customFunctions.getLocalStorage('id');
@@ -105,17 +95,15 @@ useEffect(() => {
      const ds = data.data.designation_id ? {
         label: data.data.designation_name,
         value: data.data.designation_id
-      } : ''
+      } : '';
 
      const obj = {
        ...data.data,
        designation: ds
      };
-
-     updateDefaultValues({...obj})    
+     updateDefaultValues({...obj});
    }
   };
-
 
   const getDesignation = async () => {
     // const id = props.match.params.stackId;
@@ -133,45 +121,40 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
   const allOptions = options;
   await updateOptions({...allOptions});
    getData();
-
-}  
-
+}; 
 
   useEffect(() => {
     getDesignation();
-  },[])
+  },[]);
 
   const onClear = () => {
-    props.handleModalCLose(false)
-  } 
+    props.handleModalCLose(false);
+  };
 
 	return (
     <>
-  <StarkFormBuilder
-    containerClass=''
-    formHeaderClass=''
-    formSections={jsonSchema}
-    formHeading="Employee"
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true} // eslint-disable-line
-    resetBtnText="Cancel"
-    btnContainerClass="form-submit-buttons"
-    isStepForm={false}
-    
-    onFormReset={() => {
-      onClear();
-    }}
-  />
-    
-
+      <StarkFormBuilder
+        containerClass=''
+        formHeaderClass=''
+        formSections={jsonSchema}
+        formHeading="Employee"
+        onFormSubmit={(formValues) => {submitForm(formValues);}}
+        options={options}
+        callbacks={{}}
+        defaultFormValues={defaultValues}
+        currentUser={currentUser}
+        submitBtnText="Submit"
+        showResetBtn={true} // eslint-disable-line
+        resetBtnText="Cancel"
+        btnContainerClass="form-submit-buttons"
+        isStepForm={false}
+        
+        onFormReset={() => {
+          onClear();
+        }}
+      />
     </>
-
-		)
+		);
 }
 
 export default withRouter(EditPersonalDetails);

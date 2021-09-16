@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Image, Col, Button, Row, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
@@ -12,40 +12,71 @@ function BirthdayWishes() {
 const validator = new SimpleReactValidator({ autoForceUpdate: this });
 const [message,setMessage] = useState('');
 const ID =  customFunctions.getLocalStorage('employeeId');
+const EmpId = customFunctions.getLocalStorage('EmpID');
 const [birthdayWishes,setBirthdayWishes] = useState([]);
 const isBirthday = customFunctions.getLocalStorage('birthday');
-const [profileImage,setProfileImage] = useState('');
 const id = customFunctions.getLocalStorage('greetingId');
 const GreetingId = customFunctions.getLocalStorage('gId');
 const [greetingMsg,setGreetingMessage] = useState('');
+const [showMessage,setShowMessage] = useState(false);
+const [wisherProfile,setWisherToProfile] = useState('');
+const [bannerImage,setBannerImage] = useState('');
+const [showWish,setShowWish] = useState('');
+const [employeeMessage,setEmployeeMessage] = useState('');
+const userID = customFunctions.getLocalStorage('userId');
+const showComment = customFunctions.getLocalStorage('comment-allow');
+const history = useHistory();
 
 const getBirthdayWishes = async (GrtId) => {
-
 	const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
-		console.log('data',data.data[0].wish_to_profile);
-      setBirthdayWishes(data.data);
-      setProfileImage(data.data[0].wish_to_profile);
-      setGreetingMessage(data.data[0].greeting_message);
+    if(data && data.data) {
+      setBirthdayWishes(data && data.data.length > 0 && data.data);
+      data.data.map((bd) => {
+      	if(Number(userID) === Number(bd.wish_from_id)) {
+      		setShowWish(bd.is_wish);
+      		setEmployeeMessage(bd.message);
+      	}
+      	return bd;
+      });
+      
+    } else {
+    	setBirthdayWishes([]);
     }
 };
 
+const getGreetingById = async (GrtId) => {
+	const endPoint = `${Api.greetingsUrl}${GrtId}/?employee_id=${EmpId}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if(data && data.data) {
+      setWisherToProfile(data && data.data  && data.data.employee_data.profile_url && data.data.employee_data.profile_url);
+   		setBannerImage(data && data.data && data.data.file_name);
+      setGreetingMessage(data && data.data && data.data.message);
+    } else {
+    	setGreetingMessage('');
+    	setWisherToProfile('');
+    	setBannerImage('');
+    }
+};
 
 	useEffect(() => {
-		 document.addEventListener('BirthdayUpdate', () => {
-      console.log('event calling');
-      getBirthdayWishes(GreetingId || id);
+		  document.addEventListener('BirthdayUpdate', () => {
+      const GreetingID = customFunctions.getLocalStorage('gId');
+      // const EmpID = customFunctions.getLocalStorage('EmpID');
+      getBirthdayWishes(GreetingID);
+      getGreetingById(GreetingID);
     });
 
 		if(GreetingId) {
 			getBirthdayWishes(GreetingId);
+			getGreetingById(GreetingId);
 
 		}
 		else {
 			getBirthdayWishes(id);
+		getGreetingById(id);
 		}
-	}, [])
+	}, []);
 
 const addMeaage = async () => {
 
@@ -53,15 +84,18 @@ const addMeaage = async () => {
 		wish_to: Number(ID),
 		message,
 		greeting: GreetingId
-	}
+	};
 
  const endPoint = Api.greetingWishesUrl;
  const { data } = await AuthApi.postDataToServer(endPoint, postData);
  if(data) {
  	swal(data.message[0],'','success');
+ 	setMessage('');
+  getBirthdayWishes(GreetingId);
+  setShowMessage(false);
+  setEmployeeMessage('');
  }
-}
-
+};
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -75,15 +109,25 @@ const addMeaage = async () => {
 
 	return (
 		<>
+		{console.log('wisherProfile',wisherProfile)}
 			<div className="profile-bg mt-3">
-				<Image src="/images/image.png" alt="image" />
+			{bannerImage ? (
+				<Image src={bannerImage} alt="image" />
+				) : 
+							<Image src='/images/login-img.png' alt="image" />
+		}		
 				<div className="profile-img">
-					<Image src={profileImage} alt="Card image cap" />
+				{wisherProfile ? (
+
+					<Image src={wisherProfile} alt="Card image cap" />
+					) : 
+					<Image src='/images/noProfile.jpeg' alt="Card image cap" />
+			}
 				</div>
 			</div>
 
 			<Row className="birthday-block">
-			<div className="col-md-6">
+			<div className="col-md-12">
 									<div className="card">
 										<div className="media birthday-media-section">
 											<div className="media-body">
@@ -92,24 +136,51 @@ const addMeaage = async () => {
 										</div>
 									</div>
 								</div>
+								{birthdayWishes && birthdayWishes.length >= 1 ? (
+									<>
+
 			<p><strong>Employees Wishes</strong></p>
+									</>
+									) : ''}
 
 				{birthdayWishes && birthdayWishes.map((bd) => (
-
-								<div className="col-md-6">
+								<>
+								<div className="col-md-12">
 									<div className="card">
 										<div className="media birthday-media-section">
 											<Image className="mr-3" src= {bd.wish_from_profile ? bd.wish_from_profile : '/images/profile-img.png'}  alt="Generic placeholder image" />
 											<div className="media-body">
 												<h6 className="mt-0">{bd.wish_from_full_name}</h6>{bd.message}
 											</div>
-										</div>
-									</div>
-								</div>
-								))}
 
+											{Number(userID) === Number(bd.wish_from_id) ? (
+												<>
+												<div className="float-end edit-wishes">
+					                              <a href="javascript:void()">
+					                              <Image 
+					                              className="float-end" 
+					                              src="/images/edit-button.svg"
+					                              onClick={() => {
+					                              setShowMessage(true);
+					                              setMessage(employeeMessage);
+					                           }} 
+					                              />
+
+					                              </a>
+					                            </div>
+												</>
+												
+					                            ) : ''}		
+					                  </div>
+														</div>
+													</div>
+													</>
+													))}
+				{showComment === 'true' ? (
+					<>
 				{isBirthday !== 'true' && (
 				<>
+				{(!showWish || showMessage) ? (
 
 					<Form
             onSubmit={(e) => {
@@ -118,7 +189,7 @@ const addMeaage = async () => {
           >
 				<Col sm={12}>
 					<TextInput
-                        onInputChange={(e) => setMessage(e.target.value)}
+            onInputChange={(e) => setMessage(e.target.value)}
 						label="Message"
 						containerClass="form-group"
 						type="text"
@@ -126,21 +197,28 @@ const addMeaage = async () => {
                         value={message}
 						Row={5}
 						name="firstNameTitle"
-						placeholder="Birthday Wishes..."
+						placeholder="Enter your message here..."
 						errorMessage={validator.message(
                   'Message',
                   message,
                   'required'
                 )}
 					/>
-					<Button className="mb-4" type="submit">Submit</Button>
+					<Button className="mb-4" type="submit">{!showMessage ? 'Submit' : 'Update'}</Button>
+					<Button className="mb-4 ms-3" variant="secondary" type="submit" onClick={() => history.push('/')} >Cancel</Button>
 				</Col>
 				</Form>
+
+					) : ''}
+
 				</>
-				)}	
+				)}				
+
+					</>
+
+					) : ''}
+
 			</Row>
-
-
 		</>
 	);
 }

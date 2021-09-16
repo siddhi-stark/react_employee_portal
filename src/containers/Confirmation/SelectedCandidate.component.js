@@ -77,9 +77,7 @@ function SelectedCandidate() {
         resetBtnText="Clear"
         btnContainerClass="form-submit-buttons"
         isStepForm={false}
-        onFormReset={() => {
-          console.log('form reset callback');
-        }}
+        onFormReset={() => {}}
       />
     </div>
   );

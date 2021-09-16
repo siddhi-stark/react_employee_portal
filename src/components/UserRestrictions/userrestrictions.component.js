@@ -16,15 +16,19 @@ export default function UserRestrictions(props) {
     permittedUsers.length &&
     permittedUsers.includes(Number(roleId));
 
-  if(Number(roleId) === Number(4) && Number(departmentId) !== Number(7) && Number(departmentId) !== Number(8) && childRoute === '/emp-timesheet'){
+  if(Number(roleId) === 4 && Number(departmentId) !== 7 && Number(departmentId) !== 8 && childRoute === '/emp-timesheet'){
+    return <></>;
+  }  
+
+  if(Number(roleId) === 4 && Number(departmentId) === 7 && childRoute === '/project' && childRoute === '/scheduler'){
     return <></>;
   }
   
-  if(Number(roleId) === Number(4) && Number(departmentId) === Number(7) && childrenArr.includes(childRoute)){
+  if(Number(roleId) === 4 && Number(departmentId) === 7 && childrenArr.includes(childRoute)){
     return <></>;
   }
 
-  if(Number(roleId) === Number(4) && Number(departmentId) === Number(8) && childArr.includes(childRoute)){
+  if(Number(roleId) === 4 && Number(departmentId) === 8 && childArr.includes(childRoute)){
     return <></>;
   }
 

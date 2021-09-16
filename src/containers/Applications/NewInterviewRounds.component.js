@@ -287,9 +287,7 @@ function NewInterviewRounds(props) {
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons mb-4 pb-4"
           isStepForm={false}
-          onFormReset={() => {
-            console.log('form reset callback');
-          }}
+          onFormReset={() => {}}
         />
          {/* <Button
                      size="sm"

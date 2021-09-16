@@ -55,7 +55,13 @@ import AddBirthday from './containers/Birthday/AddBirthday.component';
 import BirthdayWishes from './containers/Birthday/BirthdayWishes.component';
 import Greetings from './containers/Birthday/Greetings.component';
 import MyInterviews from './containers/Recruitment/MyInterviews.component';
- 
+import Project from './containers/Project/project.component';
+import EditProject from './containers/Project/EditProject.component';
+import TeamProject from './containers/Project/teamProject.component';
+import Team from './containers/Project/team.component';
+import TeamMemberProject from './containers/Project/teamMemberProject.component';
+import ProjectScheduler from './containers/ProjectScheduler/projectScheduler.component';
+import TeamProjectScheduler from './containers/ProjectScheduler/teamProjectScheduler.component';
 
 function Routes() {
   return (
@@ -65,12 +71,14 @@ function Routes() {
       <Route path="/forget-password" exact component={ForgetPassword} />
       <Route path="/password/reset/:token" exact component={ResetPassword} />
       <Route path="/reports" exact component={AllReports} />
+      <Route path="/employee-report" exact component={AllReports} />
       <Route path="/daily-report/:date/:id" exact component={Reports} />
       <Route path="/right" exact component={RightContainer} />
       <Route path="/projects" exact component={Projects} />
       <Route path="/designation" exact component={Designation} />
       <Route path="/employee" exact component={Employee} />
       <Route path="/report" exact component={MyReports} />
+      <Route path="/my-report" exact component={MyReports} />
       <Route path="/profile" exact component={Profile} />
       <Route path="/manage-password" exact component={ManagePassword} />
       <Route path="/team-report" exact component={TeamReport} />
@@ -101,6 +109,8 @@ function Routes() {
       <Route path="/email-templates" exact component={EmailTemplates} />
       <Route path="/recruitment" exact component={RecruitmentApplication} />
        <Route path="/recruitment/:id" exact component={Applications} />
+      <Route path="/recruitments" exact component={RecruitmentApplication} />
+       <Route path="/recruitments/:id" exact component={Applications} />
        <Route path="/hr-reports" exact component={HrReports} />
        <Route path='/hr-listing' exact component={HRListing} />
        <Route path='/quotes' exact component={Quotes} />
@@ -113,6 +123,7 @@ function Routes() {
       <Route path="/candidates/:ID" exact component={TemporaryAccount} />
       <Route path="/onboard/:ID" exact component={OnBoard} />
       <Route path="/leaves" exact component={Leaves} />
+      <Route path="/my-leaves" exact component={Leaves} />
       <Route path="/add-leave" exact component={AddLeave} />
       <Route path="/edit-leave/:leaveId" exact component={AddLeave} />
       <Route path="/view-leave/:viewLeaveId" exact component={TeamAddLeave} />
@@ -120,9 +131,17 @@ function Routes() {
       <Route path="/employee-leaves" exact component={EmployeeTeamLeaves} />
       <Route path="/add-birthday" exact component={AddBirthday} />
       <Route path="/edit-birthday/:bdayId" exact component={AddBirthday} />
-      <Route path="/birthday-wishes" exact component={BirthdayWishes} />
+      <Route path="/wishes" exact component={BirthdayWishes} />
       <Route path="/greetings" exact component={Greetings} />
       <Route path="/interview-listing" exact component={MyInterviews} />
+      <Route path="/project" exact component={Project} />
+      <Route path="/edit-project/:projectId" exact component={EditProject} />
+      <Route path="/view-project/:projectId" exact component={EditProject} />
+      <Route path="/team-project/:teamProjectId" exact component={TeamProject} />
+      <Route path="/team/:teamId" exact component={Team} />
+      <Route path="/my-project/:teamMemberId" exact component={TeamMemberProject} />
+      <Route path="/scheduler" exact component={ProjectScheduler} />
+      <Route path="/team-scheduler" exact component={TeamProjectScheduler} />
       <Route component={NotFound} />
     </Switch>
   );

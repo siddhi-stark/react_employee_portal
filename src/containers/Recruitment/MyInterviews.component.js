@@ -12,7 +12,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 
 function MyInterviews() {
 	const group = customFunctions.getLocalStorage('group');
-  const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
+  const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
 
   // Variable declarations Filter Form
@@ -24,7 +24,6 @@ function MyInterviews() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState('');
-  
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -55,6 +54,7 @@ function MyInterviews() {
               e.stopPropagation();
               history.push(`/applications/${id}`, {
                 statusObj: status_name,
+                isInterview: true
               });
 
               // history.push('/edit-employee');
@@ -76,49 +76,6 @@ function MyInterviews() {
             <Image src="/images/notes.svg" />
           </a>
         )}
-        {(Number(group) === 4 || Number(group) === 3) || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'declined' || status_name === 'rejected' ? ( //eslint-disable-line
-          ''
-        ) : (
-          <a
-            href="/"
-            className="p-r-2 text-info ms-2"
-            title="Send Offer"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              history.push('/generate-offerletter');
-              customFunctions.setLocalStorage('applicantId', id);
-              rowData &&
-                rowData.map((dt) => {
-                  if (id === dt.id) {
-                    customFunctions.setLocalStorage(
-                      'applicantName',
-                      dt.name && dt.name
-                    );
-                    customFunctions.setLocalStorage(
-                      'designation',
-                      dt.applied_for_name && dt.applied_for_name
-                    );
-                    customFunctions.setLocalStorage(
-                      'offerctc',
-                      dt.offered_ctc && dt.offered_ctc
-                    );
-                    customFunctions.setLocalStorage(
-                      'joiningdate',
-                      dt.joining_date && dt.joining_date
-                    );
-                    customFunctions.setLocalStorage(
-                      'pfInclude',
-                      dt.pf_included && dt.pf_included
-                    );
-                  }
-                  return dt;
-                });
-            }}
-          >
-            <Image src="/images/offer.svg" />
-          </a>
-        )}
       </>
     );
   };
@@ -128,15 +85,13 @@ function MyInterviews() {
       <>
       {resume.resume ? (
 
-        <a href={resume.resume} className="pl-2" target="_Blank">
+        <a href={resume.resume} className="pl-2" title="View Resume" target="_Blank">
           <Image src="/images/download-file.svg" />
         </a>
         ) : ''}
       </>
     );
   };
-
-  
 
   // Declare columns
   const columns = [
@@ -161,15 +116,8 @@ function MyInterviews() {
       isDisplay: false,
     },
     {
-      id: `{{'int_date'} ? 'int_date': 'created_at'}`, // eslint-disable-line
-      label: 'Date',
-      render: ({ created_at }) => { // eslint-disable-line
-        return (
-          <>
-            <span>{customFunctions.getNewFormattedDate(created_at)}</span>
-          </>
-        );
-      },
+      id: 'interview_date', // eslint-disable-line
+      label: 'Interview Date',
     },
     {
       id: 'name',
@@ -216,10 +164,11 @@ function MyInterviews() {
     const endPoint = `${Api.applicantsUrl}`;
 
     const params = {
+      
+      my_interview:true,
       page,
       limit,
       sort_direction: 'descending',
-      sort_by: 'updated_at',
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -263,14 +212,14 @@ function MyInterviews() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Recruitment</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">My Interviews</h2>
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
         <Card>
           <Card.Header>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Recruitment</h4>
+              <h4 className="text-primary mt-2 mb-2">My Interviews</h4>
             </div>
           </Card.Header>
           <Card.Body>
