@@ -181,6 +181,15 @@ function EditProject(props) {
     getCoordinator();
   }, []);
 
+  const onHoursAllocated = (value) => {
+    console.log('value',value);
+  };
+
+  const onHourlyRate = (value) => {
+    console.log('value',value);
+  };
+
+
 	return (
 		<>
 		 <Helmet title={title} />
@@ -199,7 +208,10 @@ function EditProject(props) {
         formSections={jsonSchema}
         onFormSubmit={(formValues) => {submitForm(formValues);}}
         options={options}
-        callbacks={{}}
+        callbacks={{
+          onHoursChange: (value) => { onHoursAllocated(value); },
+          onHourRate: (value) => {onHourlyRate(value);}
+        }}
         defaultFormValues={defaultValues}
         currentUser={currentUser}
         submitBtnText="Submit"
