@@ -46,11 +46,6 @@
 				"placeholder": "Please select project",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [{
-		            "type": "required",
-		            "applyWhen": [],
-		            "applyWhenRelation": "OR"
-		          }],
 				"displayWhen": {},
 				"haveValidations": "false",
 				"haveDisplayOptions": "false",

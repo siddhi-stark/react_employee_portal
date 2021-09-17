@@ -183,7 +183,10 @@ function Project() {
       render: ({ rt_support }) => {
         return (
           <>
-            <span>{rt_support ? 'Yes':'No'}</span>
+            <Image
+              className="rt-support-link"
+              src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
+            />
           </>
         );
       }, 

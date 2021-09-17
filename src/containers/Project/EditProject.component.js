@@ -19,6 +19,8 @@ function EditProject(props) {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [hoursAllocated,setHoursAllocated] = useState(''); 
+  const [hourlyRate,setHourlyRate] = useState(''); 
   const [title, setTitle] = useState('');
 
   const history = useHistory();
@@ -53,7 +55,10 @@ function EditProject(props) {
               item.name === 'estimate_hrs' ||
               item.name === 'project_cost' ||
               item.name === 'coordinator' ||
-              item.name === 'status'
+              item.name === 'status' ||
+              item.name === 'hours_allocated' ||
+              item.name === 'hourly_cost' ||
+              item.name === 'cost_allocated'
             )
               itemData.disabled = true;
             return itemData;
@@ -71,7 +76,10 @@ function EditProject(props) {
               item.name === 'hourly_rate' ||
               item.name === 'project_cost' ||
               item.name === 'coordinator' ||
-              item.name === 'comments'
+              item.name === 'comments' ||
+              item.name === 'hours_allocated' ||
+              item.name === 'hourly_cost' ||
+              item.name === 'cost_allocated'
             )
               itemData.disabled = false;
             return itemData;
@@ -138,11 +146,14 @@ function EditProject(props) {
           }
         : '';
 
+        const complt = data.data.completion + '%'; // eslint-disable-line
+
       const obj = {
         ...data.data,
         start_date:start,
         end_date:end,
         coordinator: coordinatorValue,
+        completion:complt
       };
 
       updateDefaultValues({ ...obj }); // updateDefaultValues(data);
@@ -183,11 +194,23 @@ function EditProject(props) {
 
   const onHoursAllocated = (value) => {
     console.log('value',value);
+    setHoursAllocated(value);
+    calculateProjectCost();
   };
 
   const onHourlyRate = (value) => {
     console.log('value',value);
+    setHourlyRate(value);
+    calculateProjectCost();
   };
+
+  const calculateProjectCost = () => {
+    let cost = ''
+    if(hoursAllocated && hourlyRate) {
+      cost = hoursAllocated * hourlyRate;
+    };
+    console.log('cost',cost);
+  }
 
 
 	return (

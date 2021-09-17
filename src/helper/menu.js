@@ -178,7 +178,7 @@ const menu = [
   {
     title: 'Project',
     path: '/project',
-    icon: 'leaves.svg',
+    icon: 'project.svg',
     submenu: [],
     roleaccess: [1,2,3,4,5],
   },

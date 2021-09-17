@@ -14,6 +14,8 @@ import customFunctions from '../../helper/customFunctions';
 function Team(props) {
   const teamid = props;
   const teamId = teamid.match.params.teamId;
+  console.log('teamId',teamId);
+  
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
 
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
@@ -151,7 +153,7 @@ function Team(props) {
 
   return (
     <>
-    {console.log('teamId',teamId)}
+    {console.log('teamId',departmentName)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
@@ -159,7 +161,7 @@ function Team(props) {
       </div>
       <Card body className="mt-4">
       <div className="mb-3">
-          <span>{`${projectName} ${departmentName} Team`}</span>
+          <span>{`${projectName} ${teamId} Team`}</span>
          <Button className="float-end" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
         </div>
             <CustomTable

@@ -3,7 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 // import StarkFormBuilder from 'stark-form-builder';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, ProgressBar } from 'react-bootstrap';
 // import FormSections from './formschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
@@ -75,6 +75,36 @@ function TeamMemberProject(props) {
     {
       id: 'completion',
       label: 'Project Completed',
+      render: ({ completion }) => {
+        return (
+          <>
+            {completion <= 50 && (
+               <ProgressBar
+                bsPrefix="progress pbar"
+                variant="danger"
+                now={completion}
+                label={`${completion}%completed`}
+              />
+            )}
+            {completion > 50 && completion <= 80 && (
+              <ProgressBar
+                bsPrefix="progress pbar"
+                variant="info"
+                now={completion}
+                label={`${completion}%completed`}
+              />
+            )}
+            {completion > 80 && (
+              <ProgressBar
+                bsPrefix="progress pbar"
+                variant="success"
+                now={completion}
+                label={`${completion}%completed`}
+              />
+            )}
+          </>
+        );
+      },
     }, 
    {
       id: 'rt_support',
