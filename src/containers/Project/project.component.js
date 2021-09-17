@@ -168,8 +168,9 @@ function Project() {
       roleAccess: [4],
     },
     {
-      id: 'hours_allocated',
-      label: 'Hours Allocated',
+      id:    Number(currentUser) === 1 || Number(currentUser) === 2 || Number(currentUser) === 3 || Number(currentUser) === 5 || Number(currentUser) === 6? 'hours_allocated' : '',
+      label: Number(currentUser) === 1 || Number(currentUser) === 2 || Number(currentUser) === 3 || Number(currentUser) === 5 || Number(currentUser) === 6 ? 'Hours Allocated' : '',
+      roleAccess: [1],
     },
     {
       id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'cost_allocated',
@@ -210,6 +211,7 @@ function Project() {
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
+      status:'all',
       sort_by:'name',
       sort_direction:'ascending',
       page,
@@ -267,7 +269,7 @@ function Project() {
     } else if(String(status) === 'late' || String(status) === 'current'){
       payload.sub_status = String(status) === 'late' ? 'late' :'current';
     } else if(String(status) === 'all'){
-      payload.status = '';
+      payload.status = 'all';
     }
 
     if(formValues) {
@@ -282,6 +284,7 @@ function Project() {
 
   return (
     <>
+    {console.log('currentUser',currentUser)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
