@@ -132,7 +132,7 @@ function TeamProject(props) {
       const { data } = await AuthApi.getDataFromServer(url);
       if(data){
     const graph = [
-      { x: 'Pending Work', y: data && data.data && data.data.remaining },
+      { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
       { x: 'Complete Work', y: data && data.data && data.data.completion },
     ];
     setGraphDetails({
