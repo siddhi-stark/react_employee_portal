@@ -193,25 +193,22 @@ function EditProject(props) {
   }, []);
 
   const onHoursAllocated = (value) => {
-    console.log('value',value);
     setHoursAllocated(value);
     calculateProjectCost();
   };
 
   const onHourlyRate = (value) => {
-    console.log('value',value);
     setHourlyRate(value);
     calculateProjectCost();
   };
 
   const calculateProjectCost = () => {
-    let cost = ''
+    let cost = '';
     if(hoursAllocated && hourlyRate) {
       cost = hoursAllocated * hourlyRate;
     };
     console.log('cost',cost);
-  }
-
+  };
 
 	return (
 		<>

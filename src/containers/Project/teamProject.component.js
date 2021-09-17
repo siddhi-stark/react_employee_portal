@@ -131,8 +131,6 @@ function TeamProject(props) {
       const url = customFunctions.generateUrl(endPoint);
       const { data } = await AuthApi.getDataFromServer(url);
       if(data){
-        console.log('data.data.remaining',data.data.remaining)
-        console.log('data.data.completion',data.data.completion)
     const graph = [
       { x: 'Pending Work', y: data && data.data && data.data.remaining },
       { x: 'Complete Work', y: data && data.data && data.data.completion },

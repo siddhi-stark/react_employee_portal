@@ -14,7 +14,6 @@ import customFunctions from '../../helper/customFunctions';
 function Team(props) {
   const teamid = props;
   const teamId = teamid.match.params.teamId;
-  console.log('teamId',teamId);
   
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
 
