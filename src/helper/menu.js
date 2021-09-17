@@ -187,7 +187,7 @@ const menu = [
     path: '/scheduler',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [1,4],
+    roleaccess: [1],
   },
   {
     title: 'Team Project Scheduler',
