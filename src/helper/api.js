@@ -143,6 +143,8 @@ export default class Api extends Component {
 
   static projectDetails = `${Api.baseUrl}projects-details/`;
 
+  static projectListUrl = `${Api.baseUrl}project-dropdown-list/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 

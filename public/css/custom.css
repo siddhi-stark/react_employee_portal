@@ -15554,6 +15554,11 @@ table tbody tr td a:hover {
 }
 
 /*Pre Code View end*/
+.schedular .table-projects {
+  max-height: 450px;
+  overflow: scroll;
+}
+
 @media (min-width: 992px) {
   .main-sidebar {
     position: relative;

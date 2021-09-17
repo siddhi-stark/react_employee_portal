@@ -280,7 +280,7 @@ function EmployeeProfile(props) {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <h6>
                       Joining Date -{' '}
                       {employeeDetails.date_joined
@@ -293,13 +293,13 @@ function EmployeeProfile(props) {
                   <div className="col-md-4">
                     <h6>Email - {employeeDetails.email}</h6>
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-5">
                     <h6>Personal Email - {employeeDetails.personal_email}</h6>
                   </div>
                 </div>
                 <br />
                 <div className="row">
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <h6>Contact No - {employeeDetails.mobile}</h6>
                   </div>
                   <div className="col-md-4">
@@ -323,7 +323,7 @@ function EmployeeProfile(props) {
                       </h6>
                     )}
                   </div>
-                  <div className="col-md-2">
+                  <div className="col-md-5">
                     {employeeDetails &&
                       !employeeDetails.confirmation_date &&
                       !employeeDetails.relieving_date && (

@@ -174,7 +174,8 @@ function ProjectScheduler() {
       date: formValues.month && customFunctions.getDate(formValues.month),
       team_id: formValues.team_id && formValues.team_id.value && Number(formValues.team_id.value),
       coordinator_id: coordinator && coordinator,
-      developer_id: developer && developer
+      developer_id: developer && developer,
+      project_id: formValues.project_id && formValues.project_id.value && Number(formValues.project_id.value)
     };
     setFilterData(payload);
   };
@@ -206,6 +207,28 @@ function ProjectScheduler() {
 
   useEffect(() => {
     getTeam();
+  }, []);
+
+  const getProjectList = async () => {
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name`);
+
+    if(!data) {
+     swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
+    });
+
+    options.project_id = dpOptions;
+    const allOptions = options;
+    await updateOptions({...allOptions});
+  };
+
+  useEffect(() => {
+    getProjectList();
   }, []);
       
   const getCoordinator = async () => {
@@ -316,7 +339,7 @@ function ProjectScheduler() {
                 <h4 className="text-primary mt-2 mb-2">Project Scheduler</h4>
               </div>
             </Card.Header>
-            <Card.Body>
+            <Card.Body className="schedular">
               <CustomTable
                 columns={columns}
                 rows={rowData}
