@@ -210,6 +210,7 @@ function Project() {
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
+      status:'all',
       sort_by:'name',
       sort_direction:'ascending',
       page,
@@ -267,7 +268,7 @@ function Project() {
     } else if(String(status) === 'late' || String(status) === 'current'){
       payload.sub_status = String(status) === 'late' ? 'late' :'current';
     } else if(String(status) === 'all'){
-      payload.status = '';
+      payload.status = 'all';
     }
 
     if(formValues) {
