@@ -183,7 +183,10 @@ function Project() {
       render: ({ rt_support }) => {
         return (
           <>
-            <span>{rt_support ? 'Yes':'No'}</span>
+            <Image
+              className="rt-support-link"
+              src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
+            />
           </>
         );
       }, 
@@ -194,8 +197,8 @@ function Project() {
     },
     {
       id: 'Action',
-      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Action',
-      render: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && handleActionCallback
+      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Action',
+      render: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && handleActionCallback
     },
   ];
 

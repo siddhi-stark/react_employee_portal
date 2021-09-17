@@ -52,12 +52,11 @@ function TeamProject(props) {
     {
       id: 'team',
       label: 'Team',
-      render: ({ team, department }) => {
+      render: ({ team,department }) => {
         return (
           <>
           {(team !== 'Total') ? (
             <>
-            {console.log('condirion',department)}
             <a
               href="/"
               className="pl-2 ms-1"
@@ -224,7 +223,7 @@ function TeamProject(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">HR Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
       <Card body className="mt-4">
