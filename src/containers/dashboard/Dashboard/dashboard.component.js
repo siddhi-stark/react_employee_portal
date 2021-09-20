@@ -324,7 +324,6 @@ function Dashboard() {
 
   return (
     <>
-     {console.log(isShowBdayHeading || isShowAnniversaryHeading)}
 
       <Helmet title={title} />
       <div className="page-header">
@@ -492,10 +491,11 @@ function Dashboard() {
 
                 <Card.Body
                   className={
-                    anniversary &&
+                    birthdayArr || birthdayArr.length > 0 ||
+                    anniversary ||
                     anniversary.length > 0
-                      ? 'birth-box-remove' 
-                      : 'work-anniversary-box'
+                      ? 'work-anniversary-box' 
+                      : 'birth-box-remove'
                   }
                 >
                   {isShowAnniversaryHeading ? (
@@ -549,10 +549,8 @@ function Dashboard() {
 
                 <Card.Body
                   className={
-                    (anniversary &&
-                      anniversary.length > 0 &&
                       appreciationData &&
-                      appreciationData.length > 0)
+                      appreciationData.length < 0
                       ? 'work-anniversary-box'
                       : 'birth-box-remove'
                   }
