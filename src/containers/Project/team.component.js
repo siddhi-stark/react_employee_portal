@@ -93,7 +93,7 @@ function Team(props) {
     },
     {
       id: 'allocated',
-      label: 'Allocated Hours',
+      label: 'Estimated Hours',
     },
     {
       id: 'remaining',
