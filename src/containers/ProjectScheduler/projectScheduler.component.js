@@ -26,7 +26,7 @@ function ProjectScheduler() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
-  const [status, setStatus] = useState(null); // eslint-disable-line
+  const [developerValue, setDeveloperValue] = useState('');
   // const departmentId = customFunctions.getLocalStorage('department');
 
   // Variable declarations Filter
@@ -246,9 +246,17 @@ function ProjectScheduler() {
   useEffect(() => {
     getCoordinator();
   }, []);
+
+  useEffect(() => {
+    if(developerValue){
+      getDeveloper();
+    }
+    getDeveloper();
+  }, [developerValue]);
       
-  const getDeveloper = async (value) => {
-    const {data,message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?team_id=${value.value}`);
+  const getDeveloper = async () => {
+    const endPoint = developerValue ? `${Api.employeeUrl}?team_id=${developerValue.value}` : `${Api.employeeUrl}?type=all`;
+    const {data,message} = await AuthApi.getDataFromServer(endPoint);
     if(!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -303,7 +311,7 @@ function ProjectScheduler() {
                       options={options}
                       callbacks={{
                         getDeveloper: (value) => {
-                          getDeveloper(value);
+                          setDeveloperValue(value);
                         },
                       }}
                       defaultFormValues={defaultValues}
@@ -315,6 +323,7 @@ function ProjectScheduler() {
                       isStepForm={false}
                       onFormReset={() => {
                         setFilterData();
+                        setDeveloperValue();
                       }}
                     />
                 </Card.Body>

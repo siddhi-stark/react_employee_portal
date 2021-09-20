@@ -45,7 +45,7 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
 
   let isShowBdayHeading = false;
-  let isShowAnniversaryHeading = false;
+  // let isShowAnniversaryHeading = false;
 
   const d = new Date();
   const ToDayDate = d.getDate();
@@ -200,9 +200,11 @@ function Dashboard() {
         await data.data && data.data.length > 0 && data.data.map((anvs, i) => {
         const JoiningDate = new Date(anvs.date_of_joined);
         const NewJoiningDate = JoiningDate.getDate();
+        console.log('anvs',NewJoiningDate,ToDayDate);
         if (NewJoiningDate === ToDayDate) {
+          console.log('inside date condition');
           avsrArr.push(anvs);
-          isShowAnniversaryHeading = true;
+          // isShowAnniversaryHeading = true;
         }
         if (i + 1 === data.data.length) {
           setAnniversary(avsrArr);
@@ -218,10 +220,6 @@ function Dashboard() {
 
     if (data && data.data) {
       setAppriciation(data.data);
-      const isAppr = data.data;
-      if(isAppr.length >= 1) {
-        console.log('inside if condition');
-      }
     }
   };
 
@@ -450,7 +448,6 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            {console.log('----',anniversary.length,isShowAnniversaryHeading)}
             
             {((birthdayArr && birthdayArr.length > 0) || (anniversary && anniversary.length > 0) || (appreciationData && appreciationData.length > 0)) ? (
               <>
@@ -508,6 +505,8 @@ function Dashboard() {
                 ) : (
                   ''
                 )}
+
+                {console.log('anniversary.length >= 1',anniversary)}
 
                 <Card.Body
                   className={
