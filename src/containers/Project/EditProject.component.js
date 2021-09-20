@@ -205,9 +205,8 @@ function EditProject(props) {
   const calculateProjectCost = () => {
     let cost = '';
     if(hoursAllocated && hourlyRate) {
-      cost = hoursAllocated * hourlyRate;
+      cost = hoursAllocated * hourlyRate; // eslint-disable-line
     };
-    console.log('cost',cost);
   };
 
 	return (
