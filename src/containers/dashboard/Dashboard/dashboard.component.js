@@ -82,7 +82,6 @@ function Dashboard() {
       const JoiningDate = new Date(anvs.date_of_joined);
       const NewJoiningDate = JoiningDate.getDate();
       if (NewJoiningDate === ToDayDate) {
-        console.log('inside if condtion');
         isShowAnniversaryHeading = true;
       }
       return anvs;
@@ -206,7 +205,6 @@ function Dashboard() {
     const { data } = await AuthApi.getDataFromServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      console.log('inside method appreciationData', data.data);
       setAppriciation(data.data);
     }
   };
@@ -325,7 +323,6 @@ function Dashboard() {
 
   return (
     <>
-      {console.log('isShowAnniversaryHeading',isShowAnniversaryHeading)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
