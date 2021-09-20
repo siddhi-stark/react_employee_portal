@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
-// import StarkFormBuilder from 'stark-form-builder';
 import { Card, Button, ProgressBar } from 'react-bootstrap';
-// import FormSections from './formschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -29,7 +27,6 @@ function TeamMemberProject(props) {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  // const [filterData, setFilterData] = useState({});
 
   // Declare columns
   const columns = [
@@ -158,7 +155,7 @@ function TeamMemberProject(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
         <Breadcrumb items={items} />
       </div>
-      <Card body className="mt-4">
+      <Card body className="mt-4 schedular">
        <span>{`${teamMemberName} Projects and Work`}</span>
          <Button className="float-end mb-3" onClick= {() => history.push(`/team/${getTeamId}`)} >Back</Button>
             <CustomTable

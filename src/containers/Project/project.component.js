@@ -31,7 +31,6 @@ function Project() {
   const [allData, setAllData] = useState({});
 
   // Variable declarations Filter State
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
 
   const handleActionCallback = ({id}) => {
@@ -158,8 +157,8 @@ function Project() {
       },
     },
     {
-      id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'hourly_cost',
-      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Hourly Rate',
+      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hourly_cost',
+      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hourly Rate',
       roleAccess: [1],
     },
     {
@@ -168,13 +167,13 @@ function Project() {
       roleAccess: [4],
     },
     {
-      id:    Number(currentUser) === 1 || Number(currentUser) === 2 || Number(currentUser) === 3 || Number(currentUser) === 5 || Number(currentUser) === 6? 'hours_allocated' : '',
-      label: Number(currentUser) === 1 || Number(currentUser) === 2 || Number(currentUser) === 3 || Number(currentUser) === 5 || Number(currentUser) === 6 ? 'Hours Allocated' : '',
+      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hours_allocated' ,
+      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hours Allocated',
       roleAccess: [1],
     },
     {
-      id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'cost_allocated',
-      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Project Cost',
+      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 )&& 'cost_allocated',
+      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Project Cost',
       roleAccess: [1],
     },
     {
@@ -308,7 +307,6 @@ function Project() {
                     formHeading="Project Filter"
                     onFormSubmit={(formValues) => {submitForm(formValues);}}
                     callbacks={{}}
-                    defaultFormValues={defaultValues}
                     currentUser={currentUser}
                     submitBtnText="Apply"
                     showResetBtn={true}
