@@ -204,7 +204,7 @@ function Dashboard() {
     const endPoint = `${Api.birthdayUrl}?is_appreciation=true`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
 
-    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+    if (data && data.data) {
       setAppriciation(data.data);
     }
   };
@@ -493,7 +493,7 @@ function Dashboard() {
 
                 <Card.Body
                   className={
-                  birthdayArr && birthdayArr.length > 0 ||isShowAnniversaryHeading === 'true'
+                 isShowAnniversaryHeading
                       ? 'work-anniversary-box' 
                       : 'birth-box-remove'
                   }
@@ -553,9 +553,7 @@ function Dashboard() {
 
                 <Card.Body
                   className={
-                      isShowAnniversaryHeading ||
-                      appreciationData ||
-                      appreciationData.length < 0
+                    appreciationData && appreciationData.length >= 1
                       ? 'work-anniversary-box'
                       : 'birth-box-remove'
                   }
