@@ -137,16 +137,16 @@ function EditProject(props) {
     }
     
     if (data) {
-      const start = data && data.data && data.data.start_date;
-      const end = data && data.data && data.data.end_date;
-      const coordinatorValue = data.data.coordinator_name
+      const start = data && data.data && new Date(data.data.start_date);
+      const end = data && data.data && new Date(data.data.end_date);
+      const coordinatorValue = data && data.data && data.data.coordinator_name
         ? {
             label: data.data.coordinator_name,
             value: data.data.coordinator_id,
           }
         : '';
 
-        const complt = data.data.completion + '%'; // eslint-disable-line
+        const complt = data && data.data && data.data.completion + '%'; // eslint-disable-line
 
       const obj = {
         ...data.data,

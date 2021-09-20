@@ -176,6 +176,7 @@ function TeamProjectScheduler() {
       </div>
       <section className="content-area">
         <div className="mt-5">
+        {currentUser !== 3 && (
           <Accordion defaultActiveKey="0">
             <Card>
               <Card.Header>
@@ -213,6 +214,7 @@ function TeamProjectScheduler() {
               </Accordion.Collapse>
             </Card>
           </Accordion>
+          )}
           <Card>
             <Card.Header>
               <div className="d-flex align-items-center justify-content-between">

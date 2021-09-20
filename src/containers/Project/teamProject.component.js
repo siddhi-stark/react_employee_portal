@@ -15,6 +15,7 @@ function TeamProject(props) {
   const teamid = props;
   const teamProjectId = teamid.match.params.teamProjectId;
   customFunctions.setLocalStorage('teamProjectId',teamProjectId);
+  const departmentId = customFunctions.getLocalStorage('department');
 
   const items = [
     { to: '/', label: 'Home' },
@@ -23,6 +24,7 @@ function TeamProject(props) {
 
   const initialState = {
     totalHrsSpend: null,
+    totalHrsEstimate: null,
     totalHrsAllocated: null,
     projectCompletion: null,
     url: '',
@@ -40,6 +42,7 @@ function TeamProject(props) {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('');
+  const [currentUser, updateCurrentUser] = useState(0);
 
   // Declare columns
   const columns = [
@@ -80,7 +83,7 @@ function TeamProject(props) {
     },
     {
       id: 'spend',
-      label: 'Spend Hours',
+      label: 'Spent Hours',
       render: ({ spend }) => {
         return (
           <>
@@ -99,7 +102,7 @@ function TeamProject(props) {
     },
     {
       id: 'allocated',
-      label: 'Allocated Hours',
+      label: 'Estimated Hours',
     },
     {
       id: 'remaining',
@@ -138,7 +141,8 @@ function TeamProject(props) {
     ];
     setGraphDetails({
       totalHrsSpend: data && data.data && data.data.spend,
-      totalHrsAllocated: data && data.data && data.data.allocated,
+      totalHrsEstimate: data && data.data && data.data.allocated,
+      totalHrsAllocated: data && data.data && data.data.hours_allocated,
       projectCompletion: data && data.data && data.data.completion,
       url: data && data.data && data.data.tw_id,
     });
@@ -220,6 +224,16 @@ function TeamProject(props) {
     getRowData(1);
   }, []);
 
+    // Get user role Filter 
+  const getUserRole = async() => {
+    const roleId = await localStorage.getItem('group');
+    updateCurrentUser(Number(roleId));
+  };
+
+  useEffect(() => {
+    getUserRole();
+  }, []);
+
   return (
     <>
       <Helmet title={title} />
@@ -261,11 +275,17 @@ function TeamProject(props) {
           <Col>
           <ul>
             <li>
-            Total Hours Spend: <span>{graphDetails.totalHrsSpend}</span>
+            Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
             </li>
             <li>
-            Total Hrs Allocated: <span>{graphDetails.totalHrsAllocated}</span>
+            Total Hrs Estimated: <span>{graphDetails.totalHrsEstimate}</span>
             </li>
+            {
+              ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
+              <li>
+              Total Hrs Allocated: <span>{graphDetails.totalHrsAllocated}</span>
+              </li>
+            )} 
             <li>
             Project Completion: <span>{graphDetails.projectCompletion}%</span>
             </li>

@@ -41,7 +41,7 @@ function TeamMemberProject(props) {
     },
     {
       id: 'spends',
-      label: 'Spend Hours',
+      label: 'Spent Hours',
     },
     {
       id: 'allocated',
