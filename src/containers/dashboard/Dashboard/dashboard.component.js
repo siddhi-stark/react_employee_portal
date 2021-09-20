@@ -82,6 +82,7 @@ function Dashboard() {
       const JoiningDate = new Date(anvs.date_of_joined);
       const NewJoiningDate = JoiningDate.getDate();
       if (NewJoiningDate === ToDayDate) {
+        console.log('inside if condtion');
         isShowAnniversaryHeading = true;
       }
       return anvs;
@@ -324,7 +325,7 @@ function Dashboard() {
 
   return (
     <>
-
+      {console.log('isShowAnniversaryHeading',isShowAnniversaryHeading)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -488,12 +489,11 @@ function Dashboard() {
                 ) : (
                   ''
                 )}
+                {console.log('condition',birthdayArr.length)}
 
                 <Card.Body
                   className={
-                    birthdayArr || birthdayArr.length > 0 ||
-                    anniversary ||
-                    anniversary.length > 0
+                   birthdayArr.length > 0 ||isShowAnniversaryHeading === 'true'
                       ? 'work-anniversary-box' 
                       : 'birth-box-remove'
                   }
@@ -820,7 +820,7 @@ function Dashboard() {
                               ))}
                           </>
                         ) : (
-                          'No leave applied yet.'
+                          'No future leaves.'
                         )}
                       </div>
                     </div>
