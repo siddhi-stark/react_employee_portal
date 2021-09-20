@@ -200,9 +200,7 @@ function Dashboard() {
         await data.data && data.data.length > 0 && data.data.map((anvs, i) => {
         const JoiningDate = new Date(anvs.date_of_joined);
         const NewJoiningDate = JoiningDate.getDate();
-        console.log('anvs',NewJoiningDate,ToDayDate);
         if (NewJoiningDate === ToDayDate) {
-          console.log('inside date condition');
           avsrArr.push(anvs);
           // isShowAnniversaryHeading = true;
         }
@@ -505,8 +503,6 @@ function Dashboard() {
                 ) : (
                   ''
                 )}
-
-                {console.log('anniversary.length >= 1',anniversary)}
 
                 <Card.Body
                   className={
