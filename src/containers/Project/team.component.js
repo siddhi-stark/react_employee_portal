@@ -34,7 +34,8 @@ function Team(props) {
   const [currentPage, setCurrentPage] = useState(1);
   // const [departmentName, setDepartmentName] = useState('');
   const [projectName, setProjectName] = useState('');
-
+  const departmentId = customFunctions.getLocalStorage('department');
+  const [currentUser, updateCurrentUser] = useState(0);
   // const [filterData, setFilterData] = useState({});
 
   // Declare columns
@@ -50,7 +51,7 @@ function Team(props) {
       render: ({ emp_id, emp_name }) => {
         return (
           <>
-          {(emp_name !== 'Total') ? (
+          {(emp_name !== 'Total' &&((Number(currentUser) === 4 && (Number(departmentId) === 8 || Number(departmentId) === 9 || Number(departmentId) === 1) || Number(currentUser) === 1) || Number(currentUser) === 2 || Number(currentUser) === 3)) ? (
               <a
               href="/"
               className="pl-2 ms-1"
@@ -149,6 +150,16 @@ function Team(props) {
   useEffect(() => {
     setTitle('Team Project');
     getRowData(1);
+  }, []);
+
+   // Get user role Filter 
+  const getUserRole = async() => {
+    const roleId = await localStorage.getItem('group');
+    updateCurrentUser(Number(roleId));
+  };
+
+  useEffect(() => {
+    getUserRole();
   }, []);
 
   return (

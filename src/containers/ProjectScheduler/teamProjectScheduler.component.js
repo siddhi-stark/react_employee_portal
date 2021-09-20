@@ -28,6 +28,8 @@ function TeamProjectScheduler() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const teamId = customFunctions.getLocalStorage('team_id');
+
   let filterOptions = {};
 
   // Declare columns
@@ -92,7 +94,7 @@ function TeamProjectScheduler() {
         : {};
     const params = {
       show_percentage:1, 
-      team_id: !filterList ? '' :7,
+      team_id: !filterList ? '' : Number(teamId),
       page,
       limit,
       ...filterList,
