@@ -19,8 +19,8 @@ function EditProject(props) {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-  const [hoursAllocated,setHoursAllocated] = useState(''); 
-  const [hourlyRate,setHourlyRate] = useState(''); 
+  // const [hoursAllocated,setHoursAllocated] = useState(''); 
+  // const [hourlyRate,setHourlyRate] = useState(''); 
   const [title, setTitle] = useState('');
 
   const history = useHistory();
@@ -192,22 +192,23 @@ function EditProject(props) {
     getCoordinator();
   }, []);
 
-  const onHoursAllocated = (value) => {
-    setHoursAllocated(value);
-    calculateProjectCost();
-  };
+  // const onHoursAllocated = (value) => {
+  //   setHoursAllocated(value);
+  //   calculateProjectCost();
+  // };
 
-  const onHourlyRate = (value) => {
-    setHourlyRate(value);
-    calculateProjectCost();
-  };
+  // const onHourlyRate = (value) => {
+  //   setHourlyRate(value);
+  //   calculateProjectCost();
+  // };
 
-  const calculateProjectCost = () => {
-    let cost = '';
-    if(hoursAllocated && hourlyRate) {
-      cost = hoursAllocated * hourlyRate; // eslint-disable-line
-    };
-  };
+  // const calculateProjectCost = () => {
+  //   let cost = '';
+  //   if(hoursAllocated && hourlyRate) {
+  //     cost = hoursAllocated * hourlyRate;
+  //   };
+  //   console.log('cost',cost);
+  // };
 
 	return (
 		<>
@@ -228,8 +229,8 @@ function EditProject(props) {
         onFormSubmit={(formValues) => {submitForm(formValues);}}
         options={options}
         callbacks={{
-          onHoursChange: (value) => { onHoursAllocated(value); },
-          onHourRate: (value) => {onHourlyRate(value);}
+          // onHoursChange: (value) => { onHoursAllocated(value); },
+          // onHourRate: (value) => {onHourlyRate(value);}
         }}
         defaultFormValues={defaultValues}
         currentUser={currentUser}

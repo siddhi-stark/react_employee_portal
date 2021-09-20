@@ -110,7 +110,6 @@ const addMeaage = async () => {
 
 	return (
 		<>
-		{console.log('EmployeeName',EmployeeName)}
 			<div className="profile-bg mt-3" style={{backgroundImage: '/images/login-img.png'}}>
 			{bannerImage ? (
 				<Image src={bannerImage} alt="image" />

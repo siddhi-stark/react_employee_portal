@@ -618,7 +618,6 @@ function Dashboard() {
               </Card>
               </>
               ) : ''}
-             
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">
