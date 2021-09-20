@@ -32,7 +32,7 @@ function Team(props) {
   const [totalCount, setTotalCount] = useState(10);
   // const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [departmentName, setDepartmentName] = useState('');
+  // const [departmentName, setDepartmentName] = useState('');
   const [projectName, setProjectName] = useState('');
 
   // const [filterData, setFilterData] = useState({});
@@ -134,7 +134,7 @@ function Team(props) {
       setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setDepartmentName(data && data.data && data.data.department);
+      // setDepartmentName(data && data.data && data.data.department);
       setProjectName(data && data.data && data.data.project_name);
       setRowData((data && data.data && data.data.employees_data) || []);
     } else {
@@ -152,7 +152,6 @@ function Team(props) {
 
   return (
     <>
-    {console.log('teamId',departmentName)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
