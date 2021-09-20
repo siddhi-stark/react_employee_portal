@@ -437,7 +437,7 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            {isShowBdayHeading || isShowAnniversaryHeading || appreciationData.length > 0 ? (
+            {isShowBdayHeading || isShowAnniversaryHeading || appreciationData || appreciationData.length > 0 ? (
               <>
                <Card className="mt-3 birthday-list">
                 {isShowBdayHeading ? (
@@ -493,7 +493,6 @@ function Dashboard() {
                 ) : (
                   ''
                 )}
-                {console.log('condition',birthdayArr.length)}
 
                 <Card.Body
                   className={
@@ -557,7 +556,8 @@ function Dashboard() {
 
                 <Card.Body
                   className={
-                      appreciationData &&
+                      isShowAnniversaryHeading ||
+                      appreciationData ||
                       appreciationData.length < 0
                       ? 'work-anniversary-box'
                       : 'birth-box-remove'
