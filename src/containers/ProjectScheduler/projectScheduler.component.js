@@ -28,6 +28,7 @@ function ProjectScheduler() {
   const [filterData, setFilterData] = useState({});
   const [developerValue, setDeveloperValue] = useState('');
   // const departmentId = customFunctions.getLocalStorage('department');
+  const teamId = customFunctions.getLocalStorage('team_id');
 
   // Variable declarations Filter
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -114,7 +115,7 @@ function ProjectScheduler() {
     const params = {
       page,
       limit,
-      team_id: !filterList ? '' :7,
+      team_id: !filterList ? '' : Number(teamId),
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);

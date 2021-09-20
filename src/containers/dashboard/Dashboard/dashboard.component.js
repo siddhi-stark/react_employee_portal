@@ -117,21 +117,7 @@ function Dashboard() {
       roleAccess: [2, 3, 4, 5, 6],
     },
   ];
-
-  // const date = new Date();
-  // const lastday = date.getDate() - (date.getDay() - 1) + 6;
-  // const lastDayNew =  new Date(date.setDate(lastday));
-
-  // const curr = new Date; // get current date
-  // const first = curr.getDate() - curr.getDay() +1; // First day is the day of the month - the day of the week
-  // const last = first + 4; // last day is the first day + 6
-
-  // const firstday = new Date(curr.setDate(first)).toUTCString();
-  // const lastday = new Date(curr.setDate(last)).toUTCString();
-
-  // const FirstDay = customFunctions.getDate(firstday);
-  // const LastDay = customFunctions.getDate(lastday);
-
+  
   const getDailyActivity = async () => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);

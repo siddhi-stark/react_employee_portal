@@ -39,6 +39,7 @@ function Header() {
       setEmployeeName(data.data.full_name);
       setImageProfile(data.data.profile_image_url);
       customFunctions.setLocalStorage('greetingId',data.data.greeting);
+      customFunctions.setLocalStorage('team_id',data.data.team_id);
       customFunctions.setLocalStorage('birthday',data.data.is_birthday);
     }
     return true;
