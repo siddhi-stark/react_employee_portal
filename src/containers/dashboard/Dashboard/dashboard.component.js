@@ -473,6 +473,10 @@ function Dashboard() {
                                           'EmpID',
                                           emp.id
                                         );
+                                         customFunctions.setLocalStorage(
+                                        'EmpName',
+                                        emp.name
+                                      );
                                         history.push('/wishes');
                                       }
                                     }}
@@ -530,6 +534,10 @@ function Dashboard() {
                                       customFunctions.setLocalStorage(
                                         'comment-allow',
                                         emp.comment_allow
+                                      ); 
+                                      customFunctions.setLocalStorage(
+                                        'EmpName',
+                                        emp.name
                                       );
                                       history.push('/wishes');
                                     }
