@@ -496,7 +496,7 @@ function Dashboard() {
 
                 <Card.Body
                   className={
-                   birthdayArr.length > 0 ||isShowAnniversaryHeading === 'true'
+                  birthdayArr && birthdayArr.length > 0 ||isShowAnniversaryHeading === 'true'
                       ? 'work-anniversary-box' 
                       : 'birth-box-remove'
                   }
