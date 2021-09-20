@@ -33,7 +33,7 @@ export default function UserRestrictions(props) {
     return <></>;
   }
 
-  if((Number(roleId) === 4 && Number(departmentId) === 2) && childProjectArr.includes(childRoute)){
+  if((Number(roleId) === 4 && (Number(departmentId) !== 8 || Number(departmentId) !== 9 || Number(departmentId) !== 1)) && childProjectArr.includes(childRoute)){
     return <></>;
   }
 
