@@ -81,18 +81,6 @@ function ProjectScheduler() {
       label: 'Developer',
       roleAccess: [4],
     },
-    // {
-    //   id: 'rt_support',
-    //   label: 'UI Support',
-    //   roleAccess: [4],
-    //   render: ({ rt_support }) => {
-    //     return (
-    //       <>
-    //         <span>{rt_support ? 'Yes':'No'}</span>
-    //       </>
-    //     );
-    //   }, 
-    // },
     {
       id: 'expected_clc',
       label: 'Expected CLC',

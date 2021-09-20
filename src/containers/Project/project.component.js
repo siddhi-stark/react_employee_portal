@@ -211,7 +211,6 @@ function Project() {
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
-      status:'all',
       sort_by:'name',
       sort_direction:'ascending',
       page,
@@ -263,13 +262,10 @@ function Project() {
       payload = {
         keyword: formValues && formValues.keyword,
       };
-    
     if(String(status) === 'active' || String(status) === 'inactive'){
       payload.status = status;
     } else if(String(status) === 'late' || String(status) === 'current'){
       payload.sub_status = String(status) === 'late' ? 'late' :'current';
-    } else if(String(status) === 'all'){
-      payload.status = 'all';
     }
 
     if(formValues) {
@@ -321,6 +317,7 @@ function Project() {
                     isStepForm={false}
                     onFormReset={() => {
                       setFilterData({});
+                      setAllData({});
                     }}
                   />
                 </Card.Body>
@@ -335,7 +332,7 @@ function Project() {
             </Card.Header>
             <Card.Body>
             <div className="recruitment-links-wrapper">
-            {(Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && (
+            {((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
               <>
               <a
                 href="javascript:void(0)"

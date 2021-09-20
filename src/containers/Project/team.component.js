@@ -16,8 +16,8 @@ function Team(props) {
   const teamId = teamid.match.params.teamId;
   
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
-
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
+  const getProjectName = customFunctions.getLocalStorage('projectName');
 
   const items = [
     { to: '/', label: 'Home' },
@@ -58,6 +58,7 @@ function Team(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 customFunctions.setLocalStorage('teamMemberId',emp_id);
+                customFunctions.setLocalStorage('teamMemberName',emp_name);
                 history.push(`/my-project/${emp_id}`);
               }}
             >
@@ -159,8 +160,8 @@ function Team(props) {
       </div>
       <Card body className="mt-4">
       <div className="mb-3">
-          <span>{`${projectName} ${teamId} Team`}</span>
-         <Button className="float-end" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
+          <span>{getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}</span>
+         <Button className="float-end mb-3" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
         </div>
             <CustomTable
               columns={columns}

@@ -508,7 +508,8 @@ function RecruitmentApplicationComponent() {
                   btnContainerClass="form-submit-buttons pull-right mb-3"
                   isStepForm={false}
                   onFormReset={() => {
-                    setFilterData();
+                    setFilterData({});
+                    setAllData({});
                   }}
                 />
               </Card.Title>

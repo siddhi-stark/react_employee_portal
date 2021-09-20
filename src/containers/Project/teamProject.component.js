@@ -17,6 +17,7 @@ function TeamProject(props) {
   const teamid = props;
   const teamProjectId = teamid.match.params.teamProjectId;
   customFunctions.setLocalStorage('teamProjectId',teamProjectId);
+
   const items = [
     { to: '/', label: 'Home' },
     { to: '/project', label: 'Project' },
@@ -62,6 +63,8 @@ function TeamProject(props) {
               className="pl-2 ms-1"
               onClick={(e) => {
                 customFunctions.setLocalStorage('departmentType',department);
+                customFunctions.setLocalStorage('projectName',name);
+                customFunctions.setLocalStorage('departmentName',team);
                 e.preventDefault();
                 e.stopPropagation();
                 history.push(`/team/${team}`);
@@ -229,7 +232,7 @@ function TeamProject(props) {
       <Card body className="mt-4">
         <div className="mb-3">
           <span>Project Name: {name}</span>
-          <Button className="float-end" onClick= {() => history.push('/project')} >Back</Button>
+          <Button className="float-end mb-3" onClick= {() => history.push('/project')} >Back</Button>
         </div>
         <Row className="doughnut-graph-section">
           <Col>

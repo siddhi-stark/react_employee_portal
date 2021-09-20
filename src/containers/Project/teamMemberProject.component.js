@@ -14,7 +14,8 @@ import customFunctions from '../../helper/customFunctions';
 function TeamMemberProject(props) {
   const teamid = props;
   const teamMemberId = teamid.match.params.teamMemberId;
-  const getTeamId = customFunctions.getLocalStorage('departmentType');
+  const getTeamId = customFunctions.getLocalStorage('departmentName');
+  const teamMemberName = customFunctions.getLocalStorage('teamMemberName');
   const items = [
     { to: '/', label: 'Home' },
     { to: '/project', label: 'Project' },
@@ -158,6 +159,7 @@ function TeamMemberProject(props) {
         <Breadcrumb items={items} />
       </div>
       <Card body className="mt-4">
+       <span>{`${teamMemberName} Projects and Work`}</span>
          <Button className="float-end mb-3" onClick= {() => history.push(`/team/${getTeamId}`)} >Back</Button>
             <CustomTable
               columns={columns}
