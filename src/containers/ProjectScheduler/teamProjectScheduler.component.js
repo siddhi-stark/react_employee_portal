@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Accordion, Button } from 'react-bootstrap';
+import { Card, Accordion, Button, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -68,12 +68,15 @@ function TeamProjectScheduler() {
     },
     {
       id: 'rt_support',
-      label: 'Runtime Support',
+      label: 'RT Support',
       roleAccess: [4],
       render: ({ rt_support }) => {
         return (
           <>
-            <span>{rt_support ? 'Yes':'No'}</span>
+            <Image
+              className="rt-support-link"
+              src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
+            />
           </>
         );
       }, 

@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
-// import StarkFormBuilder from 'stark-form-builder';
-import { Card, Button, ProgressBar } from 'react-bootstrap';
-// import FormSections from './formschema.json';
+import { Card, Button, ProgressBar, Image } from 'react-bootstrap';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -14,7 +12,8 @@ import customFunctions from '../../helper/customFunctions';
 function TeamMemberProject(props) {
   const teamid = props;
   const teamMemberId = teamid.match.params.teamMemberId;
-  const getTeamId = customFunctions.getLocalStorage('departmentType');
+  const getTeamId = customFunctions.getLocalStorage('departmentName');
+  const teamMemberName = customFunctions.getLocalStorage('teamMemberName');
   const items = [
     { to: '/', label: 'Home' },
     { to: '/project', label: 'Project' },
@@ -28,7 +27,6 @@ function TeamMemberProject(props) {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  // const [filterData, setFilterData] = useState({});
 
   // Declare columns
   const columns = [
@@ -106,14 +104,17 @@ function TeamMemberProject(props) {
         );
       },
     }, 
-   {
+    {
       id: 'rt_support',
       label: 'Runtime Support',
       roleAccess: [4],
       render: ({ rt_support }) => {
         return (
           <>
-            <span>{rt_support ? 'Yes':'No'}</span>
+            <Image
+              className="rt-support-link"
+              src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
+            />
           </>
         );
       }, 
@@ -157,7 +158,8 @@ function TeamMemberProject(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
         <Breadcrumb items={items} />
       </div>
-      <Card body className="mt-4">
+      <Card body className="mt-4 schedular">
+       <span>{`${teamMemberName} Projects and Work`}</span>
          <Button className="float-end mb-3" onClick= {() => history.push(`/team/${getTeamId}`)} >Back</Button>
             <CustomTable
               columns={columns}

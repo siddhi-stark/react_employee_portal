@@ -31,7 +31,6 @@ function Project() {
   const [allData, setAllData] = useState({});
 
   // Variable declarations Filter State
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
 
   const handleActionCallback = ({id}) => {
@@ -158,8 +157,8 @@ function Project() {
       },
     },
     {
-      id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'hourly_cost',
-      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Hourly Rate',
+      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hourly_cost',
+      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hourly Rate',
       roleAccess: [1],
     },
     {
@@ -168,13 +167,13 @@ function Project() {
       roleAccess: [4],
     },
     {
-      id:    Number(currentUser) === 1 || Number(currentUser) === 2 || Number(currentUser) === 3 || Number(currentUser) === 5 || Number(currentUser) === 6? 'hours_allocated' : '',
-      label: Number(currentUser) === 1 || Number(currentUser) === 2 || Number(currentUser) === 3 || Number(currentUser) === 5 || Number(currentUser) === 6 ? 'Hours Allocated' : '',
+      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hours_allocated' ,
+      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hours Allocated',
       roleAccess: [1],
     },
     {
-      id: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'cost_allocated',
-      label: (Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && 'Project Cost',
+      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 )&& 'cost_allocated',
+      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Project Cost',
       roleAccess: [1],
     },
     {
@@ -211,7 +210,6 @@ function Project() {
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
-      status:'all',
       sort_by:'name',
       sort_direction:'ascending',
       page,
@@ -263,13 +261,10 @@ function Project() {
       payload = {
         keyword: formValues && formValues.keyword,
       };
-    
     if(String(status) === 'active' || String(status) === 'inactive'){
       payload.status = status;
     } else if(String(status) === 'late' || String(status) === 'current'){
       payload.sub_status = String(status) === 'late' ? 'late' :'current';
-    } else if(String(status) === 'all'){
-      payload.status = 'all';
     }
 
     if(formValues) {
@@ -284,7 +279,6 @@ function Project() {
 
   return (
     <>
-    {console.log('currentUser',currentUser)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
@@ -313,7 +307,6 @@ function Project() {
                     formHeading="Project Filter"
                     onFormSubmit={(formValues) => {submitForm(formValues);}}
                     callbacks={{}}
-                    defaultFormValues={defaultValues}
                     currentUser={currentUser}
                     submitBtnText="Apply"
                     showResetBtn={true}
@@ -322,6 +315,7 @@ function Project() {
                     isStepForm={false}
                     onFormReset={() => {
                       setFilterData({});
+                      setAllData({});
                     }}
                   />
                 </Card.Body>
@@ -336,7 +330,7 @@ function Project() {
             </Card.Header>
             <Card.Body>
             <div className="recruitment-links-wrapper">
-            {(Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 && (
+            {((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
               <>
               <a
                 href="javascript:void(0)"

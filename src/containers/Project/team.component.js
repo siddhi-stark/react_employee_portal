@@ -16,8 +16,8 @@ function Team(props) {
   const teamId = teamid.match.params.teamId;
   
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
-
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
+  const getProjectName = customFunctions.getLocalStorage('projectName');
 
   const items = [
     { to: '/', label: 'Home' },
@@ -32,7 +32,7 @@ function Team(props) {
   const [totalCount, setTotalCount] = useState(10);
   // const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [departmentName, setDepartmentName] = useState('');
+  // const [departmentName, setDepartmentName] = useState('');
   const [projectName, setProjectName] = useState('');
 
   // const [filterData, setFilterData] = useState({});
@@ -58,6 +58,7 @@ function Team(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 customFunctions.setLocalStorage('teamMemberId',emp_id);
+                customFunctions.setLocalStorage('teamMemberName',emp_name);
                 history.push(`/my-project/${emp_id}`);
               }}
             >
@@ -134,7 +135,7 @@ function Team(props) {
       setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setDepartmentName(data && data.data && data.data.department);
+      // setDepartmentName(data && data.data && data.data.department);
       setProjectName(data && data.data && data.data.project_name);
       setRowData((data && data.data && data.data.employees_data) || []);
     } else {
@@ -152,7 +153,6 @@ function Team(props) {
 
   return (
     <>
-    {console.log('teamId',departmentName)}
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
@@ -160,8 +160,8 @@ function Team(props) {
       </div>
       <Card body className="mt-4">
       <div className="mb-3">
-          <span>{`${projectName} ${teamId} Team`}</span>
-         <Button className="float-end" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
+          <span>{getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}</span>
+         <Button className="float-end mb-3" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
         </div>
             <CustomTable
               columns={columns}

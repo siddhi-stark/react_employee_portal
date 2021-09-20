@@ -8,8 +8,9 @@ export default function UserRestrictions(props) {
 
   const childRoute = children&& children.props && children.props.children && children.props.children[0] && children.props.children[0].props && children.props.children[0].props.to;
 
-  const childrenArr = ['/projects', '/interview-listing', '/recruitment'];
+  const childrenArr = ['/projects', '/interview-listing', '/recruitment','/project','/scheduler','/team-scheduler'];
   const childArr = ['/projects', '/interview-listing'];
+  const childProjectArr = ['/scheduler','/team-scheduler'];
 
   const hasPermissions =
     permittedUsers &&
@@ -29,6 +30,10 @@ export default function UserRestrictions(props) {
   }
 
   if(Number(roleId) === 4 && Number(departmentId) === 8 && childArr.includes(childRoute)){
+    return <></>;
+  }
+
+  if((Number(roleId) === 4 && Number(departmentId) === 2) && childProjectArr.includes(childRoute)){
     return <></>;
   }
 
