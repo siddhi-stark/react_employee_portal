@@ -77,15 +77,15 @@ function Dashboard() {
       return empl;
     });
 
-  anniversary &&
-    anniversary.map((anvs) => {
-      const JoiningDate = new Date(anvs.date_of_joined);
-      const NewJoiningDate = JoiningDate.getDate();
-      if (NewJoiningDate === ToDayDate) {
-        isShowAnniversaryHeading = true;
-      }
-      return anvs;
-    });
+  // anniversary &&
+  //   anniversary.map((anvs) => {
+  //     const JoiningDate = new Date(anvs.date_of_joined);
+  //     const NewJoiningDate = JoiningDate.getDate();
+  //     if (NewJoiningDate === ToDayDate) {
+  //       isShowAnniversaryHeading = true;
+  //     }
+  //     return anvs;
+  //   });
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -196,7 +196,19 @@ function Dashboard() {
     const { data } = await AuthApi.getDataFromServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
-      setAnniversary(data.data);
+        const avsrArr = [];
+        await data.data && data.data.length > 0 && data.data.map((anvs, i) => {
+        const JoiningDate = new Date(anvs.date_of_joined);
+        const NewJoiningDate = JoiningDate.getDate();
+        if (NewJoiningDate === ToDayDate) {
+          avsrArr.push(anvs);
+          isShowAnniversaryHeading = true;
+        }
+        if (i + 1 === data.data.length) {
+          setAnniversary(avsrArr);
+        }
+        return anvs;
+      });
     }
   };
 
@@ -206,6 +218,10 @@ function Dashboard() {
 
     if (data && data.data) {
       setAppriciation(data.data);
+      const isAppr = data.data;
+      if(isAppr.length >= 1) {
+        console.log('inside if condition');
+      }
     }
   };
 
@@ -434,7 +450,9 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            {isShowBdayHeading || isShowAnniversaryHeading || appreciationData || appreciationData.length > 0 ? (
+            {console.log('----',anniversary.length,isShowAnniversaryHeading)}
+            
+            {((birthdayArr && birthdayArr.length > 0) || (anniversary && anniversary.length > 0) || (appreciationData && appreciationData.length > 0)) ? (
               <>
                <Card className="mt-3 birthday-list">
                 {isShowBdayHeading ? (
@@ -493,12 +511,12 @@ function Dashboard() {
 
                 <Card.Body
                   className={
-                 isShowAnniversaryHeading
+                 anniversary && anniversary.length >= 1
                       ? 'work-anniversary-box' 
                       : 'birth-box-remove'
                   }
                 >
-                  {isShowAnniversaryHeading ? (
+                  {anniversary && anniversary.length >= 1 ? (
                     <p>Today's Work Anniversary</p>
                   ) : (
                     ''
@@ -507,10 +525,7 @@ function Dashboard() {
                     anniversary.length > 0 &&
                     anniversary.map((emp, index) => (
                       <>
-                        {new Date(emp.date_of_joined).getDate() ===
-                        ToDayDate ? (
-                          <>
-                            <div className="birth-name d-flex align-items-center" key={`anniversary${index}`}>
+                        <div className="birth-name d-flex align-items-center" key={`anniversary${index}`}>
                               <img src="/images/working.png" alt="img" />
                               <div className="birthday-employees">
                                 <h6 onClick={() => { // eslint-disable-line
@@ -543,10 +558,6 @@ function Dashboard() {
                                 </h6>
                               </div>
                             </div>
-                          </>
-                        ) : (
-                          ''
-                        )}
                       </>
                     ))}
                 </Card.Body>
