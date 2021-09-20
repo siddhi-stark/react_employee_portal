@@ -194,7 +194,7 @@ const menu = [
     path: '/team-scheduler',
     icon: 'leaves.svg',
     submenu: [],
-    roleaccess: [2,3,4],
+    roleaccess: [1,2,3,4],
   },
   {
     title: 'Reports',
