@@ -68,7 +68,7 @@ function TeamProjectScheduler() {
     },
     {
       id: 'rt_support',
-      label: 'Runtime Support',
+      label: 'RT Support',
       roleAccess: [4],
       render: ({ rt_support }) => {
         return (
