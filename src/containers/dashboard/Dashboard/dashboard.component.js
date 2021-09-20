@@ -437,7 +437,9 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-              <Card className="mt-3 birthday-list">
+            {isShowBdayHeading || isShowAnniversaryHeading || appreciationData.length > 0 ? (
+              <>
+               <Card className="mt-3 birthday-list">
                 {isShowBdayHeading ? (
                   <Card.Body className="todays-birthday-member-main">
                     <>
@@ -611,6 +613,9 @@ function Dashboard() {
                     ))}
                 </Card.Body>
               </Card>
+              </>
+              ) : ''}
+             
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">
