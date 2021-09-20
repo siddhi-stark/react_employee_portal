@@ -74,7 +74,7 @@ function Team(props) {
     },
     {
       id: 'spends',
-      label: 'Spend Hours',
+      label: 'Spent Hours',
       render: ({ spends }) => {
         return (
           <>

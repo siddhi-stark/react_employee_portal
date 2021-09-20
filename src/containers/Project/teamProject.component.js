@@ -80,7 +80,7 @@ function TeamProject(props) {
     },
     {
       id: 'spend',
-      label: 'Spend Hours',
+      label: 'Spent Hours',
       render: ({ spend }) => {
         return (
           <>
@@ -261,7 +261,7 @@ function TeamProject(props) {
           <Col>
           <ul>
             <li>
-            Total Hours Spend: <span>{graphDetails.totalHrsSpend}</span>
+            Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
             </li>
             <li>
             Total Hrs Allocated: <span>{graphDetails.totalHrsAllocated}</span>
