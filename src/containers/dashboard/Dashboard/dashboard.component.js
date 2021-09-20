@@ -204,7 +204,9 @@ function Dashboard() {
           avsrArr.push(anvs);
           isShowAnniversaryHeading = true;
         }
+        console.log('i',i + 1 === data.data.length)
         if (i + 1 === data.data.length) {
+          console.log('inside if condition');
           setAnniversary(avsrArr);
         }
         return anvs;
@@ -218,10 +220,6 @@ function Dashboard() {
 
     if (data && data.data) {
       setAppriciation(data.data);
-      const isAppr = data.data;
-      if(isAppr.length >= 1) {
-        console.log('inside if condition');
-      }
     }
   };
 
@@ -508,6 +506,8 @@ function Dashboard() {
                 ) : (
                   ''
                 )}
+
+                {console.log('anniversary.length >= 1',anniversary)}
 
                 <Card.Body
                   className={
