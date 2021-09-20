@@ -25,6 +25,7 @@ const [showWish,setShowWish] = useState('');
 const [employeeMessage,setEmployeeMessage] = useState('');
 const userID = customFunctions.getLocalStorage('userId');
 const showComment = customFunctions.getLocalStorage('comment-allow');
+const EmployeeName = customFunctions.getLocalStorage('EmpName');
 const history = useHistory();
 
 const getBirthdayWishes = async (GrtId) => {
@@ -109,12 +110,13 @@ const addMeaage = async () => {
 
 	return (
 		<>
-			<div className="profile-bg mt-3">
+		{console.log('EmployeeName',EmployeeName)}
+			<div className="profile-bg mt-3" style={{backgroundImage: '/images/login-img.png'}}>
 			{bannerImage ? (
 				<Image src={bannerImage} alt="image" />
 				) : 
 							<Image src='/images/login-img.png' alt="image" />
-		}		
+		}	
 				<div className="profile-img">
 				{wisherProfile ? (
 
@@ -124,7 +126,7 @@ const addMeaage = async () => {
 			}
 				</div>
 			</div>
-
+			<h3>{EmployeeName}</h3>
 			<Row className="birthday-block">
 			<div className="col-md-12">
 									<div className="card">

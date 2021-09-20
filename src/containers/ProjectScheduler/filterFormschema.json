@@ -15,13 +15,7 @@
 				"placeholder": "Please select team",
 				"inputClass": "",
 				"containerClass": "",
-				"validations": [{
-		            "type": "required",
-		            "applyWhen": [],
-		            "applyWhenRelation": "OR"
-		          }],
 				"displayWhen": {},
-				"haveValidations": "false",
 				"haveDisplayOptions": "false",
 				"callback": "getDeveloper",
 				"callbackUrl": "InterviewRoundsUrl",

@@ -34,9 +34,9 @@ function Dashboard() {
   const [socialMedia, setSocialMediaData] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [anniversary, setAnniversary] = useState([]);
-  const [appreciationData,setAppriciation] = useState([]);
+  const [appreciationData, setAppriciation] = useState([]);
   const [image, setImage] = useState('');
-  const [birthdayArr,setBirthdayArray] =useState([]);
+  const [birthdayArr, setBirthdayArray] = useState([]);
   const history = useHistory();
   const viewHoliday = new Event('ViewHolidayButtonChange', { isUpdated: true });
   const viewLeaves = new Event('ViewLeavesButtonChange', { isUpdated: true });
@@ -82,7 +82,6 @@ function Dashboard() {
       const JoiningDate = new Date(anvs.date_of_joined);
       const NewJoiningDate = JoiningDate.getDate();
       if (NewJoiningDate === ToDayDate) {
-
         isShowAnniversaryHeading = true;
       }
       return anvs;
@@ -199,13 +198,14 @@ function Dashboard() {
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
       setAnniversary(data.data);
     }
-  }; 
+  };
 
   const getAppreciation = async () => {
     const endPoint = `${Api.birthdayUrl}?is_appreciation=true`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
 
-    if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      console.log('inside method appreciationData', data.data);
       setAppriciation(data.data);
     }
   };
@@ -283,7 +283,14 @@ function Dashboard() {
     setQuotesContent(quote);
     const userclockedin = customFunctions.getLocalStorage('userclockedin');
     if (userclockedin) setShowClockIn(userclockedin);
-    const birthdayArrr = EmployeeID && EmployeeID.filter((e) => ((Number(e.id) !== Number(UserID)) && e.is_birthday && Number(e.dob) >= day));
+    const birthdayArrr =
+      EmployeeID &&
+      EmployeeID.filter(
+        (e) =>
+          Number(e.id) !== Number(UserID) &&
+          e.is_birthday &&
+          Number(e.dob) >= day
+      );
     setBirthdayArray(birthdayArrr);
   }, []);
 
@@ -317,6 +324,8 @@ function Dashboard() {
 
   return (
     <>
+     {console.log(isShowBdayHeading || isShowAnniversaryHeading)}
+
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -350,7 +359,10 @@ function Dashboard() {
                             <Button
                               onClick={() => {
                                 history.push('wishes');
-                                customFunctions.setLocalStorage('EmpID',UserID);
+                                customFunctions.setLocalStorage(
+                                  'EmpID',
+                                  UserID
+                                );
                               }}
                             >
                               Click Here
@@ -425,169 +437,180 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-
-              {(isShowBdayHeading || isShowAnniversaryHeading) && (
-            <Card className="mt-3 birthday-list">
-              {isShowBdayHeading ? (
-                <Card.Body className="todays-birthday-member-main">
-                  <>
-                    {isShowBdayHeading ? <p>Today's Birthday</p> : ''} <br />
-                    <div className="todays-birthday-member">
-                    {
-                      birthdayArr && birthdayArr.length >0 && birthdayArr.map((emp) => (
-                        <>
-
+              <Card className="mt-3 birthday-list">
+                {isShowBdayHeading ? (
+                  <Card.Body className="todays-birthday-member-main">
+                    <>
+                      {isShowBdayHeading ? <p>Today's Birthday</p> : ''} <br />
+                      <div className="todays-birthday-member">
+                        {birthdayArr &&
+                          birthdayArr.length > 0 &&
+                          birthdayArr.map((emp) => (
+                            <>
                               <div className="birth-name d-flex align-items-center">
                                 <img
                                   src="/images/birthday-cake.png"
                                   alt="img"
                                 />
                                 <div className="birthday-employees">
-                                  <h6  onClick={() => { // eslint-disable-line
-                                      if(emp.greeting) {
+                                  <h6 onClick={() => { // eslint-disable-line
+                                      if (emp.greeting) {
+                                        customFunctions.setLocalStorage(
+                                          'employeeId',
+                                          emp.id
+                                        ); // eslint-disable-line
+                                        customFunctions.setLocalStorage(
+                                          'gId',
+                                          emp.greeting
+                                        ); // eslint-disable-line
+                                        customFunctions.setLocalStorage(
+                                          'comment-allow',
+                                          emp.comment_allow
+                                        );
+                                        customFunctions.setLocalStorage(
+                                          'EmpID',
+                                          emp.id
+                                        );
+                                        history.push('/wishes');
+                                      }
+                                    }}
+                                  >
+                                    <a>{emp.name}</a>
+                                  </h6>
+                                </div>
+                              </div>
+                            </>
+                          ))}
+                      </div>
+                    </>
+                  </Card.Body>
+                ) : (
+                  ''
+                )}
 
+                <Card.Body
+                  className={
+                    anniversary &&
+                    anniversary.length > 0
+                      ? 'birth-box-remove' 
+                      : 'work-anniversary-box'
+                  }
+                >
+                  {isShowAnniversaryHeading ? (
+                    <p>Today's Work Anniversary</p>
+                  ) : (
+                    ''
+                  )}
+                  {anniversary &&
+                    anniversary.length > 0 &&
+                    anniversary.map((emp, index) => (
+                      <>
+                        {new Date(emp.date_of_joined).getDate() ===
+                        ToDayDate ? (
+                          <>
+                            <div className="birth-name d-flex align-items-center" key={`anniversary${index}`}>
+                              <img src="/images/working.png" alt="img" />
+                              <div className="birthday-employees">
+                                <h6 onClick={() => { // eslint-disable-line
+                                    if (emp.greeting_anniversary) {
                                       customFunctions.setLocalStorage(
                                         'employeeId',
                                         emp.id
                                       ); // eslint-disable-line
                                       customFunctions.setLocalStorage(
                                         'gId',
-                                        emp.greeting
+                                        emp.greeting_anniversary
                                       ); // eslint-disable-line
-                                      customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
-                                      customFunctions.setLocalStorage('EmpID',emp.id);
+                                      customFunctions.setLocalStorage(
+                                        'EmpID',
+                                        emp.id
+                                      ); // eslint-disable-line
+                                      customFunctions.setLocalStorage(
+                                        'comment-allow',
+                                        emp.comment_allow
+                                      );
                                       history.push('/wishes');
-                                      }
-                                    }}
-                                  >
-                                  <a>
-                                    {emp.name}
-                                  </a>
-                                  </h6>
-                                </div>
+                                    }
+                                  }}
+                                >
+                                  {emp.name}
+                                </h6>
                               </div>
-                            </>
-                        ))
-                    }
-                    
-                      </div>
-                  </>
+                            </div>
+                          </>
+                        ) : (
+                          ''
+                        )}
+                      </>
+                    ))}
                 </Card.Body>
-              ) : (
-                ''
-              )}
 
-              <Card.Body
-                className={
-                  birthdayArr && birthdayArr.length > 0 
-                    ? 'work-anniversary-box'
-                    : 'birth-box-remove'
-                }
-              >
-                {isShowAnniversaryHeading ? (
-                  <p>Today's Work Anniversary</p>
-                ) : (
-                  ''
-                )}
-                {anniversary &&
-                  anniversary.map((emp) => (
-                    <>
-                      {new Date(emp.date_of_joined).getDate() === ToDayDate ? (
-                        <>
+                <Card.Body
+                  className={
+                    (anniversary &&
+                      anniversary.length > 0 &&
+                      appreciationData &&
+                      appreciationData.length > 0)
+                      ? 'work-anniversary-box'
+                      : 'birth-box-remove'
+                  }
+                >
+                  {appreciationData && appreciationData.length > 0 ? <p>Work Appreciation</p> : ''}
+                  {appreciationData && appreciationData.length > 0 && 
+                    appreciationData.map((appr, index) => (
+                      <>
+                        <div className="work-anniversary-box-user" key={`appreciation${index}`}>
                           <div className="birth-name d-flex align-items-center">
-                            <img src="/images/working.png" alt="img" />
-                            <div className="birthday-employees">
-                              <h6 onClick={() => {  // eslint-disable-line
-                                 if(emp.greeting_anniversary) {
-                                  customFunctions.setLocalStorage(
-                                    'employeeId',
-                                    emp.id
-                                  ); // eslint-disable-line
-                                  customFunctions.setLocalStorage(
-                                    'gId',
-                                    emp.greeting_anniversary
-                                  ); // eslint-disable-line
-                                   customFunctions.setLocalStorage(
-                                    'EmpID',
-                                    emp.id
-                                  ); // eslint-disable-line
-                                  customFunctions.setLocalStorage('comment-allow',emp.comment_allow);
-                                  history.push('/wishes');
-                                }}
-                                 }
-                              >
-                                {emp.name}
-                              </h6>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        ''
-                      )}
-                    </>
-                  ))}
-              </Card.Body>
+                            {appr.employee_data[0].profile_url ? (
+                              <img
+                                src={appr.employee_data[0].profile_url}
+                                alt="img"
+                              />
+                            ) : (
+                              <img src="/images/appreciation.svg" alt="img" />
+                            )}
 
-              {appreciationData && appreciationData.length > 0 ? (
-                 <Card.Body className={((birthdayArr && birthdayArr.length > 0) || (anniversary && anniversary.length > 0)) ? 'work-anniversary-box' : 'birth-box-remove'}>
-              {appreciationData ? (
-                  <p>Work Appreciation</p>
-                ) : (
-                  ''
-                )}
-             {appreciationData &&
-                  appreciationData.map((appr) => (
-                        <>
-                        <div className="work-anniversary-box-user">
-
-                          <div className="birth-name d-flex align-items-center">
-                          {appr.employee_data[0].profile_url ? (
-
-                            <img src={appr.employee_data[0].profile_url} alt="img" />
-                            ) : 
-                          <img src='/images/appreciation.svg' alt="img" />
-
-                          }
-
-                            {appr.employee_data && appr.employee_data.map((empdata) => (
-                              <>
-                            <div className="birthday-employees">
-                              <h6 onClick={() => {  // eslint-disable-line
-                                if(appr.id) {
-
-                                  customFunctions.setLocalStorage(
-                                    'employeeId',
-                                    appr.id
-                                  ); // eslint-disable-line
-                                  customFunctions.setLocalStorage(
-                                    'gId',
-                                    appr.id
-                                  ); // eslint-disable-line
-                                  customFunctions.setLocalStorage(
-                                    'EmpID',
-                                    empdata.id
-                                  ); // eslint-disable-line
-                                  customFunctions.setLocalStorage('comment-allow',appr.comment_allow);
-                                  history.push('/wishes');
-                                }}
-                                }
-                              >
-                                {empdata.full_name}
-
-                              </h6>
-                            </div>
-                              </>
-
+                            {appr.employee_data &&
+                              appr.employee_data.map((empdata) => (
+                                <>
+                                  <div className="birthday-employees">
+                                    <h6 onClick={() => {// eslint-disable-line
+                                        if (appr.id) {
+                                          customFunctions.setLocalStorage(
+                                            'employeeId',
+                                            appr.id
+                                          ); // eslint-disable-line
+                                          customFunctions.setLocalStorage(
+                                            'gId',
+                                            appr.id
+                                          ); // eslint-disable-line
+                                          customFunctions.setLocalStorage(
+                                            'EmpID',
+                                            empdata.id
+                                          ); // eslint-disable-line
+                                          customFunctions.setLocalStorage(
+                                            'EmpName',
+                                            empdata.full_name
+                                          ); // eslint-disable-line
+                                          customFunctions.setLocalStorage(
+                                            'comment-allow',
+                                            appr.comment_allow
+                                          );
+                                          history.push('/wishes');
+                                        }
+                                      }}
+                                    >
+                                      {empdata.full_name}
+                                    </h6>
+                                  </div>
+                                </>
                               ))}
                           </div>
                         </div>
-                        </>
-                  ))}
-              </Card.Body>
-                ) : ''}
-              
-            </Card>
-              )}
+                      </>
+                    ))}
+                </Card.Body>
+              </Card>
 
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">
