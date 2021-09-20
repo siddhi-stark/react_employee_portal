@@ -7,6 +7,7 @@ import FormSections from './AddBasicInfo.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function BasicInformation(props) {
   // Variable declarations
@@ -15,7 +16,7 @@ function BasicInformation(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [appicantId, setAppicantId] = useState('');
-
+  const [isShowLoader,setShowLoader] = useState(false);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
@@ -103,6 +104,8 @@ function BasicInformation(props) {
     // customFunctions.setLocalStorage('applicantName',formValues.name);
     // customFunctions.setLocalStorage('designation',formValues.applied_for.label);
 
+    setShowLoader(true);
+
     let postData = {
       ...formValues,
     };
@@ -128,11 +131,13 @@ function BasicInformation(props) {
     //   );
 
     if (data) {
+      setShowLoader(false);
       props.onBasicInfo(data.data.id);
       customFunctions.setLocalStorage('applicantId', data.data.id);
       swal(data && data.message[0], '', 'success');
       
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -205,6 +210,7 @@ function BasicInformation(props) {
 
   return (
     <>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass="mt-3"
         formHeaderClass=""

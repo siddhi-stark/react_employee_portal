@@ -7,6 +7,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -23,6 +24,8 @@ function TeamReport() {
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [team, setTeam] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -68,6 +71,7 @@ function TeamReport() {
   ];
 
   const getReports = async (pageNo = 0) => {
+    setShowLoader(true);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.reportListingUrl}?my_team=true`;
 
@@ -102,6 +106,7 @@ function TeamReport() {
 
     const { data } = await AuthApi.postDataToServer(url, payload);
     if (data && data.data) {
+      setShowLoader(false);
       if (data.paginator && Object.keys(data.paginator).length > 0) {
         setPagination({
           current_page: Number(data.paginator.current_page),
@@ -203,6 +208,7 @@ function TeamReport() {
         <h2 className="main-content-title tx-24 mg-b-5">Team Report</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
         <div className="mt-5">

@@ -12,6 +12,7 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import Loader from '../../components/Loader/index';
 
 function Events() {
 
@@ -21,6 +22,7 @@ function Events() {
   const [currentPage, setCurrentPage] = useState(1);
   const [userRole, setUserRole] = useState('');
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [isShowLoader, setShowLoader] = useState(false);
   const title = 'Events';
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Events' }];
@@ -90,17 +92,20 @@ function Events() {
   ];
 
   const getRowData = async () => {
+    setShowLoader(true);
     const endPoint =
       `${Api.eventsUrl}?type=all`;
     const url = customFunctions.generateUrl(endPoint);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
               closeOnClickOutside: false,
               allowOutsideClick: false,
@@ -157,6 +162,8 @@ function Events() {
         <h2 className="main-content-title tx-24 mg-b-5">Events</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+
       <section className="content-area">
         <div className="mt-5">
           <Card>

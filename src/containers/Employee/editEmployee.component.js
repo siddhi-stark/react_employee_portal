@@ -10,6 +10,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
+import Loader from '../../components/Loader/index';
 
 function EditEmployee(props) {
   // let time = '';
@@ -25,6 +26,8 @@ function EditEmployee(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [isShowLoader, setShowLoader] = useState(false);
+
   // const [startTime, setStartTime] = useState(null);
   // const [endTime, setEndTime] = useState(null);
   const title = 'Add Time Log Of Employee';
@@ -83,6 +86,7 @@ function EditEmployee(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
     const id = props.match.params.employeeId;
     const postData = {
       user_id: Number(id),
@@ -96,6 +100,7 @@ function EditEmployee(props) {
       postData
     );
     if (data) {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           getRowData(1);
@@ -160,6 +165,7 @@ function EditEmployee(props) {
           <Breadcrumb items={items} />
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <div className="mt-4 edit-timelog">
         <Card body>
         <div className="edit-timelog-btn text-end">

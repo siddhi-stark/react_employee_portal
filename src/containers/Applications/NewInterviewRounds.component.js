@@ -8,6 +8,7 @@ import FormSections from './NewInterviewRounds.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 // const addMoreData = {
 //   addmore: [
 //     {
@@ -27,6 +28,7 @@ function NewInterviewRounds(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
+  const [isShowLoader,setShowLoader] = useState(false);
   // const [formData, setFormData] = useState({});
   // const [updatedData, setUpdatedData] = useState({});
   const [count, forceUpdate] = useState(0);
@@ -66,7 +68,7 @@ function NewInterviewRounds(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-
+    setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
     const postData =[];
     for(const more of  formValues.addmore) {  // eslint-disable-line
@@ -105,6 +107,7 @@ function NewInterviewRounds(props) {
     );
 
     if (data) {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -117,6 +120,7 @@ function NewInterviewRounds(props) {
          getData(isProfessionalInfoId);
       });
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -260,6 +264,7 @@ function NewInterviewRounds(props) {
 
   return (
     <>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
     <div className="mt-3">
     {notes === 'null' ? (
       ''

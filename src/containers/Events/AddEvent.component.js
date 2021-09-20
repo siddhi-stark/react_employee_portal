@@ -9,6 +9,7 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function AddEvent(props) {
   const viewObj = props;
@@ -18,6 +19,7 @@ function AddEvent(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [imageUrl, setImageUrl] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
   const [title, setTitle] = useState('Add Event');
   const history = useHistory();
   const ID = props.match.params.id; // eslint-disable-line
@@ -116,6 +118,7 @@ function AddEvent(props) {
   };
 
   const submitForm = async (formValues) => {
+    setShowLoader(true);
     const postData = {
       title: formValues.title,
       description: formValues.description,
@@ -141,10 +144,12 @@ function AddEvent(props) {
     const { data, message } = await callback(endPoint, postData);
 
     if (data) {
+      setShowLoader(false);
       swal(data.message[0], '', 'success');
       setEventId('');
       history.push('/event');
     }else{
+       setShowLoader(false);
        swal(message, '', 'error');
     }
   };
@@ -194,6 +199,8 @@ function AddEvent(props) {
           <Breadcrumb items={items} />
         </div>
       </div>  
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+
        <div className="mt-4 edit-timelog">
         <Card body>
         {viewOptions ? (

@@ -9,6 +9,7 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import Loader from '../../components/Loader/index';
 
 function Holidays() {
   const employeeRole = customFunctions.getLocalStorage('group');
@@ -76,6 +77,7 @@ function Holidays() {
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [isShowLoader, setShowLoader] = useState(false);
   const [userRole, setUserRole] = useState('');
 	const title = 'Holidays';
   const history = useHistory();
@@ -84,6 +86,7 @@ function Holidays() {
   const [options, updateOptions] = useState({}); // eslint-disable-line
 
 	const getRowData = async () => {
+    setShowLoader(true);
 		const endPoint =
 			`${Api.holidayUrll}?type=all`;
 
@@ -91,11 +94,13 @@ function Holidays() {
 		const { data, message } = await AuthApi.getDataFromServer(url);
 
 		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
 			setTotalCount(data.paginator.total_count);
 			setLimit(data.paginator.limit);
 			setCurrentPage(Number(data.paginator.current_page));
 			setRowData((data && data.data) || []);
 		} else {
+      setShowLoader(false);
 			swal(message, '', 'error', {
               closeOnClickOutside: false,
               allowOutsideClick: false,
@@ -153,6 +158,8 @@ function Holidays() {
         <h2 className="main-content-title tx-24 mg-b-5">Holidays</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+
       <section className="content-area">
 
         <div className="mt-5">

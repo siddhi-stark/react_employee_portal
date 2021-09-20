@@ -10,6 +10,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -23,6 +24,7 @@ function TeamProjectScheduler() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
+  const [isShowLoader, setShowLoader] = useState(false);
 
   // Variable declarations Fikter
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -84,6 +86,7 @@ function TeamProjectScheduler() {
   ];
 
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.projectSchedularUrl}`; 
     const filterList =
@@ -100,11 +103,13 @@ function TeamProjectScheduler() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setRowData((data && data.data && data.data.employees_data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -172,6 +177,7 @@ function TeamProjectScheduler() {
         <h2 className="main-content-title tx-24 mg-b-5">Team Project Scheduler</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Accordion defaultActiveKey="0">

@@ -8,6 +8,7 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import Loader from '../../components/Loader/index';
 
 function CandidateListing() {
 	// Declare variable
@@ -16,6 +17,8 @@ function CandidateListing() {
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [filterData, setFilterData] = useState({}); // eslint-disable-line
+    const [isShowLoader, setShowLoader] = useState(false);
+
 	const title = 'Candidates';
 	const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
 	const history = useHistory();
@@ -120,6 +123,7 @@ function CandidateListing() {
 
 	// Declare methods
 	const getRowData = async (pageNo = 1) => {
+		setShowLoader(true);
 		const page = pageNo || currentPage;
 		const endPoint = `${Api.applicantsUrl}`;
 		const params = {
@@ -132,11 +136,13 @@ function CandidateListing() {
 		const { data, message } = await AuthApi.getDataFromServer(url);
 
 		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+			setShowLoader(false);
 			setTotalCount(data.paginator.total_count);
 			setLimit(data.paginator.limit);
 			setCurrentPage(Number(data.paginator.current_page));
 			setRowData((data && data.data) || []);
 		} else {
+			setShowLoader(false);
 			swal(message, '', 'error', {
 		        closeOnClickOutside: false,
 		        allowOutsideClick: false,
@@ -156,6 +162,7 @@ function CandidateListing() {
 				<h2 className="main-content-title tx-24 mg-b-5">Candidates</h2>
 				<Breadcrumb items={items} />
 			</div>
+            <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area">
 				<Card>
 					<Card.Header>

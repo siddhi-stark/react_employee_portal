@@ -8,6 +8,7 @@ import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import Loader from '../../components/Loader/index';
 
 function Quotes() {
   const history = useHistory();
@@ -24,6 +25,7 @@ function Quotes() {
   // const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [isShowLoader, setShowLoader] = useState(false);
 
   // const [quotesId, setQuotesId] = useState('');
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
@@ -113,6 +115,7 @@ function Quotes() {
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.quotesUrl}`;
     const params = {
@@ -123,6 +126,7 @@ function Quotes() {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -135,6 +139,7 @@ function Quotes() {
       });
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message,'','error');
     }
   };
@@ -153,6 +158,7 @@ function Quotes() {
           <Breadcrumb items={items} />
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Card>
           <Card.Header>
