@@ -29,6 +29,7 @@ function Project() {
   const [status, setStatus] = useState('all');
   const departmentId = customFunctions.getLocalStorage('department');
   const [allData, setAllData] = useState({});
+  const [options, updateOptions] = useState({});
 
   // Variable declarations Filter State
   const [currentUser, updateCurrentUser] = useState(0);
@@ -259,7 +260,7 @@ function Project() {
     let payload ={};
     const formValues = (typeof formValue === 'object' && Object.keys(formValue).length) ? formValue : allData;
       payload = {
-        keyword: formValues && formValues.keyword,
+        project_id: formValues.project_id && formValues.project_id.value && Number(formValues.project_id.value),
       };
     if(String(status) === 'active' || String(status) === 'inactive'){
       payload.status = status;
@@ -276,6 +277,28 @@ function Project() {
   useEffect(() => {
     submitForm();
   }, [status]);
+
+  const getProjectList = async () => {
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name`);
+
+    if(!data) {
+     swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
+      return { label: op.name, value: op.id };
+    });
+
+    options.project_id = dpOptions;
+    const allOptions = options;
+    await updateOptions({...allOptions});
+  };
+
+  useEffect(() => {
+    getProjectList();
+  }, []);
 
   return (
     <>
@@ -307,6 +330,7 @@ function Project() {
                     formHeading="Project Filter"
                     onFormSubmit={(formValues) => {submitForm(formValues);}}
                     callbacks={{}}
+                    options={options}
                     currentUser={currentUser}
                     submitBtnText="Apply"
                     showResetBtn={true}
