@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
-import { Card, Button, ProgressBar } from 'react-bootstrap';
+import { Card, Button, ProgressBar, Image } from 'react-bootstrap';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -104,14 +104,17 @@ function TeamMemberProject(props) {
         );
       },
     }, 
-   {
+    {
       id: 'rt_support',
       label: 'Runtime Support',
       roleAccess: [4],
       render: ({ rt_support }) => {
         return (
           <>
-            <span>{rt_support ? 'Yes':'No'}</span>
+            <Image
+              className="rt-support-link"
+              src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
+            />
           </>
         );
       }, 
