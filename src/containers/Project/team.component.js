@@ -12,6 +12,7 @@ import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function Team(props) {
   const teamid = props;
@@ -37,6 +38,7 @@ function Team(props) {
   const departmentId = customFunctions.getLocalStorage('department');
   const [currentUser, updateCurrentUser] = useState(0);
   const [barGraphData, setBarGraphData] = useState({});
+  const [isShowLoader,setShowLoader] = useState(false);
 
   // Declare columns
   const columns = [
@@ -122,6 +124,7 @@ function Team(props) {
 
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.departmentReportUrl}`;
     const params = {
@@ -133,6 +136,7 @@ function Team(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -168,6 +172,7 @@ function Team(props) {
       });
       setRowData((data && data.data && data.data.employees_data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -197,6 +202,7 @@ function Team(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4">
       <Row className="mb-3">
          <Col>

@@ -11,6 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import constants from '../../helper/constants';
+import Loader from '../../components/Loader/index';
 
 function TeamProject(props) {
   const teamid = props;
@@ -18,6 +19,7 @@ function TeamProject(props) {
   customFunctions.setLocalStorage('teamProjectId',teamProjectId);
   const departmentId = customFunctions.getLocalStorage('department');
   const [barGraphData, setBarGraphData] = useState({});
+  const [isShowLoader,setShowLoader] = useState(false);
 
   const items = [
     { to: '/', label: 'Home' },
@@ -137,10 +139,12 @@ function TeamProject(props) {
   ];
 
   const getGraphData = async () => {
+    setShowLoader(true);
     const endPoint = `${Api.getProjects}${teamProjectId}/`;
     const url = customFunctions.generateUrl(endPoint);
     const { data } = await AuthApi.getDataFromServer(url);
     if(data){
+      setShowLoader(false);
       const graph = [
         { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
         { x: 'Complete Work', y: data && data.data && data.data.completion },
@@ -168,6 +172,7 @@ function TeamProject(props) {
 
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const newData = []; 
     const page = pageNo || currentPage;
     const endPoint = `${Api.getProjects}${teamProjectId}/`;
@@ -179,6 +184,7 @@ function TeamProject(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -247,6 +253,7 @@ function TeamProject(props) {
         ]
       });
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -275,6 +282,7 @@ function TeamProject(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4">
         <Row className="mb-3">
           <Col>
