@@ -189,7 +189,8 @@ function TeamProject(props) {
         allocated:data && data.data && data.data.design && data.data.design.allocated,
         remaining:data && data.data && data.data.design && data.data.design.remaining,
         status:data && data.data && data.data.design && data.data.design.status,
-        department: data && data.data && data.data.design && data.data.design.dept_id
+        department: data && data.data && data.data.design && data.data.design.dept_id,
+        hours_allocated: data && data.data && data.data.design && data.data.design.hours_allocated
 
       },{
         team: 'Development',
@@ -197,7 +198,8 @@ function TeamProject(props) {
         allocated:data && data.data && data.data.development && data.data.development.allocated,
         remaining:data && data.data && data.data.development && data.data.development.remaining,
         status:data && data.data && data.data.development && data.data.development.status,
-        department: data && data.data && data.data.development && data.data.development.dept_id
+        department: data && data.data && data.data.development && data.data.development.dept_id,
+        hours_allocated: data && data.data && data.data.development && data.data.development.hours_allocated
 
       },{
         team: 'QA',
@@ -205,22 +207,25 @@ function TeamProject(props) {
         allocated:data && data.data && data.data.quality_analyst && data.data.quality_analyst.allocated,
         remaining:data && data.data && data.data.quality_analyst && data.data.quality_analyst.remaining,
         status:data && data.data && data.data.quality_analyst && data.data.quality_analyst.status,
-        department: data && data.data && data.data.quality_analyst && data.data.quality_analyst.dept_id
-
+        department: data && data.data && data.data.quality_analyst && data.data.quality_analyst.dept_id,
+         hours_allocated: data && data.data && data.data.quality_analyst && data.data.quality_analyst.hours_allocated
       },{
         team:'Project Management',
         spend:data && data.data && data.data.project_management && data.data.project_management.spends,
         allocated:data && data.data && data.data.project_management && data.data.project_management.allocated,
         remaining:data && data.data && data.data.project_management && data.data.project_management.remaining,
         status:data && data.data && data.data.project_management && data.data.project_management.status,
-        department: data && data.data && data.data.project_management && data.data.project_management.dept_id
+        department: data && data.data && data.data.project_management && data.data.project_management.dept_id,
+         hours_allocated: data && data.data && data.data.project_management && data.data.project_management.hours_allocated
 
       },{
         team:'Total',
         spend:data && data.data && data.data.total && data.data.total.spends,
         allocated:data && data.data && data.data.total && data.data.total.allocated,
         remaining:data && data.data && data.data.total && data.data.total.remaining,
-        status:data && data.data && data.data.total && data.data.total.status
+        status:data && data.data && data.data.total && data.data.total.status,
+        hours_allocated: data && data.data && data.data.total && data.data.total.hours_allocated
+
       });
       setRowData(newData || []);
       setBarGraphData({

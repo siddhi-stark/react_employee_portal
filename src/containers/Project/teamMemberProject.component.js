@@ -14,6 +14,8 @@ function TeamMemberProject(props) {
   const teamid = props;
   const teamMemberId = teamid.match.params.teamMemberId;
   const getTeamId = customFunctions.getLocalStorage('departmentName');
+  const schedular = teamid.location.state ? teamid.location.state.schedular
+    : '';
   const teamMemberName = customFunctions.getLocalStorage('teamMemberName');
   const items = [
     { to: '/', label: 'Home' },
@@ -166,7 +168,7 @@ function TeamMemberProject(props) {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4 schedular">
        <span>{`${teamMemberName} Projects and Work`}</span>
-         <Button className="float-end mb-3" onClick= {() => history.push(`/team/${getTeamId}`)} >Back</Button>
+         <Button className="float-end mb-3" onClick= {() => schedular ? history.push('/team-scheduler') : history.push(`/team/${getTeamId}`)} >Back</Button>
             <CustomTable
               columns={columns}
               rows={rowData}

@@ -162,7 +162,7 @@ function Employee() {
   ];
 
   const getTableData = async (pageNo = 0) => {
-    setShowLoader(true)
+    setShowLoader(true);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`;
 

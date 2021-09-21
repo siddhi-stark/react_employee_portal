@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -25,6 +25,7 @@ function TeamProjectScheduler() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
+  const history = useHistory();
 
   // Variable declarations Fikter
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -37,7 +38,7 @@ function TeamProjectScheduler() {
   // Declare columns
   const columns = [
     {
-      id: 'id',
+      id: 'emp_id',
       label: 'id',
       roleAccess: [4],
       isDisplay:false
@@ -46,6 +47,25 @@ function TeamProjectScheduler() {
       id: 'emp_name',
       label: 'Name',
       roleAccess: [4],
+      render: ({ emp_id, emp_name }) => {
+        return (
+          <>
+            <a
+              href="/"
+              className="pl-2 ms-1"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/my-project/${emp_id}`,{schedular:true});
+                customFunctions.setLocalStorage('teamMemberName',emp_name);
+                customFunctions.setLocalStorage('teamMemberId',emp_id);
+              }}
+            >
+             {emp_name} 
+            </a>
+          </>
+        );
+      },
     },
     {
       id: '0-25',
