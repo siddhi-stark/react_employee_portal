@@ -57,6 +57,10 @@ function Greetings() {
 			label: 'Type',
 		},
 		{
+			id: 'employeeName',
+			label: 'Employee Name',
+		},
+		{
 			id: 'message',
 			label: 'Message',
 		},
@@ -92,8 +96,14 @@ function Greetings() {
 	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
+  const getEmployee = async () => {
+    // const id = props.match.params.stackId;
+    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
+    getRowData(1,data.data);
+  };
+
 	// Declare methods
-	const getRowData = async (pageNo = 1) => {
+	const getRowData = async (pageNo = 1,empData) => {
 		setShowLoader(true);
 		const page = pageNo || currentPage;
 		const endPoint = Api.greetingsUrl;
@@ -107,11 +117,24 @@ function Greetings() {
 		const { data, message } = await AuthApi.getDataFromServer(url);
 
 		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+
+					const newEmpArr = []
+		empData && empData.map((emp) => {
+		data && data.data.map((empdata) => {
+		if(emp.id === empdata.employee[0]) {
+		const newItem = empdata;
+		newItem.employeeName = emp.full_name;
+		newEmpArr.push(newItem);
+		}
+		return empdata;
+		})
+		return emp;
+		})
 			setShowLoader(false);
 			setTotalCount(data.paginator.total_count);
 			setLimit(data.paginator.limit);
 			setCurrentPage(Number(data.paginator.current_page));
-			setRowData((data && data.data) || []);
+			setRowData((newEmpArr) || []);
 		} else {
 			setShowLoader(false);
 			 swal(message, '', 'error', {
@@ -126,7 +149,7 @@ function Greetings() {
 	};
 
 	useEffect(() => {
-		getRowData(1);
+		getEmployee();
 		setTitle('Greetings');
 	}, []);
 
@@ -168,6 +191,7 @@ function Greetings() {
 
 	return (
 		<>
+		{console.log('rowData',rowData)}
 			<Helmet title={title} />
 			<div className="title-breadcrumb-section">
 				<h2 className="main-content-title tx-24 mg-b-5">Greetings</h2>
