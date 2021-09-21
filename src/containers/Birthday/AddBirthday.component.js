@@ -170,7 +170,8 @@ function AddBirthday(props) {
           if (
             item.name === 'greet_type' ||
             item.name === 'message' ||
-            item.name === 'employee' 
+            item.name === 'employee' ||
+            item.name === 'comment_allow' 
           )
             itemData.disabled = true;
           return itemData;
@@ -187,7 +188,8 @@ function AddBirthday(props) {
           if (
             item.name === 'greet_type' ||
             item.name === 'message' ||
-            item.name === 'employee' 
+            item.name === 'employee' ||
+            item.name === 'comment_allow' 
           )
             itemData.disabled = false;
           return itemData;
@@ -274,7 +276,7 @@ function AddBirthday(props) {
     submitBtnText="Submit"
     showResetBtn={true}
     resetBtnText="Cancel"
-    btnContainerClass="form-submit-buttons"
+    btnContainerClass= {viewOptions ? 'd-none' : 'form-submit-buttons'} 
     isStepForm={false}
     
     onFormReset={() => {
