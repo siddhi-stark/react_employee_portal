@@ -98,9 +98,12 @@ function AddBirthday(props) {
 
   // Get data for form
   const getData = async (id,empList) => {
+    setShowLoader(true);
     const {data } = await AuthApi.getDataFromServer(`${Api.greetingsUrl}${id}/`);
 
-    let bEmp = {};
+    if(data) {
+      setShowLoader(false);
+      let bEmp = {};
 
     empList.map((em) => {
       data.data.employee.map((emd) => {
@@ -131,6 +134,7 @@ function AddBirthday(props) {
       };
 
      updateDefaultValues({ ...obj }); 
+    }
   };
 
   // Call get data method on load

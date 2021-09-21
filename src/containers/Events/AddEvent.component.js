@@ -155,8 +155,10 @@ function AddEvent(props) {
   };
 
   const getData = async (id) => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.eventsUrl}${id}/`);
-
+    if(data) {
+      setShowLoader(false);
     data.data.time = data && data.data &&  data.data.time
       ? new Date(
           `${customFunctions.getDate(
@@ -170,6 +172,8 @@ function AddEvent(props) {
       : '';
 
     updateDefaultValues(data.data);
+    }
+
   };
 
   useEffect(() => {
