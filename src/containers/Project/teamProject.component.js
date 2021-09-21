@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import Doughnut from 'stark-doughnut-graph';
+import { Bar } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import { Card, Row, Col, Button, Image } from 'react-bootstrap';
@@ -10,13 +11,13 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import constants from '../../helper/constants';
-import Loader from '../../components/Loader/index';
 
 function TeamProject(props) {
   const teamid = props;
   const teamProjectId = teamid.match.params.teamProjectId;
   customFunctions.setLocalStorage('teamProjectId',teamProjectId);
   const departmentId = customFunctions.getLocalStorage('department');
+  const [barGraphData, setBarGraphData] = useState({});
 
   const items = [
     { to: '/', label: 'Home' },
@@ -43,8 +44,8 @@ function TeamProject(props) {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('');
+  const [projectStatus, setProjectStatus] = useState('');
   const [currentUser, updateCurrentUser] = useState(0);
-  const [isShowLoader,setShowLoader] = useState(false);
 
   // Declare columns
   const columns = [
@@ -107,6 +108,10 @@ function TeamProject(props) {
       label: 'Estimated Hours',
     },
     {
+      id: 'hours_allocated',
+      label: 'Allocated Hours',
+    },
+    {
       id: 'remaining',
       label: 'Remaining Hours',
       render: ({ remaining }) => {
@@ -132,26 +137,28 @@ function TeamProject(props) {
   ];
 
   const getGraphData = async () => {
-    setShowLoader(true);
     const endPoint = `${Api.getProjects}${teamProjectId}/`;
-
-      const url = customFunctions.generateUrl(endPoint);
-      const { data } = await AuthApi.getDataFromServer(url);
-      if(data){
-        setShowLoader(false);
-        const graph = [
-        { x: 'Pending Work', y: data && data.data && data.data.remaining },
+    const url = customFunctions.generateUrl(endPoint);
+    const { data } = await AuthApi.getDataFromServer(url);
+    if(data){
+      const graph = [
+        { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
         { x: 'Complete Work', y: data && data.data && data.data.completion },
       ];
-    setGraphDetails({
-      totalHrsSpend: data && data.data && data.data.spend,
-      totalHrsEstimate: data && data.data && data.data.allocated,
-      totalHrsAllocated: data && data.data && data.data.hours_allocated,
-      projectCompletion: data && data.data && data.data.completion,
-      url: data && data.data && data.data.tw_id,
-    });
-    setGraphData([...graph]);
-      }
+      setGraphDetails({
+        totalHrsSpend: data && data.data && data.data.spend,
+        totalHrsEstimate: data && data.data && data.data.allocated,
+        totalHrsAllocated: data && data.data && data.data.hours_allocated,
+        projectCompletion: data && data.data && data.data.completion,
+        url: data && data.data && data.data.tw_id,
+      });
+      const allocated_hrs = data && data.data && Number(data.data.hours_allocated);
+      const spend_hrs = data && data.data && Number(data.data.spend);
+      const total = Number(allocated_hrs) - Number(spend_hrs);
+
+      setProjectStatus(total);
+      setGraphData([...graph]);
+    }
   };
 
   useEffect(() => {
@@ -161,7 +168,6 @@ function TeamProject(props) {
 
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {
-    setShowLoader(true);
     const newData = []; 
     const page = pageNo || currentPage;
     const endPoint = `${Api.getProjects}${teamProjectId}/`;
@@ -173,7 +179,6 @@ function TeamProject(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -218,8 +223,30 @@ function TeamProject(props) {
         status:data && data.data && data.data.total && data.data.total.status
       });
       setRowData(newData || []);
+      setBarGraphData({
+        labels: [''],
+        datasets: [
+          {
+            label: 'Spent Hours',
+            backgroundColor: '#F4C222',
+            borderWidth: 2,
+            data: [data && data.data && data.data.total && data.data.total.spends]
+          },
+          {
+            label: 'Estimated Hours',
+            backgroundColor: '#FFB6C1',
+            borderWidth: 2,
+            data: [data && data.data && data.data.total && data.data.total.allocated]
+          },
+          {
+            label: 'Allocated Hours',
+            backgroundColor: '#85C51C',
+            borderWidth: 2,
+            data: [data && data.data && data.data.total && data.data.hours_allocated]
+          }
+        ]
+      });
     } else {
-      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -248,20 +275,26 @@ function TeamProject(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
-      <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4">
-        <div className="mb-3">
-          <span>Project Name: {name}</span>
-          <Button className="float-end mb-3" onClick= {() => history.push('/project')} >Back</Button>
-        </div>
-        <Row className="doughnut-graph-section">
+        <Row className="mb-3">
           <Col>
+            <span>Project Name: {name}</span>
+          </Col>
+          <Col>
+           <h3 className={(projectStatus < 0) ? 'text-danger' :'text-primary'}>{(projectStatus < 0) ? 'Project in delay' :'Project Ontrack'}</h3>
+          </Col>
+          <Col>
+            <Button className="float-end mb-3" onClick= {() => history.push('/project')} >Back</Button>
+          </Col>
+        </Row>
+        <Row className="doughnut-graph-section">
+          <Col sm={3}>
             <Doughnut
               // ref={graphref}
               id="dougnut"
               data={graphData}
               subTitle=""
-              // title={`${centerPercentage}%`}
+              title={`${graphDetails.projectCompletion}%`}
               height="150"
               width="150"
               constrainToVisibleArea="true"
@@ -277,21 +310,37 @@ function TeamProject(props) {
                 top: 0,
               }}
               colorScale={['yellow','green']}
-              wrapperSize={{ height: '150px', width: '50%' }}
+              wrapperSize={{ height: '150px', width: '100%' }}
             />
           </Col>
-          <Col>
+          <Col sm={4}>
+          <Bar
+            data={barGraphData}
+             options={{
+                title:{
+                  display:true,
+                  text:'Team Bar Graph',
+                  fontSize:20
+                },
+                legend:{
+                  display:true,
+                  position:'right'
+                }
+              }}
+          />
+          </Col>
+          <Col sm={5}>
           <ul>
             <li>
             Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
             </li>
             <li>
-            Total Hrs Estimated: <span>{graphDetails.totalHrsEstimate}</span>
+            Total Hours Estimated: <span>{graphDetails.totalHrsEstimate}</span>
             </li>
             {
               ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
               <li>
-              Total Hrs Allocated: <span>{graphDetails.totalHrsAllocated}</span>
+              Total Hours Allocated: <span>{graphDetails.totalHrsAllocated}</span>
               </li>
             )} 
             <li>

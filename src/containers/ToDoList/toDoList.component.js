@@ -717,8 +717,6 @@ function ToDoList(props) {
                         return e;
                       });
                       setSelectedId([...arrNew]);
-                      // const arr = selectedId;
-                      // if (selectedId)
                     }}
                     tableClass="table-striped"
                     emptyRender={() => (

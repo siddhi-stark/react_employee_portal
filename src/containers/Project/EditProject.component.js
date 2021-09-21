@@ -9,7 +9,6 @@ import FormSections from './EditProject.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
-import Loader from '../../components/Loader/index';
 
 function EditProject(props) {
   const idProps = props;
@@ -23,10 +22,11 @@ function EditProject(props) {
   // const [hoursAllocated,setHoursAllocated] = useState(''); 
   // const [hourlyRate,setHourlyRate] = useState(''); 
   const [title, setTitle] = useState('');
-  const [isShowLoader,setShowLoader] = useState(false);
+
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: viewOptions ? 'View Project':'Edit Project' }];
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
+  let filterOptions = {};
 
   // Get user role
   const getUserRole = async() => {
@@ -46,22 +46,7 @@ function EditProject(props) {
           const s = { ...section };
           s.fields = section.fields.map((item) => {
             const itemData = item;
-            if (
-              item.name === 'name' ||
-              item.name === 'completion' ||
-              item.name === 'start_date' ||
-              item.name === 'end_date' ||
-              item.name === 'allocated' ||
-              item.name === 'hourly_rate' ||
-              item.name === 'estimate_hrs' ||
-              item.name === 'project_cost' ||
-              item.name === 'coordinator' ||
-              item.name === 'status' ||
-              item.name === 'hours_allocated' ||
-              item.name === 'hourly_cost' ||
-              item.name === 'cost_allocated'
-            )
-              itemData.disabled = true;
+            itemData.disabled = true;
             return itemData;
           });
           return s;
@@ -72,17 +57,10 @@ function EditProject(props) {
           const s = { ...section };
           s.fields = section.fields.map((item) => {
             const itemData = item;
-            if (
-              item.name === 'estimate_hrs' ||
-              item.name === 'hourly_rate' ||
-              item.name === 'project_cost' ||
-              item.name === 'coordinator' ||
-              item.name === 'comments' ||
-              item.name === 'hours_allocated' ||
-              item.name === 'hourly_cost' ||
-              item.name === 'cost_allocated'
-            )
-              itemData.disabled = false;
+            const notdisable = ['estimate_hrs','hourly_rate','project_cost','coordinator','comments','hours_allocated','hourly_cost','cost_allocated'];
+            if (notdisable.includes(item.name)){
+                  itemData.disabled = false;
+              }
             return itemData;
           });
           return s;
@@ -107,28 +85,43 @@ function EditProject(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    setShowLoader(true);
+    const teamArr = [];
+    formValues && formValues.addmore && formValues.addmore.map((add)=>{
+        return teamArr.push({
+          team: add.team_id && add.team_id.value,
+          value: Number(add.percentage),
+          project: Number(projectId)
+        });
+    });
+
     const postData = {
       hours_allocated: Number(formValues.hours_allocated),
       hourly_cost: Number(formValues.hourly_cost),
       cost_allocated: Number(formValues.cost_allocated),
       coordinator: formValues.coordinator ? Number(formValues.coordinator.value) : '',
-      comments: formValues.comments
+      comments: formValues.comments,
+      project_dept_time_list:teamArr
     };
-      const { data } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, postData);
+      const { data, message } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, postData);
       if(data) {
-        setShowLoader(false);
         swal(data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(okAction => {
+          if (okAction) {
+            history.push('/project');
+          }
+        });
+      } else {
+         swal(message, '', 'error', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         });
       }
-      history.push('/project');
   };
     
   // Get data for form
   const getData = async () => {
-    setShowLoader(true);
     const { data, message } = await AuthApi.getDataFromServer(`${Api.projectDetails}${projectId}/`);
     // console.log('data',data);
 
@@ -140,9 +133,8 @@ function EditProject(props) {
     }
     
     if (data) {
-      setShowLoader(false);
-      const start = data && data.data && new Date(data.data.start_date);
-      const end = data && data.data && new Date(data.data.end_date);
+      const start = data && data.data && data.data.start_date && new Date(data.data.start_date);
+      const end = data && data.data && data.data.end_date && new Date(data.data.end_date);
       const coordinatorValue = data && data.data && data.data.coordinator_name
         ? {
             label: data.data.coordinator_name,
@@ -150,14 +142,22 @@ function EditProject(props) {
           }
         : '';
 
-        const complt = data && data.data && data.data.completion + '%'; // eslint-disable-line
+      const complt = data && data.data && data.data.completion + '%'; // eslint-disable-line
+      const addmoreData = [];
 
+      data && data.data && data.data.project_dept_time_list && data.data.project_dept_time_list.map((pm)=>{
+        return addmoreData.push({
+           team_id:{label:pm.team_name,value:pm.team},
+           percentage: pm.value
+        });
+      });
       const obj = {
         ...data.data,
         start_date:start,
         end_date:end,
         coordinator: coordinatorValue,
-        completion:complt
+        completion:complt,
+        addmore: [...addmoreData] 
       };
 
       updateDefaultValues({ ...obj }); // updateDefaultValues(data);
@@ -168,6 +168,7 @@ function EditProject(props) {
   useEffect(() => {
     setTitle(viewOptions ? 'View Project':'Edit Project');
     getData();
+    updateDefaultValues({hourly_cost:17});
   }, []);
       
   const getCoordinator = async () => {
@@ -187,8 +188,10 @@ function EditProject(props) {
     });
     const allOptions = {
       ...options,
+      ...filterOptions,
       coordinator: dpOptions
     };
+    filterOptions = {...allOptions};
     updateOptions(allOptions);
   };
 
@@ -214,15 +217,14 @@ function EditProject(props) {
   //   console.log('cost',cost);
   // };
 
-	return (
-		<>
-		 <Helmet title={title} />
+  return (
+    <>
+     <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
         <Breadcrumb items={items} />
       </div>
-      <Loader showLoader={isShowLoader} needFullPage={false} />
-		<div className='mt-5'>
+    <div className='mt-5'>
     <Card body>
      {viewOptions && (
         <Button className="float-end" onClick= {() => history.push('/project')} >Back</Button>
@@ -234,7 +236,7 @@ function EditProject(props) {
         onFormSubmit={(formValues) => {submitForm(formValues);}}
         options={options}
         callbacks={{
-          // onHoursChange: (value) => { onHoursAllocated(value); },
+          // onHoursChange: (value) => { console.log('onHoursChange',value); },
           // onHourRate: (value) => {onHourlyRate(value);}
         }}
         defaultFormValues={defaultValues}
@@ -249,10 +251,10 @@ function EditProject(props) {
         }}
       />
     </Card>
-		</div>
-		</>
+    </div>
+    </>
 
-		);
+    );
 }
 
 export default withRouter(EditProject);

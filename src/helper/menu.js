@@ -56,7 +56,27 @@ const menu = [
     submenu: [],
     roleaccess: [1],
   },
-
+ {
+    title: 'Project',
+    path: '/project',
+    icon: 'project.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4],
+  },
+  {
+    title: 'Project Scheduler',
+    path: '/scheduler',
+    icon: 'prostatus.svg',
+    submenu: [],
+    roleaccess: [1,2,4],
+  },
+  {
+    title: 'Team Project Scheduler',
+    path: '/team-scheduler',
+    icon: 'leaves.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4],
+  },
   {
     title: 'Designation',
     path: '/designation',
@@ -113,7 +133,7 @@ const menu = [
     path: '/recruitment',
     icon: 'recruitement.svg',
     roleaccess: [5,2],
-  }, 
+  },
   {
     title: 'Candidates',
     path: '/candidates',
@@ -189,6 +209,14 @@ const menu = [
     ],
     roleaccess: [1,2,3,6,5],
   },
+   {
+    title: 'Greetings',
+    path: '/greetings',
+    icon: 'report.svg',
+    submenu: [],
+
+    roleaccess: [2,3,5,6],
+  },
   {
     title: 'Reports',
     path: '/report',
@@ -237,13 +265,7 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1,3,5,6],
   // },
-   {
-    title: 'Greetings',
-    path: '/greetings',
-    icon: 'report.svg',
-    submenu: [],
-    roleaccess: [2,3,5,6],
-  },
+  
   {
     title: 'Log Out',
     path: '#',
