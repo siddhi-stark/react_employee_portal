@@ -1,6 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import FormSections from './birthday.json';
@@ -249,14 +249,19 @@ function AddBirthday(props) {
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
           <Breadcrumb items={items} />
+    
         </div>
       </div> 
       <Loader showLoader={isShowLoader} needFullPage={false} />
-		<div className="mt-5">
-		<Card>
 
-  <StarkFormBuilder
-    containerClass='mt-4 mb-4'
+      <div className="mt-4 edit-timelog">
+        <Card body>
+        {viewOptions ? (
+
+        <Button className="float-end" onClick= {() => history.push('/greetings')} >Back</Button>
+          ) : ''}
+        <StarkFormBuilder
+    containerClass='mt-5 mb-4'
     formHeaderClass=''
     formSections={FormSections || jsonSchema}
     formHeading="tbirthday"
@@ -283,8 +288,8 @@ function AddBirthday(props) {
       history.push('/greetings');
     }}
   />
-		</Card>
-		</div>
+      </Card>
+      </div>
     
 		</>
 
