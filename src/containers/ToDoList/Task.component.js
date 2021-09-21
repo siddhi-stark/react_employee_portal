@@ -8,6 +8,7 @@ import customFunctions from '../../helper/customFunctions';
 import { ModalInput, TextInput, Datepicker } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import Loader from '../../components/Loader/index';
 
 function Task(props) {
   const validator = useRef(new SimpleReactValidator());
@@ -16,7 +17,8 @@ function Task(props) {
   const [id, setId] = useState(null);
   const [disableButton, setDisableButton] = useState(false);
   const [taskList, setTaskList] = useState([]);
-
+  const [isShowLoader,setShowLoader] = useState(false);
+  
   const defaultTask = {
 
     id: '',
@@ -33,8 +35,10 @@ function Task(props) {
   };
 
   const getTaskById = async (tid) => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.taskUrl}${tid}/`);
     if (data) {
+      setShowLoader(false);
       const dt = new Date();
       const startTm = data.data.start_time;
       const hrmin = startTm.split(':');
@@ -92,6 +96,7 @@ function Task(props) {
   }, [id]);
 
   const onAddTask = async () => {
+    setShowLoader(true);
     const selectedTask = [];
 
     taskList.map((task) => {
@@ -125,6 +130,7 @@ function Task(props) {
     const { data } = await callback(endPoint, id ? selectedTask[0] : payload);
 
     if (data) {
+      setShowLoader(false);
       props.handleModalCLose(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
@@ -135,6 +141,7 @@ function Task(props) {
         }
       });
     } else {
+      setShowLoader(false);
       setDisableButton(false);
       swal(data && data.message[0], '', 'error');
       props.handleModalCLose(false);
@@ -176,6 +183,7 @@ function Task(props) {
 
   return (
     <>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <ModalInput
         size="lg"
         centered
