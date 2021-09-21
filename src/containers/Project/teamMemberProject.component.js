@@ -8,6 +8,7 @@ import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function TeamMemberProject(props) {
   const teamid = props;
@@ -27,7 +28,8 @@ function TeamMemberProject(props) {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [isShowLoader,setShowLoader] = useState(false);
+  
   // Declare columns
   const columns = [
     {
@@ -123,6 +125,7 @@ function TeamMemberProject(props) {
 
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.departmentReportUrl}`;
     const params = {
@@ -134,11 +137,13 @@ function TeamMemberProject(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setRowData((data && data.data && data.data.project_data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -158,6 +163,7 @@ function TeamMemberProject(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4 schedular">
        <span>{`${teamMemberName} Projects and Work`}</span>
          <Button className="float-end mb-3" onClick= {() => history.push(`/team/${getTeamId}`)} >Back</Button>

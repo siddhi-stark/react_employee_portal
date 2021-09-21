@@ -6,6 +6,13 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6],
   },
+  {
+    title: 'Project',
+    path: '/project',
+    icon: 'project.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4],
+  },
    {
     title: 'Quotes',
     path: '/quotes',
@@ -175,13 +182,7 @@ const menu = [
     submenu: [],
     roleaccess: [4],
   },
-  {
-    title: 'Project',
-    path: '/project',
-    icon: 'project.svg',
-    submenu: [],
-    roleaccess: [1,2,3,4],
-  },
+  
   {
     title: 'Project Scheduler',
     path: '/scheduler',
