@@ -7,6 +7,7 @@ import FormSections from './addTechnology.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import Loader from '../../components/Loader/index';
 
 function AddTechnology(props) {
 	// Variable declarations
@@ -14,11 +15,12 @@ function AddTechnology(props) {
 	const [options, updateOptions] = useState({}); // eslint-disable-line
 	const [currentUser, updateCurrentUser] = useState(0); // eslint-disable-line
 	const [count, forceUpdate] = useState(0); // eslint-disable-line
+	const [isShowLoader,setShowLoader] = useState(false);
 	const technologyId = props;
 
 	// Submit Form
 	const submitForm = async (formValues) => {
-
+		setShowLoader(true);
 		const postData = {
 			name: formValues.name,
 			id:technologyId.technologyId
@@ -33,11 +35,13 @@ function AddTechnology(props) {
       : Api.employeeStackUrl;
     const { data, message } = await callback(endPoint, payload);
 		if (!data) {
+			setShowLoader(false);
 			swal(message, '', 'error');
 		}
 		// show error
 		swal(data && data.message[0], '', 'success').then((result) => {
 			if (result) {
+				setShowLoader(false);
 				$('.clearTechnology form').trigger('reset');
 				props.onChange();
 				updateDefaultValues({});
@@ -71,6 +75,8 @@ function AddTechnology(props) {
 	}, [technologyId]);
 
 	return (
+		<>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
 		<StarkFormBuilder
 			containerClass="clearTechnology"
 			formHeaderClass=""
@@ -90,6 +96,7 @@ function AddTechnology(props) {
 			onFormReset={() => {
 			}}
 		/>
+		</>
 	);
 }
 

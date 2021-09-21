@@ -10,6 +10,7 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import AddNote from './AddNote.component';
+import Loader from '../../components/Loader/index';
 
 function EmployeeTeamLeaves() {
   // Declare columns
@@ -128,10 +129,11 @@ function EmployeeTeamLeaves() {
   const [modalShow, setModalShow] = useState(false);
   const [statusId, setStatusId] = useState('');
   const [leaveId, setLeaveId] = useState('');
-
+  const [isShowLoader,setShowLoader] = useState(false);
   const history = useHistory();
 
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.leavesUrl}`;
 
@@ -144,6 +146,7 @@ function EmployeeTeamLeaves() {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -156,6 +159,7 @@ function EmployeeTeamLeaves() {
       });
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -177,6 +181,7 @@ function EmployeeTeamLeaves() {
         <h2 className="main-content-title tx-24 mg-b-5">Employee Leaves</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
           <Card>
             <Card.Header>

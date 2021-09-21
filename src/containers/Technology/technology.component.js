@@ -11,6 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import AddTechnology from './AddTechnology.component';
+import Loader from '../../components/Loader/index';
 
 function Technology() {
   // Declare variable
@@ -21,7 +22,7 @@ function Technology() {
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [technologyId, setTechnologyId] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(5);
-
+  const [isShowLoader,setShowLoader] = useState(false);
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
@@ -77,6 +78,7 @@ function Technology() {
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeStackUrl}`;
     const filterList = filterData && !customFunctions.checkIfEmpty(filterData, 'O') ? customFunctions.jsonParse(filterData) : {};
@@ -90,6 +92,7 @@ function Technology() {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       // setLimit(data.paginator.limit);
       setItemsPerPage(data.paginator.limit);
@@ -104,6 +107,7 @@ function Technology() {
 
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message,'','error');
     }
   };
@@ -172,6 +176,7 @@ function Technology() {
         <h2 className="main-content-title tx-24 mg-b-5">Technology</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Accordion defaultActiveKey="0">

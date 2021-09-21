@@ -9,6 +9,7 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import Loader from '../../components/Loader/index';
 
 function Leaves() {
 	const handleActionCallback = ({ id, status_name, leave_from_date }) => { // eslint-disable-line
@@ -107,11 +108,13 @@ function Leaves() {
 	const limit = 10;
 	const [title, setTitle] = useState('');
 	const [userRole, setUserRole] = useState('');
+	const [isShowLoader,setShowLoader] = useState(false);
 	const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
 
 	const history = useHistory();
 
 	const getRowData = async (pageNo = 1) => {
+		setShowLoader(true);
 		const page = pageNo || currentPage;
 		const endPoint = `${Api.leavesUrl}`;
 
@@ -125,6 +128,7 @@ function Leaves() {
 		const { data, message } = await AuthApi.getDataFromServer(url);
 
 		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+			setShowLoader(false);
 			setTotalCount(data.paginator.total_count);
 			setItemsPerPage(data.paginator.limit);
 			setCurrentPage(Number(data.paginator.current_page));
@@ -136,6 +140,7 @@ function Leaves() {
 			});
 			setRowData((data && data.data) || []);
 		} else {
+			setShowLoader(false);
 			swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -184,6 +189,7 @@ function Leaves() {
 				<h2 className="main-content-title tx-24 mg-b-5">My Leaves</h2>
 				<Breadcrumb items={items} />
 			</div>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area">
 					<Card>
 						<Card.Header>
