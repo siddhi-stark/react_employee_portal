@@ -390,7 +390,7 @@
 						"fields": [],
 						"optionCallback": "",
 						"optionsCallbackUrl": "",
-						"options": [{"label":"Design","value":"1"},{"label":"Development","value":"2"},{"label":"Quality Analysis","value":"3"},{"label":"Project Management","value":"4"}]
+						"options": [{"label":"Project Management","value":"1"},{"label":"Development","value":"2"},{"label":"Design","value":"3"},{"label":"Quality Analysis","value":"4"}]
 					},
 					{
 						"name": "percentage",
