@@ -101,6 +101,7 @@ function Greetings() {
 			page,
 			limit,
 			sort_by: 'date',
+			sort_direction: 'descending'
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
