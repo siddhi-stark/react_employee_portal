@@ -8,18 +8,19 @@ import {ModalInput} from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';    
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function AddNote(props) {
   const note = props.note; //eslint-disable-line
 
-    const value = customFunctions.getLocalStorage('isClicked');
+  const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote,setShowNote] = useState(false);
   const [id,setStatusId] = useState('');
   const [status,setStatusData] = useState('');
-
+  const [isShowLoader,setShowLoader] = useState(false);
   // Get user role
   const getUserRole = async() => {
     const roleId = await localStorage.getItem('role');
@@ -32,7 +33,7 @@ function AddNote(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-
+    setShowLoader(true);
     const postData = {
     	notes:formValues ? formValues.notes : '',
     	ids: [id],
@@ -42,6 +43,7 @@ function AddNote(props) {
       const { data } = await AuthApi.putDataToServer(`${Api.bulkStatusUrl}`, postData);
       
       if(data) {
+        setShowLoader(false);
         props.handleModalCLose(false);
            swal({
         title: data.message[0],
@@ -82,6 +84,7 @@ function AddNote(props) {
 
 	return (
 		<>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
        <ModalInput
         size="sm"
         centered

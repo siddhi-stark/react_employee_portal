@@ -95,9 +95,11 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	};
 
 	const getData = async (id) => {
+		setShowLoader(true);
 		const { data } = await AuthApi.getDataFromServer(`${Api.holidayUrll}${id}/`);
 	   
 	   if(data){
+	   	  setShowLoader(false);
 		   	data.data.date = data.data.date ? new Date(customFunctions.getDate(data.data.date)) : '';
 				updateDefaultValues(data.data);
 	   }

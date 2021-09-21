@@ -133,10 +133,12 @@ function NewInterviewRounds(props) {
   };
 
   const getData = async (interviewerId) => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.roundsUrl}?applicant_id=${interviewerId}`
     );
     if (data) {
+      setShowLoader(false);
       let newTime = '';
       let newDate = '';
       const interviewData = [];

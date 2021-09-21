@@ -89,9 +89,12 @@ useEffect(() => {
     
   // Get data for form
   const getData = async () => {
+    setShowLoader(true);
+
     const id = customFunctions.getLocalStorage('id');
     const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${id}/`);
       if(data && data.success){
+      setShowLoader(false);  
       data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
       data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
       data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';

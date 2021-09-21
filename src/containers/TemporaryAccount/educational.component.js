@@ -6,6 +6,7 @@ import FormSections from './educationalFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function EducationalDetails(props) {
   const accProps = { props };
@@ -16,7 +17,7 @@ function EducationalDetails(props) {
   const nameProps = accProps.props.name;
   const emailProps = accProps.props.email;
   const [docId, setDocId] = useState([]);
-
+  const [isShowLoader,setShowLoader] = useState(false);
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   // const [options, updateOptions] = useState({});
@@ -133,6 +134,7 @@ function EducationalDetails(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
 
     let sscfileUrl = '';
     let sscfileUrlId = '';
@@ -199,6 +201,7 @@ function EducationalDetails(props) {
       postData
     );
    if (!data) {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -211,6 +214,7 @@ function EducationalDetails(props) {
       // show error
       // return;
     } else {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -227,6 +231,7 @@ function EducationalDetails(props) {
 
   return (
     <>
+     <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass=""
         formHeaderClass=""

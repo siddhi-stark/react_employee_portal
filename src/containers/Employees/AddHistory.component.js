@@ -79,9 +79,11 @@ function AddHistory(props) {
 
   // Get data for form
   const getData = async (id, designation) => {
+    setShowLoader(true);
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
      let des = {};
      if(data){
+     setShowLoader(false);
      await designation.map((ds) => {
        if(data.data.designation.toString() === ds.name.toString()) {
          des = {

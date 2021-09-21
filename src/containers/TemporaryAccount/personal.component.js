@@ -6,6 +6,7 @@ import FormSections from './personalFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function Personal(props) {
   const accProps = { props };
@@ -21,7 +22,7 @@ function Personal(props) {
   // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [docId, setDocId] = useState(null);
-
+  const [isShowLoader,setShowLoader] = useState(false);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -122,6 +123,8 @@ function Personal(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
+
     let pancardfileUrl ='';
     let pancardfileUrlId ='';
     let adharfileUrl ='';
@@ -177,6 +180,7 @@ function Personal(props) {
     );
 
     if (!data) {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -186,6 +190,7 @@ function Personal(props) {
         swal.close();
       });
     } else {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -201,6 +206,7 @@ function Personal(props) {
 
   return (
     <>
+     <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass=""
         formHeaderClass=""

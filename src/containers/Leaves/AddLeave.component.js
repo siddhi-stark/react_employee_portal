@@ -254,6 +254,7 @@ function AddLeave(props) {
 
   // Get data for form
   const getData = async () => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.leavesUrl}${leaveId}/`
     );
@@ -262,6 +263,7 @@ function AddLeave(props) {
       return;
     }
     if(data && data.data){
+      setShowLoader(false);
       setStartDate(data.data.leave_from_date);
       setEndDate(data.data.leave_to_date);
       setStatus(data.data.status_name);

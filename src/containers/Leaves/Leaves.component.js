@@ -149,6 +149,7 @@ function Leaves() {
 	};
 
 	const changeStatus = async (id) => {
+		setShowLoader(true);
 		const endPoint = `${Api.leavesUrl}${id}/`;
 
 		const postData = {
@@ -160,6 +161,7 @@ function Leaves() {
     const { data, message } = await callback(endPoint, postData);
 
 		if (data) {
+			setShowLoader(false);
 			swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -168,6 +170,7 @@ function Leaves() {
         swal.close();
       });
 		} else {
+			setShowLoader(false);
 			swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,

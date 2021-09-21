@@ -7,7 +7,7 @@ import FormSections from './offerletter.json';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-
+import Loader from '../../components/Loader/index';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
@@ -20,7 +20,7 @@ function GenerateOfferLetter() {
   const [emailBody, setEmailBody] = useState('');
   const [document, setDocument] = useState('');
   const [checked, setChecked] = useState('');
-
+  const [isShowLoader,setShowLoader] = useState(false);
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
 
@@ -85,6 +85,7 @@ return;
   };
 
   const sendMail = async (body, doc) => {
+    setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
     let EmailBody  = '';
     const reasonLabel = checked ? 'with' : 'without';
@@ -101,8 +102,10 @@ return;
         postData
       );
       if(!customFunctions.checkIfEmpty(data, 'O') && data.data){
+        setShowLoader(false);
         EmailBody = data.data.body;
       } else {
+        setShowLoader(false);
         swal(message, '', 'error', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -159,6 +162,7 @@ return;
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
     // const Applicant = customFunctions.getLocalStorage('applicantName');
     const postData = {
@@ -179,6 +183,7 @@ return;
       postData
     );
     if (data) {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -195,6 +200,7 @@ return;
         swal.close();
       });
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -211,6 +217,7 @@ return;
           <Breadcrumb items={items} />
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <div className="mt-5">
       <Card body>

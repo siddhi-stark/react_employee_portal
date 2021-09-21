@@ -9,6 +9,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import Loader from '../../components/Loader/index';
 
 const validator = new SimpleReactValidator();
 
@@ -40,6 +41,7 @@ function Profile() {
   // const [image, setImage] = useState('');
   const [profileId, setProfileId] = useState('');
   const [companyList,setCompanyList] = useState([]);
+  const [isShowLoader,setShowLoader] = useState(false);
 
   const Department = [
     {
@@ -71,8 +73,10 @@ function Profile() {
 
   const event = new Event('ProfileUpdate', { isUpdated: true });
   const getProfile = async () => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
     if (!customFunctions.checkIfEmpty(data.data, 'O')) {
+      setShowLoader(false);
       setEmail(data.data.email);
       setName(data.data.full_name);
       setMobile(data.data.mobile);
@@ -106,10 +110,12 @@ function Profile() {
   };
 
    const getEmployeeHIstory = async () => {
+    setShowLoader(true); 
     const employeeId = customFunctions.getLocalStorage('userId');
     const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
+      setShowLoader(false);
       setCompanyList(data.data);
     }
   };
@@ -206,6 +212,7 @@ function Profile() {
           <Breadcrumb items={items} />
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body>
         <div>
           <div className="mb-3">

@@ -60,11 +60,13 @@ function BasicInformation(props) {
 
   // Get data for form
   const getData = async (technology, id) => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.applicantsUrl}${id}/`
     );
     
     if (data) {
+      setShowLoader(false);
       customFunctions.setLocalStorage('notes', data.data.notes);
 
       const ds = data.data.applied_for_id

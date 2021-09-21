@@ -48,6 +48,7 @@ function ProfessionalDetails(props) {
   }, [currentUser]);
 
    const getData = async (profId) => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${profId}/`);
      //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
      //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
@@ -60,6 +61,7 @@ function ProfessionalDetails(props) {
      //  } : ''
 
      if(data) {
+     setShowLoader(false);
      const obj = {
        ...data.data,
        // applied_for: ds
