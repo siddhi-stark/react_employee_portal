@@ -123,6 +123,7 @@ function Leaves() {
 			limit,
       my_leaves: true,
 			sort_by: 'leave_from_date',
+			sort_direction: 'descending',
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);

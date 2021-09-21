@@ -9,7 +9,7 @@ import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-// import Loader from '../../components/Loader/index';
+import Loader from '../../components/Loader/index';
 
 function AddQuotes(props) {
   const history = useHistory();
@@ -25,7 +25,7 @@ function AddQuotes(props) {
   // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [quotesId, setQuotesId] = useState('');
-  // const [isShowLoader, setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
 
   // Get user role
   const getUserRole = async () => {
@@ -39,7 +39,7 @@ function AddQuotes(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-    // setShowLoader(true);
+    setShowLoader(true);
 
     const payload = customFunctions.cleanObject(formValues);
 
@@ -52,12 +52,12 @@ function AddQuotes(props) {
     const { data, message } = await callback(endPoint, payload);
 
     if (!data) {
-      // setShowLoader(false);
+      setShowLoader(false);
       swal(message, '', 'error');
     }
     // show error
     swal(data && data.message[0], '', 'success').then((result) => {
-        // setShowLoader(false);
+        setShowLoader(false);
       if (result) {
         // setShowLoader(false);
         history.push('/quotes');
@@ -94,6 +94,7 @@ function AddQuotes(props) {
           <Breadcrumb items={items} />
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Card>
           <Card.Header>

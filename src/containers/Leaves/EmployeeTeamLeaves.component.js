@@ -141,6 +141,7 @@ function EmployeeTeamLeaves() {
       page,
       limit,
       sort_by: 'leave_from_date',
+      sort_direction: 'descending',
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
