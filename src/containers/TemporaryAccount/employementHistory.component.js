@@ -17,7 +17,6 @@ function EmployementHistory(props) {
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
 
   const formSchema = [...FormSections];
@@ -168,11 +167,9 @@ function EmployementHistory(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        // updateDefaultValues({});
         swal.close();
       });
-      // show error
-      // return;
+      
     } else {
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
@@ -184,7 +181,6 @@ function EmployementHistory(props) {
         swal.close();
       });
     }
-    // Perform success actions
   };
 
   return (
@@ -197,7 +193,6 @@ function EmployementHistory(props) {
         onFormSubmit={(formValues) => {
           submitForm(formValues);
         }}
-        // options={options}
         callbacks={{}}
         defaultFormValues={defaultValues}
         currentUser={currentUser}

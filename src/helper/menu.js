@@ -45,7 +45,7 @@ const menu = [
   {
     title: 'Project Scheduler',
     path: '/scheduler',
-    icon: 'report.svg',
+    icon: 'prostatus.svg',
     submenu: [],
     roleaccess: [1,2,4],
   },
@@ -188,6 +188,13 @@ const menu = [
     ],
     roleaccess: [1,2,3,6,5],
   },
+   {
+    title: 'Greetings',
+    path: '/greetings',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [2,3,5,6],
+  },
   {
     title: 'Reports',
     path: '/report',
@@ -236,13 +243,7 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1,3,5,6],
   // },
-   {
-    title: 'Greetings',
-    path: '/greetings',
-    icon: 'report.svg',
-    submenu: [],
-    roleaccess: [2,3,5,6],
-  },
+  
   {
     title: 'Log Out',
     path: '#',
