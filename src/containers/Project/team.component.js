@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
+import Doughnut from 'stark-doughnut-graph';
+import { Bar } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 // import StarkFormBuilder from 'stark-form-builder';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Row, Col } from 'react-bootstrap';
 // import FormSections from './formschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
@@ -30,13 +32,11 @@ function Team(props) {
   // Declare variable column state
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  // const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  // const [departmentName, setDepartmentName] = useState('');
   const [projectName, setProjectName] = useState('');
   const departmentId = customFunctions.getLocalStorage('department');
   const [currentUser, updateCurrentUser] = useState(0);
-  // const [filterData, setFilterData] = useState({});
+  const [barGraphData, setBarGraphData] = useState({});
 
   // Declare columns
   const columns = [
@@ -138,6 +138,34 @@ function Team(props) {
       setCurrentPage(Number(data.paginator.current_page));
       // setDepartmentName(data && data.data && data.data.department);
       setProjectName(data && data.data && data.data.project_name);
+      data && data.data && data.data.employees_data && data.data.employees_data.map((emp)=>{
+        if(emp.emp_name === 'Total') {
+        setBarGraphData({
+          labels: [''],
+          datasets: [
+            {
+              label: 'Spent Hours',
+              backgroundColor: '#F4C222',
+              borderWidth: 2,
+              data: [emp.spends]
+            },
+            {
+              label: 'Estimated Hours',
+              backgroundColor: '#FFB6C1',
+              borderWidth: 2,
+              data: [emp.allocated]
+            },
+            {
+              label: 'Allocated Hours',
+              backgroundColor: '#85C51C',
+              borderWidth: 2,
+              data: [emp.hours_allocated]
+            }
+          ]
+        });
+      }
+      return emp;
+      });
       setRowData((data && data.data && data.data.employees_data) || []);
     } else {
       swal(message, '', 'error', {
@@ -170,10 +198,78 @@ function Team(props) {
         <Breadcrumb items={items} />
       </div>
       <Card body className="mt-4">
-      <div className="mb-3">
+      <Row className="mb-3">
+         <Col>
           <span>{getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}</span>
+          </Col>
+          <Col>
          <Button className="float-end mb-3" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
-        </div>
+          </Col>
+        </Row>
+
+        <Row className="doughnut-graph-section">
+          <Col sm={3}>
+            <Doughnut
+              // ref={graphref}
+              id="dougnut"
+              // data={graphData}
+              subTitle=""
+              // title={`${graphDetails.projectCompletion}%`}
+              height="150"
+              width="150"
+              constrainToVisibleArea="true"
+              labels={({ datum }) => `${datum.x}: ${datum.y}%`}
+              legendOrientation="vertical"
+              legendPosition="right"
+              // legendData={legendData}
+              legends={{}}
+              padding={{
+                bottom: 0,
+                left: 10,
+                right: 10, // Adjusted to accommodate legend
+                top: 0,
+              }}
+              colorScale={['yellow','green']}
+              wrapperSize={{ height: '150px', width: '100%' }}
+            />
+          </Col>
+          <Col sm={4}>
+          <Bar
+            data={barGraphData}
+             options={{
+                title:{
+                  display:true,
+                  text:'Team Bar Graph',
+                  fontSize:20
+                },
+                legend:{
+                  display:true,
+                  position:'right'
+                }
+              }}
+          />
+          </Col>
+          <Col sm={5}>
+          <ul>
+            <li>
+            Total Hours Spent: <span>11</span>
+            </li>
+            <li>
+            Total Hours Estimated: <span>100</span>
+            </li>
+            {
+              ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
+              <li>
+              Total Hours Allocated: <span>15</span>
+              </li>
+            )} 
+            <li>
+            Project Completion: <span>50%</span>
+            </li>
+            </ul>
+          </Col>
+        </Row>
+        <hr />
             <CustomTable
               columns={columns}
               rows={rowData}

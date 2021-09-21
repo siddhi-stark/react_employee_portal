@@ -26,6 +26,7 @@ function EditProject(props) {
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: viewOptions ? 'View Project':'Edit Project' }];
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
+  let filterOptions = {};
 
   // Get user role
   const getUserRole = async() => {
@@ -45,22 +46,7 @@ function EditProject(props) {
           const s = { ...section };
           s.fields = section.fields.map((item) => {
             const itemData = item;
-            if (
-              item.name === 'name' ||
-              item.name === 'completion' ||
-              item.name === 'start_date' ||
-              item.name === 'end_date' ||
-              item.name === 'allocated' ||
-              item.name === 'hourly_rate' ||
-              item.name === 'estimate_hrs' ||
-              item.name === 'project_cost' ||
-              item.name === 'coordinator' ||
-              item.name === 'status' ||
-              item.name === 'hours_allocated' ||
-              item.name === 'hourly_cost' ||
-              item.name === 'cost_allocated'
-            )
-              itemData.disabled = true;
+            itemData.disabled = true;
             return itemData;
           });
           return s;
@@ -71,17 +57,10 @@ function EditProject(props) {
           const s = { ...section };
           s.fields = section.fields.map((item) => {
             const itemData = item;
-            if (
-              item.name === 'estimate_hrs' ||
-              item.name === 'hourly_rate' ||
-              item.name === 'project_cost' ||
-              item.name === 'coordinator' ||
-              item.name === 'comments' ||
-              item.name === 'hours_allocated' ||
-              item.name === 'hourly_cost' ||
-              item.name === 'cost_allocated'
-            )
-              itemData.disabled = false;
+            const notdisable = ['estimate_hrs','hourly_rate','project_cost','coordinator','comments','hours_allocated','hourly_cost','cost_allocated'];
+            if (notdisable.includes(item.name)){
+                  itemData.disabled = false;
+              }
             return itemData;
           });
           return s;
@@ -106,22 +85,39 @@ function EditProject(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    const teamArr = [];
+    formValues && formValues.addmore && formValues.addmore.map((add)=>{
+        return teamArr.push({
+          team: add.team_id && add.team_id.value,
+          value: Number(add.percentage),
+          project: Number(projectId)
+        });
+    });
 
     const postData = {
       hours_allocated: Number(formValues.hours_allocated),
       hourly_cost: Number(formValues.hourly_cost),
       cost_allocated: Number(formValues.cost_allocated),
       coordinator: formValues.coordinator ? Number(formValues.coordinator.value) : '',
-      comments: formValues.comments
+      comments: formValues.comments,
+      project_dept_time_list:teamArr
     };
-      const { data } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, postData);
+      const { data, message } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, postData);
       if(data) {
         swal(data.message[0], '', 'success', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
+        }).then(okAction => {
+          if (okAction) {
+            history.push('/project');
+          }
+        });
+      } else {
+         swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
         });
       }
-      history.push('/project');
   };
     
   // Get data for form
@@ -137,8 +133,8 @@ function EditProject(props) {
     }
     
     if (data) {
-      const start = data && data.data && new Date(data.data.start_date);
-      const end = data && data.data && new Date(data.data.end_date);
+      const start = data && data.data && data.data.start_date && new Date(data.data.start_date);
+      const end = data && data.data && data.data.end_date && new Date(data.data.end_date);
       const coordinatorValue = data && data.data && data.data.coordinator_name
         ? {
             label: data.data.coordinator_name,
@@ -164,6 +160,7 @@ function EditProject(props) {
   useEffect(() => {
     setTitle(viewOptions ? 'View Project':'Edit Project');
     getData();
+    updateDefaultValues({hourly_cost:17});
   }, []);
       
   const getCoordinator = async () => {
@@ -183,12 +180,40 @@ function EditProject(props) {
     });
     const allOptions = {
       ...options,
+      ...filterOptions,
       coordinator: dpOptions
     };
+    filterOptions = {...allOptions};
     updateOptions(allOptions);
   };
 
+  const getTeam = async () => {
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
+    if(!data) {
+     swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      const dpOptions = [];
+      data && data.data && data.data.team && data.data.team.map((op) => {
+        // Change appropriate keys
+        dpOptions.push({label: op.name, value: op.id});
+        return op;
+      });
+      const allOptions = {
+        ...options,
+        ...filterOptions,
+        team_id: dpOptions
+      };
+      filterOptions = {...allOptions};
+      updateOptions(allOptions);
+    };
+  };
+
   useEffect(() => {
+    getTeam();
     getCoordinator();
   }, []);
 
@@ -210,14 +235,14 @@ function EditProject(props) {
   //   console.log('cost',cost);
   // };
 
-	return (
-		<>
-		 <Helmet title={title} />
+  return (
+    <>
+     <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
         <Breadcrumb items={items} />
       </div>
-		<div className='mt-5'>
+    <div className='mt-5'>
     <Card body>
      {viewOptions && (
         <Button className="float-end" onClick= {() => history.push('/project')} >Back</Button>
@@ -229,7 +254,7 @@ function EditProject(props) {
         onFormSubmit={(formValues) => {submitForm(formValues);}}
         options={options}
         callbacks={{
-          // onHoursChange: (value) => { onHoursAllocated(value); },
+          // onHoursChange: (value) => { console.log('onHoursChange',value); },
           // onHourRate: (value) => {onHourlyRate(value);}
         }}
         defaultFormValues={defaultValues}
@@ -244,10 +269,10 @@ function EditProject(props) {
         }}
       />
     </Card>
-		</div>
-		</>
+    </div>
+    </>
 
-		);
+    );
 }
 
 export default withRouter(EditProject);
