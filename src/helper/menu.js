@@ -34,19 +34,19 @@ const menu = [
     submenu: [],
     roleaccess: [1,3,5,6],
   },
-  // {
-  //   title: 'Projects',
-  //   path: '/projects',
-  //   icon: 'project.svg',
-  //   submenu: [],
-  //   roleaccess: [1, 2, 3, 4],
-  // },
   {
     title: 'Employee Timesheet',
     path: '/emp-timesheet',
     icon: 'timesheet.svg',
     submenu: [],
     roleaccess: [1,5,4, 6],
+  },
+  {
+    title: 'Employees',
+    path: '/employees',
+    icon: 'Employee.svg',
+    submenu: [],
+    roleaccess: [2, 5, 6],
   },
   
   {
@@ -55,6 +55,35 @@ const menu = [
     icon: 'Employee.svg',
     submenu: [],
     roleaccess: [1],
+  },
+  {
+    title: 'My Interviews',
+    path: '/interview-listing',
+    icon: 'recruitement.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4,5,6],
+  },
+  
+  {
+    title: 'Recruitment',
+    path: '/recruitment',
+    icon: 'recruitement.svg',
+    roleaccess: [5,2],
+  },
+  
+  {
+    title: 'Candidates',
+    path: '/candidates',
+    icon: 'candidate.svg',
+    submenu: [],
+    roleaccess: [5,1,6],
+  },
+  {
+    title: 'Leaves',
+    path: '/leaves',
+    icon: 'leaves.svg',
+    submenu: [],
+    roleaccess: [4],
   },
   {
     title: 'Designation',
@@ -93,76 +122,11 @@ const menu = [
     roleaccess: [1,6],
   },
   {
-    title: 'Employees',
-    path: '/employees',
-    icon: 'Employee.svg',
-    submenu: [],
-    roleaccess: [2, 5, 6],
-  },
-  
-  {
-    title: 'My Interviews',
-    path: '/interview-listing',
-    icon: 'recruitement.svg',
-    submenu: [],
-    roleaccess: [1,2,3,4,5,6],
-  },
-  {
-    title: 'Recruitment',
-    path: '/recruitment',
-    icon: 'recruitement.svg',
-    roleaccess: [5,2],
-  },
-  {
-    title: 'Candidates',
-    path: '/candidates',
-    icon: 'candidate.svg',
-    submenu: [],
-    roleaccess: [5,1,6],
-  },
-  {
     title: 'Email Templates',
     path: '/email-templates',
     icon: 'template.svg',
     submenu: [],
     roleaccess: [1],
-  },
-  {
-    title: 'Event',
-    path: '/event',
-    icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [5,6,1,2,3,4],
-  },
-  {
-    title: 'Holidays',
-    path: '/holidays',
-    icon: 'holiday.svg',
-    submenu: [],
-    roleaccess: [1,2,3,4,5,6],
-  },
-  // {
-  //   title: 'Employee Technology Stack',
-  //   path: '/emp-stack',
-  //   icon: 'Designation.svg',
-  //   submenu: [],
-  //   roleaccess: [1],
-  // },
-
-  // {
-  //   title: 'Reports',
-  //   path: '/report',
-  //   icon: 'report.svg',
-  //   submenu: [],
-  //   roleaccess: [2],
-  // },
-
-  {
-    title: 'Leaves',
-    path: '/leaves',
-    icon: 'leaves.svg',
-    submenu: [],
-    roleaccess: [4],
   },
    {
     title: 'Leaves',
@@ -187,6 +151,20 @@ const menu = [
       },
     ],
     roleaccess: [1,2,3,6,5],
+  },
+  {
+    title: 'Event',
+    path: '/event',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [5,6,1,2,3,4],
+  },
+  {
+    title: 'Holidays',
+    path: '/holidays',
+    icon: 'holiday.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4,5,6],
   },
    {
     title: 'Greetings',
@@ -237,6 +215,29 @@ const menu = [
     submenu: [],
     roleaccess: [1],
   },
+  // {
+  //   title: 'Projects',
+  //   path: '/projects',
+  //   icon: 'project.svg',
+  //   submenu: [],
+  //   roleaccess: [1, 2, 3, 4],
+  // },
+  // {
+  //   title: 'Employee Technology Stack',
+  //   path: '/emp-stack',
+  //   icon: 'Designation.svg',
+  //   submenu: [],
+  //   roleaccess: [1],
+  // },
+
+  // {
+  //   title: 'Reports',
+  //   path: '/report',
+  //   icon: 'report.svg',
+  //   submenu: [],
+  //   roleaccess: [2],
+  // },
+
   //  {
   //   title: 'Birthday',
   //   path: '/greetings',
