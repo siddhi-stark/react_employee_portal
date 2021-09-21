@@ -112,11 +112,15 @@ function OnBoard(props) {
   };
 
   const getData = async () => {
+    setShowLoader(true);
     const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${applicantId}/`);
     if(!data) {
       // show error
       return;
     }
+
+    if(data) {
+      setShowLoader(false);
     let newDate = '';
 
       const ds = data.data.applied_for_id
@@ -137,6 +141,7 @@ function OnBoard(props) {
       };
 
     updateDefaultValues({ ...obj });
+    }
   };
 
   // Call get data method on load

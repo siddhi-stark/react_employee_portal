@@ -13,6 +13,20 @@ const menu = [
     submenu: [],
     roleaccess: [1,2,3,4],
   },
+  {
+    title: 'Project Scheduler',
+    path: '/scheduler',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [1,2,4],
+  },
+  {
+    title: 'Team Project Scheduler',
+    path: '/team-scheduler',
+    icon: 'leaves.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4],
+  },
    {
     title: 'Quotes',
     path: '/quotes',
@@ -181,21 +195,6 @@ const menu = [
     icon: 'report.svg',
     submenu: [],
     roleaccess: [4],
-  },
-  
-  {
-    title: 'Project Scheduler',
-    path: '/scheduler',
-    icon: 'report.svg',
-    submenu: [],
-    roleaccess: [1,2,4],
-  },
-  {
-    title: 'Team Project Scheduler',
-    path: '/team-scheduler',
-    icon: 'leaves.svg',
-    submenu: [],
-    roleaccess: [1,2,3,4],
   },
   {
     title: 'Reports',
