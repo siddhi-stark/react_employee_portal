@@ -35,7 +35,27 @@ const menu = [
     submenu: [],
     roleaccess: [1],
   },
-
+ {
+    title: 'Project',
+    path: '/project',
+    icon: 'project.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4],
+  },
+  {
+    title: 'Project Scheduler',
+    path: '/scheduler',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [1,2,4],
+  },
+  {
+    title: 'Team Project Scheduler',
+    path: '/team-scheduler',
+    icon: 'leaves.svg',
+    submenu: [],
+    roleaccess: [1,2,3,4],
+  },
   {
     title: 'Designation',
     path: '/designation',
@@ -92,7 +112,7 @@ const menu = [
     path: '/recruitment',
     icon: 'recruitement.svg',
     roleaccess: [5,2],
-  }, 
+  },
   {
     title: 'Candidates',
     path: '/candidates',
@@ -174,27 +194,6 @@ const menu = [
     icon: 'report.svg',
     submenu: [],
     roleaccess: [4],
-  },
-  {
-    title: 'Project',
-    path: '/project',
-    icon: 'project.svg',
-    submenu: [],
-    roleaccess: [1,2,3,4],
-  },
-  {
-    title: 'Project Scheduler',
-    path: '/scheduler',
-    icon: 'report.svg',
-    submenu: [],
-    roleaccess: [1,2,4],
-  },
-  {
-    title: 'Team Project Scheduler',
-    path: '/team-scheduler',
-    icon: 'leaves.svg',
-    submenu: [],
-    roleaccess: [1,2,3,4],
   },
   {
     title: 'Reports',

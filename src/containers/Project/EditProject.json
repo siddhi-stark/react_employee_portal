@@ -388,9 +388,9 @@
 						"fieldsToReset": [],
 						"fieldLayout": { "label": "1 Column", "value": "1column" },
 						"fields": [],
-						"optionCallback": "getTeam",
-						"optionsCallbackUrl": "InterviewRoundsUrl",
-						"options": []
+						"optionCallback": "",
+						"optionsCallbackUrl": "",
+						"options": [{"label":"Design","value":"1"},{"label":"Development","value":"2"},{"label":"Quality Analysis","value":"3"},{"label":"Project Management","value":"4"}]
 					},
 					{
 						"name": "percentage",

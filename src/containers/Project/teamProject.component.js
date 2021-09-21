@@ -138,28 +138,27 @@ function TeamProject(props) {
 
   const getGraphData = async () => {
     const endPoint = `${Api.getProjects}${teamProjectId}/`;
+    const url = customFunctions.generateUrl(endPoint);
+    const { data } = await AuthApi.getDataFromServer(url);
+    if(data){
+      const graph = [
+        { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
+        { x: 'Complete Work', y: data && data.data && data.data.completion },
+      ];
+      setGraphDetails({
+        totalHrsSpend: data && data.data && data.data.spend,
+        totalHrsEstimate: data && data.data && data.data.allocated,
+        totalHrsAllocated: data && data.data && data.data.hours_allocated,
+        projectCompletion: data && data.data && data.data.completion,
+        url: data && data.data && data.data.tw_id,
+      });
+      const allocated_hrs = data && data.data && Number(data.data.hours_allocated);
+      const spend_hrs = data && data.data && Number(data.data.spend);
+      const total = Number(allocated_hrs) - Number(spend_hrs);
 
-      const url = customFunctions.generateUrl(endPoint);
-      const { data } = await AuthApi.getDataFromServer(url);
-      if(data){
-    const graph = [
-      { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
-      { x: 'Complete Work', y: data && data.data && data.data.completion },
-    ];
-    setGraphDetails({
-      totalHrsSpend: data && data.data && data.data.spend,
-      totalHrsEstimate: data && data.data && data.data.allocated,
-      totalHrsAllocated: data && data.data && data.data.hours_allocated,
-      projectCompletion: data && data.data && data.data.completion,
-      url: data && data.data && data.data.tw_id,
-    });
-    const allocated_hrs = data && data.data && Number(data.data.hours_allocated);
-    const spend_hrs = data && data.data && Number(data.data.spend);
-    const total = Number(allocated_hrs) - Number(spend_hrs);
-
-    setProjectStatus(total);
-    setGraphData([...graph]);
-      }
+      setProjectStatus(total);
+      setGraphData([...graph]);
+    }
   };
 
   useEffect(() => {
@@ -282,7 +281,7 @@ function TeamProject(props) {
             <span>Project Name: {name}</span>
           </Col>
           <Col>
-           <h3 className={(projectStatus < 0) ? 'text-danger' :'text-primary'}>{(projectStatus < 0) ? 'Project In delay' :'Project Ontrack'}</h3>
+           <h3 className={(projectStatus < 0) ? 'text-danger' :'text-primary'}>{(projectStatus < 0) ? 'Project in delay' :'Project Ontrack'}</h3>
           </Col>
           <Col>
             <Button className="float-end mb-3" onClick= {() => history.push('/project')} >Back</Button>

@@ -142,14 +142,22 @@ function EditProject(props) {
           }
         : '';
 
-        const complt = data && data.data && data.data.completion + '%'; // eslint-disable-line
+      const complt = data && data.data && data.data.completion + '%'; // eslint-disable-line
+      const addmoreData = [];
 
+      data && data.data && data.data.project_dept_time_list && data.data.project_dept_time_list.map((pm)=>{
+        return addmoreData.push({
+           team_id:{label:pm.team_name,value:pm.team},
+           percentage: pm.value
+        });
+      });
       const obj = {
         ...data.data,
         start_date:start,
         end_date:end,
         coordinator: coordinatorValue,
-        completion:complt
+        completion:complt,
+        addmore: [...addmoreData] 
       };
 
       updateDefaultValues({ ...obj }); // updateDefaultValues(data);
@@ -187,33 +195,7 @@ function EditProject(props) {
     updateOptions(allOptions);
   };
 
-  const getTeam = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
-    if(!data) {
-     swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
-    }
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      const dpOptions = [];
-      data && data.data && data.data.team && data.data.team.map((op) => {
-        // Change appropriate keys
-        dpOptions.push({label: op.name, value: op.id});
-        return op;
-      });
-      const allOptions = {
-        ...options,
-        ...filterOptions,
-        team_id: dpOptions
-      };
-      filterOptions = {...allOptions};
-      updateOptions(allOptions);
-    };
-  };
-
   useEffect(() => {
-    getTeam();
     getCoordinator();
   }, []);
 
