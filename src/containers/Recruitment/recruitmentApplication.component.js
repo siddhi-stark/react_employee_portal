@@ -11,6 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import AddNote from './AddNote.component';
+import Loader from '../../components/Loader/index';
 
 function RecruitmentApplicationComponent() {
   // const title = 'Recruitment';
@@ -37,6 +38,8 @@ function RecruitmentApplicationComponent() {
   const [note, setNote] = useState('');
   const [statusData, setStatusData] = useState('');
   const [allData, setAllData] = useState({});
+  const [isShowLoader, setShowLoader] = useState(false);
+
   // const [statusLabel,setStatusLabel] = useState('');
   // const [selectedStatusOption,setSelectedStatusOption] = useState(null);
   let filterOptions = {};
@@ -302,6 +305,7 @@ function RecruitmentApplicationComponent() {
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
 
     const endPoint = `${Api.applicantsUrl}`;
@@ -320,6 +324,7 @@ function RecruitmentApplicationComponent() {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -333,6 +338,7 @@ function RecruitmentApplicationComponent() {
 
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message,'','error');
     }
   };
@@ -475,6 +481,7 @@ function RecruitmentApplicationComponent() {
         <h2 className="main-content-title tx-24 mg-b-5">Recruitment</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Accordion defaultActiveKey="0">
           <Card>

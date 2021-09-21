@@ -11,6 +11,7 @@ import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 import constants from '../../helper/constants';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -27,6 +28,8 @@ function ProjectScheduler() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
   const [developerValue, setDeveloperValue] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
+
   // const departmentId = customFunctions.getLocalStorage('department');
   const teamId = customFunctions.getLocalStorage('team_id');
 
@@ -106,6 +109,7 @@ function ProjectScheduler() {
   ];
 
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.projectSchedularUrl}`; 
     const filterList =
@@ -121,11 +125,13 @@ function ProjectScheduler() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setRowData((data && data.data && data.data.employees_data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -287,6 +293,7 @@ function ProjectScheduler() {
         <h2 className="main-content-title tx-24 mg-b-5">Project Scheduler</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Accordion defaultActiveKey="0">

@@ -9,6 +9,7 @@ import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function AddHoliday(props) {
 const viewObj = props;
@@ -20,6 +21,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	const [holidayId,setHolidayId] = useState('');
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [title,setTitle] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
 	const hId = props.match.params.ID; // eslint-disable-line
 	const viewId = props.match.params.viewID; // eslint-disable-line
 	const items = [{ to: '/', label: 'Home' }, { label: hId ? 'Edit Holiday' : 'Add Holiday'   }];
@@ -67,7 +69,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	}, []);
 
 	const submitForm = async (formValues) => {
-
+		setShowLoader(true);
 		const postData = {
 			occasion: formValues.occasion,
 			date: formValues.date ? customFunctions.getDate(formValues.date) : '',
@@ -85,6 +87,7 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
     const { data } = await callback(endPoint, postData);
 	
 		if (data) {
+			setShowLoader(false);
 			swal(data.message[0],'','success');
 			history.push('/holidays');
 			setHolidayId('');
@@ -92,9 +95,11 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 	};
 
 	const getData = async (id) => {
+		setShowLoader(true);
 		const { data } = await AuthApi.getDataFromServer(`${Api.holidayUrll}${id}/`);
 	   
 	   if(data){
+	   	  setShowLoader(false);
 		   	data.data.date = data.data.date ? new Date(customFunctions.getDate(data.data.date)) : '';
 				updateDefaultValues(data.data);
 	   }
@@ -122,6 +127,8 @@ const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
 					<Breadcrumb items={items} />
 				</div>
 			</div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+
 			<Card>
 
 				<div className="mt-5">

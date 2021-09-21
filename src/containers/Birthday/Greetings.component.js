@@ -8,6 +8,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import Loader from '../../components/Loader/index';
 
 function Greetings() {
 	const handleActionCallback = (row) => {
@@ -87,11 +88,13 @@ function Greetings() {
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [title, setTitle] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
 	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
 	// Declare methods
 	const getRowData = async (pageNo = 1) => {
+		setShowLoader(true);
 		const page = pageNo || currentPage;
 		const endPoint = Api.greetingsUrl;
 		const params = {
@@ -103,11 +106,13 @@ function Greetings() {
 		const { data, message } = await AuthApi.getDataFromServer(url);
 
 		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+			setShowLoader(false);
 			setTotalCount(data.paginator.total_count);
 			setLimit(data.paginator.limit);
 			setCurrentPage(Number(data.paginator.current_page));
 			setRowData((data && data.data) || []);
 		} else {
+			setShowLoader(false);
 			 swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -167,6 +172,7 @@ function Greetings() {
 				<h2 className="main-content-title tx-24 mg-b-5">Greetings</h2>
 				<Breadcrumb items={items} />
 			</div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area greeting-list">
 				<div className="mt-5">
 					<Card>

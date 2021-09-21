@@ -9,6 +9,7 @@ import FormSections from './EditProject.json';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function EditProject(props) {
   const idProps = props;
@@ -22,7 +23,7 @@ function EditProject(props) {
   // const [hoursAllocated,setHoursAllocated] = useState(''); 
   // const [hourlyRate,setHourlyRate] = useState(''); 
   const [title, setTitle] = useState('');
-
+  const [isShowLoader,setShowLoader] = useState(false);
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: viewOptions ? 'View Project':'Edit Project' }];
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
@@ -106,7 +107,7 @@ function EditProject(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-
+    setShowLoader(true);
     const postData = {
       hours_allocated: Number(formValues.hours_allocated),
       hourly_cost: Number(formValues.hourly_cost),
@@ -116,6 +117,7 @@ function EditProject(props) {
     };
       const { data } = await AuthApi.putDataToServer(`${Api.getProjects}${projectId}/`, postData);
       if(data) {
+        setShowLoader(false);
         swal(data.message[0], '', 'success', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -217,6 +219,7 @@ function EditProject(props) {
         <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 		<div className='mt-5'>
     <Card body>
      {viewOptions && (

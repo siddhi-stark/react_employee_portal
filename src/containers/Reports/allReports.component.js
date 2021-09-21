@@ -8,6 +8,7 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -26,6 +27,8 @@ function AllReports() {
   const [employeeList, setEmployeeList] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [userRole, setUserRole] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
+
   
    const [pagination, setPagination] = useState({
     current_page: 1,
@@ -96,6 +99,7 @@ function AllReports() {
   ];
 
   const getReports = async (pageNo = 0) => {
+    setShowLoader(true);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.reportListingUrl}`;
 
@@ -123,7 +127,7 @@ function AllReports() {
 
     const { data } = await AuthApi.postDataToServer(url, postData);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
-
+      setShowLoader(false);
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: Number(data.paginator.current_page),
@@ -234,6 +238,7 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
         <h2 className="main-content-title tx-24 mg-b-5">Reports</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Accordion defaultActiveKey="0">

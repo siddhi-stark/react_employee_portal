@@ -10,6 +10,7 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import AddNote from './AddNote.component';
+import Loader from '../../components/Loader/index';
 
 function TeamLeaves() {
   const [currentUser, updateCurrentUser] = useState(0);
@@ -129,12 +130,13 @@ function TeamLeaves() {
   const [modalShow, setModalShow] = useState(false);
   const [statusId, setStatusId] = useState('');
   const [leaveId, setLeaveId] = useState('');
-
+  const [isShowLoader,setShowLoader] = useState(false);
   // Variable declarations Filter
 
   const history = useHistory();
 
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.leavesUrl}`;
 
@@ -143,11 +145,13 @@ function TeamLeaves() {
       limit,
       my_team:true,
       sort_by: 'leave_from_date',
+      sort_direction:'descending',
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -159,6 +163,7 @@ function TeamLeaves() {
       });
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -188,6 +193,7 @@ function TeamLeaves() {
         <h2 className="main-content-title tx-24 mg-b-5">Team Leaves</h2>
         <Breadcrumb items={items} />
       </div>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
           <Card>
             <Card.Header>

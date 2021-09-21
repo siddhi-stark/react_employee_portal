@@ -10,6 +10,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function AddLeave(props) {
   const idProps = props;
@@ -41,6 +42,7 @@ function AddLeave(props) {
   const [id, setId] = useState(null);
   const [fromDateValue, setFromDateValue] = useState('');
   const [flag, setFlag] = useState(false);
+  const [isShowLoader,setShowLoader] = useState(false);
 
   const columns = [
     {
@@ -176,7 +178,7 @@ function AddLeave(props) {
   }, []);
 
  const ApplyLeave = async (formValues) => {
-
+     setShowLoader(true);
     const defaultValuesFromType = 
     defaultValues.leave_from_type && (defaultValues.leave_from_type === 'Full Day')
         ? 2
@@ -211,6 +213,7 @@ function AddLeave(props) {
     const { data, message } = await callback(endPoint, postData);
 
       if (!data) {
+        setShowLoader(false);
         swal(message, '', 'error', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -223,6 +226,7 @@ function AddLeave(props) {
         // show error
         // return;
       } else {
+        setShowLoader(false);
         swal(data && data.message[0], '', 'success', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -237,7 +241,6 @@ function AddLeave(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-   
     if(formValues.leave_from_date){
       setStartDate(formValues.leave_from_date);
       setFlag(true);
@@ -251,6 +254,7 @@ function AddLeave(props) {
 
   // Get data for form
   const getData = async () => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.leavesUrl}${leaveId}/`
     );
@@ -259,6 +263,7 @@ function AddLeave(props) {
       return;
     }
     if(data && data.data){
+      setShowLoader(false);
       setStartDate(data.data.leave_from_date);
       setEndDate(data.data.leave_to_date);
       setStatus(data.data.status_name);
@@ -329,6 +334,7 @@ function AddLeave(props) {
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const userId = customFunctions.getLocalStorage('userId');
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeTask}`;
@@ -345,6 +351,7 @@ function AddLeave(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -358,6 +365,7 @@ function AddLeave(props) {
 
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -382,6 +390,7 @@ function AddLeave(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Leave Application</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Card body>

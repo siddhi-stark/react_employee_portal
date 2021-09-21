@@ -11,6 +11,7 @@ import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function HrReports() {
   let defaultFilterOptions = {};
@@ -39,6 +40,7 @@ const [totalCount, setTotalCount] = useState(10);
 const [limit, setLimit] = useState(10);
 const [currentPage, setCurrentPage] = useState(1);
 const [filterData, setFilterData] = useState({});
+const [isShowLoader,setShowLoader] = useState(false);
 
   const columns = [
     {
@@ -165,6 +167,7 @@ const [filterData, setFilterData] = useState({});
   }, []);
 
 const getRowData = async (pageNo=1) =>{
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = Api.offerUrl;
       const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
@@ -179,6 +182,7 @@ const getRowData = async (pageNo=1) =>{
     const { data } = await AuthApi.getDataFromServer(url);
     
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -191,6 +195,7 @@ useEffect(()=>{
 },[filterData]);
 
   const getGraphData = async () => {
+    setShowLoader(true);
     const endPoint = Api.hrReportUrl;
     const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
     const params = {
@@ -200,6 +205,7 @@ useEffect(()=>{
     const { data } = await AuthApi.getDataFromServer(url);
 
     if(data){
+      setShowLoader(false);
       const graph = [
         { x: 'Shortlisted', y: data.data.shortlisted_percentage },
         { x: 'Rejected', y: data.data.declined_percentage },
@@ -249,6 +255,7 @@ useEffect(()=>{
         <h2 className="main-content-title tx-24 mg-b-5">HR Reports</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4">
         <Row>
           <StarkFormBuilder

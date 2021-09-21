@@ -8,6 +8,7 @@ import Api from '../../helper/api';
 import { PasswordInput, Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -29,12 +30,14 @@ function ManagePassword() {
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
   const [disableButton, setDisableButton] = useState(false);
+  const [isShowLoader,setShowLoader] = useState(false);
 
   useEffect(() => {
     setTitle('Change Password');
   }, []);
 
   const setNewPassword = async () => {
+    setShowLoader(true);
     const payload = {
       old_password: oldPassword,
       password,
@@ -48,6 +51,7 @@ function ManagePassword() {
       postData
     );
     if (data) {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
@@ -56,6 +60,7 @@ function ManagePassword() {
         }
       });
     } else {
+      setShowLoader(false);
       swal(message, '', 'error');
       setDisableButton(false);
     }
@@ -84,6 +89,7 @@ function ManagePassword() {
           <Breadcrumb items={items} />
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Card>

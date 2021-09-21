@@ -9,6 +9,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function AddBirthday(props) {
 
@@ -23,6 +24,7 @@ function AddBirthday(props) {
   const [imageUrl, setImageUrl] = useState('');
   const [title, setTitle] = useState('');
   const [bId, setbirthdayID] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
   const items = [{ to: '/', label: 'Home' }, { label: BirthdayId ? 'Edit Greeting' : 'Add Greeting' }]; 
   const history = useHistory();  
 
@@ -67,7 +69,7 @@ function AddBirthday(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-
+    setShowLoader(true);
     const postData = {
       message: formValues.message,
       greet_type: formValues.greet_type ? formValues.greet_type.value : '',
@@ -87,6 +89,7 @@ function AddBirthday(props) {
     const { data } = await callback(endPoint, postData);
 
     if(data) {
+      setShowLoader(false);
       swal(data.message[0],'','success');
       history.push('/greetings');
     }
@@ -242,6 +245,7 @@ function AddBirthday(props) {
           <Breadcrumb items={items} />
         </div>
       </div> 
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 		<div className="mt-5">
 		<Card>
 

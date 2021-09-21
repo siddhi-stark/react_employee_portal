@@ -9,6 +9,7 @@ import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import Loader from '../../components/Loader/index';
 
 function RecruitmentFileComponent() {
   // const title = 'Batch Upload';
@@ -48,6 +49,7 @@ function RecruitmentFileComponent() {
   const [filterOptions, updateFilterOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [title,setTitle] = useState('');
+  const [isShowLoader,setShowLoader] = useState(false);
   const history = useHistory();
   // const [show, setShow] = useState(false);
 
@@ -93,6 +95,9 @@ function RecruitmentFileComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    
+    setShowLoader(true);
+
     const csvData = fileValue[0];
 
     const formData = new FormData();
@@ -109,6 +114,7 @@ function RecruitmentFileComponent() {
     );
 
     if (!data) {
+      setShowLoader(false);
       swal(message, '', 'error');
     }
     swal(data && data.message[0], '', 'success', {
@@ -117,6 +123,7 @@ function RecruitmentFileComponent() {
       buttons: false,
       timer: 2000,
     }).then(() => {
+      setShowLoader(false);
       swal.close();
       history.push('/recruitment');
     });
@@ -149,6 +156,7 @@ function RecruitmentFileComponent() {
         <h2 className="main-content-title tx-24 mg-b-5">Bulk Upload</h2>
         <Breadcrumb items={items} />
       </div>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Card>

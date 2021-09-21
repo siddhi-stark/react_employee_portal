@@ -10,6 +10,7 @@ import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
+import Loader from '../../components/Loader/index';
 
 function EmployeeTimesheet() {
   const [rowData, setRowData] = useState([]);
@@ -20,6 +21,7 @@ function EmployeeTimesheet() {
   const [dataShow, setDataShow] = useState(false);
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState({});
+  const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
 
   // Variable declarations
@@ -194,6 +196,7 @@ function EmployeeTimesheet() {
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeTimesheet}`;
     const params = {
@@ -215,6 +218,7 @@ function EmployeeTimesheet() {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -228,6 +232,7 @@ function EmployeeTimesheet() {
 
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -343,6 +348,7 @@ function EmployeeTimesheet() {
           <Breadcrumb items={items} />
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <div className="mt-5">
         <Accordion defaultActiveKey="0">
           <Card>

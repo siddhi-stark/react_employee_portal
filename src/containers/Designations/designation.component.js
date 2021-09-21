@@ -17,6 +17,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -33,6 +34,7 @@ function Designation() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [designation, setDesignation] = useState('');
   const [title, setTitle] = useState('');
+  const [isShowLoader,setShowLoader] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -108,6 +110,7 @@ function Designation() {
   }, [cntClearFilter]);
 
   const getTableData = async (pageNo = 0) => {
+    setShowLoader(true);
     const page = pageNo || pagination.current_page;
 
     const endPoint = `${Api.designationUrl}?sort_by=name&sort_direction=ascending`;
@@ -122,6 +125,7 @@ function Designation() {
 
     const { data } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
+      setShowLoader(false);
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
@@ -197,6 +201,7 @@ function Designation() {
   };
 
   const addDesignation = async () => {
+    setShowLoader(true);
     const postData = {
       name: designation,
       is_deleted: 'false',
@@ -214,6 +219,7 @@ function Designation() {
     const { data, message } = await callback(endPoint, payload);
 
     if (data) {
+      setShowLoader(false);
       validator.current.hideMessages();
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
@@ -224,6 +230,7 @@ function Designation() {
         }
       });
     } else {
+      setShowLoader(false);
       setDisableButton(false);
       swal(message, '', 'error');
       getTableData(1);
@@ -327,7 +334,7 @@ function Designation() {
         <h2 className="main-content-title tx-24 mg-b-5">Designation</h2>
         <Breadcrumb items={items} />
       </div>
-
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Accordion defaultActiveKey="0">

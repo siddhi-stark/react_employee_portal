@@ -6,6 +6,7 @@ import FormSections from './employmentFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function PreviousEmployement(props) {
   const accProps = { props };
@@ -22,7 +23,7 @@ function PreviousEmployement(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [docId, setDocId] = useState([]);
-
+  const [isShowLoader,setShowLoader] = useState(false);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -140,6 +141,8 @@ function PreviousEmployement(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
+
     let slip1fileUrl = '';
     let slip1fileUrlId = '';
     let slip2fileUrl = '';
@@ -236,6 +239,7 @@ function PreviousEmployement(props) {
       postData
     );
     if (!data) {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -248,6 +252,7 @@ function PreviousEmployement(props) {
       // show error
       // return;
     } else {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -302,6 +307,7 @@ function PreviousEmployement(props) {
 
   return (
     <>
+     <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass=""
         formHeaderClass=""
