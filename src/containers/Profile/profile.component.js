@@ -158,6 +158,7 @@ function Profile() {
   };
 
   const updateProfileData = async () => {
+    setShowLoader(true);
     const payload = {
       id: customFunctions.getLocalStorage('userId'),
       full_name: name,
@@ -177,6 +178,7 @@ function Profile() {
       postData
     );
     if (data) {
+      setShowLoader(false);
       setModalShow(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
@@ -189,6 +191,7 @@ function Profile() {
         }
       });
     } else {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'error');
     }
   };
@@ -387,6 +390,7 @@ function Profile() {
         </Card.Body>
       </Card>
      
+     {companyList && companyList.length >= 1 ? (
       <div className="profile-details">
             <div className="row">
               <div className="col-sm-12">
@@ -427,6 +431,8 @@ function Profile() {
               </div>
             </div>
           </div>
+       ) : ''}
+
       <ModalInput
         size="md"
         centered

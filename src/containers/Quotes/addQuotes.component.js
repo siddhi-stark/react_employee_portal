@@ -56,10 +56,10 @@ function AddQuotes(props) {
       swal(message, '', 'error');
     }
     // show error
+    setShowLoader(false);
     swal(data && data.message[0], '', 'success').then((result) => {
-        setShowLoader(false);
       if (result) {
-        // setShowLoader(false);
+        setShowLoader(false);
         history.push('/quotes');
       }
     });

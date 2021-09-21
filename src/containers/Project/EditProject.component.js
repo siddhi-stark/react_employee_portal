@@ -128,6 +128,7 @@ function EditProject(props) {
     
   // Get data for form
   const getData = async () => {
+    setShowLoader(true);
     const { data, message } = await AuthApi.getDataFromServer(`${Api.projectDetails}${projectId}/`);
     // console.log('data',data);
 
@@ -139,6 +140,7 @@ function EditProject(props) {
     }
     
     if (data) {
+      setShowLoader(false);
       const start = data && data.data && new Date(data.data.start_date);
       const end = data && data.data && new Date(data.data.end_date);
       const coordinatorValue = data && data.data && data.data.coordinator_name
