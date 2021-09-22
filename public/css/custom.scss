@@ -2803,6 +2803,8 @@
  .table tbody tr td img,
  .table tbody tr td svg {
      cursor: pointer;
+     max-width: 17px;
+     width: 100%;
  }
  /*@media (min-width: 576px){
     .bd-content .highlight {
