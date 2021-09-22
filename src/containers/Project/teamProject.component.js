@@ -148,36 +148,8 @@ function TeamProject(props) {
     },
   ];
 
-  const getGraphData = async () => {
-    setShowLoader(true);
-    const endPoint = `${Api.getProjects}${teamProjectId}/`;
-    const url = customFunctions.generateUrl(endPoint);
-    const { data } = await AuthApi.getDataFromServer(url);
-    if(data){
-      setShowLoader(false);
-      const graph = [
-        { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
-        { x: 'Complete Work', y: data && data.data && data.data.completion },
-      ];
-      setGraphDetails({
-        totalHrsSpend: data && data.data && data.data.spend,
-        totalHrsEstimate: data && data.data && data.data.total && data.data.total.allocated,
-        totalHrsAllocated: data && data.data && data.data.hours_allocated,
-        projectCompletion: data && data.data && data.data.completion,
-        url: data && data.data && data.data.tw_id,
-      });
-      const allocated_hrs = data && data.data && Number(data.data.hours_allocated);
-      const spend_hrs = data && data.data && Number(data.data.spend);
-      const total = Number(allocated_hrs) - Number(spend_hrs);
-
-      setProjectStatus(total);
-      setGraphData([...graph]);
-    }
-  };
-
   useEffect(() => {
     setTitle('Team Project');
-    getGraphData();
   }, []);
 
   // Declare methods table method
@@ -198,6 +170,25 @@ function TeamProject(props) {
       let developmentHrs = '';
       let qaHrs = '';
       let managementHrs = '';
+      setShowLoader(false);
+      const graph = [
+        { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
+        { x: 'Complete Work', y: data && data.data && data.data.completion },
+      ];
+      setGraphDetails({
+        totalHrsSpend: data && data.data && data.data.spend,
+        totalHrsEstimate: data && data.data && data.data.total && data.data.total.allocated,
+        totalHrsAllocated: data && data.data && data.data.hours_allocated,
+        projectCompletion: data && data.data && data.data.completion,
+        url: data && data.data && data.data.tw_id,
+      });
+      const allocated_hrs = data && data.data && Number(data.data.hours_allocated);
+      const spend_hrs = data && data.data && Number(data.data.spend);
+      const total = Number(allocated_hrs) - Number(spend_hrs);
+
+      setProjectStatus(total);
+      setGraphData([...graph]);
+
       data && data.data && data.data.project_dept_time_list && data.data.project_dept_time_list.map((projectDept)=>{
         switch (projectDept.team_name) {
           case 'Project Management':
@@ -217,7 +208,6 @@ function TeamProject(props) {
         }
         return projectDept;
       });
-      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
