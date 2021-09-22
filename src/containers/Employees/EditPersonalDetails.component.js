@@ -17,7 +17,6 @@ function EditPersonalDetails(props) {
   const [jsonSchema, updateJsonSchema] = useState(FormSections);  
   const [isShowLoader, setShowLoader] = useState(false);
 
-
 useEffect(() => {
   const employeeId = customFunctions.getLocalStorage('id');
     if(employeeId){

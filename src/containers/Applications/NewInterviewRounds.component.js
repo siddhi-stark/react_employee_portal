@@ -148,7 +148,7 @@ function NewInterviewRounds(props) {
         if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);
         }
-        if (!customFunctions.checkIfEmpty(dt.int_time)) {
+        if (!customFunctions.checkIfEmpty(dt.int_date) && !customFunctions.checkIfEmpty(dt.int_time)) {
           newTime = new Date(
             `${customFunctions.getDate( dt.int_date )}T${customFunctions.convertTime12to24(dt.int_time)}`
           );

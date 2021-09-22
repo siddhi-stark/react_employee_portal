@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import Doughnut from 'stark-doughnut-graph';
 import { Bar } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -17,7 +16,8 @@ import Loader from '../../components/Loader/index';
 function Team(props) {
   const teamid = props;
   const teamId = teamid.match.params.teamId;
-  
+  const graphDataObj = teamid.location.state ? teamid.location.state.graphDataObj
+    : '';
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
   const getProjectName = customFunctions.getLocalStorage('projectName');
@@ -29,6 +29,11 @@ function Team(props) {
 
   const history = useHistory();
   const [title, setTitle] = useState('');
+  
+  const initialState = {
+    totalHrsSpend: null,
+    totalHrsEstimate: null,
+  };
 
   // Declare variable column state
   const [rowData, setRowData] = useState([]);
@@ -39,6 +44,8 @@ function Team(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader,setShowLoader] = useState(false);
+  const [graphDetails, setGraphDetails] = useState(initialState);
+  const [graphAllocatedHrs, setGraphAllocatedHrs] = useState(null);
 
   // Declare columns
   const columns = [
@@ -123,7 +130,10 @@ function Team(props) {
   ];
 
   // Declare methods table method
-  const getRowData = async (pageNo = 1) => {
+  const getRowData = async (pageNo = 1) => {  // eslint-disable-line
+    const spendArr =[];
+    const estimatedArr =[];
+    const employeeNameArr =[];
     setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.departmentReportUrl}`;
@@ -138,39 +148,56 @@ function Team(props) {
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
-      // setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      // setDepartmentName(data && data.data && data.data.department);
       setProjectName(data && data.data && data.data.project_name);
+      setRowData((data && data.data && data.data.employees_data) || []);
+       switch (data &&  data.data && data.data.department) {
+        case 'Project Management':
+          setGraphAllocatedHrs(graphDataObj.hours_allocated_management);
+          break;
+        case 'Development':
+          setGraphAllocatedHrs(graphDataObj.hours_allocated_development);
+          break;
+        case 'Design':
+          setGraphAllocatedHrs(graphDataObj.hours_allocated_design);
+          break;
+        case 'Quality Analysis':
+          setGraphAllocatedHrs(graphDataObj.hours_allocated_qa);
+          break;
+        default:
+          return !data.data.department;
+      }
+
       data && data.data && data.data.employees_data && data.data.employees_data.map((emp)=>{
         if(emp.emp_name === 'Total') {
-        setBarGraphData({
-          labels: [''],
+          setGraphDetails({
+            totalHrsSpend: emp.spends,
+            totalHrsEstimate: emp.allocated,
+          });  
+        } else {
+          spendArr.push(emp.spends);
+          estimatedArr.push(emp.allocated);
+          employeeNameArr.push(emp.emp_name);
+        }
+      return emp;
+      });
+      setBarGraphData({
+          labels: employeeNameArr,
           datasets: [
             {
               label: 'Spent Hours',
-              backgroundColor: '#F4C222',
-              borderWidth: 2,
-              data: [emp.spends]
+              backgroundColor: '#f00000',
+              borderWidth: 1,
+              data: spendArr
             },
             {
               label: 'Estimated Hours',
-              backgroundColor: '#FFB6C1',
-              borderWidth: 2,
-              data: [emp.allocated]
-            },
-            {
-              label: 'Allocated Hours',
               backgroundColor: '#85C51C',
-              borderWidth: 2,
-              data: [emp.hours_allocated]
+              borderWidth: 1,
+              data: estimatedArr
             }
           ]
         });
-      }
-      return emp;
-      });
-      setRowData((data && data.data && data.data.employees_data) || []);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -183,7 +210,7 @@ function Team(props) {
   useEffect(() => {
     setTitle('Team Project');
     getRowData(1);
-  }, []);
+  }, [graphAllocatedHrs]);
 
    // Get user role Filter 
   const getUserRole = async() => {
@@ -214,32 +241,7 @@ function Team(props) {
         </Row>
 
         <Row className="doughnut-graph-section">
-          <Col sm={3}>
-            <Doughnut
-              // ref={graphref}
-              id="dougnut"
-              // data={graphData}
-              subTitle=""
-              // title={`${graphDetails.projectCompletion}%`}
-              height="150"
-              width="150"
-              constrainToVisibleArea="true"
-              labels={({ datum }) => `${datum.x}: ${datum.y}%`}
-              legendOrientation="vertical"
-              legendPosition="right"
-              // legendData={legendData}
-              legends={{}}
-              padding={{
-                bottom: 0,
-                left: 10,
-                right: 10, // Adjusted to accommodate legend
-                top: 0,
-              }}
-              colorScale={['yellow','green']}
-              wrapperSize={{ height: '150px', width: '100%' }}
-            />
-          </Col>
-          <Col sm={4}>
+          <Col sm={8}>
           <Bar
             data={barGraphData}
              options={{
@@ -255,23 +257,20 @@ function Team(props) {
               }}
           />
           </Col>
-          <Col sm={5}>
+          <Col sm={4}>
           <ul>
             <li>
-            Total Hours Spent: <span>11</span>
+            Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
             </li>
             <li>
-            Total Hours Estimated: <span>100</span>
+            Total Hours Estimated: <span>{graphDetails.totalHrsEstimate}</span>
             </li>
             {
               ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
               <li>
-              Total Hours Allocated: <span>15</span>
+              Total Hours Allocated: <span>{graphAllocatedHrs}</span>
               </li>
             )} 
-            <li>
-            Project Completion: <span>50%</span>
-            </li>
             </ul>
           </Col>
         </Row>
