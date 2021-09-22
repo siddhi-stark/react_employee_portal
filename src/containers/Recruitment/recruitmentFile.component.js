@@ -13,24 +13,25 @@ import Loader from '../../components/Loader/index';
 
 function RecruitmentFileComponent() {
   // const title = 'Batch Upload';
+// Candidate Name  Contact Number  Email id  Experience (Year)  Relevant Experience  Current CTC  Expected CTC  Notice period  Reason for job change  Locality  Resume Source  Resume  Gender  Fresher
+// Anjali abd   9877367890  anjali1@test.com  3  2  3  5  30  better growth  Pune  Naukri  https://employeeportal.reviewtestlink.com  Female  Yes
 
   const csvdata = [
-    { Candidate_Name: 'Lata Patil', Email: 'lata12@gmail.com', Mobile_No: '9871234587', Locality: 'Pune' , Current_CTC: '200000', Expected_CTC: '300000', Notice_Period: '3', Total_Exp: '3' ,
-     Relevant_Exp: '2', Resume_Source: 'Naukri', Reason_Job_Change: 'Better Opportunity', Resume: 'https://employeeportal.reviewtestlink.com',Gender:'Female', Fresher : 'Yes' },
+    { Candidate_Name: 'Lata Patil',  Mobile_No: '9871234587', Email: 'lata12@gmail.com', Total_Exp: '3' , Relevant_Exp: '2', Current_CTC: '2', Expected_CTC: '3', Notice_Period: '3', Reason_Job_Change: 'Better Opportunity', Locality: 'Pune', Resume_Source: 'Naukri', Resume: 'https://employeeportal.reviewtestlink.com',Gender:'Female', Fresher : 'Yes' },
   ];
 
    const csvHeader = [
     { label: 'Candidate Name', key: 'Candidate_Name' },
-    { label: 'Email', key: 'Email' },
-    { label: 'Mobile No', key: 'Mobile_No' },
-    { label: 'Locality', key: 'Locality' },  
+    { label: 'Contact Number', key: 'Mobile_No' },
+    { label: 'Email id', key: 'Email' },
+    { label: 'Experience (Year)', key: 'Total_Exp' },
+    { label: 'Relevant Experience', key: 'Relevant_Exp' },
     { label: 'Current CTC', key: 'Current_CTC' },
     { label: 'Expected CTC', key: 'Expected_CTC' },
     { label: 'Notice Period', key: 'Notice_Period' },  
-    { label: 'Total Exp.', key: 'Total_Exp' },
-    { label: 'Relevant Exp.', key: 'Relevant_Exp' },
+    { label: 'Reason for job change', key: 'Reason_Job_Change' },
+    { label: 'Locality', key: 'Locality' },  
     { label: 'Resume Source', key: 'Resume_Source' },
-    { label: 'Reason Job Change', key: 'Reason_Job_Change' },
     { label: 'Resume', key: 'Resume' },
     { label: 'Gender', key: 'Gender' },
     { label: 'Fresher', key: 'Fresher' }
