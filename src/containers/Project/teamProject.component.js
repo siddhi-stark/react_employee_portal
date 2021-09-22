@@ -266,13 +266,13 @@ function TeamProject(props) {
         datasets: [
           {
             label: 'Spent Hours',
-            backgroundColor: '#F4C222',
+            backgroundColor: '#f00000',
             borderWidth: 2,
             data: [data && data.data && data.data.total && data.data.total.spends]
           },
           {
             label: 'Estimated Hours',
-            backgroundColor: '#FFB6C1',
+            backgroundColor: '#F4C222',
             borderWidth: 2,
             data: [data && data.data && data.data.total && data.data.total.allocated]
           },
@@ -348,7 +348,7 @@ function TeamProject(props) {
                 right: 10, // Adjusted to accommodate legend
                 top: 0,
               }}
-              colorScale={['yellow','green']}
+              colorScale={['yellow','green','red']}
               wrapperSize={{ height: '150px', width: '100%' }}
             />
           </Col>
