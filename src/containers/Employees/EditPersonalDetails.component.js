@@ -6,6 +6,7 @@ import FormSections from './editEmployee.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';    
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function EditPersonalDetails(props) {
 
@@ -13,7 +14,8 @@ function EditPersonalDetails(props) {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-   const [jsonSchema, updateJsonSchema] = useState(FormSections);  
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);  
+  const [isShowLoader, setShowLoader] = useState(false);
 
 useEffect(() => {
   const employeeId = customFunctions.getLocalStorage('id');
@@ -57,6 +59,7 @@ useEffect(() => {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
     const id = customFunctions.getLocalStorage('id');
 
     let postData = {
@@ -76,6 +79,7 @@ useEffect(() => {
     
     const { data } = await AuthApi.putDataToServer(`${Api.employeeUrl}${id}/`, postData);
     if(data) {
+      setShowLoader(false);
      swal(data && data.message[0]);
      props.handleModalCLose(false);
      props.onPersonalDetailChanges();
@@ -84,9 +88,12 @@ useEffect(() => {
     
   // Get data for form
   const getData = async () => {
+    setShowLoader(true);
+
     const id = customFunctions.getLocalStorage('id');
     const {data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}${id}/`);
       if(data && data.success){
+      setShowLoader(false);  
       data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
       data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
       data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
@@ -133,6 +140,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
 
 	return (
     <>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass=''
         formHeaderClass=''

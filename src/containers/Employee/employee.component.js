@@ -24,6 +24,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -84,6 +85,7 @@ function Employee() {
   const [newDepartment,setNewDepartment] = useState([]);
   const [projectTeam,setProjectTeam] = useState([]);
   const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
+  const [isShowLoader,setShowLoader] = useState(false);
 
   let timmer = null;
   const [pagination, setPagination] = useState({
@@ -160,6 +162,7 @@ function Employee() {
   ];
 
   const getTableData = async (pageNo = 0) => {
+    setShowLoader(true);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`;
 
@@ -188,6 +191,7 @@ function Employee() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
+      setShowLoader(false);
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: Number(data.paginator.current_page),
@@ -461,6 +465,7 @@ function Employee() {
   };
 
   const addEmployee = async () => {
+    setShowLoader(true);
     const teamIdList = [];
     if (selectedTeamLead) {
       teamIdList.push(selectedTeamLead.id);
@@ -511,6 +516,7 @@ function Employee() {
       : Api.employeeUrl;
     const { data, message } = await callback(endPoint, payload);
     if (data) {
+      setShowLoader(false);
       validator.hideMessages();
       setAddButton(false);
       setSelectedDesignationOption();
@@ -539,6 +545,7 @@ function Employee() {
         }
       });
     } else {
+      setShowLoader(false);
       setModalShow(false);
       swal({
         title: message,
@@ -771,7 +778,7 @@ function Employee() {
         <h2 className="main-content-title tx-24 mg-b-5">Employees</h2>
         <Breadcrumb items={items} />
       </div>
-
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Accordion defaultActiveKey="0">

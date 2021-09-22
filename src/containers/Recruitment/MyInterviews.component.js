@@ -9,6 +9,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import Loader from '../../components/Loader/index';
 
 function MyInterviews() {
 	const group = customFunctions.getLocalStorage('group');
@@ -24,6 +25,8 @@ function MyInterviews() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
+
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -159,6 +162,7 @@ function MyInterviews() {
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
 
     const endPoint = `${Api.applicantsUrl}`;
@@ -175,6 +179,7 @@ function MyInterviews() {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -188,6 +193,7 @@ function MyInterviews() {
 
       setRowData((data && data.data) || []);
     } else {
+      setShowLoader(false);
       swal(message,'','error');
     }
   };
@@ -216,6 +222,7 @@ function MyInterviews() {
         <h2 className="main-content-title tx-24 mg-b-5">My Interviews</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Card>
           <Card.Header>

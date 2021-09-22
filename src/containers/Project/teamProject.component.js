@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import Doughnut from 'stark-doughnut-graph';
+import { Bar } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import { Card, Row, Col, Button, Image } from 'react-bootstrap';
@@ -10,12 +11,15 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import constants from '../../helper/constants';
+import Loader from '../../components/Loader/index';
 
 function TeamProject(props) {
   const teamid = props;
   const teamProjectId = teamid.match.params.teamProjectId;
   customFunctions.setLocalStorage('teamProjectId',teamProjectId);
   const departmentId = customFunctions.getLocalStorage('department');
+  const [barGraphData, setBarGraphData] = useState({});
+  const [isShowLoader,setShowLoader] = useState(false);
 
   const items = [
     { to: '/', label: 'Home' },
@@ -30,6 +34,14 @@ function TeamProject(props) {
     url: '',
   };
   
+  const initialGraphValue = {
+    completion:null, 
+    remaining_perc:null, 
+    allocated:null, 
+    spend:null, 
+    hours_allocated:null
+  };
+
   const history = useHistory();
   const [graphDetails, setGraphDetails] = useState(initialState);
   const [graphData, setGraphData] = useState([]);
@@ -42,7 +54,9 @@ function TeamProject(props) {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('');
+  const [projectStatus, setProjectStatus] = useState('');
   const [currentUser, updateCurrentUser] = useState(0);
+  const [graphDataObj, setGraphDataObj] = useState(initialGraphValue);
 
   // Declare columns
   const columns = [
@@ -54,6 +68,7 @@ function TeamProject(props) {
     {
       id: 'team',
       label: 'Team',
+      // completion, remaining_perc, allocated, spend, hours_allocated
       render: ({ team,department }) => {
         return (
           <>
@@ -68,7 +83,7 @@ function TeamProject(props) {
                 customFunctions.setLocalStorage('departmentName',team);
                 e.preventDefault();
                 e.stopPropagation();
-                history.push(`/team/${team}`);
+                history.push(`/team/${team}`,{graphDataObj});
               }}
             >
              {team} 
@@ -105,6 +120,10 @@ function TeamProject(props) {
       label: 'Estimated Hours',
     },
     {
+      id: 'hours_allocated',
+      label: 'Allocated Hours',
+    },
+    {
       id: 'remaining',
       label: 'Remaining Hours',
       render: ({ remaining }) => {
@@ -129,34 +148,13 @@ function TeamProject(props) {
     },
   ];
 
-  const getGraphData = async () => {
-    const endPoint = `${Api.getProjects}${teamProjectId}/`;
-
-      const url = customFunctions.generateUrl(endPoint);
-      const { data } = await AuthApi.getDataFromServer(url);
-      if(data){
-    const graph = [
-      { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
-      { x: 'Complete Work', y: data && data.data && data.data.completion },
-    ];
-    setGraphDetails({
-      totalHrsSpend: data && data.data && data.data.spend,
-      totalHrsEstimate: data && data.data && data.data.allocated,
-      totalHrsAllocated: data && data.data && data.data.hours_allocated,
-      projectCompletion: data && data.data && data.data.completion,
-      url: data && data.data && data.data.tw_id,
-    });
-    setGraphData([...graph]);
-      }
-  };
-
   useEffect(() => {
     setTitle('Team Project');
-    getGraphData();
   }, []);
 
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const newData = []; 
     const page = pageNo || currentPage;
     const endPoint = `${Api.getProjects}${teamProjectId}/`;
@@ -168,6 +166,48 @@ function TeamProject(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      let designHrs = '';
+      let developmentHrs = '';
+      let qaHrs = '';
+      let managementHrs = '';
+      setShowLoader(false);
+      const graph = [
+        { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
+        { x: 'Complete Work', y: data && data.data && data.data.completion },
+      ];
+      setGraphDetails({
+        totalHrsSpend: data && data.data && data.data.spend,
+        totalHrsEstimate: data && data.data && data.data.total && data.data.total.allocated,
+        totalHrsAllocated: data && data.data && data.data.hours_allocated,
+        projectCompletion: data && data.data && data.data.completion,
+        url: data && data.data && data.data.tw_id,
+      });
+      const allocated_hrs = data && data.data && Number(data.data.hours_allocated);
+      const spend_hrs = data && data.data && Number(data.data.spend);
+      const total = Number(allocated_hrs) - Number(spend_hrs);
+
+      setProjectStatus(total);
+      setGraphData([...graph]);
+
+      data && data.data && data.data.project_dept_time_list && data.data.project_dept_time_list.map((projectDept)=>{
+        switch (projectDept.team_name) {
+          case 'Project Management':
+           managementHrs = data.data.hours_allocated && Number(data.data.hours_allocated) * (Number(projectDept.value) / 100);
+            break;
+          case 'Development':
+           developmentHrs = data.data.hours_allocated && Number(data.data.hours_allocated) * (Number(projectDept.value) / 100);
+            break;
+          case 'Design':
+           designHrs = data.data.hours_allocated && Number(data.data.hours_allocated) * (Number(projectDept.value) / 100);
+            break;
+          case 'Quality Analysis':
+           qaHrs = data.data.hours_allocated && Number(data.data.hours_allocated) * (Number(projectDept.value) / 100);
+            break;
+          default:
+            return !projectDept.team_name;
+        }
+        return projectDept;
+      });
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -178,15 +218,16 @@ function TeamProject(props) {
         allocated:data && data.data && data.data.design && data.data.design.allocated,
         remaining:data && data.data && data.data.design && data.data.design.remaining,
         status:data && data.data && data.data.design && data.data.design.status,
-        department: data && data.data && data.data.design && data.data.design.dept_id
-
+        department: data && data.data && data.data.design && data.data.design.dept_id,
+        hours_allocated: designHrs
       },{
         team: 'Development',
         spend:data && data.data && data.data.development && data.data.development.spends,
         allocated:data && data.data && data.data.development && data.data.development.allocated,
         remaining:data && data.data && data.data.development && data.data.development.remaining,
         status:data && data.data && data.data.development && data.data.development.status,
-        department: data && data.data && data.data.development && data.data.development.dept_id
+        department: data && data.data && data.data.development && data.data.development.dept_id,
+        hours_allocated: developmentHrs
 
       },{
         team: 'QA',
@@ -194,25 +235,59 @@ function TeamProject(props) {
         allocated:data && data.data && data.data.quality_analyst && data.data.quality_analyst.allocated,
         remaining:data && data.data && data.data.quality_analyst && data.data.quality_analyst.remaining,
         status:data && data.data && data.data.quality_analyst && data.data.quality_analyst.status,
-        department: data && data.data && data.data.quality_analyst && data.data.quality_analyst.dept_id
-
+        department: data && data.data && data.data.quality_analyst && data.data.quality_analyst.dept_id,
+         hours_allocated: qaHrs
       },{
         team:'Project Management',
         spend:data && data.data && data.data.project_management && data.data.project_management.spends,
         allocated:data && data.data && data.data.project_management && data.data.project_management.allocated,
         remaining:data && data.data && data.data.project_management && data.data.project_management.remaining,
         status:data && data.data && data.data.project_management && data.data.project_management.status,
-        department: data && data.data && data.data.project_management && data.data.project_management.dept_id
+        department: data && data.data && data.data.project_management && data.data.project_management.dept_id,
+         hours_allocated: managementHrs
 
       },{
         team:'Total',
         spend:data && data.data && data.data.total && data.data.total.spends,
         allocated:data && data.data && data.data.total && data.data.total.allocated,
         remaining:data && data.data && data.data.total && data.data.total.remaining,
-        status:data && data.data && data.data.total && data.data.total.status
+        status:data && data.data && data.data.total && data.data.total.status,
+        hours_allocated: (Number(qaHrs) + Number(managementHrs) + Number(developmentHrs) + Number(designHrs))
+      });
+      setGraphDataObj({
+        completion:data && data.data && data.data.completion,
+        remaining_perc:data && data.data && data.data.remaining_perc,
+        hours_allocated_qa:Number(qaHrs),
+        hours_allocated_management:Number(managementHrs),
+        hours_allocated_development:Number(developmentHrs),
+        hours_allocated_design:Number(designHrs)
       });
       setRowData(newData || []);
+      setBarGraphData({
+        labels: [''],
+        datasets: [
+          {
+            label: 'Spent Hours',
+            backgroundColor: '#F4C222',
+            borderWidth: 2,
+            data: [data && data.data && data.data.total && data.data.total.spends]
+          },
+          {
+            label: 'Estimated Hours',
+            backgroundColor: '#FFB6C1',
+            borderWidth: 2,
+            data: [data && data.data && data.data.total && data.data.total.allocated]
+          },
+          {
+            label: 'Allocated Hours',
+            backgroundColor: '#85C51C',
+            borderWidth: 2,
+            data: [data && data.data && data.data.total && data.data.hours_allocated]
+          }
+        ]
+      });
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -241,19 +316,27 @@ function TeamProject(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4">
-        <div className="mb-3">
-          <span>Project Name: {name}</span>
-          <Button className="float-end mb-3" onClick= {() => history.push('/project')} >Back</Button>
-        </div>
-        <Row className="doughnut-graph-section">
+        <Row className="mb-3">
           <Col>
+            <span>Project Name: {name}</span>
+          </Col>
+          <Col>
+           <h3 className={(projectStatus < 0) ? 'text-danger' :'text-primary'}>{(projectStatus < 0) ? 'Project in delay' :'Project Ontrack'}</h3>
+          </Col>
+          <Col>
+            <Button className="float-end mb-3" onClick= {() => history.push('/project')} >Back</Button>
+          </Col>
+        </Row>
+        <Row className="doughnut-graph-section">
+          <Col sm={3}>
             <Doughnut
               // ref={graphref}
               id="dougnut"
               data={graphData}
               subTitle=""
-              // title={`${centerPercentage}%`}
+              title={`${graphDetails.projectCompletion}%`}
               height="150"
               width="150"
               constrainToVisibleArea="true"
@@ -269,21 +352,37 @@ function TeamProject(props) {
                 top: 0,
               }}
               colorScale={['yellow','green']}
-              wrapperSize={{ height: '150px', width: '50%' }}
+              wrapperSize={{ height: '150px', width: '100%' }}
             />
           </Col>
-          <Col>
+          <Col sm={4}>
+          <Bar
+            data={barGraphData}
+             options={{
+                title:{
+                  display:true,
+                  text:'Team Bar Graph',
+                  fontSize:20
+                },
+                legend:{
+                  display:true,
+                  position:'right'
+                }
+              }}
+          />
+          </Col>
+          <Col sm={5}>
           <ul>
             <li>
             Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
             </li>
             <li>
-            Total Hrs Estimated: <span>{graphDetails.totalHrsEstimate}</span>
+            Total Hours Estimated: <span>{graphDetails.totalHrsEstimate}</span>
             </li>
             {
               ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
               <li>
-              Total Hrs Allocated: <span>{graphDetails.totalHrsAllocated}</span>
+              Total Hours Allocated: <span>{graphDetails.totalHrsAllocated}</span>
               </li>
             )} 
             <li>

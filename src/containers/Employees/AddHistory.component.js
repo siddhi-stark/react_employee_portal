@@ -6,6 +6,7 @@ import FormSections from './AddHistory.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function AddHistory(props) {
   // Variable declarations
@@ -13,6 +14,8 @@ function AddHistory(props) {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [isShowLoader, setShowLoader] = useState(false);
+
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -35,6 +38,7 @@ function AddHistory(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
     const employeeId = customFunctions.getLocalStorage('id');
     const postData = {
       employee: Number(employeeId),
@@ -57,6 +61,7 @@ function AddHistory(props) {
 
     const { data } = await callback(endPoint, postData);
     if(data) {
+      setShowLoader(false);
       swal({
         title: data.message[0],
         icon: 'success',
@@ -74,9 +79,11 @@ function AddHistory(props) {
 
   // Get data for form
   const getData = async (id, designation) => {
+    setShowLoader(true);
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
      let des = {};
      if(data){
+     setShowLoader(false);
      await designation.map((ds) => {
        if(data.data.designation.toString() === ds.name.toString()) {
          des = {
@@ -125,6 +132,8 @@ function AddHistory(props) {
   };
 
   return (
+    <>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
     <StarkFormBuilder
       containerClass="mt-4 mb-3"
       formHeaderClass=""
@@ -145,6 +154,7 @@ function AddHistory(props) {
         onClear();
       }}
     />
+    </>
   );
 }
 

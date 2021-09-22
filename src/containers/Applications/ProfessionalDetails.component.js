@@ -6,6 +6,7 @@ import FormSections from './AddProfessional.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function ProfessionalDetails(props) {
   let filterOptions = {};
@@ -15,6 +16,7 @@ function ProfessionalDetails(props) {
   const [options, updateOptions] = useState({});  // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
+  const [isShowLoader,setShowLoader] = useState(false);
 
   // Get user role
   const getUserRole = async () => {
@@ -46,6 +48,7 @@ function ProfessionalDetails(props) {
   }, [currentUser]);
 
    const getData = async (profId) => {
+    setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${profId}/`);
      //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
      //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
@@ -58,6 +61,7 @@ function ProfessionalDetails(props) {
      //  } : ''
 
      if(data) {
+     setShowLoader(false);
      const obj = {
        ...data.data,
        // applied_for: ds
@@ -85,6 +89,7 @@ function ProfessionalDetails(props) {
 
   // Submit Form
    const submitForm = async (formValues) => {
+     setShowLoader(true);
     const applicantId = customFunctions.getLocalStorage('applicantId');
 
     let postData = {
@@ -101,6 +106,7 @@ function ProfessionalDetails(props) {
       postData
     );
       if (data) {
+        setShowLoader(false);
         props.onProfDetInfo(data.data.id);
         await localStorage.setItem('InterviewId',data.data.id);
         swal(data && data.message[0], '', 'success', {
@@ -112,6 +118,7 @@ function ProfessionalDetails(props) {
           swal.close();
             });
           } else {
+            setShowLoader(false);
             swal(message, '', 'error', {
               closeOnClickOutside: false,
               allowOutsideClick: false,
@@ -148,6 +155,8 @@ function ProfessionalDetails(props) {
 
   return (
     // Usage
+    <>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
     <div mt-4>
 
     <StarkFormBuilder
@@ -171,6 +180,7 @@ function ProfessionalDetails(props) {
       onFormReset={() => {}}
     />
     </div>
+    </>
   );
 }
 

@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
+import { Bar } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 // import StarkFormBuilder from 'stark-form-builder';
-import { Card, Button } from 'react-bootstrap';
+import { Card, Button, Row, Col } from 'react-bootstrap';
 // import FormSections from './formschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function Team(props) {
   const teamid = props;
   const teamId = teamid.match.params.teamId;
-  
+  const graphDataObj = teamid.location.state ? teamid.location.state.graphDataObj
+    : '';
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
   const getProjectName = customFunctions.getLocalStorage('projectName');
@@ -26,17 +29,23 @@ function Team(props) {
 
   const history = useHistory();
   const [title, setTitle] = useState('');
+  
+  const initialState = {
+    totalHrsSpend: null,
+    totalHrsEstimate: null,
+  };
 
   // Declare variable column state
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  // const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  // const [departmentName, setDepartmentName] = useState('');
   const [projectName, setProjectName] = useState('');
   const departmentId = customFunctions.getLocalStorage('department');
   const [currentUser, updateCurrentUser] = useState(0);
-  // const [filterData, setFilterData] = useState({});
+  const [barGraphData, setBarGraphData] = useState({});
+  const [isShowLoader,setShowLoader] = useState(false);
+  const [graphDetails, setGraphDetails] = useState(initialState);
+  const [graphAllocatedHrs, setGraphAllocatedHrs] = useState(null);
 
   // Declare columns
   const columns = [
@@ -121,7 +130,11 @@ function Team(props) {
   ];
 
   // Declare methods table method
-  const getRowData = async (pageNo = 1) => {
+  const getRowData = async (pageNo = 1) => {  // eslint-disable-line
+    const spendArr =[];
+    const estimatedArr =[];
+    const employeeNameArr =[];
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.departmentReportUrl}`;
     const params = {
@@ -133,13 +146,60 @@ function Team(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
-      // setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      // setDepartmentName(data && data.data && data.data.department);
       setProjectName(data && data.data && data.data.project_name);
       setRowData((data && data.data && data.data.employees_data) || []);
+       switch (data &&  data.data && data.data.department) {
+        case 'Project Management':
+          setGraphAllocatedHrs(graphDataObj.hours_allocated_management);
+          break;
+        case 'Development':
+          setGraphAllocatedHrs(graphDataObj.hours_allocated_development);
+          break;
+        case 'Design':
+          setGraphAllocatedHrs(graphDataObj.hours_allocated_design);
+          break;
+        case 'Quality Analysis':
+          setGraphAllocatedHrs(graphDataObj.hours_allocated_qa);
+          break;
+        default:
+          return !data.data.department;
+      }
+
+      data && data.data && data.data.employees_data && data.data.employees_data.map((emp)=>{
+        if(emp.emp_name === 'Total') {
+          setGraphDetails({
+            totalHrsSpend: emp.spends,
+            totalHrsEstimate: emp.allocated,
+          });  
+        } else {
+          spendArr.push(emp.spends);
+          estimatedArr.push(emp.allocated);
+          employeeNameArr.push(emp.emp_name);
+        }
+      return emp;
+      });
+      setBarGraphData({
+          labels: employeeNameArr,
+          datasets: [
+            {
+              label: 'Spent Hours',
+              backgroundColor: '#f00000',
+              borderWidth: 1,
+              data: spendArr
+            },
+            {
+              label: 'Estimated Hours',
+              backgroundColor: '#85C51C',
+              borderWidth: 1,
+              data: estimatedArr
+            }
+          ]
+        });
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -150,7 +210,7 @@ function Team(props) {
   useEffect(() => {
     setTitle('Team Project');
     getRowData(1);
-  }, []);
+  }, [graphAllocatedHrs]);
 
    // Get user role Filter 
   const getUserRole = async() => {
@@ -169,11 +229,52 @@ function Team(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4">
-      <div className="mb-3">
+      <Row className="mb-3">
+         <Col>
           <span>{getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}</span>
+          </Col>
+          <Col>
          <Button className="float-end mb-3" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
-        </div>
+          </Col>
+        </Row>
+
+        <Row className="doughnut-graph-section">
+          <Col sm={8}>
+          <Bar
+            data={barGraphData}
+             options={{
+                title:{
+                  display:true,
+                  text:'Team Bar Graph',
+                  fontSize:20
+                },
+                legend:{
+                  display:true,
+                  position:'right'
+                }
+              }}
+          />
+          </Col>
+          <Col sm={4}>
+          <ul>
+            <li>
+            Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
+            </li>
+            <li>
+            Total Hours Estimated: <span>{graphDetails.totalHrsEstimate}</span>
+            </li>
+            {
+              ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
+              <li>
+              Total Hours Allocated: <span>{graphAllocatedHrs}</span>
+              </li>
+            )} 
+            </ul>
+          </Col>
+        </Row>
+        <hr />
             <CustomTable
               columns={columns}
               rows={rowData}

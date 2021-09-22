@@ -7,6 +7,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -20,6 +21,8 @@ function AllReports() {
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
+  const [isShowLoader, setShowLoader] = useState(false);
+
   // const history = useHistory();
 
   const [pagination, setPagination] = useState({
@@ -68,6 +71,7 @@ function AllReports() {
   ];
 
   const getReports = async (pageNo = 0) => {
+    setShowLoader(true);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.reportListingUrl}`;
 
@@ -82,6 +86,7 @@ function AllReports() {
 
     const { data } = await AuthApi.postDataToServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
+      setShowLoader(false);
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: data.paginator.current_page,
@@ -159,6 +164,7 @@ function AllReports() {
         <h2 className="main-content-title tx-24 mg-b-5">My Report</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
         <div className="mt-5">

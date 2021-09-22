@@ -9,7 +9,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-
+import Loader from '../../components/Loader/index';
 import { Helmet } from '../../components/FormInputs';
 
 function EmployeeProfile(props) {
@@ -25,27 +25,32 @@ function EmployeeProfile(props) {
   const [rowPersonalData, setRowPersonalData] = useState([]);
   const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
+  const [isShowLoader,setShowLoader] = useState(false);
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
 
   const getEmployeeDetails = async () => {
+    setShowLoader(true);
     const employeeId = props.match.params.id;
     customFunctions.setLocalStorage('id', employeeId);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${employeeId}/`
     );
     if (data) {
+      setShowLoader(false);
       setEmployeeDetails(data.data);
       getEmployeeDocument(data.data && data.data.full_name);
     }
   };
 
   const getEmployeeHIstory = async () => {
+    setShowLoader(true);
     const employeeId = props.match.params.id;
     const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
+      setShowLoader(false);
       setCompanyList(data.data);
     }
   };
@@ -135,6 +140,7 @@ function EmployeeProfile(props) {
   ];
 
   const getEmployeeDocument = async (name) => {
+    setShowLoader(true);
     const formData = new FormData();
 
     formData.append('employee_name', name);
@@ -145,6 +151,7 @@ function EmployeeProfile(props) {
       formData
     );
     if (data) {
+      setShowLoader(false);
       setEmployeeDocument(data.data);
       data.data &&
         data.data.map((document) => {
@@ -161,6 +168,7 @@ function EmployeeProfile(props) {
         });
     }
     if (!data) {
+      setShowLoader(false);
       swal(message, '', 'error');
     }
   };
@@ -225,7 +233,7 @@ function EmployeeProfile(props) {
           <Breadcrumb items={items} />
         </div>
       </div>
-
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <Button className="float-end mt-2 mb-2 mr-3" onClick={() => history.push('/employees')} >Back</Button>
       <div className="col-xl-12" id="main-content">
         <div className="employee-new-profile">

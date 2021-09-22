@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Accordion, Button, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -10,6 +10,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -23,6 +24,8 @@ function TeamProjectScheduler() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
+  const [isShowLoader, setShowLoader] = useState(false);
+  const history = useHistory();
 
   // Variable declarations Fikter
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -35,7 +38,7 @@ function TeamProjectScheduler() {
   // Declare columns
   const columns = [
     {
-      id: 'id',
+      id: 'emp_id',
       label: 'id',
       roleAccess: [4],
       isDisplay:false
@@ -44,6 +47,25 @@ function TeamProjectScheduler() {
       id: 'emp_name',
       label: 'Name',
       roleAccess: [4],
+      render: ({ emp_id, emp_name }) => {
+        return (
+          <>
+            <a
+              href="/"
+              className="pl-2 ms-1"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/my-project/${emp_id}`,{schedular:true});
+                customFunctions.setLocalStorage('teamMemberName',emp_name);
+                customFunctions.setLocalStorage('teamMemberId',emp_id);
+              }}
+            >
+             {emp_name} 
+            </a>
+          </>
+        );
+      },
     },
     {
       id: '0-25',
@@ -86,6 +108,7 @@ function TeamProjectScheduler() {
   ];
 
   const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.projectSchedularUrl}`; 
     const filterList =
@@ -102,11 +125,13 @@ function TeamProjectScheduler() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setRowData((data && data.data && data.data.employees_data) || []);
     } else {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -174,6 +199,7 @@ function TeamProjectScheduler() {
         <h2 className="main-content-title tx-24 mg-b-5">Team Project Scheduler</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
         {currentUser !== 3 && (

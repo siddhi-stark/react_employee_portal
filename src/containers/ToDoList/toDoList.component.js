@@ -113,7 +113,7 @@ function ToDoList(props) {
                 className="pl-2"
                 target="_blank"
               >
-                <Image src="/images/edit-button.svg" />
+                <Image src="/images/redirect.png" />
               </a>
             ) : (
                 <a
@@ -717,8 +717,6 @@ function ToDoList(props) {
                         return e;
                       });
                       setSelectedId([...arrNew]);
-                      // const arr = selectedId;
-                      // if (selectedId)
                     }}
                     tableClass="table-striped"
                     emptyRender={() => (

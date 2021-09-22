@@ -6,6 +6,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
+import Loader from '../../components/Loader/index';
 
 function NoticePeriodComponent() {
   
@@ -15,11 +16,14 @@ function NoticePeriodComponent() {
   const [limit, setLimit] = useState(9);
   const [currentPage, setCurrentPage] = useState('');
   const [options, updateOptions] = useState({});
+  const [isShowLoader, setShowLoader] = useState(false);
+
 
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const history = useHistory();
 
   const getEmployee = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
     const params = {
@@ -30,6 +34,7 @@ function NoticePeriodComponent() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
+      setShowLoader(false);
       setEmployee(data.data);
       // setId(data.data.id);
       setTotalCount(Number(data.paginator.total_count));
@@ -85,6 +90,7 @@ function NoticePeriodComponent() {
   return (
     <>
       <Helmet title={title} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="row mt-3">
           {employee &&

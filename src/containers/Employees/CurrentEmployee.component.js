@@ -4,7 +4,7 @@ import StarkFormBuilder from 'stark-form-builder';
 import { Row, Col, Card, Button, Image, Accordion } from 'react-bootstrap';
 import FormSections from './EmployeeFilterSchema.json';
 import { Helmet } from '../../components/FormInputs';
-
+import Loader from '../../components/Loader/index';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
@@ -21,11 +21,14 @@ function CurrentEmployee() {
   // const [currentUser, updateCurrentUser] = useState(0);
   const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
+  const [isShowLoader, setShowLoader] = useState(false);
+
 
   const history = useHistory();
   // const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
   const getEmployee = async (pageNo = 1) => {
+    setShowLoader(true);
     setEmployee([]);
 
     const page = pageNo || currentPage;
@@ -43,6 +46,7 @@ function CurrentEmployee() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
+      setShowLoader(false);
       setEmployee([...data.data]);
       // setId(data.data.id);
 
@@ -104,6 +108,7 @@ function CurrentEmployee() {
   return (
     <>
       <Helmet title={title} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
           <Accordion defaultActiveKey="0">

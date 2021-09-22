@@ -8,6 +8,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
+import Loader from '../../components/Loader/index';
 
 function OldEmployee() {
   // const title = 'Employees List';
@@ -20,11 +21,14 @@ function OldEmployee() {
   // const [currentUser, updateCurrentUser] = useState(0);
   // const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
+  const [isShowLoader, setShowLoader] = useState(false);
+
 
   const history = useHistory();
   // const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
   const getEmployee = async (pageNo = 1) => {
+    setShowLoader(true);
     setEmployee([]);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
@@ -41,6 +45,7 @@ function OldEmployee() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
+      setShowLoader(false);
       setEmployee([...data.data]);
       // setId(data.data.id);
       setTotalCount(Number(data.paginator.total_count));
@@ -96,6 +101,8 @@ function OldEmployee() {
   return (
     <>
       <Helmet title={title} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+
       <section className="content-area">
        
         <div className="row mt-3">

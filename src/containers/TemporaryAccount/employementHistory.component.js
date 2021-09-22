@@ -6,6 +6,7 @@ import FormSections from './historyFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function EmployementHistory(props) {
   const accProps = { props };
@@ -17,8 +18,8 @@ function EmployementHistory(props) {
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  const [isShowLoader,setShowLoader] = useState(false);
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -41,6 +42,8 @@ function EmployementHistory(props) {
   }, []);
 
   const getData = async () => {
+    setShowLoader(true);
+
     const addmoreData = [];
 
     const endPoint = candidateId
@@ -57,6 +60,7 @@ function EmployementHistory(props) {
       : await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
       data.data &&
         data.data.applicant_history &&
         data.data.applicant_history.length > 0 &&
@@ -98,6 +102,7 @@ function EmployementHistory(props) {
         });
       updateDefaultValues({ addmore: [...addmoreData] });
     } else {
+      setShowLoader(false);
       swal(message,'','error');
     }
   };
@@ -110,6 +115,7 @@ function EmployementHistory(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
     const payload = {
       email_hash: tokenProps,
       password: passwordProps,
@@ -162,18 +168,18 @@ function EmployementHistory(props) {
     );
 
     if (!data) {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
         buttons: false,
         timer: 2000,
       }).then(() => {
-        // updateDefaultValues({});
         swal.close();
       });
-      // show error
-      // return;
+      
     } else {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -184,11 +190,11 @@ function EmployementHistory(props) {
         swal.close();
       });
     }
-    // Perform success actions
   };
 
   return (
     <>
+     <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass=""
         formHeaderClass=""
@@ -197,7 +203,6 @@ function EmployementHistory(props) {
         onFormSubmit={(formValues) => {
           submitForm(formValues);
         }}
-        // options={options}
         callbacks={{}}
         defaultFormValues={defaultValues}
         currentUser={currentUser}

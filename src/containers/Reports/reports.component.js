@@ -6,6 +6,7 @@ import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function Reports(props) {
   const [rows, setRows] = useState([]);
@@ -13,6 +14,8 @@ function Reports(props) {
   const [reportDate, setReportDate] = useState('');
   const [title, setTitle] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
+  const [isShowLoader, setShowLoader] = useState(false);
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -53,6 +56,7 @@ function Reports(props) {
   ];
 
   const getTableData = async (pageNo = 1) => {
+    setShowLoader(true);
     const page = pagination.current_page || pageNo;
     const dt = customFunctions.getDate(
       new Date(Number(props.match.params.date))
@@ -71,6 +75,7 @@ function Reports(props) {
     const { data } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O')) {
+      setShowLoader(false);
       setPagination({
         activePage: data.paginator.current_page,
         itemsPerPage: (pagination && pagination.itemsPerPage) || 10,
@@ -107,6 +112,7 @@ function Reports(props) {
   return (
     <>
       <Helmet title={title} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <div className="mt-3">
         <Card>
           <Card.Body>

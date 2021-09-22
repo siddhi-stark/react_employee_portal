@@ -16,6 +16,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import Loader from '../../components/Loader/index';
 
 function EmailTemplatesComponent() {
   const title = 'Employees List';
@@ -29,6 +30,7 @@ function EmailTemplatesComponent() {
   const [templateId, setTemplateId] = useState(null);
   const [placeholdersData, setPlaceholdersData] = useState([]);
   const [toggle, setToggle] = useState(false);
+  const [isShowLoader,setShowLoader] = useState(false);
   let [description] = useState(EditorState.createEmpty());
 
   const getEmailTemplateData = async () => {
@@ -99,6 +101,7 @@ function EmailTemplatesComponent() {
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
     emailContent &&
       emailContent.map((emp) => {
         if (emp.id === templateId) {
@@ -121,6 +124,7 @@ function EmailTemplatesComponent() {
       payload
     );
     if (data) {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -132,6 +136,7 @@ function EmailTemplatesComponent() {
         setEmailContent([]);
       });
     } else {
+      setShowLoader(false);
       swal(message, '', 'error');
       // show error
     }
@@ -183,6 +188,7 @@ function EmailTemplatesComponent() {
         <h2 className="main-content-title tx-24 mg-b-5">Email Templates</h2>
         <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body>
         <StarkFormBuilder
           containerClass=""

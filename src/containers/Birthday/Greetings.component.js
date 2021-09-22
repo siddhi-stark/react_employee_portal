@@ -8,6 +8,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import Loader from '../../components/Loader/index';
 
 function Greetings() {
 	const handleActionCallback = (row) => {
@@ -56,6 +57,10 @@ function Greetings() {
 			label: 'Type',
 		},
 		{
+			id: 'employeeName',
+			label: 'Employee Name',
+		},
+		{
 			id: 'message',
 			label: 'Message',
 		},
@@ -87,27 +92,51 @@ function Greetings() {
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [title, setTitle] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
 	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
+  const getEmployee = async () => {
+    // const id = props.match.params.stackId;
+    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
+    getRowData(1,data.data);
+  };
+
 	// Declare methods
-	const getRowData = async (pageNo = 1) => {
+	const getRowData = async (pageNo = 1,empData) => {
+		setShowLoader(true);
 		const page = pageNo || currentPage;
 		const endPoint = Api.greetingsUrl;
 		const params = {
 			page,
 			limit,
 			sort_by: 'date',
+			sort_direction: 'descending'
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
 
 		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+
+					const newEmpArr = []
+		empData && empData.map((emp) => {
+		data && data.data.map((empdata) => {
+		if(emp.id === empdata.employee[0]) {
+		const newItem = empdata;
+		newItem.employeeName = emp.full_name;
+		newEmpArr.push(newItem);
+		}
+		return empdata;
+		})
+		return emp;
+		})
+			setShowLoader(false);
 			setTotalCount(data.paginator.total_count);
 			setLimit(data.paginator.limit);
 			setCurrentPage(Number(data.paginator.current_page));
-			setRowData((data && data.data) || []);
+			setRowData((newEmpArr) || []);
 		} else {
+			setShowLoader(false);
 			 swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -120,7 +149,7 @@ function Greetings() {
 	};
 
 	useEffect(() => {
-		getRowData(1);
+		getEmployee();
 		setTitle('Greetings');
 	}, []);
 
@@ -162,11 +191,13 @@ function Greetings() {
 
 	return (
 		<>
+		{console.log('rowData',rowData)}
 			<Helmet title={title} />
 			<div className="title-breadcrumb-section">
 				<h2 className="main-content-title tx-24 mg-b-5">Greetings</h2>
 				<Breadcrumb items={items} />
 			</div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area greeting-list">
 				<div className="mt-5">
 					<Card>

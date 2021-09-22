@@ -1,6 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import FormSections from './birthday.json';
@@ -9,6 +9,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
+import Loader from '../../components/Loader/index';
 
 function AddBirthday(props) {
 
@@ -23,6 +24,7 @@ function AddBirthday(props) {
   const [imageUrl, setImageUrl] = useState('');
   const [title, setTitle] = useState('');
   const [bId, setbirthdayID] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
   const items = [{ to: '/', label: 'Home' }, { label: BirthdayId ? 'Edit Greeting' : 'Add Greeting' }]; 
   const history = useHistory();  
 
@@ -67,7 +69,7 @@ function AddBirthday(props) {
 
   // Submit Form
   const submitForm = async (formValues) => {
-
+    setShowLoader(true);
     const postData = {
       message: formValues.message,
       greet_type: formValues.greet_type ? formValues.greet_type.value : '',
@@ -87,6 +89,7 @@ function AddBirthday(props) {
     const { data } = await callback(endPoint, postData);
 
     if(data) {
+      setShowLoader(false);
       swal(data.message[0],'','success');
       history.push('/greetings');
     }
@@ -95,9 +98,12 @@ function AddBirthday(props) {
 
   // Get data for form
   const getData = async (id,empList) => {
+    setShowLoader(true);
     const {data } = await AuthApi.getDataFromServer(`${Api.greetingsUrl}${id}/`);
 
-    let bEmp = {};
+    if(data) {
+      setShowLoader(false);
+      let bEmp = {};
 
     empList.map((em) => {
       data.data.employee.map((emd) => {
@@ -128,6 +134,7 @@ function AddBirthday(props) {
       };
 
      updateDefaultValues({ ...obj }); 
+    }
   };
 
   // Call get data method on load
@@ -163,7 +170,8 @@ function AddBirthday(props) {
           if (
             item.name === 'greet_type' ||
             item.name === 'message' ||
-            item.name === 'employee' 
+            item.name === 'employee' ||
+            item.name === 'comment_allow' 
           )
             itemData.disabled = true;
           return itemData;
@@ -180,7 +188,8 @@ function AddBirthday(props) {
           if (
             item.name === 'greet_type' ||
             item.name === 'message' ||
-            item.name === 'employee' 
+            item.name === 'employee' ||
+            item.name === 'comment_allow' 
           )
             itemData.disabled = false;
           return itemData;
@@ -240,13 +249,19 @@ function AddBirthday(props) {
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
           <Breadcrumb items={items} />
+    
         </div>
       </div> 
-		<div className="mt-5">
-		<Card>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 
-  <StarkFormBuilder
-    containerClass='mt-4 mb-4'
+      <div className="mt-4 edit-timelog">
+        <Card body>
+        {viewOptions ? (
+
+        <Button className="float-end" onClick= {() => history.push('/greetings')} >Back</Button>
+          ) : ''}
+        <StarkFormBuilder
+    containerClass='mt-5 mb-4'
     formHeaderClass=''
     formSections={FormSections || jsonSchema}
     formHeading="tbirthday"
@@ -266,15 +281,15 @@ function AddBirthday(props) {
     submitBtnText="Submit"
     showResetBtn={true}
     resetBtnText="Cancel"
-    btnContainerClass="form-submit-buttons"
+    btnContainerClass= {viewOptions ? 'd-none' : 'form-submit-buttons'} 
     isStepForm={false}
     
     onFormReset={() => {
       history.push('/greetings');
     }}
   />
-		</Card>
-		</div>
+      </Card>
+      </div>
     
 		</>
 

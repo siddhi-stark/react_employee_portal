@@ -14652,6 +14652,11 @@ table.quotes-wrapper thead th {
   max-width: 650px;
 }
 
+.table tbody tr td img,
+.table tbody tr td svg {
+  cursor: pointer;
+}
+
 /*@media (min-width: 576px){
     .bd-content .highlight {
         margin-right: 0;
@@ -15374,6 +15379,11 @@ span.np-sup {
   border-radius: 100%;
   overflow: hidden;
   border: 4px solid #ffffff;
+}
+.profile-bg h3, .profile-bg .h3 {
+  position: absolute;
+  left: 160px;
+  bottom: 10px;
 }
 
 .logout-btn {
