@@ -12,7 +12,6 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
 function OnBoard(props) {
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
@@ -78,7 +77,6 @@ function OnBoard(props) {
     );
     if (isFind) {
       postData.tw_emp = isFind.tw_id;
-      // if (employeeId) postData.tw_emp = isFind.tw_id;
     }
 
       const { data, message } = await AuthApi.postDataToServer(Api.employeeUrl, postData);
@@ -96,7 +94,6 @@ function OnBoard(props) {
           }
         });
 
-        // swal(data.message[0],'','success');
       } else {
          setShowLoader(false);
           swal(message, '', 'error', {
@@ -105,7 +102,6 @@ function OnBoard(props) {
             buttons: false,
             timer: 2000,
           }).then(() => {
-            // updateDefaultValues({});
             swal.close();
           });
       }
@@ -115,7 +111,6 @@ function OnBoard(props) {
     setShowLoader(true);
     const {data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${applicantId}/`);
     if(!data) {
-      // show error
       return;
     }
 
@@ -144,7 +139,6 @@ function OnBoard(props) {
     }
   };
 
-  // Call get data method on load
   useEffect(() => {
     getData();
   }, []);
@@ -152,7 +146,6 @@ function OnBoard(props) {
   const getTwEmp = async () => {
     const {data} = await AuthApi.getDataFromServer(`${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`);
     if(!data) {
-      // show error
       return;
     }
     
@@ -173,7 +166,6 @@ function OnBoard(props) {
   const getDesignation = async () => {
     const {data} = await AuthApi.getDataFromServer(Api.designationUrl);
     if(!data) {
-      // show error
       return;
     }   
    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
@@ -192,7 +184,6 @@ function OnBoard(props) {
   const getRole = async () => {
     const {data} = await AuthApi.getDataFromServer(Api.roleUrl);
     if(!data) {
-      // show error
       return;
     }
     
@@ -212,7 +203,6 @@ function OnBoard(props) {
   const getManagers = async () => {
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=${2}&is_dropdown=1`);
     if(!data) {
-      // show error
       return;
     }
     
@@ -232,7 +222,6 @@ function OnBoard(props) {
   const getTeamLeads = async () => {
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=${3}&is_dropdown=1`);
     if(!data) {
-      // show error
       return;
     }
     

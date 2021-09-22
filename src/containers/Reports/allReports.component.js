@@ -16,9 +16,7 @@ const items = [
 ];
 
 function AllReports() {
-  // let searchFormSubmit = false;
   const [rows, setRows] = useState([]);
-  // const [searchKeyword, setSearchKeyword] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
@@ -190,9 +188,7 @@ function AllReports() {
   };
 
   const onClear = () => {
-    // searchFormSubmit= false;
     setFilterErr('');
-    // setSearchKeyword('');
     setFromDate('');
     setToDate('');
     setSelectedEmployee([]);
@@ -225,7 +221,6 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
   isValid = false;
 }
     if (isValid) {
-      // searchFormSubmit= true;
       setFilterErr('');
       getReports(1);
     }

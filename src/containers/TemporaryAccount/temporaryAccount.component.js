@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-
 import { Tabs, Tab, Image, ProgressBar, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import { Helmet } from '../../components/FormInputs';
@@ -28,7 +27,6 @@ function TemporaryAccount(props) {
   const [completion, setCompletion] = useState(null);
   const [trigger, setTrigger] = useState(false);
 
-  // Get user role
   const getData = async () => {
     const endPoint = candidateId
       ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
@@ -146,7 +144,6 @@ function TemporaryAccount(props) {
               <Tabs
                 defaultActiveKey="Personal"
                 onSelect={(e) => handleSelect(e)}
-                // id="uncontrolled-tab-example"
               >
                 <Tab eventKey="Personal" title="Personal Documents">
                  {((key === 'Personal') && toggle) && (
