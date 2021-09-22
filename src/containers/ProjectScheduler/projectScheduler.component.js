@@ -19,7 +19,6 @@ const items = [
 ];
 
 function ProjectScheduler() {
-  // const history = useHistory();
   // Declare variable
   const [title, setTitle] = useState('');
   const [rowData, setRowData] = useState([]);
@@ -30,7 +29,6 @@ function ProjectScheduler() {
   const [developerValue, setDeveloperValue] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
 
-  // const departmentId = customFunctions.getLocalStorage('department');
   const teamId = customFunctions.getLocalStorage('team_id');
 
   // Variable declarations Filter

@@ -281,7 +281,6 @@ function Team(props) {
               showPagination={false}
               paginationProps={{
                 totalItems: totalCount,
-                // itemsPerPage: limit,
                 activePage: currentPage,
                 onPageChange: (pageNo) => {
                   getRowData(pageNo);

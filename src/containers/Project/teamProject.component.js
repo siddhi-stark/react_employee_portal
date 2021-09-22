@@ -46,7 +46,6 @@ function TeamProject(props) {
   const [graphDetails, setGraphDetails] = useState(initialState);
   const [graphData, setGraphData] = useState([]);
   const [title, setTitle] = useState('');
-  // const [legendData, setLegendData] = useState([]);
 
   // Declare variable column state
   const [rowData, setRowData] = useState([]);
@@ -342,7 +341,6 @@ function TeamProject(props) {
               labels={({ datum }) => `${datum.x}: ${datum.y}%`}
               legendOrientation="vertical"
               legendPosition="right"
-              // legendData={legendData}
               legends={{}}
               padding={{
                 bottom: 0,
