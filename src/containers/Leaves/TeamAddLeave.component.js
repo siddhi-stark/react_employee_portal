@@ -19,7 +19,6 @@ function TeamAddLeave(props) {
   const history = useHistory();
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
-  // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [title, setTitle] = useState('');
@@ -69,11 +68,8 @@ function TeamAddLeave(props) {
           buttons: false,
           timer: 2000,
         }).then(() => {
-          // updateDefaultValues({});
           swal.close();
         });
-        // show error
-        // return;
       } else {
         swal(data && data.message[0], '', 'success', {
           closeOnClickOutside: false,
@@ -89,7 +85,6 @@ function TeamAddLeave(props) {
        }
       }
     });
-    // Perform success actions
   };
 
   // Get data for form
@@ -98,7 +93,6 @@ function TeamAddLeave(props) {
       `${Api.leavesUrl}${leaveId}/`
     );
     if (!data) {
-      // show error
       return;
     }
     if(data && data.data){
@@ -144,10 +138,6 @@ function TeamAddLeave(props) {
               formHeaderClass=""
               formSections={FormSections}
               formHeading="Leave"
-              // onFormSubmit={(formValues) => {
-              //   submitForm(formValues);
-              // }}
-              // options={options}
               callbacks={{}}
               defaultFormValues={defaultValues}
               currentUser={currentUser}

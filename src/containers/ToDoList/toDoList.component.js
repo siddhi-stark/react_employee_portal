@@ -442,7 +442,6 @@ function ToDoList(props) {
     breakData.map((dt) => {
       return BreakPostData.push({
         id: dt.id,
-        // description: dt.selectedBreakOption.label,
         content: `${dt.selectedBreakOption.label}`,
         start_time: customFunctions.getTime(dt.startTime),
         end_time: customFunctions.getTime(dt.endTime),
@@ -534,7 +533,6 @@ function ToDoList(props) {
       setShowSendReport(false);
       validator.showMessages();
       forceUpdate(count + 1);
-      // swal('Please Select Break', '', 'error');
     }
   };
 
@@ -572,16 +570,13 @@ function ToDoList(props) {
       const { hours: diffHrs, minutes: diffMins } = customFunctions.msToTime(diffMs);
       breakData[i].hrs = diffHrs;
       breakData[i].mins = diffMins;
-      // setTimeSpentHours(diffHrs);
       breakData[i].timeHours = diffHrs;
-      // setTimeSpentMinutes(diffMins);
       breakData[i].timeMins = diffMins;
     }
     setBreakData([...breakData]);
   };
 
   const setHoursSpendTime = async (e, i, fromFunc = true) => {
-    // setTimeSpentHours(e.target.value);
     breakData[i].timeHours = e.target.value;
     const startTime = new Date(breakData[i].startTime);
     const getHours = startTime.getHours();

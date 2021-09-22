@@ -18,8 +18,6 @@ const items = [
   { to: '/profile', label: 'My Profile' },
 ];
 
-// const BlankProfile =  '/images/noProfile.jpeg';
-
 function Profile() {
   const [date, setDate] = useState('');
   const [companyEmail, setEmail] = useState('');
@@ -38,7 +36,6 @@ function Profile() {
   const [imageUrl, setImageUrl] = useState('');
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
-  // const [image, setImage] = useState('');
   const [profileId, setProfileId] = useState('');
   const [companyList,setCompanyList] = useState([]);
   const [isShowLoader,setShowLoader] = useState(false);
@@ -85,13 +82,11 @@ function Profile() {
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
-      // setImage(data.data.profile_image_url);
       setProfileId(data.data.profile_id);
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
       });
       setSelectedManager(managerList.length > 0 ? managerList.join(', ') : '');
-      // setDate(data.data.dob ? new Date(data.data.dob) : null);
       setDate(data.data.date_joined ? new Date(data.data.date_joined) : '');
     }
   };
@@ -315,15 +310,6 @@ function Profile() {
                   dateFormat="dd/MM/yyyy"
                  
                 />
-                      {/* <TextInput
-                        label="Joining Date"
-                        containerClass="form-group"
-                        placeholder="DD/MM/YYYY"
-                        type="date"
-                        name="date"
-                        value={date}
-                        disabled
-                      /> */}
                     </Col>
                     <Col sm={3}>
                       <TextInput

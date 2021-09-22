@@ -22,12 +22,6 @@ function SelectedCandidateListing() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            // history.push('/add-technology-stack');
-            // setModalShow(true);
-            // setEmployeeId(id);
-            // getRowData(1,index);
-            // setAddButton(true);
-            // setCntClearFilter(cntClearFilter + 1);
           }}
         >
           <Image src="/images/edit-button.svg" alt="Edit Employee" />
@@ -45,12 +39,6 @@ function SelectedCandidateListing() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            // history.push('/add-technology-stack');
-            // setModalShow(true);
-            // setEmployeeId(id);
-            // getRowData(1,index);
-            // setAddButton(true);
-            // setCntClearFilter(cntClearFilter + 1);
           }}
         >
           <Image src="/images/dropdown-select.svg" alt="Edit File" />
@@ -114,7 +102,6 @@ function SelectedCandidateListing() {
     const params = {
       limit,
       page,
-      // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);

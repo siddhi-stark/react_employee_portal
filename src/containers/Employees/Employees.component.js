@@ -10,7 +10,6 @@ import NoticePeriod from './NoticePeriod.component';
 import OldEmployee from './OldEmployee.component';
 
 function Employees() {
-  // const title = 'Employees List';
   const [title, setTitle] = useState('');
   const [key, setKey] = useState('currentEmployee');
   const items = [{ to: '/', label: 'Home' }, { label: 'Employees' }];

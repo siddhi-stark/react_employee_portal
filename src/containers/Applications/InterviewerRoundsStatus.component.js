@@ -25,7 +25,6 @@ function InterviewerRoundsStatus(props) {
   };
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
-  // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [interviewData, setInterviewData] = useState(initialState);
   const [interviewId, setInterviewId] = useState('');
@@ -97,15 +96,6 @@ function InterviewerRoundsStatus(props) {
 
     };
 
-    //   const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
-    //   postData.id = newId ? Number(newId) : Number(interviewId);
-    //     postData.applicant = applicantId;
-    //     postData.status = formValues ? formValues.status :'';
-    //     postData.comments = formValues ? formValues.comments :'';
-    // postData = {
-    //    ...postData,
-    //   }
-
     postData.push( 
       abc
     );
@@ -134,7 +124,6 @@ function InterviewerRoundsStatus(props) {
         allowOutsideClick: false,
       });
     }
-    // Perform success actions
   };
  
   return (

@@ -19,8 +19,6 @@ function EditProject(props) {
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-  // const [hoursAllocated,setHoursAllocated] = useState(''); 
-  // const [hourlyRate,setHourlyRate] = useState(''); 
   const [title, setTitle] = useState('');
 
   const history = useHistory();
@@ -123,7 +121,6 @@ function EditProject(props) {
   // Get data for form
   const getData = async () => {
     const { data, message } = await AuthApi.getDataFromServer(`${Api.projectDetails}${projectId}/`);
-    // console.log('data',data);
 
     if(!data) {
       swal(message, '', 'error', {
@@ -199,24 +196,6 @@ function EditProject(props) {
     getCoordinator();
   }, []);
 
-  // const onHoursAllocated = (value) => {
-  //   setHoursAllocated(value);
-  //   calculateProjectCost();
-  // };
-
-  // const onHourlyRate = (value) => {
-  //   setHourlyRate(value);
-  //   calculateProjectCost();
-  // };
-
-  // const calculateProjectCost = () => {
-  //   let cost = '';
-  //   if(hoursAllocated && hourlyRate) {
-  //     cost = hoursAllocated * hourlyRate;
-  //   };
-  //   console.log('cost',cost);
-  // };
-
   return (
     <>
      <Helmet title={title} />
@@ -237,7 +216,6 @@ function EditProject(props) {
         options={options}
         callbacks={{
           // onHoursChange: (value) => { console.log('onHoursChange',value); },
-          // onHourRate: (value) => {onHourlyRate(value);}
         }}
         defaultFormValues={defaultValues}
         currentUser={currentUser}

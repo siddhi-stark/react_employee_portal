@@ -11,21 +11,17 @@ import Pagination from '../../components/Pagination/pagination.component';
 import Loader from '../../components/Loader/index';
 
 function OldEmployee() {
-  // const title = 'Employees List';
   const [employee, setEmployee] = useState([]);
   const [title, setTitle] = useState('');
   const [totalCount, setTotalCount] = useState(9);
   const [limit, setLimit] = useState(9);
   const [currentPage, setCurrentPage] = useState('');
   const [options, updateOptions] = useState({});
-  // const [currentUser, updateCurrentUser] = useState(0);
-  // const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
 
 
   const history = useHistory();
-  // const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
   const getEmployee = async (pageNo = 1) => {
     setShowLoader(true);
@@ -36,18 +32,12 @@ function OldEmployee() {
       limit,
       old_employee: 'True',
       page,
-      // designation_id:
-      //   filterData && filterData.position ? filterData.position.value : '',
-      // user_id:
-      //   filterData && filterData.employee ? filterData.employee.value : '',
-      // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       setShowLoader(false);
       setEmployee([...data.data]);
-      // setId(data.data.id);
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));
@@ -62,7 +52,6 @@ function OldEmployee() {
   }, []);
 
   const getEmployeeName = async () => {
-    // const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?type=all&is_dropdown=1`
     );
@@ -79,10 +68,8 @@ function OldEmployee() {
   };
 
   const getPosition = async () => {
-    // const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
     if (!data) {
-      // show error
       return;
     }
 

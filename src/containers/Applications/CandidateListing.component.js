@@ -22,7 +22,6 @@ function CandidateListing() {
 	const title = 'Candidates';
 	const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
 	const history = useHistory();
-	// const isOnBoard = customFunctions.getLocalStorage('isShowOnBoard');
 
 	const actionCallBack = (row) => {
 		return (

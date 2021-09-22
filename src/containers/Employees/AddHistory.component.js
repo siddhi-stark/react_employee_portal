@@ -70,7 +70,6 @@ function AddHistory(props) {
           if (okAction) {
        props.handleModalCLose(false);
        props.onChanges();
-       // customFunctions.removeLocalStorage('id');
        customFunctions.removeLocalStorage('hisotryID');
           }
         });
@@ -106,7 +105,6 @@ function AddHistory(props) {
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if (!data) {
-      // show error
       return;
     }
 

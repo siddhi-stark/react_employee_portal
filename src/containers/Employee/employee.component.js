@@ -370,11 +370,6 @@ function Employee() {
 
   useEffect(() => {
     async function getData() {
-      //   const isAllowed = customFunctions.getLocalStorage('group');
-      // if(isAllowed !== 1) {
-      //   history.push('/');
-      //   return; // eslint-disable-line
-      // }
       const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
       getEmployee();

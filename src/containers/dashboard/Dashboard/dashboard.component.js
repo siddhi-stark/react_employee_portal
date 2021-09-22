@@ -45,7 +45,6 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
 
   let isShowBdayHeading = false;
-  // let isShowAnniversaryHeading = false;
 
   const d = new Date();
   const ToDayDate = d.getDate();
@@ -76,16 +75,6 @@ function Dashboard() {
       }
       return empl;
     });
-
-  // anniversary &&
-  //   anniversary.map((anvs) => {
-  //     const JoiningDate = new Date(anvs.date_of_joined);
-  //     const NewJoiningDate = JoiningDate.getDate();
-  //     if (NewJoiningDate === ToDayDate) {
-  //       isShowAnniversaryHeading = true;
-  //     }
-  //     return anvs;
-  //   });
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -188,7 +177,6 @@ function Dashboard() {
         const NewJoiningDate = JoiningDate.getDate();
         if (NewJoiningDate === ToDayDate) {
           avsrArr.push(anvs);
-          // isShowAnniversaryHeading = true;
         }
         if (i + 1 === data.data.length) {
           setAnniversary(avsrArr);
@@ -711,7 +699,6 @@ function Dashboard() {
                     <Table
                       columns={columns}
                       rows={rows}
-                      // showPagination
                       paginationProps={{
                         ...pagination,
                         activePage: pagination.current_page,

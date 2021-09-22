@@ -32,7 +32,6 @@ function BasicInformation(props) {
 
   useEffect(() => {
     const formSchema = [...FormSections];
-    // if ((Number(currentUser) !== 4) || (Number(currentUser) !== 3)) return;
     if ((Number(currentUser) === 2) || (Number(currentUser) === 4) || (Number(currentUser) === 3)) {
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -97,14 +96,9 @@ function BasicInformation(props) {
     }
   };
 
-  // useEffect(() => {
-  //   getData();
-  // }, [])
 
   // Submit Form
   const submitForm = async (formValues) => {
-    // customFunctions.setLocalStorage('applicantName',formValues.name);
-    // customFunctions.setLocalStorage('designation',formValues.applied_for.label);
 
     setShowLoader(true);
 
@@ -126,11 +120,6 @@ function BasicInformation(props) {
       ? `${Api.applicantsUrl}${appicantId}/`
       : Api.applicantsUrl;
     const { data, message } = await callback(endPoint, postData);
-
-    // const { data } = await AuthApi.postDataToServer(
-    //   Api.applicantsUrl,
-    //   postData
-    //   );
 
     if (data) {
       setShowLoader(false);
@@ -156,7 +145,6 @@ function BasicInformation(props) {
       `${Api.designationUrl}?type=all`
     );
     if (!data) {
-      // show error
       return;
     }
 
@@ -166,11 +154,7 @@ function BasicInformation(props) {
       dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
-    // const allOptions = {
-    //   ...options,
-    //   applied_for: dpOptions
-    // };
-    // updateOptions({...allOptions});
+    
 
     options.applied_for = dpOptions;
     const allOptions = options;
@@ -179,7 +163,6 @@ function BasicInformation(props) {
   };
 
   const getTechnology = async () => {
-    // const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeStackUrl}?type=all`
     );
@@ -226,7 +209,7 @@ function BasicInformation(props) {
         defaultFormValues={defaultValues}
         currentUser={currentUser}
         submitBtnText={(Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? '' : 'Save'}
-        // btnContainerClass='form-submit-buttons'
+        
         btnContainerClass={`form-submit-buttons mb-4 ${
           (Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''
         }`}

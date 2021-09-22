@@ -13,8 +13,6 @@ import { Helmet } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 
 function EditEmployee(props) {
-  // let time = '';
-  // Variable declarations
 
   let [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
@@ -28,8 +26,6 @@ function EditEmployee(props) {
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
 
-  // const [startTime, setStartTime] = useState(null);
-  // const [endTime, setEndTime] = useState(null);
   const title = 'Add Time Log Of Employee';
   const limit = 10;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
@@ -199,27 +195,10 @@ function EditEmployee(props) {
               submitForm(formValues);
             }}
             options={options}
-            callbacks={
-              {
-                // onTaskName: (value) => {
-                //   setTaskValue(value);
-                // },
-                // onDescription: (value) => {
-                //   setDescriptionValue(value);
-                // },
-                // onDurationCallback: (value) => {
-                //   getEndTime(value);
-                // },
-                // onStartTimeCallback: (value) => {
-                //   getStartTime(value);
-                // },
-              }
-            }
             defaultFormValues={defaultValues}
             currentUser={currentUser}
             submitBtnText="Save"
             showResetBtn={false}
-            // resetBtnText="Clear"
             btnContainerClass="form-submit-buttons mt-0"
             isStepForm={false}
           />

@@ -24,7 +24,6 @@ function InterviewRounds() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
 
-  // const[onClick,isOnClick] = useState(false);
   // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
@@ -129,7 +128,6 @@ function InterviewRounds() {
     if (data) {
       console.log('data',data);
     }
-    // Perform success actions
   };
 
   const getInterviewer = async () => {

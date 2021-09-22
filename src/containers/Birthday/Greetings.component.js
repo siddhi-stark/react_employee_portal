@@ -97,7 +97,6 @@ function Greetings() {
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
   const getEmployee = async () => {
-    // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
     getRowData(1,data.data);
   };

@@ -131,7 +131,6 @@ function TeamLeaves() {
   const [statusId, setStatusId] = useState('');
   const [leaveId, setLeaveId] = useState('');
   const [isShowLoader,setShowLoader] = useState(false);
-  // Variable declarations Filter
 
   const history = useHistory();
 

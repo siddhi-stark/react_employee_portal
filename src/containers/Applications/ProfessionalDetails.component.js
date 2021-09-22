@@ -29,7 +29,7 @@ function ProfessionalDetails(props) {
   }, [currentUser]);
 
   useEffect(() => {
-    // if(Number(currentUser) !== 4 || Number(currentUser) !== 3) return; 
+     
     if((Number(currentUser) === 2) || Number(currentUser) === 4 || Number(currentUser) === 3){
       const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section)=>{
@@ -50,21 +50,12 @@ function ProfessionalDetails(props) {
    const getData = async (profId) => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${profId}/`);
-     //  data.data.confirmation_date = data.data.confirmation_date ? new Date(customFunctions.getDate(data.data.confirmation_date)) : '';
-     //  data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
-     //  data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
-     //  data.data.joined_date = data.data.joined_date ? new Date(customFunctions.getDate(data.data.joined_date)) : '';
-      
-     // const ds = data.data.applied_for_id ? {
-     //    label: data.data.applied_for_name,
-     //    value: data.data.applied_for_id
-     //  } : ''
+    
 
      if(data) {
      setShowLoader(false);
      const obj = {
        ...data.data,
-       // applied_for: ds
      };
      props.onProfDetInfo(data.data.id);
    
@@ -124,7 +115,7 @@ function ProfessionalDetails(props) {
               allowOutsideClick: false,
             });
           }
-    // Perform success actions
+    
   };
 
   const getResume = async () => {
@@ -154,7 +145,7 @@ function ProfessionalDetails(props) {
   }, []);
 
   return (
-    // Usage
+    
     <>
     <Loader showLoader={isShowLoader} needFullPage={false} />
     <div mt-4>
@@ -175,7 +166,6 @@ function ProfessionalDetails(props) {
       showResetBtn={false}
       resetBtnText="Clear"
       btnContainerClass={`form-submit-buttons mb-5 ${(Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''}`}
-      // btnContainerClass={`form-submit-buttons ${id ? 'd-none' : ''}`}
       isStepForm={false}
       onFormReset={() => {}}
     />
