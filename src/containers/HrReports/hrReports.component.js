@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import Doughnut from 'stark-doughnut-graph';
-// import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { Card, Row, Col } from 'react-bootstrap';
@@ -333,7 +332,6 @@ useEffect(()=>{
               labels={({ datum }) => `${datum.x}: ${datum.y}%`}
               legendOrientation="vertical"
               legendPosition="right"
-              // legendData={legendSelectedData}
               legends={{
                 colorScale: ['red', 'yellow', 'green'],
               }}

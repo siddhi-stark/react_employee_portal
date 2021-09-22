@@ -19,14 +19,12 @@ import Api from '../../helper/api';
 function Confirmation() {
   const history = useHistory();
   const name = customFunctions.getLocalStorage('employeeName');
-  // const jobTitle = customFunctions.getLocalStorage('title');
   const id = localStorage.getItem('candidateId');
   const [confirmationDate, setConfirmationDate] = useState('');
   const [emailContent, setEmailContent] = useState(EditorState.createEmpty());
   const [emailBody, setEmailBody] = useState('');
 
   const validator = new SimpleReactValidator({ autoForceUpdate: this });
-  // const name = localStorage.getItem('employeeName');
   const title = 'Confirmation';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Confirmation' }];
@@ -167,7 +165,6 @@ function Confirmation() {
                 className="form-control"
                 selected={confirmationDate}
                 placeholder="dd/mm/yyyy"
-                // maxDate={maxdate}
                 dateFormat="dd/MM/yyyy"
                 minDate={new Date()}
                 onChange={(e) => {
@@ -206,13 +203,9 @@ function Confirmation() {
               {
                emailContent && (
               <Editor
-                // readOnly={viewType}
                 wrapperClassName="demo-wrapper"
                 editorClassName="demo-editor"
                 editorState={emailContent}
-                // onEditorStateChange={(e) => {
-                //   onEditorStateChange(e);
-                // }}
                 toolbar={{
                   options: [
                     'inline',

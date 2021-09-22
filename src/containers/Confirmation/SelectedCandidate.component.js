@@ -31,7 +31,6 @@ function SelectedCandidate() {
       // show error
       return; // eslint-disable-line
     }
-    // Perform success actions
   };
 
   const getDesignation = async () => {

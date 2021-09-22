@@ -13,7 +13,6 @@ import Loader from '../../components/Loader/index';
 import { Helmet } from '../../components/FormInputs';
 
 function EmployeeProfile(props) {
-  // const flag = customFunctions.getLocalStorage('isEmployeeConfirmed');
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});

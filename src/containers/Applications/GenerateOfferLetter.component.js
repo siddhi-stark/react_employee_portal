@@ -164,7 +164,7 @@ return;
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
-    // const Applicant = customFunctions.getLocalStorage('applicantName');
+    
     const postData = {
       name: 'Offer Letter',
       subject: 'Offer Letter',

@@ -143,11 +143,6 @@ function AddBirthday(props) {
     }, []);
 
    useEffect(() => {
-    
-    // setEventId(ID);
-    // if (ID) {
-    //   getData(ID);
-    // }
 
     if(viewOptions === 'true')  setTitle('View Greeting');
 
@@ -220,7 +215,6 @@ function AddBirthday(props) {
   }, []);
       
   const getEmployee = async () => {
-    // const id = props.match.params.stackId;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);   
      const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
       return { label: op.full_name, value: op.id };

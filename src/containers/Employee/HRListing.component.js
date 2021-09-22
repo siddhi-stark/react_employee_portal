@@ -46,10 +46,6 @@ function HRListing() {
     const page = pageNo || currentPage;
     const UserId = customFunctions.getLocalStorage('userId');
     const endPoint = `${Api.employeeTimesheet}?employee_id=${UserId}&limit=${limit}&page=${page}`;
-    // const params = {
-    //   page,
-    //   limit,
-    //   }
     const { data, message } = await AuthApi.getDataFromServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {

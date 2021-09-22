@@ -114,8 +114,8 @@ function NewInterviewRounds(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        // setFormData(formValues);
-        // setUpdatedData(data);
+        
+        
         swal.close();
          getData(isProfessionalInfoId);
       });
@@ -150,7 +150,7 @@ function NewInterviewRounds(props) {
         }
         if (!customFunctions.checkIfEmpty(dt.int_date) && !customFunctions.checkIfEmpty(dt.int_time)) {
           newTime = new Date(
-            `${customFunctions.getDate(dt.int_date)} ${customFunctions.convertTime12to24(dt.int_time)}`
+            `${customFunctions.getDate( dt.int_date )}T${customFunctions.convertTime12to24(dt.int_time)}`
           );
         }
 
@@ -256,8 +256,7 @@ function NewInterviewRounds(props) {
     updateOptions(allOptions);
   };
 
-  // const getInterviewValue = async (value)=> {
-  // }
+  
   useEffect(() => {
     getInterviewer();
     getRoundsStatus();
@@ -296,24 +295,6 @@ function NewInterviewRounds(props) {
           isStepForm={false}
           onFormReset={() => {}}
         />
-         {/* <Button
-                     size="sm"
-                     className="mt-2 ml-5"
-                     onClick={() =>{
-                       history.push('/generate-offerletter');
-                     }}
-                   >
-                     Offer Send
-                   </Button>
-                   <Button
-                     size="sm"
-                     className="mt-2"
-                     onClick={() =>{
-                       getInterviewRoundsStatus(updatedData,formData);
-                     }}
-                   >
-                     Submit Feedback
-                   </Button> */}
       </div>
     </div>
     </>

@@ -28,12 +28,7 @@ function EmployeeTimesheet() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-  // const [jsonSchema, updateJsonSchema] = useState(FormSections);
-  // const title = 'Employee Timesheet';
   const limit = 10;
-  // const defaultValues = {};
-  // const [options, updateOptions] = useState({});
-  // const [currentUser, updateCurrentUser] = useState(0);
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
   const departmentId = customFunctions.getLocalStorage('department');
 
@@ -212,7 +207,7 @@ function EmployeeTimesheet() {
         : '',
       is_detail: filterData.is_detail ? filterData.is_detail[0] : '',
       employee_id: filterData.full_name ? filterData.full_name.value : '',
-      // ...filterList
+      
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -257,7 +252,6 @@ function EmployeeTimesheet() {
         ? customFunctions.getDate(filterData.toDate)
         : '',
       employee_id: filterData.full_name ? filterData.full_name.value : '',
-      // ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -285,8 +279,6 @@ function EmployeeTimesheet() {
     } else{
       getRowData(1);
     }
-    // const type = props.match.params.empType;
-    // setType(type);
   }, [filterData]);
 
   // Get user role
@@ -312,7 +304,6 @@ function EmployeeTimesheet() {
       `${Api.employeeUrl}?type=all&is_dropdown=1`
     );
     if (!data) {
-      // show error
       return;
     }
 

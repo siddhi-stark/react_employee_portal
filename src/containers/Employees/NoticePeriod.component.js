@@ -36,7 +36,6 @@ function NoticePeriodComponent() {
     if (data) {
       setShowLoader(false);
       setEmployee(data.data);
-      // setId(data.data.id);
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));
@@ -51,7 +50,6 @@ function NoticePeriodComponent() {
   }, []);
 
   const getEmployeeName = async () => {
-    // const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?type=all&is_dropdown=1`
     );
@@ -68,10 +66,8 @@ function NoticePeriodComponent() {
   };
 
   const getPosition = async () => {
-    // const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
     if (!data) {
-      // show error
       return;
     }
 

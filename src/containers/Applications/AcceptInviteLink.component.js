@@ -21,7 +21,6 @@ function AcceptInviteLink(props) {
       `${Api.offerTokenUrl}?token=${tkn}`
     );
     if (data) {
-      // setEmail(data.data.email);
       setCandidateData(data.data);
       customFunctions.setLocalStorage(
         'candidateData',
@@ -55,8 +54,6 @@ function AcceptInviteLink(props) {
       postData
     );
     if (data) {
-      // swal(data.message[0],'','success');
-     // await verifyToken(token);
       isShowButtons(true);
 
        if(type === 0) {

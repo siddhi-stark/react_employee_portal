@@ -63,8 +63,7 @@ function AddNote(props) {
           }).then(() => {
             swal.close();
           });
-          // show error
-          // return;
+          
         } else {
           swal(data && data.message[0], '', 'success', {
             closeOnClickOutside: false,
@@ -77,7 +76,6 @@ function AddNote(props) {
         }
       }
     });
-    // Perform success actions
   };
 
   const getData = async () => {

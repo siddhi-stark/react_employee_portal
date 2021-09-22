@@ -220,11 +220,8 @@ function AddLeave(props) {
           buttons: false,
           timer: 2000,
         }).then(() => {
-          // updateDefaultValues({});
           swal.close();
         });
-        // show error
-        // return;
       } else {
         setShowLoader(false);
         swal(data && data.message[0], '', 'success', {
@@ -236,7 +233,6 @@ function AddLeave(props) {
         });
       }
     }
-      // Perform success actions
   };
 
   // Submit Form
@@ -259,7 +255,6 @@ function AddLeave(props) {
       `${Api.leavesUrl}${leaveId}/`
     );
     if (!data) {
-      // show error
       return;
     }
     if(data && data.data){
@@ -311,7 +306,6 @@ function AddLeave(props) {
   const getLeaveType = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.undefined);
     if (!data) {
-      // show error
       return;
     }
 

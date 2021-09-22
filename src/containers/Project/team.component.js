@@ -241,7 +241,7 @@ function Team(props) {
         </Row>
 
         <Row className="doughnut-graph-section">
-          <Col sm={8}>
+          <Col sm={6}>
           <Bar
             data={barGraphData}
              options={{
@@ -257,7 +257,7 @@ function Team(props) {
               }}
           />
           </Col>
-          <Col sm={4}>
+          <Col sm={6}>
           <ul>
             <li>
             Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
@@ -281,7 +281,6 @@ function Team(props) {
               showPagination={false}
               paginationProps={{
                 totalItems: totalCount,
-                // itemsPerPage: limit,
                 activePage: currentPage,
                 onPageChange: (pageNo) => {
                   getRowData(pageNo);
