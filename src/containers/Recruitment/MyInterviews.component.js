@@ -16,8 +16,6 @@ function MyInterviews() {
   const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
 
-  // Variable declarations Filter Form
-  // const [defaultValues, updateDefaultValues] = useState({});
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
@@ -60,7 +58,6 @@ function MyInterviews() {
                 isInterview: true
               });
 
-              // history.push('/edit-employee');
             }}
           >
             <Image src="/images/edit-button.svg" />
@@ -202,18 +199,6 @@ function MyInterviews() {
     getRowData(1);
     setTitle('Recruitment');
   }, []);
-
-  // filter Form
-
-  // Get user role
-  // const getUserRole = async () => {
-  //   const roleId = await localStorage.getItem('group');
-  //   updateCurrentUser(Number(roleId));
-  // };
-
-  // useEffect(() => {
-  //   getUserRole();
-  // }, []);
 
   return (
     <>

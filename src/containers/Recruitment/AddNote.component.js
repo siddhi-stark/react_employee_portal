@@ -74,7 +74,6 @@ function AddNote(props) {
     setShowNote(props.show);
     setStatusId(props.statusId);
     setStatusData(props.statusData);
-    // setNoteData(props.note);
   }, []);
 
   const onCancelButton = () => {
