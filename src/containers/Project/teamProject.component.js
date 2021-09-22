@@ -68,7 +68,6 @@ function TeamProject(props) {
     {
       id: 'team',
       label: 'Team',
-      // completion, remaining_perc, allocated, spend, hours_allocated
       render: ({ team,department }) => {
         return (
           <>
