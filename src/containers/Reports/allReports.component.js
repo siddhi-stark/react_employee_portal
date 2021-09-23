@@ -353,7 +353,7 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
           </Card.Header>
           <Card.Body>
           { rows && rows.length > 0 && (
-              <Row>
+              <Row className="mt-3">
                 <Col sm={3}>
                  <TextInput
                     value={searchKeyword}

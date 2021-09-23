@@ -3,6 +3,8 @@ import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Image, Card } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
+import StarkFormBuilder from 'stark-form-builder';
+import SearchFormSections from './searchFormschema.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -40,7 +42,7 @@ function TeamLeaves() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                  history.push(`/view-leave/${id}`, { isView: 'true' });
+                  history.push(`/view-leave/${id}`, { isView: 'true', isViewLeave : true });
               }}
             >
             {user_name}
@@ -126,6 +128,7 @@ function TeamLeaves() {
   const [statusId, setStatusId] = useState('');
   const [leaveId, setLeaveId] = useState('');
   const [isShowLoader,setShowLoader] = useState(false);
+  const [filterData, setFilterData] = useState({});
 
   const history = useHistory();
 
@@ -133,6 +136,10 @@ function TeamLeaves() {
     setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.leavesUrl}`;
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
 
     const params = {
       page,
@@ -140,6 +147,7 @@ function TeamLeaves() {
       my_team:true,
       sort_by: 'leave_from_date',
       sort_direction:'descending',
+      ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -178,7 +186,12 @@ function TeamLeaves() {
   useEffect(() => {
     getRowData(1);
     setTitle('Leaves');
-  }, []);
+  }, [filterData]);
+
+    // Submit Form
+  const submitForm = async (formValues) => {
+    setFilterData(formValues);
+  };
 
   return (
     <>
@@ -209,6 +222,22 @@ function TeamLeaves() {
               </div>
             </Card.Header>
             <Card.Body>
+             <StarkFormBuilder
+              containerClass=''
+              formHeaderClass=''
+              formSections={SearchFormSections}
+              formHeading=""
+              onFormSubmit={(formValues) => {submitForm(formValues);}}
+              callbacks={{}}
+              submitBtnText="Apply"
+              showResetBtn={true}
+              resetBtnText="Clear"
+              btnContainerClass="form-submit-buttons pull-right mb-3"
+              isStepForm={false}
+              onFormReset={() => {
+                setFilterData();
+              }}
+            />
               <CustomTable
                 columns={columns}
                 rows={rowData}

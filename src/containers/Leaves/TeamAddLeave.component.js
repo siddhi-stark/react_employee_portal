@@ -163,7 +163,7 @@ function TeamAddLeave(props) {
                 label="Note"
                 containerClass="form-group"
                 type="textarea"
-                disabled={status !== 'Pending' && true}
+                disabled={true}
                 name="reason"
                 value={reason}
               />
