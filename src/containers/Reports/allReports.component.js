@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
-import { Datepicker, Helmet, DropdownInput } from '../../components/FormInputs';
+import { Datepicker, Helmet, DropdownInput, TextInput } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -26,12 +26,32 @@ function AllReports() {
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [userRole, setUserRole] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
+  const history = useHistory();
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
+
+  const handleActionCallback = ({id, createdDate, name }) => {
+    const newDate = customFunctions.getDate(createdDate);
+    const dt = new Date(newDate).getTime();
+    return (
+      <span className ="d-flex">
+          <>
+            <a href="javascript.void(0)" onClick={(e)=>{
+              e.preventDefault();
+              e.stopPropagation();
+              history.push(`/daily-report/${dt}/${id}`,{employeeReport:true, reporterName:name})} // eslint-disable-line
+            }>
+              <span className="text-info">View Report</span>
+            </a>
+          </>
+      </span>
+    );
+  }; 
 
   const columns = [
     {
@@ -81,17 +101,7 @@ function AllReports() {
       id: 'report',
       label: 'View Report',
       roleAccess: [1, 2, 3, 4, 5, 6],
-      render: ({ id, createdDate }) => {
-        const newDate = customFunctions.getDate(createdDate);
-        const dt = new Date(newDate).getTime();
-        return (
-          <>
-            <a href={`/daily-report/${dt}/${id}`}>
-              <span className="text-info">View Report</span>
-            </a>
-          </>
-        );
-      },
+      render: handleActionCallback
     },
   ];
 
@@ -103,7 +113,7 @@ function AllReports() {
     const params = {
       page,
       limit: pagination.itemsPerPage,
-      // keyword: searchFormSubmit ? searchKeyword : '',
+      keyword: searchKeyword && searchKeyword,
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',
     };
@@ -190,6 +200,7 @@ function AllReports() {
     setFilterErr('');
     setFromDate('');
     setToDate('');
+    setSearchKeyword('');
     setSelectedEmployee([]);
     setCntClearFilter(cntClearFilter + 1);
   };
@@ -341,21 +352,54 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
               </div>
           </Card.Header>
           <Card.Body>
-            <Row>
-            <Table
-                    tableClass="table table-striped"
-                    columns={columns}
-                    rows={rows}
-                    showPagination
-                    paginationProps={{
-                      ...pagination,
-                      activePage: pagination.current_page,
-                      onPageChange: (pageNo) => {
-                        getReports(pageNo);
-                      },
+          { rows && rows.length > 0 && (
+              <Row>
+                <Col sm={3}>
+                 <TextInput
+                    value={searchKeyword}
+                    placeholder="Search employee name"
+                    onInputChange={(e) => {
+                      setSearchKeyword(e.target.value);
                     }}
-                    dropdownContainerClass="mb-3"
                   />
+                </Col>
+                <Col sm={3}>
+                <div className="filter-btn">
+                  <Button
+                    variant="primary"
+                    type="button"
+                    className="ms-4"
+                    onClick={() => getReports(1)}
+                  >
+                    Apply
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    className="ms-4"
+                    onClick={() => onClear()}
+                  >
+                    Clear
+                  </Button>
+                </div>
+                </Col>
+              </Row>
+            )}
+            <Row>
+              <Table
+                tableClass="table table-striped"
+                columns={columns}
+                rows={rows}
+                showPagination
+                paginationProps={{
+                  ...pagination,
+                  activePage: pagination.current_page,
+                  onPageChange: (pageNo) => {
+                    getReports(pageNo);
+                  },
+                }}
+                dropdownContainerClass="mb-3"
+              />
             </Row>
           </Card.Body>
           </Card>

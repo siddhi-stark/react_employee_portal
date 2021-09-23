@@ -3,6 +3,8 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { ProgressBar, Card, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
+import StarkFormBuilder from 'stark-form-builder';
+import SearchFormSections from './searchFormschema.json';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -17,7 +19,7 @@ function CandidateListing() {
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [filterData, setFilterData] = useState({}); // eslint-disable-line
-    const [isShowLoader, setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
 
 	const title = 'Candidates';
 	const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
@@ -125,11 +127,15 @@ function CandidateListing() {
 		setShowLoader(true);
 		const page = pageNo || currentPage;
 		const endPoint = `${Api.applicantsUrl}`;
+		const filterList = filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
 		const params = {
 			page,
 			limit,
 			sort_direction: 'descending',
 			status: 4,
+      ...filterList
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
 		const { data, message } = await AuthApi.getDataFromServer(url);
@@ -150,9 +156,13 @@ function CandidateListing() {
 	};
 
 	useEffect(() => {
-		
 		getRowData(1);
 	}, [filterData]);
+  
+  // Submit Form
+  const submitForm = async (formValues) => {
+    setFilterData(formValues);
+  };
 
 	return (
 		<>
@@ -170,10 +180,27 @@ function CandidateListing() {
 						</div>
 					</Card.Header>
 					<Card.Body>
+					 <StarkFormBuilder
+              containerClass=''
+              formHeaderClass=''
+              formSections={SearchFormSections}
+              formHeading=""
+              onFormSubmit={(formValues) => {submitForm(formValues);}}
+              callbacks={{}}
+              submitBtnText="Apply"
+              showResetBtn={true}
+              resetBtnText="Clear"
+              btnContainerClass="form-submit-buttons pull-right mb-3"
+              isStepForm={false}
+              onFormReset={() => {
+                setFilterData();
+              }}
+            />
 						<CustomTable
 							columns={columns}
 							rows={rowData}
 							showPagination={true}
+							tableClass="table-striped"
 							paginationProps={{
 								totalItems: totalCount,
 								itemsPerPage: limit,

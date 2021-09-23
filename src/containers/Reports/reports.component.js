@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Button } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
@@ -15,7 +15,14 @@ function Reports(props) {
   const [title, setTitle] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);
-
+  const history = useHistory();
+  const report = props;
+  const employeeReport = report.location.state ? report.location.state.employeeReport
+    : ''; 
+  const teamReport = report.location.state ? report.location.state.teamReport
+    : ''; 
+  const reporterName = report.location.state ? report.location.state.reporterName
+    : '';
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -117,8 +124,8 @@ function Reports(props) {
         <Card>
           <Card.Body>
             <Row>
-              <Card.Title>Reports: {reportDate}</Card.Title>
-              <div className="light-bg buttons d-flex align-items-center mt-3">
+              <Card.Title>{(employeeReport || teamReport) ? `Name: ${reporterName}`:''} &nbsp; &nbsp; Date: {reportDate} </Card.Title>
+              <div className="light-bg buttons align-items-center mt-3">
                 <Button
                   type="button"
                   onClick={() => {
@@ -138,6 +145,19 @@ function Reports(props) {
                   variant={`${!showButton ? 'primary ml-1' : 'secondary ml-1'}`}
                 >
                   Evening Report
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    if(teamReport){
+                      history.push(teamReport ? '/team-report':'/my-report');
+                    } else {
+                      history.push(employeeReport ? '/employee-report':'/my-report');
+                    }
+                  }}
+                  className="float-end"
+                >
+                  Back
                 </Button>
               </div>
               <div className="mt-3">

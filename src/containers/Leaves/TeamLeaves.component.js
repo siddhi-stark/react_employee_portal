@@ -33,23 +33,18 @@ function TeamLeaves() {
       render: ({ user_name, id, status_name }) => { // eslint-disable-line
         return (
           <>
-          {(status_name !== 'Pending') ? (
            <a
-          href="/"
-          className="pl-2"
-          title={(status_name !== 'Pending') && 'View Leave'}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-             if(status_name !== 'Pending'){
-              history.push(`/view-leave/${id}`, { isView: 'true' });
-            }
-          }}
-        >
-        {user_name}
-           </a>) :(
-            <span>{user_name}</span> 
-      )}
+              href="/"
+              className="pl-2"
+              title="View Leave"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                  history.push(`/view-leave/${id}`, { isView: 'true' });
+              }}
+            >
+            {user_name}
+           </a>
           </>
         );
       },

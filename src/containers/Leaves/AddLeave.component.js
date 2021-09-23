@@ -390,9 +390,7 @@ function AddLeave(props) {
           <Card body>
           <div className="container">
           <div className="leave-app-button">
-          { (status !== 'Pending') &&
            <Button className="float-end" onClick= {() => viewOptions ? history.push('/employee-leaves') :history.push('/leaves')} >Back</Button>
-          }
           { (Number(id) !== Number(employeeId)) && leaveId && (
             <p>Employee Name: {name} ({status})</p>
           )}
