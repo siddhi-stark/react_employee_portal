@@ -338,7 +338,7 @@ function Employee() {
 
   const getManager = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?role_id=${2}&is_dropdown=1`
+      `${Api.employeeUrl}?role_id=${2}&is_dropdown=1&show_self=True`
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setManager(data.data);
