@@ -171,7 +171,7 @@ function Team(props) {
       data && data.data && data.data.employees_data && data.data.employees_data.map((emp)=>{
         if(emp.emp_name === 'Total') {
           const graph = [
-            { x: 'Pending Work', y: emp.completion ? (Number(emp.completion) - 100) :'' },
+            { x: 'Pending Work', y: emp.completion && (100 - Number(emp.completion)) },
             { x: 'Complete Work', y: emp.completion },
           ];
           setGraphData([...graph]);
