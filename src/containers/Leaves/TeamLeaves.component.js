@@ -82,11 +82,11 @@ function TeamLeaves() {
     {
       id: 'status_name',
       label: 'Status',
-       render: ({ id, status_name }) => { // eslint-disable-line
+       render: ({ id, status_name,leave_from_date }) => { // eslint-disable-line
         return (
           <>
          
-         { status_name === 'Pending' ? (
+         { (status_name === 'Pending' && customFunctions.getDate(new Date()) <= leave_from_date)? (
                 <>
                   <Image
                     title = "Accept"

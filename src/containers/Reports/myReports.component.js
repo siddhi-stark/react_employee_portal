@@ -23,7 +23,6 @@ function AllReports() {
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);
 
-
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,

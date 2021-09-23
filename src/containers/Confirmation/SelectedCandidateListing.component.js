@@ -207,8 +207,6 @@ function SelectedCandidateListing() {
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-
-
       <div className="mt-5">
         <Accordion defaultActiveKey="0">
           <Card>

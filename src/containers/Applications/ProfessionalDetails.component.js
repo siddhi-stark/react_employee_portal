@@ -50,7 +50,6 @@ function ProfessionalDetails(props) {
    const getData = async (profId) => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.applicantsUrl}${profId}/`);
-    
 
      if(data) {
      setShowLoader(false);

@@ -15,8 +15,7 @@ function MyInterviews() {
 	const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
-
-
+  
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -24,7 +23,6 @@ function MyInterviews() {
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {

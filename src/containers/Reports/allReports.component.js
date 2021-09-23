@@ -27,8 +27,7 @@ function AllReports() {
   const [userRole, setUserRole] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
 
-  
-   const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,

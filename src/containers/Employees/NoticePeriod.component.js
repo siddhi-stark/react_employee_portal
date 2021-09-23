@@ -17,8 +17,6 @@ function NoticePeriodComponent() {
   const [currentPage, setCurrentPage] = useState('');
   const [options, updateOptions] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
-
-
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const history = useHistory();
 

@@ -22,7 +22,6 @@ function CurrentEmployee() {
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
 
-
   const history = useHistory();
 
   const getEmployee = async (pageNo = 1) => {

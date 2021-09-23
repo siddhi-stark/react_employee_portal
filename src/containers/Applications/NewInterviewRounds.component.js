@@ -115,7 +115,6 @@ function NewInterviewRounds(props) {
         timer: 2000,
       }).then(() => {
         
-        
         swal.close();
          getData(isProfessionalInfoId);
       });
@@ -255,7 +254,6 @@ function NewInterviewRounds(props) {
     defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
-
   
   useEffect(() => {
     getInterviewer();

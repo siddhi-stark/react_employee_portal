@@ -117,18 +117,18 @@ function Greetings() {
 
 		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
 
-					const newEmpArr = []
-		empData && empData.map((emp) => {
-		data && data.data.map((empdata) => {
-		if(emp.id === empdata.employee[0]) {
-		const newItem = empdata;
-		newItem.employeeName = emp.full_name;
-		newEmpArr.push(newItem);
-		}
-		return empdata;
-		})
-		return emp;
-		})
+			const newEmpArr = [];
+			empData && empData.map((emp) => {
+				data && data.data.map((empdata) => {
+					if(emp.id === empdata.employee[0]) {
+						const newItem = empdata;
+						newItem.employeeName = emp.full_name;
+						newEmpArr.push(newItem);
+					}
+				return empdata;
+				});
+			return emp;
+		});
 			setShowLoader(false);
 			setTotalCount(data.paginator.total_count);
 			setLimit(data.paginator.limit);
@@ -190,7 +190,6 @@ function Greetings() {
 
 	return (
 		<>
-		{console.log('rowData',rowData)}
 			<Helmet title={title} />
 			<div className="title-breadcrumb-section">
 				<h2 className="main-content-title tx-24 mg-b-5">Greetings</h2>
