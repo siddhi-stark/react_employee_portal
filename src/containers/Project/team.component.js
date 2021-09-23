@@ -298,12 +298,10 @@ function Team(props) {
             <li>
             Total Hours Estimated: <span>{graphDetails.totalHrsEstimate}</span>
             </li>
-            {
-              ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
-              <li>
+            <li>
               Total Hours Allocated: <span>{graphAllocatedHrs}</span>
-              </li>
-            )} 
+            </li>
+            
             </ul>
           </Col>
         </Row>
