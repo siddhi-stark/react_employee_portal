@@ -28,7 +28,7 @@ function Project() {
   const [filterData, setFilterData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
   const [activeMenu, setActiveMenu] = useState('all');
-  const [status, setStatus] = useState('all');
+  const [tabStatus, setTabStatus] = useState('all');
   const departmentId = customFunctions.getLocalStorage('department');
   const [allData, setAllData] = useState({});
   const [options, updateOptions] = useState({});
@@ -197,6 +197,15 @@ function Project() {
     {
       id: 'status',
       label: 'Status',
+       render: ({ status }) => {
+        return (
+          <>
+            <span>
+              {(status === 'active') ? 'Active' : 'Inactive'}
+            </span>
+          </>
+        );
+      }, 
     },
     {
       id: 'Action',
@@ -267,10 +276,10 @@ function Project() {
       payload = {
         project_id: formValues.project_id && formValues.project_id.value && Number(formValues.project_id.value),
       };
-    if(String(status) === 'active' || String(status) === 'inactive'){
-      payload.status = status;
-    } else if(String(status) === 'late' || String(status) === 'current'){
-      payload.sub_status = String(status) === 'late' ? 'late' :'current';
+    if(String(tabStatus) === 'active' || String(tabStatus) === 'inactive'){
+      payload.status = tabStatus;
+    } else if(String(tabStatus) === 'late' || String(tabStatus) === 'current'){
+      payload.sub_status = String(tabStatus) === 'late' ? 'late' :'current';
     }
 
     if(formValues) {
@@ -281,7 +290,7 @@ function Project() {
   
   useEffect(() => {
     submitForm();
-  }, [status]);
+  }, [tabStatus]);
 
   const getProjectList = async () => {
     const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name`);
@@ -368,7 +377,7 @@ function Project() {
                 className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
                 onClick={() => {
                   setActiveMenu('all');
-                  setStatus('all');
+                  setTabStatus('all');
                 }}
               >
                 All
@@ -380,7 +389,7 @@ function Project() {
                 }`}
                 onClick={() => {
                   setActiveMenu('Active');
-                  setStatus('active');
+                  setTabStatus('active');
                 }}
               >
                 Active
@@ -392,7 +401,7 @@ function Project() {
                     }`}
                     onClick={() => {
                       setActiveMenu('Inactive');
-                      setStatus('inactive');
+                      setTabStatus('inactive');
                     }}
                   >
                     Inactive
@@ -404,7 +413,7 @@ function Project() {
                     }`}
                     onClick={() => {
                       setActiveMenu('late');
-                      setStatus('late');
+                      setTabStatus('late');
                     }}
                   >
                     Late
@@ -416,7 +425,7 @@ function Project() {
                     }`}
                     onClick={() => {
                       setActiveMenu('current');
-                      setStatus('current');
+                      setTabStatus('current');
                     }}
                   >
                     Current

@@ -16,6 +16,10 @@ function TeamMemberProject(props) {
   const getTeamId = customFunctions.getLocalStorage('departmentName');
   const schedular = teamid.location.state ? teamid.location.state.schedular
     : '';
+  const teamId = teamid.location.state ? teamid.location.state.teamMemberId
+    : ''; 
+  const teamName = teamid.location.state ? teamid.location.state.teamMemberName
+    : '';
   const teamMemberName = customFunctions.getLocalStorage('teamMemberName');
   const items = [
     { to: '/', label: 'Home' },
@@ -131,7 +135,7 @@ function TeamMemberProject(props) {
     const page = pageNo || currentPage;
     const endPoint = `${Api.departmentReportUrl}`;
     const params = {
-      employee_id: teamMemberId,
+      employee_id: teamId ? Number(teamId) : teamMemberId,
       page,
       limit,
     };
@@ -167,7 +171,7 @@ function TeamMemberProject(props) {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4 schedular">
-       <span>{`${teamMemberName} Projects and Work`}</span>
+       <span>{teamName ? `${teamName} Projects and Work` : `${teamMemberName} Projects and Work`}</span>
          <Button className="float-end mb-3" onClick= {() => schedular ? history.push('/team-scheduler') : history.push(`/team/${getTeamId}`)} >Back</Button>
             <CustomTable
               columns={columns}
