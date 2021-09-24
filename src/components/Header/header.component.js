@@ -134,19 +134,6 @@ function Header() {
     const {data} = await AuthApi.putDataToServer(endPoint,postData);
     if(data && data.data.is_read) {
       getNotificationCount();
-
-      // swal({
-      //   title: data.message[0],
-      //   icon: 'success',
-      // })
-      //   .then(okAction => {
-      //     if (okAction) {
-      //  props.handleModalCLose(false);
-      //  props.onChanges();
-      //  // customFunctions.removeLocalStorage('id');
-      //  customFunctions.removeLocalStorage('hisotryID');
-      //     }
-      //   });
     }
   };
 

@@ -17,7 +17,6 @@ function Technology() {
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  // const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [technologyId, setTechnologyId] = useState('');
@@ -94,7 +93,6 @@ function Technology() {
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
-      // setLimit(data.paginator.limit);
       setItemsPerPage(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
 

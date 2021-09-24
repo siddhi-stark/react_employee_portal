@@ -3,6 +3,8 @@ import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Card, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
+import StarkFormBuilder from 'stark-form-builder';
+import SearchFormSections from './searchFormschema.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -31,23 +33,18 @@ function EmployeeTeamLeaves() {
       render: ({ user_name, id, status_name }) => { // eslint-disable-line
         return (
           <>
-          {(status_name !== 'Pending') ? (
            <a
-          href="/"
-          className="pl-2"
-          title={(status_name !== 'Pending') && 'View Leave'}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-             if(status_name !== 'Pending'){
-              history.push(`/edit-leave/${id}`, { isView: 'true' });
-            }
-          }}
-        >
-        {user_name}
-        </a>) :(
-            <span>{user_name}</span> 
-      )}
+              href="/"
+              className="pl-2"
+              title="View Leave"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/edit-leave/${id}`, { isView: 'true', isViewLeave : true });
+              }}
+            >
+            {user_name}
+          </a>
           </>
         );
       },
@@ -81,10 +78,10 @@ function EmployeeTeamLeaves() {
     {
       id: 'status_name',
       label: 'Status',
-       render: ({ id, status_name }) => { // eslint-disable-line
+       render: ({ id, status_name, leave_from_date }) => { // eslint-disable-line
         return (
           <>
-         { status_name === 'Pending' ? (
+         { (status_name === 'Pending' && customFunctions.getDate(new Date()) <= leave_from_date) ? (
                 <>
                  <Image
                     title = "Accept"
@@ -131,17 +128,23 @@ function EmployeeTeamLeaves() {
   const [leaveId, setLeaveId] = useState('');
   const [isShowLoader,setShowLoader] = useState(false);
   const history = useHistory();
+  const [filterData, setFilterData] = useState({});
 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.leavesUrl}`;
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
 
     const params = {
       page,
       limit,
       sort_by: 'leave_from_date',
       sort_direction: 'descending',
+      ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -173,7 +176,12 @@ function EmployeeTeamLeaves() {
     setUserRole(Number(uRole));
     getRowData(1);
     setTitle('Leaves');
-  }, []);
+  }, [filterData]);
+  
+    // Submit Form
+  const submitForm = async (formValues) => {
+    setFilterData(formValues);
+  };
 
   return (
     <>
@@ -204,6 +212,22 @@ function EmployeeTeamLeaves() {
               </div>
             </Card.Header>
             <Card.Body>
+             <StarkFormBuilder
+              containerClass=''
+              formHeaderClass=''
+              formSections={SearchFormSections}
+              formHeading=""
+              onFormSubmit={(formValues) => {submitForm(formValues);}}
+              callbacks={{}}
+              submitBtnText="Apply"
+              showResetBtn={true}
+              resetBtnText="Clear"
+              btnContainerClass="form-submit-buttons pull-right mb-3"
+              isStepForm={false}
+              onFormReset={() => {
+                setFilterData();
+              }}
+            />
               <CustomTable
                 columns={columns}
                 rows={rowData}

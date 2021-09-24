@@ -18,11 +18,9 @@ function EducationalDetails(props) {
   const emailProps = accProps.props.email;
   const [docId, setDocId] = useState([]);
   const [isShowLoader,setShowLoader] = useState(false);
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -131,7 +129,6 @@ function EducationalDetails(props) {
     }
   };
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
 

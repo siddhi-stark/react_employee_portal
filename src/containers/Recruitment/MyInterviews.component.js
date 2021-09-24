@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Image } from 'react-bootstrap';
+import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import FormSections from './applicationformschema.json';
+import SearchFormSections from './searchFormschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import { Helmet } from '../../components/FormInputs';
@@ -15,10 +17,7 @@ function MyInterviews() {
 	const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
-
-  // Variable declarations Filter Form
-  // const [defaultValues, updateDefaultValues] = useState({});
-
+  
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -27,6 +26,8 @@ function MyInterviews() {
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
 
+  // Variable declarations
+  const [filterData, setFilterData] = useState({});
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -60,7 +61,6 @@ function MyInterviews() {
                 isInterview: true
               });
 
-              // history.push('/edit-employee');
             }}
           >
             <Image src="/images/edit-button.svg" />
@@ -150,8 +150,8 @@ function MyInterviews() {
       label: 'Status',
     },
     {
-      id: Number(group) === 5 || Number(group) === 6 || Number(group) === 2 ? 'round_status_name' : '',
-      label: Number(group) === 5 || Number(group) === 6 || Number(group) === 2 ? 'Round Status' : '',
+      id: 'round_status_name',
+      label: 'Round Status',
     },
     {
       id: 'action',
@@ -166,6 +166,10 @@ function MyInterviews() {
     const page = pageNo || currentPage;
 
     const endPoint = `${Api.applicantsUrl}`;
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
 
     const params = {
       
@@ -173,7 +177,8 @@ function MyInterviews() {
       page,
       limit,
       sort_direction: 'descending',
-      sort_by: 'round_date'
+      sort_by: 'round_date',
+      ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -201,20 +206,14 @@ function MyInterviews() {
   useEffect(() => {
     getRowData(1);
     setTitle('Recruitment');
-  }, []);
+  }, [filterData]);
 
-  // filter Form
-
-  // Get user role
-  // const getUserRole = async () => {
-  //   const roleId = await localStorage.getItem('group');
-  //   updateCurrentUser(Number(roleId));
-  // };
-
-  // useEffect(() => {
-  //   getUserRole();
-  // }, []);
-
+  // Get user role Filter search
+  // Submit Form
+  const submitForm = async (formValues) => {
+    setFilterData(formValues);
+  };
+    
   return (
     <>
       <Helmet title={title} />
@@ -231,6 +230,22 @@ function MyInterviews() {
             </div>
           </Card.Header>
           <Card.Body>
+            <StarkFormBuilder
+              containerClass=''
+              formHeaderClass=''
+              formSections={SearchFormSections}
+              formHeading=""
+              onFormSubmit={(formValues) => {submitForm(formValues);}}
+              callbacks={{}}
+              submitBtnText="Apply"
+              showResetBtn={true}
+              resetBtnText="Clear"
+              btnContainerClass="form-submit-buttons pull-right mb-3"
+              isStepForm={false}
+              onFormReset={() => {
+                setFilterData();
+              }}
+            />
             <CustomTable
               tableContainerClass="mt-2"
               columns={columns}

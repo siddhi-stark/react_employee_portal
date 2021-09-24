@@ -18,13 +18,12 @@ function PreviousEmployement(props) {
   const emailProps = accProps.props.email;
 
   let filterOptions = {};
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [docId, setDocId] = useState([]);
   const [isShowLoader,setShowLoader] = useState(false);
-  // Get user role
+
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -139,7 +138,6 @@ function PreviousEmployement(props) {
     }
   };
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
 
@@ -264,7 +262,6 @@ function PreviousEmployement(props) {
         swal.close();
       });
     }
-    // Perform success actions
   };
 
   const getEmployee = async () => {
@@ -281,7 +278,6 @@ function PreviousEmployement(props) {
     const { data } = await callback(endPoint, postData);
 
     if (!data) {
-      // show error
       return;
     }
 

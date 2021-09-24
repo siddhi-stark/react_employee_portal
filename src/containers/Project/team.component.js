@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
+import Doughnut from 'stark-doughnut-graph';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 // import StarkFormBuilder from 'stark-form-builder';
@@ -33,6 +34,7 @@ function Team(props) {
   const initialState = {
     totalHrsSpend: null,
     totalHrsEstimate: null,
+    projectCompletion:null
   };
 
   // Declare variable column state
@@ -46,6 +48,7 @@ function Team(props) {
   const [isShowLoader,setShowLoader] = useState(false);
   const [graphDetails, setGraphDetails] = useState(initialState);
   const [graphAllocatedHrs, setGraphAllocatedHrs] = useState(null);
+  const [graphData, setGraphData] = useState([]);
 
   // Declare columns
   const columns = [
@@ -131,9 +134,6 @@ function Team(props) {
 
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {  // eslint-disable-line
-    const spendArr =[];
-    const estimatedArr =[];
-    const employeeNameArr =[];
     setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.departmentReportUrl}`;
@@ -170,34 +170,43 @@ function Team(props) {
 
       data && data.data && data.data.employees_data && data.data.employees_data.map((emp)=>{
         if(emp.emp_name === 'Total') {
+          const graph = [
+            { x: 'Pending Work', y: emp.completion && (100 - Number(emp.completion)) },
+            { x: 'Complete Work', y: emp.completion },
+          ];
+          setGraphData([...graph]);
           setGraphDetails({
             totalHrsSpend: emp.spends,
             totalHrsEstimate: emp.allocated,
+            projectCompletion: emp.completion
           });  
-        } else {
-          spendArr.push(emp.spends);
-          estimatedArr.push(emp.allocated);
-          employeeNameArr.push(emp.emp_name);
-        }
+             setBarGraphData({
+              labels: [''],
+              datasets: [
+                {
+                  label: 'Spent Hours',
+                  backgroundColor: '#f00000',
+                  borderWidth: 2,
+                  data: [emp.spends]
+                },
+                {
+                  label: 'Estimated Hours',
+                  backgroundColor: '#F4C222',
+                  borderWidth: 2,
+                  data: [emp.allocated]
+                },
+                {
+                  label: 'Allocated Hours',
+                  backgroundColor: '#85C51C',
+                  borderWidth: 2,
+                  data: [graphAllocatedHrs]
+                }
+              ]
+            });
+        } 
       return emp;
       });
-      setBarGraphData({
-          labels: employeeNameArr,
-          datasets: [
-            {
-              label: 'Spent Hours',
-              backgroundColor: '#f00000',
-              borderWidth: 1,
-              data: spendArr
-            },
-            {
-              label: 'Estimated Hours',
-              backgroundColor: '#85C51C',
-              borderWidth: 1,
-              data: estimatedArr
-            }
-          ]
-        });
+   
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -241,7 +250,31 @@ function Team(props) {
         </Row>
 
         <Row className="doughnut-graph-section">
-          <Col sm={6}>
+          <Col sm={3}>
+            <Doughnut
+              // ref={graphref}
+              id="dougnut"
+              data={graphData}
+              subTitle=""
+              title={`${graphDetails.projectCompletion}%`}
+              height="150"
+              width="150"
+              constrainToVisibleArea="true"
+              labels={({ datum }) => `${datum.x}: ${datum.y}%`}
+              legendOrientation="vertical"
+              legendPosition="right"
+              legends={{}}
+              padding={{
+                bottom: 0,
+                left: 10,
+                right: 10, // Adjusted to accommodate legend
+                top: 0,
+              }}
+              colorScale={['yellow','green','red']}
+              wrapperSize={{ height: '150px', width: '100%' }}
+            />
+          </Col>
+          <Col sm={4}>
           <Bar
             data={barGraphData}
              options={{
@@ -257,7 +290,7 @@ function Team(props) {
               }}
           />
           </Col>
-          <Col sm={6}>
+          <Col sm={5}>
           <ul>
             <li>
             Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
@@ -265,12 +298,10 @@ function Team(props) {
             <li>
             Total Hours Estimated: <span>{graphDetails.totalHrsEstimate}</span>
             </li>
-            {
-              ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
-              <li>
+            <li>
               Total Hours Allocated: <span>{graphAllocatedHrs}</span>
-              </li>
-            )} 
+            </li>
+            
             </ul>
           </Col>
         </Row>

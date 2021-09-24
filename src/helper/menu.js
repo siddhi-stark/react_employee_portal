@@ -13,13 +13,6 @@ const menu = [
     submenu: [],
     roleaccess: [1,2,3,4],
   },
-  // {
-  //   title: 'Project Scheduler',
-  //   path: '/scheduler',
-  //   icon: 'report.svg',
-  //   submenu: [],
-  //   roleaccess: [1,2,4],
-  // },
   {
     title: 'Team Project Scheduler',
     path: '/team-scheduler',
@@ -32,7 +25,7 @@ const menu = [
     path: '/quotes',
     icon: 'quote.svg',
     submenu: [],
-    roleaccess: [1,3,5,6],
+    roleaccess: [1,5,6],
   },
   {
     title: 'Employee Timesheet',

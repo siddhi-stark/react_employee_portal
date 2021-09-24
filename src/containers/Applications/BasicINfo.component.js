@@ -96,7 +96,6 @@ function BasicInformation(props) {
     }
   };
 
-
   // Submit Form
   const submitForm = async (formValues) => {
 
@@ -155,7 +154,6 @@ function BasicInformation(props) {
       return op;
     });
     
-
     options.applied_for = dpOptions;
     const allOptions = options;
     await updateOptions({ ...allOptions });

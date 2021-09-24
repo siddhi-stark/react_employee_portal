@@ -115,7 +115,6 @@ function NewInterviewRounds(props) {
         timer: 2000,
       }).then(() => {
         
-        
         swal.close();
          getData(isProfessionalInfoId);
       });
@@ -165,7 +164,7 @@ function NewInterviewRounds(props) {
           status_name: {label:dt.status_name, value:dt.status},
           comments: dt.comments,
           interview_type:  { label: dt.interview_type_name, value: dt.interview_type_id },
-          description: dt.description,
+          description: dt.description ? dt.description: 'Please attend the interview',
           id: dt.id
         });
       });
@@ -255,7 +254,6 @@ function NewInterviewRounds(props) {
     defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
-
   
   useEffect(() => {
     getInterviewer();

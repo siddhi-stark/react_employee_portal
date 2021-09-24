@@ -56,9 +56,7 @@ function TeamProjectScheduler() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                history.push(`/my-project/${emp_id}`,{schedular:true});
-                customFunctions.setLocalStorage('teamMemberName',emp_name);
-                customFunctions.setLocalStorage('teamMemberId',emp_id);
+                history.push(`/my-project/${emp_id}`,{schedular:true,teamMemberName:emp_name,teamMemberId:emp_id});
               }}
             >
              {emp_name} 

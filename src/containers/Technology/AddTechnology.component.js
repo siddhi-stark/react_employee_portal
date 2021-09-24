@@ -49,7 +49,6 @@ function AddTechnology(props) {
 				props.afterSubmitTech();
 			}
 		});
-		// Perform success actions
 	};
 
 	// Get data for form
@@ -59,10 +58,8 @@ function AddTechnology(props) {
 			`${Api.employeeStackUrl}${id.technologyId}/`
 		);
 		if (!data) {
-			// show error
 			return;
 		}
-		// $('.clearTechnology form').trigger('reset');
 		updateDefaultValues({ name: data.data.name });
 	};
 

@@ -1,0 +1,40 @@
+[
+	{
+		"sectionName": "keywordfilter",
+		"sectionTitle": "keywordfilter",
+		"layout": { "label": "1 Column", "value": "1column" },
+		"containerClass": "col-md-4",
+		"displaySection": true,
+		"displaySectionTitle": false,
+		"fields": [
+			{
+				"name": "keyword",
+				"type": "text",
+				"label": "",
+				"id": "",
+				"placeholder": "Search by name",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [],
+				"displayWhen": {},
+				"haveValidations": "false",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": { "label": "1 Column", "value": "1column" },
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			}
+		],
+		"allowedUsers": [],
+		"sectionLayout": "1column"
+	}
+]

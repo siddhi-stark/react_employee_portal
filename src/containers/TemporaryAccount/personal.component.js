@@ -17,13 +17,11 @@ function Personal(props) {
   const nameProps = accProps.props.name;
   const emailProps = accProps.props.email;
 
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [docId, setDocId] = useState(null);
   const [isShowLoader,setShowLoader] = useState(false);
-  // Get user role
+  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -121,7 +119,6 @@ function Personal(props) {
     }
   };
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
 
@@ -215,7 +212,6 @@ function Personal(props) {
         onFormSubmit={(formValues) => {
           submitForm(formValues);
         }}
-        // options={options}
         callbacks={{}}
         defaultFormValues={defaultValues}
         currentUser={currentUser}

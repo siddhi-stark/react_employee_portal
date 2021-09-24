@@ -3,8 +3,6 @@ import { withRouter } from 'react-router-dom';
 import { Col, Button, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
 import { TextInput } from '../../components/FormInputs';
-// import Api from '../../helper/api';
-// import AuthApi from '../../helper/authApi';
 import TemporaryAccount from './temporaryAccount.component';
 import customFunctions from '../../helper/customFunctions';
 

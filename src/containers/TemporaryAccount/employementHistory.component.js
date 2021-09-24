@@ -16,7 +16,6 @@ function EmployementHistory(props) {
   const tokenProps = accProps.props.token;
   const idProps = accProps.props.match.params.ID;
 
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [isShowLoader,setShowLoader] = useState(false);
@@ -31,7 +30,6 @@ function EmployementHistory(props) {
     return sectionData;
   });
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -113,7 +111,6 @@ function EmployementHistory(props) {
     }
   }, []);
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const payload = {

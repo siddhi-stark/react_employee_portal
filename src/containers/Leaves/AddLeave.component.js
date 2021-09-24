@@ -105,7 +105,7 @@ function AddLeave(props) {
  useEffect(() => {
     const formViewSchema = [...FormSections];
    let updatedSchema = [];
-   if(status !== 'Pending') {
+   if(viewLeaveOptions) {
      updatedSchema = formViewSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
@@ -390,9 +390,17 @@ function AddLeave(props) {
           <Card body>
           <div className="container">
           <div className="leave-app-button">
-          { (status !== 'Pending') &&
-           <Button className="float-end" onClick= {() => viewOptions ? history.push('/employee-leaves') :history.push('/leaves')} >Back</Button>
-          }
+          {viewLeaveOptions && (
+           <Button className="float-end" onClick= {() => {
+            history.push('/my-leaves');
+            if(viewOptions) {
+               history.push('/employee-leaves');
+            } else {
+              history.push('/leaves'); 
+            }
+           
+           }}>Back</Button>
+           )}
           { (Number(id) !== Number(employeeId)) && leaveId && (
             <p>Employee Name: {name} ({status})</p>
           )}
@@ -425,7 +433,7 @@ function AddLeave(props) {
               submitBtnText="Check task"
               showResetBtn={true}
               resetBtnText="Cancel"
-              btnContainerClass= {(status === 'Pending') ? 'form-submit-buttons':'d-none'}
+              btnContainerClass= {(!viewLeaveOptions) ? 'form-submit-buttons':'d-none'}
               isStepForm={false}
               onFormReset={() => {
                 history.push('/leaves');

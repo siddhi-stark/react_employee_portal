@@ -74,7 +74,6 @@ function AddNote(props) {
     setShowNote(props.show);
     setStatusId(props.statusId);
     setStatusData(props.statusData);
-    // setNoteData(props.note);
   }, []);
 
   const onCancelButton = () => {
@@ -96,23 +95,22 @@ function AddNote(props) {
         label="Reason"
         modalBody={
           <>
-  <StarkFormBuilder
-    containerClass=''
-    formHeaderClass=''
-    formSections={FormSections}
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText= 'Submit'
-    showResetBtn={false}
-    resetBtnText="Cancel"
-    btnContainerClass={!value ? 'form-submit-buttons' : 'd-none'}
-    isStepForm={false}
-  />
-    </>
-
+            <StarkFormBuilder
+              containerClass=''
+              formHeaderClass=''
+              formSections={FormSections}
+              onFormSubmit={(formValues) => {submitForm(formValues);}}
+              options={options}
+              callbacks={{}}
+              defaultFormValues={defaultValues}
+              currentUser={currentUser}
+              submitBtnText= 'Submit'
+              showResetBtn={false}
+              resetBtnText="Cancel"
+              btnContainerClass={!value ? 'form-submit-buttons' : 'd-none'}
+              isStepForm={false}
+            />
+          </>
         }
         />
 		</>

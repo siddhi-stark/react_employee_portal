@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
-import { Helmet, Datepicker, DropdownInput } from '../../components/FormInputs';
+import { Helmet, Datepicker, DropdownInput, TextInput } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -19,12 +19,13 @@ function TeamReport() {
   const [title, setTitle] = useState('');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
-  const [searchKeyword, setKeyword] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [filterErr, setFilterErr] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [team, setTeam] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
+  const history = useHistory();
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -78,7 +79,7 @@ function TeamReport() {
     const params = {
       limit: pagination.itemsPerPage,
       page,
-      keyword: searchKeyword,
+      keyword: searchKeyword && searchKeyword,
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',
     };
@@ -127,7 +128,14 @@ function TeamReport() {
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,
           report: (
-            <a href={`/daily-report/${dt}/${report.user_id}`}>
+            // <a href={`/daily-report/${dt}/${report.user_id}`}>
+            //   <span className="text-info">View Report</span>
+            // </a>
+             <a href="javascript.void(0)" onClick={(e)=>{
+              e.preventDefault();
+              e.stopPropagation();
+              history.push(`/daily-report/${dt}/${report.user_id}`,{teamReport:true, reporterName:report.user})} // eslint-disable-line
+            }>
               <span className="text-info">View Report</span>
             </a>
           ),
@@ -174,7 +182,7 @@ function TeamReport() {
 
   const onClear = () => {
     setFilterErr('');
-    setKeyword('');
+    setSearchKeyword('');
     setFromDate('');
     setToDate('');
     setSelectedEmployee('');
@@ -200,7 +208,7 @@ function TeamReport() {
       getReports(1);
     }
   };
-
+  
   return (
     <>
       <Helmet title={title} />
@@ -317,6 +325,39 @@ function TeamReport() {
                 <h4 className="text-primary mt-2 mb-2">Team Reports</h4>
               </div>
           </Card.Header>
+          { rows && rows.length > 0 && (
+              <Row className="mt-3">
+                <Col sm={3}>
+                 <TextInput
+                    value={searchKeyword}
+                    placeholder="Search employee name"
+                    onInputChange={(e) => {
+                      setSearchKeyword(e.target.value);
+                    }}
+                  />
+                </Col>
+                <Col sm={3}>
+                <div className="filter-btn">
+                  <Button
+                    variant="primary"
+                    type="button"
+                    className="ms-4"
+                    onClick={() => getReports(1)}
+                  >
+                    Apply
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    className="ms-4"
+                    onClick={() => onClear()}
+                  >
+                    Clear
+                  </Button>
+                </div>
+                </Col>
+              </Row>
+            )}
             <Row>
               <div className="mt-3">
                 <Table

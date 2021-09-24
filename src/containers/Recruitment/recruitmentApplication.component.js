@@ -14,13 +14,10 @@ import AddNote from './AddNote.component';
 import Loader from '../../components/Loader/index';
 
 function RecruitmentApplicationComponent() {
-  // const title = 'Recruitment';
   const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'Recruitment' }];
   const history = useHistory();
 
-  // Variable declarations Filter Form
-  // const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [modalShow, setModalShow] = useState(false);
@@ -40,8 +37,6 @@ function RecruitmentApplicationComponent() {
   const [allData, setAllData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
 
-  // const [statusLabel,setStatusLabel] = useState('');
-  // const [selectedStatusOption,setSelectedStatusOption] = useState(null);
   let filterOptions = {};
 
   const ApplicantStatus = [
@@ -95,7 +90,6 @@ function RecruitmentApplicationComponent() {
                 statusObj: status_name,
               });
 
-              // history.push('/edit-employee');
             }}
           >
             <Image src="/images/edit-button.svg" />
@@ -194,20 +188,12 @@ function RecruitmentApplicationComponent() {
                 : {}
             }
             onSelectHandler={(select) => {
-              // setSelectedStatusOption(select);
-              // setStatusLabel(select.label);
-              // onStatusClick(select,status_name.id,status_name);
               setStatusId(status_name.id);
               // {select.label === 'decined'}
               { select.label === 'declined' || select.label === 'shortlisted' ? setModalShow(true) : ''; } //eslint-disable-line
-              // setModalShow(true);
               setStatusData(select);
             }}
-            // errorMessage={validator.message(
-            //   'Designation',
-            //   selectedDesignationOption,
-            //   'required'
-            // )}
+           
             isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line
           />
         ) : (
@@ -427,7 +413,6 @@ function RecruitmentApplicationComponent() {
     const endPoint = (Number(role) === 1 ) ? `${Api.employeeUrl}?role_id=5&is_dropdown=1` :`${Api.teamUrl}?type=all`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!data) {
-      // show error
       return;
     }
 
