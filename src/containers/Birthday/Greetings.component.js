@@ -20,7 +20,7 @@ function Greetings() {
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						history.push(`/edit-birthday/${row.id}`, { isView: 'true' });
+						history.push(`/edit-greetings/${row.id}`, { isView: 'true' });
 					}}
 				>
 					<Image alt="view" src="/images/eye.svg" />
@@ -31,7 +31,7 @@ function Greetings() {
 					onClick={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						history.push(`/edit-birthday/${row.id}`);
+						history.push(`/edit-greetings/${row.id}`);
 					}}
 				>
 					<Image src="/images/edit-button.svg" />
@@ -205,10 +205,7 @@ function Greetings() {
 								<div className="d-flex align-items-center justify-content-end">
 									
 										<a
-											href="#"
-											onClick={() => {
-												history.push('/add-birthday');
-											}}
+											href="/add-greetings"
 											className="btn-link"
 										>
 											Add Greeting
