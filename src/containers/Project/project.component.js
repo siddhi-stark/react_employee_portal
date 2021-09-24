@@ -227,6 +227,7 @@ function Project() {
       sort_direction:'ascending',
       page,
       limit,
+      status:'active',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
