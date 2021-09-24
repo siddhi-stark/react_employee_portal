@@ -4,7 +4,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Bar, Pie } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
-import { Card, Row, Col, Image } from 'react-bootstrap';
+import { Card, Row, Col, Image, Button } from 'react-bootstrap';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -14,21 +14,10 @@ import constants from '../../helper/constants';
 import Loader from '../../components/Loader/index';
 
 function TeamProject(props) {
-  const grpData = {
-    labels: ['Completed', 'Pending'],
-    datasets: [
-      {
-        label: 'My First Dataset',
-        data: [300, 50],
-        backgroundColor: ['#85C51C', '#E3E3E3'],
-      },
-    ],
-  };
-
   const teamid = props;
   const teamProjectId = teamid.match.params.teamProjectId;
   customFunctions.setLocalStorage('teamProjectId', teamProjectId);
-  const [barGraphData, setBarGraphData] = useState({}); // eslint-disable-line
+  const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
 
   const items = [
@@ -50,11 +39,13 @@ function TeamProject(props) {
     allocated: null,
     spend: null,
     hours_allocated: null,
+    start_date: null,
+    end_date: null,
   };
 
   const history = useHistory();
-  const [graphDetails, setGraphDetails] = useState(initialState); // eslint-disable-line
-  const [graphData, setGraphData] = useState([]); // eslint-disable-line
+  const [graphDetails, setGraphDetails] = useState(initialState);
+  const [graphData, setGraphData] = useState({});
   const [title, setTitle] = useState('');
 
   // Declare variable column state
@@ -63,7 +54,7 @@ function TeamProject(props) {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [name, setName] = useState('');
-  const [projectStatus, setProjectStatus] = useState(''); // eslint-disable-line
+  const [projectStatus, setProjectStatus] = useState('');
   const [graphDataObj, setGraphDataObj] = useState(initialGraphValue);
 
   // Declare columns
@@ -93,7 +84,7 @@ function TeamProject(props) {
                     customFunctions.setLocalStorage('departmentName', team);
                     e.preventDefault();
                     e.stopPropagation();
-                    history.push(`/team/${team}`, { graphDataObj });
+                    history.push(`/team/${team}`, { graphDataObj, projectStatus });
                   }}
                 >
                   <strong> {team}</strong>
@@ -179,10 +170,18 @@ function TeamProject(props) {
       let qaHrs = '';
       let managementHrs = '';
       setShowLoader(false);
-      const graph = [
-        { x: 'Pending Work', y: data && data.data && data.data.remaining_perc },
-        { x: 'Complete Work', y: data && data.data && data.data.completion },
-      ];
+      const graph = {
+        labels: ['Completed', 'Pending'],
+        datasets: [
+          {
+            data: [
+              data && data.data && data.data.completion,
+              data && data.data && data.data.remaining_perc,
+            ],
+            backgroundColor: ['#8cc540', '#e3e3e3'],
+          },
+        ],
+      };
       setGraphDetails({
         totalHrsSpend: data && data.data && data.data.spend,
         totalHrsEstimate:
@@ -190,6 +189,8 @@ function TeamProject(props) {
         totalHrsAllocated: data && data.data && data.data.hours_allocated,
         projectCompletion: data && data.data && data.data.completion,
         url: data && data.data && data.data.tw_id,
+         start_date:data && data.data && data.data.start_date && customFunctions.getDMYDate(data.data.start_date),
+        end_date:data && data.data && data.data.end_date && customFunctions.getDMYDate(data.data.end_date),
       });
       const allocated_hrs =
         data && data.data && Number(data.data.hours_allocated);
@@ -197,7 +198,7 @@ function TeamProject(props) {
       const total = Number(allocated_hrs) - Number(spend_hrs);
 
       setProjectStatus(total);
-      setGraphData([...graph]);
+      setGraphData(graph);
 
       data &&
         data.data &&
@@ -362,31 +363,33 @@ function TeamProject(props) {
         hours_allocated_management: Number(managementHrs),
         hours_allocated_development: Number(developmentHrs),
         hours_allocated_design: Number(designHrs),
+        start_date:data && data.data && data.data.start_date && customFunctions.getDMYDate(data.data.start_date),
+        end_date:data && data.data && data.data.end_date && customFunctions.getDMYDate(data.data.end_date),
       });
       setRowData(newData || []);
       setBarGraphData({
-        labels: [''],
+        labels: ['Allocated Hours  Estimated Hours  Spending Hours'],
         datasets: [
           {
             label: 'Allocated Hours',
-            backgroundColor: '#85C51C',
-            borderWidth: 2,
+            backgroundColor: '#3ad2e3',
+            borderWidth: 1,
             data: [
               data && data.data && data.data.total && data.data.hours_allocated,
             ],
           },
           {
             label: 'Estimated Hours',
-            backgroundColor: '#F4C222',
-            borderWidth: 2,
+            backgroundColor: '#8cc540',
+            borderWidth: 1,
             data: [
               data && data.data && data.data.total && data.data.total.allocated,
             ],
           },
           {
             label: 'Spent Hours',
-            backgroundColor: '#f00000',
-            borderWidth: 2,
+            backgroundColor: '#f4c222 ',
+            borderWidth: 1,
             data: [
               data && data.data && data.data.total && data.data.total.spends,
             ],
@@ -410,136 +413,162 @@ function TeamProject(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
+        <Button
+          className="float-end mb-3"
+          onClick={() => history.push('/project')}
+        >
+          Back
+        </Button>
         <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Row>
-          <Col sm={3}>
-            <Card className="">
-              <Card.Body>
-                <strong>Task Status</strong>
-                <Pie
-                  data={grpData}
-                  options={{
-                    title: {
-                      display: true,
-                      text: 'Run Programs',
-                      fontSize: 20,
-                    },
-                    legend: {
-                      display: true,
-                      position: 'right',
-                    },
-                  }}
-                />
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col sm={5}>
-            <Card className="">
-              <Card.Body>
-                <Bar
-                  data={barGraphData}
-                  options={{
-                    title: {
-                      display: true,
-                      text: 'Team Bar Graph',
-                      fontSize: 20,
-                    },
-                    legend: {
-                      display: true,
-                      position: 'right',
-                    },
-                  }}
-                />
-              </Card.Body>
-            </Card>
+          <Col sm={8}>
+            <Row>
+              <Col sm={4} className="mb-4">
+                <Card className="h-100">
+                  <Card.Header className="purple-bg">
+                    <strong>Task Status</strong>
+                  </Card.Header>
+                  <Card.Body>
+                    <Pie data={graphData} />
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col sm={8} className="mb-4">
+                <Card className="h-100">
+                  <Card.Header className="purple-bg">
+                    <strong>Hours Analysis</strong>
+                  </Card.Header>
+                  <Card.Body>
+                    <Bar
+                      data={barGraphData}
+                      options={{
+                        title: {
+                          display: true,
+                          text: 'Team Bar Graph',
+                          fontSize: 20,
+                        },
+                        legend: {
+                          display: true,
+                          position: 'right',
+                        },
+                      }}
+                    />
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Card>
+                <Card.Header>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <h4 className="text-primary mt-2 mb-2">Team Details</h4>
+                  </div>
+                </Card.Header>
+                <Card.Body>
+                  <CustomTable
+                    columns={columns}
+                    rows={rowData}
+                    tableClass="table-striped"
+                    showPagination={true}
+                    paginationProps={{
+                      totalItems: totalCount,
+                      itemsPerPage: limit,
+                      activePage: currentPage,
+                      onPageChange: (pageNo) => {
+                        getRowData(pageNo);
+                      },
+                    }}
+                    emptyRender={() => {
+                      return 'No record found.';
+                    }}
+                  />
+                </Card.Body>
+              </Card>
+            </Row>
           </Col>
           <Col sm={4}>
-            <Card className="">
-              <Card.Body>
-                <p>Project Information</p>
-                <img
-                  src={`${Api.s3UrlnoProfile}`}
-                  // src={imageProfile}
-                  alt="img"
-                  style={{ height: '5%', width: '40%' }}
-                />{' '}
-                <br />
-                <strong>Employee Portal</strong>
-                <br />
-                <strong className="text-success mt-4">On Track</strong>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-        <Row>
-          <Col xl={8} id="main-content">
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              showPagination={true}
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
-              }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
-            />
-          </Col>
-          <Col xl={4} id="right-sidebar">
-            <Card className="">
-              <Card.Body>
-                <ul>
-                  <li>
-                    Total Hours Spent: <strong>{graphDetails.totalHrsSpend}</strong>
+            <div className="project-info-box">
+              <Card className="project-info-details">
+                <Card.Body>
+                  <h4>Project Information</h4>
+                  <img
+                    src="/images/project.png"
+                    // src={imageProfile}
+                    alt="img"
+                  />{' '}
+                  <br />
+                  <h2>{name}</h2>
+                  <br />
+                  <a href="#" className="mt-4 btn btn-primary">
+                    {projectStatus < 0 ? 'Project in dealy' : 'Project Ontrack'}
+                  </a>
+                </Card.Body>
+              </Card>
+              <Card>
+                <Card.Body>
+                  <ul className="list-unstyled p-0 project-information-total-hr">
+                   <li>
+                    Start Date:{' '}
+                    <strong>{graphDetails.start_date}</strong>
                   </li>
                   <li>
-                    Total Hours Estimated:{' '}
-                    <strong>{graphDetails.totalHrsEstimate}</strong>
+                    End Date:{' '}
+                    <strong>{graphDetails.end_date}</strong>
                   </li>
-                  <li>
-                    Total Hours Allocated:{' '}
-                    <strong>{graphDetails.totalHrsAllocated}</strong>
-                  </li>
-                  <li>
-                    Project Completion:{' '}
-                    <strong>{graphDetails.projectCompletion}%</strong>
-                  </li>
-                  <li>
-                    Team work URL:{' '}
-                    <a
-                      href={`${constants.project}${graphDetails.url}`}
-                      target="_blank"
-                    >
+                    <li>
+                      Total Hours Spent:{' '}
+                      <strong>{graphDetails.totalHrsSpend}</strong>
+                    </li>
+                    <li>
+                      Total Hours Estimated:{' '}
+                      <strong>{graphDetails.totalHrsEstimate}</strong>
+                    </li>
+                    <li>
+                      Total Hours Allocated:{' '}
+                      <strong>{graphDetails.totalHrsAllocated}</strong>
+                    </li>
+                    <li>
+                      Project Completion:{' '}
+                      <strong>{graphDetails.projectCompletion}%</strong>
+                    </li>
+                    <li>
+                      Team work URL:{' '}
+                      <a
+                        href={`${constants.project}${graphDetails.url}`}
+                        target="_blank"
+                      >
+                        <span>
+                          <Image src="/images/redirect.png" />
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                  <hr />
+                  <ul className="list-unstyled p-0 project-information-text mb-0">
+                    <li>
+                      <img src="/images/input_text_icon.svg" alt="img" />{' '}
                       <span>
-                        <Image src="/images/redirect.png" />
+                        Karan H. Lorem ipsum text generator Lorem ipsum
                       </span>
-                    </a>
-                  </li>
-                  <hr/>
-                  <li>
-                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
-                    </span>
-                  </li>
-                  <li>
-                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
-                    </span>
-                  </li>
-                  <li>
-                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
-                    </span>
-                  </li>
-                </ul>
-              </Card.Body>
-            </Card>
+                    </li>
+                    <li>
+                      <img src="/images/input_text_icon.svg" alt="img" />{' '}
+                      <span>
+                        Karan H. Lorem ipsum text generator Lorem ipsum
+                      </span>
+                    </li>
+                    <li>
+                      <img src="/images/input_text_icon.svg" alt="img" />{' '}
+                      <span>
+                        Karan H. Lorem ipsum text generator Lorem ipsum
+                      </span>
+                    </li>
+                  </ul>
+                </Card.Body>
+              </Card>
+            </div>
           </Col>
         </Row>
       </section>
