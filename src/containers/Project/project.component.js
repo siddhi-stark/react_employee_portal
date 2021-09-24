@@ -437,6 +437,7 @@ function Project() {
               <CustomTable
                 columns={columns}
                 rows={rowData}
+                tableClass="table-striped"
                 showPagination={true}
                 paginationProps={{
                   totalItems: totalCount,

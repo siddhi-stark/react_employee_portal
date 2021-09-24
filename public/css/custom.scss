@@ -2806,6 +2806,84 @@
      max-width: 17px;
      width: 100%;
  }
+ 
+ .project-info-box {
+     .card {
+         border-radius: 0px 0px 13px 13px !important;
+         strong {
+             text-align: center;
+             display: block;
+         }
+         &.project-info-details {
+             background-color: #393A71;
+             color: #ffffff;
+             margin-bottom: 0 !important;
+             border-radius: 13px 13px 0px 0px !important;
+             h4 {
+                 margin-bottom: 13px;
+                 margin-top: 10px;
+                 margin-left: 14px;
+             }
+             h2 {
+                 text-align: center;
+                 font-size: 24px;
+                 margin-top: 10px;
+                 font-weight: 700;
+             }
+             img {
+                 margin: 0 auto;
+                 display: block;
+                 max-width: 92px;
+             }
+             .btn {
+                 text-align: center;
+                 max-width: 262px;
+                 min-height: 30px;
+                 display: block;
+                 width: 100%;
+                 margin: 0 auto !important;
+                 background-color: #ffffff !important;
+                 color: #85C51C;
+                 font-weight: 600;
+             }
+         }
+     }
+ }
+ 
+ .purple-bg {
+     background-color: #393A71 !important;
+     color: #fff !important;
+     border-radius: 13px 13px 0px 0px !important;
+ }
+ 
+ .team-performance canvas {
+     height: 190px !important;
+     width: 590px !important;
+ }
+ 
+ .project-information-total-hr {
+     li {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         line-height: 2.5;
+         font-size: 16px;
+     }
+ }
+ 
+ .project-information-text {
+     li {
+         font-size: 14px;
+         padding: 0 10px;
+         display: flex;
+         align-items: flex-start;
+         padding: 5px 5px;
+     }
+ }
+ 
+ .project-information-text li:nth-child(odd) {
+     background-color: #f1f1f1;
+ }
  /*@media (min-width: 576px){
     .bd-content .highlight {
         margin-right: 0;
@@ -3769,6 +3847,10 @@
          width: 100%;
      }
  }
+ 
+ .project-information-text li img {
+     margin: 3px 6px;
+ }
  /*Pre Code View end*/
  
  .schedular {
@@ -3817,6 +3899,10 @@
  }
  
  @media (max-width: 1366px) {
+     .project-info-box .card.project-info-details h2,
+     .project-info-box .card.project-info-details .h2 {
+         font-size: 16px;
+     }
      body {
          font-size: 14px;
      }
@@ -3989,6 +4075,14 @@
      }
      .weekly-status ul li .status-label {
          font-size: 11px;
+     }
+     .project-information-total-hr {
+         li {
+             font-size: 14px;
+         }
+     }
+     .project-information-text li {
+         font-size: 12px;
      }
  }
  

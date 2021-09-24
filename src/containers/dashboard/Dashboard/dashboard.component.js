@@ -43,6 +43,8 @@ function Dashboard() {
   const isBirthday = customFunctions.getLocalStorage('birthday');
   const EmployeeID = JSON.parse(customFunctions.getLocalStorage('Employee'));
   const UserID = customFunctions.getLocalStorage('userId');
+  const [leavesUpdate, setLeavesUpdate] = useState([]);
+  const [interviewsUpdate, setInterviewsUpdate] = useState([]);
 
   let isShowBdayHeading = false;
 
@@ -277,6 +279,10 @@ function Dashboard() {
           Number(e.dob) >= day
       );
     setBirthdayArray(birthdayArrr);
+    if(Number(uRole) ===  1 || Number(uRole) ===  2 || Number(uRole) ===  3 ) {
+      getLeavesUpdate();
+      getInterviewsUpdate();
+    }
   }, []);
 
   const onViewButtonClick = () => {
@@ -305,6 +311,22 @@ function Dashboard() {
 
   const onCancel = () => {
     setModalShow(false);
+  };
+
+  const getLeavesUpdate = async () => {
+    const endPoint = `${Api.leavesUrl}?show_dashboard=true`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
+      setLeavesUpdate(data.data);
+    }
+  };
+
+ const getInterviewsUpdate = async () => {
+    const endPoint = `${Api.applicantsUrl}?show_dashboard=true`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
+      setInterviewsUpdate(data.data);
+    }
   };
 
   return (
@@ -421,7 +443,7 @@ function Dashboard() {
               </Row>
             </Jumbotron>
             
-            {((birthdayArr && birthdayArr.length > 0) || (anniversary && anniversary.length > 0) || (appreciationData && appreciationData.length > 0)) ? (
+            {((birthdayArr && birthdayArr.length > 0) || (anniversary && anniversary.length > 0) || (appreciationData && appreciationData.length > 0) || (leavesUpdate && leavesUpdate.length > 0) || (interviewsUpdate && interviewsUpdate.length > 0)) ? (
               <>
                <Card className="mt-3 birthday-list">
                 {isShowBdayHeading ? (
@@ -593,10 +615,41 @@ function Dashboard() {
                       </>
                     ))}
                 </Card.Body>
+                <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
+                  <Card.Body>
+                    <Row>
+                      <strong> Pending Leaves </strong>
+                      {leavesUpdate &&
+                        leavesUpdate.length > 0 &&
+                        leavesUpdate.map((empLeave) => (
+                          <>
+                            <a className="mt-2" href={(Number(userRole) === 1) ? '/employee-leaves': '/team-leaves'}>
+                              {empLeave.user_name}
+                            </a>
+                          </>
+                        ))}
+                    </Row>
+                  </Card.Body>
+                </UserRestrictions>
+                <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
+                  <Card.Body>
+                    <Row>
+                      <strong> Pending Interviews </strong>
+                      {interviewsUpdate &&
+                        interviewsUpdate.length > 0 &&
+                        interviewsUpdate.map((empInterview) => (
+                          <>
+                            <a className="mt-2" href="/interview-listing">
+                              {empInterview.name}
+                            </a>
+                          </>
+                        ))}
+                    </Row>
+                  </Card.Body>
+                </UserRestrictions>
               </Card>
               </>
               ) : ''}
-
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-4">
                 <EmployeeListComponent />
