@@ -368,11 +368,11 @@ function TeamProject(props) {
         labels: [''],
         datasets: [
           {
-            label: 'Spent Hours',
-            backgroundColor: '#f00000',
+            label: 'Allocated Hours',
+            backgroundColor: '#85C51C',
             borderWidth: 2,
             data: [
-              data && data.data && data.data.total && data.data.total.spends,
+              data && data.data && data.data.total && data.data.hours_allocated,
             ],
           },
           {
@@ -384,11 +384,11 @@ function TeamProject(props) {
             ],
           },
           {
-            label: 'Allocated Hours',
-            backgroundColor: '#85C51C',
+            label: 'Spent Hours',
+            backgroundColor: '#f00000',
             borderWidth: 2,
             data: [
-              data && data.data && data.data.total && data.data.hours_allocated,
+              data && data.data && data.data.total && data.data.total.spends,
             ],
           },
         ],
@@ -495,23 +495,23 @@ function TeamProject(props) {
             />
           </Col>
           <Col xl={4} id="right-sidebar">
-            <Card className="flex-fill w-100 weekly-status-box">
+            <Card className="">
               <Card.Body>
                 <ul>
                   <li>
-                    Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
+                    Total Hours Spent: <strong>{graphDetails.totalHrsSpend}</strong>
                   </li>
                   <li>
                     Total Hours Estimated:{' '}
-                    <span>{graphDetails.totalHrsEstimate}</span>
+                    <strong>{graphDetails.totalHrsEstimate}</strong>
                   </li>
                   <li>
                     Total Hours Allocated:{' '}
-                    <span>{graphDetails.totalHrsAllocated}</span>
+                    <strong>{graphDetails.totalHrsAllocated}</strong>
                   </li>
                   <li>
                     Project Completion:{' '}
-                    <span>{graphDetails.projectCompletion}%</span>
+                    <strong>{graphDetails.projectCompletion}%</strong>
                   </li>
                   <li>
                     Team work URL:{' '}
@@ -523,6 +523,19 @@ function TeamProject(props) {
                         <Image src="/images/redirect.png" />
                       </span>
                     </a>
+                  </li>
+                  <hr/>
+                  <li>
+                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
+                    </span>
+                  </li>
+                  <li>
+                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
+                    </span>
+                  </li>
+                  <li>
+                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
+                    </span>
                   </li>
                 </ul>
               </Card.Body>

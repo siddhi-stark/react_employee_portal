@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Bar } from 'react-chartjs-2';
-import Doughnut from 'stark-doughnut-graph';
+import { Bar, Pie } from 'react-chartjs-2';
+// import Doughnut from 'stark-doughnut-graph';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 // import StarkFormBuilder from 'stark-form-builder';
-import { Card, Button, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col } from 'react-bootstrap';
 // import FormSections from './formschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
@@ -15,13 +15,23 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
 function Team(props) {
+    const grpData = {
+    labels: ['Completed', 'Pending'],
+    datasets: [
+      {
+        label: 'My First Dataset',
+        data: [300, 50],
+        backgroundColor: ['#85C51C', '#E3E3E3'],
+      },
+    ],
+  };
   const teamid = props;
-  const teamId = teamid.match.params.teamId;
+  // const teamId = teamid.match.params.teamId;
   const graphDataObj = teamid.location.state ? teamid.location.state.graphDataObj
     : '';
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
-  const getProjectName = customFunctions.getLocalStorage('projectName');
+  // const getProjectName = customFunctions.getLocalStorage('projectName');
 
   const items = [
     { to: '/', label: 'Home' },
@@ -41,14 +51,14 @@ function Team(props) {
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [projectName, setProjectName] = useState('');
+  const [projectName, setProjectName] = useState(''); // eslint-disable-line
   const departmentId = customFunctions.getLocalStorage('department');
   const [currentUser, updateCurrentUser] = useState(0);
   const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader,setShowLoader] = useState(false);
   const [graphDetails, setGraphDetails] = useState(initialState);
   const [graphAllocatedHrs, setGraphAllocatedHrs] = useState(null);
-  const [graphData, setGraphData] = useState([]);
+  const [graphData, setGraphData] = useState([]); // eslint-disable-line
 
   // Declare columns
   const columns = [
@@ -232,81 +242,138 @@ function Team(props) {
   }, []);
 
   return (
-    <>
+   <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-      <Card body className="mt-4">
-      <Row className="mb-3">
-         <Col>
-          <span>{getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}</span>
-          </Col>
-          <Col>
-         <Button className="float-end mb-3" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
-          </Col>
-        </Row>
-
-        <Row className="doughnut-graph-section">
+      <section className="content-area">
+        <Row>
           <Col sm={3}>
-            <Doughnut
-              // ref={graphref}
-              id="dougnut"
-              data={graphData}
-              subTitle=""
-              title={`${graphDetails.projectCompletion}%`}
-              height="150"
-              width="150"
-              constrainToVisibleArea="true"
-              labels={({ datum }) => `${datum.x}: ${datum.y}%`}
-              legendOrientation="vertical"
-              legendPosition="right"
-              legends={{}}
-              padding={{
-                bottom: 0,
-                left: 10,
-                right: 10, // Adjusted to accommodate legend
-                top: 0,
-              }}
-              colorScale={['yellow','green','red']}
-              wrapperSize={{ height: '150px', width: '100%' }}
-            />
-          </Col>
-          <Col sm={4}>
-          <Bar
-            data={barGraphData}
-             options={{
-                title:{
-                  display:true,
-                  text:'Team Bar Graph',
-                  fontSize:20
-                },
-                legend:{
-                  display:true,
-                  position:'right'
-                }
-              }}
-          />
+            <Card className="">
+              <Card.Body>
+                <strong>Task Status</strong>
+                <Pie
+                  data={grpData}
+                  options={{
+                    title: {
+                      display: true,
+                      text: 'Run Programs',
+                      fontSize: 20,
+                    },
+                    legend: {
+                      display: true,
+                      position: 'right',
+                    },
+                  }}
+                />
+              </Card.Body>
+            </Card>
           </Col>
           <Col sm={5}>
-          <ul>
-            <li>
-            Total Hours Spent: <span>{graphDetails.totalHrsSpend}</span>
-            </li>
-            <li>
-            Total Hours Estimated: <span>{graphDetails.totalHrsEstimate}</span>
-            </li>
-            <li>
-              Total Hours Allocated: <span>{graphAllocatedHrs}</span>
-            </li>
-            
-            </ul>
+            <Card className="">
+              <Card.Body>
+                <Bar
+                  data={barGraphData}
+                  options={{
+                    title: {
+                      display: true,
+                      text: 'Team Bar Graph',
+                      fontSize: 20,
+                    },
+                    legend: {
+                      display: true,
+                      position: 'right',
+                    },
+                  }}
+                />
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col sm={4}>
+            <Card className="">
+              <Card.Body>
+                <p>Project Information</p>
+                <img
+                  src={`${Api.s3UrlnoProfile}`}
+                  // src={imageProfile}
+                  alt="img"
+                  style={{ height: '5%', width: '40%' }}
+                />{' '}
+                <br />
+                <strong>Employee Portal</strong>
+                <br />
+                <strong className="text-success mt-4">On Track</strong>
+              </Card.Body>
+            </Card>
           </Col>
         </Row>
-        <hr />
-            <CustomTable
+        <Row>
+         <Col sm={8}>
+            <Card className="">
+              <Card.Body>
+                <Bar
+                  data={barGraphData}
+                  options={{
+                    title: {
+                      display: true,
+                      text: 'Team Bar Graph',
+                      fontSize: 20,
+                    },
+                    legend: {
+                      display: true,
+                      position: 'right',
+                    },
+                  }}
+                />
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col sm={4} id="right-sidebar">
+            <Card className="">
+              <Card.Body>
+                <ul>
+                  <li>
+                    Total Hours Spent: <strong>{graphDetails.totalHrsSpend}</strong>
+                  </li>
+                  <li>
+                    Total Hours Estimated:{' '}
+                    <strong>{graphDetails.totalHrsEstimate}</strong>
+                  </li>
+                  <li>
+                    Total Hours Allocated:{' '}
+                    <strong>{graphDetails.totalHrsAllocated}</strong>
+                  </li>
+                  <li>
+                    Project Completion:{' '}
+                    <strong>{graphDetails.projectCompletion}%</strong>
+                  </li>
+                 
+                  <hr/>
+                  <li>
+                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
+                    </span>
+                  </li>
+                  <li>
+                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
+                    </span>
+                  </li>
+                  <li>
+                    <span>Karan H. Lorem ipsum text generator Lorem ipsum 
+                    </span>
+                  </li>
+                </ul>
+              </Card.Body>
+            </Card>
+          </Col>
+          
+        </Row>
+        <Row>
+<Col sm={8} id="main-content">
+             <CustomTable
               columns={columns}
               rows={rowData}
               showPagination={false}
@@ -321,7 +388,9 @@ function Team(props) {
                 return 'No record found.';
               }}
             />
-      </Card>
+          </Col>
+        </Row>
+      </section>
     </>
   );
 }
