@@ -66,8 +66,8 @@ function Holidays() {
       },
 		},
 		{
-			id: employeeRole ?  '' : 'action' ,
-			label: employeeRole ?  '' : 'action' ,
+			id: (Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2) ?  '' : 'action' ,
+			label: (Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2) ?  '' : 'Action' ,
 			render: handleActionCallback,
 		},
 	];
