@@ -171,7 +171,7 @@ const menu = [
     path: '/report',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [2,3,4],
+    roleaccess: [4],
   },
   {
     title: 'Reports',
