@@ -618,7 +618,10 @@ function Dashboard() {
                 <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
                   <Card.Body>
                     <Row>
-                      <strong> Pending Leaves </strong>
+                    {leavesUpdate &&
+                        leavesUpdate.length > 0 && (
+                      <strong> Today's Pending Leaves </strong>
+                          )}
                       {leavesUpdate &&
                         leavesUpdate.length > 0 &&
                         leavesUpdate.map((empLeave) => (
@@ -633,8 +636,10 @@ function Dashboard() {
                 </UserRestrictions>
                 <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
                   <Card.Body>
-                    <Row>
-                      <strong> Pending Interviews </strong>
+                    <Row> {interviewsUpdate &&
+                        interviewsUpdate.length > 0 && (
+                      <strong> Today's Interviews </strong>
+                      )}
                       {interviewsUpdate &&
                         interviewsUpdate.length > 0 &&
                         interviewsUpdate.map((empInterview) => (

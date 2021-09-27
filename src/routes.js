@@ -63,6 +63,7 @@ import TeamMemberProject from './containers/Project/teamMemberProject.component'
 import ProjectScheduler from './containers/ProjectScheduler/projectScheduler.component';
 import TeamProjectScheduler from './containers/ProjectScheduler/teamProjectScheduler.component';
 import ProjectFetch from './containers/ProjectScheduler/projectFetch.component';
+import ArchivedProject from './containers/Project/archivedProject.component';
 
 function Routes() {
   return (
@@ -135,7 +136,7 @@ function Routes() {
       <Route path="/wishes" exact component={BirthdayWishes} />
       <Route path="/greetings" exact component={Greetings} />
       <Route path="/interview-listing" exact component={MyInterviews} />
-      <Route path="/project" exact component={Project} />
+      <Route path="/current-project" exact component={Project} />
       <Route path="/edit-project/:projectId" exact component={EditProject} />
       <Route path="/view-project/:projectId" exact component={EditProject} />
       <Route path="/team-project/:teamProjectId" exact component={TeamProject} />
@@ -144,6 +145,7 @@ function Routes() {
       <Route path="/scheduler" exact component={ProjectScheduler} />
       <Route path="/team-scheduler" exact component={TeamProjectScheduler} />
       <Route path="/project-fetch" exact component={ProjectFetch} />
+      <Route path="/archived-project" exact component={ArchivedProject} />
       <Route component={NotFound} />
     </Switch>
   );

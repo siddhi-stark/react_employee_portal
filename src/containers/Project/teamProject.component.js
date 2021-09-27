@@ -16,13 +16,15 @@ import Loader from '../../components/Loader/index';
 function TeamProject(props) {
   const teamid = props;
   const teamProjectId = teamid.match.params.teamProjectId;
+   const archived = teamid.location.state ? teamid.location.state.archived
+    : '';
   customFunctions.setLocalStorage('teamProjectId', teamProjectId);
   const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
 
   const items = [
     { to: '/', label: 'Home' },
-    { to: '/project', label: 'Project' },
+    { to: archived ? '/archived-project' : '/current-project', label: archived ? 'Archived Project' : 'Current Project' },
   ];
 
   const initialState = {
@@ -84,7 +86,11 @@ function TeamProject(props) {
                     customFunctions.setLocalStorage('departmentName', team);
                     e.preventDefault();
                     e.stopPropagation();
+                    if(archived) {
+                    history.push(`/team/${team}`, { graphDataObj, projectStatus,archived:true });
+                  } else {
                     history.push(`/team/${team}`, { graphDataObj, projectStatus });
+                  }
                   }}
                 >
                   <strong> {team}</strong>
@@ -415,7 +421,7 @@ function TeamProject(props) {
       <div className="title-breadcrumb-section">
         <Button
           className="float-end mb-3"
-          onClick={() => history.push('/project')}
+          onClick={() => archived ? history.push('/archived-project') : history.push('/current-project')}
         >
           Back
         </Button>

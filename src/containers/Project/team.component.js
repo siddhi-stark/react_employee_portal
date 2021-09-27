@@ -19,6 +19,9 @@ function Team(props) {
   const teamId = teamid.match.params.teamId;
   const graphDataObj = teamid.location.state
     ? teamid.location.state.graphDataObj
+    : '';  
+  const archived = teamid.location.state
+    ? teamid.location.state.archived
     : ''; 
   const projectStatus = teamid.location.state
     ? teamid.location.state.projectStatus
@@ -29,7 +32,7 @@ function Team(props) {
 
   const items = [
     { to: '/', label: 'Home' },
-    { to: '/project', label: 'Project' },
+    { to:  archived ? '/archived-project' : '/current-project', label:  archived ? 'Archived Project' : 'Current Project' },
   ];
 
   const history = useHistory();
@@ -85,10 +88,14 @@ function Team(props) {
                   e.stopPropagation();
                   customFunctions.setLocalStorage('teamMemberId', emp_id);
                   customFunctions.setLocalStorage('teamMemberName', emp_name);
-                  history.push(`/my-project/${emp_id}`);
+                  if(archived){ 
+                    history.push(`/my-project/${emp_id}`,{archived:true});
+                  } else {
+                    history.push(`/my-project/${emp_id}`);
+                  }
                 }}
               >
-                {emp_name}
+              <strong>  {emp_name} </strong>
               </a>
             ) : (
               <span>{emp_name}</span>
@@ -166,16 +173,16 @@ function Team(props) {
       setRowData((data && data.data && data.data.employees_data) || []);
       switch (data && data.data && data.data.department) {
         case 'Project Management':
-          setGraphAllocatedHrs(graphDataObj.hours_allocated_management);
+          setGraphAllocatedHrs(graphDataObj && graphDataObj.hours_allocated_management);
           break;
         case 'Development':
-          setGraphAllocatedHrs(graphDataObj.hours_allocated_development);
+          setGraphAllocatedHrs(graphDataObj && graphDataObj.hours_allocated_development);
           break;
         case 'Design':
-          setGraphAllocatedHrs(graphDataObj.hours_allocated_design);
+          setGraphAllocatedHrs(graphDataObj && graphDataObj.hours_allocated_design);
           break;
         case 'Quality Analysis':
-          setGraphAllocatedHrs(graphDataObj.hours_allocated_qa);
+          setGraphAllocatedHrs(graphDataObj && graphDataObj.hours_allocated_qa);
           break;
         default:
           return !data.data.department;
@@ -278,7 +285,7 @@ function Team(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <Button className="float-end mb-3" onClick= {() => history.push(`/team-project/${teamProjectId}`)} >Back</Button>
+        <Button className="float-end mb-3" onClick= {() => archived ? history.push(`/team-project/${teamProjectId}`,{archived:true}) : history.push(`/team-project/${teamProjectId}`)} >Back</Button>
         <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
@@ -393,28 +400,28 @@ function Team(props) {
                   <ul className="list-unstyled p-0 project-information-total-hr">
                     <li>
                     Start Date:{' '}
-                    <strong>{graphDataObj.start_date}</strong>
+                    <strong>{graphDataObj && graphDataObj.start_date}</strong>
                   </li>
                   <li>
                     End Date:{' '}
-                    <strong>{graphDataObj.end_date}</strong>
+                    <strong>{graphDataObj && graphDataObj.end_date}</strong>
                   </li>
 
                     <li>
                     Total Hours Spent:{' '}
-                    <strong>{graphDetails.totalHrsSpend}</strong>
+                    <strong>{graphDetails && graphDetails.totalHrsSpend}</strong>
                   </li>
                   <li>
                     Total Hours Estimated:{' '}
-                    <strong>{graphDetails.totalHrsEstimate}</strong>
+                    <strong>{graphDetails && graphDetails.totalHrsEstimate}</strong>
                   </li>
                   <li>
                     Total Hours Allocated:{' '}
-                    <strong>{graphDetails.totalHrsAllocated}</strong>
+                    <strong>{graphDetails && graphDetails.totalHrsAllocated}</strong>
                   </li>
                   <li>
                     Project Completion:{' '}
-                    <strong>{graphDetails.projectCompletion}%</strong>
+                    <strong>{graphDetails && graphDetails.projectCompletion}%</strong>
                   </li>
                   </ul>
                   <hr />

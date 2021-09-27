@@ -14,6 +14,7 @@ function EditProject(props) {
   const idProps = props;
   const projectId = idProps.match.params.projectId;
   const viewOptions = idProps.location.state ? idProps.location.state.isView : '';
+  const archived = idProps.location.state ? idProps.location.state.archived : '';
   const userGroup = customFunctions.getLocalStorage('group');
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
@@ -107,7 +108,11 @@ function EditProject(props) {
           allowOutsideClick: false,
         }).then(okAction => {
           if (okAction) {
-            history.push('/project');
+            if(archived) {
+              history.push('/archived-project');
+            } else {
+              history.push('/current-project');
+            }
           }
         });
       } else {
@@ -206,7 +211,7 @@ function EditProject(props) {
     <div className='mt-5'>
     <Card body>
      {viewOptions && (
-        <Button className="float-end" onClick= {() => history.push('/project')} >Back</Button>
+        <Button className="float-end" onClick= {() =>archived ? history.push('/archived-project'):history.push('/current-project')} >Back</Button>
       )}
       <StarkFormBuilder
         containerClass='mt-4'
@@ -225,7 +230,11 @@ function EditProject(props) {
         btnContainerClass={viewOptions ? 'd-none':'form-submit-buttons mb-3'}
         isStepForm={false}
         onFormReset={() => {
-          history.push('/project');
+          if(archived) {
+            history.push('/archived-project');
+          } else {
+            history.push('/current-project');
+          }
         }}
       />
     </Card>

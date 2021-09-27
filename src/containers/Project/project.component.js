@@ -14,7 +14,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/project', label: 'Project' },
+  { to: '/current-project', label: 'Current Project' },
 ];
 
 function Project() {
@@ -27,8 +27,8 @@ function Project() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
-  const [activeMenu, setActiveMenu] = useState('all');
-  const [tabStatus, setTabStatus] = useState('all');
+  // const [activeMenu, setActiveMenu] = useState('all');
+  // const [tabStatus, setTabStatus] = useState('all');
   const departmentId = customFunctions.getLocalStorage('department');
   const [allData, setAllData] = useState({});
   const [options, updateOptions] = useState({});
@@ -94,7 +94,7 @@ function Project() {
                 history.push(`/team-project/${id}`);
               }}
             >
-             {name} 
+          <strong> {name} </strong>
             </a>
           </>
         );
@@ -257,7 +257,7 @@ function Project() {
 
   useEffect(() => {
     getRowData(1);
-    setTitle('Project');
+    setTitle('Current Project');
   }, [filterData]);
 
   // Get user role Filter 
@@ -277,11 +277,11 @@ function Project() {
       payload = {
         project_id: formValues.project_id && formValues.project_id.value && Number(formValues.project_id.value),
       };
-    if(String(tabStatus) === 'active' || String(tabStatus) === 'inactive'){
-      payload.status = tabStatus;
-    } else if(String(tabStatus) === 'late' || String(tabStatus) === 'current'){
-      payload.sub_status = String(tabStatus) === 'late' ? 'late' :'current';
-    }
+    // if(String(tabStatus) === 'active' || String(tabStatus) === 'inactive'){
+    //   payload.status = tabStatus;
+    // } else if(String(tabStatus) === 'late' || String(tabStatus) === 'current'){
+    //   payload.sub_status = String(tabStatus) === 'late' ? 'late' :'current';
+    // }
 
     if(formValues) {
       setAllData(payload);
@@ -289,12 +289,12 @@ function Project() {
     setFilterData(payload);
   };
   
-  useEffect(() => {
-    submitForm();
-  }, [tabStatus]);
+  // useEffect(() => {
+  //   submitForm();
+  // }, [tabStatus]);
 
   const getProjectList = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name`);
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name&status=active`);
 
     if(!data) {
      swal(message, '', 'error', {
@@ -370,7 +370,7 @@ function Project() {
               </div>
             </Card.Header>
             <Card.Body>
-            <div className="recruitment-links-wrapper">
+         {/*   <div className="recruitment-links-wrapper">
             {((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
               <>
               <a
@@ -433,7 +433,7 @@ function Project() {
                   </a>
                 </>
              )}
-            </div>
+            </div> */}
               <CustomTable
                 columns={columns}
                 rows={rowData}
