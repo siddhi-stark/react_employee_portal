@@ -295,7 +295,7 @@ function Team(props) {
           <Col sm={8}>
             <Row>
               <Col sm={4} className="mb-4">
-                <Card className="h-100">
+                <Card className="h-100 pie-chart-graph">
                   <Card.Header className="purple-bg">
                     <strong>Task Status</strong>
                   </Card.Header>

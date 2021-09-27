@@ -15666,6 +15666,21 @@ table tbody tr td a:hover {
   width: 100%;
 }
 
+.birthday-anniversary-box.jumbotron {
+  min-height: 200px;
+}
+
+.birth-name {
+  margin-bottom: 10px;
+}
+.birth-name img {
+  max-width: 16px;
+  margin-right: 5px;
+}
+.birth-name .birthday-employees h6, .birth-name .birthday-employees .h6 {
+  margin-bottom: 0;
+}
+
 @media (min-width: 992px) {
   .main-sidebar {
     position: relative;
@@ -15906,6 +15921,12 @@ table td {
   }
 }
 @media (max-width: 1199px) {
+  .pie-chart-graph canvas {
+    width: 200px !important;
+    height: 200px !important;
+    margin: 0 auto;
+  }
+
   .modal-dialog.modal-lg.modal-dialog-centered {
     margin-left: 29%;
   }
