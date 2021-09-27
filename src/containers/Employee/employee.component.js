@@ -379,16 +379,14 @@ function Employee() {
   }, []);
 
   useEffect(() => {
-    if (addButton) {
-      getDesignation();
-      getTwEmployee();
-      getRole();
-      getManager();
-      getTeamLead();
-      // getDepartment();
-      getNewDapartment();
-      getTeam();
-    }
+    getDesignation();
+    getTwEmployee();
+    getRole();
+    getManager();
+    getTeamLead();
+    // getDepartment();
+    getNewDapartment();
+    getTeam();
   }, [addButton]);
 
   useEffect(() => {
