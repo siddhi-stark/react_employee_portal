@@ -6,21 +6,7 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6],
   },
-  // {
-  //   title: 'Project',
-  //   path: '/project',
-  //   icon: 'project.svg',
-  //   submenu: [],
-  //   roleaccess: [1,2,3,4],
-  // },
   {
-    title: 'Team Project Scheduler',
-    path: '/team-scheduler',
-    icon: 'leaves.svg',
-    submenu: [],
-    roleaccess: [1,2,3,4],
-  },
-    {
     title: 'Project',
     path: '#',
     redirect: false,
@@ -39,6 +25,20 @@ const menu = [
         roleaccess: [1,2,3,4],
       },
     ],
+    roleaccess: [1,2,3,4],
+  },
+  // {
+  //   title: 'Project',
+  //   path: '/project',
+  //   icon: 'project.svg',
+  //   submenu: [],
+  //   roleaccess: [1,2,3,4],
+  // },
+  {
+    title: 'Team Project Scheduler',
+    path: '/team-scheduler',
+    icon: 'leaves.svg',
+    submenu: [],
     roleaccess: [1,2,3,4],
   },
    {
