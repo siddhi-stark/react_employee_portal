@@ -445,7 +445,7 @@ function Dashboard() {
 
              {(birthdayArr && birthdayArr.length > 0) && (
                <>
-             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box">
+             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box mb-4">
               <Row className="align-items-center">
                 <Col md={5} className="mt-3">
                   <div className="welcome-text">
@@ -522,7 +522,7 @@ function Dashboard() {
             
              {(anniversary && anniversary.length > 0) && (
                <>
-             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box">
+             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box mb-4">
               <Row className="align-items-center">
                 <Col md={5} className="mt-3">
                   <div className="welcome-text">
@@ -596,7 +596,7 @@ function Dashboard() {
 
               {(appreciationData && appreciationData.length > 0) && (
                <>
-             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box">
+             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box mb-4">
               <Row className="align-items-center">
                 <Col md={5} className="mt-3">
                   <div className="welcome-text">
@@ -681,10 +681,10 @@ function Dashboard() {
             </Jumbotron>
             </>
             )}
-
-            {((birthdayArr && birthdayArr.length > 0) || (anniversary && anniversary.length > 0) || (appreciationData && appreciationData.length > 0) || (leavesUpdate && leavesUpdate.length > 0) || (interviewsUpdate && interviewsUpdate.length > 0)) ? (
+  
+            {((leavesUpdate && leavesUpdate.length > 0) || (interviewsUpdate && interviewsUpdate.length > 0)) ? (
               <>
-               <Card className="mt-3 birthday-list">
+               <Card className="mt-3 birthday-list mb-4">
               {/*  {isShowBdayHeading ? (
                   <Card.Body className="todays-birthday-member-main">
                     <>
