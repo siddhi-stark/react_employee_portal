@@ -12983,22 +12983,26 @@ p:empty {
   border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
-.main-sidebar-body::-webkit-scrollbar {
+.main-sidebar-body::-webkit-scrollbar,
+.table-projects.table-responsive::-webkit-scrollbar {
   width: 3px;
 }
 
 /* Track */
-.main-sidebar-body::-webkit-scrollbar-track {
+.main-sidebar-body::-webkit-scrollbar-track,
+.table-projects.table-responsive::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
 /* Handle */
-.main-sidebar-body::-webkit-scrollbar-thumb {
+.main-sidebar-body::-webkit-scrollbar-thumb,
+.table-projects.table-responsive::-webkit-scrollbar-thumb {
   background: #888;
 }
 
 /* Handle on hover */
-.main-sidebar-body::-webkit-scrollbar-thumb:hover {
+.main-sidebar-body::-webkit-scrollbar-thumb:hover,
+.table-projects.table-responsive::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
@@ -15654,7 +15658,12 @@ table tbody tr td a:hover {
 /*Pre Code View end*/
 .schedular .table-projects {
   max-height: 450px;
-  overflow: scroll;
+  overflow-y: scroll;
+}
+
+.project-information-total-hr li a img {
+  max-width: 17px;
+  width: 100%;
 }
 
 @media (min-width: 992px) {
@@ -15693,6 +15702,10 @@ table tbody tr td a:hover {
   }
 }
 @media (max-width: 1366px) {
+  .project-information-total-hr li {
+    font-size: 12px;
+  }
+
   .project-info-box .card.project-info-details h2,
 .project-info-box .card.project-info-details .h2 {
     font-size: 16px;

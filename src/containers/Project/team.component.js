@@ -350,7 +350,7 @@ function Team(props) {
                   </Card.Body>
                 </Card>
               </Col>
-              <Card>
+              <Card className="p-0">
                 <Card.Header>
                   <div className="d-flex align-items-center justify-content-between">
                     <h4 className="text-primary mt-2 mb-2">Team Details</h4>
