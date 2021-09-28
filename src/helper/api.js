@@ -145,6 +145,8 @@ export default class Api extends Component {
 
   static projectListUrl = `${Api.baseUrl}project-dropdown-list/`;
 
+  static fetchTeamworkDataUrl = 'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
+
   // Get base URL of APIs
   static getBaseUrl() {
 

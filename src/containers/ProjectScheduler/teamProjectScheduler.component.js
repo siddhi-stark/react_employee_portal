@@ -59,7 +59,7 @@ function TeamProjectScheduler() {
                 history.push(`/my-project/${emp_id}`,{schedular:true,teamMemberName:emp_name,teamMemberId:emp_id});
               }}
             >
-             {emp_name} 
+            <strong> {emp_name} </strong>
             </a>
           </>
         );
@@ -249,6 +249,7 @@ function TeamProjectScheduler() {
               <CustomTable
                 columns={columns}
                 rows={rowData}
+                tableClass="table-striped"
                 showPagination={true}
                 paginationProps={{
                   totalItems: totalCount,

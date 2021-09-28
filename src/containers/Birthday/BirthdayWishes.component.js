@@ -148,7 +148,7 @@ const addMeaage = async () => {
 								<div className="col-md-12">
 									<div className="card">
 										<div className="media birthday-media-section">
-											<Image className="mr-3" src= {bd.wish_from_profile ? bd.wish_from_profile : '/images/profile-img.png'}  alt="Generic placeholder image" />
+											<Image className="mr-3" src= {bd.wish_from_profile ? bd.wish_from_profile : '/images/birthday_full_width.png'}  alt="Generic placeholder image" />
 											<div className="media-body">
 												<h6 className="mt-0">{bd.wish_from_full_name}</h6>{bd.message}
 											</div>

@@ -8,11 +8,32 @@ const menu = [
   },
   {
     title: 'Project',
-    path: '/project',
+    path: '#',
+    redirect: false,
     icon: 'project.svg',
-    submenu: [],
+    submenu: [
+      {
+        title: 'Current Project',
+        path: '/current-project',
+        icon: 'project.svg',
+        roleaccess: [1,2,3,4],
+      },
+      {
+        title: 'Archived Project',
+        path: '/archived-project',
+        icon: 'project.svg',
+        roleaccess: [1,2,3,4],
+      },
+    ],
     roleaccess: [1,2,3,4],
   },
+  // {
+  //   title: 'Project',
+  //   path: '/project',
+  //   icon: 'project.svg',
+  //   submenu: [],
+  //   roleaccess: [1,2,3,4],
+  // },
   {
     title: 'Team Project Scheduler',
     path: '/team-scheduler',
@@ -237,7 +258,21 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1,3,5,6],
   // },
-  
+  {
+    title: 'Setting',
+    path: '#',
+    redirect: false,
+    icon: 'report.svg',
+    submenu: [
+      {
+        title: 'Project Fetch',
+        path: '/project-fetch',
+        icon: 'report.svg',
+        roleaccess: [1],
+      }
+    ],
+    roleaccess: [1],
+  },
   {
     title: 'Log Out',
     path: '#',

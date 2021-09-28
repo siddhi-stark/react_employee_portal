@@ -20,10 +20,12 @@ function TeamMemberProject(props) {
     : ''; 
   const teamName = teamid.location.state ? teamid.location.state.teamMemberName
     : '';
+  const archived = teamid.location.state ? teamid.location.state.archived
+    : '';
   const teamMemberName = customFunctions.getLocalStorage('teamMemberName');
   const items = [
     { to: '/', label: 'Home' },
-    { to: '/project', label: 'Project' },
+    { to:  archived ? '/archived-project' : '/current-project', label:  archived ? 'Archived Project' : 'Current Project' },
   ];
 
   const history = useHistory();
@@ -172,10 +174,18 @@ function TeamMemberProject(props) {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4 schedular">
        <span>{teamName ? `${teamName} Projects and Work` : `${teamMemberName} Projects and Work`}</span>
-         <Button className="float-end mb-3" onClick= {() => schedular ? history.push('/team-scheduler') : history.push(`/team/${getTeamId}`)} >Back</Button>
+         <Button className="float-end mb-3" onClick= {() =>{ if(schedular){
+            history.push('/team-scheduler'); 
+         } else if(archived) {
+           history.push(`/team/${getTeamId}`,{archived:true});
+         } else {
+           history.push(`/team/${getTeamId}`) ;
+          }
+         }}>Back</Button>
             <CustomTable
               columns={columns}
               rows={rowData}
+              tableClass="table-striped"
               showPagination={true}
               paginationProps={{
                 totalItems: totalCount,
