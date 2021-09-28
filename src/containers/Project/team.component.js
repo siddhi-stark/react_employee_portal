@@ -217,7 +217,7 @@ function Team(props) {
                   label: 'Allocated Hours',
                   backgroundColor: '#3ad2e3',
                   borderWidth: 1,
-                  data: [emp.spends],
+                  data: [graphAllocatedHrs],
                 },
                 {
                   label: 'Estimated Hours',
@@ -229,7 +229,7 @@ function Team(props) {
                   label: 'Spent Hours',
                   backgroundColor: '#f4c222',
                   borderWidth: 1,
-                  data: [graphAllocatedHrs],
+                  data: [emp.spends],
                 },
               ],
             });
