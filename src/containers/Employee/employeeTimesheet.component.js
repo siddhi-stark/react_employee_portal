@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
+import { Card, Row, Col, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
@@ -340,21 +340,12 @@ function EmployeeTimesheet() {
         </div>
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-      <div className="mt-5">
-        <Accordion defaultActiveKey="0">
           <Card>
-            <Card.Header>
+            <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Filters</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                    Expand
-                  </Accordion.Toggle>
-                </div>
-              </div>
-            </Card.Header>
-
-            <Accordion.Collapse eventKey="1">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>  
+              <hr/>
               <StarkFormBuilder
                 containerClass=""
                 formHeaderClass=""
@@ -370,30 +361,26 @@ function EmployeeTimesheet() {
                 submitBtnText="Apply"
                 showResetBtn={true} // eslint-disable-line
                 resetBtnText="Clear"
-                btnContainerClass="form-submit-buttons pull-right mb-3"
+                btnContainerClass="form-submit-buttons"
                 isStepForm={false}
                 onFormReset={() => {
                   setDataShow(false);
                   onResetForm();
                 }}
               />
-            </Accordion.Collapse>
+            </Card.Body>
           </Card>
-        </Accordion>
         <Card>
-          <Card.Header>
-            <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">
-                {`${
+          <Card.Body>
+           <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">{`${
                   filterData.full_name
                     ? `Employee Timesheet for ${filterData.full_name.label}`
                     : 'Employees Timesheet'
-                }`}
-              </h4>
+                }`}</h5>
             </div>
-          </Card.Header>
-          <Card.Body>
-            {filterData.full_name && filterData.is_detail && (
+            <hr/>
+            {(filterData.is_detail && filterData.is_detail[0] && filterData.full_name && filterData.full_name.value) && (
               <Row>
                 <Col>
                   <p>
@@ -438,7 +425,6 @@ function EmployeeTimesheet() {
               />
           </Card.Body>
         </Card>
-      </div>
     </>
   );
 }

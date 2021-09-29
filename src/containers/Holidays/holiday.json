@@ -13,7 +13,7 @@
 		"type": "text",
 		"label": "Holiday",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Enter Holiday",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -45,7 +45,7 @@
 		"type": "date",
 		"label": "Date",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Please select date",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{

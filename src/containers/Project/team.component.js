@@ -351,12 +351,11 @@ function Team(props) {
                 </Card>
               </Col>
               <Card className="p-0">
-                <Card.Header>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <h4 className="text-primary mt-2 mb-2">Team Details</h4>
-                  </div>
-                </Card.Header>
                 <Card.Body>
+                <div className="d-flex align-items-center justify-content-between">
+                    <h5 className="card-title mb-0 mt-2 ">Team Details</h5>
+                  </div>
+                  <hr/>
                    <CustomTable
                     columns={columns}
                     rows={rowData}
@@ -390,8 +389,8 @@ function Team(props) {
                   <br />
                   <h2>{getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}</h2>
                   <br />
-                  <a href="#" className="mt-4 btn btn-primary">
-                    {projectStatus < 0 ? 'Project in dealy' : 'Project Ontrack'}
+                  <a href="#" className={projectStatus < 0 ? 'mt-4 btn text-danger':'mt-4 btn btn-primary'}>
+                    {projectStatus < 0 ? 'Project in Delay' : 'Project Ontrack'}
                   </a>
                 </Card.Body>
               </Card>

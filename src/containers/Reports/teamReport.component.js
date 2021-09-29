@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
+import { Card, Row, Col, Form, Button } from 'react-bootstrap';
 import { Helmet, Datepicker, DropdownInput, TextInput } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
@@ -11,7 +11,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/team-report', label: 'Team Report' },
+  { to: '/team-report', label: 'Team Reports' },
 ];
 
 function TeamReport() {
@@ -195,6 +195,7 @@ function TeamReport() {
     let isValid = true;
 
     if (
+      customFunctions.checkIfEmpty(searchKeyword) &&
       customFunctions.checkIfEmpty(fromDate) &&
       customFunctions.checkIfEmpty(toDate) &&
       customFunctions.checkIfEmpty(selectedEmployee)
@@ -213,27 +214,19 @@ function TeamReport() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Team Report</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Team Reports</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
         <div className="mt-5">
-          <Accordion defaultActiveKey="0">
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
                 <Card.Body>
+                 <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                 </div> 
+               <hr/> 
                   <Card.Title>
                     <Form onSubmit={(e) => filterSearch(e)}>
                       {filterErr && (
@@ -245,6 +238,15 @@ function TeamReport() {
                         </div>
                       )}
                       <Row className="mt-3">
+                      <Col sm={3}>
+                       <TextInput
+                          value={searchKeyword}
+                          placeholder="Search employee name"
+                          onInputChange={(e) => {
+                            setSearchKeyword(e.target.value);
+                          }}
+                        />
+                      </Col>
                         <Col sm={3}>
                           <div className="search-bar-input">
                             <DropdownInput
@@ -289,7 +291,8 @@ function TeamReport() {
                             maxDate={new Date()}
                           />
                         </Col>
-                        <Col sm={3}>
+                         
+                        <Col sm={4}>
                           <div className="filter-btn">
                             <Button
                               variant="primary"
@@ -312,70 +315,30 @@ function TeamReport() {
                     </Form>
                   </Card.Title>
                 </Card.Body>
-              </Accordion.Collapse>
             </Card>
-          </Accordion>
         </div>
       </section>
       <div className="mt-3">
         <Card>
           <Card.Body>
-          <Card.Header>
-          <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Team Reports</h4>
-              </div>
-          </Card.Header>
-          { rows && rows.length > 0 && (
-              <Row className="mt-3">
-                <Col sm={3}>
-                 <TextInput
-                    value={searchKeyword}
-                    placeholder="Search employee name"
-                    onInputChange={(e) => {
-                      setSearchKeyword(e.target.value);
-                    }}
-                  />
-                </Col>
-                <Col sm={3}>
-                <div className="filter-btn">
-                  <Button
-                    variant="primary"
-                    type="button"
-                    className="ms-4"
-                    onClick={() => getReports(1)}
-                  >
-                    Apply
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    type="button"
-                    className="ms-4"
-                    onClick={() => onClear()}
-                  >
-                    Clear
-                  </Button>
-                </div>
-                </Col>
-              </Row>
-            )}
-            <Row>
-              <div className="mt-3">
-                <Table
-                  tableClass="table table-striped"
-                  columns={columns}
-                  rows={rows}
-                  showPagination
-                  paginationProps={{
-                    ...pagination,
-                    activePage: pagination.current_page,
-                    onPageChange: (pageNo) => {
-                      getReports(pageNo);
-                    },
-                  }}
-                  dropdownContainerClass="mb-3"
-                />
-              </div>
-            </Row>
+           <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">Team Reports</h5>
+           </div> 
+           <hr/> 
+            <Table
+              tableClass="table table-striped"
+              columns={columns}
+              rows={rows}
+              showPagination
+              paginationProps={{
+                ...pagination,
+                activePage: pagination.current_page,
+                onPageChange: (pageNo) => {
+                  getReports(pageNo);
+                },
+              }}
+              dropdownContainerClass="mb-3"
+            />
           </Card.Body>
         </Card>
       </div>

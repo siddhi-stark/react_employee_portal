@@ -936,6 +936,7 @@ function Dashboard() {
               <ToDoList
                 onMorningSendScrum={getDailyActivity}
                 onClockoutReport={getTimeSheetList}
+                totalHrs={totalHrs}
               />
             )}
           </Col>

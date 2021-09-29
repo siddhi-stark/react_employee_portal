@@ -203,10 +203,10 @@ function TeamLeaves() {
     <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
           <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Leaves</h4>
-                <div className="d-flex align-items-center justify-content-end">
+          <Card.Body>
+             <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                 <div className="d-flex align-items-center justify-content-end">
                   <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
                     <a
                       href="#"
@@ -219,9 +219,8 @@ function TeamLeaves() {
                     </a>
                   </UserRestrictions>
                 </div>
-              </div>
-            </Card.Header>
-            <Card.Body>
+               </div> 
+               <hr/>
              <StarkFormBuilder
               containerClass=''
               formHeaderClass=''
@@ -232,12 +231,20 @@ function TeamLeaves() {
               submitBtnText="Apply"
               showResetBtn={true}
               resetBtnText="Clear"
-              btnContainerClass="form-submit-buttons pull-right mb-3"
+              btnContainerClass="form-submit-buttons"
               isStepForm={false}
               onFormReset={() => {
                 setFilterData();
               }}
             />
+            </Card.Body>
+            </Card>
+            <Card>
+            <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Team Leaves</h5>
+               </div> 
+               <hr/> 
               <CustomTable
                 columns={columns}
                 rows={rowData}

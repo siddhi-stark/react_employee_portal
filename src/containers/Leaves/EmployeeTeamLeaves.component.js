@@ -193,9 +193,9 @@ function EmployeeTeamLeaves() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
           <Card>
-            <Card.Header>
+            <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Leaves</h4>
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
                 <div className="d-flex align-items-center justify-content-end">
                   <UserRestrictions permittedUsers={[4]} roleId={userRole}>
                     <a
@@ -209,9 +209,8 @@ function EmployeeTeamLeaves() {
                     </a>
                   </UserRestrictions>
                 </div>
-              </div>
-            </Card.Header>
-            <Card.Body>
+              </div>  
+              <hr/>
              <StarkFormBuilder
               containerClass=''
               formHeaderClass=''
@@ -222,12 +221,20 @@ function EmployeeTeamLeaves() {
               submitBtnText="Apply"
               showResetBtn={true}
               resetBtnText="Clear"
-              btnContainerClass="form-submit-buttons pull-right mb-3"
+              btnContainerClass="form-submit-buttons"
               isStepForm={false}
               onFormReset={() => {
                 setFilterData();
               }}
             />
+            </Card.Body>
+            </Card>
+            <Card>
+            <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Employee Leaves</h5>
+               </div> 
+               <hr/> 
               <CustomTable
                 columns={columns}
                 rows={rowData}

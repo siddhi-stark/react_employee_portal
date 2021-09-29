@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
-import { Row, Col, Card, Button, Image, Accordion } from 'react-bootstrap';
+import { Row, Col, Card, Button, Image } from 'react-bootstrap';
 import FormSections from './EmployeeFilterSchema.json';
 import { Helmet } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
@@ -103,23 +103,14 @@ function CurrentEmployee() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-          <Accordion defaultActiveKey="0">
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-
-              <Accordion.Collapse eventKey="1">
-                <Card.Title>
+            <Card.Body>
+             <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+            </div>  
+            <hr/>
                   <StarkFormBuilder
-                    containerClass="mt-5"
+                    containerClass=""
                     formHeaderClass=""
                     formSections={FormSections}
                     formHeading="filter form"
@@ -133,16 +124,14 @@ function CurrentEmployee() {
                     submitBtnText="Apply"
                     showResetBtn={true}
                     resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons pull-right mb-3"
+                    btnContainerClass="form-submit-buttons"
                     isStepForm={false}
                     onFormReset={() => {
                       setFilterData({});
                     }}
                   />
-                </Card.Title>
-              </Accordion.Collapse>
+                </Card.Body>
             </Card>
-          </Accordion>
         </div>
         <div className="row mt-3 employee-grid-list">
           {employee &&

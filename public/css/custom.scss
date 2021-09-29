@@ -853,6 +853,9 @@
      box-shadow: 0px 0px 10px #00000017 !important;
      border-radius: 13px !important;
      margin-bottom: 24px;
+     hr {
+         margin: 15px auto 15px;
+     }
  }
  
  .welcome-box {
@@ -866,6 +869,7 @@
          background-size: contain;
          background-position: top left;
          background-repeat: no-repeat;
+         min-height: 241px;
          .blockquote {
              .btn {
                  min-width: 100px;
@@ -1106,7 +1110,7 @@
              a {
                  padding: 20.5px 15px;
                  span {
-                     color: $white;
+                     color: #E6E6E6;
                      font-size: 14px;
                      margin-left: 15px;
                      font-weight: 400;
@@ -1129,15 +1133,17 @@
                  &.show {
                      li {
                          &:first-child {
-                             a {
+                             .main-sidebar-body .nav li.active.show a a {
                                  padding-top: 10px;
                              }
                          }
                      }
                      a {
                          background-color: $purple;
+                         color: $white;
                          span {
                              font-weight: 500;
+                             color: $white;
                          }
                      }
                  }
@@ -1567,10 +1573,12 @@
                          align-items: flex-start;
                          &.new {
                              color: #8f9cc0;
+                             padding: 10px 0px;
                          }
                      }
                      .media-body {
-                         margin-left: 15px;
+                         //  margin-left: 15px;
+                         margin-left: 0;
                          font-size: 13px;
                          p {
                              margin-bottom: 5px;
@@ -1827,6 +1835,7 @@
  }
  
  .check-in {
+     width: 100%;
      .time-count {
          background-color: $white;
          border-radius: 5px;
@@ -1842,10 +1851,17 @@
              color: $darkblue;
              letter-spacing: 0.9px;
              line-height: 1;
+             h4 {
+                 padding: 5px;
+                 margin: 0;
+             }
          }
      }
      .btn {
-         min-width: 90px;
+         max-width: 155px;
+         min-width: inherit;
+         width: 100%;
+         display: inline-block;
      }
  }
  
@@ -2765,7 +2781,7 @@
              justify-content: space-between;
              align-items: center;
              h5 {
-                 font-size: 12px !important;
+                 font-size: 16px !important;
              }
              img.up-leaves {
                  max-width: 15px;
@@ -3512,6 +3528,7 @@
  
  .active-media {
      background-color: #f1f1f1;
+     padding: 5px;
  }
  
  .status-reason-popup {

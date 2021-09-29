@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import { withRouter } from 'react-router-dom';
-import { Card, Accordion, Button, Row, Col, Image } from 'react-bootstrap';
+import { Card, Row, Col, Image } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import FilterFormSections from './FilterTechnology.json';
@@ -177,21 +177,12 @@ function Technology() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-          <Accordion defaultActiveKey="0">
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
                 <Card.Body>
-                  <Card.Title>
+                   <div className="d-flex align-items-center justify-content-between">
+                    <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                  </div>  
+                  <hr/>
                     <StarkFormBuilder
                       containerClass=""
                       formHeaderClass=""
@@ -212,18 +203,14 @@ function Technology() {
                         setFilterData('');
                       }}
                     />
-                  </Card.Title>
                 </Card.Body>
-              </Accordion.Collapse>
             </Card>
-          </Accordion>
           <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Technology</h4>
-              </div>
-            </Card.Header>
             <Card.Body>
+             <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Technology</h5>
+              </div>  
+              <hr/>
               <Row className="mt-3">
                 <Col>
                   <AddTechnology 

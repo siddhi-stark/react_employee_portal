@@ -24,6 +24,8 @@ import SharedService from '../../services/SharedService/sharedServices';
 const validator = new SimpleReactValidator();
 
 function ToDoList(props) {
+  const hrsProps = props;
+  const totalHours = hrsProps.totalHrs;
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
   const [showMsg, setShowMsg] = useState(false);
@@ -730,7 +732,7 @@ function ToDoList(props) {
                       Clock In & Send Scrum
                     </Button>
                   )}
-                  {!signOutMail && morningMail && (
+                  {!signOutMail && morningMail && (String(totalHours) !== '0 Hrs 0 Mins') && (
                     <Button
                       variant="primary"
                       className="mb-3"

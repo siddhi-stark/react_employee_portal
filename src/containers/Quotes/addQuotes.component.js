@@ -97,12 +97,11 @@ function AddQuotes(props) {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Card>
-          <Card.Header>
-            <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Add Quote</h4>
-            </div>
-          </Card.Header>
           <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Add Quote</h5>
+            </div>  
+            <hr/>
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""

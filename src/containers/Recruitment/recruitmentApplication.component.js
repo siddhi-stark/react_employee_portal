@@ -3,7 +3,7 @@ import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Card, Image, Button, Accordion } from 'react-bootstrap';
+import { Card, Image, Button } from 'react-bootstrap';
 import FormSections from './applicationformschema.json';
 import customFunctions from '../../helper/customFunctions';
 import { Helmet, DropdownInput } from '../../components/FormInputs';
@@ -468,20 +468,12 @@ function RecruitmentApplicationComponent() {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
-        <Accordion defaultActiveKey="0">
           <Card>
-            <Card.Header>
+            <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Filters</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                    Expand
-                  </Accordion.Toggle>
-                </div>
-              </div>
-            </Card.Header>
-            <Accordion.Collapse eventKey="1">
-              <Card.Title>
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>  
+              <hr/>
                 <StarkFormBuilder
                   containerClass="select-options"
                   formHeaderClass=""
@@ -497,21 +489,19 @@ function RecruitmentApplicationComponent() {
                   submitBtnText="Apply"
                   showResetBtn={true}
                   resetBtnText="Clear"
-                  btnContainerClass="form-submit-buttons pull-right mb-3"
+                  btnContainerClass="form-submit-buttons"
                   isStepForm={false}
                   onFormReset={() => {
                     setFilterData({});
                     setAllData({});
                   }}
                 />
-              </Card.Title>
-            </Accordion.Collapse>
+              </Card.Body>
           </Card>
-        </Accordion>
         <Card>
-          <Card.Header>
+          <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Recruitment</h4>
+              <h5 className="card-title mb-0 mt-2 ">Recruitment</h5>
               <div className="d-flex align-items-center justify-content-end">
                 <a
                   href="#"
@@ -524,10 +514,9 @@ function RecruitmentApplicationComponent() {
                     ? ''
                     : 'Add Applicant'}
                 </a>
-              </div>
+              </div>  
             </div>
-          </Card.Header>
-          <Card.Body>
+            <hr/>
             <div className="text-end">
               {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
                 <Button

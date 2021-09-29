@@ -12758,6 +12758,9 @@ p:empty {
   border-radius: 13px !important;
   margin-bottom: 24px;
 }
+.card hr {
+  margin: 15px auto 15px;
+}
 
 .welcome-box.jumbotron {
   background: #FFE7C1;
@@ -12770,6 +12773,7 @@ p:empty {
   background-size: contain;
   background-position: top left;
   background-repeat: no-repeat;
+  min-height: 241px;
 }
 .welcome-box.jumbotron .blockquote .btn {
   min-width: 100px;
@@ -13024,7 +13028,7 @@ p:empty {
   padding: 20.5px 15px;
 }
 .main-sidebar-body .nav li a span {
-  color: #ffffff;
+  color: #E6E6E6;
   font-size: 14px;
   margin-left: 15px;
   font-weight: 400;
@@ -13044,14 +13048,16 @@ p:empty {
 .main-sidebar-body .nav li a svg path polygon {
   fill: #ffffff !important;
 }
-.main-sidebar-body .nav li.active.show li:first-child a {
+.main-sidebar-body .nav li.active.show li:first-child .main-sidebar-body .nav li.active.show a a {
   padding-top: 10px;
 }
 .main-sidebar-body .nav li.active.show a {
   background-color: #2D2E61;
+  color: #ffffff;
 }
 .main-sidebar-body .nav li.active.show a span {
   font-weight: 500;
+  color: #ffffff;
 }
 .main-sidebar-body .nav li .nav-sub {
   padding-left: 31px;
@@ -13476,9 +13482,10 @@ p:empty {
 }
 .main-header .main-header-right .main-header-notification .dropdown-menu .main-notification-list .media.new {
   color: #8f9cc0;
+  padding: 10px 0px;
 }
 .main-header .main-header-right .main-header-notification .dropdown-menu .main-notification-list .media-body {
-  margin-left: 15px;
+  margin-left: 0;
   font-size: 13px;
 }
 .main-header .main-header-right .main-header-notification .dropdown-menu .main-notification-list .media-body p {
@@ -13735,6 +13742,9 @@ p:empty {
   font-style: italic;
 }
 
+.check-in {
+  width: 100%;
+}
 .check-in .time-count {
   background-color: #ffffff;
   border-radius: 5px;
@@ -13758,8 +13768,15 @@ p:empty {
   letter-spacing: 0.9px;
   line-height: 1;
 }
+.check-in .time-count span h4, .check-in .time-count span .h4 {
+  padding: 5px;
+  margin: 0;
+}
 .check-in .btn {
-  min-width: 90px;
+  max-width: 155px;
+  min-width: inherit;
+  width: 100%;
+  display: inline-block;
 }
 
 .card-title {
@@ -14624,7 +14641,7 @@ table.quotes-wrapper thead th {
           align-items: center;
 }
 .table-projects.time-sheet-table .table-title h5, .table-projects.time-sheet-table .table-title .h5 {
-  font-size: 12px !important;
+  font-size: 16px !important;
 }
 .table-projects.time-sheet-table .table-title img.up-leaves {
   max-width: 15px;
@@ -15336,6 +15353,7 @@ span.np-sup {
 
 .active-media {
   background-color: #f1f1f1;
+  padding: 5px;
 }
 
 .status-reason-popup .reson-text-title .title h2, .status-reason-popup .reson-text-title .title .h2 {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Form, Button, Accordion } from 'react-bootstrap';
+import { Card, Row, Col, Form, Button } from 'react-bootstrap';
 import { Helmet, Datepicker } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
@@ -11,7 +11,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/reports', label: 'Reports' },
+  { to: '/my-report', label: 'My Report' },
 ];
 
 function AllReports() {
@@ -161,20 +161,12 @@ function AllReports() {
 
       <section className="content-area">
         <div className="mt-5">
-          <Accordion defaultActiveKey="0">
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
                 <Card.Body>
+                 <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                 </div> 
+               <hr/> 
                   <Card.Title>
                     <Form onSubmit={(e) => filterSearch(e)}>
                       {filterErr && (
@@ -187,7 +179,7 @@ function AllReports() {
                       )}
                       <Row className="mt-3">
 
-                        <Col sm={3}>
+                        <Col sm={4}>
                           <Datepicker
                             className="form-control"
                             selected={fromDate}
@@ -202,7 +194,7 @@ function AllReports() {
                           />
                         </Col>
 
-                        <Col sm={3}>
+                        <Col sm={4}>
                           <Datepicker
                             className="form-control"
                             selected={toDate}
@@ -217,7 +209,7 @@ function AllReports() {
                             placeholder="To Date"
                           />
                         </Col>
-                        <Col sm={3}>
+                        <Col sm={4}>
                           <div className="filter-btn">
                             <Button
                               variant="primary"
@@ -240,16 +232,13 @@ function AllReports() {
                     </Form>
                   </Card.Title>
                 </Card.Body>
-              </Accordion.Collapse>
             </Card>
-          </Accordion>
           <Card>
-          <Card.Header>
-          <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Reports</h4>
-              </div>
-          </Card.Header>
           <Card.Body>
+          <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">My Report</h5>
+                 </div> 
+               <hr/> 
             <Row>
             <Table
                 columns={columns}

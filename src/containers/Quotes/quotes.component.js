@@ -161,10 +161,10 @@ function Quotes() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Card>
-          <Card.Header>
+          <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Quotes</h4>
-               <div className="d-flex align-items-center justify-content-end">
+              <h5 className="card-title mb-0 mt-2 ">Quotes</h5>
+                <div className="d-flex align-items-center justify-content-end">
                   <a
                     href="#"
                     onClick={() => {
@@ -176,8 +176,7 @@ function Quotes() {
                   </a>
               </div>
             </div>
-          </Card.Header>
-          <Card.Body>
+            <hr/>
             <CustomTable
               columns={columns}
               rows={rowData}

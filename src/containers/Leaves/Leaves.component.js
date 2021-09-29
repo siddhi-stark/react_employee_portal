@@ -196,10 +196,10 @@ function Leaves() {
     <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area">
 					<Card>
-						<Card.Header>
-							<div className="d-flex align-items-center justify-content-between">
-								<h4 className="text-primary mt-2 mb-2">Leaves</h4>
-								<div className="d-flex align-items-center justify-content-end">
+						<Card.Body>
+						<div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Leaves</h5>
+                <div className="d-flex align-items-center justify-content-end">
 									<UserRestrictions permittedUsers={[2,3,4,5,6]} roleId={userRole}>
 										<a
 											href="#"
@@ -212,9 +212,8 @@ function Leaves() {
 										</a>
 									</UserRestrictions>
 								</div>
-							</div>
-						</Card.Header>
-						<Card.Body>
+               </div> 
+               <hr/> 
 							<CustomTable
 								columns={columns}
 								rows={rowData}
