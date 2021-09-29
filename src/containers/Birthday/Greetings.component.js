@@ -197,8 +197,7 @@ function Greetings() {
 			</div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area greeting-list">
-				<div className="mt-5">
-					<Card>
+					<Card className="mt-4">
 						<Card.Body>
 						 <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Greetings</h5>
@@ -232,7 +231,6 @@ function Greetings() {
 							/>
 						</Card.Body>
 					</Card>
-				</div>
 			</section>
 		</>
 	);

@@ -183,7 +183,7 @@ const menu = [
    {
     title: 'Greetings',
     path: '/greetings',
-    icon: 'report.svg',
+    icon: 'greetings.svg',
     submenu: [],
 
     roleaccess: [2,3,5,6],
@@ -263,7 +263,7 @@ const menu = [
     title: 'Setting',
     path: '#',
     redirect: false,
-    icon: 'report.svg',
+    icon: 'setting.svg',
     submenu: [
       {
         title: 'Project Fetch',

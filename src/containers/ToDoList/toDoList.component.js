@@ -666,10 +666,10 @@ function ToDoList(props) {
         <div className="mt-5">
           <UserRestrictions permittedUsers={[2, 3, 4, 5,6]} roleId={userRole}>
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary mt-2 mb-2">To Do</h4>
-                  <div className="d-flex align-items-center justify-content-end">
+              <Card.Body>
+               <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 "> To Do</h5>
+                 <div className="d-flex align-items-center justify-content-end">
                     <Button
                       size="sm"
                       variant="primary"
@@ -683,10 +683,8 @@ function ToDoList(props) {
                       Add Task 
                     </Button>
                   </div>
-                </div>
-              </Card.Header>
-
-              <Card.Body>
+              </div>  
+              <hr/>
                 <Row>
                   <Table
                     columns={columns}

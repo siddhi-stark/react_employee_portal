@@ -1306,7 +1306,10 @@
              font-weight: 600;
          }
          &.upcoming-event-img-edit {
-             justify-content: space-between;
+             //  justify-content: space-between;
+             img {
+                 margin-right: 5px;
+             }
          }
      }
      .event-title {
@@ -3909,6 +3912,14 @@
      }
  }
  
+ .upcoming-event-box .date span img {
+     margin-left: 10px;
+ }
+ 
+ .holidays-applied .upcoming-event-box .event-title img {
+     margin-left: 5px;
+ }
+ 
  @media (min-width: 992px) {
      .main-sidebar {
          position: relative;
@@ -3942,12 +3953,15 @@
  
  @media (max-width: 1440px) {
      .welcome-box.jumbotron {
-         padding: 30px 0px 0px 29px;
+         padding: 40px 0px 0px 29px;
          /*background-size: 16% 57%;*/
      }
  }
  
  @media (max-width: 1366px) {
+     .upcoming-event-box {
+         padding: 12px;
+     }
      .project-information-total-hr {
          li {
              font-size: 12px;
@@ -3989,7 +4003,10 @@
      .upcoming-event-box {
          .upcoming-event-img {
              &.upcoming-event-img-edit {
-                 justify-content: space-between;
+                 //  justify-content: space-between;
+                 img {
+                     margin-right: 5px;
+                 }
              }
          }
          .date {
@@ -4044,7 +4061,7 @@
      .check-in {
          .time-count {
              h4 {
-                 font-size: 14px;
+                 font-size: 18px;
                  margin-bottom: 0;
                  padding: 0 10px;
              }

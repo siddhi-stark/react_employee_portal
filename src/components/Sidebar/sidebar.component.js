@@ -218,7 +218,7 @@ const n = m_names[d.getMonth()];
               <div className="upcoming-event-box up-event ">
                 <div className="upcoming-event-img">
                   <img src="/images/up-coming-event.svg" alt="Upcoming event" />
-                  <p>Events In {n}</p>
+                  <p>Events in {n}</p>
                    <Image 
                            src="/images/redirect.png"
                            className="ms-3 up-leaves"

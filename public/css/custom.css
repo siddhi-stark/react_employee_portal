@@ -13215,10 +13215,8 @@ p:empty {
   margin-bottom: 0;
   font-weight: 600;
 }
-.upcoming-event-box .upcoming-event-img.upcoming-event-img-edit {
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+.upcoming-event-box .upcoming-event-img.upcoming-event-img-edit img {
+  margin-right: 5px;
 }
 .upcoming-event-box .event-title p {
   font-size: 14px;
@@ -15699,6 +15697,14 @@ table tbody tr td a:hover {
   margin-bottom: 0;
 }
 
+.upcoming-event-box .date span img {
+  margin-left: 10px;
+}
+
+.holidays-applied .upcoming-event-box .event-title img {
+  margin-left: 5px;
+}
+
 @media (min-width: 992px) {
   .main-sidebar {
     position: relative;
@@ -15730,11 +15736,15 @@ table tbody tr td a:hover {
 }
 @media (max-width: 1440px) {
   .welcome-box.jumbotron {
-    padding: 30px 0px 0px 29px;
+    padding: 40px 0px 0px 29px;
     /*background-size: 16% 57%;*/
   }
 }
 @media (max-width: 1366px) {
+  .upcoming-event-box {
+    padding: 12px;
+  }
+
   .project-information-total-hr li {
     font-size: 12px;
   }
@@ -15778,10 +15788,8 @@ table tbody tr td a:hover {
     font-size: 11px !important;
   }
 
-  .upcoming-event-box .upcoming-event-img.upcoming-event-img-edit {
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+  .upcoming-event-box .upcoming-event-img.upcoming-event-img-edit img {
+    margin-right: 5px;
   }
   .upcoming-event-box .date span {
     font-size: 11px;
@@ -15818,7 +15826,7 @@ table tbody tr td a:hover {
   }
 
   .check-in .time-count h4, .check-in .time-count .h4 {
-    font-size: 14px;
+    font-size: 18px;
     margin-bottom: 0;
     padding: 0 10px;
   }

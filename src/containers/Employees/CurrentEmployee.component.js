@@ -109,28 +109,28 @@ function CurrentEmployee() {
               <h5 className="card-title mb-0 mt-2 ">Filters</h5>
             </div>  
             <hr/>
-                  <StarkFormBuilder
-                    containerClass=""
-                    formHeaderClass=""
-                    formSections={FormSections}
-                    formHeading="filter form"
-                    onFormSubmit={(formValues) => {
-                      submitForm(formValues);
-                    }}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    // currentUser={currentUser}
-                    submitBtnText="Apply"
-                    showResetBtn={true}
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
-                    isStepForm={false}
-                    onFormReset={() => {
-                      setFilterData({});
-                    }}
-                  />
-                </Card.Body>
+              <StarkFormBuilder
+                containerClass=""
+                formHeaderClass=""
+                formSections={FormSections}
+                formHeading="filter form"
+                onFormSubmit={(formValues) => {
+                  submitForm(formValues);
+                }}
+                options={options}
+                callbacks={{}}
+                defaultFormValues={defaultValues}
+                // currentUser={currentUser}
+                submitBtnText="Apply"
+                showResetBtn={true}
+                resetBtnText="Clear"
+                btnContainerClass="form-submit-buttons pull-right"
+                isStepForm={false}
+                onFormReset={() => {
+                  setFilterData({});
+                }}
+              />
+            </Card.Body>
             </Card>
         </div>
         <div className="row mt-3 employee-grid-list">

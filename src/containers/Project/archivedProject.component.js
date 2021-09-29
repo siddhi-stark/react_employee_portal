@@ -258,7 +258,7 @@ function ArchivedProject() {
                     submitBtnText="Apply"
                     showResetBtn={true}
                     resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
+                    btnContainerClass="form-submit-buttons pull-right"
                     isStepForm={false}
                     onFormReset={() => {
                       setFilterData({});

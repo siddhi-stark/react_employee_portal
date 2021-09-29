@@ -172,8 +172,7 @@ function Holidays() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
-        <div className="mt-5">
-          <Card>
+          <Card className="mt-5 schedular">
             <Card.Body>
              <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Holidays</h5>
@@ -215,7 +214,6 @@ function Holidays() {
               />
             </Card.Body>
           </Card>
-        </div>
       </section>
     </>
   );

@@ -361,7 +361,7 @@ function EmployeeTimesheet() {
                 submitBtnText="Apply"
                 showResetBtn={true} // eslint-disable-line
                 resetBtnText="Clear"
-                btnContainerClass="form-submit-buttons"
+                btnContainerClass="form-submit-buttons pull-right"
                 isStepForm={false}
                 onFormReset={() => {
                   setDataShow(false);

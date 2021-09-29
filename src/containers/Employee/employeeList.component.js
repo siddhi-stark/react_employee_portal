@@ -122,13 +122,11 @@ function EmployeeListComponent() {
   return (
     <>
       <Card>
-        <Card.Header>
-          {' '}
-          <h4 className="text-primary mt-2 mb-2">
-            Employee List - {n}({dateNew})
-          </h4>
-        </Card.Header>
         <Card.Body>
+         <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 "> Employee List - {n}({dateNew})</h5>
+              </div>  
+              <hr/>
           <CustomTable
             columns={columns}
             rows={rowData}

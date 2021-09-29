@@ -380,10 +380,7 @@ function Dashboard() {
                     </blockquote>
                   </div>
                 </Col>
-                <Col
-                  md={3}
-                  className="d-flex justify-content-space-between flex-wrap"
-                >
+                <Col md={3} className="d-flex justify-content-space-between flex-wrap">
                   <UserRestrictions
                     permittedUsers={[2, 3, 4, 5, 6]}
                     roleId={userRole}
@@ -393,8 +390,8 @@ function Dashboard() {
                         <div className="time-count text-center">
                           <span>
                             <h4>
-                              ClockIn Time
-                              <br />
+                             {/* ClockIn Time
+                              <br /> */}
                               {signInTime || '00:00'}
                             </h4>
                           </span>
@@ -404,7 +401,9 @@ function Dashboard() {
                       {time && (
                         <div className="time-count text-center">
                           <span>
-                            <h4>Clockout Time{time || '00:00'}</h4>
+                            <h4>
+                            {/* Clockout Time */}
+                            {time || '00:00'}</h4>
                           </span>
                         </div>
                       )}
@@ -426,14 +425,14 @@ function Dashboard() {
                       )}
                     </div>
                   </UserRestrictions>
-                  <UserRestrictions
+                 {/* <UserRestrictions
                     permittedUsers={[2, 3, 4, 5, 6]}
                     roleId={userRole}
                   >
                     <p className="text-primary mt-4">
-                      <i>Total Working Time: {totalHrs}</i>
+                      <i>Logged Time: <br/> {totalHrs}</i>
                     </p>
-                  </UserRestrictions>
+                  </UserRestrictions> */}
                 </Col>
                 <Col md={4}>
                   <div className="welcome-img text-right">
@@ -1046,14 +1045,7 @@ function Dashboard() {
                               alt="Upcoming event"
                             />
                             <p>Holidays</p>
-                            <Image
-                              className="up-holday"
-                              src="/images/redirect.png"
-                              onClick={() => {
-                                history.push('/holidays');
-                                onViewHoliday();
-                              }}
-                            />
+                            
                           </div>
                           {holidays &&
                             holidays.map((hd) => (
@@ -1063,7 +1055,16 @@ function Dashboard() {
                                     <span>{hd.date}</span>
                                   </p>
                                   <p className="ms-1">
+                                    <a href ="/holidays" onClick={()=>{
+                                      onViewHoliday();
+                                    }}>
                                     <span>{hd.occasion}</span>
+                                    
+                                    <Image
+                                      className="up-holday"
+                                      src="/images/next.svg"
+                                    />
+                                    </a>
                                   </p>
                                 </div>
                               </>
@@ -1090,14 +1091,7 @@ function Dashboard() {
                             alt="Upcoming event"
                           />
                           <p>Leaves</p>
-                          <Image
-                            className="up-leaves"
-                            src="/images/redirect.png"
-                            onClick={() => {
-                              history.push('/leaves');
-                              onViewLeaves();
-                            }}
-                          />
+                          
                         </div>
 
                         {leaves && leaves.length >= 1 ? (
@@ -1105,13 +1099,21 @@ function Dashboard() {
                             {leaves &&
                               leaves.map((lv) => (
                                 <>
-                                  <div className="date">
-                                    <span>
-                                      {lv.leave_from_date} To {lv.leave_to_date}
-                                    </span>
-                                  </div>
                                   <div className="event-title">
                                     <p> {lv.leave_type}</p>
+                                  </div>
+                                  <div className="date">
+                                       <a href ="/my-leaves" onClick={()=>{
+                                          onViewLeaves();
+                                    }}>
+                                    <span>
+                                      {lv.leave_from_date} To {lv.leave_to_date}
+                                    <Image
+                                        className="up-leaves"
+                                        src="/images/next.svg"
+                                    />
+                                    </span>
+                                    </a>
                                   </div>
                                 </>
                               ))}
