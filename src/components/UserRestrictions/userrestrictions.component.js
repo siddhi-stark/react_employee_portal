@@ -8,8 +8,9 @@ export default function UserRestrictions(props) {
 
   const childRoute = children&& children.props && children.props.children && children.props.children[0] && children.props.children[0].props && children.props.children[0].props.to;
 
-  const childrenArr = ['/projects', '/interview-listing', '/recruitment','/project','/scheduler','/team-scheduler'];
-  const childArr = ['/projects'];
+  const subChildRoute = children&& children.props && children.props.children && children.props.children.props && children.props.children.props.to;
+  const childrenArr = ['/archived-project', '/interview-listing', '/recruitment','/current-project','/scheduler','/team-scheduler'];
+  const childArr = ['/projects', '/interview-listing'];
   const childProjectArr = ['/scheduler','/team-scheduler'];
 
   const hasPermissions =
@@ -21,11 +22,11 @@ export default function UserRestrictions(props) {
     return <></>;
   }  
 
-  if(Number(roleId) === 4 && Number(departmentId) === 7 && childRoute === '/project' && childRoute === '/scheduler'){
+  if(Number(roleId) === 4 && Number(departmentId) === 7 && childrenArr.includes(childRoute)){
     return <></>;
   }
-  
-  if(Number(roleId) === 4 && Number(departmentId) === 7 && childrenArr.includes(childRoute)){
+
+  if(Number(roleId) === 4 && Number(departmentId) === 7 && (childrenArr.includes(subChildRoute) || !childRoute)){
     return <></>;
   }
 

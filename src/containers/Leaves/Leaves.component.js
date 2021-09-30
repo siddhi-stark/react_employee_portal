@@ -8,7 +8,6 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
 
 function Leaves() {
@@ -200,7 +199,7 @@ function Leaves() {
 						<div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Leaves</h5>
                 <div className="d-flex align-items-center justify-content-end">
-									<UserRestrictions permittedUsers={[2,3,4,5,6]} roleId={userRole}>
+                	{ Number(userRole) !== 1 && (
 										<a
 											href="#"
 											onClick={() => {
@@ -210,7 +209,7 @@ function Leaves() {
 										>
 											Apply Leave
 										</a>
-									</UserRestrictions>
+										)}
 								</div>
                </div> 
                <hr/> 
