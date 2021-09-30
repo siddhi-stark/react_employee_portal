@@ -131,13 +131,9 @@ function Team(props) {
       render: ({ remaining }) => {
         return (
           <>
-            {Math.sign(remaining) === 1 || Math.sign(remaining) === 0 ? (
-              <span>
-                {remaining} {Math.sign(remaining) === 0 ? 'Hr' : 'Hrs'}
-              </span>
-            ) : (
-              <span className="text-danger">{remaining} Hrs</span>
-            )}
+            <span>
+              {remaining} %
+            </span>
           </>
         );
       },
@@ -166,6 +162,13 @@ function Team(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      data && data.data && data.data.employees_data && data.data.employees_data.map((empdata)=>{
+        const employeeNewData = empdata;
+        const add = {'rowClass':(empdata.remaining > 100 && empdata.emp_name !== 'Total')?'alert-danger':''};
+        Object.entries(add).forEach(([key,value]) => { employeeNewData[key] = value; });
+        return employeeNewData ;
+      });
+
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setCurrentPage(Number(data.paginator.current_page));

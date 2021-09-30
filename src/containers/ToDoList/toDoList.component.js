@@ -108,7 +108,7 @@ function ToDoList(props) {
       roleAccess: [1, 2, 3, 4, 5,6],
       render: ({ id, twId, taskType }) => {
         return (
-          <>
+          <span className ="d-flex">
             {taskType === 'tw' ? (
               <a
                 href={`${constants.link}${twId}`}
@@ -146,7 +146,7 @@ function ToDoList(props) {
             >
               {twId ? '' : <Image src="/images/delete.png" />}
             </a>
-          </>
+          </span>
         );
       },
     },

@@ -118,13 +118,13 @@ function RecruitmentFileComponent() {
       setShowLoader(false);
       swal(message, '', 'error');
     }
+    setShowLoader(false);
     swal(data && data.message[0], '', 'success', {
       closeOnClickOutside: false,
       allowOutsideClick: false,
       buttons: false,
       timer: 2000,
     }).then(() => {
-      setShowLoader(false);
       swal.close();
       history.push('/recruitment');
     });

@@ -645,13 +645,15 @@ function Employee() {
   const getTeamLeadList = () => {
     if (!teamLead) return [];
     const options = [];
-    teamLead.map((data) => {
-      return options.push({
-        label: data.full_name,
-        id: data.id,
-        value: data.full_name,
+    if(Number(selectedRole && selectedRole.id) !== 3){
+      teamLead.map((data) => {
+        return options.push({
+          label: data.full_name,
+          id: data.id,
+          value: data.full_name,
+        });
       });
-    });
+    }
     return options;
   };
 
@@ -1069,7 +1071,12 @@ function Employee() {
                   options={getEmployeeRole()}
                   placeholder="Select Role"
                   defaultValue={selectedRole}
-                  onSelectHandler={(select) => setSelectedRole(select)}
+                  onSelectHandler={(select) => {
+                    setSelectedRole(select);
+                    if(Number(select && select.id) === 3){
+                      setSelectedTeamLead('');
+                    }
+                  }}
                   errorMessage={validator.message(
                     'Role',
                     selectedRole,

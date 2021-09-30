@@ -425,14 +425,6 @@ function Dashboard() {
                       )}
                     </div>
                   </UserRestrictions>
-                 {/* <UserRestrictions
-                    permittedUsers={[2, 3, 4, 5, 6]}
-                    roleId={userRole}
-                  >
-                    <p className="text-primary mt-4">
-                      <i>Logged Time: <br/> {totalHrs}</i>
-                    </p>
-                  </UserRestrictions> */}
                 </Col>
                 <Col md={4}>
                   <div className="welcome-img text-right">
@@ -441,7 +433,18 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-
+            {showClockIn && (
+              <UserRestrictions
+                    permittedUsers={[2, 3, 4, 5, 6]}
+                    roleId={userRole}
+                  >
+                <div className="p-3 mb-2 bg-success mt-2 bg-success-main">
+                  <strong>
+                    Today's Logged Time: {totalHrs}
+                  </strong>
+                </div>
+              </UserRestrictions> 
+            )}
              {(birthdayArr && birthdayArr.length > 0) && (
                <>
              <Jumbotron className="welcome-box mt-3 birthday-anniversary-box mb-4">

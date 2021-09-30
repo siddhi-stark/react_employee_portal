@@ -18,14 +18,7 @@
         "placeholder": "eg. 3",
         "inputClass": "",
         "containerClass": "",
-        "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
-          {
-            "type": "numeric|min:0,num",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          }
-        ],
+        "validations": [],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -54,14 +47,7 @@
         "placeholder": "eg. 3.2",
         "inputClass": "",
         "containerClass": "",
-        "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
-          {
-            "type": "numeric|min:0,num",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          }
-        ],
+        "validations": [],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -134,11 +120,7 @@
         "placeholder": "eg.350000",
         "inputClass": "",
         "containerClass": "",
-    "validations": [{
-      "type": "required",
-      "applyWhen": [],
-      "applyWhenRelation": "OR"
-    }],
+        "validations": [],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -167,11 +149,7 @@
         "placeholder": "eg.500000",
         "inputClass": "",
         "containerClass": "",
-    "validations": [{
-      "type": "required",
-      "applyWhen": [],
-      "applyWhenRelation": "OR"
-    }],
+        "validations": [],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
