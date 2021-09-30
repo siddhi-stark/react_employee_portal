@@ -870,6 +870,8 @@
          background-position: top left;
          background-repeat: no-repeat;
          min-height: 241px;
+         display: flex;
+         align-items: center;
          .blockquote {
              .btn {
                  min-width: 100px;
@@ -1645,6 +1647,16 @@
          height: 30px;
          display: flex;
          align-items: center;
+         .dropdown-menu {
+             .header-navheading {
+                 .main-notification-text {
+                     margin-bottom: 5px;
+                 }
+                 small {
+                     font-size: 12px;
+                 }
+             }
+         }
      }
  }
  
@@ -3920,6 +3932,63 @@
      margin-left: 5px;
  }
  
+ .birthday-wish-section {
+     .birth-wish-profile {
+         max-width: 73px;
+         border-radius: 100%;
+     }
+     img {
+         max-width: 44px;
+         width: 100%;
+     }
+     .birthtitle {
+         img {
+             max-width: 30px;
+             width: 100%;
+             margin-right: 10px;
+         }
+         h4 {
+             font-size: 18px;
+             letter-spacing: 0px;
+             color: #FFFFFF;
+         }
+     }
+     .birth-input-field {
+         position: relative;
+         .form-control {
+             background-color: #393A71;
+             color: #ffffff;
+             padding-right: 40px;
+         }
+         .birth-input-arrow {
+             position: absolute;
+             right: 10px;
+             top: 10px;
+             z-index: 9;
+             img {
+                 max-width: 16px;
+                 width: 100%;
+             }
+         }
+     }
+ }
+ 
+ .dark-blue-bg {
+     background-color: #393A71;
+     &.card {
+         min-height: 140px;
+     }
+ }
+ 
+ .log-time-bar {
+     min-height: 30px;
+ }
+ 
+ .filter-btn-report {
+     max-width: 315px;
+     width: 100%;
+ }
+ 
  @media (min-width: 992px) {
      .main-sidebar {
          position: relative;
@@ -3961,6 +4030,14 @@
  }
  
  @media (max-width: 1366px) {
+     .birthday-wish-section-row .col-xl-4 {
+         width: 50% !important;
+     }
+     .birthday-wish-section .birth-input-field .form-control {
+         background-color: #393A71;
+         color: #ffffff;
+         font-size: 12px !important;
+     }
      .upcoming-event-box {
          padding: 12px;
      }

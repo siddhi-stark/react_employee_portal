@@ -321,8 +321,9 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
                             maxDate={new Date()}
                           />
                         </Col>
-                        <Col sm={4}>
-                          <div className="filter-btn">
+                         
+                        <Col sm={12}>
+                          <div className="filter-btn pull-right filter-btn-report">
                             <Button
                               variant="primary"
                               type="submit"

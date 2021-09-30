@@ -12774,6 +12774,12 @@ p:empty {
   background-position: top left;
   background-repeat: no-repeat;
   min-height: 241px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .welcome-box.jumbotron .blockquote .btn {
   min-width: 100px;
@@ -13547,6 +13553,12 @@ p:empty {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+.main-header .main-header-menu-icon .dropdown-menu .header-navheading .main-notification-text {
+  margin-bottom: 5px;
+}
+.main-header .main-header-menu-icon .dropdown-menu .header-navheading small, .main-header .main-header-menu-icon .dropdown-menu .header-navheading .small {
+  font-size: 12px;
 }
 
 .header-search {
@@ -15705,6 +15717,59 @@ table tbody tr td a:hover {
   margin-left: 5px;
 }
 
+.birthday-wish-section .birth-wish-profile {
+  max-width: 73px;
+  border-radius: 100%;
+}
+.birthday-wish-section img {
+  max-width: 44px;
+  width: 100%;
+}
+.birthday-wish-section .birthtitle img {
+  max-width: 30px;
+  width: 100%;
+  margin-right: 10px;
+}
+.birthday-wish-section .birthtitle h4, .birthday-wish-section .birthtitle .h4 {
+  font-size: 18px;
+  letter-spacing: 0px;
+  color: #FFFFFF;
+}
+.birthday-wish-section .birth-input-field {
+  position: relative;
+}
+.birthday-wish-section .birth-input-field .form-control {
+  background-color: #393A71;
+  color: #ffffff;
+  padding-right: 40px;
+}
+.birthday-wish-section .birth-input-field .birth-input-arrow {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 9;
+}
+.birthday-wish-section .birth-input-field .birth-input-arrow img {
+  max-width: 16px;
+  width: 100%;
+}
+
+.dark-blue-bg {
+  background-color: #393A71;
+}
+.dark-blue-bg.card {
+  min-height: 140px;
+}
+
+.log-time-bar {
+  min-height: 30px;
+}
+
+.filter-btn-report {
+  max-width: 315px;
+  width: 100%;
+}
+
 @media (min-width: 992px) {
   .main-sidebar {
     position: relative;
@@ -15747,6 +15812,16 @@ table tbody tr td a:hover {
   }
 }
 @media (max-width: 1366px) {
+  .birthday-wish-section-row .col-xl-4 {
+    width: 50% !important;
+  }
+
+  .birthday-wish-section .birth-input-field .form-control {
+    background-color: #393A71;
+    color: #ffffff;
+    font-size: 12px !important;
+  }
+
   .upcoming-event-box {
     padding: 12px;
   }
