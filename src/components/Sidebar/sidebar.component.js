@@ -282,13 +282,13 @@ const n = m_names[d.getMonth()];
                       customFunctions.setLocalStorage('employeeId',bday.id); // eslint-disable-line 
                       customFunctions.setLocalStorage('gId',bday.greeting); // eslint-disable-line 
                       customFunctions.setLocalStorage('comment-allow',bday.comment_allow);
+                      customFunctions.setLocalStorage('EmpID',bday.id);
+                      customFunctions.setLocalStorage('EmpName',bday.name);
                       history.push('/wishes');
                       document.dispatchEvent(BirthdayEvent);
                         }
 
-                    }}
-
-                      >{bday.name}</p> 
+                    }}>{bday.name}</p> 
                      </>
                         ) : ''}
                       </>
