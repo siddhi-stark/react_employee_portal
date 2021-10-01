@@ -188,8 +188,10 @@ function CandidateListing() {
 	              callbacks={{}}
 	              submitBtnText="Apply"
 	              showResetBtn={true}
+	              showBtnClass={false}
+	              btnContainerClass="col-md-4 filter-apply-btns"
+	              formClass="row"
 	              resetBtnText="Clear"
-	              btnContainerClass="form-submit-buttons pull-right"
 	              isStepForm={false}
 	              onFormReset={() => {
 	                setFilterData();

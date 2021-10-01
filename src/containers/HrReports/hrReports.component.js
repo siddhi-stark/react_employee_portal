@@ -272,6 +272,7 @@ useEffect(()=>{
             submitBtnText="Apply"
             showResetBtn={true}
             resetBtnText="Clear"
+            showBtnClass={true}
             btnContainerClass="form-submit-buttons pull-right"
             isStepForm={false}
             onFormReset={() => {

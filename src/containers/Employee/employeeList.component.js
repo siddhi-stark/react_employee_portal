@@ -15,7 +15,7 @@ const columns = [
   },
   {
     id: 'emp_id',
-    label: 'Employee ID',
+    label: 'ID',
     render: ({ emp_id }) => { // eslint-disable-line
       return (
         <>
@@ -28,7 +28,7 @@ const columns = [
   },
   {
     id: 'emp_name',
-    label: 'Employee Name',
+    label: 'Name',
   },
   {
     id: 'designatin_name',
@@ -36,15 +36,15 @@ const columns = [
   },
   {
     id: 'sign_in',
-    label: 'Clock-In',
+    label: 'In',
   },
   {
     id: 'sign_out',
-    label: 'Clock-Out',
+    label: 'Out',
   },
   {
     id: 'estimation',
-    label: 'Total Working Hours',
+    label: 'Total Working',
     render: ({ estimation }) => {
       return (
         <>
@@ -124,7 +124,7 @@ function EmployeeListComponent() {
       <Card>
         <Card.Body>
          <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 "> Employee List - {n}({dateNew})</h5>
+                <h5 className="card-title mb-0 mt-2 "> Employee Timesheet - {n}({dateNew})</h5>
               </div>  
               <hr/>
           <CustomTable

@@ -221,7 +221,9 @@ function EmployeeTeamLeaves() {
               submitBtnText="Apply"
               showResetBtn={true}
               resetBtnText="Clear"
-              btnContainerClass="form-submit-buttons pull-right"
+              showBtnClass={false}
+              btnContainerClass="col-md-4 filter-apply-btns"
+              formClass="row"
               isStepForm={false}
               onFormReset={() => {
                 setFilterData();

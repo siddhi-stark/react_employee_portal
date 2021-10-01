@@ -86,7 +86,7 @@ function EmployeeTimesheet() {
     },
     {
       id: 'emp_id',
-      label: dataShow ? '' : 'Employee ID',
+      label: dataShow ? '' : 'ID',
 
       render: ({ emp_id }) => { // eslint-disable-line
         return (
@@ -127,7 +127,7 @@ function EmployeeTimesheet() {
       label:
         filterData.full_name || (filterData.formDate && filterData.toDate)
           ? ''
-          : 'Employee Name',
+          : 'Name',
       render: ({ row }) => {
         return (
           <>
@@ -154,15 +154,15 @@ function EmployeeTimesheet() {
     },
     {
       id: 'sign_in',
-      label: 'Clock-In',
+      label: 'In',
     },
     {
       id: 'sign_out',
-      label: 'Clock-Out',
+      label: 'Out',
     },
     {
       id: 'estimation',
-      label: 'Total Working Hours',
+      label: 'Total Working',
       render: ({ estimation }) => {
         return (
           <>
@@ -360,6 +360,7 @@ function EmployeeTimesheet() {
                 currentUser={currentUser}
                 submitBtnText="Apply"
                 showResetBtn={true} // eslint-disable-line
+                showBtnClass={true}
                 resetBtnText="Clear"
                 btnContainerClass="form-submit-buttons pull-right"
                 isStepForm={false}

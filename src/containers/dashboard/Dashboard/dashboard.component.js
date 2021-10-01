@@ -51,7 +51,7 @@ function Dashboard() {
   // let isShowBdayHeading = false;
 
   const d = new Date();
-  const ToDayDate = d.getDate();
+  // const ToDayDate = d.getDate();
   const day = d.getDate(); // eslint-disable-line
   const m_names = [
     'January',
@@ -176,15 +176,16 @@ function Dashboard() {
 
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
         const avsrArr = [];
-        await data.data && data.data.length > 0 && data.data.map((anvs, i) => {
+        await data.data && data.data.length > 0 && data.data.map((anvs) => {
+        const dayMonth = anvs.date_of_joined && anvs.date_of_joined.substring(5, 11);
         const JoiningDate = new Date(anvs.date_of_joined);
-        const NewJoiningDate = JoiningDate.getDate();
-        if (NewJoiningDate === ToDayDate) {
+        const newDate = JoiningDate.getFullYear() + 1;
+        const newJoiningDate = `${newDate}-${dayMonth}`;
+        const todayDate = new Date();
+        if(newJoiningDate === customFunctions.getDate(todayDate)){
           avsrArr.push(anvs);
         }
-        if (i + 1 === data.data.length) {
-          setAnniversary(avsrArr);
-        }
+        setAnniversary(avsrArr);
         return anvs;
       });
     }
@@ -466,10 +467,10 @@ function Dashboard() {
               </UserRestrictions> 
             )}
 
-             <Row className="birthday-wish-section-row mt-3">
+             <Row className="birthday-wish-section-row mt-3 justify-content-center">
              {(birthdayArr && birthdayArr.length > 0) && (
                <>
-             <Col className="col-xl-4 col-lg-6 col-sm-4">
+             <Col>
              {birthdayArr &&
                       birthdayArr.length > 0 &&
                       birthdayArr.map((emp) => (
@@ -531,7 +532,7 @@ function Dashboard() {
                 </>)}
               {(anniversary && anniversary.length > 0) && (
                <>
-              <Col className="col-xl-4 col-lg-6 col-sm-4">
+              <Col>
                {anniversary &&
                     anniversary.length > 0 &&
                     anniversary.map((emp) => (
@@ -547,15 +548,15 @@ function Dashboard() {
                             customFunctions.setLocalStorage(
                               'employeeId',
                               emp.id
-                            ); // eslint-disable-line
+                            );
                             customFunctions.setLocalStorage(
                               'gId',
                               emp.greeting_anniversary
-                            ); // eslint-disable-line
+                            );
                             customFunctions.setLocalStorage(
                               'EmpID',
                               emp.id
-                            ); // eslint-disable-line
+                            );
                             customFunctions.setLocalStorage(
                               'comment-allow',
                               emp.comment_allow
@@ -594,7 +595,7 @@ function Dashboard() {
                   </>)}
               {(appreciationData && appreciationData.length > 0) && (
                <>
-                <Col className="col-xl-4 col-lg-6 col-sm-4">
+                <Col>
                {appreciationData && appreciationData.length > 0 && 
                     appreciationData.map((appr) => (
              <Card className="dark-blue-bg">
@@ -613,19 +614,19 @@ function Dashboard() {
                               customFunctions.setLocalStorage(
                                 'employeeId',
                                 appr.id
-                              ); // eslint-disable-line
+                              );
                               customFunctions.setLocalStorage(
                                 'gId',
                                 appr.id
-                              ); // eslint-disable-line
+                              );
                               customFunctions.setLocalStorage(
                                 'EmpID',
                                 empdata.id
-                              ); // eslint-disable-line
+                              );
                               customFunctions.setLocalStorage(
                                 'EmpName',
                                 empdata.full_name
-                              ); // eslint-disable-line
+                              );
                               customFunctions.setLocalStorage(
                                 'comment-allow',
                                 appr.comment_allow

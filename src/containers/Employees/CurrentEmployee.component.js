@@ -123,6 +123,7 @@ function CurrentEmployee() {
                 // currentUser={currentUser}
                 submitBtnText="Apply"
                 showResetBtn={true}
+                showBtnClass={true}
                 resetBtnText="Clear"
                 btnContainerClass="form-submit-buttons pull-right"
                 isStepForm={false}

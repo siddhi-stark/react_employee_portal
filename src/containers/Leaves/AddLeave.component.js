@@ -432,6 +432,7 @@ function AddLeave(props) {
               currentUser={currentUser}
               submitBtnText="Check task"
               showResetBtn={true}
+              showBtnClass={true}
               resetBtnText="Cancel"
               btnContainerClass= {(!viewLeaveOptions) ? 'form-submit-buttons':'d-none'}
               isStepForm={false}

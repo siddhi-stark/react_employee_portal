@@ -227,6 +227,7 @@ function SelectedCandidateListing() {
                 currentUser={currentUser}
                 submitBtnText="Submit"
                 showResetBtn={true}
+                showBtnClass={true}
                 resetBtnText="Clear"
                 btnContainerClass="form-submit-buttons pull-right"
                 isStepForm={false}

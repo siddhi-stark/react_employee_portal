@@ -208,6 +208,7 @@ function EmailTemplatesComponent() {
           defaultFormValues={defaultValues}
           submitBtnText="Submit"
           showResetBtn={false}
+          showBtnClass={true}
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
           isStepForm={false}

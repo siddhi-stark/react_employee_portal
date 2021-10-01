@@ -229,6 +229,7 @@ function AddEvent(props) {
           currentUser={currentUser}
           submitBtnText="Submit"
           showResetBtn={true}
+          showBtnClass={true}
           resetBtnText="Cancel"
           btnContainerClass={viewOptions ? 'd-none' : 'form-submit-buttons'}
           isStepForm={false}

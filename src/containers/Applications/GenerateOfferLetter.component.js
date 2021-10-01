@@ -234,6 +234,7 @@ return;
           currentUser={currentUser}
           submitBtnText="Preview"
           showResetBtn={false}
+          showBtnClass={true}
           resetBtnText="Cancel"
           btnContainerClass={checked ? 'form-submit-buttons mb-4': 'd-none'}
           isStepForm={false}

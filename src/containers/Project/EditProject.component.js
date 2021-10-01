@@ -226,6 +226,7 @@ function EditProject(props) {
         currentUser={currentUser}
         submitBtnText="Submit"
         showResetBtn={true}
+        showBtnClass={true}
         resetBtnText="Cancel"
         btnContainerClass={viewOptions ? 'd-none':'form-submit-buttons mb-3'}
         isStepForm={false}

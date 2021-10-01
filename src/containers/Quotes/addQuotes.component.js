@@ -116,6 +116,7 @@ function AddQuotes(props) {
               currentUser={currentUser}
               submitBtnText="Submit"
               showResetBtn={true}
+              showBtnClass={true}
               resetBtnText="Cancel"
               btnContainerClass="form-submit-buttons"
               isStepForm={false}

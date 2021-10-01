@@ -109,7 +109,7 @@ function Greetings() {
 		const params = {
 			page,
 			limit,
-			sort_by: 'date',
+			sort_by: 'id',
 			sort_direction: 'descending'
 		};
 		const url = customFunctions.generateUrl(endPoint, params);

@@ -209,6 +209,7 @@ function EditEmployee(props) {
                 rows={rowData}
                 role={5}
                 showPagination={true}
+                showBtnClass={true}
                 tableClass="table-striped"
                 paginationProps={{
                   totalItems: totalCount,

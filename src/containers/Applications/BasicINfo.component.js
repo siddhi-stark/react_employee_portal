@@ -212,6 +212,7 @@ function BasicInformation(props) {
           (Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''
         }`}
         showResetBtn={false}
+        showBtnClass={true}
         resetBtnText="Clear"
         isStepForm={false}
         onFormReset={() => {}}

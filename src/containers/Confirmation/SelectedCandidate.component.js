@@ -73,6 +73,7 @@ function SelectedCandidate() {
         currentUser={currentUser}
         submitBtnText="Submit"
         showResetBtn={false}
+        showBtnClass={true}
         resetBtnText="Clear"
         btnContainerClass="form-submit-buttons"
         isStepForm={false}
