@@ -15753,6 +15753,9 @@ table tbody tr td a:hover {
   max-width: 16px;
   width: 100%;
 }
+.birthday-wish-section .media-body {
+  width: 100%;
+}
 
 .birthday-wish-section .birthtitle h4, .birthday-wish-section .birthtitle .h4 {
   font-size: 14px;
