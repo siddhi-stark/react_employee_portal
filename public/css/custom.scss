@@ -3971,9 +3971,9 @@
              }
          }
      }
-    .media-body {
-        width: 100%;
-    }
+     .media-body {
+         width: 100%;
+     }
  }
  
  .birthday-wish-section {
@@ -4030,6 +4030,14 @@
      }
  }
  
+ @media (max-width: 1920px) {
+     .birthday-wish-section-row {
+         .col {
+             min-width: 33.33%;
+         }
+     }
+ }
+ 
  @media (max-width: 1860px) {
      .holidays-applied {
          .row {
@@ -4047,13 +4055,13 @@
          display: flex;
          align-items: center;
      }
- }
- 
- @media (max-width: 1366px) {
      .birthday-wish-section-row .col {
          width: 50% !important;
          flex: 50% !important;
      }
+ }
+ 
+ @media (max-width: 1366px) {
      .birthday-wish-section .birth-input-field .form-control {
          background-color: #393A71;
          color: #ffffff;

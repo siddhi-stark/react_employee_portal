@@ -470,10 +470,10 @@ function Dashboard() {
              <Row className="birthday-wish-section-row mt-3 justify-content-center">
              {(birthdayArr && birthdayArr.length > 0) && (
                <>
-             <Col>
              {birthdayArr &&
                       birthdayArr.length > 0 &&
                       birthdayArr.map((emp) => (
+             <Col>
              <Card className="dark-blue-bg">
              <Card.Body>
                <div className="media birthday-wish-section align-items-center">
@@ -527,15 +527,15 @@ function Dashboard() {
                 </div>
              </Card.Body>
              </Card>
-              ))}
                 </Col>
+              ))}
                 </>)}
               {(anniversary && anniversary.length > 0) && (
                <>
-              <Col>
                {anniversary &&
                     anniversary.length > 0 &&
                     anniversary.map((emp) => (
+              <Col>
              <Card className="dark-blue-bg">
              <Card.Body>
                <div className="media birthday-wish-section align-items-center">
@@ -590,14 +590,14 @@ function Dashboard() {
                 </div>
              </Card.Body>
              </Card>
-               ))}
                 </Col>
+               ))}
                   </>)}
               {(appreciationData && appreciationData.length > 0) && (
                <>
-                <Col>
                {appreciationData && appreciationData.length > 0 && 
                     appreciationData.map((appr) => (
+                <Col>
              <Card className="dark-blue-bg">
 
              <Card.Body>
@@ -655,8 +655,8 @@ function Dashboard() {
                 ))}
              </Card.Body>
              </Card>
-             ))}
                 </Col>  
+             ))}
                  </>)}
              </Row>
                 
