@@ -35,7 +35,7 @@
     "simple-react-validator": "^1.6.0",
     "stark-custom-datatable": "^0.1.7",
     "stark-doughnut-graph": "^0.1.5",
-    "stark-form-builder": "^0.3.0",
+    "stark-form-builder": "^0.3.1",
     "sweetalert": "^2.1.2",
     "web-vitals": "^1.0.1"
   },

@@ -277,6 +277,7 @@ function InterviewRounds() {
           currentUser={currentUser}
           submitBtnText="Schedule Interview"
           showResetBtn={false}
+          showBtnClass={true}
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
           isStepForm={false}

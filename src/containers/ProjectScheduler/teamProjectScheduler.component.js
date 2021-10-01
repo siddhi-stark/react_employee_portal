@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Accordion, Button, Image } from 'react-bootstrap';
+import { Card, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -201,20 +201,12 @@ function TeamProjectScheduler() {
       <section className="content-area">
         <div className="mt-5">
         {currentUser !== 3 && (
-          <Accordion defaultActiveKey="0">
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
                 <Card.Body>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                  </div>
+                  <hr/>
                    <StarkFormBuilder
                     containerClass=''
                     formHeaderClass=''
@@ -227,25 +219,23 @@ function TeamProjectScheduler() {
                     currentUser={currentUser}
                     submitBtnText="Apply"
                     showResetBtn={true}
+                    showBtnClass={true}
                     resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons pull-right mb-3"
+                    btnContainerClass="form-submit-buttons pull-right"
                     isStepForm={false}
                     onFormReset={() => {
                       setFilterData();
                     }}
                   />
                 </Card.Body>
-              </Accordion.Collapse>
             </Card>
-          </Accordion>
           )}
           <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Team Project Scheduler</h4>
-              </div>
-            </Card.Header>
             <Card.Body>
+             <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">Team Project Scheduler</h5>
+                </div>
+                <hr/>
               <CustomTable
                 columns={columns}
                 rows={rowData}

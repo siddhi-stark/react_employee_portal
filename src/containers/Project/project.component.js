@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Accordion, Button, Image, ProgressBar } from 'react-bootstrap';
+import { Card, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -107,54 +107,7 @@ function Project() {
       render: ({ completion }) => {
         return (
           <>
-            {completion <= 50 && (
-               <ProgressBar
-                bsPrefix="progress pbar"
-                variant="danger"
-                now={completion}
-                label={`${completion}%completed`}
-              />
-            )}
-            {completion > 50 && completion <= 80 && (
-              <ProgressBar
-                bsPrefix="progress pbar"
-                variant="info"
-                now={completion}
-                label={`${completion}%completed`}
-              />
-            )}
-            {completion > 80 && (
-              <ProgressBar
-                bsPrefix="progress pbar"
-                variant="success"
-                now={completion}
-                label={`${completion}%completed`}
-              />
-            )}
-          </>
-        );
-      },
-    },
-    {
-      id: 'start_date',
-      label: 'Start Date',
-      roleAccess: [4],
-      render: ({ start_date }) => {
-        return (
-          <>
-            <span>{start_date && customFunctions.getDMYDate(start_date)}</span>
-          </>
-        );
-      }, 
-    },
-    {
-      id: 'end_date',
-      label: 'End Date',
-      roleAccess: [4],
-      render: ({ end_date }) => {
-        return (
-          <>
-            <span>{end_date && customFunctions.getDMYDate(end_date)}</span>
+            <strong>{completion}%</strong>
           </>
         );
       },
@@ -178,34 +131,6 @@ function Project() {
       id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 )&& 'cost_allocated',
       label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Project Cost',
       roleAccess: [1],
-    },
-    {
-      id: 'rt_support',
-      label: 'RT Support',
-      roleAccess: [4],
-      render: ({ rt_support }) => {
-        return (
-          <>
-            <Image
-              className="rt-support-link"
-              src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
-            />
-          </>
-        );
-      }, 
-    },
-    {
-      id: 'status',
-      label: 'Status',
-       render: ({ status }) => {
-        return (
-          <>
-            <span>
-              {(status === 'active') ? 'Active' : 'Inactive'}
-            </span>
-          </>
-        );
-      }, 
     },
     {
       id: 'Action',
@@ -326,20 +251,11 @@ function Project() {
 
       <section className="content-area">
         <div className="mt-5">
-          <Accordion defaultActiveKey="0">
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
                 <Card.Body>
+                  <h5 className="card-title mb-0 mt-2 ">Filter</h5>
+                  <hr/>
+                 
                   <StarkFormBuilder
                     containerClass=''
                     formHeaderClass=''
@@ -351,8 +267,10 @@ function Project() {
                     currentUser={currentUser}
                     submitBtnText="Apply"
                     showResetBtn={true}
+                    showBtnClass={false}
+                    btnContainerClass="col-md-4 filter-apply-btns"
+                    formClass="row"
                     resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons pull-right mb-3"
                     isStepForm={false}
                     onFormReset={() => {
                       setFilterData({});
@@ -360,16 +278,13 @@ function Project() {
                     }}
                   />
                 </Card.Body>
-              </Accordion.Collapse>
             </Card>
-          </Accordion>
-          <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Project</h4>
-              </div>
-            </Card.Header>
-            <Card.Body>
+            <Card>
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">Project</h5>
+                </div>
+                <hr/>
          {/*   <div className="recruitment-links-wrapper">
             {((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
               <>

@@ -131,13 +131,9 @@ function Team(props) {
       render: ({ remaining }) => {
         return (
           <>
-            {Math.sign(remaining) === 1 || Math.sign(remaining) === 0 ? (
-              <span>
-                {remaining} {Math.sign(remaining) === 0 ? 'Hr' : 'Hrs'}
-              </span>
-            ) : (
-              <span className="text-danger">{remaining} Hrs</span>
-            )}
+            <span>
+              {remaining} %
+            </span>
           </>
         );
       },
@@ -166,6 +162,13 @@ function Team(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      data && data.data && data.data.employees_data && data.data.employees_data.map((empdata)=>{
+        const employeeNewData = empdata;
+        const add = {'rowClass':(empdata.remaining > 100 && empdata.emp_name !== 'Total')?'alert-danger':''};
+        Object.entries(add).forEach(([key,value]) => { employeeNewData[key] = value; });
+        return employeeNewData ;
+      });
+
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setCurrentPage(Number(data.paginator.current_page));
@@ -351,12 +354,11 @@ function Team(props) {
                 </Card>
               </Col>
               <Card className="p-0">
-                <Card.Header>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <h4 className="text-primary mt-2 mb-2">Team Details</h4>
-                  </div>
-                </Card.Header>
                 <Card.Body>
+                <div className="d-flex align-items-center justify-content-between">
+                    <h5 className="card-title mb-0 mt-2 ">Team Details</h5>
+                  </div>
+                  <hr/>
                    <CustomTable
                     columns={columns}
                     rows={rowData}
@@ -390,8 +392,8 @@ function Team(props) {
                   <br />
                   <h2>{getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}</h2>
                   <br />
-                  <a href="#" className="mt-4 btn btn-primary">
-                    {projectStatus < 0 ? 'Project in dealy' : 'Project Ontrack'}
+                  <a href="#" className={projectStatus < 0 ? 'mt-4 btn text-danger':'mt-4 btn btn-primary'}>
+                    {projectStatus < 0 ? 'Project in Delay' : 'Project Ontrack'}
                   </a>
                 </Card.Body>
               </Card>

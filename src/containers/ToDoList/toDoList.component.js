@@ -24,6 +24,8 @@ import SharedService from '../../services/SharedService/sharedServices';
 const validator = new SimpleReactValidator();
 
 function ToDoList(props) {
+  const hrsProps = props;
+  const totalHours = hrsProps.totalHrs;
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
   const [showMsg, setShowMsg] = useState(false);
@@ -106,7 +108,7 @@ function ToDoList(props) {
       roleAccess: [1, 2, 3, 4, 5,6],
       render: ({ id, twId, taskType }) => {
         return (
-          <>
+          <span className ="d-flex">
             {taskType === 'tw' ? (
               <a
                 href={`${constants.link}${twId}`}
@@ -144,7 +146,7 @@ function ToDoList(props) {
             >
               {twId ? '' : <Image src="/images/delete.png" />}
             </a>
-          </>
+          </span>
         );
       },
     },
@@ -664,10 +666,10 @@ function ToDoList(props) {
         <div className="mt-5">
           <UserRestrictions permittedUsers={[2, 3, 4, 5,6]} roleId={userRole}>
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary mt-2 mb-2">To Do</h4>
-                  <div className="d-flex align-items-center justify-content-end">
+              <Card.Body>
+               <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 "> To Do</h5>
+                 <div className="d-flex align-items-center justify-content-end">
                     <Button
                       size="sm"
                       variant="primary"
@@ -681,10 +683,8 @@ function ToDoList(props) {
                       Add Task 
                     </Button>
                   </div>
-                </div>
-              </Card.Header>
-
-              <Card.Body>
+              </div>  
+              <hr/>
                 <Row>
                   <Table
                     columns={columns}
@@ -730,7 +730,7 @@ function ToDoList(props) {
                       Clock In & Send Scrum
                     </Button>
                   )}
-                  {!signOutMail && morningMail && (
+                  {!signOutMail && morningMail && (String(totalHours) !== '0 Hrs 0 Mins') && (
                     <Button
                       variant="primary"
                       className="mb-3"

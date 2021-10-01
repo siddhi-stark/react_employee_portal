@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
@@ -12,11 +12,12 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
 function AddBirthday(props) {
-
   const BirthdayId = props.match.params.bdayId; //eslint-disable-line
   // Variable declarations
   const viewObj = props;
-  const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
+  const viewOptions = viewObj.location.state
+    ? viewObj.location.state.isView
+    : '';
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
@@ -25,28 +26,31 @@ function AddBirthday(props) {
   const [title, setTitle] = useState('');
   const [bId, setbirthdayID] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-  const items = [{ to: '/', label: 'Home' }, { label: BirthdayId ? 'Edit Greeting' : 'Add Greeting' }]; 
-  const history = useHistory();  
+  const items = [
+    { to: '/', label: 'Home' },
+    { label: BirthdayId ? 'Edit Greeting' : 'Add Greeting' },
+  ];
+  const history = useHistory();
 
   // Get user role
-  const getUserRole = async() => {
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
 
   items.map((it) => {
-    if(viewOptions) {
+    if (viewOptions) {
       items[1].label = 'View Greeting';
     }
     return it;
   });
-  
+
   useEffect(() => {
     getUserRole();
     setTitle('Add Greeting');
   }, []);
 
-   const handleImageFileUpload = (e) => {
+  const handleImageFileUpload = (e) => {
     if (!e) return;
     setImageUrl(e[0]);
   };
@@ -74,88 +78,88 @@ function AddBirthday(props) {
       message: formValues.message,
       greet_type: formValues.greet_type ? formValues.greet_type.value : '',
       employee: formValues.employee ? [formValues.employee.value] : '',
-      comment_allow: formValues.comment_allow ? formValues.comment_allow : ''
+      comment_allow: formValues.comment_allow ? formValues.comment_allow : '',
     };
 
-     if (imageUrl) {
+    if (imageUrl) {
       postData.file = await uploadFile();
     }
 
-    if(bId) postData.id = bId;
+    if (bId) postData.id = bId;
 
-     const callback = bId ? AuthApi.putDataToServer : AuthApi.postDataToServer;
+    const callback = bId ? AuthApi.putDataToServer : AuthApi.postDataToServer;
 
     const endPoint = Api.greetingsUrl;
     const { data } = await callback(endPoint, postData);
 
-    if(data) {
+    if (data) {
       setShowLoader(false);
-      swal(data.message[0],'','success');
+      swal(data.message[0], '', 'success');
       history.push('/greetings');
     }
-      
   };
 
   // Get data for form
-  const getData = async (id,empList) => {
+  const getData = async (id, empList) => {
     setShowLoader(true);
-    const {data } = await AuthApi.getDataFromServer(`${Api.greetingsUrl}${id}/`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.greetingsUrl}${id}/`
+    );
 
-    if(data) {
+    if (data) {
       setShowLoader(false);
       let bEmp = {};
 
-    empList.map((em) => {
-      data.data.employee.map((emd) => {
-        if(emd === em.id) {
-          bEmp = {
-            label: em.full_name,
-            value: em.id
-          };
-        }
-        return emd;
+      empList.map((em) => {
+        data.data.employee.map((emd) => {
+          if (emd === em.id) {
+            bEmp = {
+              label: em.full_name,
+              value: em.id,
+            };
+          }
+          return emd;
+        });
+        return em;
       });
-      return em;
-    });
-   
-    const gt = data.data.greet_type
+
+      const gt = data.data.greet_type
         ? {
             label: data.data.greet_type_name,
             value: data.data.greet_type,
           }
         : '';
 
-          const obj = {
+      const obj = {
         ...data.data,
         greet_type: gt,
         employee: bEmp,
         file: data.data.file_name,
-        comment_allow: data.data.comment_allow === true ? 'true' : 'false'
+        comment_allow: data.data.comment_allow === true ? 'true' : 'false',
       };
 
-     updateDefaultValues({ ...obj }); 
+      updateDefaultValues({ ...obj });
     }
   };
 
   // Call get data method on load
   useEffect(() => {
     setbirthdayID(BirthdayId);
-    }, []);
+  }, []);
 
-   useEffect(() => {
-
-    if(viewOptions === 'true')  setTitle('View Greeting');
+  useEffect(() => {
+    if (viewOptions === 'true') setTitle('View Greeting');
 
     if (BirthdayId) {
       setTitle('Edit Greeting');
     }
-    
-    if(BirthdayId && viewOptions === 'true'){
+
+    if (BirthdayId && viewOptions === 'true') {
       setTitle('View Greeting');
     }
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!customFunctions.checkIfEmpty(viewOptions)) {
       const formSchema = [...FormSections];
       const updatedSchema = formSchema.map((section) => {
@@ -166,7 +170,7 @@ function AddBirthday(props) {
             item.name === 'greet_type' ||
             item.name === 'message' ||
             item.name === 'employee' ||
-            item.name === 'comment_allow' 
+            item.name === 'comment_allow'
           )
             itemData.disabled = true;
           return itemData;
@@ -184,7 +188,7 @@ function AddBirthday(props) {
             item.name === 'greet_type' ||
             item.name === 'message' ||
             item.name === 'employee' ||
-            item.name === 'comment_allow' 
+            item.name === 'comment_allow'
           )
             itemData.disabled = false;
           return itemData;
@@ -194,37 +198,45 @@ function AddBirthday(props) {
       updateJsonSchema([...updatedSchema]);
     }
   }, []);
-      
+
   const getType = async () => {
-    const {data} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=greet_type`);
-    if(!data) {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=greet_type`
+    );
+    if (!data) {
       // show error
       return;
     }
-    const dpOptions = await data && data.data.greet_type.length > 0 && data.data.greet_type.map((op) => {
-      return { label: op.name, value: op.id };
-
-    });
+    const dpOptions =
+      (await data) &&
+      data.data.greet_type.length > 0 &&
+      data.data.greet_type.map((op) => {
+        return { label: op.name, value: op.id };
+      });
     options.greet_type = dpOptions;
     const allOptions = options;
-    await updateOptions({...allOptions});
+    await updateOptions({ ...allOptions });
   };
 
   useEffect(() => {
     getType();
   }, []);
-      
-  const getEmployee = async () => {
-    const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);   
-     const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
-      return { label: op.full_name, value: op.id };
 
-    });
+  const getEmployee = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?type=all&is_dropdown=1`
+    );
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.full_name, value: op.id };
+      });
     options.employee = dpOptions;
     const allOptions = options;
-    await updateOptions({...allOptions});
-    if(BirthdayId) {
-    getData(BirthdayId,data.data);
+    await updateOptions({ ...allOptions });
+    if (BirthdayId) {
+      getData(BirthdayId, data.data);
     }
   };
 
@@ -232,62 +244,67 @@ function AddBirthday(props) {
     getEmployee();
   }, []);
 
- const onCommentsChange = (value) => {
-   customFunctions.setLocalStorage('ShowComment',value);
- };     
+  const onCommentsChange = (value) => {
+    customFunctions.setLocalStorage('ShowComment', value);
+  };
 
-	return (
-		<>
-		 <Helmet title={title} />
+  return (
+    <>
+      <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
           <Breadcrumb items={items} />
-    
         </div>
-      </div> 
+      </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <div className="mt-4 edit-timelog">
         <Card body>
-        {viewOptions ? (
+          {viewOptions ? (
+            <Button
+              className="float-end"
+              onClick={() => history.push('/greetings')}
+            >
+              Back
+            </Button>
+          ) : (
+            ''
+          )}
+          <StarkFormBuilder
+            containerClass="mt-5 mb-4"
+            formHeaderClass=""
+            formSections={FormSections || jsonSchema}
+            formHeading="tbirthday"
+            onFormSubmit={(formValues) => {
+              submitForm(formValues);
+            }}
+            options={options}
+            callbacks={{
+              handleimage: (value) => {
+                handleImageFileUpload(value);
+              },
 
-        <Button className="float-end" onClick= {() => history.push('/greetings')} >Back</Button>
-          ) : ''}
-        <StarkFormBuilder
-    containerClass='mt-5 mb-4'
-    formHeaderClass=''
-    formSections={FormSections || jsonSchema}
-    formHeading="tbirthday"
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-     callbacks={{
-            handleimage: (value) => {
-              handleImageFileUpload(value);
-            },
-
-            handleComments:(value) => {
-              onCommentsChange(value);
-            }
-          }}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true}
-    resetBtnText="Cancel"
-    btnContainerClass= {viewOptions ? 'd-none' : 'form-submit-buttons'} 
-    isStepForm={false}
-    
-    onFormReset={() => {
-      history.push('/greetings');
-    }}
-  />
-      </Card>
+              handleComments: (value) => {
+                onCommentsChange(value);
+              },
+            }}
+            defaultFormValues={defaultValues}
+            currentUser={currentUser}
+            submitBtnText="Submit"
+            showResetBtn={true}
+            showBtnClass={true}
+            resetBtnText="Cancel"
+            btnContainerClass={viewOptions ? 'd-none' : 'form-submit-buttons'}
+            isStepForm={false}
+            onFormReset={() => {
+              history.push('/greetings');
+            }}
+          />
+        </Card>
       </div>
-    
-		</>
-
-		);
+    </>
+  );
 }
 
 export default withRouter(AddBirthday);

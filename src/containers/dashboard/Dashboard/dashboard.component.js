@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
+import swal from 'sweetalert';
 import { Jumbotron, Card, Button, Row, Col, Image } from 'react-bootstrap';
-import { Helmet, ModalInput } from '../../../components/FormInputs';
+import { Helmet, ModalInput, TextInput } from '../../../components/FormInputs';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
@@ -45,11 +46,12 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
   const [leavesUpdate, setLeavesUpdate] = useState([]);
   const [interviewsUpdate, setInterviewsUpdate] = useState([]);
+  const [message, setMessage] = useState('');
 
   // let isShowBdayHeading = false;
 
   const d = new Date();
-  const ToDayDate = d.getDate();
+  // const ToDayDate = d.getDate();
   const day = d.getDate(); // eslint-disable-line
   const m_names = [
     'January',
@@ -174,15 +176,16 @@ function Dashboard() {
 
     if (!customFunctions.checkIfEmpty(data && data.data, 'O')) {
         const avsrArr = [];
-        await data.data && data.data.length > 0 && data.data.map((anvs, i) => {
+        await data.data && data.data.length > 0 && data.data.map((anvs) => {
+        const dayMonth = anvs.date_of_joined && anvs.date_of_joined.substring(5, 11);
         const JoiningDate = new Date(anvs.date_of_joined);
-        const NewJoiningDate = JoiningDate.getDate();
-        if (NewJoiningDate === ToDayDate) {
+        const newDate = JoiningDate.getFullYear() + 1;
+        const newJoiningDate = `${newDate}-${dayMonth}`;
+        const todayDate = new Date();
+        if(newJoiningDate === customFunctions.getDate(todayDate)){
           avsrArr.push(anvs);
         }
-        if (i + 1 === data.data.length) {
-          setAnniversary(avsrArr);
-        }
+        setAnniversary(avsrArr);
         return anvs;
       });
     }
@@ -329,6 +332,24 @@ function Dashboard() {
     }
   };
 
+  const postGreetingMessage = async (id,GreetingId) => {
+    const postData = {
+      wish_to: Number(id),
+      message,
+      greeting: GreetingId,
+    };
+
+    const endPoint = Api.greetingWishesUrl;
+    const { data } = await AuthApi.postDataToServer(endPoint, postData);
+    if (data) {
+      swal(data.message[0], '', 'success');
+      setMessage('');
+      // getBirthdayWishes(GreetingId);
+      // setShowMessage(false);
+      // setEmployeeMessage('');
+    }
+  };
+
   return (
     <>
       <Helmet title={title} />
@@ -380,10 +401,7 @@ function Dashboard() {
                     </blockquote>
                   </div>
                 </Col>
-                <Col
-                  md={3}
-                  className="d-flex justify-content-space-between flex-wrap"
-                >
+                <Col md={3} className="d-flex justify-content-space-between flex-wrap">
                   <UserRestrictions
                     permittedUsers={[2, 3, 4, 5, 6]}
                     roleId={userRole}
@@ -393,8 +411,8 @@ function Dashboard() {
                         <div className="time-count text-center">
                           <span>
                             <h4>
-                              ClockIn Time
-                              <br />
+                             {/* ClockIn Time
+                              <br /> */}
                               {signInTime || '00:00'}
                             </h4>
                           </span>
@@ -404,7 +422,9 @@ function Dashboard() {
                       {time && (
                         <div className="time-count text-center">
                           <span>
-                            <h4>Clockout Time{time || '00:00'}</h4>
+                            <h4>
+                            {/* Clockout Time */}
+                            {time || '00:00'}</h4>
                           </span>
                         </div>
                       )}
@@ -426,14 +446,6 @@ function Dashboard() {
                       )}
                     </div>
                   </UserRestrictions>
-                  <UserRestrictions
-                    permittedUsers={[2, 3, 4, 5, 6]}
-                    roleId={userRole}
-                  >
-                    <p className="text-primary mt-4">
-                      <i>Total Working Time: {totalHrs}</i>
-                    </p>
-                  </UserRestrictions>
                 </Col>
                 <Col md={4}>
                   <div className="welcome-img text-right">
@@ -442,418 +454,215 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
+            {showClockIn && (
+              <UserRestrictions
+                    permittedUsers={[2, 3, 4, 5, 6]}
+                    roleId={userRole}
+                  >
+                <div className="p-3 mb-3 bg-success mt-3 bg-success-main log-time-bar">
+                  <div className="img-text">
+                    Today's Logged Time: {totalHrs}
+                  </div>
+                </div>
+              </UserRestrictions> 
+            )}
 
+             <Row className="birthday-wish-section-row mt-3 justify-content-center">
              {(birthdayArr && birthdayArr.length > 0) && (
                <>
-             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box mb-4">
-              <Row className="align-items-center">
-                <Col md={5} className="mt-3">
-                  <div className="welcome-text">
-                    <h1>
-                      <strong>
-                        Today's Birthday
-                      </strong>
-                    </h1>
-
-                    <blockquote className="blockquote quote">
-                      <p className="mb-0">
-                         A birthday is like a new year and my wish for you, is a great year full of happiness and sunshine!
-                      </p>
-                    </blockquote>
-                  </div>
-                </Col>
-                <Col
-                  md={3}
-                  className="d-flex justify-content-space-between flex-wrap"
-                >
-                 <div className="todays-birthday-member">
-                    {birthdayArr &&
+             {birthdayArr &&
                       birthdayArr.length > 0 &&
                       birthdayArr.map((emp) => (
-                        <>
-                          <div className="birth-name d-flex align-items-center">
-                            <img
-                              src="/images/birthday-cake.png"
-                              alt="img"
-                            />
-                            <div className="birthday-employees">
-                              <h6 onClick={() => { // eslint-disable-line
-                                  if (emp.greeting) {
-                                    customFunctions.setLocalStorage(
-                                      'employeeId',
-                                      emp.id
-                                    ); // eslint-disable-line
-                                    customFunctions.setLocalStorage(
-                                      'gId',
-                                      emp.greeting
-                                    ); // eslint-disable-line
-                                    customFunctions.setLocalStorage(
-                                      'comment-allow',
-                                      emp.comment_allow
-                                    );
-                                    customFunctions.setLocalStorage(
-                                      'EmpID',
-                                      emp.id
-                                    );
-                                     customFunctions.setLocalStorage(
-                                    'EmpName',
-                                    emp.name
-                                  );
-                                  }
-                                }}
-                              >
-                                <a href="/wishes">{emp.name}</a>
-                              </h6>
-                            </div>
-                          </div>
-                        </>
-                      ))}
-                  </div>                
-                </Col>
-                <Col md={4}>
-                  <div className="welcome-img text-right">
-                    <img src="/images/Birthday.png" alt="img" />
+             <Col>
+             <Card className="dark-blue-bg">
+             <Card.Body>
+               <div className="media birthday-wish-section align-items-center">
+                  <img className="mr-3 birth-wish-profile" src={emp.profile_image_url} alt="img" />
+                  <div className="media-body">
+                    <div className="birthtitle d-flex align-items-center">
+                      <img className="mr-2" src="/images/birthday-cake-icon.svg" alt="img" />
+                      <a href="/wishes" onClick={()=>{
+                         if (emp.greeting) {
+                            customFunctions.setLocalStorage(
+                              'employeeId',
+                              emp.id
+                            ); // eslint-disable-line
+                            customFunctions.setLocalStorage(
+                              'gId',
+                              emp.greeting
+                            ); // eslint-disable-line
+                            customFunctions.setLocalStorage(
+                              'comment-allow',
+                              emp.comment_allow
+                            );
+                            customFunctions.setLocalStorage(
+                              'EmpID',
+                              emp.id
+                            );
+                             customFunctions.setLocalStorage(
+                            'EmpName',
+                            emp.name
+                          );
+                          }
+                      }}><h4>{emp.name}</h4></a>
+                    </div>
+                     {(emp.comment_allow && (Number(emp.id) === Number(UserID))) || 
+                      (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
+                    <div className="birth-input-field mt-3">
+                     <TextInput
+                      onInputChange={(e) => setMessage(e.target.value)}
+                      containerClass="mb-0"
+                      type="text"
+                      value={message}
+                      name="firstNameTitle"
+                      placeholder="Type Here to wish"
+                    />  
+                    <a href="#" onClick={()=>{
+
+                      postGreetingMessage(emp.id,emp.greeting);
+                    }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
+                    </div> 
+                    )}   
                   </div>
+                </div>
+             </Card.Body>
+             </Card>
                 </Col>
-              </Row>
-            </Jumbotron>
-            </>
-            )}
-            
-             {(anniversary && anniversary.length > 0) && (
+              ))}
+                </>)}
+              {(anniversary && anniversary.length > 0) && (
                <>
-             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box mb-4">
-              <Row className="align-items-center">
-                <Col md={5} className="mt-3">
-                  <div className="welcome-text">
-                    <h1>
-                      <strong>
-                        Today's Work Anniversary
-                      </strong>
-                    </h1>
-
-                    <blockquote className="blockquote quote">
-                      <p className="mb-0">
-                       You are an asset to our company, and I hope you’ll continue on this path of hard work. We wish you a wonderful work anniversary!
-                      </p>
-                    </blockquote>
-                  </div>
-                </Col>
-                <Col
-                  md={3}
-                  className="d-flex justify-content-space-between flex-wrap"
-                >
-                 <div className="todays-birthday-member">
-                     {anniversary &&
+               {anniversary &&
                     anniversary.length > 0 &&
-                    anniversary.map((emp, index) => (
-                        <>
-                          <div className="birth-name d-flex align-items-center" key={`anniversary${index}`}>
-                              <img src="/images/working.png" alt="img" />
-                              <div className="birthday-employees">
-                                <h6 onClick={() => { // eslint-disable-line
-                                    if (emp.greeting_anniversary) {
-                                      customFunctions.setLocalStorage(
-                                        'employeeId',
-                                        emp.id
-                                      ); // eslint-disable-line
-                                      customFunctions.setLocalStorage(
-                                        'gId',
-                                        emp.greeting_anniversary
-                                      ); // eslint-disable-line
-                                      customFunctions.setLocalStorage(
-                                        'EmpID',
-                                        emp.id
-                                      ); // eslint-disable-line
-                                      customFunctions.setLocalStorage(
-                                        'comment-allow',
-                                        emp.comment_allow
-                                      ); 
-                                      customFunctions.setLocalStorage(
-                                        'EmpName',
-                                        emp.name
-                                      );
-                                    }
-                                  }}
-                                >
-                                <a href="/wishes">{emp.name}</a>
-                                </h6>
-                              </div>
-                            </div>
-                        </>
-                      ))}
-                  </div>                
-                </Col>
-                <Col md={4}>
-                  <div className="welcome-img text-right">
-                    <img src="/images/annivarsary.png" alt="img" />
-                  </div>
-                </Col>
-              </Row>
-            </Jumbotron>
-            </>
-            )}
+                    anniversary.map((emp) => (
+              <Col>
+             <Card className="dark-blue-bg">
+             <Card.Body>
+               <div className="media birthday-wish-section align-items-center">
+                  <img className="mr-3 birth-wish-profile" src={emp.profile_image_url} alt="img" />
+                  <div className="media-body">
+                    <div className="birthtitle d-flex align-items-center">
+                      <img className="mr-2" src="/images/anniversary-icon.svg" alt="img" />
+                       <a href="/wishes" onClick={() => { // eslint-disable-line
+                          if (emp.greeting_anniversary) {
+                            customFunctions.setLocalStorage(
+                              'employeeId',
+                              emp.id
+                            );
+                            customFunctions.setLocalStorage(
+                              'gId',
+                              emp.greeting_anniversary
+                            );
+                            customFunctions.setLocalStorage(
+                              'EmpID',
+                              emp.id
+                            );
+                            customFunctions.setLocalStorage(
+                              'comment-allow',
+                              emp.comment_allow
+                            ); 
+                            customFunctions.setLocalStorage(
+                              'EmpName',
+                              emp.name
+                            );
+                          }
+                        }}><h4>{emp.name}</h4></a>
+                    </div>
+                      {(emp.comment_allow && (Number(emp.id) === Number(UserID))) || 
+                      (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
+                    <div className="birth-input-field mt-3">
 
+                     <TextInput
+                      onInputChange={(e) => setMessage(e.target.value)}
+                      containerClass="mb-0"
+                      type="text"
+                      value={message}
+                      Row={5}
+                      name="firstNameTitle"
+                      placeholder="Type Here to wish"
+                    />  
+                    <a href="#" onClick={()=>{
+                      postGreetingMessage(emp.id,emp.greeting_anniversary);
+                    }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
+                    </div>
+                    )}    
+                  </div>
+                </div>
+             </Card.Body>
+             </Card>
+                </Col>
+               ))}
+                  </>)}
               {(appreciationData && appreciationData.length > 0) && (
                <>
-             <Jumbotron className="welcome-box mt-3 birthday-anniversary-box mb-4">
-              <Row className="align-items-center">
-                <Col md={5} className="mt-3">
-                  <div className="welcome-text">
-                    <h1>
-                      <strong>
-                        Work Appreciation
-                      </strong>
-                    </h1>
+               {appreciationData && appreciationData.length > 0 && 
+                    appreciationData.map((appr) => (
+                <Col>
+             <Card className="dark-blue-bg">
 
-                    <blockquote className="blockquote quote">
-                      <p className="mb-0">
-                       You are an asset to our company, and I hope you’ll continue on this path of hard work. We wish you a wonderful work anniversary!
-                      </p>
-                    </blockquote>
-                  </div>
-                </Col>
-                <Col
-                  md={3}
-                  className="d-flex justify-content-space-between flex-wrap"
-                >
-                 <div className="todays-birthday-member">
-                    {appreciationData && appreciationData.length > 0 && 
-                    appreciationData.map((appr, index) => (
-                        <>
-                        <div className="work-anniversary-box-user" key={`appreciation${index}`}>
-                          <div className="birth-name d-flex align-items-center">
-                            {appr.employee_data[0].profile_url ? (
-                              <img
-                                src={appr.employee_data[0].profile_url}
-                                alt="img"
-                              />
-                            ) : (
-                              <img src="/images/appreciation.svg" alt="img" />
-                            )}
-
-                            {appr.employee_data &&
+             <Card.Body>
+               {appr.employee_data &&
                               appr.employee_data.map((empdata) => (
                                 <>
-                                  <div className="birthday-employees">
-                                    <h6 onClick={() => {// eslint-disable-line
-                                        if (appr.id) {
-                                          customFunctions.setLocalStorage(
-                                            'employeeId',
-                                            appr.id
-                                          ); // eslint-disable-line
-                                          customFunctions.setLocalStorage(
-                                            'gId',
-                                            appr.id
-                                          ); // eslint-disable-line
-                                          customFunctions.setLocalStorage(
-                                            'EmpID',
-                                            empdata.id
-                                          ); // eslint-disable-line
-                                          customFunctions.setLocalStorage(
-                                            'EmpName',
-                                            empdata.full_name
-                                          ); // eslint-disable-line
-                                          customFunctions.setLocalStorage(
-                                            'comment-allow',
-                                            appr.comment_allow
-                                          );
-                                        }
-                                      }}
-                                    >
-                                     <a href="/wishes">{empdata.full_name}</a>
-                                    </h6>
-                                  </div>
-                                </>
-                              ))}
-                          </div>
-                        </div>
-                      </>
-                      ))}
-                  </div>                
-                </Col>
-                <Col md={4}>
-                  <div className="welcome-img text-right">
-                    <img src="/images/appreciation.png" alt="img" />
+               <div className="media birthday-wish-section align-items-center">
+                  <img className="mr-3 birth-wish-profile" src={empdata.profile_url} alt="img" />
+                  <div className="media-body">
+                    <div className="birthtitle d-flex align-items-center">
+                      <img className="mr-2" src="/images/appreciation-icon.svg" alt="img" />
+                       <a href="/wishes" onClick={()=>{
+                          if (appr.id) {
+                              customFunctions.setLocalStorage(
+                                'employeeId',
+                                appr.id
+                              );
+                              customFunctions.setLocalStorage(
+                                'gId',
+                                appr.id
+                              );
+                              customFunctions.setLocalStorage(
+                                'EmpID',
+                                empdata.id
+                              );
+                              customFunctions.setLocalStorage(
+                                'EmpName',
+                                empdata.full_name
+                              );
+                              customFunctions.setLocalStorage(
+                                'comment-allow',
+                                appr.comment_allow
+                              );
+                            }
+                       }}><h4>{empdata.full_name}</h4></a>
+                    </div>
+
+                     {(appr.comment_allow && (Number(empdata.id) === Number(UserID))) || 
+                      (appr.comment_allow && (Number(empdata.id) !== Number(UserID))) && (
+                    <div className="birth-input-field mt-3">
+                     <TextInput
+                      onInputChange={(e) => setMessage(e.target.value)}
+                      containerClass="mb-0"
+                      type="text"
+                      value={message}
+                      name="firstNameTitle"
+                      placeholder="Type Here to wish"
+                    />  
+                    <a href="#" className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
+                    </div> 
+                    )}   
                   </div>
-                </Col>
-              </Row>
-            </Jumbotron>
-            </>
-            )}
-  
+                </div>
+                </>
+                ))}
+             </Card.Body>
+             </Card>
+                </Col>  
+             ))}
+                 </>)}
+             </Row>
+                
             {((leavesUpdate && leavesUpdate.length > 0) || (interviewsUpdate && interviewsUpdate.length > 0)) ? (
               <>
                <Card className="mt-3 birthday-list mb-4">
-              {/*  {isShowBdayHeading ? (
-                  <Card.Body className="todays-birthday-member-main">
-                    <>
-                      {isShowBdayHeading ? <p>Today's Birthday</p> : ''} <br />
-                      <div className="todays-birthday-member">
-                        {birthdayArr &&
-                          birthdayArr.length > 0 &&
-                          birthdayArr.map((emp) => (
-                            <>
-                              <div className="birth-name d-flex align-items-center">
-                                <img
-                                  src="/images/birthday-cake.png"
-                                  alt="img"
-                                />
-                                <div className="birthday-employees">
-                                  <h6 onClick={() => { // eslint-disable-line
-                                      if (emp.greeting) {
-                                        customFunctions.setLocalStorage(
-                                          'employeeId',
-                                          emp.id
-                                        ); // eslint-disable-line
-                                        customFunctions.setLocalStorage(
-                                          'gId',
-                                          emp.greeting
-                                        ); // eslint-disable-line
-                                        customFunctions.setLocalStorage(
-                                          'comment-allow',
-                                          emp.comment_allow
-                                        );
-                                        customFunctions.setLocalStorage(
-                                          'EmpID',
-                                          emp.id
-                                        );
-                                         customFunctions.setLocalStorage(
-                                        'EmpName',
-                                        emp.name
-                                      );
-                                        history.push('/wishes');
-                                      }
-                                    }}
-                                  >
-                                    <a>{emp.name}</a>
-                                  </h6>
-                                </div>
-                              </div>
-                            </>
-                          ))}
-                      </div>
-                    </>
-                  </Card.Body>
-                ) : (
-                  ''
-                )} */}
-              {/*
-                <Card.Body
-                  className={
-                 anniversary && anniversary.length >= 1
-                      ? 'work-anniversary-box' 
-                      : 'birth-box-remove'
-                  }
-                >
-                  {anniversary && anniversary.length >= 1 ? (
-                    <p>Today's Work Anniversary</p>
-                  ) : (
-                    ''
-                  )}
-                  {anniversary &&
-                    anniversary.length > 0 &&
-                    anniversary.map((emp, index) => (
-                      <>
-                        <div className="birth-name d-flex align-items-center" key={`anniversary${index}`}>
-                              <img src="/images/working.png" alt="img" />
-                              <div className="birthday-employees">
-                                <h6 onClick={() => { // eslint-disable-line
-                                    if (emp.greeting_anniversary) {
-                                      customFunctions.setLocalStorage(
-                                        'employeeId',
-                                        emp.id
-                                      ); // eslint-disable-line
-                                      customFunctions.setLocalStorage(
-                                        'gId',
-                                        emp.greeting_anniversary
-                                      ); // eslint-disable-line
-                                      customFunctions.setLocalStorage(
-                                        'EmpID',
-                                        emp.id
-                                      ); // eslint-disable-line
-                                      customFunctions.setLocalStorage(
-                                        'comment-allow',
-                                        emp.comment_allow
-                                      ); 
-                                      customFunctions.setLocalStorage(
-                                        'EmpName',
-                                        emp.name
-                                      );
-                                      history.push('/wishes');
-                                    }
-                                  }}
-                                >
-                                  {emp.name}
-                                </h6>
-                              </div>
-                            </div>
-                      </>
-                    ))}
-                </Card.Body> */}
-
-               {/* <Card.Body
-                  className={
-                    appreciationData && appreciationData.length >= 1
-                      ? 'work-anniversary-box'
-                      : 'birth-box-remove'
-                  }
-                >
-                  {appreciationData && appreciationData.length > 0 ? <p>Work Appreciation</p> : ''}
-                  {appreciationData && appreciationData.length > 0 && 
-                    appreciationData.map((appr, index) => (
-                      <>
-                        <div className="work-anniversary-box-user" key={`appreciation${index}`}>
-                          <div className="birth-name d-flex align-items-center">
-                            {appr.employee_data[0].profile_url ? (
-                              <img
-                                src={appr.employee_data[0].profile_url}
-                                alt="img"
-                              />
-                            ) : (
-                              <img src="/images/appreciation.svg" alt="img" />
-                            )}
-
-                            {appr.employee_data &&
-                              appr.employee_data.map((empdata) => (
-                                <>
-                                  <div className="birthday-employees">
-                                    <h6 onClick={() => {// eslint-disable-line
-                                        if (appr.id) {
-                                          customFunctions.setLocalStorage(
-                                            'employeeId',
-                                            appr.id
-                                          ); // eslint-disable-line
-                                          customFunctions.setLocalStorage(
-                                            'gId',
-                                            appr.id
-                                          ); // eslint-disable-line
-                                          customFunctions.setLocalStorage(
-                                            'EmpID',
-                                            empdata.id
-                                          ); // eslint-disable-line
-                                          customFunctions.setLocalStorage(
-                                            'EmpName',
-                                            empdata.full_name
-                                          ); // eslint-disable-line
-                                          customFunctions.setLocalStorage(
-                                            'comment-allow',
-                                            appr.comment_allow
-                                          );
-                                          history.push('/wishes');
-                                        }
-                                      }}
-                                    >
-                                      {empdata.full_name}
-                                    </h6>
-                                  </div>
-                                </>
-                              ))}
-                          </div>
-                        </div>
-                      </>
-                    ))}
-                </Card.Body> */}
                 <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
                 <Card.Body
                   className={
@@ -936,6 +745,7 @@ function Dashboard() {
               <ToDoList
                 onMorningSendScrum={getDailyActivity}
                 onClockoutReport={getTimeSheetList}
+                totalHrs={totalHrs}
               />
             )}
           </Col>
@@ -1045,14 +855,7 @@ function Dashboard() {
                               alt="Upcoming event"
                             />
                             <p>Holidays</p>
-                            <Image
-                              className="up-holday"
-                              src="/images/redirect.png"
-                              onClick={() => {
-                                history.push('/holidays');
-                                onViewHoliday();
-                              }}
-                            />
+                            
                           </div>
                           {holidays &&
                             holidays.map((hd) => (
@@ -1062,7 +865,16 @@ function Dashboard() {
                                     <span>{hd.date}</span>
                                   </p>
                                   <p className="ms-1">
+                                    <a href ="/holidays" onClick={()=>{
+                                      onViewHoliday();
+                                    }}>
                                     <span>{hd.occasion}</span>
+                                    
+                                    <Image
+                                      className="up-holday"
+                                      src="/images/next.svg"
+                                    />
+                                    </a>
                                   </p>
                                 </div>
                               </>
@@ -1089,14 +901,7 @@ function Dashboard() {
                             alt="Upcoming event"
                           />
                           <p>Leaves</p>
-                          <Image
-                            className="up-leaves"
-                            src="/images/redirect.png"
-                            onClick={() => {
-                              history.push('/leaves');
-                              onViewLeaves();
-                            }}
-                          />
+                          
                         </div>
 
                         {leaves && leaves.length >= 1 ? (
@@ -1104,13 +909,21 @@ function Dashboard() {
                             {leaves &&
                               leaves.map((lv) => (
                                 <>
-                                  <div className="date">
-                                    <span>
-                                      {lv.leave_from_date} To {lv.leave_to_date}
-                                    </span>
-                                  </div>
                                   <div className="event-title">
                                     <p> {lv.leave_type}</p>
+                                  </div>
+                                  <div className="date">
+                                       <a href ="/my-leaves" onClick={()=>{
+                                          onViewLeaves();
+                                    }}>
+                                    <span>
+                                      {lv.leave_from_date} To {lv.leave_to_date}
+                                    <Image
+                                        className="up-leaves"
+                                        src="/images/next.svg"
+                                    />
+                                    </span>
+                                    </a>
                                   </div>
                                 </>
                               ))}

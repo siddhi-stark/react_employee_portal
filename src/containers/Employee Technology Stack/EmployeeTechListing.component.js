@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Accordion, Button, Row, Image } from 'react-bootstrap';
+import { Card, Row, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -188,21 +188,12 @@ function EmployeeTechListing() {
       </div>
       <section className="content-area">
         <div className="mt-5">
-          <Accordion defaultActiveKey="0">
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
                 <Card.Body>
-                  <Card.Title>
+                 <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>  
+              <hr/>
                     <StarkFormBuilder
                       containerClass=""
                       formHeaderClass=""
@@ -217,20 +208,17 @@ function EmployeeTechListing() {
                       submitBtnText="Submit"
                       showResetBtn={true}
                       resetBtnText="Clear"
-                      btnContainerClass="form-submit-buttons"
+                      btnContainerClass="form-submit-buttons pull-right"
                       isStepForm={false}
                       onFormReset={() => {}}
                     />
-                  </Card.Title>
                 </Card.Body>
-              </Accordion.Collapse>
             </Card>
-          </Accordion>
           <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Employees</h4>
-                <div className="d-flex align-items-center justify-content-end">
+            <Card.Body>
+             <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Employees</h5>
+                 <div className="d-flex align-items-center justify-content-end">
                   <a
                     href="#"
                     onClick={() => {
@@ -241,9 +229,8 @@ function EmployeeTechListing() {
                     Add Technology
                   </a>
                 </div>
-              </div>
-            </Card.Header>
-            <Card.Body>
+              </div>  
+              <hr/>
               <Row>
                 <CustomTable
                   columns={columns}

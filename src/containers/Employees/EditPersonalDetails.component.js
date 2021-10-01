@@ -152,6 +152,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
         currentUser={currentUser}
         submitBtnText="Submit"
         showResetBtn={true} // eslint-disable-line
+        showBtnClass={true}
         resetBtnText="Cancel"
         btnContainerClass="form-submit-buttons"
         isStepForm={false}

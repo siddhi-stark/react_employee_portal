@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
-import { Image, Accordion, Card, Button } from 'react-bootstrap';
+import { Image, Card } from 'react-bootstrap';
 import FormSections from './filter.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
@@ -207,53 +207,42 @@ function SelectedCandidateListing() {
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-      <div className="mt-5">
-        <Accordion defaultActiveKey="0">
-          <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary m-0">Filters</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                    Expand
-                  </Accordion.Toggle>
-                </div>
-              </div>
-            </Card.Header>
-            <Accordion.Collapse eventKey="1">
-              <Card.Body>
-                <Card.Title>
-                  <StarkFormBuilder
-                    containerClass=""
-                    formHeaderClass=""
-                    formSections={FormSections}
-                    onFormSubmit={(formValues) => {
-                      submitForm(formValues);
-                    }}
-                    options={options}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    currentUser={currentUser}
-                    submitBtnText="Submit"
-                    showResetBtn={true}
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons"
-                    isStepForm={false}
-                    onFormReset={() => {}}
-                  />
-                </Card.Title>
-              </Card.Body>
-            </Accordion.Collapse>
-          </Card>
-        </Accordion>
+        <Card>
+          <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+            </div>  
+            <hr/>
+            <Card.Title>
+              <StarkFormBuilder
+                containerClass=""
+                formHeaderClass=""
+                formSections={FormSections}
+                onFormSubmit={(formValues) => {
+                  submitForm(formValues);
+                }}
+                options={options}
+                callbacks={{}}
+                defaultFormValues={defaultValues}
+                currentUser={currentUser}
+                submitBtnText="Submit"
+                showResetBtn={true}
+                showBtnClass={true}
+                resetBtnText="Clear"
+                btnContainerClass="form-submit-buttons pull-right"
+                isStepForm={false}
+                onFormReset={() => {}}
+              />
+            </Card.Title>
+          </Card.Body>
+        </Card>
 
         <Card>
-          <Card.Header>
-            <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">Employees List</h4>
-            </div>
-          </Card.Header>
           <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Employees List</h5>
+            </div>  
+            <hr/>
             <CustomTable
               columns={columns}
               rows={rowData}
@@ -273,7 +262,6 @@ function SelectedCandidateListing() {
             />
           </Card.Body>
         </Card>
-      </div>
     </>
   );
 }

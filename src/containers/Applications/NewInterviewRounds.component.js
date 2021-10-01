@@ -288,6 +288,7 @@ function NewInterviewRounds(props) {
           currentUser={currentUser}
           submitBtnText="Submit Round"
           showResetBtn={false}
+          showBtnClass={true}
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons mb-4 pb-4"
           isStepForm={false}

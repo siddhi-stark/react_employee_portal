@@ -136,13 +136,9 @@ function TeamProject(props) {
       render: ({ remaining }) => {
         return (
           <>
-            {Math.sign(remaining) === 1 || Math.sign(remaining) === 0 ? (
               <span>
-                {remaining} {Math.sign(remaining) === 0 ? 'Hr' : 'Hrs'}
+                {remaining} %
               </span>
-            ) : (
-              <span className="text-danger">{remaining} Hrs</span>
-            )}
           </>
         );
       },
@@ -247,6 +243,7 @@ function TeamProject(props) {
       newData.push(
         {
           team: 'Design',
+          rowClass:(data.data.design.remaining > 100?'alert-danger':'' ),
           spend:
             data && data.data && data.data.design && data.data.design.spends,
           allocated:
@@ -258,9 +255,11 @@ function TeamProject(props) {
           department:
             data && data.data && data.data.design && data.data.design.dept_id,
           hours_allocated: designHrs,
+
         },
         {
           team: 'Development',
+          rowClass:(data.data.development.remaining > 100?'alert-danger':'' ),
           spend:
             data &&
             data.data &&
@@ -290,6 +289,7 @@ function TeamProject(props) {
         },
         {
           team: 'QA',
+          rowClass:(data.data.quality_analyst.remaining > 100?'alert-danger':'' ),
           spend:
             data &&
             data.data &&
@@ -319,6 +319,7 @@ function TeamProject(props) {
         },
         {
           team: 'Project Management',
+          rowClass:(data.data.project_management.remaining > 100?'alert-danger':'' ),
           spend:
             data &&
             data.data &&
@@ -467,12 +468,11 @@ function TeamProject(props) {
                 </Card>
               </Col>
               <Card className="p-0">
-                <Card.Header>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <h4 className="text-primary mt-2 mb-2">Team Details</h4>
-                  </div>
-                </Card.Header>
                 <Card.Body>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <h5 className="card-title mb-0 mt-2 ">Team Details</h5>
+                  </div>
+                  <hr/>
                   <CustomTable
                     columns={columns}
                     rows={rowData}
@@ -507,8 +507,8 @@ function TeamProject(props) {
                   <br />
                   <h2>{name}</h2>
                   <br />
-                  <a href="#" className="mt-4 btn btn-primary">
-                    {projectStatus < 0 ? 'Project in dealy' : 'Project Ontrack'}
+                  <a href="#" className={projectStatus < 0 ? 'mt-4 btn text-danger':'mt-4 btn btn-primary'}>
+                    {projectStatus < 0 ? 'Project in Delay' : 'Project Ontrack'}
                   </a>
                 </Card.Body>
               </Card>

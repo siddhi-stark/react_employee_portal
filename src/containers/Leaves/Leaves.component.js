@@ -8,7 +8,6 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
 
 function Leaves() {
@@ -196,11 +195,11 @@ function Leaves() {
     <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area">
 					<Card>
-						<Card.Header>
-							<div className="d-flex align-items-center justify-content-between">
-								<h4 className="text-primary mt-2 mb-2">Leaves</h4>
-								<div className="d-flex align-items-center justify-content-end">
-									<UserRestrictions permittedUsers={[2,3,4,5,6]} roleId={userRole}>
+						<Card.Body>
+						<div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Leaves</h5>
+                <div className="d-flex align-items-center justify-content-end">
+                	{ Number(userRole) !== 1 && (
 										<a
 											href="#"
 											onClick={() => {
@@ -210,11 +209,10 @@ function Leaves() {
 										>
 											Apply Leave
 										</a>
-									</UserRestrictions>
+										)}
 								</div>
-							</div>
-						</Card.Header>
-						<Card.Body>
+               </div> 
+               <hr/> 
 							<CustomTable
 								columns={columns}
 								rows={rowData}

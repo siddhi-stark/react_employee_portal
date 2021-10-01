@@ -13,7 +13,7 @@
 		"type": "select",
 		"label": "Type",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Please select greet type",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -48,7 +48,7 @@
 		"type": "textarea",
 		"label": "Message",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Write message here",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{
@@ -80,7 +80,7 @@
 		"type": "select",
 		"label": "Employee Name",
 		"id": "",
-		"placeholder": "",
+		"placeholder": "Please select employee",
 		"inputClass": "",
 		"containerClass": "",
 		"validations": [{

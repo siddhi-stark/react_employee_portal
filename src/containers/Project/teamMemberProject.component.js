@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
-import { Card, Button, ProgressBar, Image } from 'react-bootstrap';
+import { Card, Button, Image } from 'react-bootstrap';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -86,33 +86,10 @@ function TeamMemberProject(props) {
       render: ({ completion }) => {
         return (
           <>
-            {completion <= 50 && (
-               <ProgressBar
-                bsPrefix="progress pbar"
-                variant="danger"
-                now={completion}
-                label={`${completion}%completed`}
-              />
-            )}
-            {completion > 50 && completion <= 80 && (
-              <ProgressBar
-                bsPrefix="progress pbar"
-                variant="info"
-                now={completion}
-                label={`${completion}%completed`}
-              />
-            )}
-            {completion > 80 && (
-              <ProgressBar
-                bsPrefix="progress pbar"
-                variant="success"
-                now={completion}
-                label={`${completion}%completed`}
-              />
-            )}
+            <span>{completion} %</span>
           </>
         );
-      },
+      }, 
     }, 
     {
       id: 'rt_support',

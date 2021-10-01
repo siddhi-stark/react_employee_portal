@@ -106,6 +106,7 @@ function AddNote(props) {
               currentUser={currentUser}
               submitBtnText= 'Submit'
               showResetBtn={false}
+              showBtnClass={true}
               resetBtnText="Cancel"
               btnContainerClass={!value ? 'form-submit-buttons' : 'd-none'}
               isStepForm={false}

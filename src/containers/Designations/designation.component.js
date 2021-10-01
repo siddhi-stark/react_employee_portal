@@ -7,7 +7,6 @@ import {
   Button,
   Form,
   Image,
-  Accordion,
 } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
@@ -337,20 +336,13 @@ function Designation() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-          <Accordion defaultActiveKey="0">
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h4 className="text-primary m-0">Filters</h4>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      Expand
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
+            
                 <Card.Body>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                  </div>  
+                  <hr/>
                   <Card.Title>
                     <Form onSubmit={(e) => filterSearch(e)}>
                       {filterErr && (
@@ -362,7 +354,7 @@ function Designation() {
                         </div>
                       )}
                       <Row className="mt-3">
-                        <Col sm={3}>
+                        <Col sm={4}>
                           <div className="search-bar-input">
                             <TextInput
                               inputClass="form-control"
@@ -398,16 +390,13 @@ function Designation() {
                     </Form>
                   </Card.Title>
                 </Card.Body>
-              </Accordion.Collapse>
             </Card>
-          </Accordion>
           <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Designation</h4>
-              </div>
-            </Card.Header>
             <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Designation</h5>
+              </div>  
+              <hr/>
               <Row className="mt-3">
                 <Col>
                   <Form autoComplete="off" onSubmit={(e) => submitForm(e)}>

@@ -109,7 +109,7 @@ function Greetings() {
 		const params = {
 			page,
 			limit,
-			sort_by: 'date',
+			sort_by: 'id',
 			sort_direction: 'descending'
 		};
 		const url = customFunctions.generateUrl(endPoint, params);
@@ -197,12 +197,11 @@ function Greetings() {
 			</div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area greeting-list">
-				<div className="mt-5">
-					<Card>
-						<Card.Header>
-							<div className="d-flex align-items-center justify-content-between">
-								<h4 className="text-primary mt-2 mb-2">Greetings</h4>
-								<div className="d-flex align-items-center justify-content-end">
+					<Card className="mt-4">
+						<Card.Body>
+						 <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Greetings</h5>
+               <div className="d-flex align-items-center justify-content-end">
 									
 										<a
 											href="/add-greetings"
@@ -211,13 +210,13 @@ function Greetings() {
 											Add Greeting
 										</a>
 								</div>
-							</div>
-						</Card.Header>
-						<Card.Body>
+               </div> 
+               <hr/> 
 							<CustomTable
 								columns={columns}
 								rows={rowData}
 								showPagination={true}
+                tableClass="table-striped"
 								paginationProps={{
 									totalItems: totalCount,
 									itemsPerPage: limit,
@@ -232,7 +231,6 @@ function Greetings() {
 							/>
 						</Card.Body>
 					</Card>
-				</div>
 			</section>
 		</>
 	);

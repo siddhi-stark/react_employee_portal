@@ -163,6 +163,7 @@ function ProfessionalDetails(props) {
       currentUser={currentUser}
       submitBtnText="Save"
       showResetBtn={false}
+      showBtnClass={true}
       resetBtnText="Clear"
       btnContainerClass={`form-submit-buttons mb-5 ${(Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''}`}
       isStepForm={false}

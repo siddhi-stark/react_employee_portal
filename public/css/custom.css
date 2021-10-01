@@ -12758,6 +12758,9 @@ p:empty {
   border-radius: 13px !important;
   margin-bottom: 24px;
 }
+.card hr {
+  margin: 15px auto 15px;
+}
 
 .welcome-box.jumbotron {
   background: #FFE7C1;
@@ -12770,6 +12773,13 @@ p:empty {
   background-size: contain;
   background-position: top left;
   background-repeat: no-repeat;
+  min-height: 241px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .welcome-box.jumbotron .blockquote .btn {
   min-width: 100px;
@@ -13024,7 +13034,7 @@ p:empty {
   padding: 20.5px 15px;
 }
 .main-sidebar-body .nav li a span {
-  color: #ffffff;
+  color: #E6E6E6;
   font-size: 14px;
   margin-left: 15px;
   font-weight: 400;
@@ -13044,14 +13054,16 @@ p:empty {
 .main-sidebar-body .nav li a svg path polygon {
   fill: #ffffff !important;
 }
-.main-sidebar-body .nav li.active.show li:first-child a {
+.main-sidebar-body .nav li.active.show li:first-child .main-sidebar-body .nav li.active.show a a {
   padding-top: 10px;
 }
 .main-sidebar-body .nav li.active.show a {
   background-color: #2D2E61;
+  color: #ffffff;
 }
 .main-sidebar-body .nav li.active.show a span {
   font-weight: 500;
+  color: #ffffff;
 }
 .main-sidebar-body .nav li .nav-sub {
   padding-left: 31px;
@@ -13205,14 +13217,12 @@ p:empty {
   font-size: 14px;
   letter-spacing: 0.35px;
   color: #3A3A3A;
-  margin-left: 14px;
+  margin-left: 7px;
   margin-bottom: 0;
   font-weight: 600;
 }
-.upcoming-event-box .upcoming-event-img.upcoming-event-img-edit {
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+.upcoming-event-box .upcoming-event-img.upcoming-event-img-edit img {
+  margin-right: 5px;
 }
 .upcoming-event-box .event-title p {
   font-size: 14px;
@@ -13476,9 +13486,10 @@ p:empty {
 }
 .main-header .main-header-right .main-header-notification .dropdown-menu .main-notification-list .media.new {
   color: #8f9cc0;
+  padding: 10px 0px;
 }
 .main-header .main-header-right .main-header-notification .dropdown-menu .main-notification-list .media-body {
-  margin-left: 15px;
+  margin-left: 0;
   font-size: 13px;
 }
 .main-header .main-header-right .main-header-notification .dropdown-menu .main-notification-list .media-body p {
@@ -13542,6 +13553,12 @@ p:empty {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+.main-header .main-header-menu-icon .dropdown-menu .header-navheading .main-notification-text {
+  margin-bottom: 5px;
+}
+.main-header .main-header-menu-icon .dropdown-menu .header-navheading small, .main-header .main-header-menu-icon .dropdown-menu .header-navheading .small {
+  font-size: 12px;
 }
 
 .header-search {
@@ -13735,6 +13752,9 @@ p:empty {
   font-style: italic;
 }
 
+.check-in {
+  width: 100%;
+}
 .check-in .time-count {
   background-color: #ffffff;
   border-radius: 5px;
@@ -13758,8 +13778,15 @@ p:empty {
   letter-spacing: 0.9px;
   line-height: 1;
 }
+.check-in .time-count span h4, .check-in .time-count span .h4 {
+  padding: 5px;
+  margin: 0;
+}
 .check-in .btn {
-  min-width: 90px;
+  max-width: 155px;
+  min-width: inherit;
+  width: 100%;
+  display: inline-block;
 }
 
 .card-title {
@@ -14624,7 +14651,7 @@ table.quotes-wrapper thead th {
           align-items: center;
 }
 .table-projects.time-sheet-table .table-title h5, .table-projects.time-sheet-table .table-title .h5 {
-  font-size: 12px !important;
+  font-size: 16px !important;
 }
 .table-projects.time-sheet-table .table-title img.up-leaves {
   max-width: 15px;
@@ -15336,6 +15363,7 @@ span.np-sup {
 
 .active-media {
   background-color: #f1f1f1;
+  padding: 5px;
 }
 
 .status-reason-popup .reson-text-title .title h2, .status-reason-popup .reson-text-title .title .h2 {
@@ -15681,6 +15709,81 @@ table tbody tr td a:hover {
   margin-bottom: 0;
 }
 
+.upcoming-event-box .date span img {
+  margin-left: 10px;
+}
+
+.holidays-applied .upcoming-event-box .event-title img {
+  margin-left: 5px;
+}
+
+.birthday-wish-section .birth-wish-profile {
+  max-width: 73px;
+  border-radius: 100%;
+}
+.birthday-wish-section img {
+  max-width: 44px;
+  width: 100%;
+}
+.birthday-wish-section .birthtitle img {
+  max-width: 30px;
+  width: 100%;
+  margin-right: 10px;
+}
+.birthday-wish-section .birthtitle h4, .birthday-wish-section .birthtitle .h4 {
+  font-size: 18px;
+  letter-spacing: 0px;
+  color: #FFFFFF;
+}
+.birthday-wish-section .birth-input-field {
+  position: relative;
+}
+.birthday-wish-section .birth-input-field .form-control {
+  background-color: #393A71;
+  color: #ffffff;
+  padding-right: 40px;
+}
+.birthday-wish-section .birth-input-field .birth-input-arrow {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 9;
+}
+.birthday-wish-section .birth-input-field .birth-input-arrow img {
+  max-width: 16px;
+  width: 100%;
+}
+.birthday-wish-section .media-body {
+  width: 100%;
+}
+
+.birthday-wish-section .birthtitle h4, .birthday-wish-section .birthtitle .h4 {
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.dark-blue-bg {
+  background-color: #393A71;
+}
+.dark-blue-bg.card {
+  min-height: 156px;
+}
+
+.log-time-bar {
+  min-height: 30px;
+}
+
+.filter-btn-report {
+  max-width: 315px;
+  width: 100%;
+}
+
+.filter-apply-btns .btn {
+  max-width: 100px;
+  width: 100%;
+  min-width: 125px;
+}
+
 @media (min-width: 992px) {
   .main-sidebar {
     position: relative;
@@ -15705,6 +15808,11 @@ table tbody tr td a:hover {
     /*height: 100vh;*/
   }
 }
+@media (max-width: 1920px) {
+  .birthday-wish-section-row .col {
+    min-width: 33.33%;
+  }
+}
 @media (max-width: 1860px) {
   .holidays-applied .row [class*=col] {
     /*width: 100%;*/
@@ -15712,11 +15820,34 @@ table tbody tr td a:hover {
 }
 @media (max-width: 1440px) {
   .welcome-box.jumbotron {
-    padding: 30px 0px 0px 29px;
+    padding: 15px 0px 0px 29px;
     /*background-size: 16% 57%;*/
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+
+  .birthday-wish-section-row .col {
+    width: 50% !important;
+    -webkit-box-flex: 50% !important;
+        -ms-flex: 50% !important;
+            flex: 50% !important;
   }
 }
 @media (max-width: 1366px) {
+  .birthday-wish-section .birth-input-field .form-control {
+    background-color: #393A71;
+    color: #ffffff;
+    font-size: 12px !important;
+  }
+
+  .upcoming-event-box {
+    padding: 12px;
+  }
+
   .project-information-total-hr li {
     font-size: 12px;
   }
@@ -15760,10 +15891,8 @@ table tbody tr td a:hover {
     font-size: 11px !important;
   }
 
-  .upcoming-event-box .upcoming-event-img.upcoming-event-img-edit {
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+  .upcoming-event-box .upcoming-event-img.upcoming-event-img-edit img {
+    margin-right: 5px;
   }
   .upcoming-event-box .date span {
     font-size: 11px;
@@ -15800,7 +15929,7 @@ table tbody tr td a:hover {
   }
 
   .check-in .time-count h4, .check-in .time-count .h4 {
-    font-size: 14px;
+    font-size: 18px;
     margin-bottom: 0;
     padding: 0 10px;
   }

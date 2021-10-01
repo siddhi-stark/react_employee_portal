@@ -76,14 +76,11 @@ function HRListing() {
       </div>
       <div className="mt-5">
         <Card>
-          <Card.Header>
-            <div className="d-flex align-items-center justify-content-between">
-              <h4 className="text-primary mt-2 mb-2">
-                Employee Timesheet - {Name}
-              </h4>
-            </div>
-          </Card.Header>
           <Card.Body>
+           <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 "> Employee Timesheet - {Name}</h5>
+            </div>
+            <hr/>
             <CustomTable
               columns={columns}
               rows={rowData}

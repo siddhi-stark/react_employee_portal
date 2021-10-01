@@ -32,7 +32,12 @@ function Events() {
   
   const handleActionCallback = (row) => {
     return (
-      <>
+      <> {Number(employeeRole) === 4 ||
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2 ? (
+          ''
+        ) : (
+        <>
 
         <a
           href="/"
@@ -71,6 +76,7 @@ function Events() {
         </a>
         </>
         ))}
+       </>)}
       </>
     );
   };
@@ -85,8 +91,12 @@ function Events() {
       label: 'Date',
     },
     {
-      id: 'action',
-      label: 'Action',
+      id:  Number(employeeRole) === 4 ||
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2 ? '' :'action',
+      label:   Number(employeeRole) === 4 ||
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2 ? '' :'Action',
       render: handleActionCallback,
     },
   ];
@@ -167,9 +177,9 @@ function Events() {
       <section className="content-area">
         <div className="mt-5">
           <Card>
-            <Card.Header>
+            <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Events</h4>
+                <h5 className="card-title mb-0 mt-2 ">Events</h5>
                 <div className="d-flex align-items-center justify-content-end">
                   <UserRestrictions permittedUsers={[1,5,6]} roleId={userRole}>
                     <a
@@ -183,14 +193,14 @@ function Events() {
                     </a>
                   </UserRestrictions>
                 </div>
-              </div>
-            </Card.Header>
-            <Card.Body>
+               </div> 
+               <hr/> 
               <CustomTable
                 columns={columns}
                 rows={rowData}
                 role={5}
                 showPagination={true}
+                tableClass="table-striped"
                 paginationProps={{
                   totalItems: totalCount,
                   itemsPerPage: limit,

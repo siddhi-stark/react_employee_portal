@@ -12,7 +12,7 @@
 				"type": "select",
 				"label": "Email Template Name",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Please select template name",
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [
@@ -41,7 +41,7 @@
 				"type": "text",
 				"label": "Email Template Subject",
 				"id": "",
-				"placeholder": "",
+				"placeholder": "Enter email template subject",
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [

@@ -212,7 +212,7 @@ function AddEvent(props) {
         <Button className="float-end" onClick= {() => history.push('/event')} >Back</Button>
           ) : ''}
         <StarkFormBuilder
-          containerClass="mt-5"
+          containerClass="mt-2 mb-2"
           formHeaderClass=""
           formSections={FormSections || jsonSchema}
           formHeading="Event Form"
@@ -229,6 +229,7 @@ function AddEvent(props) {
           currentUser={currentUser}
           submitBtnText="Submit"
           showResetBtn={true}
+          showBtnClass={true}
           resetBtnText="Cancel"
           btnContainerClass={viewOptions ? 'd-none' : 'form-submit-buttons'}
           isStepForm={false}

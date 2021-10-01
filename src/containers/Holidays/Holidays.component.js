@@ -13,102 +13,114 @@ import Loader from '../../components/Loader/index';
 
 function Holidays() {
   const employeeRole = customFunctions.getLocalStorage('group');
- 
+
   const handleActionCallback = (row) => {
-		return (
-			<>
-      {(Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2) ? '' : (
-        <>
-				<a
-					href="/"
-					className="pl-2"
-					onClick={(e) => {
-					  e.preventDefault();
-					  e.stopPropagation();
-					  history.push(`/edit-holiday/${row.id}`);
-					}}
-				>
-					<Image src="/images/edit-button.svg" />
-				</a>
-				
-				<a
-					href="/"
-					className="pl-2 ms-2"
-					onClick={(e) => {
-					  e.preventDefault();
-					  e.stopPropagation();
-					  removeHoliday(row.id);
-					}}
-				>
-					<Image src="/images/delete.png" />
-				</a>
-        </>
+    return (
+      <>
+        {Number(employeeRole) === 4 ||
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2 ? (
+          ''
+        ) : (
+          <>
+            <a
+              href="/"
+              className="pl-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/edit-holiday/${row.id}`);
+              }}
+            >
+              <Image src="/images/edit-button.svg" />
+            </a>
+
+            <a
+              href="/"
+              className="pl-2 ms-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                removeHoliday(row.id);
+              }}
+            >
+              <Image src="/images/delete.png" />
+            </a>
+          </>
         )}
-			</>
-		);
-	};
+      </>
+    );
+  };
 
-	const columns = [
-
-		{
-			id: 'occasion',
-			label: 'Occasion',
-		},
-		{
-			id: 'date',
-			label: 'Date',
-			render: ({ date }) => {
+  const columns = [
+    {
+      id: 'occasion',
+      label: 'Occasion',
+    },
+    {
+      id: 'date',
+      label: 'Date',
+      render: ({ date }) => {
         return (
           <>
             <span>{customFunctions.getDMYDate(date)}</span>
           </>
         );
       },
-		},
-		{
-			id: (Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2) ?  '' : 'action' ,
-			label: (Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2) ?  '' : 'Action' ,
-			render: handleActionCallback,
-		},
-	];
+    },
+    {
+      id:
+        Number(employeeRole) === 4 ||
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2
+          ? ''
+          : 'action',
+      label:
+        Number(employeeRole) === 4 ||
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2
+          ? ''
+          : 'Action',
+      render: handleActionCallback,
+    },
+  ];
 
-	const [rowData, setRowData] = useState([]);
-	const [totalCount, setTotalCount] = useState(10);
-	const [limit, setLimit] = useState(10);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [rowData, setRowData] = useState([]);
+  const [totalCount, setTotalCount] = useState(10);
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
   const [userRole, setUserRole] = useState('');
-	const title = 'Holidays';
+  const title = 'Holidays';
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Holidays' }];
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
 
-	const getRowData = async () => {
+  const getRowData = async () => {
     setShowLoader(true);
-		const endPoint =
-			`${Api.holidayUrll}?type=all`;
+    const endPoint = `${Api.holidayUrll}?type=all`;
 
-		const url = customFunctions.generateUrl(endPoint);
-		const { data, message } = await AuthApi.getDataFromServer(url);
+    const url = customFunctions.generateUrl(endPoint);
+    const { data, message } = await AuthApi.getDataFromServer(url);
 
-		if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-			setTotalCount(data.paginator.total_count);
-			setLimit(data.paginator.limit);
-			setCurrentPage(Number(data.paginator.current_page));
-			setRowData((data && data.data) || []);
-		} else {
+      setTotalCount(data.paginator.total_count);
+      setLimit(data.paginator.limit);
+      setCurrentPage(Number(data.paginator.current_page));
+      setRowData((data && data.data) || []);
+    } else {
       setShowLoader(false);
-			swal(message, '', 'error', {
-              closeOnClickOutside: false,
-              allowOutsideClick: false,
-            });
-		}
-	};
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
 
-	const removeHoliday = (id) => {
+  const removeHoliday = (id) => {
     if (id) {
       swal({
         title: 'Are you sure?',
@@ -143,17 +155,16 @@ function Holidays() {
       });
     }
   };
-    
-	useEffect(() => {
-		const uRole = customFunctions.getLocalStorage('group');
+
+  useEffect(() => {
+    const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-		getRowData(1);
-	}, [filterData]);
+    getRowData(1);
+  }, [filterData]);
 
-	return (
-		<>
-
- <Helmet title={title} />
+  return (
+    <>
+      <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Holidays</h2>
         <Breadcrumb items={items} />
@@ -161,51 +172,51 @@ function Holidays() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
-
-        <div className="mt-5">
-          <Card>
-            <Card.Header>
-              <div className="d-flex align-items-center justify-content-between">
-                <h4 className="text-primary mt-2 mb-2">Holidays</h4>
-                <div className="d-flex align-items-center justify-content-end">
-                  <UserRestrictions permittedUsers={[1,5,6]} roleId={userRole}>
+          <Card className="mt-5 schedular">
+            <Card.Body>
+             <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Holidays</h5>
+                 <div className="d-flex align-items-center justify-content-end">
+                  <UserRestrictions
+                    permittedUsers={[1, 5, 6]}
+                    roleId={userRole}
+                  >
                     <a
                       href="#"
-                        onClick={() => {
-                          history.push('/add-holiday');
-                        }}
+                      onClick={() => {
+                        history.push('/add-holiday');
+                      }}
                       className="btn-link"
                     >
                       Add Holiday
                     </a>
                   </UserRestrictions>
                 </div>
-              </div>
-            </Card.Header>
-            <Card.Body>
-             	<CustomTable
-			columns={columns}
-			rows={rowData}
-			role={5}
-			showPagination={true}
-			paginationProps={{
-				totalItems: totalCount,
-				itemsPerPage: limit,
-				activePage: currentPage,
-				onPageChange: (pageNo) => {
-					getRowData(pageNo);
-				},
-			}}
-			emptyRender={() => {
-				return 'No record found.';
-			}}
-		/>
+               </div> 
+               <hr/> 
+              <CustomTable
+                columns={columns}
+                rows={rowData}
+                role={5}
+                showPagination={true}
+                tableClass="table-striped"
+                paginationProps={{
+                  totalItems: totalCount,
+                  itemsPerPage: limit,
+                  activePage: currentPage,
+                  onPageChange: (pageNo) => {
+                    getRowData(pageNo);
+                  },
+                }}
+                emptyRender={() => {
+                  return 'No record found.';
+                }}
+              />
             </Card.Body>
           </Card>
-        </div>
       </section>
-		</>
-	);
+    </>
+  );
 }
 
 export default withRouter(Holidays);

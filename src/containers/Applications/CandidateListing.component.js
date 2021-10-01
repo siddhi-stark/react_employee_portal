@@ -171,48 +171,57 @@ function CandidateListing() {
 				<h2 className="main-content-title tx-24 mg-b-5">Candidates</h2>
 				<Breadcrumb items={items} />
 			</div>
-            <Loader showLoader={isShowLoader} needFullPage={false} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 			<section className="content-area">
 				<Card>
-					<Card.Header>
-						<div className="d-flex align-items-center justify-content-between">
-							<h4 className="text-primary mt-2 mb-2">Candidates</h4>
-						</div>
-					</Card.Header>
 					<Card.Body>
-					 <StarkFormBuilder
-              containerClass=''
-              formHeaderClass=''
-              formSections={SearchFormSections}
-              formHeading=""
-              onFormSubmit={(formValues) => {submitForm(formValues);}}
-              callbacks={{}}
-              submitBtnText="Apply"
-              showResetBtn={true}
-              resetBtnText="Clear"
-              btnContainerClass="form-submit-buttons pull-right mb-3"
-              isStepForm={false}
-              onFormReset={() => {
-                setFilterData();
-              }}
-            />
-						<CustomTable
-							columns={columns}
-							rows={rowData}
-							showPagination={true}
-							tableClass="table-striped"
-							paginationProps={{
-								totalItems: totalCount,
-								itemsPerPage: limit,
-								activePage: currentPage,
-								onPageChange: (pageNo) => {
-									getRowData(pageNo);
-								},
-							}}
-							emptyRender={() => {
-								return 'No record found.';
-							}}
-						/>
+					 <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+            </div>  
+            <hr/>
+						 <StarkFormBuilder
+	              containerClass=''
+	              formHeaderClass=''
+	              formSections={SearchFormSections}
+	              formHeading=""
+	              onFormSubmit={(formValues) => {submitForm(formValues);}}
+	              callbacks={{}}
+	              submitBtnText="Apply"
+	              showResetBtn={true}
+	              showBtnClass={false}
+	              btnContainerClass="col-md-4 filter-apply-btns"
+	              formClass="row"
+	              resetBtnText="Clear"
+	              isStepForm={false}
+	              onFormReset={() => {
+	                setFilterData();
+	              }}
+	            />
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+             	<div className="d-flex align-items-center justify-content-between">
+              	<h5 className="card-title mb-0 mt-2 ">Candidates</h5>
+            	</div>  
+            	<hr/>
+							<CustomTable
+								columns={columns}
+								rows={rowData}
+								showPagination={true}
+								tableClass="table-striped"
+								paginationProps={{
+									totalItems: totalCount,
+									itemsPerPage: limit,
+									activePage: currentPage,
+									onPageChange: (pageNo) => {
+										getRowData(pageNo);
+									},
+								}}
+								emptyRender={() => {
+									return 'No record found.';
+								}}
+							/>
 					</Card.Body>
 				</Card>
 			</section>

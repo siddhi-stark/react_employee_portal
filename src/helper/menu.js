@@ -46,7 +46,7 @@ const menu = [
     path: '/quotes',
     icon: 'quote.svg',
     submenu: [],
-    roleaccess: [1,5,6],
+    roleaccess: [1,3,5,6],
   },
   {
     title: 'Employee Timesheet',
@@ -82,7 +82,7 @@ const menu = [
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'recruitement.svg',
-    roleaccess: [5,2],
+    roleaccess: [5],
   },
   
   {
@@ -183,7 +183,7 @@ const menu = [
    {
     title: 'Greetings',
     path: '/greetings',
-    icon: 'report.svg',
+    icon: 'greetings.svg',
     submenu: [],
     roleaccess: [1,2,3,5,6],
   },
@@ -262,7 +262,7 @@ const menu = [
     title: 'Setting',
     path: '#',
     redirect: false,
-    icon: 'report.svg',
+    icon: 'setting.svg',
     submenu: [
       {
         title: 'Project Fetch',
