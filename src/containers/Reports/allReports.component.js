@@ -84,12 +84,12 @@ function AllReports() {
     },
     {
       id: 'clockin',
-      label: 'Clock in',
+      label: 'In',
       roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockout',
-      label: 'Clock Out',
+      label: 'Out',
       roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {

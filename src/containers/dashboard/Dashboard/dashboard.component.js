@@ -96,12 +96,12 @@ function Dashboard() {
     },
     {
       id: 'clockin',
-      label: 'Clock In',
+      label: 'In',
       roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockout',
-      label: 'Clock out',
+      label: 'Out',
       roleAccess: [2, 3, 4, 5, 6],
     },
     {
@@ -913,8 +913,15 @@ function Dashboard() {
                                     <p> {lv.leave_type}</p>
                                   </div>
                                   <div className="date">
-                                       <a href ="/my-leaves" onClick={()=>{
+                                       <a href ="#" onClick={()=>{
                                           onViewLeaves();
+                                          if(Number(userRole) === 1){
+                                             history.push('/employee-leaves');
+                                          } else if(Number(userRole) === 6 || Number(userRole) === 3 || Number(userRole) === 2 || Number(userRole) === 5) {
+                                            history.push('/my-leaves');
+                                          } else {
+                                            history.push('/leaves');
+                                          }
                                     }}>
                                     <span>
                                       {lv.leave_from_date} To {lv.leave_to_date}
