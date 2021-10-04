@@ -15792,6 +15792,10 @@ table tbody tr td a:hover {
   display: none;
 }
 
+.filter-box-main .container {
+  padding: 0;
+}
+
 @media (min-width: 992px) {
   .main-sidebar {
     position: relative;

@@ -120,13 +120,14 @@ function TeamMemberProject(props) {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-      setRowData((data && data.data && data.data.project_data) || []);
+      setTotalCount(data && data.data && data.data.project_data && data.data.project_data.length);
+      setLimit(10);
+      const startIndex = currentPage * 10 - 10;
+      const endIndex = startIndex + 10;
+      const projectData = data && data.data && data.data.project_data;
+      setRowData((projectData.slice(startIndex, endIndex)) || []);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -138,8 +139,8 @@ function TeamMemberProject(props) {
 
   useEffect(() => {
     setTitle('Team Project');
-    getRowData(1);
-  }, []);
+    getRowData(currentPage);
+  }, [currentPage]);
 
   return (
     <>
@@ -149,7 +150,7 @@ function TeamMemberProject(props) {
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-      <Card body className="mt-4 schedular">
+      <Card body className="mt-4">
        <span>{teamName ? `${teamName} Projects and Work` : `${teamMemberName} Projects and Work`}</span>
          <Button className="float-end mb-3" onClick= {() =>{ if(schedular){
             history.push('/team-scheduler'); 
@@ -170,6 +171,7 @@ function TeamMemberProject(props) {
                 activePage: currentPage,
                 onPageChange: (pageNo) => {
                   getRowData(pageNo);
+                  setCurrentPage(Number(pageNo));
                 },
               }}
               emptyRender={() => {

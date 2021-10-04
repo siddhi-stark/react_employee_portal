@@ -255,7 +255,7 @@ function Project() {
                 <Card.Body>
                   <h5 className="card-title mb-0 mt-2 ">Filter</h5>
                   <hr/>
-                 
+                  <div className="filter-box-main">
                   <StarkFormBuilder
                     containerClass=''
                     formHeaderClass=''
@@ -277,6 +277,7 @@ function Project() {
                       setAllData({});
                     }}
                   />
+                  </div>
                 </Card.Body>
             </Card>
             <Card>

@@ -346,6 +346,7 @@ function EmployeeTimesheet() {
                 <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               </div>  
               <hr/>
+              <div className="filter-box-main">
               <StarkFormBuilder
                 containerClass=""
                 formHeaderClass=""
@@ -369,6 +370,7 @@ function EmployeeTimesheet() {
                   onResetForm();
                 }}
               />
+              </div>  
             </Card.Body>
           </Card>
         <Card>
