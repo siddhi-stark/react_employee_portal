@@ -516,7 +516,7 @@ function Dashboard() {
                       (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
                     <div className="birth-input-field mt-3">
                      <TextInput
-                      onInputChange={(e) => setMessage(e.target.value)}
+                      onInputChange={(e) => {setMessage(e.target.value)}}
                       containerClass="mb-0"
                       type="text"
                       value={message}
