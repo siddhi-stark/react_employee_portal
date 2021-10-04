@@ -26,6 +26,8 @@ function BirthdayWishes() {
 	const userID = customFunctions.getLocalStorage('userId');
 	// const showComment = customFunctions.getLocalStorage('comment-allow');
 	const EmployeeName = customFunctions.getLocalStorage('EmpName');
+	const showAnniversary = customFunctions.getLocalStorage('isAnniversary');
+	const showBirthday = customFunctions.getLocalStorage('isBirthday');
 	// const history = useHistory();
 
 	const getBirthdayWishes = async (GrtId) => {
@@ -116,9 +118,23 @@ function BirthdayWishes() {
 				style={{ backgroundImage: '/images/login-img.png' }}
 			>
 				{bannerImage ? (
+					<>
+					{console.log('inside banner',bannerImage)}
 					<Image src={bannerImage} alt="image" />
+					</>
 				) : (
+				<>
+				console.log('outsite banner');
+				{showAnniversary === 'true' && 
+
+					<Image src="/images/Full_Anniversary.png" alt="image" />
+				}
+				{showBirthday === 'true' && 
+
 					<Image src="/images/birthday_full_width.png" alt="image" />
+				}
+				</>
+
 				)}
 				<div className="profile-img">
 					{wisherProfile ? (
