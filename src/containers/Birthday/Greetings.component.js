@@ -96,9 +96,12 @@ function Greetings() {
 	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
-  const getEmployee = async () => {
+  const getEmployee = async (pageNo = 1) => {
+  	const page = pageNo;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
-    getRowData(1,data.data);
+    if(data) {
+    getRowData(page,data.data);
+    }
   };
 
 	// Declare methods
@@ -222,7 +225,7 @@ function Greetings() {
 									itemsPerPage: limit,
 									activePage: currentPage,
 									onPageChange: (pageNo) => {
-										getRowData(pageNo);
+									getEmployee(pageNo);
 									},
 								}}
 								emptyRender={() => {
