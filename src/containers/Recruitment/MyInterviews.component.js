@@ -83,15 +83,16 @@ function MyInterviews() {
     );
   };
 
-  const handleResumeCallback = (resume) => {
+  const handleResumeCallback = ({resume,name}) => {
     return (
       <>
-      {resume.resume ? (
+        <span> {name} </span>
+        {resume ? (
 
-        <a href={resume.resume} className="pl-2" title="View Resume" target="_Blank">
-          <Image src="/images/download-file.svg" />
-        </a>
-        ) : ''}
+          <a href={resume} className="ms-2 pl-2" title="View Resume" target="_Blank">
+            <Image src="/images/download-file.svg" />
+          </a>
+          ) : ''}
       </>
     );
   };
@@ -125,25 +126,16 @@ function MyInterviews() {
     {
       id: 'name',
       label: 'Name',
+      render: handleResumeCallback,
     },
     {
       id: 'applied_for_name',
       label: 'Position',
     },
     {
-      id: 'tech_stack_name',
-      label: 'Technology',
-    },
-    {
       id: 'notes',
       label: 'Note',
       isDisplay: false,
-    },
-
-    {
-      id: 'resume',
-      label: 'Resume',
-      render: handleResumeCallback,
     },
     {
       id: 'status_name',
