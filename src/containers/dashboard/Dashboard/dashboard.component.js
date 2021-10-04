@@ -590,7 +590,6 @@ function Dashboard() {
                     <div className="birthtitle d-flex align-items-center">
                       <img className="mr-2" src="/images/anniversary-icon.svg" alt="img" />
                        <a href="/wishes" onClick={() => { // eslint-disable-line
-                         console.log('emp.is_anniversary///////////////////',emp.is_birthday);
                          customFunctions.setLocalStorage('isAnniversary',emp.is_anniversary);
                          customFunctions.setLocalStorage('isBirthday',emp.is_birthday); 
                           if (emp.greeting_anniversary) {

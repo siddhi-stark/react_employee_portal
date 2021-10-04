@@ -119,7 +119,6 @@ function BirthdayWishes() {
 			>
 				{bannerImage ? (
 					<>
-					{console.log('inside banner',bannerImage)}
 					<Image src={bannerImage} alt="image" />
 					</>
 				) : (
