@@ -124,10 +124,12 @@ function TeamProjectScheduler() {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-      setRowData((data && data.data && data.data.employees_data) || []);
+      setTotalCount(data && data.data && data.data.employees_data && data.data.employees_data.length);
+      setLimit(10);
+      const startIndex = currentPage * 10 - 10;
+      const endIndex = startIndex + 10;
+      const projectData = data && data.data && data.data.employees_data;
+      setRowData((projectData.slice(startIndex, endIndex)) || []);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -138,9 +140,15 @@ function TeamProjectScheduler() {
   };
 
   useEffect(() => {
-    getRowData(1);
+    if(filterData){
+      getRowData(currentPage);
+    }
     setTitle('Project Scheduler');
   }, [filterData]);
+
+  useEffect(() => {
+    getRowData(currentPage);
+  }, [currentPage]);
   
   // Get user role Filter
   const getUserRole = async() => {
@@ -207,6 +215,7 @@ function TeamProjectScheduler() {
                     <h5 className="card-title mb-0 mt-2 ">Filters</h5>
                   </div>
                   <hr/>
+                  <div className="filter-box-main">
                    <StarkFormBuilder
                     containerClass=''
                     formHeaderClass=''
@@ -227,6 +236,7 @@ function TeamProjectScheduler() {
                       setFilterData();
                     }}
                   />
+                  </div>
                 </Card.Body>
             </Card>
           )}
@@ -247,6 +257,7 @@ function TeamProjectScheduler() {
                   activePage: currentPage,
                   onPageChange: (pageNo) => {
                     getRowData(pageNo);
+                    setCurrentPage(Number(pageNo));
                   },
                 }}
                 emptyRender={() => {

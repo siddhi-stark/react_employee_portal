@@ -229,7 +229,8 @@ function MyInterviews() {
                 <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               </div>  
               <hr/>
-             <StarkFormBuilder
+            <div className="filter-box-main">
+              <StarkFormBuilder
               containerClass=''
               formHeaderClass=''
               formSections={SearchFormSections}
@@ -247,6 +248,7 @@ function MyInterviews() {
                 setFilterData();
               }}
             />
+            </div>
             </Card.Body>
           </Card>
         <Card>

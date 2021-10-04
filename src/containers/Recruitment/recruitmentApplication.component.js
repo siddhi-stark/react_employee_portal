@@ -474,7 +474,8 @@ function RecruitmentApplicationComponent() {
                 <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               </div>  
               <hr/>
-                <StarkFormBuilder
+              <div className="filter-box-main">
+              <StarkFormBuilder
                   containerClass="select-options"
                   formHeaderClass=""
                   formSections={FormSections}
@@ -497,6 +498,7 @@ function RecruitmentApplicationComponent() {
                     setAllData({});
                   }}
                 />
+                </div>
               </Card.Body>
           </Card>
         <Card>

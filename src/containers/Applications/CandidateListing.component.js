@@ -179,6 +179,7 @@ function CandidateListing() {
               <h5 className="card-title mb-0 mt-2 ">Filters</h5>
             </div>  
             <hr/>
+            <div className="filter-box-main">
 						 <StarkFormBuilder
 	              containerClass=''
 	              formHeaderClass=''
@@ -197,6 +198,7 @@ function CandidateListing() {
 	                setFilterData();
 	              }}
 	            />
+	            </div>
             </Card.Body>
           </Card>
           <Card>

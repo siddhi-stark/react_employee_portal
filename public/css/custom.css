@@ -13177,6 +13177,10 @@ p:empty {
 .upcoming-events {
   margin-top: 30px;
 }
+.upcoming-events .upcoming-event-img .up-leaves {
+  max-width: 15px;
+  width: 100%;
+}
 
 .upcoming-bg {
   background-color: #51B773;
@@ -15057,7 +15061,7 @@ table.quotes-wrapper thead th {
   background-repeat: no-repeat;
   background-size: 6%;
   background-position: 97%;
-  margin-right: 10px !important;
+  margin-right: 0px !important;
 }
 .bulk-action-apply select:focus {
   border-color: #E3E3E3;
@@ -15488,7 +15492,7 @@ span.np-sup {
 }
 .profile-bg .profile-img {
   position: absolute;
-  bottom: -20px;
+  bottom: 5px;
   left: 25px;
   width: 120px;
   height: 120px;
@@ -15516,7 +15520,7 @@ span.np-sup {
   right: 0;
   margin: 0 auto;
   color: #000000 !important;
-  top: 7px;
+  top: 8px;
   font-size: 9px !important;
   text-align: center;
   margin-left: 0 !important;
@@ -15766,7 +15770,7 @@ table tbody tr td a:hover {
   background-color: #393A71;
 }
 .dark-blue-bg.card {
-  min-height: 156px;
+  min-height: 140px;
 }
 
 .log-time-bar {
@@ -15782,6 +15786,14 @@ table tbody tr td a:hover {
   max-width: 100px;
   width: 100%;
   min-width: 125px;
+}
+
+.birth-input-field p {
+  display: none;
+}
+
+.filter-box-main .container {
+  padding: 0;
 }
 
 @media (min-width: 992px) {

@@ -221,24 +221,26 @@ function TeamLeaves() {
                 </div>
                </div> 
                <hr/>
-             <StarkFormBuilder
-              containerClass=''
-              formHeaderClass=''
-              formSections={SearchFormSections}
-              formHeading=""
-              onFormSubmit={(formValues) => {submitForm(formValues);}}
-              callbacks={{}}
-              submitBtnText="Apply"
-              showResetBtn={true}
-              resetBtnText="Clear"
-              showBtnClass={false}
-              btnContainerClass="col-md-4 filter-apply-btns"
-              formClass="row"
-              isStepForm={false}
-              onFormReset={() => {
-                setFilterData();
-              }}
-            />
+              <div className="filter-box-main">
+              <StarkFormBuilder
+                containerClass=''
+                formHeaderClass=''
+                formSections={SearchFormSections}
+                formHeading=""
+                onFormSubmit={(formValues) => {submitForm(formValues);}}
+                callbacks={{}}
+                submitBtnText="Apply"
+                showResetBtn={true}
+                resetBtnText="Clear"
+                showBtnClass={false}
+                btnContainerClass="col-md-4 filter-apply-btns"
+                formClass="row"
+                isStepForm={false}
+                onFormReset={() => {
+                  setFilterData();
+                }}
+              />
+              </div>
             </Card.Body>
             </Card>
             <Card>

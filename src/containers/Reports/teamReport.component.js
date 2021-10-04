@@ -51,12 +51,12 @@ function TeamReport() {
     },
     {
       id: 'clockin',
-      label: 'Clock in',
+      label: 'In',
       roleAccess: [3,2,6,5],
     },
     {
       id: 'clockout',
-      label: 'Clock Out',
+      label: 'Out',
       roleAccess: [3,2,6,5],
     },
     {

@@ -96,12 +96,12 @@ function Dashboard() {
     },
     {
       id: 'clockin',
-      label: 'Clock In',
+      label: 'In',
       roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockout',
-      label: 'Clock out',
+      label: 'Out',
       roleAccess: [2, 3, 4, 5, 6],
     },
     {
@@ -505,6 +505,12 @@ function Dashboard() {
                             'EmpName',
                             emp.name
                           );
+                          } else {
+                            customFunctions.removeLocalStorage('employeeId');
+                            customFunctions.removeLocalStorage('gId');
+                            customFunctions.removeLocalStorage('comment-allow');
+                            customFunctions.removeLocalStorage('EmpID');
+                            customFunctions.removeLocalStorage('EmpName');
                           }
                       }}><h4>{emp.name}</h4></a>
                     </div>
@@ -520,7 +526,6 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" onClick={()=>{
-
                       postGreetingMessage(emp.id,emp.greeting);
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
@@ -570,6 +575,12 @@ function Dashboard() {
                               'EmpName',
                               emp.name
                             );
+                          } else {
+                            customFunctions.removeLocalStorage('employeeId');
+                            customFunctions.removeLocalStorage('gId');
+                            customFunctions.removeLocalStorage('comment-allow');
+                            customFunctions.removeLocalStorage('EmpID');
+                            customFunctions.removeLocalStorage('EmpName');
                           }
                         }}><h4>{emp.name}</h4></a>
                     </div>
@@ -636,7 +647,13 @@ function Dashboard() {
                                 'comment-allow',
                                 appr.comment_allow
                               );
-                            }
+                            } else {
+                            customFunctions.removeLocalStorage('employeeId');
+                            customFunctions.removeLocalStorage('gId');
+                            customFunctions.removeLocalStorage('comment-allow');
+                            customFunctions.removeLocalStorage('EmpID');
+                            customFunctions.removeLocalStorage('EmpName');
+                          }
                        }}><h4>{empdata.full_name}</h4></a>
                     </div>
 
@@ -685,7 +702,15 @@ function Dashboard() {
                           <>
                             <div className="birthday-employees">
                               <h6>
-                              <a className="mt-2" href={(Number(userRole) === 1) ? '/employee-leaves': '/team-leaves'}>
+                              <a className="mt-2" href='#' onClick={()=>{
+                                 if(Number(userRole) === 1){
+                                     history.push('/employee-leaves');
+                                  } else if(Number(userRole) === 6 || Number(userRole) === 3 || Number(userRole) === 2 || Number(userRole) === 5) {
+                                    history.push('/my-leaves');
+                                  } else {
+                                    history.push('/leaves');
+                                  }
+                              }}>
                                 {empLeave.user_name}
                               </a>
                               </h6>
@@ -918,8 +943,15 @@ function Dashboard() {
                                     <p> {lv.leave_type}</p>
                                   </div>
                                   <div className="date">
-                                       <a href ="/my-leaves" onClick={()=>{
+                                       <a href ="#" onClick={()=>{
                                           onViewLeaves();
+                                          if(Number(userRole) === 1){
+                                             history.push('/employee-leaves');
+                                          } else if(Number(userRole) === 6 || Number(userRole) === 3 || Number(userRole) === 2 || Number(userRole) === 5) {
+                                            history.push('/my-leaves');
+                                          } else {
+                                            history.push('/leaves');
+                                          }
                                     }}>
                                     <span>
                                       {lv.leave_from_date} To {lv.leave_to_date}
