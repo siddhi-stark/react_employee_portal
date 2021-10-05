@@ -15768,9 +15768,13 @@ table tbody tr td a:hover {
 
 .dark-blue-bg {
   background-color: #393A71;
+  color: #ffffff;
 }
 .dark-blue-bg.card {
   min-height: 140px;
+}
+.dark-blue-bg h6 a, .dark-blue-bg .h6 a {
+  color: #fff;
 }
 
 .log-time-bar {
@@ -15794,6 +15798,10 @@ table tbody tr td a:hover {
 
 .filter-box-main .container {
   padding: 0;
+}
+
+.today-pending-leaves-interviews .card-title {
+  color: #707070;
 }
 
 @media (min-width: 992px) {

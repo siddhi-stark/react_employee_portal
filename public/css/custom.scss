@@ -3993,8 +3993,14 @@
  
  .dark-blue-bg {
      background-color: #393A71;
+     color: #ffffff;
      &.card {
          min-height: 140px;
+     }
+     h6 {
+         a {
+             color: #fff;
+         }
      }
  }
  
@@ -4023,6 +4029,10 @@
      .container {
          padding: 0;
      }
+ }
+ 
+ .today-pending-leaves-interviews .card-title {
+     color: #707070;
  }
  
  @media (min-width: 992px) {
