@@ -119,22 +119,17 @@ function BirthdayWishes() {
 			>
 				{bannerImage ? (
 					<>
-					{console.log('inside banner',bannerImage)}
-					<Image src={bannerImage} alt="image" />
+						<Image src={bannerImage} alt="image" />
 					</>
 				) : (
-				<>
-				console.log('outsite banner');
-				{showAnniversary === 'true' && 
-
-					<Image src="/images/Full_Anniversary.png" alt="image" />
-				}
-				{showBirthday === 'true' && 
-
-					<Image src="/images/birthday_full_width.png" alt="image" />
-				}
-				</>
-
+					<>
+						{showAnniversary === 'true' && (
+							<Image src="/images/Full_Anniversary.png" alt="image" />
+						)}
+						{showBirthday === 'true' && (
+							<Image src="/images/birthday_full_width.png" alt="image" />
+						)}
+					</>
 				)}
 				<div className="profile-img">
 					{wisherProfile ? (
@@ -149,8 +144,10 @@ function BirthdayWishes() {
 				<div className="col-md-12">
 					<div className="card">
 						<div className="media birthday-media-section">
-							<div className="media-body">{greetingMsg ? greetingMsg : 'Wishing you a day filled with happiness and a year filled with joy. Happy birthday!'  // eslint-disable-line
-						}
+							<div className="media-body">
+								{
+									greetingMsg ? greetingMsg : 'Wishing you a day filled with happiness and a year filled with joy. Happy birthday!' // eslint-disable-line
+								}
 							</div>
 						</div>
 					</div>

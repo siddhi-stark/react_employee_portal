@@ -46,7 +46,8 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
   const [leavesUpdate, setLeavesUpdate] = useState([]);
   const [interviewsUpdate, setInterviewsUpdate] = useState([]);
-  const [message, setMessage] = useState('');
+  const [, setCount] = useState('');  // eslint-disable-line
+  const [newBirthdayData, setNewBirthdayData] = useState([]);
 
   // let isShowBdayHeading = false;
 
@@ -329,21 +330,54 @@ function Dashboard() {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
       setInterviewsUpdate(data.data);
-    }
+    }  
   };
 
-  const postGreetingMessage = async (id,GreetingId) => {
+  const postGreetingMessage = async (id,GreetingId, type='') => {
+    const newGreetData = newBirthdayData && newBirthdayData.filter(i => i.id === id);
+    const newData = newBirthdayData && newBirthdayData[0] && newBirthdayData[0].employee_data && newBirthdayData[0].employee_data.filter(i => i.id === id);
     const postData = {
       wish_to: Number(id),
-      message,
       greeting: GreetingId,
+      message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
 
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
       swal(data.message[0], '', 'success');
-      setMessage('');
+      if(type === 'birthday'){
+        birthdayArr && birthdayArr.map(i =>{
+          const dt = i;
+          if(dt.id === id){
+            dt.message = '';
+          }
+          return i;
+        });
+        setBirthdayArray(birthdayArr);
+      }else if(type === 'anniversary'){
+          anniversary && anniversary.map(i =>{
+          const dt = i;
+          if(dt.id === id){
+            dt.message = '';
+          }
+          return i;
+        });
+        setAnniversary(anniversary);
+      }else{
+         appreciationData && appreciationData.map((i) => {
+           i.employee_data && i.employee_data.map((appData) => {
+          const dt = appData;
+          if(dt.id === id){
+            dt.greetMessage = '';
+          }
+          return appData;
+        });
+           return i;
+        });
+        setAppriciation(appreciationData);
+      }
+      setCount('');
       // getBirthdayWishes(GreetingId);
       // setShowMessage(false);
       // setEmployeeMessage('');
@@ -518,15 +552,20 @@ function Dashboard() {
                       (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
                     <div className="birth-input-field mt-3">
                      <TextInput
-                      onInputChange={(e) => {setMessage(e.target.value)}}
+                      onInputChange={(e) => { 
+                        emp.message = e.target.value; // eslint-disable-line
+                        setCount(e.target.value);
+                        setNewBirthdayData(birthdayArr);
+                      }}
                       containerClass="mb-0"
                       type="text"
-                      value={message}
+                      value={emp.message}
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" onClick={()=>{
-                      postGreetingMessage(emp.id,emp.greeting);
+                    <a href="#" onClick={(e)=>{
+                      e.preventDefault();
+                      postGreetingMessage(emp.id, emp.greeting, 'birthday');
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
@@ -551,7 +590,6 @@ function Dashboard() {
                     <div className="birthtitle d-flex align-items-center">
                       <img className="mr-2" src="/images/anniversary-icon.svg" alt="img" />
                        <a href="/wishes" onClick={() => { // eslint-disable-line
-                         console.log('emp.is_anniversary///////////////////',emp.is_birthday);
                          customFunctions.setLocalStorage('isAnniversary',emp.is_anniversary);
                          customFunctions.setLocalStorage('isBirthday',emp.is_birthday); 
                           if (emp.greeting_anniversary) {
@@ -588,17 +626,20 @@ function Dashboard() {
                       (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
                     <div className="birth-input-field mt-3">
 
-                     <TextInput
-                      onInputChange={(e) => setMessage(e.target.value)}
+                    <TextInput
+                      onInputChange={(e) => { setCount(e.target.value);
+                        emp.message = e.target.value; // eslint-disable-line
+                        setNewBirthdayData(anniversary);
+                      }}
                       containerClass="mb-0"
                       type="text"
-                      value={message}
-                      Row={5}
+                      value={emp.message}
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" onClick={()=>{
-                      postGreetingMessage(emp.id,emp.greeting_anniversary);
+                    <a href="#" onClick={(e)=>{
+                      e.preventDefault();
+                      postGreetingMessage(emp.id,emp.greeting_anniversary, 'anniversary');
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div>
                     )}    
@@ -661,14 +702,21 @@ function Dashboard() {
                       (appr.comment_allow && (Number(empdata.id) !== Number(UserID))) && (
                     <div className="birth-input-field mt-3">
                      <TextInput
-                      onInputChange={(e) => setMessage(e.target.value)}
+                      onInputChange={(e) => { 
+                        setCount(e.target.value);
+                        empdata.greetMessage = e.target.value; // eslint-disable-line
+                        setNewBirthdayData(appreciationData);
+                      }}
                       containerClass="mb-0"
                       type="text"
-                      value={message}
+                      value={empdata.greetMessage}
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
+                    <a href="#" className="birth-input-arrow" onClick={(e)=>{
+                      e.preventDefault();
+                      postGreetingMessage(empdata.id, appr.id);
+                    }}><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
                   </div>
