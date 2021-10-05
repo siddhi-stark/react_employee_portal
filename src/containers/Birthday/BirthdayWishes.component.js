@@ -29,7 +29,7 @@ function BirthdayWishes() {
 	// const history = useHistory();
 
 	const getBirthdayWishes = async (GrtId) => {
-		const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
+		const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}&type=all`;
 		const { data } = await AuthApi.getDataFromServer(endPoint);
 		if (data && data.data) {
 			setBirthdayWishes(data && data.data.length > 0 && data.data);
