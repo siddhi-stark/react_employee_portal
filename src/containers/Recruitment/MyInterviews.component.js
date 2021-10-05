@@ -142,8 +142,34 @@ function MyInterviews() {
       label: 'Status',
     },
     {
-      id: 'round_status_name',
-      label: 'Round Status',
+      id: 'round_one',
+      label: 'Round 1',
+      render :(round_one) =>{
+      const categoryData = round_one.round_one; //eslint-disable-line
+      return(
+      <>
+       <span>
+       {`${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
+       } 
+       </span> 
+      </>
+      );
+      }
+    },
+    {
+      id: 'round_two',
+      label: 'Round 2',
+      render :(round_two) =>{
+      const categoryData = round_two.round_two; //eslint-disable-line
+      return(
+      <>
+       <span>
+       {`${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
+       } 
+       </span> 
+      </>
+      );
+      }
     },
     {
       id: 'action',
@@ -170,6 +196,7 @@ function MyInterviews() {
       limit,
       sort_direction: 'descending',
       sort_by: 'round_date',
+      my_interview_round: 'true',
       ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -181,14 +208,22 @@ function MyInterviews() {
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
 
-      const newData = [...data.data];
+      const newInterwArr = await data.data.map((dt) => {
+       if (dt.applicant_round_list && dt.applicant_round_list.length > 0) {
+       dt.round_two = dt.applicant_round_list[0]; //eslint-disable-line
+       dt.round_one = dt.applicant_round_list[1]; //eslint-disable-line
+       }
+       return dt;
+      });
+
+      const newData = [newInterwArr];
       newData.map((item, i) => {
         const newItem = item;
         newItem.no = (page - 1) * limit + (i + 1);
         return newItem;
       });
 
-      setRowData((data && data.data) || []);
+      setRowData((newInterwArr) || []);
     } else {
       setShowLoader(false);
       swal(message,'','error');

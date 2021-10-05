@@ -734,13 +734,7 @@ function Dashboard() {
               <>
                <Card className="mt-3 birthday-list mb-4">
                 <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
-                <Card.Body
-                  className={
-                    leavesUpdate && leavesUpdate.length >= 1
-                      ? 'work-anniversary-box'
-                      : 'birth-box-remove'
-                    }
-                  >
+                <Card.Body>
                   {leavesUpdate && leavesUpdate.length > 0 ? <p>Today's Pending Leaves</p> : ''}
                     <div className="work-anniversary-box-user">
                     <div className="birth-name d-flex align-items-center">
@@ -784,7 +778,7 @@ function Dashboard() {
                         interviewsUpdate.map((empInterview) => (
                           <>
                             <div className="birthday-employees">
-                              <h6>
+                              <h6 className="birthday-employees">
                                  <a className="mt-2" href="/interview-listing">
                                   {empInterview.name}
                                 </a>
