@@ -706,7 +706,7 @@ function Dashboard() {
                                  if(Number(userRole) === 1){
                                      history.push('/employee-leaves');
                                   } else if(Number(userRole) === 6 || Number(userRole) === 3 || Number(userRole) === 2 || Number(userRole) === 5) {
-                                    history.push('/my-leaves');
+                                    history.push('/team-leaves');
                                   } else {
                                     history.push('/leaves');
                                   }
