@@ -113,7 +113,6 @@ function EmployeeTeamLeaves() {
       },
     }
   ];
-
  
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -177,7 +176,6 @@ function EmployeeTeamLeaves() {
     getRowData(1);
     setTitle('Leaves');
   }, [filterData]);
-  
    
   const submitForm = async (formValues) => {
     setFilterData(formValues);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
+import CustomTable from 'stark-custom-datatable';
 import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
@@ -39,6 +40,95 @@ function Profile() {
   const [profileId, setProfileId] = useState('');
   const [companyList,setCompanyList] = useState([]);
   const [isShowLoader,setShowLoader] = useState(false);
+  const [employeeDocument, setEmployeeDocument] = useState([]);
+  const [rowEducationalData, setRowEducationalData] = useState([]);
+  const [rowPersonalData, setRowPersonalData] = useState([]);
+  const [rowEmploymentData, setRowEmploymentData] = useState([]);
+  const [rowOtherData, setRowOtherData] = useState([]);
+
+  const personalColumns = [
+    {
+      id: 'title',
+      label: 'Name',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ document_url }) => { // eslint-disable-line
+        return (
+          <>
+            <a href={document_url} target="_blank" // eslint-disable-line
+            > 
+              <Image src="/images/download-file.svg" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
+  const educationalColumns = [
+    {
+      id: 'title',
+      label: 'Name',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ document_url }) => { // eslint-disable-line
+        return (
+          <>
+            <a href={document_url} target="_blank" // eslint-disable-line
+            >
+              <Image src="/images/download-file.svg" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
+  const employmentColumns = [
+    {
+      id: 'title',
+      label: 'Name',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ document_url }) => {  // eslint-disable-line
+        return (
+          <>
+            <a href={document_url} target="_blank"  // eslint-disable-line
+            >
+              <Image src="/images/download-file.svg" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
+  const otherColumns = [
+    {
+      id: 'title',
+      label: 'Name',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ document_url }) => { // eslint-disable-line
+        return (
+          <>
+            <a href={document_url} target="_blank" // eslint-disable-line
+            >
+              <Image src="/images/download-file.svg" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
 
   const Department = [
     {
@@ -73,6 +163,8 @@ function Profile() {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
     if (!customFunctions.checkIfEmpty(data.data, 'O')) {
+      getEmployeeDocument(data.data.full_name);
+
       setShowLoader(false);
       setEmail(data.data.email);
       setName(data.data.full_name);
@@ -198,6 +290,40 @@ function Profile() {
     } else {
       validator.showMessages();
       forceUpdate(count + 1);
+    }
+  };
+
+ const getEmployeeDocument = async (fullName) => {
+    setShowLoader(true);
+    const formData = new FormData();
+
+    formData.append('employee_name', fullName);
+
+    const endPoint = `${Api.driveUploadDocumentUrl}`;
+    const { data, message } = await AuthApi.postDataToServer(
+      endPoint,
+      formData
+    );
+    if (data) {
+      setShowLoader(false);
+      setEmployeeDocument(data.data);
+      data.data &&
+        data.data.map((document) => {
+          if (document.title === 'Personal') {
+            setRowPersonalData(document.files);
+          } else if (document.title === 'Educational') {
+            setRowEducationalData(document.files);
+          } else if (document.title === 'Employment') {
+            setRowEmploymentData(document.files);
+          } else if (document.title === 'Other Documents') {
+            setRowOtherData(document.files);
+          }
+          return document;
+        });
+    }
+    if (!data) {
+      setShowLoader(false);
+      swal(message, '', 'error');
     }
   };
 
@@ -382,11 +508,10 @@ function Profile() {
               <div className="col-sm-12">
                 <div className="card">
                   <div className="card-body">
-                    <div className="d-flex align-items-start justify-content-between mb-4">
-                      
-                        <h5 className="card-title">Employment History</h5>
-                    
-                    </div>
+                    <div className="d-flex align-items-center justify-content-between">
+                      <h5 className="card-title mb-0 mt-2 ">Employment History</h5>
+                   </div> 
+                   <hr/> 
                     {companyList &&
                       companyList.map((comp) => (
                         <>
@@ -418,7 +543,84 @@ function Profile() {
             </div>
           </div>
        ) : ''}
-
+     
+       {employeeDocument && employeeDocument.length > 0 ? (
+                  <>
+                  <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <h5 className="card-title mb-0 mt-2 ">Documents</h5>
+                   </div> 
+                   <hr/> 
+                    {employeeDocument &&
+                      employeeDocument.map((document) => (
+                        <>
+                          {document.title === 'Personal' && (
+                            <div className="row">
+                              <h5 className="mb-3">Personal</h5>
+                              <CustomTable
+                                tableContainerClass="mt-2"
+                                columns={personalColumns}
+                                rows={rowPersonalData}
+                                tableClass="table-striped"
+                                showPagination={true}
+                                emptyRender={() => {
+                                  return 'No record found.';
+                                }}
+                              />
+                            </div>
+                          )}
+                          {document.title === 'Educational' && (
+                            <div className="row">
+                              <h5 className="mb-3">Educational</h5>
+                              <CustomTable
+                                tableContainerClass="mt-2"
+                                columns={educationalColumns}
+                                rows={rowEducationalData}
+                                tableClass="table-striped"
+                                showPagination={true}
+                                emptyRender={() => {
+                                  return 'No record found.';
+                                }}
+                              />
+                            </div>
+                          )}
+                          {document.title === 'Employment' && (
+                            <div className="row">
+                              <h5 className="mb-3">Previous Employment</h5>
+                              <CustomTable
+                                tableContainerClass="mt-2"
+                                columns={employmentColumns}
+                                rows={rowEmploymentData}
+                                tableClass="table-striped"
+                                showPagination={true}
+                                emptyRender={() => {
+                                  return 'No record found.';
+                                }}
+                              />
+                            </div>
+                          )}
+                          {document.title === 'Other Documents' && (
+                            <div className="row">
+                              <h5 className="mb-3">Other Documents</h5>
+                              <CustomTable
+                                tableContainerClass="mt-2"
+                                columns={otherColumns}
+                                rows={rowOtherData}
+                                tableClass="table-striped"
+                                showPagination={true}
+                                emptyRender={() => {
+                                  return 'No record found.';
+                                }}
+                              />
+                            </div>
+                          )}
+                        </>
+                      ))}
+                  </div>
+                </div>
+                  </>
+                  ) : ''}
       <ModalInput
         size="md"
         centered
@@ -513,7 +715,7 @@ function Profile() {
             <div className="float-end">
 
               <Button variant="primary" type="submit" className="ms-4">
-                Update
+                Update 
               </Button>
               <Button variant="secondary ms-4" onClick={() => onCancel()}>
                 Cancel

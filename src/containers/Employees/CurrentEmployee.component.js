@@ -57,7 +57,6 @@ function CurrentEmployee() {
     getEmployeeName();
     getPosition();
   }, [filterData]);
-
   
   const submitForm = async (formValues) => {
     setFilterData(formValues); //eslint-disable-line

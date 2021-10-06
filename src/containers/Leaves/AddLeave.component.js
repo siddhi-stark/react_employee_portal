@@ -146,11 +146,10 @@ function AddLeave(props) {
         });
         return s;
       });
-}  
+    }  
       updateJsonSchema([...updatedSchema]);
   }, [status]);
 
-  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -234,7 +233,6 @@ function AddLeave(props) {
       }
     }
   };
-
  
   const submitForm = async (formValues) => {
     if(formValues.leave_from_date){
@@ -323,7 +321,6 @@ function AddLeave(props) {
   useEffect(() => {
     getLeaveType();
   }, []);
-
   
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);

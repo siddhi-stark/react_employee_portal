@@ -443,10 +443,11 @@ function EmployeeProfile(props) {
                 {employeeDocument && employeeDocument.length > 0 ? (
                   <>
                   <div className="card">
-                  <div className="card-header">
-                    <h5>Documents</h5>
-                  </div>
                   <div className="card-body">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <h5 className="card-title mb-0 mt-2 ">Documents</h5>
+                   </div> 
+                   <hr/> 
                     {employeeDocument &&
                       employeeDocument.map((document) => (
                         <>

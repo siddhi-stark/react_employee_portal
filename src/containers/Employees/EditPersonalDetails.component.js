@@ -46,7 +46,6 @@ useEffect(() => {
   updateJsonSchema([...updatedSchema]);        
   } 
   }, []);
-
   
   const getUserRole = async() => {
     const roleId = await localStorage.getItem('role');
@@ -56,7 +55,6 @@ useEffect(() => {
   useEffect(() => {
     getUserRole();
   }, []);
-
  
   const submitForm = async (formValues) => {
     setShowLoader(true);
