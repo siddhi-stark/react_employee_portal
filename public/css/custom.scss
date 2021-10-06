@@ -2232,6 +2232,12 @@
      }
  }
  
+ .card {
+     .card-body {
+         padding: 20px;
+     }
+ }
+ 
  .table-projects {
      max-width: 100%;
      width: 100%;
@@ -4000,6 +4006,7 @@
      color: #ffffff;
      &.card {
          min-height: 140px;
+         margin-bottom: 16px !important;
      }
      h6 {
          a {
@@ -4220,7 +4227,7 @@
      }
      .table-projects {
          .card {
-             padding: 30px 20px;
+             padding: 0px;
          }
      }
      table {

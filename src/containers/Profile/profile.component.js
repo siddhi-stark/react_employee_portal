@@ -552,11 +552,12 @@ function Profile() {
                       <h5 className="card-title mb-0 mt-2 ">Documents</h5>
                    </div> 
                    <hr/> 
+                            <div className="row">
                     {employeeDocument &&
                       employeeDocument.map((document) => (
                         <>
                           {document.title === 'Personal' && (
-                            <div className="row">
+                            <div className="col-md-4">
                               <h5 className="mb-3">Personal</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
@@ -571,7 +572,7 @@ function Profile() {
                             </div>
                           )}
                           {document.title === 'Educational' && (
-                            <div className="row">
+                            <div className="col-md-4">
                               <h5 className="mb-3">Educational</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
@@ -586,7 +587,7 @@ function Profile() {
                             </div>
                           )}
                           {document.title === 'Employment' && (
-                            <div className="row">
+                            <div className="col-md-4">
                               <h5 className="mb-3">Previous Employment</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
@@ -601,7 +602,7 @@ function Profile() {
                             </div>
                           )}
                           {document.title === 'Other Documents' && (
-                            <div className="row">
+                            <div className="col-md-4">
                               <h5 className="mb-3">Other Documents</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
@@ -619,6 +620,7 @@ function Profile() {
                       ))}
                   </div>
                 </div>
+                            </div>
                   </>
                   ) : ''}
       <ModalInput

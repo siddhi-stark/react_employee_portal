@@ -13,7 +13,7 @@ import Api from '../../helper/api';
 import Loader from '../../components/Loader/index';
 
 function CandidateListing() {
-	// Declare variable
+
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
 	const [limit, setLimit] = useState(10);
@@ -76,8 +76,7 @@ function CandidateListing() {
 			</>
 		);
 	};
-
-	// Declare columns
+	
 	const columns = [
 		{
 			id: 'name',
@@ -122,7 +121,6 @@ function CandidateListing() {
 		},
 	];
 
-	// Declare methods
 	const getRowData = async (pageNo = 1) => {
 		setShowLoader(true);
 		const page = pageNo || currentPage;
@@ -158,8 +156,7 @@ function CandidateListing() {
 	useEffect(() => {
 		getRowData(1);
 	}, [filterData]);
-  
-  // Submit Form
+
   const submitForm = async (formValues) => {
     setFilterData(formValues);
   };

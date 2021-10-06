@@ -13802,7 +13802,7 @@ p:empty {
   min-height: 241px;
 }
 .weekly-status-box .card-body {
-  padding: 30px;
+  padding: 20px;
 }
 .weekly-status-box .card-title {
   border-bottom: 1px solid #E3E3E3;
@@ -14132,13 +14132,19 @@ p:empty {
   max-width: 200px;
 }
 
+.card .card-body {
+  padding: 20px;
+}
+
 .table-projects {
   max-width: 100%;
   width: 100%;
 }
 .table-projects .card {
-  padding: 30px;
   display: block;
+}
+.table-projects .card-body {
+  padding: 20px;
 }
 .table-projects .form-control {
   min-height: 40px;
@@ -15772,6 +15778,7 @@ table tbody tr td a:hover {
 }
 .dark-blue-bg.card {
   min-height: 140px;
+  margin-bottom: 16px !important;
 }
 .dark-blue-bg h6 a, .dark-blue-bg .h6 a {
   color: #fff;
@@ -15966,7 +15973,7 @@ table tbody tr td a:hover {
   }
 
   .table-projects .card {
-    padding: 30px 20px;
+    padding: 0px;
   }
 
   table thead th {

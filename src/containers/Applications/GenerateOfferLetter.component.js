@@ -13,7 +13,6 @@ import customFunctions from '../../helper/customFunctions';
 
 function GenerateOfferLetter() {
   const history = useHistory();
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
@@ -62,7 +61,6 @@ return;
     });
   }, []);
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -160,7 +158,6 @@ return;
     });
   };
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');

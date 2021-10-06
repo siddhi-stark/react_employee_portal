@@ -392,7 +392,7 @@ function Dashboard() {
         <Row>
           <Col xl={8} id="main-content">
             <Jumbotron className="welcome-box">
-              <Row className="align-items-center">
+              <Row className="align-items-center w-100">
                 <Col md={5}>
                   <div className="welcome-text">
                     <h1>
@@ -800,7 +800,7 @@ function Dashboard() {
               </>
               ) : ''}
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
-              <div className="mt-4">
+              <div className="mt-0">
                 <EmployeeListComponent />
               </div>
             </UserRestrictions>

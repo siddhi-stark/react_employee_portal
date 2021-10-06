@@ -663,7 +663,7 @@ function ToDoList(props) {
       )}
       <Loader showLoader={loader} needFullPage={false} />
       <section className="content-area">
-        <div className="mt-5">
+        <div className="0">
           <UserRestrictions permittedUsers={[2, 3, 4, 5,6]} roleId={userRole}>
             <Card>
               <Card.Body>

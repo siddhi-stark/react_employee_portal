@@ -10,14 +10,14 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
 function BasicInformation(props) {
-  // Variable declarations
+ 
   const [defaultValues, updateDefaultValues] = useState({}); 
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [appicantId, setAppicantId] = useState('');
   const [isShowLoader,setShowLoader] = useState(false);
-  // Get user role
+ 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -57,7 +57,6 @@ function BasicInformation(props) {
     }
   }, [currentUser]);
 
-  // Get data for form
   const getData = async (technology, id) => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
@@ -96,7 +95,6 @@ function BasicInformation(props) {
     }
   };
 
-  // Submit Form
   const submitForm = async (formValues) => {
 
     setShowLoader(true);
@@ -149,7 +147,6 @@ function BasicInformation(props) {
 
     const dpOptions = [];
     await data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
@@ -157,7 +154,6 @@ function BasicInformation(props) {
     options.applied_for = dpOptions;
     const allOptions = options;
     await updateOptions({ ...allOptions });
-    // await getData();
   };
 
   const getTechnology = async () => {
@@ -165,7 +161,6 @@ function BasicInformation(props) {
       `${Api.employeeStackUrl}?type=all`
     );
     if (!data) {
-      // show error
       return;
     }
 
