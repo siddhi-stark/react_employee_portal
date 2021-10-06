@@ -6,12 +6,12 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 function SelectedCandidate() {
-  // Variable declarations
+  
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
 
-  // Get user role
+  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -21,14 +21,13 @@ function SelectedCandidate() {
     getUserRole();
   }, []);
 
-  // Submit Form
+
   const submitForm = async (formValues) => {
     const { data } = await AuthApi.postDataToServer(
       Api.employeeUrl,
       formValues
     );
     if (!data) {
-      // show error
       return; // eslint-disable-line
     }
   };
@@ -42,7 +41,6 @@ function SelectedCandidate() {
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.title, value: op.id });
       return op;
     });

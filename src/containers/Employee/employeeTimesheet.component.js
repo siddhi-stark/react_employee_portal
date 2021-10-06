@@ -306,7 +306,6 @@ function EmployeeTimesheet() {
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.full_name, value: op.id });
       return op;
     });

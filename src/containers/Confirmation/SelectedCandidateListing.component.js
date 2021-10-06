@@ -47,7 +47,6 @@ function SelectedCandidateListing() {
     );
   };
 
-  // Declare columns
   const columns = [
     {
       id: 'index',
@@ -77,15 +76,12 @@ function SelectedCandidateListing() {
     },
   ];
 
-  // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const limit = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [itemsPerPage, setItemsPerPage] = useState(5);
-
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
@@ -94,7 +90,6 @@ function SelectedCandidateListing() {
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
-  // Declare methods
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -133,7 +128,6 @@ function SelectedCandidateListing() {
     getRowData(1);
   }, [filterData]);
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -143,7 +137,7 @@ function SelectedCandidateListing() {
     getUserRole();
   }, []);
 
-  // Submit Form
+
   const submitForm = async (formValues) => {
 
     setFilterData(formValues);
@@ -152,13 +146,11 @@ function SelectedCandidateListing() {
   const getTechnologyStack = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.title, value: op.id });
       return op;
     });
@@ -176,13 +168,11 @@ function SelectedCandidateListing() {
   const getPosition = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
     if (!data) {
-      // show error
       return; // eslint-disable-line
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.title, value: op.id });
       return op;
     });

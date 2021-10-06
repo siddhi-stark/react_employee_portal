@@ -1,34 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Image, Row } from 'react-bootstrap';
-// import SimpleReactValidator from 'simple-react-validator';
-// import swal from 'sweetalert';
-// import { TextInput } from '../../components/FormInputs';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function BirthdayWishes() {
-	// const validator = new SimpleReactValidator({ autoForceUpdate: this });
-	// const [message, setMessage] = useState('');
-	// const ID = customFunctions.getLocalStorage('employeeId');
 	const EmpId = customFunctions.getLocalStorage('EmpID');
 	const [birthdayWishes, setBirthdayWishes] = useState([]);
-	// const isBirthday = customFunctions.getLocalStorage('birthday');
 	const id = customFunctions.getLocalStorage('greetingId');
 	const GreetingId = customFunctions.getLocalStorage('gId');
 	const [greetingMsg, setGreetingMessage] = useState('');
-	// const [showMessage, setShowMessage] = useState(false);
 	const [wisherProfile, setWisherToProfile] = useState('');
 	const [bannerImage, setBannerImage] = useState('');
-	// const [showWish, setShowWish] = useState('');
-	// const [employeeMessage, setEmployeeMessage] = useState('');
 	const userID = customFunctions.getLocalStorage('userId');
-	// const showComment = customFunctions.getLocalStorage('comment-allow');
 	const EmployeeName = customFunctions.getLocalStorage('EmpName');
 	const showAnniversary = customFunctions.getLocalStorage('isAnniversary');
 	const showBirthday = customFunctions.getLocalStorage('isBirthday');
-	// const history = useHistory();
 
 	const getBirthdayWishes = async (GrtId) => {
 		const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}`;
@@ -69,7 +57,6 @@ function BirthdayWishes() {
 	useEffect(() => {
 		document.addEventListener('BirthdayUpdate', () => {
 			const GreetingID = customFunctions.getLocalStorage('gId');
-			// const EmpID = customFunctions.getLocalStorage('EmpID');
 			getBirthdayWishes(GreetingID);
 			getGreetingById(GreetingID);
 		});
@@ -82,34 +69,6 @@ function BirthdayWishes() {
 			getGreetingById(id);
 		}
 	}, []);
-
-	// const addMeaage = async () => {
-	// 	const postData = {
-	// 		wish_to: Number(ID),
-	// 		message,
-	// 		greeting: GreetingId,
-	// 	};
-
-	// 	const endPoint = Api.greetingWishesUrl;
-	// 	const { data } = await AuthApi.postDataToServer(endPoint, postData);
-	// 	if (data) {
-	// 		swal(data.message[0], '', 'success');
-	// 		setMessage('');
-	// 		getBirthdayWishes(GreetingId);
-	// 		// setShowMessage(false);
-	// 		setEmployeeMessage('');
-	// 	}
-	// };
-
-	// const onSubmit = (e) => {
-	// 	e.preventDefault();
-	// 	if (validator.allValid()) {
-	// 		addMeaage();
-	// 	} else {
-	// 		validator.showMessages();
-	// 	}
-	// };
-	// validator.purgeFields();
 
 	return (
 		<>

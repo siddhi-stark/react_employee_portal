@@ -86,7 +86,6 @@ function Greetings() {
 		},
 	];
 
-	// Declare variable
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
 	const [limit, setLimit] = useState(10);
@@ -104,7 +103,6 @@ function Greetings() {
     }
   };
 
-	// Declare methods
 	const getRowData = async (pageNo = 1,empData) => {
 		setShowLoader(true);
 		const page = pageNo || currentPage;
