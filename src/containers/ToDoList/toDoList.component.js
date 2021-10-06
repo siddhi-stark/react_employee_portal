@@ -670,18 +670,17 @@ function ToDoList(props) {
                <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 "> To Do</h5>
                  <div className="d-flex align-items-center justify-content-end">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      type="Button"
+                    <a
+                      href='#'
                       onClick={() => {
                         customFunctions.removeLocalStorage('taskid');
                         setModalShow(true);
                         forceUpdate(count + 1);
                       }}
+                      className="btn-link"
                     >
                       Add Task 
-                    </Button>
+                    </a>
                   </div>
               </div>  
               <hr/>

@@ -15728,7 +15728,7 @@ table tbody tr td a:hover {
 }
 
 .birthday-wish-section .birth-wish-profile {
-  max-width: 73px;
+  max-width: 45px;
   border-radius: 100%;
 }
 .birthday-wish-section img {
@@ -15768,8 +15768,9 @@ table tbody tr td a:hover {
 }
 
 .birthday-wish-section .birthtitle h4, .birthday-wish-section .birthtitle .h4 {
-  font-size: 14px;
+  font-size: 12px;
   margin-bottom: 0;
+  line-height: 1.5;
 }
 
 .dark-blue-bg {
@@ -15811,6 +15812,11 @@ table tbody tr td a:hover {
   color: #707070;
 }
 
+@media (min-width: 1920px) {
+  .birthday-wish-section-row .col {
+    min-width: 33.33%;
+  }
+}
 @media (min-width: 992px) {
   .main-sidebar {
     position: relative;
@@ -15843,6 +15849,15 @@ table tbody tr td a:hover {
 @media (max-width: 1860px) {
   .holidays-applied .row [class*=col] {
     /*width: 100%;*/
+  }
+
+  .birthday-wish-section-row .card .card-body {
+    padding: 15px;
+  }
+}
+@media (max-width: 1550px) {
+  .birthday-wish-section-row .col {
+    min-width: 50%;
   }
 }
 @media (max-width: 1440px) {
