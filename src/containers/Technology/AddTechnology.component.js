@@ -10,15 +10,14 @@ import Api from '../../helper/api';
 import Loader from '../../components/Loader/index';
 
 function AddTechnology(props) {
-	// Variable declarations
+	
 	const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
 	const [options, updateOptions] = useState({}); // eslint-disable-line
 	const [currentUser, updateCurrentUser] = useState(0); // eslint-disable-line
 	const [count, forceUpdate] = useState(0); // eslint-disable-line
 	const [isShowLoader,setShowLoader] = useState(false);
 	const technologyId = props;
-
-	// Submit Form
+	
 	const submitForm = async (formValues) => {
 		setShowLoader(true);
 		const postData = {
@@ -38,7 +37,7 @@ function AddTechnology(props) {
 			setShowLoader(false);
 			swal(message, '', 'error');
 		}
-		// show error
+		
 		swal(data && data.message[0], '', 'success').then((result) => {
 			if (result) {
 				setShowLoader(false);
@@ -51,7 +50,6 @@ function AddTechnology(props) {
 		});
 	};
 
-	// Get data for form
 	const getData = async (id) => {
 		if (!id.technologyId) return;
 		const { data } = await AuthApi.getDataFromServer(
@@ -63,7 +61,6 @@ function AddTechnology(props) {
 		updateDefaultValues({ name: data.data.name });
 	};
 
-	// Call get data method on load
 	useEffect(() => {
 		if(technologyId)
 		{

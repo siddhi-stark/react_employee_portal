@@ -49,10 +49,7 @@ function Dashboard() {
   const [, setCount] = useState('');  // eslint-disable-line
   const [newBirthdayData, setNewBirthdayData] = useState([]);
 
-  // let isShowBdayHeading = false;
-
   const d = new Date();
-  // const ToDayDate = d.getDate();
   const day = d.getDate(); // eslint-disable-line
   const m_names = [
     'January',
@@ -72,14 +69,6 @@ function Dashboard() {
   const n = m_names[d.getMonth()];
 
   const DayMonth = day + ' ' + n; // eslint-disable-line
-
-  // EmployeeID &&
-  //   EmployeeID.map((empl) => {
-  //     if (Number(empl.dob) === Number(day)) {
-  //       isShowBdayHeading = true;
-  //     }
-  //     return empl;
-  //   });
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -188,7 +177,6 @@ function Dashboard() {
         // const newDate = JoiningDate.getFullYear() + 1;
         // const newJoiningDate = `${newDate}-${dayMonth}`;
         if(dayMonth === todayDayMonth && joiningDateYear < currentYear) {
-          console.log('inside if condition');
           avsrArr.push(anvs);
         }
 
@@ -343,20 +331,14 @@ function Dashboard() {
   };
 
   const postGreetingMessage = async (id,GreetingId, type='') => {
-    console.log('id',id);
-    console.log('GreetingId',GreetingId);
-    console.log('type',type);
-    console.log('newBirthdayData && newBirthdayData.filter(i => i.id === id)',newBirthdayData && newBirthdayData.filter(i => i.id === id));
     const newGreetData = newBirthdayData && newBirthdayData.filter(i => i.id === id);
     const newData = newBirthdayData && newBirthdayData[0] && newBirthdayData[0].employee_data && newBirthdayData[0].employee_data.filter(i => i.id === id);
-    console.log('newData',newData); 
     const postData = {
       wish_to: Number(id),
       greeting: GreetingId,
       message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
 
-    console.log('postData',postData);
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
@@ -393,9 +375,6 @@ function Dashboard() {
         setAppriciation(appreciationData);
       }
       setCount('');
-      // getBirthdayWishes(GreetingId);
-      // setShowMessage(false);
-      // setEmployeeMessage('');
     }
   };
 

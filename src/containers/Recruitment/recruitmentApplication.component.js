@@ -203,7 +203,6 @@ function RecruitmentApplicationComponent() {
     );
   };
 
-  // Declare columns
   const columns = [
     {
       id: 'offered_ctc',
@@ -289,7 +288,7 @@ function RecruitmentApplicationComponent() {
     return depart;
   };
 
-  // Declare methods
+  
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -335,9 +334,7 @@ function RecruitmentApplicationComponent() {
     setTitle('Recruitment');
   }, [filterData]);
 
-  // filter Form
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     getHrName(roleId);
@@ -348,7 +345,7 @@ function RecruitmentApplicationComponent() {
     getUserRole();
   }, []);
 
-  // Submit Form
+
   const submitForm = async (formValue) => {
     let payload = {};
     const formValues = (typeof formValue === 'object' && Object.keys(formValue).length) ? formValue : allData;
@@ -390,13 +387,11 @@ function RecruitmentApplicationComponent() {
       `${Api.designationUrl}?type=all`
     );
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
@@ -418,7 +413,6 @@ function RecruitmentApplicationComponent() {
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: (Number(role) === 1 ) ? op.full_name : op.employee_name, value:  (Number(role) === 1 ) ? op.id : op.employee_id });
       return op;
     });
@@ -432,10 +426,8 @@ function RecruitmentApplicationComponent() {
   };
 
   const getTechnology = async () => {
-    // const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
     if (!data) {
-      // show error
       return;
     }
 

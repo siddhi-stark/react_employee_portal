@@ -18,7 +18,7 @@ function MyInterviews() {
   const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
   
-  // Declare variable
+  
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
@@ -26,7 +26,7 @@ function MyInterviews() {
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
 
-  // Variable declarations
+  
   const [filterData, setFilterData] = useState({});
 
   const formSchema = [...FormSections];
@@ -97,7 +97,7 @@ function MyInterviews() {
     );
   };
 
-  // Declare columns
+ 
   const columns = [
     {
       id: 'offered_ctc',
@@ -178,7 +178,7 @@ function MyInterviews() {
     },
   ];
 
-  // Declare methods
+ 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -235,8 +235,7 @@ function MyInterviews() {
     setTitle('Recruitment');
   }, [filterData]);
 
-  // Get user role Filter search
-  // Submit Form
+
   const submitForm = async (formValues) => {
     setFilterData(formValues);
   };
@@ -298,7 +297,6 @@ function MyInterviews() {
                   getRowData(pageNo);
                 },
               }}
-              // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
               emptyRender={() => {
                 return 'No record found.';
               }}

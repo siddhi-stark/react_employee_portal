@@ -114,7 +114,7 @@ function EmployeeTeamLeaves() {
     }
   ];
 
-  // Declare variable
+ 
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -178,7 +178,7 @@ function EmployeeTeamLeaves() {
     setTitle('Leaves');
   }, [filterData]);
   
-    // Submit Form
+   
   const submitForm = async (formValues) => {
     setFilterData(formValues);
   };

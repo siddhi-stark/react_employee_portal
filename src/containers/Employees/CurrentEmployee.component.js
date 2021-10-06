@@ -58,7 +58,7 @@ function CurrentEmployee() {
     getPosition();
   }, [filterData]);
 
-  // Submit Form
+  
   const submitForm = async (formValues) => {
     setFilterData(formValues); //eslint-disable-line
   };
@@ -121,7 +121,6 @@ function CurrentEmployee() {
                 options={options}
                 callbacks={{}}
                 defaultFormValues={defaultValues}
-                // currentUser={currentUser}
                 submitBtnText="Apply"
                 showResetBtn={true}
                 showBtnClass={true}

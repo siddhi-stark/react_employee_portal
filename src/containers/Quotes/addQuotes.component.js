@@ -37,7 +37,6 @@ function AddQuotes(props) {
     getUserRole();
   }, []);
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
 
@@ -55,7 +54,7 @@ function AddQuotes(props) {
       setShowLoader(false);
       swal(message, '', 'error');
     }
-    // show error
+    
     setShowLoader(false);
     swal(data && data.message[0], '', 'success').then((result) => {
       if (result) {
@@ -63,20 +62,17 @@ function AddQuotes(props) {
         history.push('/quotes');
       }
     });
-    // Perform success actions
+    
   };
 
-  // Get data for form
   const getData = async (id) => {
     const { data } = await AuthApi.getDataFromServer(`${Api.quotesUrl}${id}/`);
     if (!data) {
-      // show error
       return;
     }
     updateDefaultValues({content: data.data.content});
   };
 
-  // Call get data method on load
   useEffect(() => {
     const id = props.match.params.qid;
     if(id){
@@ -110,7 +106,6 @@ function AddQuotes(props) {
               onFormSubmit={(formValues) => {
                 submitForm(formValues);
               }}
-              // options={options}
               callbacks={{}}
               defaultFormValues={defaultValues}
               currentUser={currentUser}

@@ -70,7 +70,6 @@ function EditEmployee(props) {
     },
   ];
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -79,8 +78,7 @@ function EditEmployee(props) {
   useEffect(() => {
     getUserRole();
   }, []);
-
-  // Submit Form
+  
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = props.match.params.employeeId;
@@ -104,8 +102,7 @@ function EditEmployee(props) {
       });
     }
   };
-
-  // Declare methods table
+  
   const getRowData = async (pageNo = 1) => {
     const ID = customFunctions.getLocalStorage('userId');
     const page = pageNo || currentPage;

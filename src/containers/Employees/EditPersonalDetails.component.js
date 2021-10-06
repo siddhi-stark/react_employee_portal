@@ -47,7 +47,7 @@ useEffect(() => {
   } 
   }, []);
 
-  // Get user role
+  
   const getUserRole = async() => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -57,7 +57,7 @@ useEffect(() => {
     getUserRole();
   }, []);
 
-  // Submit Form
+ 
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('id');
@@ -84,9 +84,8 @@ useEffect(() => {
      props.handleModalCLose(false);
      props.onPersonalDetailChanges();
     }
-  };
-    
-  // Get data for form
+  };    
+
   const getData = async () => {
     setShowLoader(true);
 
@@ -115,7 +114,6 @@ useEffect(() => {
   const getDesignation = async () => {
   const {data} = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
   if(!data) {
-    // show error
     return;
   }
   

@@ -74,7 +74,6 @@ function TemporaryAccount(props) {
   useEffect(() => {
     if(trigger) {
       getCompletionData();
-      // window.location.reload();
     }
   }, [trigger]);
 

@@ -189,7 +189,6 @@ function EmployeeTimesheet() {
     },
   ];
 
-  // Declare methods
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -281,7 +280,6 @@ function EmployeeTimesheet() {
     }
   }, [filterData]);
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -291,8 +289,7 @@ function EmployeeTimesheet() {
     getUserRole();
     setTitle('Employee Timesheet');
   }, []);
-
-  // Submit Form
+  
   const submitForm = async (formValues) => {
     if (!formValues) return;
     setDataShow(true);

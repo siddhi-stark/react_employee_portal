@@ -18,7 +18,7 @@ function AddNote(props) {
   const [leaveId, setLeaveId] = useState(null);
   const [statusId, setStatusId] = useState(null);
 
-  // Get user role
+ 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -28,7 +28,7 @@ function AddNote(props) {
     getUserRole();
   }, []);
 
-  // Submit Form
+  
   const submitForm = async (formValues) => {
     const reasonLabel = (statusId === 2) ? 'approve' : 'decline';
     const postData = {

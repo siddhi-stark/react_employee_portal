@@ -128,9 +128,6 @@ function TeamReport() {
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,
           report: (
-            // <a href={`/daily-report/${dt}/${report.user_id}`}>
-            //   <span className="text-info">View Report</span>
-            // </a>
              <a href="javascript.void(0)" onClick={(e)=>{
               e.preventDefault();
               e.stopPropagation();

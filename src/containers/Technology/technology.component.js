@@ -14,7 +14,7 @@ import AddTechnology from './AddTechnology.component';
 import Loader from '../../components/Loader/index';
 
 function Technology() {
-  // Declare variable
+  
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +22,6 @@ function Technology() {
   const [technologyId, setTechnologyId] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [isShowLoader,setShowLoader] = useState(false);
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
@@ -75,7 +74,6 @@ function Technology() {
     },
   ];
 
-  // Declare methods
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -116,7 +114,7 @@ function Technology() {
     setTitle('Technology');
   }, [filterData]);
 
-  // Get user role
+  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -126,7 +124,7 @@ function Technology() {
     getUserRole();
   }, []);
 
-  // Submit Form
+ 
   const submitFilterForm = async (formValues) => {
     setFilterData(formValues);
   };

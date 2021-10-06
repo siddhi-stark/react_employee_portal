@@ -150,7 +150,7 @@ function AddLeave(props) {
       updateJsonSchema([...updatedSchema]);
   }, [status]);
 
-  // Get user role
+  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -235,7 +235,7 @@ function AddLeave(props) {
     }
   };
 
-  // Submit Form
+ 
   const submitForm = async (formValues) => {
     if(formValues.leave_from_date){
       setStartDate(formValues.leave_from_date);
@@ -247,8 +247,7 @@ function AddLeave(props) {
     } 
     setFormValuesData(formValues);
   };
-
-  // Get data for form
+  
   const getData = async () => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
@@ -297,8 +296,7 @@ function AddLeave(props) {
       },
     });
   };
-
-  // Call get data method on load
+  
   useEffect(() => {
     if (leaveId) getData();
   }, [status]);
@@ -311,7 +309,7 @@ function AddLeave(props) {
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
+      
       dpOptions.push({ label: op.title, value: op.id });
       return op;
     });
@@ -326,7 +324,7 @@ function AddLeave(props) {
     getLeaveType();
   }, []);
 
-  // Declare methods
+  
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const userId = customFunctions.getLocalStorage('userId');

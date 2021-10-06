@@ -37,7 +37,7 @@ function TeamAddLeave(props) {
     setTitle(!viewOptions ? 'Edit Leaves' : 'View Leaves');
   }, []);
 
-  // Submit Form
+ 
   const submitForm = async (value) => { // eslint-disable-line
     const reasonLabel = (Number(value) === 2) ? 'accept': 'declined'; 
     const postData = {
@@ -87,7 +87,7 @@ function TeamAddLeave(props) {
     });
   };
 
-  // Get data for form
+  
   const getData = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.leavesUrl}${leaveId}/`
@@ -116,7 +116,7 @@ function TeamAddLeave(props) {
     });
   };
 
-  // Call get data method on load
+  
   useEffect(() => {
     if (leaveId) getData();
   }, []);

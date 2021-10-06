@@ -244,11 +244,8 @@ function PreviousEmployement(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        // updateDefaultValues({});
         swal.close();
       });
-      // show error
-      // return;
     } else {
       setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
@@ -284,7 +281,6 @@ function PreviousEmployement(props) {
     const dpOptions = [];
     data && data.data && data.data.applicant_history && 
       data.data.applicant_history.map((op) => {
-        // Change appropriate keys
           dpOptions.push({ label: op.company_name, value: op.company_name });
         return op;
       });

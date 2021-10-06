@@ -12,10 +12,7 @@ import Api from '../../helper/api';
 import Loader from '../../components/Loader/index';
 
 function RecruitmentFileComponent() {
-  // const title = 'Batch Upload';
-// Candidate Name  Contact Number  Email id  Experience (Year)  Relevant Experience  Current CTC  Expected CTC  Notice period  Reason for job change  Locality  Resume Source  Resume  Gender  Fresher
-// Anjali abd   9877367890  anjali1@test.com  3  2  3  5  30  better growth  Pune  Naukri  https://employeeportal.reviewtestlink.com  Female  Yes
-
+ 
   const csvdata = [
     { Candidate_Name: 'Lata Patil',  Mobile_No: '9871234587', Email: 'lata12@gmail.com', Total_Exp: '3' , Relevant_Exp: '2', Current_CTC: '2', Expected_CTC: '3', Notice_Period: '3', Reason_Job_Change: 'Better Opportunity', Locality: 'Pune', Resume_Source: 'Naukri', Resume: 'https://employeeportal.reviewtestlink.com',Gender:'Female', Fresher : 'Yes' },
   ];
@@ -45,25 +42,17 @@ function RecruitmentFileComponent() {
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Bulk Upload' }];
 
-  // Variable declarations Filter form
+ 
   const [defaultFilterValues, updateDefaultFilterValues] = useState({}); // eslint-disable-line
   const [filterOptions, updateFilterOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [title,setTitle] = useState('');
   const [isShowLoader,setShowLoader] = useState(false);
   const history = useHistory();
-  // const [show, setShow] = useState(false);
-
-  // Declare variable table
   const [filterData, setFilterData] = useState({}); //eslint-disable-line
-  // Form
-
-  // Variable declarations
-  // const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [fileValue, setFileValue] = useState();
-
-  // Get user role
+  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -77,7 +66,6 @@ function RecruitmentFileComponent() {
   const getTechnology = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
     if (!data) {
-      // show error
       return;
     }
 
@@ -94,7 +82,6 @@ function RecruitmentFileComponent() {
     getTechnology();
   }, []); 
 
-  // Submit Form
   const submitForm = async (formValues) => {
     
     setShowLoader(true);
@@ -133,7 +120,6 @@ function RecruitmentFileComponent() {
   const getPosition = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
     if (!data) {
-      // show error
       return;
     }
 

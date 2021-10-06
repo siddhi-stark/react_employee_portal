@@ -700,7 +700,6 @@ function ToDoList(props) {
                     }}
                     dropdownContainerClass="mb-3"
                     selectedRowItems={selectedId}
-                    // selectedRowItems={[25763, 25250]}
                     onSelectRowsIndexes={async (rowIndex) => {
                       const arr = [...selectedId,...rowIndex];
                       const arrNew = [];

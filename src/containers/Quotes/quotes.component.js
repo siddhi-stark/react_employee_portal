@@ -22,12 +22,9 @@ function Quotes() {
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
-  // const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isShowLoader, setShowLoader] = useState(false);
-
-  // const [quotesId, setQuotesId] = useState('');
   const [filterData, setFilterData] = useState({}); // eslint-disable-line
 
   const limit = 10;
