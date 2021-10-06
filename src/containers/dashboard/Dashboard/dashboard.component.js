@@ -179,13 +179,22 @@ function Dashboard() {
         const avsrArr = [];
         await data.data && data.data.length > 0 && data.data.map((anvs) => {
         const dayMonth = anvs.date_of_joined && anvs.date_of_joined.substring(5, 11);
-        const JoiningDate = new Date(anvs.date_of_joined);
-        const newDate = JoiningDate.getFullYear() + 1;
-        const newJoiningDate = `${newDate}-${dayMonth}`;
         const todayDate = new Date();
-        if(newJoiningDate === customFunctions.getDate(todayDate)){
+        const currentYear = todayDate.getFullYear();
+        const todayFormattedDate = customFunctions.getDate(todayDate);
+        const todayDayMonth = todayFormattedDate.substring(5,11);
+        const joiningDateYear = new Date(anvs.date_of_joined).getFullYear();
+        // const JoiningDate = new Date(anvs.date_of_joined);
+        // const newDate = JoiningDate.getFullYear() + 1;
+        // const newJoiningDate = `${newDate}-${dayMonth}`;
+        if(dayMonth === todayDayMonth && joiningDateYear < currentYear) {
+          console.log('inside if condition');
           avsrArr.push(anvs);
         }
+
+        // if(newJoiningDate === customFunctions.getDate(todayDate)){
+        //   avsrArr.push(anvs);
+        // }
         setAnniversary(avsrArr);
         return anvs;
       });
@@ -334,14 +343,20 @@ function Dashboard() {
   };
 
   const postGreetingMessage = async (id,GreetingId, type='') => {
+    console.log('id',id);
+    console.log('GreetingId',GreetingId);
+    console.log('type',type);
+    console.log('newBirthdayData && newBirthdayData.filter(i => i.id === id)',newBirthdayData && newBirthdayData.filter(i => i.id === id));
     const newGreetData = newBirthdayData && newBirthdayData.filter(i => i.id === id);
     const newData = newBirthdayData && newBirthdayData[0] && newBirthdayData[0].employee_data && newBirthdayData[0].employee_data.filter(i => i.id === id);
+    console.log('newData',newData); 
     const postData = {
       wish_to: Number(id),
       greeting: GreetingId,
       message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
 
+    console.log('postData',postData);
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
@@ -892,6 +907,7 @@ function Dashboard() {
             >
               <div className="table-projects time-sheet-table">
                 <div className="card">
+                <div className="card-body">
                   <div className="table-title">
                     <h5 className="card-title">Timesheet</h5>
                     <Image
@@ -915,13 +931,15 @@ function Dashboard() {
                           getTimeSheetList(pageNo);
                         },
                       }}
-                      tableClass="table-striped"
+                      tableClass="table-striped mb-0"
                       dropdownContainerClass="mb-3"
                       emptyRender={() => (
                         <p className="text-center mb-0">No record found</p>
                       )}
                     />
                   </div>
+
+                </div>
                 </div>
               </div>
             </UserRestrictions>

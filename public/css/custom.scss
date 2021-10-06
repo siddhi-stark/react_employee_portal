@@ -1894,7 +1894,8 @@
  .weekly-status-box {
      min-height: 241px;
      .card-body {
-         padding: 30px;
+         //  padding: 30px;
+         padding: 20px;
      }
      .card-title {
          border-bottom: 1px solid $gray;
@@ -2235,8 +2236,11 @@
      max-width: 100%;
      width: 100%;
      .card {
-         padding: 30px;
+         //  padding: 20px;
          display: block;
+     }
+     .card-body {
+         padding: 20px;
      }
      .form-control {
          min-height: 40px;
