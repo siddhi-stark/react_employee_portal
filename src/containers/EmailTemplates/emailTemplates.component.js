@@ -82,7 +82,6 @@ function EmailTemplatesComponent() {
     });
     setEmailContent([...data]);
   };
-
  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -99,7 +98,6 @@ function EmailTemplatesComponent() {
     if (templateId) getEmailTemplateData();
   }, [templateId]);
 
-  
   const submitForm = async (formValues) => {
     setShowLoader(true);
     emailContent &&

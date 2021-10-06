@@ -41,7 +41,6 @@ function RecruitmentFileComponent() {
   };
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Bulk Upload' }];
-
  
   const [defaultFilterValues, updateDefaultFilterValues] = useState({}); // eslint-disable-line
   const [filterOptions, updateFilterOptions] = useState({}); //eslint-disable-line

@@ -34,7 +34,6 @@ function AddHistory(props) {
   useEffect(() => {
     getUserRole();
   }, []);
-
   
   const submitForm = async (formValues) => {
     setShowLoader(true);

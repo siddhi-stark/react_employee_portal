@@ -31,7 +31,6 @@ function AddNote(props) {
     getUserRole();
   }, []);
 
-
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const postData = {

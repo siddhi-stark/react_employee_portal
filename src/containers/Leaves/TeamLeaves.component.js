@@ -187,7 +187,6 @@ function TeamLeaves() {
     getRowData(1);
     setTitle('Leaves');
   }, [filterData]);
-
    
   const submitForm = async (formValues) => {
     setFilterData(formValues);

@@ -287,7 +287,6 @@ function RecruitmentApplicationComponent() {
     });
     return depart;
   };
-
   
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
@@ -334,7 +333,6 @@ function RecruitmentApplicationComponent() {
     setTitle('Recruitment');
   }, [filterData]);
 
-
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     getHrName(roleId);
@@ -344,7 +342,6 @@ function RecruitmentApplicationComponent() {
   useEffect(() => {
     getUserRole();
   }, []);
-
 
   const submitForm = async (formValue) => {
     let payload = {};

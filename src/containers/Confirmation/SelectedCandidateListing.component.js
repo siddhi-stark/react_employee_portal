@@ -137,7 +137,6 @@ function SelectedCandidateListing() {
     getUserRole();
   }, []);
 
-
   const submitForm = async (formValues) => {
 
     setFilterData(formValues);

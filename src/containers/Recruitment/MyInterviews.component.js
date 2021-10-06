@@ -17,16 +17,12 @@ function MyInterviews() {
 	const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
-  
-  
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-
-  
   const [filterData, setFilterData] = useState({});
 
   const formSchema = [...FormSections];
@@ -96,7 +92,6 @@ function MyInterviews() {
       </>
     );
   };
-
  
   const columns = [
     {
@@ -177,7 +172,6 @@ function MyInterviews() {
       render: handleActionCallback,
     },
   ];
-
  
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
@@ -234,7 +228,6 @@ function MyInterviews() {
     getRowData(1);
     setTitle('Recruitment');
   }, [filterData]);
-
 
   const submitForm = async (formValues) => {
     setFilterData(formValues);

@@ -113,7 +113,6 @@ function Technology() {
     getRowData(1);
     setTitle('Technology');
   }, [filterData]);
-
   
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
@@ -123,7 +122,6 @@ function Technology() {
   useEffect(() => {
     getUserRole();
   }, []);
-
  
   const submitFilterForm = async (formValues) => {
     setFilterData(formValues);

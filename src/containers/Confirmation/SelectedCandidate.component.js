@@ -11,7 +11,6 @@ function SelectedCandidate() {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
 
-  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -20,7 +19,6 @@ function SelectedCandidate() {
   useEffect(() => {
     getUserRole();
   }, []);
-
 
   const submitForm = async (formValues) => {
     const { data } = await AuthApi.postDataToServer(
