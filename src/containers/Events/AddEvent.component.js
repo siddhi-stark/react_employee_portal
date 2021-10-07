@@ -21,8 +21,9 @@ function AddEvent(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const [title, setTitle] = useState('Add Event');
   const history = useHistory();
-  const DesignationID = props.match.params.id; // eslint-disable-line
-  const items = [{ to: '/', label: 'Home' }, { label: DesignationID ? 'Edit Event' : 'Add Event' }]; 
+  const Event = props;
+  const EditEventId = Event.match.params.event;
+  const items = [{ to: '/', label: 'Home' }, { label: EditEventId ? 'Edit Event' : 'Add Event' }]; 
   const [eventId, setEventId] = useState('');
 
   items.map((it) => {
@@ -177,18 +178,18 @@ function AddEvent(props) {
 
   useEffect(() => {
     
-    setEventId(DesignationID);
-    if (DesignationID) {
-      getData(DesignationID);
+    setEventId(EditEventId);
+    if (EditEventId) {
+      getData(EditEventId);
     }
 
     if(viewOptions === 'true')  setTitle('View Event');
 
-    if (DesignationID) {
+    if (EditEventId) {
       setTitle('Edit Event');
     }
     
-    if(DesignationID && viewOptions === 'true'){
+    if(EditEventId && viewOptions === 'true'){
       setTitle('View Event');
     }
   }, []);

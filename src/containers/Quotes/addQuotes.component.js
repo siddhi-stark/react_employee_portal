@@ -22,7 +22,6 @@ function AddQuotes(props) {
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
-  // const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [quotesId, setQuotesId] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);

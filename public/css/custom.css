@@ -16055,6 +16055,9 @@ table tbody tr td a:hover {
   .content-area .row [class*=col] {
     width: 100%;
   }
+  .content-area .row.employee-grid-list [class*=col] {
+    width: 50%;
+  }
 
   table thead th {
     font-size: 11px !important;

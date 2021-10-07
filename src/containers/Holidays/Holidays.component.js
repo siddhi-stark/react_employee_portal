@@ -89,14 +89,11 @@ function Holidays() {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
   const [userRole, setUserRole] = useState('');
   const title = 'Holidays';
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Holidays' }];
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  const [options, updateOptions] = useState({}); // eslint-disable-line
 
   const getRowData = async () => {
     setShowLoader(true);
@@ -160,7 +157,7 @@ function Holidays() {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
     getRowData(1);
-  }, [filterData]);
+  }, []);
 
   return (
     <>

@@ -4330,6 +4330,11 @@
              [class*="col"] {
                  width: 100%;
              }
+             &.employee-grid-list {
+                 [class*=col] {
+                     width: 50%;
+                 }
+             }
          }
      }
      table thead th {

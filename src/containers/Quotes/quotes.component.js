@@ -25,7 +25,6 @@ function Quotes() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isShowLoader, setShowLoader] = useState(false);
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
 
   const limit = 10;
 
@@ -144,7 +143,7 @@ function Quotes() {
   useEffect(() => {
      
     getRowData(1);
-  }, [filterData]);
+  }, []);
 
   return (
     <>
