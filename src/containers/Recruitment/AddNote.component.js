@@ -13,7 +13,6 @@ import Loader from '../../components/Loader/index';
 function AddNote(props) {
   const noteData = props;
   const note = noteData.note;
-  console.log('noteData',noteData);
 
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});

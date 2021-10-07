@@ -15,7 +15,6 @@ function AddBirthday(props) {
   // const BirthdayId = props.match.params.bdayId; //eslint-disable-line 
   const bday = props;
   const BirthdayId = bday.match.params.bdayId;
-  console.log('bday',bday);
   const viewObj = props;
   const viewOptions = viewObj.location.state
     ? viewObj.location.state.isView

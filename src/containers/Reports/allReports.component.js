@@ -44,7 +44,7 @@ function AllReports() {
             <a href="javascript.void(0)" onClick={(e)=>{
               e.preventDefault();
               e.stopPropagation();
-              history.push(`/daily-report/${dt}/${id}`,{employeeReport:true, reporterName:name})}
+              history.push(`/daily-report/${dt}/${id}`,{employeeReport:true, reporterName:name});}
             }>
               <span className="text-info">View Report</span>
             </a>

@@ -30,7 +30,6 @@ function EditEmployee(props) {
   const dataaa = datee.split('-');
   const newDate = `${dataaa[2]}-${dataaa[1]}-${dataaa[0]}`;
   
-
   const columns = [
     {
       id: 'index',
