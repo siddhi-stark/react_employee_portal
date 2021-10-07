@@ -42,8 +42,6 @@ function ToDoList(props) {
   const [userRole, setUserRole] = useState('');
 
   const [taskId, setTaskId] = useState(null);
-  const [staticHrs, setStaticHours] = useState(''); // eslint-disable-line
-  const [staticMin, setStaticMinutes] = useState(''); // eslint-disable-line
   const [morningMail, setMorningMail] = useState(false);
   const [signOutMail, setSignOutMail] = useState(false);
   const [showScrumPopup, setShowScrumPopup] = useState(false);

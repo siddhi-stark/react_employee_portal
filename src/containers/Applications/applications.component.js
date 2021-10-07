@@ -11,7 +11,8 @@ import customFunctions from '../../helper/customFunctions';
 
 function Applications(props) {
   const title = 'Applications';
-  const id = props.match.params.ID; //eslint-disable-line
+  const application = props;
+  const id = application.match.params.ID;
   const statusObj = props;
   const paginationOptions = statusObj.location.state
     ? statusObj.location.state.statusObj
@@ -48,7 +49,11 @@ function Applications(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <Button className="float-end" onClick={()=> {Interview ? history.push('/interview-listing') : history.push('/recruitment')}} // eslint-disable-line 
+        <Button 
+        className="float-end" 
+        onClick={()=> {
+          Interview ? history.push('/interview-listing') : history.push('/recruitment') // eslint-disable-line
+        }}  
         >Back</Button>
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
         <Breadcrumb items={items} />

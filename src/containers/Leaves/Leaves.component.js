@@ -11,7 +11,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 
 function Leaves() {
-	const handleActionCallback = ({ id, status_name, leave_from_date }) => { // eslint-disable-line
+	const handleActionCallback = ({ id, status_name, leave_from_date }) => { 
 		return (
 			<>
 				<a
@@ -67,7 +67,7 @@ function Leaves() {
       id: 'leave_date',
       label: 'Leave Date',
       roleAccess: [3],
-      render: ({ leave_from_date, leave_to_date }) => { // eslint-disable-line
+      render: ({ leave_from_date, leave_to_date }) => {
         return (
           <>
             <span>{`${customFunctions.getNewFormattedDate(
