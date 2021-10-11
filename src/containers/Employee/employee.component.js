@@ -85,6 +85,8 @@ function Employee() {
   const [projectTeam,setProjectTeam] = useState([]);
   const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
   const [isShowLoader,setShowLoader] = useState(false);
+  const [bondStartDate, setBondStartDate] = useState('');
+  const [bondEndDate, setBondEndDate] = useState('');
 
   let timmer = null;
   const [pagination, setPagination] = useState({
@@ -295,6 +297,8 @@ function Employee() {
       setMobile(data.data.mobile);
       setDate(data.data.dob ? new Date(data.data.dob) : null);
       setJoiningDate(data.data.date_joined ? new Date(data.data.date_joined) : null);
+      setBondStartDate(data.data.bond_start_date ? new Date(data.data.bond_start_date) : null);
+      setBondEndDate(data.data.bond_end_date ? new Date(data.data.bond_end_date) : null);
       setEmpCode(data.data.emp_code);
     }
   };
@@ -447,6 +451,8 @@ function Employee() {
     setSelectedTeamLead(null);
     setSelectedDepartment('');
     setDate();
+    setBondStartDate('');
+    setBondEndDate('');
     setModalShow(false);
     if (timmer) clearTimeout(timmer);
     timmer = setTimeout(() => {
@@ -484,6 +490,8 @@ function Employee() {
       date_joined: joiningDate ? customFunctions.getDate(joiningDate) : null,
       tw_emp: twId,
       department: selectedDepartment.id,
+      bond_start_date: bondStartDate ? customFunctions.getDate(bondStartDate) : null,
+      bond_end_date: bondEndDate ? customFunctions.getDate(bondEndDate) : null,
     };
     if (selectedDesignationOption) {
       postData.designation = selectedDesignationOption.id;
@@ -529,6 +537,8 @@ function Employee() {
           setSelectedManager();
           setDate();
           setJoiningDate();
+          setBondStartDate('');
+          setBondEndDate('');
           setSelectedTeamLead();
           setSelectedDepartment();
           setModalShow(false);
@@ -1138,6 +1148,41 @@ function Employee() {
                   placeholder="Select Team"
                   defaultValue={selectedProjectTeam}
                   onSelectHandler={(select) => setSelectedProjectTeam(select)}
+                />
+              </Col>
+               <Col sm={6}>
+                <Datepicker
+                  label="Bond Start Date"
+                  className="form-control"
+                  selected={bondStartDate}
+                  placeholder="dd/mm/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  onChange={(e) => {
+                    setBondStartDate(e);
+                  }}
+                  // errorMessage={validator.message(
+                  //   'Bond Start Date',
+                  //   bondStartDate,
+                  //   'required'
+                  // )}
+                />
+              </Col>
+               <Col sm={6}>
+                <Datepicker
+                  label="Bond End Date"
+                  className="form-control"
+                  selected={bondEndDate}
+                  placeholder="dd/mm/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  minDate={bondStartDate}
+                  onChange={(e) => {
+                    setBondEndDate(e);
+                  }}
+                  // errorMessage={validator.message(
+                  //   'Bond End Date',
+                  //   bondEndDate,
+                  //   'required'
+                  // )}
                 />
               </Col>
             </Row>

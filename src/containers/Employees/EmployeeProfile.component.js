@@ -11,6 +11,7 @@ import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import { Helmet } from '../../components/FormInputs';
+import AddBondHistory from './AddBondHistory.component';
 
 function EmployeeProfile(props) {
   const [showEmployee, setShowEMployee] = useState(false);
@@ -25,6 +26,9 @@ function EmployeeProfile(props) {
   const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
   const [isShowLoader,setShowLoader] = useState(false);
+  const [showBond,setShowBond] = useState(false);
+  const [bondList, setBondList] = useState([]);
+  const [bondData, setBondData] = useState({});
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
@@ -175,6 +179,7 @@ function EmployeeProfile(props) {
   useEffect(() => {
     getEmployeeHIstory();
     getEmployeeDetails();
+    getBondHistory();
     setTitle('Employee Profile');
   }, []);
 
@@ -223,6 +228,21 @@ function EmployeeProfile(props) {
     }
   };
 
+  const getBondHistory = async () => {
+    setShowLoader(true);
+    const employeeId = props.match.params.id;
+    const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
+      setShowLoader(false);
+      setBondList(data.data);
+    }
+  };
+  
+  const onChangeInBondHistory = () => {
+    getBondHistory();
+  };
+
   return (
     <>
       <Helmet title={title} />
@@ -254,16 +274,20 @@ function EmployeeProfile(props) {
           <div className="table-projects">
             {showPersonalDetails ? (
               <div className="mt-4 card">
-                <EditPersonalDetails
-                  handleModalCLose={(e) => setShowPersonalDetails(e)}
-                  onPersonalDetailChanges={() => {
-                    onEmployeePersonalDetails();
-                  }}
-                />
+                <div className="card-body">
+                  <EditPersonalDetails
+                    handleModalCLose={(e) => setShowPersonalDetails(e)}
+                    onPersonalDetailChanges={() => {
+                      onEmployeePersonalDetails();
+                    }}
+                  />
+                </div>
               </div>
             ) : (
               <div className="mt-4 card">
-                <div className="d-flex align-items-center justify-content-between mb-2">
+                <div className="card-body">
+
+                <div className=" d-flex align-items-center justify-content-between mb-2">
                   <div className="date-edit-option d-flex align-items-center justify-content-between w-100">
                     <h6 className="me-5">
                       DOB -{' '}
@@ -347,7 +371,8 @@ function EmployeeProfile(props) {
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+             )}
           </div>
           <div className="profile-details">
             <div className="row">
@@ -430,6 +455,80 @@ function EmployeeProfile(props) {
                                   title="Edit Profile"
                                   onClick={() => {
                                     deleteEmployeeHistory(comp.id);
+                                  }}
+                                />
+                              </a>
+                            </div>
+                          </div>
+                          <hr />
+                        </>
+                      ))}
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex align-items-start justify-content-between mb-4">
+                        <h5 className="card-title">Bond History</h5>
+
+                        <button
+                          onClick={() => {
+                            setShowBond(true);
+                            customFunctions.removeLocalStorage('bondHistoryID');
+                          }}
+                          type="button"
+                          className="btn btn-primary"
+                        >
+                          Add Bond
+                        </button>
+                    </div>
+                   {showBond && (
+                      <div className="mt-4 card">
+                        <AddBondHistory
+                          optionsData={bondData}
+                          handleModalCLose={(e) => setShowBond(e)}
+                          onChanges={() => {
+                            onChangeInBondHistory();
+                          }}
+                        />
+                      </div>
+                    )}
+                    {bondList &&
+                      bondList.map((bond) => (
+                        <>
+                          <div className="d-flex align-items-start justify-content-between">
+                            <div className="media">
+                              <div className="media-body">
+                                <h5 className="mt-0">{bond.designation}</h5>
+                                <p>{bond.company_name}</p>
+                                <p>
+                                  {bond.start_date_formate} -{' '}
+                                  {bond.end_date_formate} {bond.date}|{' '}
+                                  {bond.duration}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="address-edit-delete d-flex align-items-center">
+                              <a href="javascript:void()">
+                                <Image
+                                  src="/images/edit-button.svg"
+                                  title="Edit Profile"
+                                  onClick={() => {
+                                    setBondData(bond);
+                                    setShowBond(true);
+                                    customFunctions.setLocalStorage(
+                                      'bondHistoryID',
+                                      bond.id
+                                    );
+                                    // history.push(`/profile-history/id=${comp.id}`)
+                                  }}
+                                />
+                              </a>
+                              <a href="javascript:void()">
+                                <Image
+                                  src="/images/delete.png"
+                                  title="Edit Profile"
+                                  onClick={() => {
+                                    deleteEmployeeHistory(bond.id);
                                   }}
                                 />
                               </a>
