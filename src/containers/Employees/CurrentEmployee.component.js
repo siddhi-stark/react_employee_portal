@@ -700,6 +700,17 @@ function CurrentEmployee() {
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
+                                setEmployeeId(emp.id);
+                                deleteEmployee(emp.id);
+                              }}
+                            >
+                              <Image src="/images/delete.png" />
+                            </Link>
+                            <Link
+                              className="float-end"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
                                 setModalShow(true);
                                 setEmployeeId(emp.id);
                                 getEmployeeById(emp.id);
@@ -709,17 +720,6 @@ function CurrentEmployee() {
                             >
                               <Image src="/images/edit-button.svg" />
                             </Link>
-                              <Link
-                                className="float-end"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setEmployeeId(emp.id);
-                                  deleteEmployee(emp.id);
-                                }}
-                              >
-                                <Image src="/images/delete.png" />
-                              </Link>
                           </>
                         )}
                         <Card.Title>{emp.name}</Card.Title>
