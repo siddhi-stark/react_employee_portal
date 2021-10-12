@@ -20,7 +20,6 @@ function HrReports() {
   ];
 
   const title = 'HR Reports';
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
 
@@ -69,8 +68,7 @@ const [isShowLoader,setShowLoader] = useState(false);
   const [shortlistedGraph, setShortlistedGraph] = useState(initialState);
   const [graphData, setGraphData] = useState([]);
   const [shortlistedData, setShortlistedData] = useState([]);
-  const [legendData, setLegendData] = useState([]); // eslint-disable-line
-  const [legendSelectedData, setLegendSelectedData] = useState([]); // eslint-disable-line
+  // const [legendSelectedData, setLegendSelectedData] = useState([]); // eslint-disable-line
   const graphref = useRef();
 
   const getUserRole = async () => {
@@ -210,21 +208,21 @@ useEffect(()=>{
         { x: 'Rejected', y: data.data.declined_percentage },
         { x: 'Pending', y: data.data.pending_percentage },
       ];
-      const legData = [
-        { name: `Shortlisted ${data.data.shortlisted_percentage}%`, symbol: { fill: 'green' } },
-        { name: `Declined ${data.data.declined_percentage}%`, symbol: { fill: 'red' } },
-        { name: `Pending ${data.data.pending_percentage}%`, symbol: { fill: 'yellow' } },
-        { name: `Applicant ${data.data.total_applicant_percentage}%`, symbol: { fill: 'none' } },
-      ];
+      // const legData = [
+      //   { name: `Shortlisted ${data.data.shortlisted_percentage}%`, symbol: { fill: 'green' } },
+      //   { name: `Declined ${data.data.declined_percentage}%`, symbol: { fill: 'red' } },
+      //   { name: `Pending ${data.data.pending_percentage}%`, symbol: { fill: 'yellow' } },
+      //   { name: `Applicant ${data.data.total_applicant_percentage}%`, symbol: { fill: 'none' } },
+      // ];
       const selectedGraph = [
         { x: 'Selected', y: data.data.shortlisted_final_percentage },
         { x: 'Rejected', y: data.data.rejected_final_percentage },
       ];
-      const selectedlegData = [
-        { name: `Selected ${data.data.shortlisted_final_percentage}%`, symbol: { fill: 'green' } },
-        { name: `Rejected ${data.data.rejected_final_percentage}%`, symbol: { fill: 'red' } },
-        { name: `Shortlisted ${data.data.total_final_percentage}%`, symbol: { fill: 'none' } },
-      ];
+      // const selectedlegData = [
+      //   { name: `Selected ${data.data.shortlisted_final_percentage}%`, symbol: { fill: 'green' } },
+      //   { name: `Rejected ${data.data.rejected_final_percentage}%`, symbol: { fill: 'red' } },
+      //   { name: `Shortlisted ${data.data.total_final_percentage}%`, symbol: { fill: 'none' } },
+      // ];
       setShortlistedGraph({
         shortlistedCount:data.data.shortlisted_count,
         declinedCount:data.data.declined_count,
@@ -237,8 +235,8 @@ useEffect(()=>{
         shortlisted : data.data.total_final_percentage
       });
       setShortlistedData([...selectedGraph]);
-      setLegendData([...legData]);
-      setLegendSelectedData([...selectedlegData]);
+      // setLegendData([...legData]);
+      // setLegendSelectedData([...selectedlegData]);
       setGraphData([...graph]);
     }
   };
@@ -267,7 +265,6 @@ useEffect(()=>{
             }}
             options={options}
             callbacks={{}}
-            defaultFormValues={defaultValues}
             currentUser={currentUser}
             submitBtnText="Apply"
             showResetBtn={true}

@@ -12,7 +12,7 @@ function EditPersonalDetails(props) {
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({}); // eslint-disable-line
+  const [options, updateOptions] = useState({}); 
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);  
   const [isShowLoader, setShowLoader] = useState(false);
@@ -141,7 +141,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
-        containerClass=''
+        containerClass='mb-2 mt-2'
         formHeaderClass=''
         formSections={jsonSchema}
         formHeading="Employee"
@@ -151,7 +151,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
         defaultFormValues={defaultValues}
         currentUser={currentUser}
         submitBtnText="Submit"
-        showResetBtn={true} // eslint-disable-line
+        showResetBtn={true} 
         showBtnClass={true}
         resetBtnText="Cancel"
         btnContainerClass="form-submit-buttons"

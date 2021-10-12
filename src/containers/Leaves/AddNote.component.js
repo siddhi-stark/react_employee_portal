@@ -9,7 +9,8 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
 function AddNote(props) {
-  const note = props.note; //eslint-disable-line
+  const noteData = props;
+  const note = noteData.note;
 
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});

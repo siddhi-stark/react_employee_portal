@@ -768,10 +768,10 @@ function Employee() {
     } else if (event.length > 6) {
       event = event.substring(0, 5);
     }
-    return event !== '' ? 'SDMS-' + event : ''; // eslint-disable-line
+    return event !== '' ? `SDMS-${event}` : ''; 
 
   };
-
+ 
   validator.purgeFields();
 
   return (

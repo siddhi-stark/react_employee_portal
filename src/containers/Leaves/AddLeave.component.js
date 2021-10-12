@@ -65,7 +65,7 @@ function AddLeave(props) {
     {
       id: 'start_date',
       label: 'Task Start Date',
-      render: ({ start_date }) => { // eslint-disable-line
+      render: ({ start_date }) => { 
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(start_date)}</span>
@@ -76,7 +76,7 @@ function AddLeave(props) {
     {
       id: 'end_date',
       label: 'Task Completion Date',
-      render: ({ end_date }) => { // eslint-disable-line
+      render: ({ end_date }) => { 
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(end_date)}</span>
@@ -91,10 +91,10 @@ function AddLeave(props) {
     {
       id: 'project_end_date',
       label: 'Project Deadline',
-      render: ({ project_end_date }) => { // eslint-disable-line
+      render: ({ project_end_date }) => { 
         return (
           <>
-            <span>{project_end_date ? customFunctions.getNewFormattedDate(project_end_date) :'' // eslint-disable-line
+            <span>{project_end_date ? customFunctions.getNewFormattedDate(project_end_date) :'' 
             }</span>
           </>
         );

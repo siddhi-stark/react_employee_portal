@@ -18,7 +18,7 @@ function CandidateListing() {
 	const [totalCount, setTotalCount] = useState(10);
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [filterData, setFilterData] = useState({}); // eslint-disable-line
+	const [filterData, setFilterData] = useState({}); 
   const [isShowLoader, setShowLoader] = useState(false);
 
 	const title = 'Candidates';
@@ -101,7 +101,7 @@ function CandidateListing() {
 		{
 			id: 'joining_date',
 			label: 'Joining Date',
-			render: ({ joining_date }) => { // eslint-disable-line
+			render: ({ joining_date }) => { 
 				return (
 					<>
 						<span>{customFunctions.getDMYDate(joining_date)}</span>

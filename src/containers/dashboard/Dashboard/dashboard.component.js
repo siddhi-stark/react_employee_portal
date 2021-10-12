@@ -540,7 +540,7 @@ function Dashboard() {
                             customFunctions.removeLocalStorage('EmpID');
                             customFunctions.removeLocalStorage('EmpName');
                           }
-                      }}><h4>{emp.name}</h4></a>
+                      }}><h4>Happy Birthday <br />{emp.name}</h4></a>
                     </div>
                      {(emp.comment_allow && (Number(emp.id) === Number(UserID))) || 
                       (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
@@ -614,7 +614,7 @@ function Dashboard() {
                             customFunctions.removeLocalStorage('EmpID');
                             customFunctions.removeLocalStorage('EmpName');
                           }
-                        }}><h4>{emp.name}</h4></a>
+                        }}><h4>Work Anniversary<br/>{emp.name}</h4></a>
                     </div>
                       {(emp.comment_allow && (Number(emp.id) === Number(UserID))) || 
                       (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
@@ -689,7 +689,7 @@ function Dashboard() {
                             customFunctions.removeLocalStorage('EmpID');
                             customFunctions.removeLocalStorage('EmpName');
                           }
-                       }}><h4>{empdata.full_name}</h4></a>
+                       }}><h4>Appreciate<br/>{empdata.full_name}</h4></a>
                     </div>
 
                      {(appr.comment_allow && (Number(empdata.id) === Number(UserID))) || 

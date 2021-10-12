@@ -131,7 +131,7 @@ function TeamReport() {
              <a href="javascript.void(0)" onClick={(e)=>{
               e.preventDefault();
               e.stopPropagation();
-              history.push(`/daily-report/${dt}/${report.user_id}`,{teamReport:true, reporterName:report.user})} // eslint-disable-line
+              history.push(`/daily-report/${dt}/${report.user_id}`,{teamReport:true, reporterName:report.user});}
             }>
               <span className="text-info">View Report</span>
             </a>

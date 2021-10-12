@@ -25,7 +25,6 @@ function EmployeeTimesheet() {
   const history = useHistory();
 
   // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const limit = 10;
@@ -88,12 +87,12 @@ function EmployeeTimesheet() {
       id: 'emp_id',
       label: dataShow ? '' : 'ID',
 
-      render: ({ emp_id }) => { // eslint-disable-line
+      render: ({ emp_id }) => { 
         return (
           <>
             <span>
               {
-                dataShow ? '' : `SDMS ${emp_id}` // eslint-disable-line
+                dataShow ? '' : `SDMS ${emp_id}` 
               }
             </span>
           </>
@@ -353,10 +352,9 @@ function EmployeeTimesheet() {
                 }}
                 options={options}
                 callbacks={{}}
-                defaultFormValues={defaultValues}
                 currentUser={currentUser}
                 submitBtnText="Apply"
-                showResetBtn={true} // eslint-disable-line
+                showResetBtn={true}
                 showBtnClass={true}
                 resetBtnText="Clear"
                 btnContainerClass="form-submit-buttons pull-right"

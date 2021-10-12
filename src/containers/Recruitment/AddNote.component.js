@@ -11,11 +11,11 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
 function AddNote(props) {
-  const note = props.note; //eslint-disable-line
+  const noteData = props;
+  const note = noteData.note;
 
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({}); //eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote,setShowNote] = useState(false);
   const [id,setStatusId] = useState('');
@@ -99,7 +99,6 @@ function AddNote(props) {
               formHeaderClass=''
               formSections={FormSections}
               onFormSubmit={(formValues) => {submitForm(formValues);}}
-              options={options}
               callbacks={{}}
               defaultFormValues={defaultValues}
               currentUser={currentUser}

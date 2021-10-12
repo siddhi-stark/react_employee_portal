@@ -30,7 +30,7 @@ function EmployeeTeamLeaves() {
       id: 'user_name',
       label: 'Name',
       roleAccess: [4],
-      render: ({ user_name, id, status_name }) => { // eslint-disable-line
+      render: ({ user_name, id }) => {
         return (
           <>
            <a
@@ -53,7 +53,7 @@ function EmployeeTeamLeaves() {
       id: 'leave_date',
       label: 'Leave Date',
       roleAccess: [3],
-      render: ({ leave_from_date, leave_to_date }) => { // eslint-disable-line
+      render: ({ leave_from_date, leave_to_date }) => { 
         return (
           <>
             <span>{`${customFunctions.getNewFormattedDate(
@@ -78,7 +78,7 @@ function EmployeeTeamLeaves() {
     {
       id: 'status_name',
       label: 'Status',
-       render: ({ id, status_name, leave_from_date }) => { // eslint-disable-line
+       render: ({ id, status_name, leave_from_date }) => { 
         return (
           <>
          { (status_name === 'Pending' && customFunctions.getDate(new Date()) <= leave_from_date) ? (

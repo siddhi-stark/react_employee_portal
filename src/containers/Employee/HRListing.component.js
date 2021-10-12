@@ -34,7 +34,6 @@ function HRListing() {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); //eslint-disable-line
   const title = 'Timesheet';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
@@ -60,7 +59,7 @@ function HRListing() {
 
   useEffect(() => {
     getRowData(1);
-  }, [filterData]);
+  }, []);
 
   return (
     <>

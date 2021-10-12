@@ -12,7 +12,9 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
 function AddBirthday(props) {
-  const BirthdayId = props.match.params.bdayId; //eslint-disable-line
+  // const BirthdayId = props.match.params.bdayId; //eslint-disable-line 
+  const bday = props;
+  const BirthdayId = bday.match.params.bdayId;
   const viewObj = props;
   const viewOptions = viewObj.location.state
     ? viewObj.location.state.isView

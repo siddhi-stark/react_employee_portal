@@ -78,7 +78,7 @@ function RecruitmentApplicationComponent() {
 
     return (
       <>
-        {status_name !== 'declined' ? ( //eslint-disable-line
+        {status_name !== 'declined' ? ( 
           <a
             href="/"
             className="pl-2"
@@ -232,7 +232,7 @@ function RecruitmentApplicationComponent() {
           <>
             <span>{customFunctions.getNewFormattedDate(created_at)}</span>
           </>
-        );
+        ); 
       },
     },
     {

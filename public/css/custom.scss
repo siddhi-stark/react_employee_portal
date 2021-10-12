@@ -3950,7 +3950,7 @@
  
  .birthday-wish-section {
      .birth-wish-profile {
-         max-width: 73px;
+         max-width: 45px;
          border-radius: 100%;
      }
      img {
@@ -3995,8 +3995,9 @@
  .birthday-wish-section {
      .birthtitle {
          h4 {
-             font-size: 14px;
+             font-size: 12px;
              margin-bottom: 0;
+             line-height: 1.5;
          }
      }
  }
@@ -4046,6 +4047,12 @@
      color: #707070;
  }
  
+ @media (min-width: 1920px) {
+     .birthday-wish-section-row .col {
+         min-width: 33.33%;
+     }
+ }
+ 
  @media (min-width: 992px) {
      .main-sidebar {
          position: relative;
@@ -4081,6 +4088,21 @@
              [class*="col"] {
                  /*width: 100%;*/
              }
+         }
+     }
+     .birthday-wish-section-row {
+         .card {
+             .card-body {
+                 padding: 15px;
+             }
+         }
+     }
+ }
+ 
+ @media (max-width: 1550px) {
+     .birthday-wish-section-row {
+         .col {
+             min-width: 50%;
          }
      }
  }
@@ -4307,6 +4329,11 @@
          .row {
              [class*="col"] {
                  width: 100%;
+             }
+             &.employee-grid-list {
+                 [class*=col] {
+                     width: 50%;
+                 }
              }
          }
      }
