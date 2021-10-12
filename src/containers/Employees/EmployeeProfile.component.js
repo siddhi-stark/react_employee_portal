@@ -254,16 +254,20 @@ function EmployeeProfile(props) {
           <div className="table-projects">
             {showPersonalDetails ? (
               <div className="mt-4 card">
-                <EditPersonalDetails
-                  handleModalCLose={(e) => setShowPersonalDetails(e)}
-                  onPersonalDetailChanges={() => {
-                    onEmployeePersonalDetails();
-                  }}
-                />
+                <div className="card-body">
+                  <EditPersonalDetails
+                    handleModalCLose={(e) => setShowPersonalDetails(e)}
+                    onPersonalDetailChanges={() => {
+                      onEmployeePersonalDetails();
+                    }}
+                  />
+                </div>
               </div>
             ) : (
               <div className="mt-4 card">
-                <div className="d-flex align-items-center justify-content-between mb-2">
+                <div className="card-body">
+
+                <div className=" d-flex align-items-center justify-content-between mb-2">
                   <div className="date-edit-option d-flex align-items-center justify-content-between w-100">
                     <h6 className="me-5">
                       DOB -{' '}
@@ -347,7 +351,8 @@ function EmployeeProfile(props) {
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+             )}
           </div>
           <div className="profile-details">
             <div className="row">
