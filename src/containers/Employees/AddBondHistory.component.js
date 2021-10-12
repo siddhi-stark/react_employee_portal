@@ -14,6 +14,7 @@ function AddBondHistory(props) {
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);
+  const [attachmentId, setAttachmentId] = useState(null);
 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -56,7 +57,7 @@ function AddBondHistory(props) {
     const employeeId = customFunctions.getLocalStorage('id');
     const postData = {
       employee: Number(employeeId),
-      attachement: fileUrlId ? Number(fileUrlId) : '',
+      attachement: fileUrlId ? Number(fileUrlId) : Number(attachmentId),
       start_date: formValues.bond_start_date ? customFunctions.getDate(formValues.bond_start_date) : '',
       end_date: formValues.bond_end_date ? customFunctions.getDate(formValues.bond_end_date) : '',
     };
@@ -99,6 +100,7 @@ function AddBondHistory(props) {
        ...data.data,
        attachments: data.data.file_name
      };
+     setAttachmentId(data && data.data && data.data.attachement_id);
      updateDefaultValues({...obj});    // updateDefaultValues(data);
      }
   };
