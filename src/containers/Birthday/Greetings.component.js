@@ -177,6 +177,7 @@ function Greetings() {
             }).then(() => {
               swal.close();
               getRowData(1);
+              getEmployee(1);
             });
           } else {
             swal(message, '', 'error', {
