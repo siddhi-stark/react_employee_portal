@@ -689,6 +689,16 @@ function CurrentEmployee() {
                       <Col className="col-md-8">
                       { (Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && (
                           <>
+                             <Link
+                              className="float-end ms-2"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                history.push('/addemployement-history');
+                              }}
+                            >
+                              <Image src="/images/redirect.png" />
+                            </Link>
                             <Link
                               className="float-end ml-2"
                               onClick={(e) => {
