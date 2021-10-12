@@ -79,7 +79,7 @@
         "options": []
       },
       {
-        "name": "attachements",
+        "name": "attachments",
         "type": "file",
         "label": "Attachment",
         "id": "",

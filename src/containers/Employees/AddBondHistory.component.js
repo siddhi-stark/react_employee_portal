@@ -26,22 +26,46 @@ function AddBondHistory(props) {
     }
     getUserRole();
   }, []);
-  
+
+  const fileUpload = async (formValues) => { // eslint-disable-line
+    const formData = new FormData();
+
+    formData.append('file_name', formValues[0]);
+
+    const { data, message } = await AuthApi.postDataToServer(
+      `${Api.fileUploadUrl}`,formData
+    );
+    if(customFunctions.checkIfEmpty(data)) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    if (!customFunctions.checkIfEmpty(data) && data.success) { 
+      return data.data.id;
+    }
+  };
+
   const submitForm = async (formValues) => {
+    let fileUrlId ='';
+    if(formValues.attachments){
+       fileUrlId = (typeof formValues.attachments === 'object') && await fileUpload(formValues.attachments);
+     }
+
     setShowLoader(true);
     const employeeId = customFunctions.getLocalStorage('id');
     const postData = {
       employee: Number(employeeId),
-      attachments: formValues.attachments ? formValues.attachments : '',
-      bond_start_date: formValues.bond_start_date ? customFunctions.getDate(formValues.bond_start_date) : '',
-      bond_end_date: formValues.bond_end_date ? customFunctions.getDate(formValues.bond_end_date) : '',
+      attachement: fileUrlId ? Number(fileUrlId) : '',
+      start_date: formValues.bond_start_date ? customFunctions.getDate(formValues.bond_start_date) : '',
+      end_date: formValues.bond_end_date ? customFunctions.getDate(formValues.bond_end_date) : '',
     };
      const callback = history
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
     const endPoint = history
-      ? `${Api.historyUrl}`
-      : Api.historyUrl;
+      ? `${Api.employeeBondDetailsUrl}`
+      : Api.employeeBondDetailsUrl;
 
        if (history) {
          postData.id = history;
@@ -66,14 +90,14 @@ function AddBondHistory(props) {
   
   const getData = async (id) => {
     setShowLoader(true);
-     const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);
+     const { data } = await AuthApi.getDataFromServer(`${Api.employeeBondDetailsUrl}${id}/`);
      if(data){
      setShowLoader(false);
-     data.data.bond_start_date = data.data.bond_start_date ? new Date(customFunctions.getDate(data.data.bond_start_date)) : '';
-     data.data.bond_end_date = data.data.bond_end_date ? new Date(customFunctions.getDate(data.data.bond_end_date)) : '';
+     data.data.bond_start_date = data.data.start_date ? new Date(customFunctions.getDate(data.data.start_date)) : '';
+     data.data.bond_end_date = data.data.end_date ? new Date(customFunctions.getDate(data.data.end_date)) : '';
      const obj = {
        ...data.data,
-       attachments: data.data.attachments
+       attachments: data.data.file_name
      };
      updateDefaultValues({...obj});    // updateDefaultValues(data);
      }

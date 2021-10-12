@@ -280,10 +280,10 @@ function Dashboard() {
           Number(e.dob) >= day
       );
     setBirthdayArray(birthdayArrr);
-    if(Number(uRole) ===  1 || Number(uRole) ===  2 || Number(uRole) ===  3 ) {
+    if(Number(uRole) !==  4 ) {
       getLeavesUpdate();
-      getInterviewsUpdate();
     }
+    getInterviewsUpdate();
   }, []);
 
   const onViewButtonClick = () => {
@@ -723,19 +723,16 @@ function Dashboard() {
              ))}
                  </>)}
              </Row>
-                
-            {((leavesUpdate && leavesUpdate.length > 0) || (interviewsUpdate && interviewsUpdate.length > 0)) ? (
-              <>
-              <div classNameName="row">
 
+              <div classNameName="row">
+              {(leavesUpdate && leavesUpdate.length > 0) && (
               <div classnamename="dark-blue-bg mb-4 col-md-12 card">
-                <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
-                
+                <UserRestrictions permittedUsers={[1, 2, 3, 5, 6]} roleId={userRole}>
                 <div classnamename="pie-chart-graph card today-pending-leaves-interviews">
-                 <div className="purple-bg card-header">
-              <strong>Today's Pending Leaves</strong>
-              </div>
-              <div className="card-body">
+                  <div className="purple-bg card-header">
+                    <span>Today's Pending Leaves</span>
+                  </div>
+                  <div className="card-body">
                     <div className="birth-name d-flex align-items-center mb-0">
                       {leavesUpdate &&
                         leavesUpdate.length > 0 &&
@@ -758,47 +755,42 @@ function Dashboard() {
                             </div>
                           </>
                         ))}
-              </div>
-                  
+                      </div>
                     </div>
                   </div>
                 </UserRestrictions>
                 </div>
-              
-                <Card classNameName="dark-blue-bg mb-4 col-md-12">
-                 <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
-                 <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
-                  {interviewsUpdate && interviewsUpdate.length > 0 ?
-
-                  <div className="purple-bg card-header">
-              <strong>Today's Interviews</strong>
-              </div> 
-                   : ''}
-                  
-               <div className="card-body">
-                    <div className="birth-name d-flex align-items-center mb-0">
-                      {interviewsUpdate &&
-                        interviewsUpdate.length > 0 &&
-                        interviewsUpdate.map((empInterview) => (
-                          <>
-                            <div className="birthday-employees">
-                              <h5 className="card-title">
-                                 <a className="mt-2" href="/interview-listing">
-                                  {empInterview.name} &nbsp;
-                                </a>
-                              </h5>
-                            </div>
-                          </>
-                        ))}
+                )}
+                {(interviewsUpdate && interviewsUpdate.length > 0) && (
+                  <Card classNameName="dark-blue-bg mb-4 col-md-12">
+                   <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
+                    {interviewsUpdate && interviewsUpdate.length > 0 ?
+                      <div className="purple-bg card-header">
+                        <span>Today's Interviews</span>
+                      </div> 
+                     : ''}
+                    
+                    <div className="card-body">
+                      <div className="birth-name d-flex align-items-center mb-0">
+                        {interviewsUpdate &&
+                          interviewsUpdate.length > 0 &&
+                          interviewsUpdate.map((empInterview) => (
+                            <>
+                              <div className="birthday-employees">
+                                <h5 className="card-title">
+                                   <a className="mt-2" href="/interview-listing">
+                                    {empInterview.name} &nbsp;
+                                  </a>
+                                </h5>
+                              </div>
+                            </>
+                          ))}
+                      </div>
                     </div>
-               </div>
-                 </div>
-
-                 </UserRestrictions>
-                </Card>
-                </div>
-              </>
-              ) : ''}
+                   </div>
+                  </Card>
+                )}
+              </div>
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-0">
                 <EmployeeListComponent />

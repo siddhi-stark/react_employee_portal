@@ -73,8 +73,6 @@ useEffect(() => {
       relieving_date: formValues.relieving_date ? customFunctions.getDate(formValues.relieving_date) : null,
       relieved: formValues.relieving_date ? true : false, // eslint-disable-line
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : null,
-      bond_start_date: formValues.bond_start_date ? customFunctions.getDate(formValues.bond_start_date) : null,
-      bond_end_date: formValues.bond_end_date ? customFunctions.getDate(formValues.bond_end_date) : null,
     };
     
     const { data } = await AuthApi.putDataToServer(`${Api.employeeUrl}${id}/`, postData);
@@ -97,8 +95,6 @@ useEffect(() => {
       data.data.relieving_date = data.data.relieving_date ? new Date(customFunctions.getDate(data.data.relieving_date)) : '';
       data.data.dob = data.data.dob ? new Date(customFunctions.getDate(data.data.dob)) : '';
       data.data.joining_date = data.data.date_joined ? new Date(customFunctions.getDate(data.data.date_joined)) : '';
-       data.data.bond_start_date = data.data.bond_start_date ? new Date(customFunctions.getDate(data.data.bond_start_date)) : '';
-       data.data.bond_end_date = data.data.bond_end_date ? new Date(customFunctions.getDate(data.data.bond_end_date)) : '';
      
      const ds = data.data.designation_id ? {
         label: data.data.designation_name,

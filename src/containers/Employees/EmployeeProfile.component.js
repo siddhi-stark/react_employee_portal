@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, Link } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import { Image, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
@@ -231,7 +231,7 @@ function EmployeeProfile(props) {
   const getBondHistory = async () => {
     setShowLoader(true);
     const employeeId = props.match.params.id;
-    const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
+    const endPoint = `${Api.employeeBondDetailsUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
       setShowLoader(false);
@@ -241,6 +241,42 @@ function EmployeeProfile(props) {
   
   const onChangeInBondHistory = () => {
     getBondHistory();
+  };
+
+  const deleteBondHistory = (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to delete the bond history?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.employeeBondDetailsUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getBondHistory();
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
   };
 
   return (
@@ -498,12 +534,19 @@ function EmployeeProfile(props) {
                           <div className="d-flex align-items-start justify-content-between">
                             <div className="media">
                               <div className="media-body">
-                                <h5 className="mt-0">{bond.designation}</h5>
-                                <p>{bond.company_name}</p>
                                 <p>
-                                  {bond.start_date_formate} -{' '}
-                                  {bond.end_date_formate} {bond.date}|{' '}
-                                  {bond.duration}
+                                  Start Date: {bond.start_date && customFunctions.getDMYDate( bond.start_date)} &nbsp;
+                                  End Date: {bond.end_date && customFunctions.getDMYDate(bond.end_date)} <br/>
+                                
+                                Document Link: 
+                                  <Link
+                                    className="mt-3 ms-2"
+                                    title="Document Link"
+                                    to={{ pathname: `${bond.file_name}`}}
+                                    target="_blank"
+                                  >
+                                   { bond.file_name && decodeURI(bond.file_name.split(decodeURI(Api.s3url))).substring(55)}
+                                  </Link>
                                 </p>
                               </div>
                             </div>
@@ -528,7 +571,7 @@ function EmployeeProfile(props) {
                                   src="/images/delete.png"
                                   title="Edit Profile"
                                   onClick={() => {
-                                    deleteEmployeeHistory(bond.id);
+                                    deleteBondHistory(bond.id);
                                   }}
                                 />
                               </a>
