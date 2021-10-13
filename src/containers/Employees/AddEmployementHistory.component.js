@@ -3,18 +3,19 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Tabs, Tab, Button } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import Personal from '../TemporaryAccount/personal.component';
-import EducationalDetails from '../TemporaryAccount/educational.component';
-import EmployementHistory from '../TemporaryAccount/employementHistory.component';
-import PreviousEmployement from '../TemporaryAccount/previousEmployement.component';
+import PersonalDocument from './PersonalDocument.component';
+import EducationalDetails from './EducationalDocument.component';
+import PreviousEmployement from './PreviousEmployment.component';
 
 function AddEmployementHistory(props) {
   const title = 'Employement History';
   const items = [{ to: '/', label: 'Home' }, { label: 'Employment History' }];
   const history = useHistory();
   const employee = props;
+  console.log('employee',employee);
   const employeeId = employee.match.params.ID;
-  console.log('employeeId',employeeId);
+  const email = employee.location.state.email;
+  const name = employee.location.state.name;
 
 	return (
 		<>
@@ -33,27 +34,19 @@ function AddEmployementHistory(props) {
 					<Tabs defaultActiveKey="Personal">
 						<Tab eventKey="Personal" title="Personal Documents">
 							<div className="row ml-2">
-								<Personal
-								ID={employeeId}
-								 />
-								}
+								<PersonalDocument ID={employeeId} email={email} name={name} />
+								
 							</div>
 						</Tab>
 						<Tab eventKey="currentEmployee" title="Educational Documents">
 							<div className="row ml-2">
-								<EducationalDetails />
-							</div>
-						</Tab>
-
-						<Tab eventKey="employmentHistory" title="Employment History">
-							<div className="row ml-2">
-								<EmployementHistory />
+								<EducationalDetails ID={employeeId} email={email} name={name} />
 							</div>
 						</Tab>
 
 						<Tab eventKey="previousEmployment" title="Previous Employment">
 							<div className="row ml-2">
-								<PreviousEmployement />
+								<PreviousEmployement ID={employeeId} email={email} name={name} />
 							</div>
 						</Tab>
 					</Tabs>

@@ -29,6 +29,8 @@ function EmployeeProfile(props) {
   const [showBond,setShowBond] = useState(false);
   const [bondList, setBondList] = useState([]);
   const [bondData, setBondData] = useState({});
+  const employeeData = {props};
+  const employeeID = employeeData.props.match.params.id;
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
@@ -50,6 +52,7 @@ function EmployeeProfile(props) {
   const getEmployeeHIstory = async () => {
     setShowLoader(true);
     const employeeId = props.match.params.id;
+    console.log('employeeId----------------------',employeeId);
     const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
@@ -281,6 +284,7 @@ function EmployeeProfile(props) {
 
   return (
     <>
+    {console.log('employeeDetails',employeeDetails)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -582,12 +586,22 @@ function EmployeeProfile(props) {
                       ))}
                   </div>
                 </div>
-                {employeeDocument && employeeDocument.length > 0 ? (
+               
                   <>
                   <div className="card">
                   <div className="card-body">
                     <div className="d-flex align-items-center justify-content-between">
                       <h5 className="card-title mb-0 mt-2 ">Documents</h5>
+                      <button
+                          onClick={() => {
+                            setShowBond(true);
+                            history.push(`/addemployement-history/${employeeID}`,{email:employeeDetails.email,name: employeeDetails.full_name})
+                          }}
+                          type="button"
+                          className="btn btn-primary"
+                        >
+                          Add Documents
+                        </button>
                    </div> 
                    <hr/> 
                     {employeeDocument &&
@@ -658,7 +672,6 @@ function EmployeeProfile(props) {
                   </div>
                 </div>
                   </>
-                  ) : ''}
               </div>
             </div>
           </div>

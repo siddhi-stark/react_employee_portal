@@ -90,7 +90,8 @@ function Personal(props) {
     formData.append('employee_name', nameProps); 
     formData.append('employee_email', emailProps);
     formData.append('folder_name', 'Personal');
-
+    
+    console.log('----formData----',formData);
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );
