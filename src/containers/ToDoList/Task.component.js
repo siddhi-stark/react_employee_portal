@@ -283,7 +283,7 @@ function Task(props) {
 
                       showTimeSelect="showTimeSelect"
                       showTimeSelectOnly="showTimeSelectOnly"
-                      timeIntervals="1"
+                      timeIntervals="10"
                       dateFormat="h:mm aa"
                       errorMessage={validator.current.message(
                         `task start time`,
@@ -324,7 +324,7 @@ function Task(props) {
                       }}
                       showTimeSelect="showTimeSelect"
                       showTimeSelectOnly="showTimeSelectOnly"
-                      timeIntervals="1"
+                      timeIntervals="10"
                       dateFormat="h:mm aa"
                       errorMessage={validator.current.message(
                         `task end time`,
