@@ -744,6 +744,10 @@ function CurrentEmployee() {
                             emp.notice_period_date &&
                             customFunctions.getDMYDate(emp.relieving_date)}
                         </p>{' '}
+                        <span> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].start_date && `Bond start date- ${customFunctions.getDMYDate(emp.bond_details_list[0].start_date)}`}
+                        </span><br/>
+                        <span> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].end_date && `Bond end date- ${customFunctions.getDMYDate(emp.bond_details_list[0].end_date)}`}
+                        </span>
                         <br />
                       </Col>
                     </Row>
