@@ -5,6 +5,10 @@
   margin-left: 23px;
 }
 
+.mr-5 {
+  margin-right: 15px;
+}
+
 .btn-sm,
 .btn-group-sm > .btn {
   padding: 9px 25px;
@@ -12176,6 +12180,10 @@ td.progress-main {
   margin-top: 30px !important;
 }
 
+.ml-1 {
+  margin-left: 16px !important;
+}
+
 .badge-info {
   background-color: #24CBD3;
 }
@@ -12184,8 +12192,28 @@ td.progress-main {
   background-color: #F4C222;
 }
 
+.badge-secondary {
+  color: #393A71;
+  background-color: #F3F3F3;
+}
+
+.badge-orange {
+  color: #EE9603;
+  background-color: #FFF4EF;
+}
+
 .badge-danger {
   background-color: #D80F0F;
+}
+
+.badge-success {
+  color: #fff;
+  background-color: #28a745;
+}
+
+.badge-primary {
+  color: #fff;
+  background-color: #007bff;
 }
 
 .colors-title {
@@ -13032,6 +13060,7 @@ p:empty {
 }
 .main-sidebar-body .nav li a {
   padding: 20.5px 15px;
+  color: #E6E6E6;
 }
 .main-sidebar-body .nav li a span {
   color: #E6E6E6;
@@ -14782,6 +14811,123 @@ table.quotes-wrapper thead th {
   background-color: #f1f1f1;
 }
 
+.bugs-portal-projects .card-header .badge {
+  background: transparent -o-linear-gradient(225deg, #FFC200 0%, #FFD54E 100%) 0% 0% no-repeat padding-box;
+  background: transparent linear-gradient(225deg, #FFC200 0%, #FFD54E 100%) 0% 0% no-repeat padding-box;
+  width: 45px;
+  height: 45px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  color: #393A71;
+  font-size: 16px;
+  font-weight: 700;
+}
+.bugs-portal-projects .card li {
+  font-size: 14px;
+}
+.bugs-portal-projects .card .media img {
+  max-width: 50px;
+  width: 100%;
+  border-radius: 100%;
+  margin-left: auto !important;
+}
+.bugs-portal-projects .card .access-this-project li {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+.bugs-portal-projects .card .access-this-project li img {
+  max-width: 25px;
+  width: 100%;
+  border-radius: 100%;
+}
+.bugs-portal-projects .card-title {
+  color: #ffffff;
+  display: inline-block;
+  width: 230px;
+  white-space: nowrap;
+  overflow: hidden !important;
+  -o-text-overflow: ellipsis;
+     text-overflow: ellipsis;
+  margin-left: 10px;
+}
+
+.team-project-badge .badge {
+  min-height: 30px;
+  width: 25%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-weight: 400;
+}
+
+.startdate-end-date .badge {
+  font-size: 10px;
+  padding: 8px 10px;
+}
+
+.bug-type-details {
+  background-color: #F8F8F8;
+  border-top: 5px solid #E3E3E3;
+  border-radius: 3px;
+  padding: 20px;
+  border-bottom: 5px solid #E3E3E3;
+}
+.bug-type-details h5, .bug-type-details .h5 {
+  color: #707070;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: right;
+}
+.bug-type-details h6, .bug-type-details .h6 {
+  color: #707070 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+.bug-type-details .row {
+  margin-bottom: 20px;
+}
+.bug-type-details .row:last-child {
+  margin-bottom: 0;
+}
+
+.bug-project-details .card .media {
+  color: #393A71;
+  font-size: 14px;
+}
+.bug-project-details .card h6, .bug-project-details .card .h6 {
+  color: #393A71;
+  font-size: 14px;
+  font-weight: 700;
+}
+.bug-project-details .custom-file input {
+  border: 1px solid #cccccc;
+  display: block;
+}
+.bug-project-details .custom-file small, .bug-project-details .custom-file .small {
+  font-size: 12px;
+}
+.bug-project-details .comment-box .send-btn {
+  margin-left: 0;
+}
+
+.comment-status-box {
+  max-width: 947px;
+  width: 100%;
+}
+
 /*@media (min-width: 576px){
     .bd-content .highlight {
         margin-right: 0;
@@ -15812,6 +15958,90 @@ table tbody tr td a:hover {
   color: #707070;
 }
 
+.links li {
+  margin-right: 20px;
+}
+.links li a {
+  color: #393A71;
+}
+
+.bz_common_actions {
+  text-align: center;
+}
+.bz_common_actions ul li {
+  display: inline;
+  vertical-align: top;
+}
+.bz_common_actions ul li a {
+  display: inline-block;
+  height: 170px;
+  width: 145px;
+  margin: 0 2ex 2em 0;
+}
+.bz_common_actions ul li a span {
+  position: relative;
+  top: 90%;
+  font-weight: bold;
+}
+
+#enter_bug {
+  background: url(../images/file-a-bug.png) no-repeat;
+}
+
+#query {
+  background: url(../images/search.png) no-repeat;
+}
+
+#account {
+  background: url(../images/new-account.png) no-repeat;
+}
+
+#help {
+  background: url(../images/help.png) no-repeat;
+}
+
+.quicksearchForm {
+  position: relative;
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+}
+.quicksearchForm .form-control {
+  padding-right: 160px;
+}
+.quicksearchForm .btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  min-height: 40px;
+  border-radius: 0;
+}
+
+.employee-profile {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.employee-profile li {
+  margin-right: 10px;
+}
+.employee-profile li:last-child {
+  margin-right: 0;
+}
+.employee-profile li img {
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+  border: 1px solid #cccccc;
+}
+.employee-profile li.item-user-more {
+  cursor: pointer;
+}
+
+.employee-grid-list .confirmation-date {
+  min-height: inherit;
+}
+
 @media (min-width: 1920px) {
   .birthday-wish-section-row .col {
     min-width: 33.33%;
@@ -15854,6 +16084,11 @@ table tbody tr td a:hover {
   .birthday-wish-section-row .card .card-body {
     padding: 15px;
   }
+
+  .startdate-end-date .badge {
+    margin: 0 auto;
+    margin-bottom: 10px;
+  }
 }
 @media (max-width: 1550px) {
   .birthday-wish-section-row .col {
@@ -15877,6 +16112,13 @@ table tbody tr td a:hover {
     -webkit-box-flex: 50% !important;
         -ms-flex: 50% !important;
             flex: 50% !important;
+  }
+
+  .bugs-portal-projects .card strong {
+    font-size: 12px;
+  }
+  .bugs-portal-projects .card li {
+    font-size: 12px;
   }
 }
 @media (max-width: 1366px) {
@@ -16052,6 +16294,15 @@ table tbody tr td a:hover {
   }
 }
 @media (max-width: 1280px) {
+  .bug-type-details h5,
+.bug-type-details .h5 {
+    text-align: left;
+  }
+
+  .bugs-portal-projects .row [class*=col] {
+    width: 50%;
+  }
+
   .content-area .row [class*=col] {
     width: 100%;
   }
