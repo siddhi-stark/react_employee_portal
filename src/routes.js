@@ -147,7 +147,7 @@ function Routes() {
       <Route path="/team-scheduler" exact component={TeamProjectScheduler} />
       <Route path="/project-fetch" exact component={ProjectFetch} />
       <Route path="/archived-project" exact component={ArchivedProject} />
-      <Route path="/addemployement-history" exact component={AddEmployementHistory} />
+      <Route path="/addemployement-history/:ID" exact component={AddEmployementHistory} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -12,6 +12,7 @@ function Personal(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
   const applicantId = accProps.props.applicantId;
+  const employeeId = accProps.props.ID;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -32,6 +33,7 @@ function Personal(props) {
   }, []);
 
   const getData = async () => {
+    console.log('inside getdata method',candidateId,employeeId);
     let panCard = '';
     let adharCard = '';
     let photo = '';
@@ -74,7 +76,7 @@ function Personal(props) {
 
   useEffect(async() => {
 
-    if(candidateId || applicantId) {
+    if(candidateId || applicantId || employeeId) {
       getData();
     }
   }, []);

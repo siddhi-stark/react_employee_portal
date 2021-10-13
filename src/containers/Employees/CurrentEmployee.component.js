@@ -694,7 +694,8 @@ function CurrentEmployee() {
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                history.push('/addemployement-history');
+                                // history.push('/addemployement-history');
+                                history.push(`/addemployement-history/${emp.id}`);
                               }}
                             >
                               <Image src="/images/redirect.png" />

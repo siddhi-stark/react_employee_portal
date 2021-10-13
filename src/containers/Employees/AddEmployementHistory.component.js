@@ -8,10 +8,13 @@ import EducationalDetails from '../TemporaryAccount/educational.component';
 import EmployementHistory from '../TemporaryAccount/employementHistory.component';
 import PreviousEmployement from '../TemporaryAccount/previousEmployement.component';
 
-function AddEmployementHistory() {
+function AddEmployementHistory(props) {
   const title = 'Employement History';
   const items = [{ to: '/', label: 'Home' }, { label: 'Employment History' }];
   const history = useHistory();
+  const employee = props;
+  const employeeId = employee.match.params.ID;
+  console.log('employeeId',employeeId);
 
 	return (
 		<>
@@ -30,7 +33,10 @@ function AddEmployementHistory() {
 					<Tabs defaultActiveKey="Personal">
 						<Tab eventKey="Personal" title="Personal Documents">
 							<div className="row ml-2">
-								<Personal />
+								<Personal
+								ID={employeeId}
+								 />
+								}
 							</div>
 						</Tab>
 						<Tab eventKey="currentEmployee" title="Educational Documents">
