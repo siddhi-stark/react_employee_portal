@@ -721,6 +721,10 @@ function CurrentEmployee() {
                           {emp.full_name}
                           <span> {emp.designation_name}</span>
                         </p>
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col className="col-md-12">
                         <p className="text-primary confirmation-date">
                           {' '}
                           {emp.confirmation_date &&
@@ -744,10 +748,10 @@ function CurrentEmployee() {
                             emp.notice_period_date &&
                             customFunctions.getDMYDate(emp.relieving_date)}
                         </p>{' '}
-                        <span> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].start_date && `Bond start date- ${customFunctions.getDMYDate(emp.bond_details_list[0].start_date)}`}
-                        </span><br/>
-                        <span> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].end_date && `Bond end date- ${customFunctions.getDMYDate(emp.bond_details_list[0].end_date)}`}
-                        </span>
+                        <h6> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].start_date && `Bond start date- ${customFunctions.getDMYDate(emp.bond_details_list[0].start_date)}`}
+                        </h6>
+                        <h6> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].end_date && `Bond end date- ${customFunctions.getDMYDate(emp.bond_details_list[0].end_date)}`}
+                        </h6>
                         <br />
                       </Col>
                     </Row>
