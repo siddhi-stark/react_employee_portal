@@ -100,19 +100,17 @@ function ToDoList(props) {
       label: 'ETA',
       roleAccess: [1, 2, 3, 4, 5,6],
     },
-    {
-      id: 'at',
-      label: 'AT',
-      roleAccess: [1, 2, 3, 4, 5,6],
-    },
       {
       id: 'progress',
       label: 'Progress',
       roleAccess: [1, 2, 3, 4, 5, 6],
-      render: ({ progress,id, indexOf }) => {
+      render: ({ progress,id, indexOf,at }) => {
         return(
           <>
-          {console.log('progress',progress)}
+          {progress === 100 ? 
+            <span>{at}</span> 
+            : (
+
        <div className="progress-main">
                         <div className="progress">
                           <div className="progress-bar bg-secondary w-100">
@@ -125,7 +123,6 @@ function ToDoList(props) {
                               max="100"
                               value={Number(progress)}
                               onChange={(e) => {
-                                console.log('e.taget.value----',e.target.value);
                                 rows[indexOf].progress = e.target.value;
                                 setTimeout(() => {
                                   setRows([...rows]);
@@ -135,6 +132,7 @@ function ToDoList(props) {
                           </div>
                         </div>
                       </div>
+            )}
           </>
           )
       }
@@ -644,11 +642,9 @@ function ToDoList(props) {
     setBreakData([...breakData]);
   };
 
-  const OnSaveProgress = () => {
+  const OnSaveProgress = async () => {
     const progressArr = [];
     rows && rows.map((rw) => {
-      console.log('rw',rw);
-      console.log('rw.oldProgress === rw.progress',rw.oldProgress === rw.progress);
       if(rw.oldProgress !== rw.progress) {
       progressArr.push({
         id: rw.id,
@@ -658,7 +654,20 @@ function ToDoList(props) {
       }
       return rw;
     })
-    console.log('progressArr',progressArr);
+    const postData = {
+      data : progressArr
+    }
+
+    const endPoint = `${Api.taskProgressUrl}`;
+    const { data } = await AuthApi.putDataToServer(endPoint,postData);
+    if(data) {
+      console.log('data',data.message);
+       swal(data.message[0], '', 'success').then((result) => {
+        if (result) {
+          getTableData(1);
+        }
+      });
+    }
   }
 
   return (
