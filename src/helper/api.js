@@ -147,6 +147,8 @@ export default class Api extends Component {
 
   static fetchTeamworkDataUrl = 'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
 
+  static employeeBondDetailsUrl = `${Api.baseUrl}employee-bond-details/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 

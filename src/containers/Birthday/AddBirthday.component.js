@@ -12,8 +12,9 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
 function AddBirthday(props) {
-  const BirthdayId = props.match.params.bdayId; //eslint-disable-line
-  // Variable declarations
+  // const BirthdayId = props.match.params.bdayId; //eslint-disable-line 
+  const bday = props;
+  const BirthdayId = bday.match.params.bdayId;
   const viewObj = props;
   const viewOptions = viewObj.location.state
     ? viewObj.location.state.isView
@@ -32,7 +33,6 @@ function AddBirthday(props) {
   ];
   const history = useHistory();
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -71,7 +71,6 @@ function AddBirthday(props) {
     return imgId;
   };
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const postData = {
@@ -99,7 +98,6 @@ function AddBirthday(props) {
     }
   };
 
-  // Get data for form
   const getData = async (id, empList) => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
@@ -142,7 +140,6 @@ function AddBirthday(props) {
     }
   };
 
-  // Call get data method on load
   useEffect(() => {
     setbirthdayID(BirthdayId);
   }, []);
@@ -204,7 +201,6 @@ function AddBirthday(props) {
       `${Api.InterviewRoundsUrl}?constant_type=greet_type`
     );
     if (!data) {
-      // show error
       return;
     }
     const dpOptions =

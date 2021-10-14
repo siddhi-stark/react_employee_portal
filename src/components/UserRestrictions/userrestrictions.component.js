@@ -10,7 +10,7 @@ export default function UserRestrictions(props) {
 
   const subChildRoute = children&& children.props && children.props.children && children.props.children.props && children.props.children.props.to;
   const childrenArr = ['/archived-project', '/interview-listing', '/recruitment','/current-project','/scheduler','/team-scheduler'];
-  const childArr = ['/projects', '/interview-listing'];
+  const childArr = ['/projects'];
   const childProjectArr = ['/scheduler','/team-scheduler'];
 
   const hasPermissions =

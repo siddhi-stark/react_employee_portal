@@ -17,16 +17,12 @@ function MyInterviews() {
 	const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
-  
-  // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-
-  // Variable declarations
   const [filterData, setFilterData] = useState({});
 
   const formSchema = [...FormSections];
@@ -83,20 +79,20 @@ function MyInterviews() {
     );
   };
 
-  const handleResumeCallback = (resume) => {
+  const handleResumeCallback = ({resume,name}) => {
     return (
       <>
-      {resume.resume ? (
+        <span> {name} </span>
+        {resume ? (
 
-        <a href={resume.resume} className="pl-2" title="View Resume" target="_Blank">
-          <Image src="/images/download-file.svg" />
-        </a>
-        ) : ''}
+          <a href={resume} className="ms-2 pl-2" title="View Resume" target="_Blank">
+            <Image src="/images/download-file.svg" />
+          </a>
+          ) : ''}
       </>
     );
   };
-
-  // Declare columns
+ 
   const columns = [
     {
       id: 'offered_ctc',
@@ -125,33 +121,50 @@ function MyInterviews() {
     {
       id: 'name',
       label: 'Name',
+      render: handleResumeCallback,
     },
     {
       id: 'applied_for_name',
       label: 'Position',
     },
     {
-      id: 'tech_stack_name',
-      label: 'Technology',
-    },
-    {
       id: 'notes',
       label: 'Note',
       isDisplay: false,
-    },
-
-    {
-      id: 'resume',
-      label: 'Resume',
-      render: handleResumeCallback,
     },
     {
       id: 'status_name',
       label: 'Status',
     },
     {
-      id: 'round_status_name',
-      label: 'Round Status',
+      id: 'round_one',
+      label: 'Round 1',
+      render :(round_one) =>{
+      const categoryData = round_one.round_one; //eslint-disable-line
+      return(
+      <>
+       <span>
+       {`${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
+       } 
+       </span> 
+      </>
+      );
+      }
+    },
+    {
+      id: 'round_two',
+      label: 'Round 2',
+      render :(round_two) =>{
+      const categoryData = round_two.round_two; //eslint-disable-line
+      return(
+      <>
+       <span>
+       {`${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
+       } 
+       </span> 
+      </>
+      );
+      }
     },
     {
       id: 'action',
@@ -159,8 +172,7 @@ function MyInterviews() {
       render: handleActionCallback,
     },
   ];
-
-  // Declare methods
+ 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -178,6 +190,7 @@ function MyInterviews() {
       limit,
       sort_direction: 'descending',
       sort_by: 'round_date',
+      my_interview_round: 'true',
       ...filterList
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -189,14 +202,22 @@ function MyInterviews() {
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
 
-      const newData = [...data.data];
+      const newInterwArr = await data.data.map((dt) => {
+       if (dt.applicant_round_list && dt.applicant_round_list.length > 0) {
+       dt.round_two = dt.applicant_round_list[0]; //eslint-disable-line
+       dt.round_one = dt.applicant_round_list[1]; //eslint-disable-line
+       }
+       return dt;
+      });
+
+      const newData = [newInterwArr];
       newData.map((item, i) => {
         const newItem = item;
         newItem.no = (page - 1) * limit + (i + 1);
         return newItem;
       });
 
-      setRowData((data && data.data) || []);
+      setRowData((newInterwArr) || []);
     } else {
       setShowLoader(false);
       swal(message,'','error');
@@ -208,8 +229,6 @@ function MyInterviews() {
     setTitle('Recruitment');
   }, [filterData]);
 
-  // Get user role Filter search
-  // Submit Form
   const submitForm = async (formValues) => {
     setFilterData(formValues);
   };
@@ -229,7 +248,8 @@ function MyInterviews() {
                 <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               </div>  
               <hr/>
-             <StarkFormBuilder
+            <div className="filter-box-main">
+              <StarkFormBuilder
               containerClass=''
               formHeaderClass=''
               formSections={SearchFormSections}
@@ -247,6 +267,7 @@ function MyInterviews() {
                 setFilterData();
               }}
             />
+            </div>
             </Card.Body>
           </Card>
         <Card>
@@ -269,7 +290,6 @@ function MyInterviews() {
                   getRowData(pageNo);
                 },
               }}
-              // showCheckbox={Number(group) !== 4 ? true : false} //eslint-disable-line
               emptyRender={() => {
                 return 'No record found.';
               }}

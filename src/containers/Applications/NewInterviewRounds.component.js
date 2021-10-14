@@ -2,39 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
-// import { Button } from 'react-bootstrap';
-// import { setHours, setMinutes } from 'date-fns';
 import FormSections from './NewInterviewRounds.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
-// const addMoreData = {
-//   addmore: [
-//     {
-//       int_date: new Date,
-//       int_time: new Date,
-//       interviewer: { label: 'Prashant Mane', value: 2 },
-//       round_status: { label: 'hr screening', value: '1' },
-//     },
-//   ],
-// };
 
 function NewInterviewRounds(props) {
   const notes = customFunctions.getLocalStorage('notes');
   let defaultFilterOptions = {};
-  // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [isShowLoader,setShowLoader] = useState(false);
-  // const [formData, setFormData] = useState({});
-  // const [updatedData, setUpdatedData] = useState({});
   const [count, forceUpdate] = useState(0);
   const { isProfessionalInfoId } = props;
-
-  // const history = useHistory();
 
   useEffect(() => {
     const formSchema = [...FormSections];
@@ -56,7 +39,6 @@ function NewInterviewRounds(props) {
     updateJsonSchema([...updatedSchema]);
   }, []);
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -66,7 +48,6 @@ function NewInterviewRounds(props) {
     getUserRole();
   }, []);
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
@@ -175,7 +156,6 @@ function NewInterviewRounds(props) {
     }
   };
 
-  // Call get data method on load
   useEffect(() => {
     if (isProfessionalInfoId) {
       getData(isProfessionalInfoId);
@@ -187,13 +167,11 @@ function NewInterviewRounds(props) {
       `${Api.employeeUrl}?type=all&show_self=1`
     );
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     await data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.full_name, value: op.id });
       return op;
     });
@@ -211,13 +189,11 @@ function NewInterviewRounds(props) {
       `${Api.InterviewRoundsUrl}?constant_type=applicant_round_status`
     );
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     await data.data && data.data.applicant_round_status.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
@@ -235,14 +211,12 @@ function NewInterviewRounds(props) {
       `${Api.InterviewRoundsUrl}?constant_type=round_type`
     );
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     (await data.data) &&
       data.data.round_type.map((op) => {
-        // Change appropriate keys
         dpOptions.push({ label: op.name, value: op.id });
         return op;
       });
@@ -280,9 +254,6 @@ function NewInterviewRounds(props) {
             submitForm(formValues);
           }}
           options={options}
-          // callbacks={{
-          //   getinterviewvalue: (value) => { getInterviewValue(value); },
-          // }}
           defaultFormValues={defaultValues}
           refreshCounter={count}
           currentUser={currentUser}

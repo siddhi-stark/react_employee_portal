@@ -16,7 +16,6 @@ function AddHistory(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -35,8 +34,7 @@ function AddHistory(props) {
   useEffect(() => {
     getUserRole();
   }, []);
-
-  // Submit Form
+  
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const employeeId = customFunctions.getLocalStorage('id');
@@ -75,8 +73,7 @@ function AddHistory(props) {
         });
     }
   };
-
-  // Get data for form
+  
   const getData = async (id, designation) => {
     setShowLoader(true);
      const { data } = await AuthApi.getDataFromServer(`${Api.historyUrl}${id}/`);

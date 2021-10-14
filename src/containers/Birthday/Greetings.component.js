@@ -86,7 +86,6 @@ function Greetings() {
 		},
 	];
 
-	// Declare variable
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
 	const [limit, setLimit] = useState(10);
@@ -96,12 +95,14 @@ function Greetings() {
 	const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Greetings' }];
 
-  const getEmployee = async () => {
+  const getEmployee = async (pageNo = 1) => {
+  	const page = pageNo;
     const {data} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
-    getRowData(1,data.data);
+    if(data) {
+    getRowData(page,data.data);
+    }
   };
 
-	// Declare methods
 	const getRowData = async (pageNo = 1,empData) => {
 		setShowLoader(true);
 		const page = pageNo || currentPage;
@@ -176,6 +177,7 @@ function Greetings() {
             }).then(() => {
               swal.close();
               getRowData(1);
+              getEmployee(1);
             });
           } else {
             swal(message, '', 'error', {
@@ -222,7 +224,7 @@ function Greetings() {
 									itemsPerPage: limit,
 									activePage: currentPage,
 									onPageChange: (pageNo) => {
-										getRowData(pageNo);
+									getEmployee(pageNo);
 									},
 								}}
 								emptyRender={() => {

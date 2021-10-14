@@ -21,14 +21,11 @@ function Events() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [userRole, setUserRole] = useState('');
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
   const title = 'Events';
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Events' }];
   const employeeRole = customFunctions.getLocalStorage('group');
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  const [options, updateOptions] = useState({}); // eslint-disable-line
   
   const handleActionCallback = (row) => {
     return (
@@ -127,7 +124,7 @@ function Events() {
     getRowData(1);
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-  }, [filterData]);
+  }, []);
 
     const removeHoliday = (id) => {
     if (id) {

@@ -12,7 +12,7 @@ function EditPersonalDetails(props) {
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({}); // eslint-disable-line
+  const [options, updateOptions] = useState({}); 
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);  
   const [isShowLoader, setShowLoader] = useState(false);
@@ -46,8 +46,7 @@ useEffect(() => {
   updateJsonSchema([...updatedSchema]);        
   } 
   }, []);
-
-  // Get user role
+  
   const getUserRole = async() => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -56,8 +55,7 @@ useEffect(() => {
   useEffect(() => {
     getUserRole();
   }, []);
-
-  // Submit Form
+ 
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('id');
@@ -84,9 +82,8 @@ useEffect(() => {
      props.handleModalCLose(false);
      props.onPersonalDetailChanges();
     }
-  };
-    
-  // Get data for form
+  };    
+
   const getData = async () => {
     setShowLoader(true);
 
@@ -115,7 +112,6 @@ useEffect(() => {
   const getDesignation = async () => {
   const {data} = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
   if(!data) {
-    // show error
     return;
   }
   
@@ -141,7 +137,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
-        containerClass=''
+        containerClass='mb-2 mt-2'
         formHeaderClass=''
         formSections={jsonSchema}
         formHeading="Employee"
@@ -151,7 +147,7 @@ const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
         defaultFormValues={defaultValues}
         currentUser={currentUser}
         submitBtnText="Submit"
-        showResetBtn={true} // eslint-disable-line
+        showResetBtn={true} 
         showBtnClass={true}
         resetBtnText="Cancel"
         btnContainerClass="form-submit-buttons"

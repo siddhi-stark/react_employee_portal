@@ -60,16 +60,16 @@ const menu = [
     path: '/employees',
     icon: 'Employee.svg',
     submenu: [],
-    roleaccess: [2, 5, 6],
+    roleaccess: [1, 2, 5, 6],
   },
   
-  {
-    title: 'Employees',
-    path: '/employee',
-    icon: 'Employee.svg',
-    submenu: [],
-    roleaccess: [1],
-  },
+  // {
+  //   title: 'Employees',
+  //   path: '/employee',
+  //   icon: 'Employee.svg',
+  //   submenu: [],
+  //   roleaccess: [1],
+  // },
   {
     title: 'My Interviews',
     path: '/interview-listing',

@@ -44,7 +44,7 @@ function AllReports() {
             <a href="javascript.void(0)" onClick={(e)=>{
               e.preventDefault();
               e.stopPropagation();
-              history.push(`/daily-report/${dt}/${id}`,{employeeReport:true, reporterName:name})} // eslint-disable-line
+              history.push(`/daily-report/${dt}/${id}`,{employeeReport:true, reporterName:name});}
             }>
               <span className="text-info">View Report</span>
             </a>
@@ -84,12 +84,12 @@ function AllReports() {
     },
     {
       id: 'clockin',
-      label: 'Clock in',
+      label: 'In',
       roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockout',
-      label: 'Clock Out',
+      label: 'Out',
       roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {

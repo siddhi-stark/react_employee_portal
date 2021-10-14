@@ -383,7 +383,6 @@ function Employee() {
     getRole();
     getManager();
     getTeamLead();
-    // getDepartment();
     getNewDapartment();
     getTeam();
   }, [addButton]);
@@ -759,10 +758,10 @@ function Employee() {
     } else if (event.length > 6) {
       event = event.substring(0, 5);
     }
-    return event !== '' ? 'SDMS-' + event : ''; // eslint-disable-line
+    return event !== '' ? `SDMS-${event}` : ''; 
 
   };
-
+ 
   validator.purgeFields();
 
   return (
@@ -794,14 +793,6 @@ function Employee() {
                       <Row className="mt-3">
                         <Col sm={4}>
                           <div className="search-bar-input">
-                            {/* <TextInput
-                              value={searchKeyword}
-                              placeholder="Search Employee"
-                              onInputChange={(e) => {
-                                setFilterErr('');
-                                setSearchKeyword(e.target.value);
-                              }}
-                            /> */}
                             <DropdownInput
                               options={getEmp()}
                               placeholder="Select employee"
@@ -1008,7 +999,6 @@ function Employee() {
                   className="form-control"
                   selected={joiningDate}
                   placeholder="dd/mm/yyyy"
-                  // maxDate={maxdate}
                   dateFormat="dd/MM/yyyy"
                   maxDate={new Date()}
                   onChange={(e) => {

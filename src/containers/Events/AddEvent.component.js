@@ -15,15 +15,15 @@ function AddEvent(props) {
   const viewObj = props;
   const viewOptions = viewObj.location.state ? viewObj.location.state.isView : '';
   const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [imageUrl, setImageUrl] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   const [title, setTitle] = useState('Add Event');
   const history = useHistory();
-  const ID = props.match.params.id; // eslint-disable-line
-  const items = [{ to: '/', label: 'Home' }, { label: ID ? 'Edit Event' : 'Add Event' }]; 
+  const Event = props;
+  const EditEventId = Event.match.params.event;
+  const items = [{ to: '/', label: 'Home' }, { label: EditEventId ? 'Edit Event' : 'Add Event' }]; 
   const [eventId, setEventId] = useState('');
 
   items.map((it) => {
@@ -178,18 +178,18 @@ function AddEvent(props) {
 
   useEffect(() => {
     
-    setEventId(ID);
-    if (ID) {
-      getData(ID);
+    setEventId(EditEventId);
+    if (EditEventId) {
+      getData(EditEventId);
     }
 
     if(viewOptions === 'true')  setTitle('View Event');
 
-    if (ID) {
+    if (EditEventId) {
       setTitle('Edit Event');
     }
     
-    if(ID && viewOptions === 'true'){
+    if(EditEventId && viewOptions === 'true'){
       setTitle('View Event');
     }
   }, []);
@@ -219,7 +219,6 @@ function AddEvent(props) {
           onFormSubmit={(formValues) => {
             submitForm(formValues);
           }}
-          options={options}
           callbacks={{
             handleimage: (value) => {
               handleImageFileUpload(value);

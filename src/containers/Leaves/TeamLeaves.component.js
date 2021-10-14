@@ -32,7 +32,7 @@ function TeamLeaves() {
       id: 'user_name',
       label: 'Name',
       roleAccess: [4],
-      render: ({ user_name, id, status_name }) => { // eslint-disable-line
+      render: ({ user_name, id }) => { 
         return (
           <>
            <a
@@ -55,7 +55,7 @@ function TeamLeaves() {
       id: 'leave_date',
       label: 'Leave Date',
       roleAccess: [3],
-      render: ({ leave_from_date, leave_to_date }) => { // eslint-disable-line
+      render: ({ leave_from_date, leave_to_date }) => { 
         return (
           <>
             <span>{`${customFunctions.getNewFormattedDate(
@@ -79,7 +79,7 @@ function TeamLeaves() {
     {
       id: 'status_name',
       label: 'Status',
-       render: ({ id, status_name,leave_from_date }) => { // eslint-disable-line
+       render: ({ id, status_name,leave_from_date }) => { 
         return (
           <>
          
@@ -187,8 +187,7 @@ function TeamLeaves() {
     getRowData(1);
     setTitle('Leaves');
   }, [filterData]);
-
-    // Submit Form
+   
   const submitForm = async (formValues) => {
     setFilterData(formValues);
   };
@@ -221,24 +220,26 @@ function TeamLeaves() {
                 </div>
                </div> 
                <hr/>
-             <StarkFormBuilder
-              containerClass=''
-              formHeaderClass=''
-              formSections={SearchFormSections}
-              formHeading=""
-              onFormSubmit={(formValues) => {submitForm(formValues);}}
-              callbacks={{}}
-              submitBtnText="Apply"
-              showResetBtn={true}
-              resetBtnText="Clear"
-              showBtnClass={false}
-              btnContainerClass="col-md-4 filter-apply-btns"
-              formClass="row"
-              isStepForm={false}
-              onFormReset={() => {
-                setFilterData();
-              }}
-            />
+              <div className="filter-box-main">
+              <StarkFormBuilder
+                containerClass=''
+                formHeaderClass=''
+                formSections={SearchFormSections}
+                formHeading=""
+                onFormSubmit={(formValues) => {submitForm(formValues);}}
+                callbacks={{}}
+                submitBtnText="Apply"
+                showResetBtn={true}
+                resetBtnText="Clear"
+                showBtnClass={false}
+                btnContainerClass="col-md-4 filter-apply-btns"
+                formClass="row"
+                isStepForm={false}
+                onFormReset={() => {
+                  setFilterData();
+                }}
+              />
+              </div>
             </Card.Body>
             </Card>
             <Card>

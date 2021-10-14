@@ -30,7 +30,7 @@ function EmployeeTeamLeaves() {
       id: 'user_name',
       label: 'Name',
       roleAccess: [4],
-      render: ({ user_name, id, status_name }) => { // eslint-disable-line
+      render: ({ user_name, id }) => {
         return (
           <>
            <a
@@ -53,7 +53,7 @@ function EmployeeTeamLeaves() {
       id: 'leave_date',
       label: 'Leave Date',
       roleAccess: [3],
-      render: ({ leave_from_date, leave_to_date }) => { // eslint-disable-line
+      render: ({ leave_from_date, leave_to_date }) => { 
         return (
           <>
             <span>{`${customFunctions.getNewFormattedDate(
@@ -78,7 +78,7 @@ function EmployeeTeamLeaves() {
     {
       id: 'status_name',
       label: 'Status',
-       render: ({ id, status_name, leave_from_date }) => { // eslint-disable-line
+       render: ({ id, status_name, leave_from_date }) => { 
         return (
           <>
          { (status_name === 'Pending' && customFunctions.getDate(new Date()) <= leave_from_date) ? (
@@ -113,8 +113,7 @@ function EmployeeTeamLeaves() {
       },
     }
   ];
-
-  // Declare variable
+ 
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -177,8 +176,7 @@ function EmployeeTeamLeaves() {
     getRowData(1);
     setTitle('Leaves');
   }, [filterData]);
-  
-    // Submit Form
+   
   const submitForm = async (formValues) => {
     setFilterData(formValues);
   };
@@ -211,24 +209,26 @@ function EmployeeTeamLeaves() {
                 </div>
               </div>  
               <hr/>
-             <StarkFormBuilder
-              containerClass=''
-              formHeaderClass=''
-              formSections={SearchFormSections}
-              formHeading=""
-              onFormSubmit={(formValues) => {submitForm(formValues);}}
-              callbacks={{}}
-              submitBtnText="Apply"
-              showResetBtn={true}
-              resetBtnText="Clear"
-              showBtnClass={false}
-              btnContainerClass="col-md-4 filter-apply-btns"
-              formClass="row"
-              isStepForm={false}
-              onFormReset={() => {
-                setFilterData();
-              }}
-            />
+              <div className="filter-box-main">
+              <StarkFormBuilder
+                containerClass=''
+                formHeaderClass=''
+                formSections={SearchFormSections}
+                formHeading=""
+                onFormSubmit={(formValues) => {submitForm(formValues);}}
+                callbacks={{}}
+                submitBtnText="Apply"
+                showResetBtn={true}
+                resetBtnText="Clear"
+                showBtnClass={false}
+                btnContainerClass="col-md-4 filter-apply-btns"
+                formClass="row"
+                isStepForm={false}
+                onFormReset={() => {
+                  setFilterData();
+                }}
+              />
+              </div>
             </Card.Body>
             </Card>
             <Card>

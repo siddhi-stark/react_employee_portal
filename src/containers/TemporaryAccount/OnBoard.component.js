@@ -64,7 +64,6 @@ function OnBoard(props) {
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : '',
       role: formValues.role ? formValues.role.value : '',
       emp_code: Number(formValues.emp_code),
-      // tw_emp: formValues.tw_emp ? formValues.tw_emp.value : '',
       managers: managerList,
       team_leads: teamIdList,
       is_onboard: true,

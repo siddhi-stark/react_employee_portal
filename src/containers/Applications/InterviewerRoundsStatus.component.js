@@ -23,7 +23,7 @@ function InterviewerRoundsStatus(props) {
     interviewSelector: '',
     interviewRound: '',
   };
-  // Variable declarations
+
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [interviewData, setInterviewData] = useState(initialState);
@@ -38,7 +38,6 @@ function InterviewerRoundsStatus(props) {
     ? statusObj.location.state.isInterview
     : '';
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -69,7 +68,6 @@ function InterviewerRoundsStatus(props) {
     getData(isProfessionalInfoId);
   }, [isProfessionalInfoId]);
 
-  // Submit Form
   const submitForm = async (formValues) => {
       const applicantId = customFunctions.getLocalStorage('applicantId');
 
@@ -195,7 +193,6 @@ function InterviewerRoundsStatus(props) {
           onFormSubmit={(formValues) => {
             submitForm(formValues);
           }}
-          // options={options}
           callbacks={{}}
           defaultFormValues={defaultValues}
           currentUser={currentUser}

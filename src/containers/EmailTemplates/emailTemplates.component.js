@@ -22,7 +22,7 @@ function EmailTemplatesComponent() {
   const title = 'Employees List';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Email Templates' }];
-  // Variable declarations
+ 
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
@@ -72,7 +72,7 @@ function EmailTemplatesComponent() {
   };
 
   const onEditorStateChange = (editorState, index) => {
-    // setDescription(editorState);
+    
     const emlContent = [...emailContent];
     const data = emlContent.map((d, i) => {
       if (i === index) {
@@ -82,8 +82,7 @@ function EmailTemplatesComponent() {
     });
     setEmailContent([...data]);
   };
-
-  // Get user role
+ 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -99,7 +98,6 @@ function EmailTemplatesComponent() {
     if (templateId) getEmailTemplateData();
   }, [templateId]);
 
-  // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
     emailContent &&
@@ -138,7 +136,7 @@ function EmailTemplatesComponent() {
     } else {
       setShowLoader(false);
       swal(message, '', 'error');
-      // show error
+      
     }
   };
 
@@ -155,13 +153,11 @@ function EmailTemplatesComponent() {
   const getEmailTemplateName = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.emailTemplates);
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.name, value: op.id });
       return op;
     });

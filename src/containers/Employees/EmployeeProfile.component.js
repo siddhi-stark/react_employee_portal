@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, Link } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import { Image, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
@@ -11,6 +11,7 @@ import customFunctions from '../../helper/customFunctions';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import { Helmet } from '../../components/FormInputs';
+import AddBondHistory from './AddBondHistory.component';
 
 function EmployeeProfile(props) {
   const [showEmployee, setShowEMployee] = useState(false);
@@ -25,6 +26,9 @@ function EmployeeProfile(props) {
   const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
   const [isShowLoader,setShowLoader] = useState(false);
+  const [showBond,setShowBond] = useState(false);
+  const [bondList, setBondList] = useState([]);
+  const [bondData, setBondData] = useState({});
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
@@ -175,6 +179,7 @@ function EmployeeProfile(props) {
   useEffect(() => {
     getEmployeeHIstory();
     getEmployeeDetails();
+    getBondHistory();
     setTitle('Employee Profile');
   }, []);
 
@@ -223,6 +228,57 @@ function EmployeeProfile(props) {
     }
   };
 
+  const getBondHistory = async () => {
+    setShowLoader(true);
+    const employeeId = props.match.params.id;
+    const endPoint = `${Api.employeeBondDetailsUrl}?sort_direction=descending&employee_id=${employeeId}`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
+      setShowLoader(false);
+      setBondList(data.data);
+    }
+  };
+  
+  const onChangeInBondHistory = () => {
+    getBondHistory();
+  };
+
+  const deleteBondHistory = (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure that you want to delete the bond history?',
+        icon: 'warning',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.employeeBondDetailsUrl}${id}/`
+          );
+          if (data) {
+            swal(data && data.message[0], '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              getBondHistory();
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
+  };
+
   return (
     <>
       <Helmet title={title} />
@@ -254,16 +310,20 @@ function EmployeeProfile(props) {
           <div className="table-projects">
             {showPersonalDetails ? (
               <div className="mt-4 card">
-                <EditPersonalDetails
-                  handleModalCLose={(e) => setShowPersonalDetails(e)}
-                  onPersonalDetailChanges={() => {
-                    onEmployeePersonalDetails();
-                  }}
-                />
+                <div className="card-body">
+                  <EditPersonalDetails
+                    handleModalCLose={(e) => setShowPersonalDetails(e)}
+                    onPersonalDetailChanges={() => {
+                      onEmployeePersonalDetails();
+                    }}
+                  />
+                </div>
               </div>
             ) : (
               <div className="mt-4 card">
-                <div className="d-flex align-items-center justify-content-between mb-2">
+                <div className="card-body">
+
+                <div className=" d-flex align-items-center justify-content-between mb-2">
                   <div className="date-edit-option d-flex align-items-center justify-content-between w-100">
                     <h6 className="me-5">
                       DOB -{' '}
@@ -347,7 +407,8 @@ function EmployeeProfile(props) {
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+             )}
           </div>
           <div className="profile-details">
             <div className="row">
@@ -440,13 +501,95 @@ function EmployeeProfile(props) {
                       ))}
                   </div>
                 </div>
+                <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex align-items-start justify-content-between mb-4">
+                        <h5 className="card-title">Bond History</h5>
+
+                        <button
+                          onClick={() => {
+                            setShowBond(true);
+                            customFunctions.removeLocalStorage('bondHistoryID');
+                          }}
+                          type="button"
+                          className="btn btn-primary"
+                        >
+                          Add Bond
+                        </button>
+                    </div>
+                   {showBond && (
+                      <div className="mt-4 card">
+                        <AddBondHistory
+                          optionsData={bondData}
+                          handleModalCLose={(e) => setShowBond(e)}
+                          onChanges={() => {
+                            onChangeInBondHistory();
+                          }}
+                        />
+                      </div>
+                    )}
+                    {bondList &&
+                      bondList.map((bond) => (
+                        <>
+                          <div className="d-flex align-items-start justify-content-between">
+                            <div className="media">
+                              <div className="media-body">
+                                <p>
+                                  Start Date: {bond.start_date && customFunctions.getDMYDate( bond.start_date)} &nbsp;
+                                  End Date: {bond.end_date && customFunctions.getDMYDate(bond.end_date)} <br/>
+                                
+                                Document Link: 
+                                  <Link
+                                    className="mt-3 ms-2"
+                                    title="Document Link"
+                                    to={{ pathname: `${bond.file_name}`}}
+                                    target="_blank"
+                                  >
+                                   { bond.file_name && decodeURI(bond.file_name.split(decodeURI(Api.s3url))).substring(55)}
+                                  </Link>
+                                </p>
+                              </div>
+                            </div>
+                            <div className="address-edit-delete d-flex align-items-center">
+                              <a href="javascript:void()">
+                                <Image
+                                  src="/images/edit-button.svg"
+                                  title="Edit Profile"
+                                  onClick={() => {
+                                    setBondData(bond);
+                                    setShowBond(true);
+                                    customFunctions.setLocalStorage(
+                                      'bondHistoryID',
+                                      bond.id
+                                    );
+                                    // history.push(`/profile-history/id=${comp.id}`)
+                                  }}
+                                />
+                              </a>
+                              <a href="javascript:void()">
+                                <Image
+                                  src="/images/delete.png"
+                                  title="Edit Profile"
+                                  onClick={() => {
+                                    deleteBondHistory(bond.id);
+                                  }}
+                                />
+                              </a>
+                            </div>
+                          </div>
+                          <hr />
+                        </>
+                      ))}
+                  </div>
+                </div>
                 {employeeDocument && employeeDocument.length > 0 ? (
                   <>
                   <div className="card">
-                  <div className="card-header">
-                    <h5>Documents</h5>
-                  </div>
                   <div className="card-body">
+                    <div className="d-flex align-items-center justify-content-between">
+                      <h5 className="card-title mb-0 mt-2 ">Documents</h5>
+                   </div> 
+                   <hr/> 
                     {employeeDocument &&
                       employeeDocument.map((document) => (
                         <>

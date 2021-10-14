@@ -65,7 +65,7 @@ function AddLeave(props) {
     {
       id: 'start_date',
       label: 'Task Start Date',
-      render: ({ start_date }) => { // eslint-disable-line
+      render: ({ start_date }) => { 
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(start_date)}</span>
@@ -76,7 +76,7 @@ function AddLeave(props) {
     {
       id: 'end_date',
       label: 'Task Completion Date',
-      render: ({ end_date }) => { // eslint-disable-line
+      render: ({ end_date }) => { 
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(end_date)}</span>
@@ -91,10 +91,10 @@ function AddLeave(props) {
     {
       id: 'project_end_date',
       label: 'Project Deadline',
-      render: ({ project_end_date }) => { // eslint-disable-line
+      render: ({ project_end_date }) => { 
         return (
           <>
-            <span>{project_end_date ? customFunctions.getNewFormattedDate(project_end_date) :'' // eslint-disable-line
+            <span>{project_end_date ? customFunctions.getNewFormattedDate(project_end_date) :'' 
             }</span>
           </>
         );
@@ -146,11 +146,10 @@ function AddLeave(props) {
         });
         return s;
       });
-}  
+    }  
       updateJsonSchema([...updatedSchema]);
   }, [status]);
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -234,8 +233,7 @@ function AddLeave(props) {
       }
     }
   };
-
-  // Submit Form
+ 
   const submitForm = async (formValues) => {
     if(formValues.leave_from_date){
       setStartDate(formValues.leave_from_date);
@@ -247,8 +245,7 @@ function AddLeave(props) {
     } 
     setFormValuesData(formValues);
   };
-
-  // Get data for form
+  
   const getData = async () => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
@@ -297,8 +294,7 @@ function AddLeave(props) {
       },
     });
   };
-
-  // Call get data method on load
+  
   useEffect(() => {
     if (leaveId) getData();
   }, [status]);
@@ -311,7 +307,7 @@ function AddLeave(props) {
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
+      
       dpOptions.push({ label: op.title, value: op.id });
       return op;
     });
@@ -325,8 +321,7 @@ function AddLeave(props) {
   useEffect(() => {
     getLeaveType();
   }, []);
-
-  // Declare methods
+  
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const userId = customFunctions.getLocalStorage('userId');

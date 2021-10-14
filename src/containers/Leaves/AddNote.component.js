@@ -9,7 +9,8 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 
 function AddNote(props) {
-  const note = props.note; //eslint-disable-line
+  const noteData = props;
+  const note = noteData.note;
 
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});
@@ -17,8 +18,7 @@ function AddNote(props) {
   const [showNote, setShowNote] = useState(false);
   const [leaveId, setLeaveId] = useState(null);
   const [statusId, setStatusId] = useState(null);
-
-  // Get user role
+ 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -27,8 +27,7 @@ function AddNote(props) {
   useEffect(() => {
     getUserRole();
   }, []);
-
-  // Submit Form
+  
   const submitForm = async (formValues) => {
     const reasonLabel = (statusId === 2) ? 'approve' : 'decline';
     const postData = {

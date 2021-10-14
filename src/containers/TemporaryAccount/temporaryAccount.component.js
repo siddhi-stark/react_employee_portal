@@ -74,7 +74,6 @@ function TemporaryAccount(props) {
   useEffect(() => {
     if(trigger) {
       getCompletionData();
-      // window.location.reload();
     }
   }, [trigger]);
 
@@ -109,6 +108,7 @@ function TemporaryAccount(props) {
               <h5>{personalInfo.applied_for_name}</h5>
               <div className="table-projects">
                 <div className="mt-4 card">
+                  <div className="card-body">
                   <div className="row">
                     <div className="col-md-4">
                       <h6>Email - {personalInfo.email}</h6>
@@ -137,6 +137,7 @@ function TemporaryAccount(props) {
                         label={`${personalInfo.completion ? personalInfo.completion : completion}% completed`}
                       />
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>

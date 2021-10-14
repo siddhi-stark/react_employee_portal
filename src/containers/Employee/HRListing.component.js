@@ -9,7 +9,6 @@ import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 
-// Declare columns
 const columns = [
   {
     id: 'date',
@@ -31,17 +30,14 @@ const columns = [
 const Name = customFunctions.getLocalStorage('name');
 
 function HRListing() {
-  // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); //eslint-disable-line
   const title = 'Timesheet';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
 
-  // Declare methods
   const getRowData = async (pageNo = 1) => {
     const page = pageNo || currentPage;
     const UserId = customFunctions.getLocalStorage('userId');
@@ -63,7 +59,7 @@ function HRListing() {
 
   useEffect(() => {
     getRowData(1);
-  }, [filterData]);
+  }, []);
 
   return (
     <>

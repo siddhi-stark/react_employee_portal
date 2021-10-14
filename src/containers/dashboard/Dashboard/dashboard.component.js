@@ -46,12 +46,10 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
   const [leavesUpdate, setLeavesUpdate] = useState([]);
   const [interviewsUpdate, setInterviewsUpdate] = useState([]);
-  const [message, setMessage] = useState('');
-
-  // let isShowBdayHeading = false;
+  const [, setCount] = useState('');  // eslint-disable-line
+  const [newBirthdayData, setNewBirthdayData] = useState([]);
 
   const d = new Date();
-  // const ToDayDate = d.getDate();
   const day = d.getDate(); // eslint-disable-line
   const m_names = [
     'January',
@@ -72,14 +70,6 @@ function Dashboard() {
 
   const DayMonth = day + ' ' + n; // eslint-disable-line
 
-  // EmployeeID &&
-  //   EmployeeID.map((empl) => {
-  //     if (Number(empl.dob) === Number(day)) {
-  //       isShowBdayHeading = true;
-  //     }
-  //     return empl;
-  //   });
-
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -96,12 +86,12 @@ function Dashboard() {
     },
     {
       id: 'clockin',
-      label: 'Clock In',
+      label: 'In',
       roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockout',
-      label: 'Clock out',
+      label: 'Out',
       roleAccess: [2, 3, 4, 5, 6],
     },
     {
@@ -178,13 +168,21 @@ function Dashboard() {
         const avsrArr = [];
         await data.data && data.data.length > 0 && data.data.map((anvs) => {
         const dayMonth = anvs.date_of_joined && anvs.date_of_joined.substring(5, 11);
-        const JoiningDate = new Date(anvs.date_of_joined);
-        const newDate = JoiningDate.getFullYear() + 1;
-        const newJoiningDate = `${newDate}-${dayMonth}`;
         const todayDate = new Date();
-        if(newJoiningDate === customFunctions.getDate(todayDate)){
+        const currentYear = todayDate.getFullYear();
+        const todayFormattedDate = customFunctions.getDate(todayDate);
+        const todayDayMonth = todayFormattedDate.substring(5,11);
+        const joiningDateYear = new Date(anvs.date_of_joined).getFullYear();
+        // const JoiningDate = new Date(anvs.date_of_joined);
+        // const newDate = JoiningDate.getFullYear() + 1;
+        // const newJoiningDate = `${newDate}-${dayMonth}`;
+        if(dayMonth === todayDayMonth && joiningDateYear < currentYear) {
           avsrArr.push(anvs);
         }
+
+        // if(newJoiningDate === customFunctions.getDate(todayDate)){
+        //   avsrArr.push(anvs);
+        // }
         setAnniversary(avsrArr);
         return anvs;
       });
@@ -282,10 +280,10 @@ function Dashboard() {
           Number(e.dob) >= day
       );
     setBirthdayArray(birthdayArrr);
-    if(Number(uRole) ===  1 || Number(uRole) ===  2 || Number(uRole) ===  3 ) {
+    if(Number(uRole) !==  4 ) {
       getLeavesUpdate();
-      getInterviewsUpdate();
     }
+    getInterviewsUpdate();
   }, []);
 
   const onViewButtonClick = () => {
@@ -329,24 +327,54 @@ function Dashboard() {
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
       setInterviewsUpdate(data.data);
-    }
+    }  
   };
 
-  const postGreetingMessage = async (id,GreetingId) => {
+  const postGreetingMessage = async (id,GreetingId, type='') => {
+    const newGreetData = newBirthdayData && newBirthdayData.filter(i => i.id === id);
+    const newData = newBirthdayData && newBirthdayData[0] && newBirthdayData[0].employee_data && newBirthdayData[0].employee_data.filter(i => i.id === id);
     const postData = {
       wish_to: Number(id),
-      message,
       greeting: GreetingId,
+      message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
 
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
       swal(data.message[0], '', 'success');
-      setMessage('');
-      // getBirthdayWishes(GreetingId);
-      // setShowMessage(false);
-      // setEmployeeMessage('');
+      if(type === 'birthday'){
+        birthdayArr && birthdayArr.map(i =>{
+          const dt = i;
+          if(dt.id === id){
+            dt.message = '';
+          }
+          return i;
+        });
+        setBirthdayArray(birthdayArr);
+      }else if(type === 'anniversary'){
+          anniversary && anniversary.map(i =>{
+          const dt = i;
+          if(dt.id === id){
+            dt.message = '';
+          }
+          return i;
+        });
+        setAnniversary(anniversary);
+      }else{
+         appreciationData && appreciationData.map((i) => {
+           i.employee_data && i.employee_data.map((appData) => {
+          const dt = appData;
+          if(dt.id === id){
+            dt.greetMessage = '';
+          }
+          return appData;
+        });
+           return i;
+        });
+        setAppriciation(appreciationData);
+      }
+      setCount('');
     }
   };
 
@@ -364,7 +392,7 @@ function Dashboard() {
         <Row>
           <Col xl={8} id="main-content">
             <Jumbotron className="welcome-box">
-              <Row className="align-items-center">
+              <Row className="align-items-center w-100">
                 <Col md={5}>
                   <div className="welcome-text">
                     <h1>
@@ -482,6 +510,8 @@ function Dashboard() {
                     <div className="birthtitle d-flex align-items-center">
                       <img className="mr-2" src="/images/birthday-cake-icon.svg" alt="img" />
                       <a href="/wishes" onClick={()=>{
+                        customFunctions.setLocalStorage('isAnniversary',emp.is_anniversary);
+                         customFunctions.setLocalStorage('isBirthday',emp.is_birthday); 
                          if (emp.greeting) {
                             customFunctions.setLocalStorage(
                               'employeeId',
@@ -503,23 +533,33 @@ function Dashboard() {
                             'EmpName',
                             emp.name
                           );
+                          } else {
+                            customFunctions.removeLocalStorage('employeeId');
+                            customFunctions.removeLocalStorage('gId');
+                            customFunctions.removeLocalStorage('comment-allow');
+                            customFunctions.removeLocalStorage('EmpID');
+                            customFunctions.removeLocalStorage('EmpName');
                           }
-                      }}><h4>{emp.name}</h4></a>
+                      }}><h4>Happy Birthday <br />{emp.name}</h4></a>
                     </div>
                      {(emp.comment_allow && (Number(emp.id) === Number(UserID))) || 
                       (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
                     <div className="birth-input-field mt-3">
                      <TextInput
-                      onInputChange={(e) => setMessage(e.target.value)}
+                      onInputChange={(e) => { 
+                        emp.message = e.target.value; // eslint-disable-line
+                        setCount(e.target.value);
+                        setNewBirthdayData(birthdayArr);
+                      }}
                       containerClass="mb-0"
                       type="text"
-                      value={message}
+                      value={emp.message}
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" onClick={()=>{
-
-                      postGreetingMessage(emp.id,emp.greeting);
+                    <a href="#" onClick={(e)=>{
+                      e.preventDefault();
+                      postGreetingMessage(emp.id, emp.greeting, 'birthday');
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
@@ -544,6 +584,8 @@ function Dashboard() {
                     <div className="birthtitle d-flex align-items-center">
                       <img className="mr-2" src="/images/anniversary-icon.svg" alt="img" />
                        <a href="/wishes" onClick={() => { // eslint-disable-line
+                         customFunctions.setLocalStorage('isAnniversary',emp.is_anniversary);
+                         customFunctions.setLocalStorage('isBirthday',emp.is_birthday); 
                           if (emp.greeting_anniversary) {
                             customFunctions.setLocalStorage(
                               'employeeId',
@@ -565,24 +607,33 @@ function Dashboard() {
                               'EmpName',
                               emp.name
                             );
+                          } else {
+                            customFunctions.removeLocalStorage('employeeId');
+                            customFunctions.removeLocalStorage('gId');
+                            customFunctions.removeLocalStorage('comment-allow');
+                            customFunctions.removeLocalStorage('EmpID');
+                            customFunctions.removeLocalStorage('EmpName');
                           }
-                        }}><h4>{emp.name}</h4></a>
+                        }}><h4>Work Anniversary<br/>{emp.name}</h4></a>
                     </div>
                       {(emp.comment_allow && (Number(emp.id) === Number(UserID))) || 
                       (emp.comment_allow && (Number(emp.id) !== Number(UserID))) && (
                     <div className="birth-input-field mt-3">
 
-                     <TextInput
-                      onInputChange={(e) => setMessage(e.target.value)}
+                    <TextInput
+                      onInputChange={(e) => { setCount(e.target.value);
+                        emp.message = e.target.value; // eslint-disable-line
+                        setNewBirthdayData(anniversary);
+                      }}
                       containerClass="mb-0"
                       type="text"
-                      value={message}
-                      Row={5}
+                      value={emp.message}
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" onClick={()=>{
-                      postGreetingMessage(emp.id,emp.greeting_anniversary);
+                    <a href="#" onClick={(e)=>{
+                      e.preventDefault();
+                      postGreetingMessage(emp.id,emp.greeting_anniversary, 'anniversary');
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div>
                     )}    
@@ -631,22 +682,35 @@ function Dashboard() {
                                 'comment-allow',
                                 appr.comment_allow
                               );
-                            }
-                       }}><h4>{empdata.full_name}</h4></a>
+                            } else {
+                            customFunctions.removeLocalStorage('employeeId');
+                            customFunctions.removeLocalStorage('gId');
+                            customFunctions.removeLocalStorage('comment-allow');
+                            customFunctions.removeLocalStorage('EmpID');
+                            customFunctions.removeLocalStorage('EmpName');
+                          }
+                       }}><h4>Appreciate<br/>{empdata.full_name}</h4></a>
                     </div>
 
                      {(appr.comment_allow && (Number(empdata.id) === Number(UserID))) || 
                       (appr.comment_allow && (Number(empdata.id) !== Number(UserID))) && (
                     <div className="birth-input-field mt-3">
                      <TextInput
-                      onInputChange={(e) => setMessage(e.target.value)}
+                      onInputChange={(e) => { 
+                        setCount(e.target.value);
+                        empdata.greetMessage = e.target.value; // eslint-disable-line
+                        setNewBirthdayData(appreciationData);
+                      }}
                       containerClass="mb-0"
                       type="text"
-                      value={message}
+                      value={empdata.greetMessage}
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
+                    <a href="#" className="birth-input-arrow" onClick={(e)=>{
+                      e.preventDefault();
+                      postGreetingMessage(empdata.id, appr.id);
+                    }}><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
                   </div>
@@ -659,70 +723,76 @@ function Dashboard() {
              ))}
                  </>)}
              </Row>
-                
-            {((leavesUpdate && leavesUpdate.length > 0) || (interviewsUpdate && interviewsUpdate.length > 0)) ? (
-              <>
-               <Card className="mt-3 birthday-list mb-4">
-                <UserRestrictions permittedUsers={[1, 2, 3]} roleId={userRole}>
-                <Card.Body
-                  className={
-                    leavesUpdate && leavesUpdate.length >= 1
-                      ? 'work-anniversary-box'
-                      : 'birth-box-remove'
-                    }
-                  >
-                  {leavesUpdate && leavesUpdate.length > 0 ? <p>Today's Pending Leaves</p> : ''}
-                    <div className="work-anniversary-box-user">
-                    <div className="birth-name d-flex align-items-center">
+
+              <div classNameName="row">
+              {(leavesUpdate && leavesUpdate.length > 0) && (
+              <div classnamename="dark-blue-bg mb-4 col-md-12 card">
+                <UserRestrictions permittedUsers={[1, 2, 3, 5, 6]} roleId={userRole}>
+                <div classnamename="pie-chart-graph card today-pending-leaves-interviews">
+                  <div className="purple-bg card-header">
+                    <span>Today's Pending Leaves</span>
+                  </div>
+                  <div className="card-body">
+                    <div className="birth-name d-flex align-items-center mb-0">
                       {leavesUpdate &&
                         leavesUpdate.length > 0 &&
                         leavesUpdate.map((empLeave) => (
                           <>
                             <div className="birthday-employees">
-                              <h6>
-                              <a className="mt-2" href={(Number(userRole) === 1) ? '/employee-leaves': '/team-leaves'}>
-                                {empLeave.user_name}
+                              <h5 className="card-title">
+                              <a className="mt-2" href='#' onClick={()=>{
+                                 if(Number(userRole) === 1){
+                                     history.push('/employee-leaves');
+                                  } else if(Number(userRole) === 6 || Number(userRole) === 3 || Number(userRole) === 2 || Number(userRole) === 5) {
+                                    history.push('/team-leaves');
+                                  } else {
+                                    history.push('/leaves');
+                                  }
+                              }}>
+                                {empLeave.user_name} &nbsp;
                               </a>
-                              </h6>
+                              </h5>
                             </div>
                           </>
                         ))}
+                      </div>
                     </div>
                   </div>
-                </Card.Body>
-
-                 <Card.Body
-                  className={
-                    interviewsUpdate && interviewsUpdate.length >= 1
-                      ? 'work-anniversary-box'
-                      : 'birth-box-remove'
-                    }
-                  >
-                  {interviewsUpdate && interviewsUpdate.length > 0 ? <p>Today's Interviews</p> : ''}
-                    <div className="work-anniversary-box-user">
-                    <div className="birth-name d-flex align-items-center">
-                      {interviewsUpdate &&
-                        interviewsUpdate.length > 0 &&
-                        interviewsUpdate.map((empInterview) => (
-                          <>
-                            <div className="birthday-employees">
-                              <h6>
-                                 <a className="mt-2" href="/interview-listing">
-                                  {empInterview.name}
-                                </a>
-                              </h6>
-                            </div>
-                          </>
-                        ))}
-                    </div>
-                  </div>
-                </Card.Body>
                 </UserRestrictions>
-              </Card>
-              </>
-              ) : ''}
+                </div>
+                )}
+                {(interviewsUpdate && interviewsUpdate.length > 0) && (
+                  <Card classNameName="dark-blue-bg mb-4 col-md-12">
+                   <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
+                    {interviewsUpdate && interviewsUpdate.length > 0 ?
+                      <div className="purple-bg card-header">
+                        <span>Today's Interviews</span>
+                      </div> 
+                     : ''}
+                    
+                    <div className="card-body">
+                      <div className="birth-name d-flex align-items-center mb-0">
+                        {interviewsUpdate &&
+                          interviewsUpdate.length > 0 &&
+                          interviewsUpdate.map((empInterview) => (
+                            <>
+                              <div className="birthday-employees">
+                                <h5 className="card-title">
+                                   <a className="mt-2" href="/interview-listing">
+                                    {empInterview.name} &nbsp;
+                                  </a>
+                                </h5>
+                              </div>
+                            </>
+                          ))}
+                      </div>
+                    </div>
+                   </div>
+                  </Card>
+                )}
+              </div>
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
-              <div className="mt-4">
+              <div className="mt-0">
                 <EmployeeListComponent />
               </div>
             </UserRestrictions>
@@ -808,6 +878,7 @@ function Dashboard() {
             >
               <div className="table-projects time-sheet-table">
                 <div className="card">
+                <div className="card-body">
                   <div className="table-title">
                     <h5 className="card-title">Timesheet</h5>
                     <Image
@@ -831,13 +902,15 @@ function Dashboard() {
                           getTimeSheetList(pageNo);
                         },
                       }}
-                      tableClass="table-striped"
+                      tableClass="table-striped mb-0"
                       dropdownContainerClass="mb-3"
                       emptyRender={() => (
                         <p className="text-center mb-0">No record found</p>
                       )}
                     />
                   </div>
+
+                </div>
                 </div>
               </div>
             </UserRestrictions>
@@ -913,8 +986,15 @@ function Dashboard() {
                                     <p> {lv.leave_type}</p>
                                   </div>
                                   <div className="date">
-                                       <a href ="/my-leaves" onClick={()=>{
+                                       <a href ="#" onClick={()=>{
                                           onViewLeaves();
+                                          if(Number(userRole) === 1){
+                                             history.push('/employee-leaves');
+                                          } else if(Number(userRole) === 6 || Number(userRole) === 3 || Number(userRole) === 2 || Number(userRole) === 5) {
+                                            history.push('/my-leaves');
+                                          } else {
+                                            history.push('/leaves');
+                                          }
                                     }}>
                                     <span>
                                       {lv.leave_from_date} To {lv.leave_to_date}

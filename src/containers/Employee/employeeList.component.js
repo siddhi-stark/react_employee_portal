@@ -16,11 +16,11 @@ const columns = [
   {
     id: 'emp_id',
     label: 'ID',
-    render: ({ emp_id }) => { // eslint-disable-line
+    render: ({ emp_id }) => { 
       return (
         <>
           <span>{
-            `SDMS ${emp_id}` // eslint-disable-line
+            `SDMS ${emp_id}`
           }</span>
         </>
       );
@@ -78,7 +78,6 @@ function EmployeeListComponent() {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const history = useHistory();
   const [userRole, setUserRole] = useState('');
 
@@ -112,7 +111,7 @@ function EmployeeListComponent() {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
     getRowData(1);
-  }, [filterData]);
+  }, []);
 
   const onViewBtnChange = () => {
     document.dispatchEvent(ViewButtonMenu);
@@ -121,7 +120,7 @@ function EmployeeListComponent() {
 
   return (
     <>
-      <Card>
+      <Card className="mb-3">
         <Card.Body>
          <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 "> Employee Timesheet - {n}({dateNew})</h5>

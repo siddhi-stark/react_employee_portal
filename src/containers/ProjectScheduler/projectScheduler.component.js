@@ -32,7 +32,6 @@ function ProjectScheduler() {
   const teamId = customFunctions.getLocalStorage('team_id');
 
   // Variable declarations Filter
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   let filterOptions = {};
@@ -312,7 +311,6 @@ function ProjectScheduler() {
                           setDeveloperValue(value);
                         },
                       }}
-                      defaultFormValues={defaultValues}
                       currentUser={currentUser}
                       submitBtnText="Apply"
                       showResetBtn={true}

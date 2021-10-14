@@ -13,12 +13,12 @@ import Api from '../../helper/api';
 import Loader from '../../components/Loader/index';
 
 function CandidateListing() {
-	// Declare variable
+
 	const [rowData, setRowData] = useState([]);
 	const [totalCount, setTotalCount] = useState(10);
 	const [limit, setLimit] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [filterData, setFilterData] = useState({}); // eslint-disable-line
+	const [filterData, setFilterData] = useState({}); 
   const [isShowLoader, setShowLoader] = useState(false);
 
 	const title = 'Candidates';
@@ -76,8 +76,7 @@ function CandidateListing() {
 			</>
 		);
 	};
-
-	// Declare columns
+	
 	const columns = [
 		{
 			id: 'name',
@@ -102,7 +101,7 @@ function CandidateListing() {
 		{
 			id: 'joining_date',
 			label: 'Joining Date',
-			render: ({ joining_date }) => { // eslint-disable-line
+			render: ({ joining_date }) => { 
 				return (
 					<>
 						<span>{customFunctions.getDMYDate(joining_date)}</span>
@@ -122,7 +121,6 @@ function CandidateListing() {
 		},
 	];
 
-	// Declare methods
 	const getRowData = async (pageNo = 1) => {
 		setShowLoader(true);
 		const page = pageNo || currentPage;
@@ -158,8 +156,7 @@ function CandidateListing() {
 	useEffect(() => {
 		getRowData(1);
 	}, [filterData]);
-  
-  // Submit Form
+
   const submitForm = async (formValues) => {
     setFilterData(formValues);
   };
@@ -179,6 +176,7 @@ function CandidateListing() {
               <h5 className="card-title mb-0 mt-2 ">Filters</h5>
             </div>  
             <hr/>
+            <div className="filter-box-main">
 						 <StarkFormBuilder
 	              containerClass=''
 	              formHeaderClass=''
@@ -197,6 +195,7 @@ function CandidateListing() {
 	                setFilterData();
 	              }}
 	            />
+	            </div>
             </Card.Body>
           </Card>
           <Card>

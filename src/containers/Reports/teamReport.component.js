@@ -51,12 +51,12 @@ function TeamReport() {
     },
     {
       id: 'clockin',
-      label: 'Clock in',
+      label: 'In',
       roleAccess: [3,2,6,5],
     },
     {
       id: 'clockout',
-      label: 'Clock Out',
+      label: 'Out',
       roleAccess: [3,2,6,5],
     },
     {
@@ -128,13 +128,10 @@ function TeamReport() {
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,
           report: (
-            // <a href={`/daily-report/${dt}/${report.user_id}`}>
-            //   <span className="text-info">View Report</span>
-            // </a>
              <a href="javascript.void(0)" onClick={(e)=>{
               e.preventDefault();
               e.stopPropagation();
-              history.push(`/daily-report/${dt}/${report.user_id}`,{teamReport:true, reporterName:report.user})} // eslint-disable-line
+              history.push(`/daily-report/${dt}/${report.user_id}`,{teamReport:true, reporterName:report.user});}
             }>
               <span className="text-info">View Report</span>
             </a>

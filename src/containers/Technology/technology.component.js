@@ -14,17 +14,14 @@ import AddTechnology from './AddTechnology.component';
 import Loader from '../../components/Loader/index';
 
 function Technology() {
-  // Declare variable
+  
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
+  const [filterData, setFilterData] = useState({}); 
   const [technologyId, setTechnologyId] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [isShowLoader,setShowLoader] = useState(false);
-  // Variable declarations
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [title, setTitle] = useState('');
   const limit = 10;
@@ -75,7 +72,6 @@ function Technology() {
     },
   ];
 
-  // Declare methods
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -115,8 +111,7 @@ function Technology() {
     getRowData(1);
     setTitle('Technology');
   }, [filterData]);
-
-  // Get user role
+  
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -125,8 +120,7 @@ function Technology() {
   useEffect(() => {
     getUserRole();
   }, []);
-
-  // Submit Form
+ 
   const submitFilterForm = async (formValues) => {
     setFilterData(formValues);
   };
@@ -183,6 +177,7 @@ function Technology() {
                     <h5 className="card-title mb-0 mt-2 ">Filters</h5>
                   </div>  
                   <hr/>
+                  <div className="filter-box-main">
                     <StarkFormBuilder
                       containerClass=""
                       formHeaderClass=""
@@ -190,12 +185,10 @@ function Technology() {
                       onFormSubmit={(formValues) => {
                         submitFilterForm(formValues);
                       }}
-                      options={options}
                       callbacks={{}}
-                      defaultFormValues={defaultValues}
                       currentUser={currentUser}
                       submitBtnText="Apply"
-                      showResetBtn={true} // eslint-disable-line
+                      showResetBtn={true} 
                       resetBtnText="Clear"
                       showBtnClass={false}
                       btnContainerClass="col-md-4 filter-apply-btns"
@@ -205,6 +198,7 @@ function Technology() {
                         setFilterData('');
                       }}
                     />
+                    </div>
                 </Card.Body>
             </Card>
           <Card>

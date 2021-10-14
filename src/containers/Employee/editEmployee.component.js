@@ -14,16 +14,11 @@ import Loader from '../../components/Loader/index';
 
 function EditEmployee(props) {
 
-  let [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  const [options, updateOptions] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-
-  // Declare variable Table
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [filterData, setFilterData] = useState({}); // eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
 
   const title = 'Add Time Log Of Employee';
@@ -33,8 +28,8 @@ function EditEmployee(props) {
 
   const datee = customFunctions.getLocalStorage('date');
   const dataaa = datee.split('-');
-  const newDate = dataaa[2] + '-' + dataaa[1] + '-' + dataaa[0]; //eslint-disable-line
-
+  const newDate = `${dataaa[2]}-${dataaa[1]}-${dataaa[0]}`;
+  
   const columns = [
     {
       id: 'index',
@@ -70,7 +65,6 @@ function EditEmployee(props) {
     },
   ];
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -79,8 +73,7 @@ function EditEmployee(props) {
   useEffect(() => {
     getUserRole();
   }, []);
-
-  // Submit Form
+  
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = props.match.params.employeeId;
@@ -104,22 +97,17 @@ function EditEmployee(props) {
       });
     }
   };
-
-  // Declare methods table
+  
   const getRowData = async (pageNo = 1) => {
     const ID = customFunctions.getLocalStorage('userId');
     const page = pageNo || currentPage;
     const endPoint = `${Api.dailyReportUrl}`;
-    const filterList =
-      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
-        ? customFunctions.jsonParse(filterData)
-        : {};
+    
     const params = {
       date: newDate,
       user_id: ID,
       page,
       limit,
-      ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -150,7 +138,7 @@ function EditEmployee(props) {
 
   useEffect(() => {
     getRowData(1);
-  }, [filterData]);
+  }, []);
 
   return (
     <>
@@ -194,8 +182,6 @@ function EditEmployee(props) {
             onFormSubmit={(formValues) => {
               submitForm(formValues);
             }}
-            options={options}
-            defaultFormValues={defaultValues}
             currentUser={currentUser}
             submitBtnText="Save"
             showResetBtn={false}

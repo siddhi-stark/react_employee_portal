@@ -12,7 +12,6 @@ import customFunctions from '../../helper/customFunctions';
 function InterviewRounds() {
   const history = useHistory();
 
-  // Variable declarations
   const [defaultAddMoreValues, updateDefaultAddMoreValues] = useState({}); // eslint-disable-line
   const [addMoreValuesOptions, updateAddMoreValuesOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
@@ -20,11 +19,9 @@ function InterviewRounds() {
   const [toggle, setToggle] = useState(false);
   const [flag, setFlag] = useState(false);
 
-  // Variable declarations HR
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
 
-  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -49,8 +46,6 @@ function InterviewRounds() {
           const itemData = item;
           if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = true;
           return !['feedback'].includes(item.name);
-          // const itemData = item;
-         // if(item.name === 'int_date') itemData.disabled = true;
 
         });
         return s;
@@ -113,7 +108,6 @@ function InterviewRounds() {
   },[])
 
 
-  // Submit Form
   const submitAddMoreForm = async (formValues) => {
     const postData = {
       int_date: formValues.int_date ? customFunctions.getFormattedDate(formValues.int_date) : '',
@@ -133,13 +127,11 @@ function InterviewRounds() {
   const getInterviewer = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.full_name, value: op.id });
       return op;
     });
@@ -154,7 +146,6 @@ function InterviewRounds() {
     getInterviewer();
   }, []);
 
-  // Submit Form HR
   const submitForm = async (formValues) => {
     const id = customFunctions.getLocalStorage('applicantId');
     const postData = {
@@ -176,13 +167,11 @@ function InterviewRounds() {
   const getHrInterviewer = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.employeeUrl);
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.full_name, value: op.id });
       return op;
     });
@@ -200,13 +189,11 @@ function InterviewRounds() {
   const getRound = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.undefined);
     if (!data) {
-      // show error
       return;
     }
 
     const dpOptions = [];
     data.data.map((op) => {
-      // Change appropriate keys
       dpOptions.push({ label: op.title, value: op.id });
       return op;
     });
