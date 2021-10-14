@@ -663,11 +663,11 @@ function CurrentEmployee() {
             </Card.Body>
             </Card>
         </div>
-        <div className="row mt-3 employee-grid-list">
+        <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
           {employee &&
             employee.map((emp) => (
-              <Col className="col-md-4 h-100">
-                <Card>
+              <Col>
+                <Card className="h-100">
                   <Card.Body>
                     <Row>
                       <Col className="col-md-4">
@@ -755,25 +755,25 @@ function CurrentEmployee() {
                         <br />
                       </Col>
                     </Row>
-                    <Card.Footer className="card-footer-view">
-                      <h4 className="text-primary">SDMS{emp.emp_code}</h4>
-                      <Button
-                        size="sm"
-                        className="pull-right"
-                        onClick={() => {
-                          history.push(`/employee-profile/${emp.id}`);
-                          localStorage.setItem('employeeName', emp.full_name);
-                          customFunctions.setLocalStorage(
-                            'title',
-                            emp.designation_name
-                          );
-                          localStorage.setItem('candidateId', emp.id);
-                        }}
-                      >
-                        View
-                      </Button>
-                    </Card.Footer>
                   </Card.Body>
+                  <Card.Footer className="card-footer-view">
+                    <h4 className="text-primary">SDMS{emp.emp_code}</h4>
+                    <Button
+                      size="sm"
+                      className="pull-right"
+                      onClick={() => {
+                        history.push(`/employee-profile/${emp.id}`);
+                        localStorage.setItem('employeeName', emp.full_name);
+                        customFunctions.setLocalStorage(
+                          'title',
+                          emp.designation_name
+                        );
+                        localStorage.setItem('candidateId', emp.id);
+                      }}
+                    >
+                      View
+                    </Button>
+                  </Card.Footer>
                 </Card>
               </Col>
             ))}
