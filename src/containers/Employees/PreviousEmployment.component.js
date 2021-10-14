@@ -29,7 +29,6 @@ function PreviousEmployment(props) {
   }, []);
 
   const fileUpload = async (formValues) => { // eslint-disable-line
-
     const formData = new FormData();
 
     formData.append('file_name', formValues[0]);
@@ -128,7 +127,6 @@ function PreviousEmployment(props) {
       ],
     };
 
-    
     const { data, message } = (!customFunctions.checkIfEmpty(slip1fileUrlId) || slip1fileUrl && !customFunctions.checkIfEmpty(slip2fileUrlId) || slip2fileUrl && !customFunctions.checkIfEmpty(slip3fileUrlId) || slip3fileUrl && !customFunctions.checkIfEmpty(relivingfileUrlId)||relivingfileUrl && !customFunctions.checkIfEmpty(experiencefileUrlId)||experiencefileUrl) && await AuthApi.postDataToServer(
       `${Api.applicantDocumentUrl}`,
       postData
@@ -153,7 +151,6 @@ function PreviousEmployment(props) {
     }
       
   };
-      
 
 	return (
 		
@@ -172,14 +169,9 @@ function PreviousEmployment(props) {
     btnContainerClass="form-submit-buttons"
     showBtnClass={true}
     isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-    }}
   />
-    
 
-		)
+		);
 }
 
 export default withRouter(PreviousEmployment);

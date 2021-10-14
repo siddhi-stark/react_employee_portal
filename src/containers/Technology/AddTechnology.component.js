@@ -70,7 +70,6 @@ function AddTechnology(props) {
 
 	return (
 		<>
-		{console.log('isShowLoader',isShowLoader)}
     <Loader showLoader={isShowLoader} needFullPage={false} />
 		<StarkFormBuilder
 			containerClass="clearTechnology"

@@ -33,7 +33,6 @@ function Personal(props) {
   }, []);
 
   const getData = async () => {
-    console.log('inside getdata method',candidateId,employeeId);
     let panCard = '';
     let adharCard = '';
     let photo = '';
@@ -91,7 +90,6 @@ function Personal(props) {
     formData.append('employee_email', emailProps);
     formData.append('folder_name', 'Personal');
     
-    console.log('----formData----',formData);
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );

@@ -100,7 +100,6 @@ function EducationalDocument(props) {
       ],
     };
 
-    
      const { data, message } = (!customFunctions.checkIfEmpty(graduatefileUrlId) || graduatefileUrl && !customFunctions.checkIfEmpty(hscfileUrlId) || hscfileUrl && !customFunctions.checkIfEmpty(postfileUrlId) || postfileUrl && !customFunctions.checkIfEmpty(sscfileUrlId) || sscfileUrl) && await AuthApi.postDataToServer(
      `${Api.applicantDocumentUrl}`,
       postData
@@ -125,7 +124,6 @@ function EducationalDocument(props) {
     }
       
   };
-    
 
 	return (
 		
@@ -144,14 +142,9 @@ function EducationalDocument(props) {
     btnContainerClass="form-submit-buttons"
     showBtnClass={true}
     isStepForm={false}
-    
-    onFormReset={() => {
-      console.log('form reset callback')
-    }}
   />
-    
 
-		)
+		);
 }
 
 export default withRouter(EducationalDocument);

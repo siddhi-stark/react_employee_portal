@@ -131,9 +131,6 @@ function PersonalDocument(props) {
 			btnContainerClass="form-submit-buttons"
 			showBtnClass={true}
 			isStepForm={false}
-			onFormReset={() => {
-				console.log('form reset callback');
-			}}
 		/>
 	);
 }

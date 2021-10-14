@@ -12,7 +12,6 @@ function AddEmployementHistory(props) {
   const items = [{ to: '/', label: 'Home' }, { label: 'Employment History' }];
   const history = useHistory();
   const employee = props;
-  console.log('employee',employee);
   const employeeId = employee.match.params.ID;
   const email = employee.location.state.email;
   const name = employee.location.state.name;

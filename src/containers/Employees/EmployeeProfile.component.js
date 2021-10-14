@@ -52,7 +52,6 @@ function EmployeeProfile(props) {
   const getEmployeeHIstory = async () => {
     setShowLoader(true);
     const employeeId = props.match.params.id;
-    console.log('employeeId----------------------',employeeId);
     const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
@@ -300,7 +299,6 @@ function EmployeeProfile(props) {
 
   return (
     <>
-    {console.log('employeeDetails',employeeDetails)}
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
@@ -612,7 +610,7 @@ function EmployeeProfile(props) {
                       <button
                           onClick={() => {
                             setShowBond(true);
-                            history.push(`/addemployement-history/${employeeID}`,{email:employeeDetails.email,name: employeeDetails.full_name})
+                            history.push(`/addemployement-history/${employeeID}`,{email:employeeDetails.email,name: employeeDetails.full_name});
                           }}
                           type="button"
                           className="btn btn-primary"

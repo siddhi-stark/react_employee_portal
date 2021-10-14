@@ -134,7 +134,7 @@ function ToDoList(props) {
                       </div>
             )}
           </>
-          )
+          );
       }
     },
     {
@@ -264,7 +264,6 @@ function ToDoList(props) {
           // rowClass: morningSelected ? 'morning-mail-sent' : ''
         };
         row.push(setRowData);
-        console.log('row', row);
         return task;
       });
       setSelectedId([...selectedId]);
@@ -650,25 +649,24 @@ function ToDoList(props) {
         id: rw.id,
         progress: Number(rw.progress)
       }
-        )
+        );
       }
       return rw;
-    })
+    });
     const postData = {
       data : progressArr
-    }
+    };
 
     const endPoint = `${Api.taskProgressUrl}`;
     const { data } = await AuthApi.putDataToServer(endPoint,postData);
     if(data) {
-      console.log('data',data.message);
        swal(data.message[0], '', 'success').then((result) => {
         if (result) {
           getTableData(1);
         }
       });
     }
-  }
+  };
 
   return (
     <>
