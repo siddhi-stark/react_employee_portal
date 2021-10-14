@@ -38,10 +38,9 @@ function AddTechnology(props) {
 			swal(message, '', 'error');
 		}
 		
+		setShowLoader(false);
 		swal(data && data.message[0], '', 'success').then((result) => {
-			setShowLoader(false);
 			if (result) {
-				setShowLoader(false);
 				$('.clearTechnology form').trigger('reset');
 				props.onChange();
 				updateDefaultValues({});
