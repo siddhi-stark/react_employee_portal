@@ -100,7 +100,6 @@ return;
         postData
       );
       if(!customFunctions.checkIfEmpty(data, 'O') && data.data){
-        setShowLoader(false);
         EmailBody = data.data.body;
       } else {
         setShowLoader(false);
@@ -110,6 +109,7 @@ return;
         });
       }
     }
+    setShowLoader(false);
      swal({
       title: 'Are you sure?',
       text: `Do you want to send mail ${reasonLabel} annexture ?`,
