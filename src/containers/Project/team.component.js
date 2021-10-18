@@ -289,7 +289,7 @@ function Team(props) {
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <Button className="float-end mb-3" onClick= {() => archived ? history.push(`/team-project/${teamProjectId}`,{archived:true}) : history.push(`/team-project/${teamProjectId}`)} >Back</Button>
-        <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Project Dashboard</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -427,26 +427,6 @@ function Team(props) {
                   </li>
                   </ul>
                   <hr />
-                  <ul className="list-unstyled p-0 project-information-text mb-0">
-                    <li>
-                      <img src="/images/input_text_icon.svg" alt="img" />{' '}
-                      <span>
-                        Karan H. Lorem ipsum text generator Lorem ipsum
-                      </span>
-                    </li>
-                    <li>
-                      <img src="/images/input_text_icon.svg" alt="img" />{' '}
-                      <span>
-                        Karan H. Lorem ipsum text generator Lorem ipsum
-                      </span>
-                    </li>
-                    <li>
-                      <img src="/images/input_text_icon.svg" alt="img" />{' '}
-                      <span>
-                        Karan H. Lorem ipsum text generator Lorem ipsum
-                      </span>
-                    </li>
-                  </ul>
                 </Card.Body>
               </Card>
             </div>

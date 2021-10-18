@@ -663,11 +663,11 @@ function CurrentEmployee() {
             </Card.Body>
             </Card>
         </div>
-        <div className="row mt-3 employee-grid-list">
+        <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
           {employee &&
             employee.map((emp) => (
-              <Col className="col-md-4 h-100">
-                <Card>
+              <Col>
+                <Card className="h-100">
                   <Card.Body>
                     <Row>
                       <Col className="col-md-4">
@@ -721,6 +721,10 @@ function CurrentEmployee() {
                           {emp.full_name}
                           <span> {emp.designation_name}</span>
                         </p>
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Col className="col-md-12">
                         <p className="text-primary confirmation-date">
                           {' '}
                           {emp.confirmation_date &&
@@ -744,28 +748,32 @@ function CurrentEmployee() {
                             emp.notice_period_date &&
                             customFunctions.getDMYDate(emp.relieving_date)}
                         </p>{' '}
+                        <h6> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].start_date && `Bond start date- ${customFunctions.getDMYDate(emp.bond_details_list[0].start_date)}`}
+                        </h6>
+                        <h6> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].end_date && `Bond end date- ${customFunctions.getDMYDate(emp.bond_details_list[0].end_date)}`}
+                        </h6>
                         <br />
                       </Col>
                     </Row>
-                    <Card.Footer className="card-footer-view">
-                      <h4 className="text-primary">SDMS{emp.emp_code}</h4>
-                      <Button
-                        size="sm"
-                        className="pull-right"
-                        onClick={() => {
-                          history.push(`/employee-profile/${emp.id}`);
-                          localStorage.setItem('employeeName', emp.full_name);
-                          customFunctions.setLocalStorage(
-                            'title',
-                            emp.designation_name
-                          );
-                          localStorage.setItem('candidateId', emp.id);
-                        }}
-                      >
-                        View
-                      </Button>
-                    </Card.Footer>
                   </Card.Body>
+                  <Card.Footer className="card-footer-view">
+                    <h4 className="text-primary">SDMS{emp.emp_code}</h4>
+                    <Button
+                      size="sm"
+                      className="pull-right"
+                      onClick={() => {
+                        history.push(`/employee-profile/${emp.id}`);
+                        localStorage.setItem('employeeName', emp.full_name);
+                        customFunctions.setLocalStorage(
+                          'title',
+                          emp.designation_name
+                        );
+                        localStorage.setItem('candidateId', emp.id);
+                      }}
+                    >
+                      View
+                    </Button>
+                  </Card.Footer>
                 </Card>
               </Col>
             ))}
