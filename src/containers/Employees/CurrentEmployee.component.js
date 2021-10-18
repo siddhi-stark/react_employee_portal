@@ -420,7 +420,6 @@ function CurrentEmployee() {
       });
     }
 
-
     const postData = {
       full_name: fullName,
       email,
@@ -841,8 +840,6 @@ function CurrentEmployee() {
             }}
             autocomplete="off"
           >
-            {/* [a-z0-9!#$%&'*+/=?^_`{|}~-]+(?
-          :\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+net */}
             <Row>
               {!employeeId && (
 
@@ -1034,7 +1031,6 @@ function CurrentEmployee() {
                   isMulti
                   onSelectHandler={(select) => {
                     setSelectedManager(select);
-                    console.log('select',select);
                   }}
                 />
               </Col>
@@ -1095,7 +1091,7 @@ function CurrentEmployee() {
               {employeeId && (
              <Col sm={6}>
                 <DropdownInput
-                  label="Manager"
+                  label="Mentor"
                   options={getMentorData()}
                   placeholder="Select Mentor"
                   defaultValue={selectedMentor}
