@@ -233,7 +233,7 @@ function ArchivedProject() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Project</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Project Dashboard</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
