@@ -3,6 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 // import Doughnut from 'stark-doughnut-graph';
 import { Bar, Pie } from 'react-chartjs-2';
 import swal from 'sweetalert';
+import moment from 'moment';
 import CustomTable from 'stark-custom-datatable';
 import { Card, Row, Col, Image, Button } from 'react-bootstrap';
 import Api from '../../helper/api';
@@ -20,70 +21,7 @@ function TeamProject(props) {
   customFunctions.setLocalStorage('teamProjectId', teamProjectId);
   const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
-  const taskArr = [];
-
-  const taskArray = {
-    '14-10-2021': [
-      {
-        shubham: [
-          {
-            id: 142,
-            task: 1234,
-            task_name: 'abc',
-            status: 100,
-            ETA: 12,
-            AT: 123,
-          }, 
-          {
-            id: 142,
-            task: 1234,
-            task_name: 'pqr',
-            status: 60,
-            ETA: 12,
-            AT: 123,
-          },
-        ],
-        yogesh: [
-          {
-            id: 142,
-            task: 1234,
-            task_name: 'edc',
-            status: 70,
-            ETA: 12,
-            AT: 123,
-          },
-        ],
-      },
-    ],
-    '15-10-2021': [
-      {
-        rohit: [
-          {
-            id: 142,
-            task: 1234,
-            task_name: 'xza',
-            status: 50,
-            ETA: 12,
-            AT: 123,
-          },
-        ],
-        vinayak: [
-          {
-            id: 142,
-            task: 1234,
-            task_name: 'wax',
-            status: 45,
-            ETA: 12,
-            AT: 123,
-          },
-        ],
-      },
-    ],
-  };
-
-  for (const [key, value] of Object.entries(taskArray)) { // eslint-disable-line
-   taskArr.push({date:key,employee:value});
-}
+  const [activityData, setActivityData] = useState([]);
 
   const items = [
     { to: '/', label: 'Home' },
@@ -503,8 +441,35 @@ function TeamProject(props) {
 
   useEffect(() => {
     getRowData(1);
+    if(activeMenu === 'Activity'){
+      getActivityData();
+    }
   }, [activeMenu]);
 
+  const getActivityData = async () => {
+    setShowLoader(true);
+
+    const endPoint = `${Api.tasksActivityUrl}`;
+
+    const params = {
+      project_id: teamProjectId,
+      sort_by: 'created_at',
+      sort_direction: 'descending',
+      limit: 3,
+    };
+
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
+      setActivityData(data.data);
+    } else {
+      setShowLoader(false);
+      swal(message,'','error');
+    }
+  };
+     
   return (
     <>
       <Helmet title={title} />
@@ -596,7 +561,7 @@ function TeamProject(props) {
                     <CustomTable
                       columns={columns}
                       rows={rowData}
-                      tableClass="table-striped"
+                      tableclassName="table-striped"
                       showPagination={true}
                       paginationProps={{
                         totalItems: totalCount,
@@ -690,39 +655,36 @@ function TeamProject(props) {
         <section className="content-area">
           <div className="row">
             <div className="col-sm-8">
-            {taskArr && taskArr.map((task)=>(
-              <section className="card">
-                <div className="purple-bg card-header d-flex align-items-center">
-                  <h5
-                    className="card-title mb-0"
-                    title="ZS Innovation Lab NEw Project"
-                  >
-                  {task.date}
-                  </h5>
-                </div>
-                {task && task.employee && task.employee.map((emp)=>(
-                <section className="card-body">
-                    {emp && Object.keys(emp) && Object.keys(emp).map((e)=>(
-                        <div className="clearfix">
-                          <h5>{e}</h5>
-                      {emp[e] && emp[e].map((dt)=>(
-                          <ul className="timeline">
-                            <li className="d-flex align-items-center justify-content-between task task-complete">
-                              <h6 className="mb-0 task-name">{dt.task_name}</h6>
-                              <div className="d-flex align-items-center">
-                                <h6 className="mr-5"> ETA: {dt.ETA}hr</h6>
-                                <h6>Status: {Number(dt.status) === 100 ? `100% (${dt.AT}hr)`:`${dt.status}%`}</h6>
-                              </div>
+              {/* loop for date */}
+              { Object.entries(activityData).map(([datekey, datevalueobject]) => (
+                <section className="card">
+                  <div className="purple-bg card-header d-flex align-items-center">
+                    <h5 className="card-title mb-0" title="ZS Innovation Lab NEw Project">{datekey && (`${moment(datekey).format('dddd Do MMMM')}`)}</h5>
+                  </div>
+                  <section className="card-body">
+                    {/* emnployee loop */}
+                    { Object.entries(datevalueobject).map(([employeeName, taskData]) => (
+                      <div className="clearfix">
+                        <h5>{employeeName}</h5>
+                        <ul className="timeline">
+                          {/* task loop */}
+                          { Object.entries(taskData).map((task) => (
+                            <li className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}>  
+                                 <h6 title={`${task[1].content}`} className="mb-0 task-name">{task[1].content.substring(0,40)}</h6>
+                                 <div className="d-flex align-items-center">
+                                    <h6 className="mr-5"> ETA: {task[1].estimation}</h6>
+                                    <h6>Status: {task[1].progress && task[1].progress}%
+                                      {task[1].progress === 100 ? (` ( ${task[1].hours_1 && task[1].hours_1}) `) :''}
+                                    </h6>
+                                 </div>
                             </li>
-                          </ul>
-                      ))}
-                        </div>
-                     ))}
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </section>
                 </section>
-                ))}
-              </section>
-              ))}
-              {/* <a href="#" className="btn-link">Load More</a> */}
+              ))}                     
             </div>
           </div>
         </section>

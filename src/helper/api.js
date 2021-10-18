@@ -149,6 +149,8 @@ export default class Api extends Component {
 
   static employeeBondDetailsUrl = `${Api.baseUrl}employee-bond-details/`;
 
+  static tasksActivityUrl = `${Api.baseUrl}tasks-activity/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 
