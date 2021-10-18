@@ -79,7 +79,7 @@ function CurrentEmployee() {
   const [projectTeam,setProjectTeam] = useState([]);
   const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
-  const [selectedMentor, setSelectedMentor] = useState('');
+  const [selectedMentor, setSelectedMentor] = useState([]);
 
   let timmer = null;
   const history = useHistory();
@@ -420,7 +420,6 @@ function CurrentEmployee() {
       });
     }
 
-    console.log('mentorList',mentorList);
 
     const postData = {
       full_name: fullName,
@@ -436,6 +435,7 @@ function CurrentEmployee() {
       date_joined: joiningDate ? customFunctions.getDate(joiningDate) : null,
       tw_emp: twId,
       department: selectedDepartment.id,
+      mentor:mentorList
     };
     if (selectedDesignationOption) {
       postData.designation = selectedDesignationOption.id;
@@ -478,6 +478,7 @@ function CurrentEmployee() {
           setPassword();
           setMobile();
           setSelectedManager();
+          setSelectedMentor();
           setDate();
           setJoiningDate();
           setSelectedTeamLead();
@@ -547,7 +548,8 @@ function CurrentEmployee() {
     mentorData.map((mntr) => {
       return op.push({
         label: mntr.full_name,
-        id: mntr.id
+        id: mntr.id,
+        value: mntr.full_name
       });
     });
     return op;
@@ -1032,6 +1034,7 @@ function CurrentEmployee() {
                   isMulti
                   onSelectHandler={(select) => {
                     setSelectedManager(select);
+                    console.log('select',select);
                   }}
                 />
               </Col>
@@ -1090,14 +1093,16 @@ function CurrentEmployee() {
                 />
               </Col>
               {employeeId && (
-              <Col sm={6}>
+             <Col sm={6}>
                 <DropdownInput
-                  label="Mentor"
+                  label="Manager"
                   options={getMentorData()}
-                  placeholder="Select Team"
+                  placeholder="Select Mentor"
                   defaultValue={selectedMentor}
-                  isMulti={true}
-                  onSelectHandler={(select) => setSelectedMentor(select)}
+                  isMulti
+                  onSelectHandler={(select) => {
+                    setSelectedMentor(select);
+                  }}
                 />
               </Col>
                 )}
