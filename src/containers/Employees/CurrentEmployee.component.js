@@ -55,6 +55,7 @@ function CurrentEmployee() {
   const [password, setPassword] = useState('');
   const [designation, setDesignation] = useState([]);
   const [twEmployee, setTwEmployee] = useState([]);
+  const [mentorData, setMentorData] = useState([]);
   const [addButton, setAddButton] = useState(false);
   const [role, setRole] = useState([]);
   const [manager, setManager] = useState([]);
@@ -78,6 +79,7 @@ function CurrentEmployee() {
   const [projectTeam,setProjectTeam] = useState([]);
   const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
+  const [selectedMentor, setSelectedMentor] = useState('');
 
   let timmer = null;
   const history = useHistory();
@@ -268,6 +270,15 @@ function CurrentEmployee() {
     }
   };
 
+  const getMentorList = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`
+    );
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      setMentorData(data.data);
+    }
+  };
+
   const getRole = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.roleUrl}`);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
@@ -317,6 +328,7 @@ function CurrentEmployee() {
     getTeamLead();
     getNewDapartment();
     getTeam();
+    getMentorList();
   }, [addButton]);
 
   useEffect(() => {
@@ -375,6 +387,7 @@ function CurrentEmployee() {
     setSelectedManager('');
     setSelectedTeamLead('');
     setSelectedDepartment('');
+    setSelectedMentor('');
     setDate();
     setModalShow(false);
     if (timmer) clearTimeout(timmer);
@@ -398,6 +411,16 @@ function CurrentEmployee() {
         return mngr;
       });
     }
+
+    const mentorList = [];
+    if(selectedMentor && selectedMentor.length > 0) {
+      selectedMentor.map((mt) => {
+        mentorList.push(mt.id);
+        return mt;
+      });
+    }
+
+    console.log('mentorList',mentorList);
 
     const postData = {
       full_name: fullName,
@@ -513,6 +536,18 @@ function CurrentEmployee() {
         label: emp.full_name,
         id: emp.tw_id,
 
+      });
+    });
+    return op;
+  };
+
+  const getMentorData = () => {
+    if(!mentorData) return [];
+    const op = [];
+    mentorData.map((mntr) => {
+      return op.push({
+        label: mntr.full_name,
+        id: mntr.id
       });
     });
     return op;
@@ -1054,6 +1089,19 @@ function CurrentEmployee() {
                   onSelectHandler={(select) => setSelectedProjectTeam(select)}
                 />
               </Col>
+              {employeeId && (
+              <Col sm={6}>
+                <DropdownInput
+                  label="Mentor"
+                  options={getMentorData()}
+                  placeholder="Select Team"
+                  defaultValue={selectedMentor}
+                  isMulti={true}
+                  onSelectHandler={(select) => setSelectedMentor(select)}
+                />
+              </Col>
+                )}
+
             </Row>
             <div className="float-end">
               <Button

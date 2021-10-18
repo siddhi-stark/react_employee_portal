@@ -12743,6 +12743,19 @@ p:empty {
 .table-projects .tab-content > .active {
   opacity: 1;
 }
+.table-projects .progress {
+  padding: 0;
+  min-height: 35px;
+}
+.table-projects .progress .progress-bar {
+  background-color: #f1f1f1 !important;
+  font-size: 9px;
+  min-height: 35px;
+}
+.table-projects .progress .progress-bar h5, .table-projects .progress .progress-bar .h5 {
+  font-size: 14px;
+  margin-bottom: 0;
+}
 
 .filter-tab .filter-btn {
   min-width: 30px;
@@ -16183,6 +16196,10 @@ ul.timeline li:before {
   }
 }
 @media (max-width: 1366px) {
+  .table-projects .progress .progress-bar h5, .table-projects .progress .progress-bar .h5 {
+    font-size: 11px;
+  }
+
   .birthday-wish-section .birth-input-field .form-control {
     background-color: #393A71;
     color: #ffffff;

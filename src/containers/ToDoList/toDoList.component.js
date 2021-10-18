@@ -115,7 +115,7 @@ function ToDoList(props) {
                         <div className="progress">
                           <div className="progress-bar bg-secondary w-100">
                             <h5 className="justify-content-start">
-                              Set Progress: {progress}%{' '}
+                               {progress}%{' '}
                             </h5>
                             <input
                               type="range"
