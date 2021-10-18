@@ -163,6 +163,7 @@ function CurrentEmployee() {
 
     if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
       const managerList = [];
+      const mentorList = [];
 
       teamLead.map((team) => {
         data.data.assigned_team_leads.map((assign) => {
@@ -190,7 +191,9 @@ function CurrentEmployee() {
 
       manager.map((mngr) => {
         data.data.assigned_managers.map((assgnmgmr) => {
+          console.log('assgnmgmr',assgnmgmr);
           if (mngr.id === assgnmgmr) {
+           
             managerList.push({
               id: mngr.id,
               label: mngr.full_name,
@@ -202,6 +205,39 @@ function CurrentEmployee() {
         setSelectedManager(managerList);
         return mngr;
       });
+
+      mentorData.map((mntr) => {
+        data.data.assigned_mentors.map((assgnmntr) => {
+          console.log('assgnmntr..',assgnmntr);
+          if (mntr.id === assgnmntr) {
+           
+            mentorList.push({
+              id: mntr.id,
+              label: mntr.full_name,
+              value: mntr.full_name,
+            });
+          }
+          return assgnmntr;
+        });
+        setSelectedMentor(mentorList);
+        return mntr;
+      });
+
+      //  mentorData.map((mngr) => {
+      //   const dd = data.data.assigned_mentors.filter((assgnmgmr) => {return Number(mngr.id) === Number(assgnmgmr) });
+      //    console.log('dd.id',dd);
+      //     if (dd && dd.length > 0) {
+      //        mentorList.push({
+      //         id: mngr.id,
+      //         label: mngr.full_name,
+      //         value: mngr.full_name,
+      //       });
+      //       console.log('inside if')
+      //     }
+       
+      //   setSelectedMentor(managerList);
+      //   return mngr;
+      // });
 
       twEmployee.map((tw) => {
         if (data.data.tw_id === tw.tw_id) {
@@ -272,7 +308,7 @@ function CurrentEmployee() {
 
   const getMentorList = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending`
+      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending&type=all&is_dropdown=1`
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setMentorData(data.data);
