@@ -12,6 +12,7 @@ function Personal(props) {
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
   const applicantId = accProps.props.applicantId;
+  const employeeId = accProps.props.ID;
   const passwordProps = accProps.props.password;
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
@@ -74,7 +75,7 @@ function Personal(props) {
 
   useEffect(async() => {
 
-    if(candidateId || applicantId) {
+    if(candidateId || applicantId || employeeId) {
       getData();
     }
   }, []);
@@ -88,7 +89,7 @@ function Personal(props) {
     formData.append('employee_name', nameProps); 
     formData.append('employee_email', emailProps);
     formData.append('folder_name', 'Personal');
-
+    
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,formData
     );

@@ -51,8 +51,8 @@ function ToDoList(props) {
   const [clockInDate, setClockInDate] = useState('');
   const [timeHour, setTimeHour] = useState('');
   const [timeMinutes, setTimeMinutes] = useState('');
-
   const [showSendReport, setShowSendReport] = useState(false);
+  // const [progressValue,setProgressValue] = useState(0);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -91,14 +91,48 @@ function ToDoList(props) {
       roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
-      id: 'status',
-      label: 'Status',
-      roleAccess: [1, 2, 3, 4, 5,6],
-    },
-    {
       id: 'eta',
       label: 'ETA',
       roleAccess: [1, 2, 3, 4, 5,6],
+    },
+      {
+      id: 'progress',
+      label: 'Status',
+      roleAccess: [1, 2, 3, 4, 5, 6],
+      render: ({ progress,id, indexOf,eta, status }) => {
+        return(
+          <>
+          {progress === 100 ? 
+            <span>{status}({eta})</span> 
+            : (
+
+       <div className="progress-main">
+                        <div className="progress">
+                          <div className="progress-bar bg-secondary w-100">
+                            <h5 className="justify-content-start">
+                               {progress}%{' '}
+                            </h5>
+                            <input
+                              type="range"
+                              id={`progress${id+ 1}`}
+                              name="rangeInput"
+                              min="0"
+                              max="100"
+                              value={Number(progress)}
+                              onChange={(e) => {
+                                rows[indexOf].progress = e.target.value;
+                                setTimeout(() => {
+                                  setRows([...rows]);
+                                }, 500);
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+            )}
+          </>
+          );
+      }
     },
     {
       id: 'action',
@@ -190,7 +224,7 @@ function ToDoList(props) {
 
       const row = [];
 
-      data.data.map((task) => {
+      data.data.map((task, i) => {
         const morningSelected = task.morning_selected;
         if (morningSelected && !selectedId.includes(Number(task.id))) {
           selectedId.push(task.id);
@@ -201,17 +235,6 @@ function ToDoList(props) {
             <>
               {task.content}
               <br />
-              <div
-                className={
-                  task.is_overdue ? 'badge badge-danger' : 'badge badge-warning'
-                }
-              >
-                {task.is_overdue ? 'Overdue' : 'Today'}
-              </div>
-              {task.is_overdue ?
-                <div>{task.days} Day</div> :
-                ''
-              }
             </>
           ),
           id: task.id,
@@ -220,6 +243,10 @@ function ToDoList(props) {
           projects: task.project_name,
           status: task.status,
           eta: task.estimation,
+          at: task.actual_time,
+          progress: task.progress,
+          indexOf: i,
+          oldProgress: task.progress,
           // rowClass: morningSelected ? 'morning-mail-sent' : ''
         };
         row.push(setRowData);
@@ -600,6 +627,33 @@ function ToDoList(props) {
     setBreakData([...breakData]);
   };
 
+  const OnSaveProgress = async () => {
+    const progressArr = [];
+    rows && rows.map((rw) => {
+      if(rw.oldProgress !== rw.progress) {
+      progressArr.push({
+        id: rw.id,
+        progress: Number(rw.progress)
+      }
+        );
+      }
+      return rw;
+    });
+    const postData = {
+      data : progressArr
+    };
+
+    const endPoint = `${Api.taskProgressUrl}`;
+    const { data } = await AuthApi.putDataToServer(endPoint,postData);
+    if(data) {
+       swal(data.message[0], '', 'success').then((result) => {
+        if (result) {
+          getTableData(1);
+        }
+      });
+    }
+  };
+
   return (
     <>
       {ShowDelete && (
@@ -715,10 +769,21 @@ function ToDoList(props) {
                   />
                 </Row>
                 <div className="d-flex justify-content-end mr-3">
+                  {pagination.totalItems > 0 && (
+                   <Button
+                      variant="primary"
+                      className="mb-3 ms-4"
+                      onClick={() => {
+                        OnSaveProgress();
+                      }}
+                    >
+                      Update Progress
+                    </Button>
+                    )}
                   {!morningMail && !signOutMail && pagination.totalItems > 0 && (
                     <Button
                       variant="primary"
-                      className="mb-3"
+                      className="mb-3 ms-4"
                       onClick={() => {
                         setShowScrumPopup(true);
                       }}
@@ -729,7 +794,7 @@ function ToDoList(props) {
                   {!signOutMail && morningMail && (String(totalHours) !== '0 Hrs 0 Mins') && (
                     <Button
                       variant="primary"
-                      className="mb-3"
+                      className="mb-3 ms-2"
                       onClick={() => {
                         setShowBreak(true);
                       }}

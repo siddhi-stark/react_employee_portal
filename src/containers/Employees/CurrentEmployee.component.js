@@ -55,6 +55,7 @@ function CurrentEmployee() {
   const [password, setPassword] = useState('');
   const [designation, setDesignation] = useState([]);
   const [twEmployee, setTwEmployee] = useState([]);
+  const [mentorData, setMentorData] = useState([]);
   const [addButton, setAddButton] = useState(false);
   const [role, setRole] = useState([]);
   const [manager, setManager] = useState([]);
@@ -78,6 +79,7 @@ function CurrentEmployee() {
   const [projectTeam,setProjectTeam] = useState([]);
   const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
+  const [selectedMentor, setSelectedMentor] = useState([]);
 
   let timmer = null;
   const history = useHistory();
@@ -161,6 +163,7 @@ function CurrentEmployee() {
 
     if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
       const managerList = [];
+      const mentorList = [];
 
       teamLead.map((team) => {
         data.data.assigned_team_leads.map((assign) => {
@@ -189,6 +192,7 @@ function CurrentEmployee() {
       manager.map((mngr) => {
         data.data.assigned_managers.map((assgnmgmr) => {
           if (mngr.id === assgnmgmr) {
+           
             managerList.push({
               id: mngr.id,
               label: mngr.full_name,
@@ -200,6 +204,38 @@ function CurrentEmployee() {
         setSelectedManager(managerList);
         return mngr;
       });
+
+      mentorData.map((mntr) => {
+        data.data.assigned_mentors.map((assgnmntr) => {
+          if (mntr.id === assgnmntr) {
+           
+            mentorList.push({
+              id: mntr.id,
+              label: mntr.full_name,
+              value: mntr.full_name,
+            });
+          }
+          return assgnmntr;
+        });
+        setSelectedMentor(mentorList);
+        return mntr;
+      });
+
+      //  mentorData.map((mngr) => {
+      //   const dd = data.data.assigned_mentors.filter((assgnmgmr) => {return Number(mngr.id) === Number(assgnmgmr) });
+      //    console.log('dd.id',dd);
+      //     if (dd && dd.length > 0) {
+      //        mentorList.push({
+      //         id: mngr.id,
+      //         label: mngr.full_name,
+      //         value: mngr.full_name,
+      //       });
+      //       console.log('inside if')
+      //     }
+       
+      //   setSelectedMentor(managerList);
+      //   return mngr;
+      // });
 
       twEmployee.map((tw) => {
         if (data.data.tw_id === tw.tw_id) {
@@ -268,6 +304,15 @@ function CurrentEmployee() {
     }
   };
 
+  const getMentorList = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending&type=all&is_dropdown=1`
+    );
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      setMentorData(data.data);
+    }
+  };
+
   const getRole = async () => {
     const { data } = await AuthApi.getDataFromServer(`${Api.roleUrl}`);
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
@@ -317,6 +362,7 @@ function CurrentEmployee() {
     getTeamLead();
     getNewDapartment();
     getTeam();
+    getMentorList();
   }, [addButton]);
 
   useEffect(() => {
@@ -375,6 +421,7 @@ function CurrentEmployee() {
     setSelectedManager('');
     setSelectedTeamLead('');
     setSelectedDepartment('');
+    setSelectedMentor('');
     setDate();
     setModalShow(false);
     if (timmer) clearTimeout(timmer);
@@ -399,6 +446,14 @@ function CurrentEmployee() {
       });
     }
 
+    const mentorList = [];
+    if(selectedMentor && selectedMentor.length > 0) {
+      selectedMentor.map((mt) => {
+        mentorList.push(mt.id);
+        return mt;
+      });
+    }
+
     const postData = {
       full_name: fullName,
       email,
@@ -413,6 +468,7 @@ function CurrentEmployee() {
       date_joined: joiningDate ? customFunctions.getDate(joiningDate) : null,
       tw_emp: twId,
       department: selectedDepartment.id,
+      mentor:mentorList
     };
     if (selectedDesignationOption) {
       postData.designation = selectedDesignationOption.id;
@@ -455,6 +511,7 @@ function CurrentEmployee() {
           setPassword();
           setMobile();
           setSelectedManager();
+          setSelectedMentor();
           setDate();
           setJoiningDate();
           setSelectedTeamLead();
@@ -513,6 +570,19 @@ function CurrentEmployee() {
         label: emp.full_name,
         id: emp.tw_id,
 
+      });
+    });
+    return op;
+  };
+
+  const getMentorData = () => {
+    if(!mentorData) return [];
+    const op = [];
+    mentorData.map((mntr) => {
+      return op.push({
+        label: mntr.full_name,
+        id: mntr.id,
+        value: mntr.full_name
       });
     });
     return op;
@@ -804,8 +874,6 @@ function CurrentEmployee() {
             }}
             autocomplete="off"
           >
-            {/* [a-z0-9!#$%&'*+/=?^_`{|}~-]+(?
-          :\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+net */}
             <Row>
               {!employeeId && (
 
@@ -1054,6 +1122,21 @@ function CurrentEmployee() {
                   onSelectHandler={(select) => setSelectedProjectTeam(select)}
                 />
               </Col>
+              {employeeId && (
+             <Col sm={6}>
+                <DropdownInput
+                  label="Reporting Person"
+                  options={getMentorData()}
+                  placeholder="Select Mentor"
+                  defaultValue={selectedMentor}
+                  isMulti
+                  onSelectHandler={(select) => {
+                    setSelectedMentor(select);
+                  }}
+                />
+              </Col>
+                )}
+
             </Row>
             <div className="float-end">
               <Button
