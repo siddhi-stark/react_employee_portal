@@ -807,7 +807,8 @@ function ToDoList(props) {
                       Clockout & Send Report
                     </Button>
                   )}
-                  <Button
+                  {pagination.totalItems > 0 && (
+                   <Button
                       variant="primary"
                       className="mb-3 ms-4"
                       onClick={() => {
@@ -816,6 +817,7 @@ function ToDoList(props) {
                     >
                       Save Progress
                     </Button>
+                    )}
                 </div>
               </Card.Body>
             </Card>
