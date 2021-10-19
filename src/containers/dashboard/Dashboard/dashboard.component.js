@@ -331,6 +331,7 @@ function Dashboard() {
   };
 
   const postGreetingMessage = async (id,GreetingId, type='') => {
+    console.log('inside postGreetingMessage');
     const newGreetData = newBirthdayData && newBirthdayData.filter(i => i.id === id);
     const newData = newBirthdayData && newBirthdayData[0] && newBirthdayData[0].employee_data && newBirthdayData[0].employee_data.filter(i => i.id === id);
     const postData = {
@@ -338,7 +339,7 @@ function Dashboard() {
       greeting: GreetingId,
       message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
-    console.log('postData----------',postData,newData);
+    console.log('postData----------',newData);
 
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
@@ -559,11 +560,10 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" onClick={(e)=>{
-                      console.log('newBirthdayData',newBirthdayData);
-                      if(newBirthdayData.length > 0) {
+                     
                       e.preventDefault();
                       postGreetingMessage(emp.id, emp.greeting, 'birthday');
-                      }
+                      
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
@@ -636,11 +636,10 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" onClick={(e)=>{
-                      console.log('emp in anniversary',emp);
-                      if(newBirthdayData.length > 0) {
+                      
                       e.preventDefault();
                       postGreetingMessage(emp.id,emp.greeting_anniversary, 'anniversary');
-                      }
+                      
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div>
                     )}    
@@ -715,11 +714,11 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" className="birth-input-arrow" onClick={(e)=>{
-                      if(newBirthdayData.length > 0) {
+                      
                       console.log('empdata',empdata);
                       e.preventDefault();
                       postGreetingMessage(empdata.id, appr.id);
-                      }
+                      
                     }}><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
