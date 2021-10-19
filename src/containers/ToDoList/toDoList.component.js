@@ -815,7 +815,7 @@ function ToDoList(props) {
                         OnSaveProgress();
                       }}
                     >
-                      Save Progress
+                      Update Progress
                     </Button>
                     )}
                 </div>

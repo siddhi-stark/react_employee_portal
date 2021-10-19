@@ -1127,7 +1127,7 @@ function CurrentEmployee() {
               {employeeId && (
              <Col sm={6}>
                 <DropdownInput
-                  label="Mentor"
+                  label="Reporting Person"
                   options={getMentorData()}
                   placeholder="Select Mentor"
                   defaultValue={selectedMentor}
