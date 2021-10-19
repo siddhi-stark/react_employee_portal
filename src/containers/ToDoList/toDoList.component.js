@@ -104,11 +104,11 @@ function ToDoList(props) {
       id: 'progress',
       label: 'Progress',
       roleAccess: [1, 2, 3, 4, 5, 6],
-      render: ({ progress,id, indexOf,at }) => {
+      render: ({ progress,id, indexOf,eta }) => {
         return(
           <>
           {progress === 100 ? 
-            <span>{at}</span> 
+            <span>{eta}</span> 
             : (
 
        <div className="progress-main">
@@ -240,17 +240,6 @@ function ToDoList(props) {
             <>
               {task.content}
               <br />
-              <div
-                className={
-                  task.is_overdue ? 'badge badge-danger' : 'badge badge-warning'
-                }
-              >
-                {task.is_overdue ? 'Overdue' : 'Today'}
-              </div>
-              {task.is_overdue ?
-                <div>{task.days} Day</div> :
-                ''
-              }
             </>
           ),
           id: task.id,
@@ -785,28 +774,6 @@ function ToDoList(props) {
                   />
                 </Row>
                 <div className="d-flex justify-content-end mr-3">
-                  {!morningMail && !signOutMail && pagination.totalItems > 0 && (
-                    <Button
-                      variant="primary"
-                      className="mb-3"
-                      onClick={() => {
-                        setShowScrumPopup(true);
-                      }}
-                    >
-                      Clock In & Send Scrum
-                    </Button>
-                  )}
-                  {!signOutMail && morningMail && (String(totalHours) !== '0 Hrs 0 Mins') && (
-                    <Button
-                      variant="primary"
-                      className="mb-3"
-                      onClick={() => {
-                        setShowBreak(true);
-                      }}
-                    >
-                      Clockout & Send Report
-                    </Button>
-                  )}
                   {pagination.totalItems > 0 && (
                    <Button
                       variant="primary"
@@ -818,6 +785,28 @@ function ToDoList(props) {
                       Update Progress
                     </Button>
                     )}
+                  {!morningMail && !signOutMail && pagination.totalItems > 0 && (
+                    <Button
+                      variant="primary"
+                      className="mb-3 ms-4"
+                      onClick={() => {
+                        setShowScrumPopup(true);
+                      }}
+                    >
+                      Clock In & Send Scrum
+                    </Button>
+                  )}
+                  {!signOutMail && morningMail && (String(totalHours) !== '0 Hrs 0 Mins') && (
+                    <Button
+                      variant="primary"
+                      className="mb-3 ms-2"
+                      onClick={() => {
+                        setShowBreak(true);
+                      }}
+                    >
+                      Clockout & Send Report
+                    </Button>
+                  )}
                 </div>
               </Card.Body>
             </Card>
