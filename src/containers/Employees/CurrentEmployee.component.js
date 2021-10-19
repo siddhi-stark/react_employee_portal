@@ -221,22 +221,6 @@ function CurrentEmployee() {
         return mntr;
       });
 
-      //  mentorData.map((mngr) => {
-      //   const dd = data.data.assigned_mentors.filter((assgnmgmr) => {return Number(mngr.id) === Number(assgnmgmr) });
-      //    console.log('dd.id',dd);
-      //     if (dd && dd.length > 0) {
-      //        mentorList.push({
-      //         id: mngr.id,
-      //         label: mngr.full_name,
-      //         value: mngr.full_name,
-      //       });
-      //       console.log('inside if')
-      //     }
-       
-      //   setSelectedMentor(managerList);
-      //   return mngr;
-      // });
-
       twEmployee.map((tw) => {
         if (data.data.tw_id === tw.tw_id) {
           setSelectedEmployee({ label: tw.full_name });

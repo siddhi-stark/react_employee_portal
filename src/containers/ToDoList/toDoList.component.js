@@ -52,7 +52,6 @@ function ToDoList(props) {
   const [timeHour, setTimeHour] = useState('');
   const [timeMinutes, setTimeMinutes] = useState('');
   const [showSendReport, setShowSendReport] = useState(false);
-  // const [progressValue,setProgressValue] = useState(0);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
