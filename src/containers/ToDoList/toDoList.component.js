@@ -640,6 +640,9 @@ function ToDoList(props) {
       }
       return rw;
     });
+
+    console.log('progressArr',progressArr);
+
     const postData = {
       data : progressArr
     };
