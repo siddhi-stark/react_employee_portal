@@ -633,7 +633,8 @@ function ToDoList(props) {
       if(rw.oldProgress !== rw.progress) {
       progressArr.push({
         id: rw.id,
-        progress: Number(rw.progress)
+        progress: Number(rw.progress),
+        tw_id: rw.twId ? Number(rw.twId) : null
       }
         );
       }
