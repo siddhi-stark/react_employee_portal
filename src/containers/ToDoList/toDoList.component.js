@@ -99,11 +99,11 @@ function ToDoList(props) {
       id: 'progress',
       label: 'Status',
       roleAccess: [1, 2, 3, 4, 5, 6],
-      render: ({ progress,id, indexOf,eta, status }) => {
+      render: ({ progress,id, indexOf,eta, status,twId, at }) => {
         return(
           <>
           {progress === 100 ? 
-            <span>{status}({eta})</span> 
+            <span>{status}({twId ? at : eta})</span> 
             : (
 
        <div className="progress-main">
