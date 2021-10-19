@@ -34,6 +34,7 @@ function Profile() {
   );
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedManager, setSelectedManager] = useState([]);
+  const [selectedMentor, setSelectedMentor] = useState([]);
   const [imageUrl, setImageUrl] = useState('');
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
@@ -164,7 +165,6 @@ function Profile() {
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
     if (!customFunctions.checkIfEmpty(data.data, 'O')) {
       getEmployeeDocument(data.data.full_name);
-
       setShowLoader(false);
       setEmail(data.data.email);
       setName(data.data.full_name);
@@ -178,6 +178,10 @@ function Profile() {
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
       });
+      const mentorList = data.data.assigned_mentors.map((assgnmntr) => {
+        return assgnmntr.report_mentor__full_name;
+      })
+      setSelectedMentor(mentorList.length > 0 ? mentorList.join(', ') : '');
       setSelectedManager(managerList.length > 0 ? managerList.join(', ') : '');
       setDate(data.data.date_joined ? new Date(data.data.date_joined) : '');
     }
@@ -491,6 +495,16 @@ function Profile() {
                         containerClass="form-group"
                         name="selectedManager"
                         value={selectedManager}
+                        disabled
+                      />
+                    </Col> 
+                    <Col sm={6}>
+                      <TextInput
+                        onInputChange={(e) => setSelectedMentor(e.target.value)}
+                        label="Reporting Person"
+                        containerClass="form-group"
+                        name="selectedMentor"
+                        value={selectedMentor}
                         disabled
                       />
                     </Col>
