@@ -91,24 +91,19 @@ function ToDoList(props) {
       roleAccess: [1, 2, 3, 4, 5,6],
     },
     {
-      id: 'status',
-      label: 'Status',
-      roleAccess: [1, 2, 3, 4, 5,6],
-    },
-    {
       id: 'eta',
       label: 'ETA',
       roleAccess: [1, 2, 3, 4, 5,6],
     },
       {
       id: 'progress',
-      label: 'Progress',
+      label: 'Status',
       roleAccess: [1, 2, 3, 4, 5, 6],
-      render: ({ progress,id, indexOf,eta }) => {
+      render: ({ progress,id, indexOf,eta, status }) => {
         return(
           <>
           {progress === 100 ? 
-            <span>{eta}</span> 
+            <span>{status}({eta})</span> 
             : (
 
        <div className="progress-main">
