@@ -558,8 +558,11 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" onClick={(e)=>{
+                      console.log('newBirthdayData',newBirthdayData);
+                      if(newBirthdayData.length > 0) {
                       e.preventDefault();
                       postGreetingMessage(emp.id, emp.greeting, 'birthday');
+                      }
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
@@ -632,8 +635,11 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" onClick={(e)=>{
+                      console.log('newBirthdayData',newBirthdayData.length);
+                      if(newBirthdayData.length > 0) {
                       e.preventDefault();
                       postGreetingMessage(emp.id,emp.greeting_anniversary, 'anniversary');
+                      }
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div>
                     )}    
@@ -708,8 +714,10 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" className="birth-input-arrow" onClick={(e)=>{
+                      if(newBirthdayData.length > 0) {
                       e.preventDefault();
                       postGreetingMessage(empdata.id, appr.id);
+                      }
                     }}><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
