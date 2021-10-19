@@ -29,6 +29,8 @@ function EmployeeProfile(props) {
   const [showBond,setShowBond] = useState(false);
   const [bondList, setBondList] = useState([]);
   const [bondData, setBondData] = useState({});
+  const employeeData = {props};
+  const employeeID = employeeData.props.match.params.id;
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
@@ -73,6 +75,10 @@ function EmployeeProfile(props) {
             > 
               <Image src="/images/download-file.svg" />
             </a>
+            <a href={document_url} target="_blank" // eslint-disable-line
+            > 
+              <Image className="ms-1"  src="/images/delete.png" />
+            </a>
           </>
         );
       },
@@ -93,6 +99,10 @@ function EmployeeProfile(props) {
             <a href={document_url} target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
+            </a>
+            <a href={document_url} target="_blank" // eslint-disable-line
+            > 
+              <Image className="ms-1"  src="/images/delete.png" />
             </a>
           </>
         );
@@ -115,6 +125,10 @@ function EmployeeProfile(props) {
             >
               <Image src="/images/download-file.svg" />
             </a>
+            <a href={document_url} target="_blank" // eslint-disable-line
+            > 
+              <Image className="ms-1"  src="/images/delete.png" />
+            </a>
           </>
         );
       },
@@ -135,6 +149,10 @@ function EmployeeProfile(props) {
             <a href={document_url} target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
+            </a>
+            <a href={document_url} target="_blank" // eslint-disable-line
+            > 
+              <Image className="ms-1"  src="/images/delete.png" />
             </a>
           </>
         );
@@ -582,19 +600,31 @@ function EmployeeProfile(props) {
                       ))}
                   </div>
                 </div>
-                {employeeDocument && employeeDocument.length > 0 ? (
+               
+               {employeeDocument && employeeDocument.length > 0 ?  (
                   <>
                   <div className="card">
                   <div className="card-body">
                     <div className="d-flex align-items-center justify-content-between">
                       <h5 className="card-title mb-0 mt-2 ">Documents</h5>
+                      <button
+                          onClick={() => {
+                            setShowBond(true);
+                            history.push(`/addemployement-history/${employeeID}`,{email:employeeDetails.email,name: employeeDetails.full_name});
+                          }}
+                          type="button"
+                          className="btn btn-primary"
+                        >
+                          Add Documents
+                        </button>
                    </div> 
                    <hr/> 
+                   <div className="row">
                     {employeeDocument &&
                       employeeDocument.map((document) => (
                         <>
                           {document.title === 'Personal' && (
-                            <div className="row">
+                            <div className="col-md-4">
                               <h5 className="mb-3">Personal</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
@@ -609,7 +639,7 @@ function EmployeeProfile(props) {
                             </div>
                           )}
                           {document.title === 'Educational' && (
-                            <div className="row">
+                            <div className="col-md-4">
                               <h5 className="mb-3">Educational</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
@@ -624,7 +654,7 @@ function EmployeeProfile(props) {
                             </div>
                           )}
                           {document.title === 'Employment' && (
-                            <div className="row">
+                            <div className="col-md-4">
                               <h5 className="mb-3">Previous Employment</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
@@ -639,7 +669,7 @@ function EmployeeProfile(props) {
                             </div>
                           )}
                           {document.title === 'Other Documents' && (
-                            <div className="row">
+                            <div className="col-md-4">
                               <h5 className="mb-3">Other Documents</h5>
                               <CustomTable
                                 tableContainerClass="mt-2"
@@ -655,10 +685,11 @@ function EmployeeProfile(props) {
                           )}
                         </>
                       ))}
+                   </div>
                   </div>
                 </div>
                   </>
-                  ) : ''}
+                 ) : ''}
               </div>
             </div>
           </div>

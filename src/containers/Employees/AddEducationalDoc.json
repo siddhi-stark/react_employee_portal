@@ -1,0 +1,138 @@
+[{
+	"sectionName": "addform",
+	"sectionTitle": "add form",
+	"layout": {
+		"label": "1 Column",
+		"value": "1column"
+	},
+	"containerClass": "",
+	"displaySection": true,
+	"displaySectionTitle": false,
+	"fields": [{
+		"name": "doc_link_ssc",
+		"type": "file",
+		"label": "SSC",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "col-md-6",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "doc_link_hsc",
+		"type": "file",
+		"label": "HSC",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "col-md-6",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "doc_link_graduate",
+		"type": "file",
+		"label": "Graduation",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "col-md-6",
+		"validations": [{
+			"type": "required",
+			"applyWhen": [],
+			"applyWhenRelation": "OR"
+		}],
+		"displayWhen": {},
+		"haveValidations": "true",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}, {
+		"name": "doc_link_post_graduate",
+		"type": "file",
+		"label": "Post Graduate",
+		"id": "",
+		"placeholder": "",
+		"inputClass": "",
+		"containerClass": "col-md-6",
+		"validations": [],
+		"displayWhen": {},
+		"haveValidations": "false",
+		"haveDisplayOptions": "false",
+		"callback": "",
+		"callbackUrl": "",
+		"inputToChange": "",
+		"minDateSelector": "",
+		"maxDateSelector": "",
+		"disabled": false,
+		"isMulti": false,
+		"allowedUsers": [],
+		"fieldsToReset": [],
+		"fieldLayout": {
+			"label": "1 Column",
+			"value": "1column"
+		},
+		"fields": [],
+		"optionCallback": "",
+		"options": []
+	}],
+	"allowedUsers": [],
+	"sectionLayout": "1column"
+}]

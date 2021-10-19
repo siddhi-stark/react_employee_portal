@@ -18,7 +18,7 @@ function Task(props) {
   const [disableButton, setDisableButton] = useState(false);
   const [taskList, setTaskList] = useState([]);
   const [isShowLoader,setShowLoader] = useState(false);
-  
+
   const defaultTask = {
 
     id: '',
@@ -269,6 +269,7 @@ function Task(props) {
                       label="Start Time"
                       asterisk="*"
                       format="HH:mm"
+                      // timeIntervals={10}
                       id={`taskStartTime${i + 1}`}
                       selected={data.taskStartTime}
                       onChange={(e) => {
