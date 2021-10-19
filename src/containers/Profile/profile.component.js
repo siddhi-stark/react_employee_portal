@@ -180,7 +180,7 @@ function Profile() {
       });
       const mentorList = data.data.assigned_mentors.map((assgnmntr) => {
         return assgnmntr.report_mentor__full_name;
-      })
+      });
       setSelectedMentor(mentorList.length > 0 ? mentorList.join(', ') : '');
       setSelectedManager(managerList.length > 0 ? managerList.join(', ') : '');
       setDate(data.data.date_joined ? new Date(data.data.date_joined) : '');
