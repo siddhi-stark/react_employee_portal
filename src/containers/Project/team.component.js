@@ -13,6 +13,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
+import ProjectRightContainer from '../../components/RightContainer/projectRightContainer.component';
 
 function Team(props) {
   const teamid = props;
@@ -380,56 +381,17 @@ function Team(props) {
             </Row>
           </Col>
           <Col sm={4}>
-            <div className="project-info-box">
-              <Card className="project-info-details">
-                <Card.Body>
-                  <h4>Project Information</h4>
-                  <img
-                    src="/images/project.png"
-                    // src={imageProfile}
-                    alt="img"
-                  />{' '}
-                  <br />
-                  <h2>{getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}</h2>
-                  <br />
-                  <a href="#" className={projectStatus < 0 ? 'mt-4 btn text-danger':'mt-4 btn btn-primary'}>
-                    {projectStatus < 0 ? 'Project in Delay' : 'Project Ontrack'}
-                  </a>
-                </Card.Body>
-              </Card>
-              <Card>
-                <Card.Body>
-                  <ul className="list-unstyled p-0 project-information-total-hr">
-                    <li>
-                    Start Date:{' '}
-                    <strong>{graphDataObj && graphDataObj.start_date}</strong>
-                  </li>
-                  <li>
-                    End Date:{' '}
-                    <strong>{graphDataObj && graphDataObj.end_date}</strong>
-                  </li>
-
-                    <li>
-                    Total Hours Spent:{' '}
-                    <strong>{graphDetails && graphDetails.totalHrsSpend}</strong>
-                  </li>
-                  <li>
-                    Total Hours Estimated:{' '}
-                    <strong>{graphDetails && graphDetails.totalHrsEstimate}</strong>
-                  </li>
-                  <li>
-                    Total Hours Allocated:{' '}
-                    <strong>{graphDetails && graphDetails.totalHrsAllocated}</strong>
-                  </li>
-                  <li>
-                    Project Completion:{' '}
-                    <strong>{graphDetails && graphDetails.projectCompletion}%</strong>
-                  </li>
-                  </ul>
-                  <hr />
-                </Card.Body>
-              </Card>
-            </div>
+            <ProjectRightContainer 
+              name = {getProjectName ?`${getProjectName} ${teamId} Team` : `${projectName} ${teamId} Team`}
+              projectStatus = {projectStatus}
+              startDate ={graphDetails.start_date}
+              endDate ={graphDetails.end_date}
+              totalHrsSpend={graphDetails.totalHrsSpend}
+              totalHrsEstimate ={graphDetails.totalHrsEstimate}
+              totalHrsAllocated ={graphDetails.totalHrsAllocated}
+              projectCompletion ={graphDetails.projectCompletion}
+            />
+         
           </Col>
         </Row>
       </section>

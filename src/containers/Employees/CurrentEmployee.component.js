@@ -191,7 +191,6 @@ function CurrentEmployee() {
 
       manager.map((mngr) => {
         data.data.assigned_managers.map((assgnmgmr) => {
-          console.log('assgnmgmr',assgnmgmr);
           if (mngr.id === assgnmgmr) {
            
             managerList.push({
@@ -208,7 +207,6 @@ function CurrentEmployee() {
 
       mentorData.map((mntr) => {
         data.data.assigned_mentors.map((assgnmntr) => {
-          console.log('assgnmntr..',assgnmntr);
           if (mntr.id === assgnmntr) {
            
             mentorList.push({

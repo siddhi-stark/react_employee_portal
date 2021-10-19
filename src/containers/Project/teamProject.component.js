@@ -5,14 +5,14 @@ import { Bar, Pie } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import moment from 'moment';
 import CustomTable from 'stark-custom-datatable';
-import { Card, Row, Col, Image, Button } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
-import constants from '../../helper/constants';
 import Loader from '../../components/Loader/index';
+import ProjectRightContainer from '../../components/RightContainer/projectRightContainer.component';
 
 function TeamProject(props) {
   const teamid = props;
@@ -580,73 +580,17 @@ function TeamProject(props) {
               </Row>
             </Col>
             <Col sm={4}>
-              <div className="project-info-box">
-                <Card className="project-info-details">
-                  <Card.Body>
-                    <h4>Project Information</h4>
-                    <img
-                      src="/images/project.png"
-                      // src={imageProfile}
-                      alt="img"
-                    />{' '}
-                    <br />
-                    <h2>{name}</h2>
-                    <br />
-                    <a
-                      href="#"
-                      className={
-                        projectStatus < 0
-                          ? 'mt-4 btn text-danger'
-                          : 'mt-4 btn btn-primary'
-                      }
-                    >
-                      {projectStatus < 0
-                        ? 'Project in Delay'
-                        : 'Project Ontrack'}
-                    </a>
-                  </Card.Body>
-                </Card>
-                <Card>
-                  <Card.Body>
-                    <ul className="list-unstyled p-0 project-information-total-hr">
-                      <li>
-                        Start Date: <strong>{graphDetails.start_date}</strong>
-                      </li>
-                      <li>
-                        End Date: <strong>{graphDetails.end_date}</strong>
-                      </li>
-                      <li>
-                        Total Hours Spent:{' '}
-                        <strong>{graphDetails.totalHrsSpend}</strong>
-                      </li>
-                      <li>
-                        Total Hours Estimated:{' '}
-                        <strong>{graphDetails.totalHrsEstimate}</strong>
-                      </li>
-                      <li>
-                        Total Hours Allocated:{' '}
-                        <strong>{graphDetails.totalHrsAllocated}</strong>
-                      </li>
-                      <li>
-                        Project Completion:{' '}
-                        <strong>{graphDetails.projectCompletion}%</strong>
-                      </li>
-                      <li>
-                        Team work URL:{' '}
-                        <a
-                          href={`${constants.project}${graphDetails.url}`}
-                          target="_blank"
-                        >
-                          <span>
-                            <Image src="/images/redirect.png" />
-                          </span>
-                        </a>
-                      </li>
-                    </ul>
-                    <hr />
-                  </Card.Body>
-                </Card>
-              </div>
+            <ProjectRightContainer 
+              name = {name}
+              projectStatus = {projectStatus}
+              startDate ={graphDetails.start_date}
+              endDate ={graphDetails.end_date}
+              totalHrsSpend={graphDetails.totalHrsSpend}
+              totalHrsEstimate ={graphDetails.totalHrsEstimate}
+              totalHrsAllocated ={graphDetails.totalHrsAllocated}
+              projectCompletion ={graphDetails.projectCompletion}
+              url ={graphDetails.url}
+            />
             </Col>
           </Row>
         </section>
@@ -686,6 +630,19 @@ function TeamProject(props) {
                 </section>
               ))}                     
             </div>
+             <Col sm={4}>
+              <ProjectRightContainer 
+                name = {name}
+                projectStatus = {projectStatus}
+                startDate ={graphDetails.start_date}
+                endDate ={graphDetails.end_date}
+                totalHrsSpend={graphDetails.totalHrsSpend}
+                totalHrsEstimate ={graphDetails.totalHrsEstimate}
+                totalHrsAllocated ={graphDetails.totalHrsAllocated}
+                projectCompletion ={graphDetails.projectCompletion}
+                url ={graphDetails.url}
+              />
+            </Col>
           </div>
         </section>
       )}
