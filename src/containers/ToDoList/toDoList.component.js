@@ -102,6 +102,7 @@ function ToDoList(props) {
       render: ({ progress,id, indexOf,eta, status,twId, at }) => {
         return(
           <>
+          {console.log('at',at)}
           {progress === 100 ? 
             <span>{status}({twId ? at : eta})</span> 
             : (

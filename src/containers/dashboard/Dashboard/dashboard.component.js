@@ -338,6 +338,7 @@ function Dashboard() {
       greeting: GreetingId,
       message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
+    console.log('postData----------',postData,newData);
 
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
@@ -635,7 +636,7 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" onClick={(e)=>{
-                      console.log('newBirthdayData',newBirthdayData.length);
+                      console.log('emp in anniversary',emp);
                       if(newBirthdayData.length > 0) {
                       e.preventDefault();
                       postGreetingMessage(emp.id,emp.greeting_anniversary, 'anniversary');
@@ -715,6 +716,7 @@ function Dashboard() {
                     />  
                     <a href="#" className="birth-input-arrow" onClick={(e)=>{
                       if(newBirthdayData.length > 0) {
+                      console.log('empdata',empdata);
                       e.preventDefault();
                       postGreetingMessage(empdata.id, appr.id);
                       }
