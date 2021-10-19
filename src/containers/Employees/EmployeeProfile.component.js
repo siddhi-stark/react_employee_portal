@@ -75,10 +75,6 @@ function EmployeeProfile(props) {
             > 
               <Image src="/images/download-file.svg" />
             </a>
-            <a href={document_url} target="_blank" // eslint-disable-line
-            > 
-              <Image className="ms-1"  src="/images/delete.png" />
-            </a>
           </>
         );
       },
@@ -99,10 +95,6 @@ function EmployeeProfile(props) {
             <a href={document_url} target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
-            </a>
-            <a href={document_url} target="_blank" // eslint-disable-line
-            > 
-              <Image className="ms-1"  src="/images/delete.png" />
             </a>
           </>
         );
@@ -125,10 +117,6 @@ function EmployeeProfile(props) {
             >
               <Image src="/images/download-file.svg" />
             </a>
-            <a href={document_url} target="_blank" // eslint-disable-line
-            > 
-              <Image className="ms-1"  src="/images/delete.png" />
-            </a>
           </>
         );
       },
@@ -149,10 +137,6 @@ function EmployeeProfile(props) {
             <a href={document_url} target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
-            </a>
-            <a href={document_url} target="_blank" // eslint-disable-line
-            > 
-              <Image className="ms-1"  src="/images/delete.png" />
             </a>
           </>
         );
