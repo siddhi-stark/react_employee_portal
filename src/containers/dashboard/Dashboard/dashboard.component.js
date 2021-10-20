@@ -925,8 +925,6 @@ function Dashboard() {
 
             <div className="holidays-applied">
               <div className="row">
-                {holidays && holidays.length >= 1 ? (
-                  <>
                     <div className="col-xl-6">
                       <div className="upcoming-bg">
                         <div className="upcoming-event-box">
@@ -938,6 +936,9 @@ function Dashboard() {
                             <p>Holidays</p>
                             
                           </div>
+
+                          {holidays && holidays.length >= 1 ? (
+                            <>
                           {holidays &&
                             holidays.map((hd) => (
                               <>
@@ -960,13 +961,12 @@ function Dashboard() {
                                 </div>
                               </>
                             ))}
+                            </>
+                            ) : ('No upcoming holidays.')}
+
                         </div>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  ''
-                )}
 
                 <UserRestrictions
                   permittedUsers={[2, 3, 4, 5, 6]}
