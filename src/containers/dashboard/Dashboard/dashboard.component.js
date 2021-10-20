@@ -331,7 +331,6 @@ function Dashboard() {
   };
 
   const postGreetingMessage = async (id,GreetingId, type='') => {
-    console.log('inside postGreetingMessage');
     const newGreetData = newBirthdayData && newBirthdayData.filter(i => i.id === id);
     const newData = newBirthdayData && newBirthdayData[0] && newBirthdayData[0].employee_data && newBirthdayData[0].employee_data.filter(i => i.id === id);
     const postData = {
@@ -339,7 +338,7 @@ function Dashboard() {
       greeting: GreetingId,
       message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
-    console.log('postData----------',newData);
+    console.log('newData----------',newData);
 
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
