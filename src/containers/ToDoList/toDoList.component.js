@@ -104,6 +104,7 @@ function ToDoList(props) {
           {progress === 100 ? 
             <span>{status}({twId ? (at ? at : '0 Hrs') : eta})</span> // eslint-disable-line
             : (
+              <div className="progress-bar-dashboard">
               <div className="progress-main">
                 <div className="progress">
                   <div className="progress-bar bg-secondary w-100">
@@ -126,6 +127,7 @@ function ToDoList(props) {
                     />
                   </div>
                 </div>
+              </div>
               </div>
             )}
           </>

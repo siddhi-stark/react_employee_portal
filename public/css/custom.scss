@@ -190,6 +190,14 @@
      top: 7px;
  }
  
+ body {
+     .card {
+         &.rounded-0 {
+             border-radius: 0 !important;
+         }
+     }
+ }
+ 
  @import "../scss/bootstrap.scss";
  .bg-success {
      min-height: 68px;
@@ -557,6 +565,10 @@
      background-color: #E3E3E3;
      opacity: 1;
      margin: 19px auto 29px;
+     width: 100%;
+     &.seprate5-height {
+         height: 5px;
+     }
  }
  
  p:empty {
@@ -841,16 +853,19 @@
      .tab-content>.active {
          opacity: 1;
      }
-     .progress {
-         padding: 0;
-         min-height: 35px;
-         .progress-bar {
-             background-color: #f1f1f1 !important;
-             font-size: 9px;
+     .progress-bar-dashboard {
+         .progress {
+             padding: 0;
              min-height: 35px;
-             h5 {
-                 font-size: 14px;
-                 margin-bottom: 0;
+             background-color: transparent;
+             .progress-bar {
+                 background-color: transparent !important;
+                 font-size: 9px;
+                 min-height: 35px;
+                 h5 {
+                     font-size: 14px;
+                     margin-bottom: 0;
+                 }
              }
          }
      }
@@ -1935,6 +1950,7 @@
  
  .weekly-status-box {
      min-height: 241px;
+     margin-bottom: 30px;
      .card-body {
          //  padding: 30px;
          padding: 20px;
@@ -2950,6 +2966,9 @@
      h5 {
          color: #ffffff;
      }
+     &.rounded-0 {
+         border-radius: 0 !important;
+     }
  }
  
  .team-performance canvas {
@@ -3089,6 +3108,11 @@
  }
  
  .bug-project-details {
+     .form-select {
+         &:focus {
+             box-shadow: none;
+         }
+     }
      .card {
          .media {
              color: #393A71;
@@ -3104,6 +3128,8 @@
          input {
              border: 1px solid #cccccc;
              display: block;
+             max-width: 462px;
+             width: 100%;
          }
          small {
              font-size: 12px;
@@ -3117,7 +3143,7 @@
  }
  
  .comment-status-box {
-     max-width: 947px;
+     max-width: 899px;
      width: 100%;
  }
  /*@media (min-width: 576px){
@@ -4342,6 +4368,9 @@
  
  .nav-tabs-btn {
      max-width: 250px;
+     &.bug-milestone-tabs {
+         max-width: 100%;
+     }
      .active {
          color: #292a52 !important;
          background-color: transparent !important;
@@ -4365,6 +4394,106 @@
      width: 20px;
      height: 20px;
      z-index: 400;
+ }
+ 
+ .bug-milestone-box {
+     .milestone-bug-details {
+         li {
+             .nav-link {
+                 border-color: #E3E3E3;
+             }
+         }
+     }
+     .project-bug-details {
+         border: 0;
+     }
+     .nav-tabs {
+         border-bottom: 0;
+         .nav-link.active,
+         .nav-item.show .nav-link {
+             background-color: #393A71 !important;
+         }
+     }
+     .filter-apply-btns {
+         .btn {
+             max-width: 78px;
+             min-width: 65px;
+         }
+     }
+ }
+ 
+ .top_counter {
+     display: flex;
+     align-items: center;
+     .icon {
+         border-radius: .125rem;
+         width: 50px;
+         height: 50px;
+         line-height: 50px;
+         text-align: center;
+         margin-right: 20px;
+     }
+     .bg-yellow {
+         background: linear-gradient( 45deg, #fbbd08, #fce44e) !important;
+     }
+     .bg-gray {
+         background: linear-gradient(45deg, #666A6D, #808488) !important;
+     }
+     .icon {
+         border-radius: .125rem;
+         width: 50px;
+         height: 50px;
+         line-height: 50px;
+         text-align: center;
+         img {
+             max-width: 30px;
+             width: 100%;
+         }
+     }
+ }
+ 
+ .member-icon {
+     span {
+         width: 40px;
+         height: 40px;
+         border-radius: 100%;
+         text-align: center;
+         background-color: #ccc;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+     }
+ }
+ 
+ .badge-info-status {
+     .badge {
+         border-radius: 3px;
+     }
+     .bg-success {
+         min-height: inherit;
+         background-color: #e7f3d2 !important;
+         color: #85c51c !important;
+     }
+     .bg-info {
+         background-color: #d8f6f9 !important;
+         color: #3ad2e3 !important;
+     }
+     .comment {
+         width: 16px;
+         height: 16px;
+         border: 1px solid #BBBBBB;
+         font-size: 10px;
+         color: #707070;
+         display: inline-block;
+         text-align: center;
+     }
+ }
+ 
+ .member-date {
+     h6 {
+         color: #707070 !important;
+         font-weight: 400 !important;
+     }
  }
  
  @media (min-width: 1920px) {
