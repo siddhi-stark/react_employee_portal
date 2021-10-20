@@ -125,6 +125,13 @@ function Team(props) {
     {
       id: 'allocated',
       label: 'Estimated Hours',
+      render: ({ allocated }) => {
+        return (
+          <>
+          {allocated.toFixed(2)}
+          </>
+          )
+      }
     },
     {
       id: 'remaining',

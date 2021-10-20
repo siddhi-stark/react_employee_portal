@@ -118,11 +118,21 @@ function ArchivedProject() {
       id: 'allocated',
       label: 'Estimated Hrs',
       roleAccess: [4],
+      render: ({ allocated }) => {
+        return (
+        <> {allocated.toFixed(2)} </>
+        )
+      }
     },
     {
       id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hours_allocated' ,
       label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hours Allocated',
       roleAccess: [1],
+      render: ({ hours_allocated }) => {
+        return (
+        <> {hours_allocated.toFixed(2)} </>
+        )
+      }
     },
     {
       id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 )&& 'cost_allocated',

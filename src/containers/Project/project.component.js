@@ -121,11 +121,29 @@ function Project() {
       id: 'allocated',
       label: 'Estimated Hrs',
       roleAccess: [4],
+      render: ({ allocated }) => {
+        return (
+        <>
+        <span> {allocated.toFixed(2)} </span>
+        </>
+        )
+      }
     },
     {
       id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hours_allocated' ,
       label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hours Allocated',
       roleAccess: [1],
+      render: ({ hours_allocated }) => { 
+        return (
+          <>
+            <span>
+              
+                {hours_allocated.toFixed(2)} 
+              
+            </span>
+          </>
+        );
+      },
     },
     {
       id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 )&& 'cost_allocated',

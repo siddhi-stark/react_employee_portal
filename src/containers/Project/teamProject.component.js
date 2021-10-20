@@ -137,10 +137,24 @@ function TeamProject(props) {
     {
       id: 'allocated',
       label: 'Estimated Hours',
+      render: ({ allocated }) => {
+        return (
+          <>
+          {allocated.toFixed(2)}
+          </>
+          )
+      }
     },
     {
       id: 'hours_allocated',
       label: 'Allocated Hours',
+      render: ({ hours_allocated }) => {
+        return (
+        <>
+        {hours_allocated.toFixed(2)}
+        </>
+        )
+      }
     },
     {
       id: 'remaining',
