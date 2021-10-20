@@ -98,11 +98,12 @@ function ToDoList(props) {
       id: 'progress',
       label: 'Status',
       roleAccess: [1, 2, 3, 4, 5, 6],
-      render: ({ progress,id, indexOf,eta, status }) => {
+      render: ({ progress,id, indexOf,eta, status,twId, at }) => {
         return(
           <>
+          {console.log('at',at)}
           {progress === 100 ? 
-            <span>{status}({eta})</span> 
+            <span>{status}({twId ? at : eta})</span> 
             : (
 
        <div className="progress-main">
@@ -632,12 +633,16 @@ function ToDoList(props) {
       if(rw.oldProgress !== rw.progress) {
       progressArr.push({
         id: rw.id,
-        progress: Number(rw.progress)
+        progress: Number(rw.progress),
+        tw_id: rw.twId ? Number(rw.twId) : null
       }
         );
       }
       return rw;
     });
+
+    console.log('progressArr',progressArr);
+
     const postData = {
       data : progressArr
     };

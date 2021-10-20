@@ -156,12 +156,12 @@ export default class Api extends Component {
   // Get base URL of APIs
   static getBaseUrl() {
 
-    const env = 'dev';
+    const env = 'production';
 
     let url = '';
     switch (env) {
       case 'production':
-        url = 'https://fj67fd3njj.execute-api.ap-south-1.amazonaws.com/production/api/v1/';
+        url = 'https://liveapi.starkdigital.in/api/v1/';
         break; 
 
       case 'dev':

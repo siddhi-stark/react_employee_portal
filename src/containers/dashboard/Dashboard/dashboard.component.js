@@ -338,6 +338,7 @@ function Dashboard() {
       greeting: GreetingId,
       message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
+    console.log('newData----------',newData);
 
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
@@ -558,8 +559,10 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" onClick={(e)=>{
+                     
                       e.preventDefault();
                       postGreetingMessage(emp.id, emp.greeting, 'birthday');
+                      
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
@@ -632,8 +635,10 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" onClick={(e)=>{
+                      
                       e.preventDefault();
                       postGreetingMessage(emp.id,emp.greeting_anniversary, 'anniversary');
+                      
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div>
                     )}    
@@ -708,8 +713,11 @@ function Dashboard() {
                       placeholder="Type Here to wish"
                     />  
                     <a href="#" className="birth-input-arrow" onClick={(e)=>{
+                      
+                      console.log('empdata',empdata);
                       e.preventDefault();
                       postGreetingMessage(empdata.id, appr.id);
+                      
                     }}><img src="/images/arrow-post.svg" alt="Profile"/></a>              
                     </div> 
                     )}   
@@ -917,8 +925,6 @@ function Dashboard() {
 
             <div className="holidays-applied">
               <div className="row">
-                {holidays && holidays.length >= 1 ? (
-                  <>
                     <div className="col-xl-6">
                       <div className="upcoming-bg">
                         <div className="upcoming-event-box">
@@ -930,6 +936,9 @@ function Dashboard() {
                             <p>Holidays</p>
                             
                           </div>
+
+                          {holidays && holidays.length >= 1 ? (
+                            <>
                           {holidays &&
                             holidays.map((hd) => (
                               <>
@@ -952,13 +961,12 @@ function Dashboard() {
                                 </div>
                               </>
                             ))}
+                            </>
+                            ) : ('No upcoming holidays.')}
+
                         </div>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  ''
-                )}
 
                 <UserRestrictions
                   permittedUsers={[2, 3, 4, 5, 6]}

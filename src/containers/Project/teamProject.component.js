@@ -453,7 +453,7 @@ function TeamProject(props) {
 
     const params = {
       project_id: teamProjectId,
-      sort_by: 'created_at',
+      sort_by: 'start_date',
       sort_direction: 'descending',
       limit: 3,
     };

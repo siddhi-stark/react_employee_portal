@@ -185,7 +185,6 @@ const menu = [
     path: '/greetings',
     icon: 'greetings.svg',
     submenu: [],
-
     roleaccess: [1,2,3,5,6],
   },
   {

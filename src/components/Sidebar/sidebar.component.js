@@ -304,9 +304,7 @@ const n = m_names[d.getMonth()];
                       document.dispatchEvent(BirthdayEvent);
                         }
 
-                    }}
-
-                      >{bday.name}</p> 
+                    }}>{bday.name}</p> 
                      </>
                         ) : ''}
                       </>
