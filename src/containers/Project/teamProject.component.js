@@ -630,7 +630,7 @@ function TeamProject(props) {
                             <li className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}>  
                                  <h6 title={`${task[1].content}`} className="mb-0 task-name">{task[1].content.substring(0,40)}</h6>
                                  <div className="d-flex align-items-center">
-                                    <h6 className="mr-5"> ETA: {task[1].estimation}Hr</h6>
+                                    <h6 className="mr-5"> ETA: {task[1].estimation}</h6>
                                     <h6>Status: {task[1].progress && task[1].progress}%
                                       {task[1].progress === 100 ? (` ( ${task[1].hours_sum && task[1].hours_sum}) `) :''}
                                     </h6>
