@@ -130,7 +130,7 @@ function Team(props) {
           <>
           {allocated.toFixed(2)}
           </>
-          )
+          );
       }
     },
     {

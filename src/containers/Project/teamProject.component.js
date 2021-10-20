@@ -142,7 +142,7 @@ function TeamProject(props) {
           <>
           {allocated.toFixed(2)}
           </>
-          )
+          );
       }
     },
     {
@@ -153,7 +153,7 @@ function TeamProject(props) {
         <>
         {hours_allocated.toFixed(2)}
         </>
-        )
+        );
       }
     },
     {

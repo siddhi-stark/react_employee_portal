@@ -59,7 +59,7 @@ function TeamMemberProject(props) {
       render: ({ allocated }) => {
         return (
           <> {allocated.toFixed(2)} </>
-          )
+          );
       }
     },
     {

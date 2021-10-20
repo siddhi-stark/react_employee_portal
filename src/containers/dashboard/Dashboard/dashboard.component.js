@@ -338,7 +338,6 @@ function Dashboard() {
       greeting: GreetingId,
       message: newData && newData.length && newData[0].greetMessage ?  newData && newData.length && newData[0].greetMessage && newData[0].greetMessage : newGreetData && newGreetData.length && newGreetData[0].message,
     };
-    console.log('newData----------',newData);
 
     const endPoint = Api.greetingWishesUrl;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
@@ -714,7 +713,6 @@ function Dashboard() {
                     />  
                     <a href="#" className="birth-input-arrow" onClick={(e)=>{
                       
-                      console.log('empdata',empdata);
                       e.preventDefault();
                       postGreetingMessage(empdata.id, appr.id);
                       

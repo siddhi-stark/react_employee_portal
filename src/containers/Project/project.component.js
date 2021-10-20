@@ -126,7 +126,7 @@ function Project() {
         <>
         <span> {allocated.toFixed(2)} </span>
         </>
-        )
+        );
       }
     },
     {

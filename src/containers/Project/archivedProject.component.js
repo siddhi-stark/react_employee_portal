@@ -121,7 +121,7 @@ function ArchivedProject() {
       render: ({ allocated }) => {
         return (
         <> {allocated.toFixed(2)} </>
-        )
+        );
       }
     },
     {
@@ -131,7 +131,7 @@ function ArchivedProject() {
       render: ({ hours_allocated }) => {
         return (
         <> {hours_allocated.toFixed(2)} </>
-        )
+        );
       }
     },
     {
