@@ -130,7 +130,11 @@ function ArchivedProject() {
       roleAccess: [1],
       render: ({ hours_allocated }) => {
         return (
-        <> {hours_allocated.toFixed(2)} </>
+         <span>
+            {
+              ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && (hours_allocated.toFixed(2)) 
+            }
+          </span>
         );
       }
     },

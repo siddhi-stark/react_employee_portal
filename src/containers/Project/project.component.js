@@ -137,9 +137,9 @@ function Project() {
         return (
           <>
             <span>
-              
-                {hours_allocated.toFixed(2)} 
-              
+              {
+                ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && (hours_allocated.toFixed(2)) 
+              }
             </span>
           </>
         );

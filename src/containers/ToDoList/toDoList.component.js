@@ -102,32 +102,31 @@ function ToDoList(props) {
         return(
           <>
           {progress === 100 ? 
-            <span>{status}({twId ? at : eta})</span> 
+            <span>{status}({twId ? (at ? at : '0 Hrs') : eta})</span> // eslint-disable-line
             : (
-
-       <div className="progress-main">
-                        <div className="progress">
-                          <div className="progress-bar bg-secondary w-100">
-                            <h5 className="justify-content-start">
-                               {progress}%{' '}
-                            </h5>
-                            <input
-                              type="range"
-                              id={`progress${id+ 1}`}
-                              name="rangeInput"
-                              min="0"
-                              max="100"
-                              value={Number(progress)}
-                              onChange={(e) => {
-                                rows[indexOf].progress = e.target.value;
-                                setTimeout(() => {
-                                  setRows([...rows]);
-                                }, 500);
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
+              <div className="progress-main">
+                <div className="progress">
+                  <div className="progress-bar bg-secondary w-100">
+                    <h5 className="justify-content-start">
+                       {progress}%{' '}
+                    </h5>
+                    <input
+                      type="range"
+                      id={`progress${id+ 1}`}
+                      name="rangeInput"
+                      min="0"
+                      max="100"
+                      value={Number(progress)}
+                      onChange={(e) => {
+                        rows[indexOf].progress = e.target.value;
+                        setTimeout(() => {
+                          setRows([...rows]);
+                        }, 500);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             )}
           </>
           );

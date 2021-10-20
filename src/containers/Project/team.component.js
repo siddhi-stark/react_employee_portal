@@ -128,9 +128,9 @@ function Team(props) {
       render: ({ allocated }) => {
         return (
           <>
-          {allocated.toFixed(2)}
+            {allocated.toFixed(2)}
           </>
-          );
+        );
       }
     },
     {
