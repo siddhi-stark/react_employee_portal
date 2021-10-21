@@ -678,7 +678,7 @@ function ToDoList(props) {
       )}
 
       {showErrorBlock && (
-        <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
+        <div className="p-3 mb-4 bg-danger text-white mt-1 bg-danger-main table-red-bg">
           <div className="img-text">
             <img src="/images/fail.svg" alt="Success" /> Report Sent Failed !!
           </div>
@@ -697,7 +697,7 @@ function ToDoList(props) {
       )}
 
       {showSuccessBlock && (
-        <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
+        <div className="p-3 mb-4 bg-success text-white mt-1 bg-success-main">
           <div className="img-text">
             <img src="/images/success.svg" alt="Success" /> Report Sent
             Successfully
@@ -843,7 +843,7 @@ function ToDoList(props) {
               </button>
                 </div>
                 {showMsg && (
-                  <div className="p-3 mb-2 bg-success text-white mt-4 bg-success-main">
+                  <div className="p-3 mb-4 bg-success text-white mt-1 bg-success-main">
                     <div className="img-text">
                       <img src="/images/success.svg" alt="Success" /> You have skipped all the breaks !
           </div>

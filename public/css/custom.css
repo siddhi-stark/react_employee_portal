@@ -14759,6 +14759,10 @@ table.quotes-wrapper thead th {
   text-align: center;
   display: block;
 }
+.project-info-box .card .form-select:focus {
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
 .project-info-box .card.project-info-details {
   background-color: #393A71;
   color: #ffffff;
@@ -14776,10 +14780,26 @@ table.quotes-wrapper thead th {
   margin-top: 10px;
   font-weight: 700;
 }
-.project-info-box .card.project-info-details img {
+.project-info-box .card.project-info-details .project-logo {
   margin: 0 auto;
-  display: block;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   max-width: 92px;
+  border-radius: 100%;
+  height: 92px;
+  border: 1px solid #ffffff;
+}
+.project-info-box .card.project-info-details img {
+  max-width: 92px;
+  border-radius: 100%;
+  padding: 5px;
 }
 .project-info-box .card.project-info-details .btn {
   text-align: center;
@@ -14791,6 +14811,15 @@ table.quotes-wrapper thead th {
   background-color: #ffffff !important;
   color: #85C51C;
   font-weight: 600;
+}
+.project-info-box .card .milestone-status {
+  min-height: 38px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .purple-bg {
@@ -16236,6 +16265,42 @@ ul.timeline li:before {
   font-weight: 400 !important;
 }
 
+.member-status h5, .member-status .h5 {
+  color: #707070;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.righttab-statistics {
+  margin-top: 58px;
+}
+.righttab-statistics .badge {
+  padding: 13px 15px;
+  width: 100%;
+}
+
+.project-bug-details .filter-apply-btns {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 100%;
+          flex: 0 0 100%;
+  text-align: right;
+}
+
+.event-img img {
+  max-width: 200px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
+.modal-description {
+  text-align: left;
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+
 @media (min-width: 1920px) {
   .birthday-wish-section-row .col {
     min-width: 33.33%;
@@ -16290,6 +16355,22 @@ ul.timeline li:before {
   }
 }
 @media (max-width: 1440px) {
+  .righttab-statistics .badge {
+    padding: 13px 9px;
+    width: 100%;
+  }
+
+  .milestone-status-box .card-body {
+    padding: 15px;
+  }
+
+  .righttab-statistics .content h4, .righttab-statistics .content .h4 {
+    font-size: 16px;
+  }
+  .righttab-statistics .content .number {
+    font-size: 14px;
+  }
+
   .welcome-box.jumbotron {
     padding: 15px 0px 0px 29px;
     /*background-size: 16% 57%;*/
@@ -16314,8 +16395,42 @@ ul.timeline li:before {
   .bugs-portal-projects .card li {
     font-size: 12px;
   }
+
+  .bug-milestone-box .card .card-body {
+    padding: 15px;
+  }
 }
 @media (max-width: 1366px) {
+  .bug-milestone-box .card .card-body {
+    padding: 11px;
+  }
+
+  .bug-type-details h6,
+.bug-type-details .h6 {
+    font-size: 12px !important;
+  }
+
+  .member-status h5,
+.member-status .h5 {
+    font-size: 11px !important;
+  }
+
+  .bug-project-details .card h6,
+.bug-project-details .card .h6 {
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  .bug-type-details h5, .bug-type-details .h5 {
+    font-size: 12px !important;
+  }
+  .bug-type-details .row [class*=col] {
+    width: 25%;
+  }
+  .bug-type-details .row [class*=col]:nth-child(2n) {
+    width: 75%;
+  }
+
   .table-projects .progress .progress-bar h5, .table-projects .progress .progress-bar .h5 {
     font-size: 11px;
   }
