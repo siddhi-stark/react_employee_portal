@@ -10,7 +10,7 @@
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
-     {
+      {
         "name": "bond_start_date",
         "type": "date",
         "label": "Bond Start Date",
@@ -18,20 +18,22 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "col-md-6",
-        "validations": [{
-          "type": "",
-          "applyWhen": [],
-          "applyWhenRelation": "OR"
-        }],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
         "minDateSelector": "",
         "maxDateSelector": "",
-        "dateFormat":"dd/MM/yyyy",
+        "dateFormat": "dd/MM/yyyy",
         "disabled": false,
         "isMulti": false,
         "allowedUsers": [],
@@ -52,20 +54,22 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "col-md-6",
-        "validations": [{
-          "type": "",
-          "applyWhen": [],
-          "applyWhenRelation": "OR"
-        }],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
         "minDateSelector": "bond_start_date",
         "maxDateSelector": "",
-        "dateFormat":"dd/MM/yyyy",
+        "dateFormat": "dd/MM/yyyy",
         "disabled": false,
         "isMulti": false,
         "allowedUsers": [],
@@ -86,7 +90,13 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "col-md-6",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
