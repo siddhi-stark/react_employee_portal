@@ -13286,6 +13286,9 @@ p:empty {
   margin-bottom: 0;
   line-height: 1;
 }
+.upcoming-event-box .event-title p a {
+  color: #51B773;
+}
 .upcoming-event-box .date span {
   /*color: $gray4;*/
   color: #000000;
@@ -16287,7 +16290,7 @@ ul.timeline li:before {
 }
 
 .event-img img {
-  max-width: 200px;
+  max-width: 300px;
   margin: 0 auto;
   text-align: center;
   width: 100%;

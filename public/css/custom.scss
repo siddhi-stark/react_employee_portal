@@ -1384,6 +1384,9 @@
              color: $green2;
              margin-bottom: 0;
              line-height: 1;
+             a {
+                 color: $green2;
+             }
          }
      }
      .date {
@@ -4541,7 +4544,7 @@
  
  .event-img {
      img {
-         max-width: 200px;
+         max-width: 300px;
          margin: 0 auto;
          text-align: center;
          width: 100%;
