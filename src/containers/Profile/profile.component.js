@@ -46,6 +46,7 @@ function Profile() {
   const [rowPersonalData, setRowPersonalData] = useState([]);
   const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
+  const [reliveDate, setReliveDate] = useState('');
 
   const personalColumns = [
     {
@@ -175,6 +176,7 @@ function Profile() {
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
       setProfileId(data.data.profile_id);
+      setReliveDate(data.data.relieving_date ? customFunctions.getFormattedDate(data.data.relieving_date):'');
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
       });
@@ -451,7 +453,7 @@ function Profile() {
                         disabled
                       />
                     </Col>
-                    <Col sm={4}>
+                    <Col sm={6}>
                       <TextInput
                         onInputChange={(e) => setEmail(e.target.value)}
                         label="Company Email"
@@ -476,7 +478,7 @@ function Profile() {
                         disabled
                       />
                     </Col>
-                    <Col sm={4}>
+                    <Col sm={6}>
                       <TextInput
                         onInputChange={(e) =>
                           setSelectedDesignationOption(e.target.value)
@@ -505,6 +507,15 @@ function Profile() {
                         containerClass="form-group"
                         name="selectedMentor"
                         value={selectedMentor}
+                        disabled
+                      />
+                    </Col>
+                    <Col sm={6}>
+                      <TextInput
+                        label="Reliving Date"
+                        containerClass="form-group"
+                        name="reliveDate"
+                        value={reliveDate}
                         disabled
                       />
                     </Col>
