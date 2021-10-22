@@ -46,6 +46,7 @@ function Profile() {
   const [rowPersonalData, setRowPersonalData] = useState([]);
   const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
+  const [reliveDate, setReliveDate] = useState('');
 
   const personalColumns = [
     {
@@ -170,11 +171,12 @@ function Profile() {
       setName(data.data.full_name);
       setMobile(data.data.mobile);
       setId(data.data.emp_code);
-      setBirthdate(data.data.dob ? customFunctions.getFormattedDate(data.data.dob):'-');
+      setBirthdate(data.data.dob ? customFunctions.getDMYDate(data.data.dob):'-');
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
       setProfileId(data.data.profile_id);
+      setReliveDate(data.data.relieving_date ? customFunctions.getDMYDate(data.data.relieving_date):'');
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
       });
@@ -451,7 +453,7 @@ function Profile() {
                         disabled
                       />
                     </Col>
-                    <Col sm={4}>
+                    <Col sm={6}>
                       <TextInput
                         onInputChange={(e) => setEmail(e.target.value)}
                         label="Company Email"
@@ -476,7 +478,7 @@ function Profile() {
                         disabled
                       />
                     </Col>
-                    <Col sm={4}>
+                    <Col sm={6}>
                       <TextInput
                         onInputChange={(e) =>
                           setSelectedDesignationOption(e.target.value)
@@ -505,6 +507,15 @@ function Profile() {
                         containerClass="form-group"
                         name="selectedMentor"
                         value={selectedMentor}
+                        disabled
+                      />
+                    </Col>
+                    <Col sm={6}>
+                      <TextInput
+                        label="Reliving Date"
+                        containerClass="form-group"
+                        name="reliveDate"
+                        value={reliveDate}
                         disabled
                       />
                     </Col>

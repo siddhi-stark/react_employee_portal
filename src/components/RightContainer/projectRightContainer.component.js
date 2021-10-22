@@ -22,11 +22,13 @@ function ProjectRightContainer(props) {
         <Card className="project-info-details">
           <Card.Body>
             <h4>Project Information</h4>
-            <img
-              src="/images/project.png"
-              // src={imageProfile}
-              alt="img"
-            />{' '}
+            <div className="project-logo">
+              <img
+                src="/images/project.png"
+                // src={imageProfile}
+                alt="img"
+              />{' '}
+            </div>
             <br />
             <h2>{name}</h2>
             <br />

@@ -808,7 +808,7 @@ function Dashboard() {
               roleId={userRole}
             >
               {showClockIn && !morningMail && (
-                <div className="p-3 mb-2 bg-danger text-white mt-4 bg-danger-main table-red-bg">
+                <div className="p-3 mb-4 bg-danger text-white mt-1 bg-danger-main table-red-bg">
                   <div className="img-text">
                     <img src="/images/fail.svg" alt="Success" /> Please select
                     below task and send morning scrum.

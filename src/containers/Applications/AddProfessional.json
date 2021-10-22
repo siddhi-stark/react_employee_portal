@@ -12,13 +12,24 @@
     "fields": [
       {
         "name": "total_exp",
-        "type": "number",
+        "type": "text",
         "label": "Total Experience (In Year)",
         "id": "",
         "placeholder": "eg. 3",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          },
+          {
+            "type": "numeric|min:0,num",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -41,13 +52,24 @@
       },
       {
         "name": "rel_exp",
-        "type": "number",
+        "type": "text",
         "label": "Relevant Experience (In Year)",
         "id": "",
         "placeholder": "eg. 3.2",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          },
+          {
+            "type": "numeric|min:0,num",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -171,7 +193,7 @@
         "options": []
       }
     ],
-    "allowedUsers": [1,2,5,6],
+    "allowedUsers": [1, 2, 5, 6],
     "sectionLayout": "2column"
   },
   {

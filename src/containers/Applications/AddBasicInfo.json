@@ -197,19 +197,24 @@
 			},
 			{
 				"name": "mobile",
-				"type": "number",
+				"type": "text",
 				"label": "Contact Number",
 				"id": "",
 				"placeholder": "",
+				"maxLength":"10",
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [
 					{
-						"type": "required|min:0|max:10",
+						"type": "required|min:10|max:10|regex:^[6-9]{1}[0-9]{9}$",
 						"applyWhen": [],
 						"applyWhenRelation": "OR"
 					},
-					{ "type": "phone", "applyWhen": [], "applyWhenRelation": "OR" }
+					{
+						"type": "phone",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
 				],
 				"displayWhen": {},
 				"haveValidations": "true",
@@ -239,7 +244,7 @@
 				"placeholder": "",
 				"inputClass": "",
 				"containerClass": "",
-				"inline":"true",
+				"inline": "true",
 				"validations": [],
 				"displayWhen": {},
 				"haveValidations": "true",
@@ -259,7 +264,10 @@
 				},
 				"fields": [],
 				"optionCallback": "",
-				"options": [{"label":"Fresher","value":"1"},{"label":"Experience","value":"0"}]
+				"options": [
+					{ "label": "Fresher", "value": "1" },
+					{ "label": "Experience", "value": "0" }
+				]
 			}
 		],
 		"allowedUsers": [],

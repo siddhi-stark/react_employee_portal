@@ -7,8 +7,14 @@ import UserRestrictions from '../UserRestrictions/userrestrictions.component';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import { ModalInput } from '../FormInputs';
 
 function Sidebar() {
+  const initialState = {
+    imgURL:'',
+    eventTitle:'',
+    eventDescription:''
+  };
   const history = useHistory();
   const viewEvent = new Event('ViewEventButtonChange', { isUpdated: true });
 
@@ -18,6 +24,8 @@ function Sidebar() {
   const [events,setEvents] = useState([]);
   const [birthdays,setBirthdayData] = useState([]);
   const [isBirthDayPresent, setIsBirthDayPresent] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [eventDetails, setEventDetails] = useState(initialState);
 
   const BirthdayEvent = new Event('BirthdayUpdate', { isUpdated: true });
 
@@ -232,18 +240,27 @@ const n = m_names[d.getMonth()];
                 </div>
 
                 {events && events.map((ev) => (
-                        <>
-                          <div className="event-title date d-flex align-items-center">
-                           <p className="bday-date">
-                       <img src="/images/calendar-img.png"  alt="Upcoming event"/>
-                       <span>{ev.datetime}</span>
-                     </p> 
-                            <p className="ms-1">{ev.title}</p>
-                </div> <br />
-                
-                        </>
-                      ))}
-
+                  <>
+                    <div className="event-title date d-flex align-items-center">
+                      <p className="bday-date">
+                        <img src="/images/calendar-img.png"  alt="Upcoming event"/>
+                        <span>{ev.datetime}</span>
+                      </p> 
+                      {
+                          ev.image ?
+                          <p className="ms-1">  
+                          <Link onClick={()=>{setEventDetails({
+                            imgURL:ev.image,
+                            eventTitle:ev.title,
+                            eventDescription:ev.description
+                         }); setShowModal(true);}}>{ev.title}
+                          </Link>
+                          </p> :
+                      <p className="ms-1">{ev.title}</p>
+                    }
+                    </div> <br />
+                  </>
+                ))}
               </div>
               ) : ''}
 
@@ -327,6 +344,28 @@ const n = m_names[d.getMonth()];
             </div>
           </div>
       </div>
+      <ModalInput
+            size="md"
+            centered
+            show={showModal}
+            onHide={()=>setShowModal(false)}
+            className="event-image-popup"
+            id="contained-modal-title-center"
+            modalHeaderClass="reson-text-title d-flex align-items-center"
+            label={eventDetails.eventTitle}
+            modalBody={
+              <div className="event-img">
+                <Image alt="view" src={eventDetails.imgURL} />
+              </div>
+            }
+            modalFooter={
+              eventDetails.eventDescription && (  
+                <span className="modal-description">
+                  Description: {eventDetails.eventDescription}
+                </span>
+              )
+            }
+          />
     </>
   );
 }

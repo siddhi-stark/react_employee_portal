@@ -506,8 +506,11 @@ function EmployeeProfile(props) {
                 <div className="card">
                   <div className="card-body">
                     <div className="d-flex align-items-start justify-content-between mb-4">
+                      {!bondList.length < 1 && (
                         <h5 className="card-title">Bond History</h5>
+                      )}
 
+                        { (!employeeDetails.on_notice_period && !employeeDetails.relieved) && (
                         <button
                           onClick={() => {
                             setShowBond(true);
@@ -518,6 +521,7 @@ function EmployeeProfile(props) {
                         >
                           Add Bond
                         </button>
+                        )}
                     </div>
                    {showBond && (
                       <div className="mt-4 card">

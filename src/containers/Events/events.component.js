@@ -1,6 +1,6 @@
 import CustomTable from 'stark-custom-datatable';
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, Link } from 'react-router-dom';
 import {
   Card,
   Image,
@@ -9,23 +9,30 @@ import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, ModalInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
 
 function Events() {
 
+  const initialState = {
+    imgURL:'',
+    eventTitle:'',
+    eventDescription:''
+  };
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [userRole, setUserRole] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-  const title = 'Events';
+  const titleHeading = 'Events';
   const history = useHistory();
   const items = [{ to: '/', label: 'Home' }, { label: 'Events' }];
   const employeeRole = customFunctions.getLocalStorage('group');
+  const [showModal, setShowModal] = useState(false);
+  const [eventDetails, setEventDetails] = useState(initialState);
   
   const handleActionCallback = (row) => {
     return (
@@ -82,18 +89,37 @@ function Events() {
     {
       id: 'title',
       label: 'Title',
+      render: ({ title, image, description }) => { 
+        return (
+          <>
+          {
+            image ?
+            (<Link
+               onClick={()=>{setEventDetails({
+                  imgURL:image,
+                  eventTitle:title,
+                  eventDescription:description
+               }); setShowModal(true);}}
+              >
+                <strong> {title} </strong>
+              </Link>)
+            : <span>{title}</span>
+          }
+          </>
+        );
+      },
     },
     {
       id: 'datetime',
       label: 'Date',
     },
     {
-      id:  Number(employeeRole) === 4 ||
-        Number(employeeRole) === 3 ||
-        Number(employeeRole) === 2 ? '' :'action',
-      label:   Number(employeeRole) === 4 ||
-        Number(employeeRole) === 3 ||
-        Number(employeeRole) === 2 ? '' :'Action',
+      id: (Number(employeeRole) === 4 ||
+              Number(employeeRole) === 3 ||
+              Number(employeeRole) === 2) ? '' :'action',
+      label:  ( Number(employeeRole) === 4 ||
+              Number(employeeRole) === 3 ||
+              Number(employeeRole) === 2) ? '' :'Action',
       render: handleActionCallback,
     },
   ];
@@ -101,7 +127,7 @@ function Events() {
   const getRowData = async () => {
     setShowLoader(true);
     const endPoint =
-      `${Api.eventsUrl}?type=all`;
+      `${Api.eventsUrl}?type=all&sort_direction=descending`;
     const url = customFunctions.generateUrl(endPoint);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -164,7 +190,7 @@ function Events() {
 
   return (
     <>
-      <Helmet title={title} />
+      <Helmet title={titleHeading} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Events</h2>
         <Breadcrumb items={items} />
@@ -212,6 +238,28 @@ function Events() {
               />
             </Card.Body>
           </Card>
+          <ModalInput
+            size="md"
+            centered
+            show={showModal}
+            onHide={()=>setShowModal(false)}
+            className="event-image-popup"
+            id="contained-modal-title-center"
+            modalHeaderClass="reson-text-title d-flex align-items-center"
+            label={eventDetails.eventTitle}
+            modalBody={
+              <div className="event-img">
+                <Image alt="view" src={eventDetails.imgURL} />
+              </div>
+            }
+            modalFooter={
+              eventDetails.eventDescription && (  
+                <span className="modal-description">
+                  Description: {eventDetails.eventDescription}
+                </span>
+              )
+            }
+          />
         </div>
       </section>
     </>
