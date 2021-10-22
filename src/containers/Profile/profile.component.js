@@ -171,12 +171,12 @@ function Profile() {
       setName(data.data.full_name);
       setMobile(data.data.mobile);
       setId(data.data.emp_code);
-      setBirthdate(data.data.dob ? customFunctions.getFormattedDate(data.data.dob):'-');
+      setBirthdate(data.data.dob ? customFunctions.getDMYDate(data.data.dob):'-');
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
       setProfileId(data.data.profile_id);
-      setReliveDate(data.data.relieving_date ? customFunctions.getFormattedDate(data.data.relieving_date):'');
+      setReliveDate(data.data.relieving_date ? customFunctions.getDMYDate(data.data.relieving_date):'');
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
       });
