@@ -512,7 +512,7 @@ function Profile() {
                     </Col>
                     <Col sm={6}>
                       <TextInput
-                        label="Reliving Date"
+                        label="Relieving Date"
                         containerClass="form-group"
                         name="reliveDate"
                         value={reliveDate}
