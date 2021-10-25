@@ -237,7 +237,7 @@ function Project() {
   // }, [tabStatus]);
 
   const getProjectList = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name&status=active`);
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name&status=active&type=all`);
 
     if(!data) {
      swal(message, '', 'error', {
