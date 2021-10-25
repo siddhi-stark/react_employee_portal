@@ -222,7 +222,7 @@ function ArchivedProject() {
   }, []);
 
   const getProjectList = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name&status=inactive`);
+    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name&status=inactive&type=all`);
 
     if(!data) {
      swal(message, '', 'error', {
