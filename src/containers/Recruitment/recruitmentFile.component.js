@@ -14,12 +14,13 @@ import Loader from '../../components/Loader/index';
 function RecruitmentFileComponent() {
  
   const csvdata = [
-    { Candidate_Name: 'Lata Patil',  Mobile_No: '9871234587', Email: 'lata12@gmail.com', Total_Exp: '3' , Relevant_Exp: '2', Current_CTC: '2', Expected_CTC: '3', Notice_Period: '3', Reason_Job_Change: 'Better Opportunity', Locality: 'Pune', Resume_Source: 'Naukri', Resume: 'https://employeeportal.reviewtestlink.com',Gender:'Female', Fresher : 'Yes' },
+    { Candidate_Name: 'Lata Patil',  Mobile_No: '9871234587', alternative_no: '898374333', Email: 'lata12@gmail.com', Total_Exp: '3' , Relevant_Exp: '2', Current_CTC: '2', Expected_CTC: '3', Notice_Period: '3', Reason_Job_Change: 'Better Opportunity', Locality: 'Pune', Resume_Source: 'Naukri', Resume: 'https://employeeportal.reviewtestlink.com',Gender:'Female', Fresher : 'Yes' },
   ];
 
    const csvHeader = [
     { label: 'Candidate Name', key: 'Candidate_Name' },
     { label: 'Contact Number', key: 'Mobile_No' },
+    { label: 'Alternative Number', key: 'alternative_no' },
     { label: 'Email id', key: 'Email' },
     { label: 'Experience (Year)', key: 'Total_Exp' },
     { label: 'Relevant Experience', key: 'Relevant_Exp' },

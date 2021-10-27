@@ -237,13 +237,54 @@
 				"options": []
 			},
 			{
+				"name": "alternative_no",
+				"type": "text",
+				"label": "Alternative No",
+				"id": "",
+				"placeholder": "",
+				"maxLength":"10",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "min:10|max:10|regex:^[6-9]{1}[0-9]{9}$",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					},
+					{
+						"type": "phone",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": {
+					"label": "1 Column",
+					"value": "1column"
+				},
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
 				"name": "is_fresher",
 				"type": "radio",
 				"label": "",
 				"id": "",
 				"placeholder": "",
 				"inputClass": "",
-				"containerClass": "",
+				"containerClass": "mt-4",
 				"inline": "true",
 				"validations": [],
 				"displayWhen": {},

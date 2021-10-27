@@ -45,7 +45,8 @@ function BasicInformation(props) {
             item.name === 'education' ||
             item.name === 'email' ||
             item.name === 'mobile' || 
-            item.name === 'is_fresher'
+            item.name === 'is_fresher'||
+            item.name === 'alternative_no'
           )
             itemData.disabled = true;
           return itemData;

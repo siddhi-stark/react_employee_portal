@@ -105,7 +105,7 @@ function BirthdayWishes() {
 						<div className="media birthday-media-section">
 							<div className="media-body">
 								{
-									greetingMsg ? greetingMsg : 'Wishing you a day filled with happiness and a year filled with joy. Happy birthday!' // eslint-disable-line
+									greetingMsg ? greetingMsg : showAnniversary === 'true' ? 'Congrats on your work anniversary!' : 'Wishing you a day filled with happiness and a year filled with joy. Happy birthday!' // eslint-disable-line
 								}
 							</div>
 						</div>

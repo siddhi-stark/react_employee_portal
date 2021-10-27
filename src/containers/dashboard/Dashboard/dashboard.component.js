@@ -738,7 +738,7 @@ function Dashboard() {
                     <div className="birth-name d-flex align-items-center mb-0">
                       {leavesUpdate &&
                         leavesUpdate.length > 0 &&
-                        leavesUpdate.map((empLeave) => (
+                        leavesUpdate.map((empLeave,i) => (
                           <>
                             <div className="birthday-employees">
                               <h5 className="card-title">
@@ -751,7 +751,8 @@ function Dashboard() {
                                     history.push('/leaves');
                                   }
                               }}>
-                                {empLeave.user_name} &nbsp;
+                                {i>0 ? ', ' : '' } &nbsp;
+                                {empLeave.user_name}
                               </a>
                               </h5>
                             </div>
@@ -776,12 +777,14 @@ function Dashboard() {
                       <div className="birth-name d-flex align-items-center mb-0">
                         {interviewsUpdate &&
                           interviewsUpdate.length > 0 &&
-                          interviewsUpdate.map((empInterview) => (
+                          interviewsUpdate.map((empInterview,i) => (
                             <>
                               <div className="birthday-employees">
                                 <h5 className="card-title">
                                    <a className="mt-2" href="/interview-listing">
-                                    {empInterview.name} &nbsp;
+                                   {i>0 ? ', ' : '' } &nbsp;
+                                    {empInterview.name} 
+                                    
                                   </a>
                                 </h5>
                               </div>
