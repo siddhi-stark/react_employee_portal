@@ -331,6 +331,7 @@ function Dashboard() {
   };
 
   const postGreetingMessage = async (id,GreetingId, type='') => {
+    if(!newBirthdayData[0].message ) return;
     const newGreetData = newBirthdayData && newBirthdayData.filter(i => i.id === id);
     const newData = newBirthdayData && newBirthdayData[0] && newBirthdayData[0].employee_data && newBirthdayData[0].employee_data.filter(i => i.id === id);
     const postData = {
@@ -557,9 +558,7 @@ function Dashboard() {
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" onClick={(e)=>{
-                     
-                      e.preventDefault();
+                    <a href="#" onClick={()=>{
                       postGreetingMessage(emp.id, emp.greeting, 'birthday');
                       
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
@@ -623,7 +622,8 @@ function Dashboard() {
                     <div className="birth-input-field mt-3">
 
                     <TextInput
-                      onInputChange={(e) => { setCount(e.target.value);
+                      onInputChange={(e) => { 
+                        setCount(e.target.value);
                         emp.message = e.target.value; // eslint-disable-line
                         setNewBirthdayData(anniversary);
                       }}
@@ -633,9 +633,7 @@ function Dashboard() {
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" onClick={(e)=>{
-                      
-                      e.preventDefault();
+                    <a href="#" onClick={()=>{
                       postGreetingMessage(emp.id,emp.greeting_anniversary, 'anniversary');
                       
                     }} className="birth-input-arrow"><img src="/images/arrow-post.svg" alt="Profile"/></a>              
@@ -711,9 +709,7 @@ function Dashboard() {
                       name="firstNameTitle"
                       placeholder="Type Here to wish"
                     />  
-                    <a href="#" className="birth-input-arrow" onClick={(e)=>{
-                      
-                      e.preventDefault();
+                    <a href="#" className="birth-input-arrow" onClick={()=>{
                       postGreetingMessage(empdata.id, appr.id);
                       
                     }}><img src="/images/arrow-post.svg" alt="Profile"/></a>              
