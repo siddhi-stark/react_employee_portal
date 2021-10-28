@@ -65,6 +65,8 @@ import TeamProjectScheduler from './containers/ProjectScheduler/teamProjectSched
 import ProjectFetch from './containers/ProjectScheduler/projectFetch.component';
 import ArchivedProject from './containers/Project/archivedProject.component';
 import AddEmployementHistory from './containers/Employees/AddEmployementHistory.component';
+import Broadcast from './containers/Broadcast/broadcast.component';
+import AddBroadcast from './containers/Broadcast/addBroadcast.component';
 
 function Routes() {
   return (
@@ -148,6 +150,8 @@ function Routes() {
       <Route path="/project-fetch" exact component={ProjectFetch} />
       <Route path="/archived-project" exact component={ArchivedProject} />
       <Route path="/addemployement-history/:ID" exact component={AddEmployementHistory} />
+      <Route path="/broadcast" exact component={Broadcast} />
+      <Route path="/add-broadcast" exact component={AddBroadcast} />
       <Route component={NotFound} />
     </Switch>
   );

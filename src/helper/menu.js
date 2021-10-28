@@ -180,7 +180,14 @@ const menu = [
     submenu: [],
     roleaccess: [1,2,3,4,5,6],
   },
-   {
+  {
+    title: 'Broadcast',
+    path: '/broadcast',
+    icon: 'holiday.svg',
+    submenu: [],
+    roleaccess: [5,6],
+  },
+  {
     title: 'Greetings',
     path: '/greetings',
     icon: 'greetings.svg',

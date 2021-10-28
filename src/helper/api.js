@@ -152,6 +152,8 @@ export default class Api extends Component {
   static taskProgressUrl = `${Api.baseUrl}progress-tasks/`;
 
   static tasksActivityUrl = `${Api.baseUrl}tasks-activity/`;
+  
+  static broadcastUrl = `${Api.baseUrl}broadcast/`;
 
   // Get base URL of APIs
   static getBaseUrl() {

@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Bar, Pie } from 'react-chartjs-2';
-// import Doughnut from 'stark-doughnut-graph';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
-// import StarkFormBuilder from 'stark-form-builder';
 import { Card, Row, Col, Button } from 'react-bootstrap';
-// import FormSections from './formschema.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
