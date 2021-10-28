@@ -12406,14 +12406,6 @@ input[type=checkbox] {
   cursor: pointer;
 }
 
-input[type=checkbox]:checked {
-  background-color: #393A71;
-  background-image: url(../images/select-white.svg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-}
-
 select {
   background-image: url(../images/dropdown-select.svg);
   background-repeat: no-repeat;
@@ -15578,7 +15570,7 @@ span.np-sup {
   margin-bottom: 30px;
   overflow: hidden;
   width: 100%;
-  max-height: 350px;
+  max-height: 546px;
 }
 .profile-bg img {
   width: 100%;
@@ -16179,6 +16171,17 @@ ul.timeline li:before {
 
 .swal-modal .swal-title:not(:first-child) {
   padding-bottom: 13px;
+}
+
+.regular-text-slider {
+  background-color: #FFE7C1;
+  padding: 5px;
+  position: relative;
+  width: 100%;
+}
+.regular-text-slider .slick-slide {
+  display: block;
+  padding: 0 15px;
 }
 
 @media (min-width: 1920px) {

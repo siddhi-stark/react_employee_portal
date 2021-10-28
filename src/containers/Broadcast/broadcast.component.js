@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, Link } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import { Image, Card } from 'react-bootstrap';
@@ -26,7 +26,7 @@ function Broadcast() {
   const [limit, setLimit] = useState(10);
   const [isShowLoader, setShowLoader] = useState(false);
 
-  const handleActionCallback = ({ id }) => {
+  const handleActionCallback = ({ id }) => { // eslint-disable-line
     return (
       <span className="d-flex">
         <a
@@ -48,8 +48,6 @@ function Broadcast() {
           href="javascript:void(0)"
           className="ml-2"
           onClick={() => {
-            //   e.preventDefault();
-            //   e.stopPropagation();
             deleteQuotes(id);
           }}
         >
@@ -72,16 +70,24 @@ function Broadcast() {
     {
       id: 'description',
       label: 'Description',
+       render: ({ description }) => {
+        const originalString = `${description}`;
+        const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
+        return (
+          <>
+            <span>{
+             `${strippedString}`
+            }
+            </span>
+          </>
+        );
+      },
     },
-    {
-      id: 'created_by_name',
-      label: 'Created By Name',
-    },
-     {
-      id: 'action',
-      label: 'Action',
-      render: handleActionCallback,
-    },
+    //  {
+    //   id: 'action',
+    //   label: 'Action',
+    //   render: handleActionCallback,
+    // },
   ];
 
   const deleteQuotes = (id) => {
@@ -165,15 +171,14 @@ function Broadcast() {
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 ">Broadcast</h5>
               <div className="d-flex align-items-center justify-content-end">
-                <a
-                  href="#"
-                  onClick={() => {
-                    history.push('/add-broadcast');
+                <Link
+                  to={{
+                    pathname: '/add-broadcast',
                   }}
                   className="btn-link"
                 >
                   Add Broadcast
-                </a>
+                </Link>
               </div>
             </div>
             <hr />

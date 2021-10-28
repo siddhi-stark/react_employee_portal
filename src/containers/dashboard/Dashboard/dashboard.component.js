@@ -48,6 +48,7 @@ function Dashboard() {
   const [interviewsUpdate, setInterviewsUpdate] = useState([]);
   const [, setCount] = useState('');  // eslint-disable-line
   const [newBirthdayData, setNewBirthdayData] = useState([]);
+  const [broadcastDescription, setBroadcastDescription] = useState([]);
 
   const d = new Date();
   const day = d.getDate(); // eslint-disable-line
@@ -264,6 +265,7 @@ function Dashboard() {
     getWeeklyStatus('this_week');
     getTimeSheetList();
     getWorkingHrs();
+    getBroadcastData();
     setTitle('Dashboard');
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
@@ -379,9 +381,37 @@ function Dashboard() {
     }
   };
 
+  const getBroadcastData = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.broadcastUrl}?upcoming=true&limit=1`
+    );
+    if (!data) {
+      swal(message, '', 'error');
+    }
+    if(data && data.data){
+      data.data.map((broad)=>{
+        setBroadcastDescription(broad.title);
+        return broad;
+      });
+    }
+  };
+
   return (
     <>
       <Helmet title={title} />
+      {(userRole !== 5 && userRole !== 6) && (
+       <div className="row">
+          <div className="regular-text-slider mt-4">
+            <div>
+               {broadcastDescription}
+            </div>
+            <div>
+                {broadcastDescription}
+            </div>
+        </div>
+      </div>
+      )} 
+      
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">Dashboard</h2>

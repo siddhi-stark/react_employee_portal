@@ -67,6 +67,8 @@ import ArchivedProject from './containers/Project/archivedProject.component';
 import AddEmployementHistory from './containers/Employees/AddEmployementHistory.component';
 import Broadcast from './containers/Broadcast/broadcast.component';
 import AddBroadcast from './containers/Broadcast/addBroadcast.component';
+import Policy from './containers/Policy/policy.component';
+import AddPolicy from './containers/Policy/addPolicy.component';
 
 function Routes() {
   return (
@@ -152,6 +154,10 @@ function Routes() {
       <Route path="/addemployement-history/:ID" exact component={AddEmployementHistory} />
       <Route path="/broadcast" exact component={Broadcast} />
       <Route path="/add-broadcast" exact component={AddBroadcast} />
+      <Route path="/edit-broadcast/:broadid" exact component={AddBroadcast} />
+      <Route path="/policy" exact component={Policy} />
+      <Route path="/add-policy" exact component={AddPolicy} />
+      <Route path="/edit-policy/:policyId" exact component={AddPolicy} />
       <Route component={NotFound} />
     </Switch>
   );

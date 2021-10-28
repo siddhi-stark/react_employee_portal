@@ -178,7 +178,16 @@ function EmployeeTeamLeaves() {
   }, [filterData]);
    
   const submitForm = async (formValues) => {
-    setFilterData(formValues);
+     const filterValues = {
+       start_date: formValues.start_date
+        ? customFunctions.getDate(formValues.start_date)
+        : '',
+      end_date: formValues.end_date
+        ? customFunctions.getDate(formValues.end_date)
+        : '',
+      keyword: formValues.keyword,
+    };
+    setFilterData(filterValues);
   };
 
   return (
@@ -221,7 +230,7 @@ function EmployeeTeamLeaves() {
                 showResetBtn={true}
                 resetBtnText="Clear"
                 showBtnClass={false}
-                btnContainerClass="col-md-4 filter-apply-btns"
+                btnContainerClass="form-submit-buttons pull-right"
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {

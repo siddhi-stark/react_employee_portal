@@ -155,6 +155,10 @@ export default class Api extends Component {
   
   static broadcastUrl = `${Api.baseUrl}broadcast/`;
 
+  static policyUrl = `${Api.baseUrl}policy/`;
+
+  static policyStatusUrl = `${Api.baseUrl}policy-bulk-status/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 
