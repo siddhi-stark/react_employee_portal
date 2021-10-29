@@ -192,7 +192,7 @@ const menu = [
     path: '/broadcast',
     icon: 'holiday.svg',
     submenu: [],
-    roleaccess: [5,6],
+    roleaccess: [1,5,6],
   },
   {
     title: 'Greetings',

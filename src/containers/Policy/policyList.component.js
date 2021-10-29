@@ -63,6 +63,10 @@ function EmployeePolicyList() {
       },
     },
     {
+      id: 'created_by_name',
+      label: 'Added By',
+    },
+    {
       id: 'status',
       label: 'Status',
       render: ({status}) => {

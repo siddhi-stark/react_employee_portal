@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Row, Col, Card, Image } from 'react-bootstrap';
+import { Row, Col, Card, Image, Button } from 'react-bootstrap';
+import { ModalInput } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -13,8 +14,16 @@ function EmployeePolicyList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(9);
   const [isShowLoader, setShowLoader] = useState(false);
-
+  const initialData ={
+    title: '',
+    description: '',
+    image: '',
+    createdBy: '',
+  };
+  const [policyData, setPolicyData] = useState(initialData);
+  const [modalShow, setModalShow] = useState(false);
   const [policy, setPolicy] = useState([]);
+  let timmer = null;
 
   const getPolicyData = async () => {
     setShowLoader(true);
@@ -38,6 +47,28 @@ function EmployeePolicyList() {
     getPolicyData();
   }, []);
 
+  const getBroadcastById = async (id) => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.policyUrl}${id}/`
+    );
+    if (data && data.data) {
+      setPolicyData({
+        title: data.data.title,
+        description: data.data.description,
+        image: data.data.image,
+        createdBy: data.data.created_by_name,
+      });
+    }
+  };
+
+  const onCancel = () => {
+    setModalShow(false);
+    if (timmer) clearTimeout(timmer);
+    timmer = setTimeout(() => {
+      getPolicyData(1);
+    }, 1000);
+  };
+
   return (
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -55,8 +86,8 @@ function EmployeePolicyList() {
                         <span className="mini-stat-icon bg-purple mr-0 float-right">
                           <Image
                             className="card-img-top"
-                            src={pl.image ? `${pl.image}` : `${Api.s3UrlnoProfile}`}
-                            // src="/images/5.jpg"
+                            // src={pl.image ? `${pl.image}` : `${Api.s3UrlnoProfile}`}
+                            src="/images/5.jpg"
                             alt="Card image cap"
                           />
                         </span>
@@ -72,6 +103,17 @@ function EmployeePolicyList() {
                        
                     </Row>
                     </Card.Body>
+                    <Card.Footer className="card-footer-view d-flex align-items-center justify-content-end">
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setModalShow(true);
+                        getBroadcastById(pl.id);
+                      }}
+                    >
+                      View
+                    </Button>
+                  </Card.Footer>
                   </Card>
               </Col>
             ))}
@@ -85,6 +127,44 @@ function EmployeePolicyList() {
           }}
         />
         {totalCount < 1 && <p className="text-center"> No records found</p>}
+
+        <ModalInput
+        size="md"
+        centered
+        show={modalShow}
+        onHide={onCancel}
+        label={policyData.title}
+        // label={employeeId ? 'Update Employee' : 'Add Employee'}
+        id="contained-modal-title-vcenter"
+        modalBody={
+          <>
+            <Row>
+              <Col className="col-md-4">
+                <Image
+                  className="card-img-top"
+                  // src={policyData.image ?`${policyData.image}` :`${Api.s3UrlnoProfile}`}
+                  src="/images/5.jpg"
+                  alt="Card image cap"
+                />
+              </Col>
+            </Row>
+            <Row className="mt-3">
+              <Col className="col-md-12">
+                <div className="policy-modal-description">
+                  <p >{policyData.description}</p>{' '}
+                </div>
+                <br />
+              </Col>
+              {/*
+              <Col className="col-md-12">
+                <p className="text-primary confirmation-date text-end">
+                  Created By: <br/> {policyData.createdBy}
+                </p>{' '}
+              </Col> */}
+            </Row>
+          </>
+        }
+      />
     </>
   );
 }

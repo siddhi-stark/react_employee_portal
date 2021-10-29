@@ -13036,25 +13036,29 @@ p:empty {
 }
 
 .main-sidebar-body::-webkit-scrollbar,
-.table-projects.table-responsive::-webkit-scrollbar {
+.table-projects.table-responsive::-webkit-scrollbar,
+.policy-modal-description::-webkit-scrollbar {
   width: 3px;
 }
 
 /* Track */
 .main-sidebar-body::-webkit-scrollbar-track,
-.table-projects.table-responsive::-webkit-scrollbar-track {
+.table-projects.table-responsive::-webkit-scrollbar-track,
+.policy-modal-description::-webkit-scrollbar {
   background: #f1f1f1;
 }
 
 /* Handle */
 .main-sidebar-body::-webkit-scrollbar-thumb,
-.table-projects.table-responsive::-webkit-scrollbar-thumb {
+.table-projects.table-responsive::-webkit-scrollbar-thumb,
+.policy-modal-description::-webkit-scrollbar {
   background: #888;
 }
 
 /* Handle on hover */
 .main-sidebar-body::-webkit-scrollbar-thumb:hover,
-.table-projects.table-responsive::-webkit-scrollbar-thumb:hover {
+.table-projects.table-responsive::-webkit-scrollbar-thumb:hover,
+.policy-modal-description::-webkit-scrollbar {
   background: #555;
 }
 
@@ -16182,6 +16186,12 @@ ul.timeline li:before {
 .regular-text-slider .slick-slide {
   display: block;
   padding: 0 15px;
+}
+
+.policy-modal-description {
+  max-height: calc(100% - 50px);
+  min-height: 100px;
+  overflow: auto;
 }
 
 @media (min-width: 1920px) {

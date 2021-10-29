@@ -25,11 +25,11 @@ function Policy() {
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
-      { (Number(userRole) !== 5 && Number(userRole) !== 6) && (
+      { (Number(userRole) !== 5 && Number(userRole) !== 6 && Number(userRole) !== 1) && (
         <EmployeePolicyList/>
         )
       }
-      { (Number(userRole) === 5 || Number(userRole) === 6) && (
+      { (Number(userRole) === 5 || Number(userRole) === 6 || Number(userRole) === 1) && (
         <PolicyList/>
         )
       }

@@ -135,12 +135,16 @@ function AddPolicy(props) {
 
   const onPolicySubmit = (e) => {
     e.preventDefault();
-    if (validator.allValid()) {
+    let isValid = true;
+    let discErr = '';
+    if (!description.getCurrentContent().hasText()) {
+      discErr = 'Description is required';
+      isValid = false;
+    }
+    setDescriptionErr(discErr);
+    if (validator.allValid() && isValid) {
       submitForm();
     } else {
-      if (!description.getCurrentContent().hasText()) {
-        setDescriptionErr('Description is required');
-      }
       validator.showMessages();
       forceUpdate(count + 1);
     }
