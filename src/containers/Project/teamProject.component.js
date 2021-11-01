@@ -190,7 +190,7 @@ function TeamProject(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.data && data.success) {
       let designHrs = '';
       let developmentHrs = '';
       let qaHrs = '';
@@ -475,7 +475,7 @@ function TeamProject(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.data && data.success) {
       setShowLoader(false);
       setActivityData(data.data);
     } else {
@@ -597,13 +597,13 @@ function TeamProject(props) {
             <ProjectRightContainer 
               name = {name}
               projectStatus = {projectStatus}
-              startDate ={graphDetails.start_date}
-              endDate ={graphDetails.end_date}
-              totalHrsSpend={graphDetails.totalHrsSpend}
-              totalHrsEstimate ={graphDetails.totalHrsEstimate}
-              totalHrsAllocated ={graphDetails.totalHrsAllocated}
-              projectCompletion ={graphDetails.projectCompletion}
-              url ={graphDetails.url}
+              startDate ={graphDetails && graphDetails.start_date}
+              endDate ={graphDetails && graphDetails.end_date}
+              totalHrsSpend={graphDetails && graphDetails.totalHrsSpend}
+              totalHrsEstimate ={graphDetails && graphDetails.totalHrsEstimate}
+              totalHrsAllocated ={graphDetails && graphDetails.totalHrsAllocated}
+              projectCompletion ={graphDetails && graphDetails.projectCompletion}
+              url ={graphDetails && graphDetails.url}
             />
             </Col>
           </Row>
@@ -614,14 +614,14 @@ function TeamProject(props) {
           <div className="row">
             <div className="col-sm-8">
               {/* loop for date */}
-              { activityData && Object.entries(activityData).map(([datekey, datevalueobject]) => (
+              { activityData && Object.entries(activityData) && Object.entries(activityData).map(([datekey, datevalueobject]) => (
                 <section className="card">
                   <div className="purple-bg card-header d-flex align-items-center">
                     <h5 className="card-title mb-0" title="ZS Innovation Lab NEw Project">{datekey && (`${moment(datekey).format('dddd Do MMMM')}`)}</h5>
                   </div>
                   <section className="card-body">
                     {/* emnployee loop */}
-                    { datevalueobject && Object.entries(datevalueobject).map(([employeeName, taskData]) => (
+                    { datevalueobject && Object.entries(datevalueobject) && Object.entries(datevalueobject).map(([employeeName, taskData]) => (
                       <div className="clearfix">
                         <h5>{employeeName}</h5>
                         <ul className="timeline">
