@@ -563,7 +563,7 @@ function PolicyList() {
                 getRowData(pageNo);
               },
             }}
-            showCheckbox={[1,3,2].includes(Number(userRole)) ? false : true} // eslint-disable-line
+            showCheckbox={[4,3,2].includes(Number(userRole)) ? false : true} // eslint-disable-line
             tableClass="table-striped"
             emptyRender={() => {
               return 'No record found.';
