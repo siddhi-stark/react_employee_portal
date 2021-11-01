@@ -403,10 +403,9 @@ function Dashboard() {
        <div className="row">
           <div className="regular-text-slider mt-4">
             <div>
-               {broadcastDescription}
-            </div>
-            <div>
+              <p>
                 {broadcastDescription}
+              </p>
             </div>
         </div>
       </div>

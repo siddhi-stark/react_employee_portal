@@ -27,23 +27,23 @@ jQuery(document).ready(function () {
     $('.header-settings').removeClass('open');
   });
 
-  $(".regular-text-slider").slick({
-        speed: 7000,
-        autoplay: true,
-        autoplaySpeed: 0,
-        cssEase: 'linear',
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        variableWidth: true,
-        arrows: false,
-        draggable: false,
-        responsive: [{
-            breakpoint: 1280,
-            settings: {
-                slidesToShow: 1
-            }
-        }, ]
-    });
+  // $(".regular-text-slider").slick({
+  //       speed: 7000,
+  //       autoplay: true,
+  //       autoplaySpeed: 0,
+  //       cssEase: 'linear',
+  //       slidesToShow: 1,
+  //       slidesToScroll: 1,
+  //       variableWidth: true,
+  //       arrows: false,
+  //       draggable: false,
+  //       responsive: [{
+  //           breakpoint: 1280,
+  //           settings: {
+  //               slidesToShow: 1
+  //           }
+  //       }, ]
+  //   });
 
   //   $(document).mouseup(function (e) {
   //     if ($(e.target).closest(".header-settings").length
