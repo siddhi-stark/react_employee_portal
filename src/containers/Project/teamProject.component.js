@@ -614,19 +614,19 @@ function TeamProject(props) {
           <div className="row">
             <div className="col-sm-8">
               {/* loop for date */}
-              { Object.entries(activityData).map(([datekey, datevalueobject]) => (
+              { activityData && Object.entries(activityData).map(([datekey, datevalueobject]) => (
                 <section className="card">
                   <div className="purple-bg card-header d-flex align-items-center">
                     <h5 className="card-title mb-0" title="ZS Innovation Lab NEw Project">{datekey && (`${moment(datekey).format('dddd Do MMMM')}`)}</h5>
                   </div>
                   <section className="card-body">
                     {/* emnployee loop */}
-                    { Object.entries(datevalueobject).map(([employeeName, taskData]) => (
+                    { datevalueobject && Object.entries(datevalueobject).map(([employeeName, taskData]) => (
                       <div className="clearfix">
                         <h5>{employeeName}</h5>
                         <ul className="timeline">
                           {/* task loop */}
-                          { Object.entries(taskData).map((task) => (
+                          { taskData && Object.entries(taskData).map((task) => (
                             <li className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}>  
                                  <h6 title={`${task[1].content}`} className="mb-0 task-name">{task[1].content.substring(0,40)}</h6>
                                  <div className="d-flex align-items-center">
