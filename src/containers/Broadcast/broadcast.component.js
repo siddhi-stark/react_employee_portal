@@ -62,6 +62,7 @@ function Broadcast() {
     {
       id: 'id',
       label: 'Sr. No',
+      isDisplay:false
     },
     {
       id: 'title',
@@ -134,6 +135,7 @@ function Broadcast() {
     const params = {
       limit,
       page,
+      sort_direction:'descending'
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);

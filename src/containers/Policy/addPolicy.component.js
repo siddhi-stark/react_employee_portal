@@ -205,37 +205,39 @@ function AddPolicy(props) {
                   Description
                   <span style={{ color: 'red' }}>*</span>
                 </Form.Label>
-                <Editor
-                  wrapperClassName="demo-wrapper"
-                  editorClassName="demo-editor"
-                  editorState={description}
-                  onEditorStateChange={(e) => {
-                    onEditorStateChange(e);
-                  }}
-                  toolbar={{
-                    options: [
-                      'inline',
-                      'fontSize',
-                      'fontFamily',
-                      'list',
-                      'textAlign',
-                      'link',
-                      'history',
-                    ],
-                    fontSize: {
+                <div className="editor-description-box">
+                  <Editor
+                    wrapperClassName="demo-wrapper"
+                    editorClassName="demo-editor"
+                    editorState={description}
+                    onEditorStateChange={(e) => {
+                      onEditorStateChange(e);
+                    }}
+                    toolbar={{
                       options: [
-                        7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-                        22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-                        36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-                        50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
-                        78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100,
+                        'inline',
+                        'fontSize',
+                        'fontFamily',
+                        'list',
+                        'textAlign',
+                        'link',
+                        'history',
                       ],
-                    },
-                    list: {
-                      options: ['unordered', 'ordered'],
-                    },
-                  }}
-                />
+                      fontSize: {
+                        options: [
+                          7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                          22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+                          36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+                          50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
+                          78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100,
+                        ],
+                      },
+                      list: {
+                        options: ['unordered', 'ordered'],
+                      },
+                    }}
+                  />
+                </div>
                 <span className="text-danger">{descriptionErr}</span>
                 <br />
                 <input

@@ -169,9 +169,16 @@ const menu = [
   {
     title: 'Policy',
     path: '/policy',
-    icon: 'technology.svg',
+    icon: 'policy.svg',
     submenu: [],
     roleaccess: [1,2,3,4,5,6],
+  },
+  {
+    title: 'Broadcast',
+    path: '/broadcast',
+    icon: 'broadcast.svg',
+    submenu: [],
+    roleaccess: [1,5,6],
   },
   {
     title: 'Event',
@@ -186,13 +193,6 @@ const menu = [
     icon: 'holiday.svg',
     submenu: [],
     roleaccess: [1,2,3,4,5,6],
-  },
-  {
-    title: 'Broadcast',
-    path: '/broadcast',
-    icon: 'holiday.svg',
-    submenu: [],
-    roleaccess: [1,5,6],
   },
   {
     title: 'Greetings',

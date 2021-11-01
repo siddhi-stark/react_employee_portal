@@ -4464,6 +4464,13 @@
      overflow: auto;
  }
  
+ .editor-description-box {
+     border: 1px solid #cccccc;
+     .rdw-editor-main {
+         padding: 10px;
+     }
+ }
+ 
  @media (min-width: 1920px) {
      .birthday-wish-section-row .col {
          min-width: 33.33%;
