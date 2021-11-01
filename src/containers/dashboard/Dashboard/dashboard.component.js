@@ -399,7 +399,7 @@ function Dashboard() {
   return (
     <>
       <Helmet title={title} />
-      {(userRole !== 5 && userRole !== 6) && (
+      {(userRole !== 5 && userRole !== 6 && userRole !== 1) && (
        <div className="row">
           <div className="regular-text-slider mt-4">
             <div>
