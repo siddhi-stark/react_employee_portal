@@ -166,6 +166,7 @@ function TeamProject(props) {
   ];
 
   useEffect(() => {
+    getRowData(1);
     setTitle('Team Project');
   }, []);
 
@@ -235,6 +236,7 @@ function TeamProject(props) {
         data.data.project_dept_time_list &&
         data.data.project_dept_time_list.length > 0 &&
       await  data.data.project_dept_time_list.map((projectDept) => {
+        console.log('projectDept',projectDept);
           switch (projectDept.team_name) {
             case 'Project Management':
               managementHrs =
@@ -434,6 +436,7 @@ function TeamProject(props) {
           customFunctions.getDMYDate(data.data.end_date),
       });
       setRowData(newData || []);
+
       setBarGraphData({
         labels: ['Allocated Hours  Estimated Hours  Spending Hours'],
         datasets: [
@@ -473,7 +476,6 @@ function TeamProject(props) {
   };
 
   useEffect(() => {
-    getRowData(1);
     if (activeMenu === 'Activity') {
       getActivityData();
     }
@@ -500,11 +502,15 @@ function TeamProject(props) {
       data.success
     ) {
       setShowLoader(false);
+      console.log('data, data.data-Activity',data, data.data);
+
       const obj =  Object.keys(data.data).length > 0 && Object.entries(data.data);
       if(obj){
+        console.log('objIF',obj);
         setActivityData(obj);  
       }
       else{
+        console.log('objELse',obj);
         setActivityData([]);
       }
     } else {
@@ -568,7 +574,7 @@ function TeamProject(props) {
                       <strong>Task Status</strong>
                     </Card.Header>
                     <Card.Body>
-                      <Pie data={graphData} />
+                      <Pie data={graphData && graphData} />
                     </Card.Body>
                   </Card>
                 </Col>
@@ -579,7 +585,7 @@ function TeamProject(props) {
                     </Card.Header>
                     <Card.Body>
                       <Bar
-                        data={barGraphData}
+                        data={barGraphData && barGraphData}
                         options={{
                           title: {
                             display: true,
@@ -666,16 +672,18 @@ function TeamProject(props) {
                         Object.entries(datevalueobject).map(
                           ([employeeName, taskData]) => (
                             <div className="clearfix">
+                            {console.log('employeeName',employeeName,taskData)}
                               <h5>{employeeName}</h5>
                               <ul className="timeline">
                                 {/* task loop */}
                                 {taskData &&
                                   Object.keys(taskData) && Object.keys(taskData).length > 0 &&
                                   Object.entries(taskData).length > 0 &&
-                                  Object.entries(taskData).map((task) => (
+                                  Object.entries(taskData).map(([task]) => (
                                     <li
                                       className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}
                                     >
+                                    {console.log('task',task)}
                                       <h6
                                         title={`${task[1].content}`}
                                         className="mb-0 task-name"
