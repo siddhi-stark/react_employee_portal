@@ -3,7 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 // import Doughnut from 'stark-doughnut-graph';
 import { Bar, Pie } from 'react-chartjs-2';
 import swal from 'sweetalert';
-// import moment from 'moment';
+import moment from 'moment';
 import CustomTable from 'stark-custom-datatable';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import Api from '../../helper/api';
@@ -21,7 +21,7 @@ function TeamProject(props) {
   customFunctions.setLocalStorage('teamProjectId', teamProjectId);
   const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
-  const [activityData, setActivityData] = useState([]); // eslint-disable-line
+  const [activityData, setActivityData] = useState([]);
 
   const items = [
     { to: '/', label: 'Home' },
@@ -183,7 +183,6 @@ function TeamProject(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (
-      !customFunctions.checkIfEmpty(data, 'O') &&
       data &&
       data.data &&
       data.success
@@ -231,11 +230,11 @@ function TeamProject(props) {
       setProjectStatus(total);
       setGraphData(graph);
 
-      data &&
+     await data &&
         data.data &&
         data.data.project_dept_time_list &&
         data.data.project_dept_time_list.length > 0 &&
-        data.data.project_dept_time_list.map((projectDept) => {
+      await  data.data.project_dept_time_list.map((projectDept) => {
           switch (projectDept.team_name) {
             case 'Project Management':
               managementHrs =
@@ -270,7 +269,7 @@ function TeamProject(props) {
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setName(data.data.name);
-      newData.push(
+     await newData.push(
         {
           team: 'Design',
           rowClass:
@@ -496,14 +495,18 @@ function TeamProject(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (
-      !customFunctions.checkIfEmpty(data, 'O') &&
       data &&
       data.data &&
       data.success
     ) {
       setShowLoader(false);
       const obj =  Object.keys(data.data).length > 0 && Object.entries(data.data);
-      setActivityData(obj);
+      if(obj){
+        setActivityData(obj);  
+      }
+      else{
+        setActivityData([]);
+      }
     } else {
       setShowLoader(false);
       swal(message, '', 'error');
@@ -639,7 +642,89 @@ function TeamProject(props) {
           </Row>
         </section>
       )}
-     
+      {activeMenu === 'Activity' && (
+        <section className="content-area">
+          <div className="row">
+            <div className="col-sm-8">
+              {/* loop for date */}
+
+              { activityData && activityData.length > 0 && activityData.map((datekey, datevalueobject) => (
+                  <section className="card">
+                    <div className="purple-bg card-header d-flex align-items-center">
+                      <h5
+                        className="card-title mb-0"
+                        title="ZS Innovation Lab NEw Project"
+                      >
+                        {datekey && `${moment(datekey).format('dddd Do MMMM')}`}
+                      </h5>
+                    </div>
+                    <section className="card-body">
+                      {/* emnployee loop */}
+                      {datevalueobject && Object.keys(datevalueobject)  && Object.keys(datevalueobject).length > 0 &&
+                        Object.entries(datevalueobject) &&
+                        Object.entries(datevalueobject).length > 0 &&
+                        Object.entries(datevalueobject).map(
+                          ([employeeName, taskData]) => (
+                            <div className="clearfix">
+                              <h5>{employeeName}</h5>
+                              <ul className="timeline">
+                                {/* task loop */}
+                                {taskData &&
+                                  Object.keys(taskData) && Object.keys(taskData).length > 0 &&
+                                  Object.entries(taskData).length > 0 &&
+                                  Object.entries(taskData).map((task) => (
+                                    <li
+                                      className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}
+                                    >
+                                      <h6
+                                        title={`${task[1].content}`}
+                                        className="mb-0 task-name"
+                                      >
+                                        {task[1].content.substring(0, 40)}
+                                      </h6>
+                                      <div className="d-flex align-items-center">
+                                        <h6 className="mr-5">
+                                          {' '}
+                                          ETA: {task[1].estimation}
+                                        </h6>
+                                        <h6>
+                                          Status:{' '}
+                                          {task[1].progress && task[1].progress}
+                                          %
+                                          {task[1].progress === 100
+                                            ? ` ( ${
+                                                task[1].hours_sum &&
+                                                task[1].hours_sum
+                                              }) `
+                                            : ''}
+                                        </h6>
+                                      </div>
+                                    </li>
+                                  ))}
+                              </ul>
+                            </div>
+                          )
+                        )}
+                    </section>
+                  </section>
+                ))}
+            </div>
+            <Col sm={4}>
+              <ProjectRightContainer
+                name={name}
+                projectStatus={projectStatus}
+                startDate={graphDetails.start_date}
+                endDate={graphDetails.end_date}
+                totalHrsSpend={graphDetails.totalHrsSpend}
+                totalHrsEstimate={graphDetails.totalHrsEstimate}
+                totalHrsAllocated={graphDetails.totalHrsAllocated}
+                projectCompletion={graphDetails.projectCompletion}
+                url={graphDetails.url}
+              />
+            </Col>
+          </div>
+        </section>
+      )}
     </>
   );
 }
