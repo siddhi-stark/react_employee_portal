@@ -645,7 +645,7 @@ function TeamProject(props) {
             <div className="col-sm-8">
               {/* loop for date */}
 
-              { activityData && activityData.length > 0 && activityData.map((datekey, datevalueobject) => (
+              { activityData && activityData.length > 0 && activityData.map((datekey, datevalueobject) => ( // eslint-disable-line
                   <section className="card">
                     <div className="purple-bg card-header d-flex align-items-center">
                       <h5
@@ -655,54 +655,7 @@ function TeamProject(props) {
                         {datekey && `${moment(datekey).format('dddd Do MMMM')}`}
                       </h5>
                     </div>
-                    <section className="card-body">
-                      {/* emnployee loop */}
-                      {datevalueobject &&
-                        Object.entries(datevalueobject) &&
-                        Object.entries(datevalueobject).length > 0 &&
-                        Object.entries(datevalueobject).map(
-                          ([employeeName, taskData]) => (
-                            <div className="clearfix">
-                              <h5>{employeeName}</h5>
-                              <ul className="timeline">
-                                {/* task loop */}
-                                {taskData &&
-                                  Object.entries(taskData) &&
-                                  Object.entries(taskData).length > 0 &&
-                                  Object.entries(taskData).map((task) => (
-                                    <li
-                                      className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}
-                                    >
-                                      <h6
-                                        title={`${task[1].content}`}
-                                        className="mb-0 task-name"
-                                      >
-                                        {task[1].content.substring(0, 40)}
-                                      </h6>
-                                      <div className="d-flex align-items-center">
-                                        <h6 className="mr-5">
-                                          {' '}
-                                          ETA: {task[1].estimation}
-                                        </h6>
-                                        <h6>
-                                          Status:{' '}
-                                          {task[1].progress && task[1].progress}
-                                          %
-                                          {task[1].progress === 100
-                                            ? ` ( ${
-                                                task[1].hours_sum &&
-                                                task[1].hours_sum
-                                              }) `
-                                            : ''}
-                                        </h6>
-                                      </div>
-                                    </li>
-                                  ))}
-                              </ul>
-                            </div>
-                          )
-                        )}
-                    </section>
+                    
                   </section>
                 ))}
             </div>
