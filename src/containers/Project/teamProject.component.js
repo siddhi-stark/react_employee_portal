@@ -63,7 +63,6 @@ function TeamProject(props) {
   const [projectStatus, setProjectStatus] = useState('');
   const [graphDataObj, setGraphDataObj] = useState(initialGraphValue);
   const [activeMenu, setActiveMenu] = useState('Summary');
-  const [tabShow, setTabShow] = useState(false);
 
   // Declare columns
   const columns = [
@@ -193,14 +192,17 @@ function TeamProject(props) {
       let developmentHrs = '';
       let qaHrs = '';
       let managementHrs = '';
+      const newCompletion = data && data.data && data.data.completion;
+      const newRemaining_perc = data && data.data && data.data.remaining_perc;
       setShowLoader(false);
+
       const graph = {
         labels: ['Completed', 'Pending'],
         datasets: [
           {
             data: [
-              data && data.data && data.data.completion,
-              data && data.data && data.data.remaining_perc,
+              newCompletion ? Number(newCompletion) :0,
+              newRemaining_perc? Number(newRemaining_perc):0
             ],
             backgroundColor: ['#8cc540', '#e3e3e3'],
           },
@@ -436,7 +438,14 @@ function TeamProject(props) {
           customFunctions.getDMYDate(data.data.end_date),
       });
       setRowData(newData || []);
-
+      let spendAllocated = '';
+      let totalAllocated = '';
+      let hrsAllocated = '';
+      if(data && data.data && data.data.total){
+        hrsAllocated = data && data.data && data.data.total && data.data.hours_allocated;
+        totalAllocated =  data && data.data && data.data.total && data.data.total.allocated;
+        spendAllocated =  data && data.data && data.data.total && data.data.total.spends;
+      }
       setBarGraphData({
         labels: ['Allocated Hours  Estimated Hours  Spending Hours'],
         datasets: [
@@ -445,7 +454,7 @@ function TeamProject(props) {
             backgroundColor: '#3ad2e3',
             borderWidth: 1,
             data: [
-              data && data.data && data.data.total && data.data.hours_allocated,
+              hrsAllocated ? Number(hrsAllocated) : 0
             ],
           },
           {
@@ -453,7 +462,7 @@ function TeamProject(props) {
             backgroundColor: '#8cc540',
             borderWidth: 1,
             data: [
-              data && data.data && data.data.total && data.data.total.allocated,
+             totalAllocated ? Number(totalAllocated) : 0
             ],
           },
           {
@@ -461,7 +470,7 @@ function TeamProject(props) {
             backgroundColor: '#f4c222 ',
             borderWidth: 1,
             data: [
-              data && data.data && data.data.total && data.data.total.spends,
+              spendAllocated ? Number(spendAllocated) : 0
             ],
           },
         ],
@@ -505,11 +514,9 @@ function TeamProject(props) {
 
       const obj =  Object.keys(data.data).length > 0 && Object.entries(data.data);
       if(obj){
-        setTabShow(true);
         setActivityData(obj);  
       }
       else{
-        setTabShow(false);
         setActivityData([]);
       }
     } else {
@@ -650,7 +657,6 @@ function TeamProject(props) {
       {activeMenu === 'Activity' && (
         <section className="content-area">
           <div className="row">
-              {tabShow ? (
             <div className="col-sm-8">
               {/* loop for date */}
               { activityData && activityData.length > 0 && activityData.map((datekey, datevalueobject) => (
@@ -714,7 +720,6 @@ function TeamProject(props) {
                   </section>
                 ))}
             </div>
-            ):(<div className="col-sm-8"/>)}
             <Col sm={4}>
               <ProjectRightContainer
                 name={name}
