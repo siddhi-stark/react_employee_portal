@@ -639,26 +639,7 @@ function TeamProject(props) {
           </Row>
         </section>
       )}
-      {activeMenu === 'Activity' && (
-        <section className="content-area">
-          <div className="row">
-              <div className="col-sm-8"/>
-            <Col sm={4}>
-              <ProjectRightContainer
-                name={name}
-                projectStatus={projectStatus}
-                startDate={graphDetails.start_date}
-                endDate={graphDetails.end_date}
-                totalHrsSpend={graphDetails.totalHrsSpend}
-                totalHrsEstimate={graphDetails.totalHrsEstimate}
-                totalHrsAllocated={graphDetails.totalHrsAllocated}
-                projectCompletion={graphDetails.projectCompletion}
-                url={graphDetails.url}
-              />
-            </Col>
-          </div>
-        </section>
-      )}
+     
     </>
   );
 }
