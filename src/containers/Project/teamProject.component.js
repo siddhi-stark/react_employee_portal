@@ -3,7 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 // import Doughnut from 'stark-doughnut-graph';
 import { Bar, Pie } from 'react-chartjs-2';
 import swal from 'sweetalert';
-import moment from 'moment';
+// import moment from 'moment';
 import CustomTable from 'stark-custom-datatable';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import Api from '../../helper/api';
@@ -21,7 +21,7 @@ function TeamProject(props) {
   customFunctions.setLocalStorage('teamProjectId', teamProjectId);
   const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
-  const [activityData, setActivityData] = useState([]);
+  const [activityData, setActivityData] = useState([]); // eslint-disable-line
 
   const items = [
     { to: '/', label: 'Home' },
@@ -642,23 +642,7 @@ function TeamProject(props) {
       {activeMenu === 'Activity' && (
         <section className="content-area">
           <div className="row">
-            <div className="col-sm-8">
-              {/* loop for date */}
-
-              { activityData && activityData.length > 0 && activityData.map((datekey, datevalueobject) => ( // eslint-disable-line
-                  <section className="card">
-                    <div className="purple-bg card-header d-flex align-items-center">
-                      <h5
-                        className="card-title mb-0"
-                        title="ZS Innovation Lab NEw Project"
-                      >
-                        {datekey && `${moment(datekey).format('dddd Do MMMM')}`}
-                      </h5>
-                    </div>
-                    
-                  </section>
-                ))}
-            </div>
+              <div className="col-sm-8"/>
             <Col sm={4}>
               <ProjectRightContainer
                 name={name}

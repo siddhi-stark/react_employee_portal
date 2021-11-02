@@ -167,7 +167,7 @@ function Team(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      data && data.data && data.data.employees_data && data.data.employees_data.map((empdata)=>{
+      data && data.data && data.data.employees_data  && data.data.employees_data.length > 0 && data.data.employees_data.map((empdata)=>{
         const employeeNewData = empdata;
         const add = {'rowClass':(empdata.remaining > 100 && empdata.emp_name !== 'Total')?'alert-danger':''};
         Object.entries(add).forEach(([key,value]) => { employeeNewData[key] = value; });
@@ -198,7 +198,7 @@ function Team(props) {
 
       data &&
         data.data &&
-        data.data.employees_data &&
+        data.data.employees_data && data.data.employees_data.length > 0 &&
         data.data.employees_data.map((emp) => {
           if (emp.emp_name === 'Total') {
             const graph = {
