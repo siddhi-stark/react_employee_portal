@@ -63,6 +63,7 @@ function TeamProject(props) {
   const [projectStatus, setProjectStatus] = useState('');
   const [graphDataObj, setGraphDataObj] = useState(initialGraphValue);
   const [activeMenu, setActiveMenu] = useState('Summary');
+  const [tabShow, setTabShow] = useState(false);
 
   // Declare columns
   const columns = [
@@ -236,7 +237,6 @@ function TeamProject(props) {
         data.data.project_dept_time_list &&
         data.data.project_dept_time_list.length > 0 &&
       await  data.data.project_dept_time_list.map((projectDept) => {
-        console.log('projectDept',projectDept);
           switch (projectDept.team_name) {
             case 'Project Management':
               managementHrs =
@@ -502,15 +502,14 @@ function TeamProject(props) {
       data.success
     ) {
       setShowLoader(false);
-      console.log('data, data.data-Activity',data, data.data);
 
       const obj =  Object.keys(data.data).length > 0 && Object.entries(data.data);
       if(obj){
-        console.log('objIF',obj);
+        setTabShow(true);
         setActivityData(obj);  
       }
       else{
-        console.log('objELse',obj);
+        setTabShow(false);
         setActivityData([]);
       }
     } else {
@@ -651,9 +650,9 @@ function TeamProject(props) {
       {activeMenu === 'Activity' && (
         <section className="content-area">
           <div className="row">
+              {tabShow ? (
             <div className="col-sm-8">
               {/* loop for date */}
-
               { activityData && activityData.length > 0 && activityData.map((datekey, datevalueobject) => (
                   <section className="card">
                     <div className="purple-bg card-header d-flex align-items-center">
@@ -672,7 +671,6 @@ function TeamProject(props) {
                         Object.entries(datevalueobject).map(
                           ([employeeName, taskData]) => (
                             <div className="clearfix">
-                            {console.log('employeeName',employeeName,taskData)}
                               <h5>{employeeName}</h5>
                               <ul className="timeline">
                                 {/* task loop */}
@@ -683,7 +681,6 @@ function TeamProject(props) {
                                     <li
                                       className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}
                                     >
-                                    {console.log('task',task)}
                                       <h6
                                         title={`${task[1].content}`}
                                         className="mb-0 task-name"
@@ -717,6 +714,7 @@ function TeamProject(props) {
                   </section>
                 ))}
             </div>
+            ):(<div className="col-sm-8"/>)}
             <Col sm={4}>
               <ProjectRightContainer
                 name={name}
