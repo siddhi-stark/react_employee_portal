@@ -30,6 +30,8 @@ function PolicyList() {
   const [policyModal, setPolicyModal] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState('');
   const [approvalId, setApprovalId] = useState('');
+  const [activeMenu, setActiveMenu] = useState('Parent');
+
   let timmer = null;
 
   const handleActionCallback = ({ id }) => {
@@ -207,8 +209,15 @@ function PolicyList() {
     const params = {
       page,
       limit,
-      sort_direction:'descending'
+      sort_direction:'descending',
     };
+
+    if(activeMenu === 'Parent'){
+      params.is_parent = true;
+    }
+    if(activeMenu === 'Draft'){
+      params.is_draft = true;
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -330,8 +339,21 @@ function PolicyList() {
   useEffect(() => {
     const id = customFunctions.getLocalStorage('group');
     setUserRole(id);
-    getRowData(1);
-  }, []);
+    if(activeMenu === 'Draft'){
+      getRowData(1);
+    } else {
+      getRowData(1);
+    }
+  }, [activeMenu]);
+
+// useEffect(() => {
+//   const id = customFunctions.getLocalStorage('group');
+//     setUserRole(id);
+//     getRowData(1);
+//     if(activeMenu === 'Activity'){
+//       getActivityData();
+//     }
+//   }, [activeMenu]);
 
   const handleChangeActiveStatus = async (selectedIds) => { // eslint-disable-line
     if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
@@ -522,7 +544,32 @@ function PolicyList() {
             </div>
           </div>
           <hr />
-
+           <div className="nav-tabs-btn mb-3">
+            <nav className="nav border-0">
+              <a
+                href="#"
+                className={`nav-link mr-5 ${
+                  activeMenu === 'Parent' ? 'active' : ''
+                }`}
+                onClick={() => {
+                  setActiveMenu('Parent');
+                }}
+              >
+                Parent
+              </a>
+              <a
+                href="#"
+                className={`nav-link mr-5 ${
+                  activeMenu === 'Draft' ? 'active' : ''
+                }`}
+                onClick={() => {
+                  setActiveMenu('Draft');
+                }}
+              >
+                Draft
+              </a>
+            </nav>
+          </div>
           <CustomTable
             columns={columns}
             rows={rowData}
@@ -582,49 +629,48 @@ function PolicyList() {
               />
             )}
            {
-             policyModal && (
-
-        <ModalInput
-        size="md"
-        centered
-        show={policyModal}
-        onHide={onCancel}
-        label={policyData.title}
-        // label={employeeId ? 'Update Employee' : 'Add Employee'}
-        id="contained-modal-title-vcenter"
-        modalBody={
-          <>
-          {policyData.image && (
-           <Row>
-              <Col className="col-md-4">
-                <Image
-                  className="card-img-top"
-                  src={policyData.image ?`${policyData.image}` :`${Api.s3UrlnoProfile}`}
-                  alt="Policy Image"
-                />
-              </Col>
-            </Row>
-            )}
-            <Row className="mt-3">
-              <Col className="col-md-12">
-                <div className="policy-modal-description">
-                  <p >
-                  {policyData.description}</p>{' '}
-                </div>
-                <br />
-              </Col>
-              {/*
-              <Col className="col-md-12">
-                <p className="text-primary confirmation-date text-end">
-                  Created By: <br/> {policyData.createdBy}
-                </p>{' '}
-              </Col> */}
-            </Row>
-          </>
-        }
-      />
-              )
-           }
+             (policyModal && Number(userRole) === 4 || Number(userRole) === 3) && (
+                <ModalInput
+                size="md"
+                centered
+                show={policyModal}
+                onHide={onCancel}
+                label={policyData.title}
+                // label={employeeId ? 'Update Employee' : 'Add Employee'}
+                id="contained-modal-title-vcenter"
+                modalBody={
+                  <>
+                  {policyData.image && (
+                   <Row>
+                      <Col className="col-md-4">
+                        <Image
+                          className="card-img-top"
+                          src={policyData.image ?`${policyData.image}` :`${Api.s3UrlnoProfile}`}
+                          alt="Policy Image"
+                        />
+                      </Col>
+                    </Row>
+                    )}
+                    <Row className="mt-3">
+                      <Col className="col-md-12">
+                        <div className="policy-modal-description">
+                          <p >
+                          {policyData.description}</p>{' '}
+                        </div>
+                        <br />
+                      </Col>
+                      {/*
+                      <Col className="col-md-12">
+                        <p className="text-primary confirmation-date text-end">
+                          Created By: <br/> {policyData.createdBy}
+                        </p>{' '}
+                      </Col> */}
+                    </Row>
+                  </>
+                }
+              />
+            )
+          }
         </Card.Body>
       </Card>
     </>
