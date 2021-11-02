@@ -211,7 +211,7 @@
 			"optionCallback": "",
 			"optionsCallbackUrl": "",
 			"options": [{"label":"Telephonic","value":"1"},
-				{"label":"Google Meet", "value":"2"}]
+				{"label":"Google Meet", "value":"2"},{"label":"Face To Face", "value":"3"}]
 		},
 		{
         "name": "description",

@@ -235,7 +235,7 @@ function TeamProject(props) {
       setGraphData(graph);
 
       data &&
-        data.data &&
+        data.data && data.data.project_dept_time_list.length > 0 &&
         data.data.project_dept_time_list &&
         data.data.project_dept_time_list.map((projectDept) => {
           switch (projectDept.team_name) {
@@ -275,7 +275,7 @@ function TeamProject(props) {
       newData.push(
         {
           team: 'Design',
-          rowClass: data.data.design.remaining > 100 ? 'alert-danger' : '',
+          rowClass: data && data.data && data.data.design && data.data.design.remaining > 100 ? 'alert-danger' : '',
           spend:
             data && data.data && data.data.design && data.data.design.spends,
           allocated:
@@ -290,7 +290,7 @@ function TeamProject(props) {
         },
         {
           team: 'Development',
-          rowClass: data.data.development.remaining > 100 ? 'alert-danger' : '',
+          rowClass: data && data.data && data.data.development && data.data.development.remaining > 100 ? 'alert-danger' : '',
           spend:
             data &&
             data.data &&
@@ -321,7 +321,7 @@ function TeamProject(props) {
         {
           team: 'QA',
           rowClass:
-            data.data.quality_analyst.remaining > 100 ? 'alert-danger' : '',
+            data && data.data && data.data.quality_analyst && data.data.quality_analyst.remaining > 100 ? 'alert-danger' : '',
           spend:
             data &&
             data.data &&
@@ -352,7 +352,7 @@ function TeamProject(props) {
         {
           team: 'Project Management',
           rowClass:
-            data.data.project_management.remaining > 100 ? 'alert-danger' : '',
+            data && data.data && data.data.project_management && data.data.project_management.remaining > 100 ? 'alert-danger' : '',
           spend:
             data &&
             data.data &&
@@ -614,19 +614,19 @@ function TeamProject(props) {
           <div className="row">
             <div className="col-sm-8">
               {/* loop for date */}
-              { activityData && Object.entries(activityData) && Object.entries(activityData).map(([datekey, datevalueobject]) => (
+              { activityData && Object.entries(activityData) && Object.entries(activityData).length > 0 && Object.entries(activityData).map(([datekey, datevalueobject]) => (
                 <section className="card">
                   <div className="purple-bg card-header d-flex align-items-center">
                     <h5 className="card-title mb-0" title="ZS Innovation Lab NEw Project">{datekey && (`${moment(datekey).format('dddd Do MMMM')}`)}</h5>
                   </div>
                   <section className="card-body">
                     {/* emnployee loop */}
-                    { datevalueobject && Object.entries(datevalueobject) && Object.entries(datevalueobject).map(([employeeName, taskData]) => (
+                    { datevalueobject && Object.entries(datevalueobject) && Object.entries(datevalueobject).length > 0 && Object.entries(datevalueobject).map(([employeeName, taskData]) => (
                       <div className="clearfix">
                         <h5>{employeeName}</h5>
                         <ul className="timeline">
                           {/* task loop */}
-                          { taskData && Object.entries(taskData).map((task) => (
+                          { taskData && Object.entries(taskData) && Object.entries(taskData).length > 0 && Object.entries(taskData).map((task) => (
                             <li className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}>  
                                  <h6 title={`${task[1].content}`} className="mb-0 task-name">{task[1].content.substring(0,40)}</h6>
                                  <div className="d-flex align-items-center">

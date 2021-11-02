@@ -16,11 +16,11 @@
 				"inputClass": "",
 				"containerClass": "",
 				"validations": [
-				{
-								"type": "required",
-								"applyWhen": [],
-								"applyWhenRelation": "OR"
-							}
+					{
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
 				],
 				"displayWhen": {},
 				"haveValidations": "false",
@@ -53,10 +53,10 @@
 				"containerClass": "",
 				"validations": [
 					{
-								"type": "required",
-								"applyWhen": [],
-								"applyWhenRelation": "OR"
-							}
+						"type": "required",
+						"applyWhen": [],
+						"applyWhenRelation": "OR"
+					}
 				],
 				"displayWhen": {},
 				"haveValidations": "false",
