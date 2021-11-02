@@ -138,23 +138,15 @@ function TeamProject(props) {
       id: 'allocated',
       label: 'Estimated Hours',
       render: ({ allocated }) => {
-        return (
-          <>
-          {allocated.toFixed(2)}
-          </>
-          );
-      }
+        return <>{allocated.toFixed(2)}</>;
+      },
     },
     {
       id: 'hours_allocated',
       label: 'Allocated Hours',
       render: ({ hours_allocated }) => {
-        return (
-        <>
-        {hours_allocated.toFixed(2)}
-        </>
-        );
-      }
+        return <>{hours_allocated.toFixed(2)}</>;
+      },
     },
     {
       id: 'remaining',
@@ -190,7 +182,12 @@ function TeamProject(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.data && data.success) {
+    if (
+      !customFunctions.checkIfEmpty(data, 'O') &&
+      data &&
+      data.data &&
+      data.success
+    ) {
       let designHrs = '';
       let developmentHrs = '';
       let qaHrs = '';
@@ -235,8 +232,9 @@ function TeamProject(props) {
       setGraphData(graph);
 
       data &&
-        data.data && data.data.project_dept_time_list.length > 0 &&
+        data.data &&
         data.data.project_dept_time_list &&
+        data.data.project_dept_time_list.length > 0 &&
         data.data.project_dept_time_list.map((projectDept) => {
           switch (projectDept.team_name) {
             case 'Project Management':
@@ -275,7 +273,13 @@ function TeamProject(props) {
       newData.push(
         {
           team: 'Design',
-          rowClass: data && data.data && data.data.design && data.data.design.remaining > 100 ? 'alert-danger' : '',
+          rowClass:
+            data &&
+            data.data &&
+            data.data.design &&
+            data.data.design.remaining > 100
+              ? 'alert-danger'
+              : '',
           spend:
             data && data.data && data.data.design && data.data.design.spends,
           allocated:
@@ -290,7 +294,13 @@ function TeamProject(props) {
         },
         {
           team: 'Development',
-          rowClass: data && data.data && data.data.development && data.data.development.remaining > 100 ? 'alert-danger' : '',
+          rowClass:
+            data &&
+            data.data &&
+            data.data.development &&
+            data.data.development.remaining > 100
+              ? 'alert-danger'
+              : '',
           spend:
             data &&
             data.data &&
@@ -321,7 +331,12 @@ function TeamProject(props) {
         {
           team: 'QA',
           rowClass:
-            data && data.data && data.data.quality_analyst && data.data.quality_analyst.remaining > 100 ? 'alert-danger' : '',
+            data &&
+            data.data &&
+            data.data.quality_analyst &&
+            data.data.quality_analyst.remaining > 100
+              ? 'alert-danger'
+              : '',
           spend:
             data &&
             data.data &&
@@ -352,7 +367,12 @@ function TeamProject(props) {
         {
           team: 'Project Management',
           rowClass:
-            data && data.data && data.data.project_management && data.data.project_management.remaining > 100 ? 'alert-danger' : '',
+            data &&
+            data.data &&
+            data.data.project_management &&
+            data.data.project_management.remaining > 100
+              ? 'alert-danger'
+              : '',
           spend:
             data &&
             data.data &&
@@ -455,7 +475,7 @@ function TeamProject(props) {
 
   useEffect(() => {
     getRowData(1);
-    if(activeMenu === 'Activity'){
+    if (activeMenu === 'Activity') {
       getActivityData();
     }
   }, [activeMenu]);
@@ -475,15 +495,21 @@ function TeamProject(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.data && data.success) {
+    if (
+      !customFunctions.checkIfEmpty(data, 'O') &&
+      data &&
+      data.data &&
+      data.success
+    ) {
       setShowLoader(false);
-      setActivityData(data.data);
+      const obj =  Object.keys(data.data).length > 0 && Object.entries(data.data);
+      setActivityData(obj);
     } else {
       setShowLoader(false);
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
-     
+
   return (
     <>
       <Helmet title={title} />
@@ -594,17 +620,21 @@ function TeamProject(props) {
               </Row>
             </Col>
             <Col sm={4}>
-            <ProjectRightContainer 
-              name = {name}
-              projectStatus = {projectStatus}
-              startDate ={graphDetails && graphDetails.start_date}
-              endDate ={graphDetails && graphDetails.end_date}
-              totalHrsSpend={graphDetails && graphDetails.totalHrsSpend}
-              totalHrsEstimate ={graphDetails && graphDetails.totalHrsEstimate}
-              totalHrsAllocated ={graphDetails && graphDetails.totalHrsAllocated}
-              projectCompletion ={graphDetails && graphDetails.projectCompletion}
-              url ={graphDetails && graphDetails.url}
-            />
+              <ProjectRightContainer
+                name={name}
+                projectStatus={projectStatus}
+                startDate={graphDetails && graphDetails.start_date}
+                endDate={graphDetails && graphDetails.end_date}
+                totalHrsSpend={graphDetails && graphDetails.totalHrsSpend}
+                totalHrsEstimate={graphDetails && graphDetails.totalHrsEstimate}
+                totalHrsAllocated={
+                  graphDetails && graphDetails.totalHrsAllocated
+                }
+                projectCompletion={
+                  graphDetails && graphDetails.projectCompletion
+                }
+                url={graphDetails && graphDetails.url}
+              />
             </Col>
           </Row>
         </section>
@@ -614,47 +644,79 @@ function TeamProject(props) {
           <div className="row">
             <div className="col-sm-8">
               {/* loop for date */}
-              { activityData && Object.entries(activityData) && Object.entries(activityData).length > 0 && Object.entries(activityData).map(([datekey, datevalueobject]) => (
-                <section className="card">
-                  <div className="purple-bg card-header d-flex align-items-center">
-                    <h5 className="card-title mb-0" title="ZS Innovation Lab NEw Project">{datekey && (`${moment(datekey).format('dddd Do MMMM')}`)}</h5>
-                  </div>
-                  <section className="card-body">
-                    {/* emnployee loop */}
-                    { datevalueobject && Object.entries(datevalueobject) && Object.entries(datevalueobject).length > 0 && Object.entries(datevalueobject).map(([employeeName, taskData]) => (
-                      <div className="clearfix">
-                        <h5>{employeeName}</h5>
-                        <ul className="timeline">
-                          {/* task loop */}
-                          { taskData && Object.entries(taskData) && Object.entries(taskData).length > 0 && Object.entries(taskData).map((task) => (
-                            <li className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}>  
-                                 <h6 title={`${task[1].content}`} className="mb-0 task-name">{task[1].content.substring(0,40)}</h6>
-                                 <div className="d-flex align-items-center">
-                                    <h6 className="mr-5"> ETA: {task[1].estimation}</h6>
-                                    <h6>Status: {task[1].progress && task[1].progress}%
-                                      {task[1].progress === 100 ? (` ( ${task[1].hours_sum && task[1].hours_sum}) `) :''}
-                                    </h6>
-                                 </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
+
+              { activityData && activityData.length > 0 && activityData.map((datekey, datevalueobject) => (
+                  <section className="card">
+                    <div className="purple-bg card-header d-flex align-items-center">
+                      <h5
+                        className="card-title mb-0"
+                        title="ZS Innovation Lab NEw Project"
+                      >
+                        {datekey && `${moment(datekey).format('dddd Do MMMM')}`}
+                      </h5>
+                    </div>
+                    <section className="card-body">
+                      {/* emnployee loop */}
+                      {datevalueobject &&
+                        Object.entries(datevalueobject) &&
+                        Object.entries(datevalueobject).length > 0 &&
+                        Object.entries(datevalueobject).map(
+                          ([employeeName, taskData]) => (
+                            <div className="clearfix">
+                              <h5>{employeeName}</h5>
+                              <ul className="timeline">
+                                {/* task loop */}
+                                {taskData &&
+                                  Object.entries(taskData) &&
+                                  Object.entries(taskData).length > 0 &&
+                                  Object.entries(taskData).map((task) => (
+                                    <li
+                                      className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}
+                                    >
+                                      <h6
+                                        title={`${task[1].content}`}
+                                        className="mb-0 task-name"
+                                      >
+                                        {task[1].content.substring(0, 40)}
+                                      </h6>
+                                      <div className="d-flex align-items-center">
+                                        <h6 className="mr-5">
+                                          {' '}
+                                          ETA: {task[1].estimation}
+                                        </h6>
+                                        <h6>
+                                          Status:{' '}
+                                          {task[1].progress && task[1].progress}
+                                          %
+                                          {task[1].progress === 100
+                                            ? ` ( ${
+                                                task[1].hours_sum &&
+                                                task[1].hours_sum
+                                              }) `
+                                            : ''}
+                                        </h6>
+                                      </div>
+                                    </li>
+                                  ))}
+                              </ul>
+                            </div>
+                          )
+                        )}
+                    </section>
                   </section>
-                </section>
-              ))}                     
+                ))}
             </div>
-             <Col sm={4}>
-              <ProjectRightContainer 
-                name = {name}
-                projectStatus = {projectStatus}
-                startDate ={graphDetails.start_date}
-                endDate ={graphDetails.end_date}
+            <Col sm={4}>
+              <ProjectRightContainer
+                name={name}
+                projectStatus={projectStatus}
+                startDate={graphDetails.start_date}
+                endDate={graphDetails.end_date}
                 totalHrsSpend={graphDetails.totalHrsSpend}
-                totalHrsEstimate ={graphDetails.totalHrsEstimate}
-                totalHrsAllocated ={graphDetails.totalHrsAllocated}
-                projectCompletion ={graphDetails.projectCompletion}
-                url ={graphDetails.url}
+                totalHrsEstimate={graphDetails.totalHrsEstimate}
+                totalHrsAllocated={graphDetails.totalHrsAllocated}
+                projectCompletion={graphDetails.projectCompletion}
+                url={graphDetails.url}
               />
             </Col>
           </div>
