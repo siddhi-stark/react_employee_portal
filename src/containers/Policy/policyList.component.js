@@ -18,7 +18,15 @@ function PolicyList() {
     image: '',
     createdBy: '',
   };
+
+  const draftData ={
+    title: '',
+    description: '',
+    image: '',
+    createdBy: '',
+  };
   const [policyData, setPolicyData] = useState(initialData);
+  const [policyDraftData, setPolicyDraftData] = useState(draftData);
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -31,10 +39,12 @@ function PolicyList() {
   const [approvalStatus, setApprovalStatus] = useState('');
   const [approvalId, setApprovalId] = useState('');
   const [activeMenu, setActiveMenu] = useState('Parent');
+  const [draftPolicyModal, setDraftPolicyModal] = useState(false);
 
   let timmer = null;
 
   const handleActionCallback = ({ id }) => {
+    const actMenu = activeMenu === 'Draft' && 'Draft';
     return (
       <span className="d-flex">
         {(Number(userRole) === 1 ||
@@ -42,7 +52,7 @@ function PolicyList() {
           Number(userRole) === 6) && (
           <Link
             to={{
-              pathname: `/edit-policy/${id}`,
+              pathname: `/edit-policy/${id}`,activeMenu:actMenu
             }}
             className="btn-link"
           >
@@ -120,11 +130,22 @@ function PolicyList() {
       render: ({ id, title }) => {
         return (
           <>
-          {(Number(userRole) !== 1 && Number(userRole) !== 5 && Number(userRole) !== 6) ?(
+          {(Number(userRole) !== 1 && Number(userRole) !== 5 && Number(userRole) !== 6) && (
             <Link
             onClick={() => {
               getPolicyById(id);
               setPolicyModal(true);
+            }}
+          >
+            {title}
+          </Link>
+          )}
+
+           {((Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && activeMenu === 'Draft') ?(
+            <Link
+            onClick={() => {
+              getDraftPolicyById(id);
+              setDraftPolicyModal(true);
             }}
           >
             {title}
@@ -319,17 +340,40 @@ function PolicyList() {
     if (data && data.data) {
       const originalString = `${data.data.description}`;
       const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
+      const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+
       setPolicyData({
         title: data.data.title,
-        description: strippedString,
+        description: decString,
         image: data.data.image,
         createdBy: data.data.created_by_name,
       });
     }
   };
 
+  const getDraftPolicyById = async (id) => {
+
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.policyUrl}${id}/`
+    );
+
+    if (data && data.data) {
+      const originalString = `${data.data.parent_description}`;
+      const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
+      const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+     
+      setPolicyDraftData({
+        title: data.data.parent_title,
+        description:decString,
+        // image: data.data.image,
+        // createdBy: data.data.created_by_name,
+      });
+    }
+  };
+
   const onCancel = () => {
     setPolicyModal(false);
+    setDraftPolicyModal(false);
     if (timmer) clearTimeout(timmer);
     timmer = setTimeout(() => {
       getRowData(1);
@@ -656,6 +700,50 @@ function PolicyList() {
                         <div className="policy-modal-description">
                           <p >
                           {policyData.description}</p>{' '}
+                        </div>
+                        <br />
+                      </Col>
+                      {/*
+                      <Col className="col-md-12">
+                        <p className="text-primary confirmation-date text-end">
+                          Created By: <br/> {policyData.createdBy}
+                        </p>{' '}
+                      </Col> */}
+                    </Row>
+                  </>
+                }
+              />
+            )
+          }
+
+           {
+             (draftPolicyModal && Number(userRole) === 5 || Number(userRole) === 6 || Number(userRole) === 1) && (
+                <ModalInput
+                size="md"
+                centered
+                show={draftPolicyModal}
+                onHide={onCancel}
+                label={policyDraftData.title}
+                // label={employeeId ? 'Update Employee' : 'Add Employee'}
+                id="contained-modal-title-vcenter"
+                modalBody={
+                  <>
+                  {policyDraftData.image && (
+                   <Row>
+                      <Col className="col-md-4">
+                        <Image
+                          className="card-img-top"
+                          src={policyDraftData.image ?`${policyDraftData.image}` :`${Api.s3UrlnoProfile}`}
+                          alt="Policy Image"
+                        />
+                      </Col>
+                    </Row>
+                    )}
+                    <Row className="mt-3">
+                      <Col className="col-md-12">
+                        <div className="policy-modal-description">
+                          <p >
+                          {policyDraftData.description}</p>{' '}
                         </div>
                         <br />
                       </Col>
