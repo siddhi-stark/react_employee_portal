@@ -141,7 +141,7 @@ function PolicyList() {
           </Link>
           )}
 
-           {((Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && activeMenu === 'Draft') ?(
+           {((Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && activeMenu === 'Draft') && (
             <Link
             onClick={() => {
               getDraftPolicyById(id);
@@ -150,7 +150,7 @@ function PolicyList() {
           >
             {title}
           </Link>
-          ) : <span>{title}</span> }
+          ) }
           </>
         );
       },
