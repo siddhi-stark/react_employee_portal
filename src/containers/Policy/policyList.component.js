@@ -18,7 +18,15 @@ function PolicyList() {
     image: '',
     createdBy: '',
   };
+
+  const draftData ={
+    title: '',
+    description: '',
+    image: '',
+    createdBy: '',
+  };
   const [policyData, setPolicyData] = useState(initialData);
+  const [policyDraftData, setPolicyDraftData] = useState(draftData);
   // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -30,9 +38,13 @@ function PolicyList() {
   const [policyModal, setPolicyModal] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState('');
   const [approvalId, setApprovalId] = useState('');
+  const [activeMenu, setActiveMenu] = useState('Parent');
+  const [draftPolicyModal, setDraftPolicyModal] = useState(false);
+
   let timmer = null;
 
   const handleActionCallback = ({ id }) => {
+    const actMenu = activeMenu === 'Draft' && 'Draft';
     return (
       <span className="d-flex">
         {(Number(userRole) === 1 ||
@@ -40,7 +52,7 @@ function PolicyList() {
           Number(userRole) === 6) && (
           <Link
             to={{
-              pathname: `/edit-policy/${id}`,
+              pathname: `/edit-policy/${id}`,activeMenu:actMenu
             }}
             className="btn-link"
           >
@@ -118,11 +130,22 @@ function PolicyList() {
       render: ({ id, title }) => {
         return (
           <>
-          {(Number(userRole) !== 1 && Number(userRole) !== 5 && Number(userRole) !== 6) ?(
+          {(Number(userRole) !== 1 && Number(userRole) !== 5 && Number(userRole) !== 6) && (
             <Link
             onClick={() => {
               getPolicyById(id);
               setPolicyModal(true);
+            }}
+          >
+            {title}
+          </Link>
+          )}
+
+           {((Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && activeMenu === 'Draft') ?(
+            <Link
+            onClick={() => {
+              getDraftPolicyById(id);
+              setDraftPolicyModal(true);
             }}
           >
             {title}
@@ -207,8 +230,15 @@ function PolicyList() {
     const params = {
       page,
       limit,
-      sort_direction:'descending'
+      sort_direction:'descending',
     };
+
+    if(activeMenu === 'Parent'){
+      params.is_parent = true;
+    }
+    if(activeMenu === 'Draft'){
+      params.is_draft = true;
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -310,17 +340,40 @@ function PolicyList() {
     if (data && data.data) {
       const originalString = `${data.data.description}`;
       const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
+      const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+
       setPolicyData({
         title: data.data.title,
-        description: strippedString,
+        description: decString,
         image: data.data.image,
         createdBy: data.data.created_by_name,
       });
     }
   };
 
+  const getDraftPolicyById = async (id) => {
+
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.policyUrl}${id}/`
+    );
+
+    if (data && data.data) {
+      const originalString = `${data.data.parent_description}`;
+      const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
+      const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+     
+      setPolicyDraftData({
+        title: data.data.parent_title,
+        description:decString,
+        // image: data.data.image,
+        // createdBy: data.data.created_by_name,
+      });
+    }
+  };
+
   const onCancel = () => {
     setPolicyModal(false);
+    setDraftPolicyModal(false);
     if (timmer) clearTimeout(timmer);
     timmer = setTimeout(() => {
       getRowData(1);
@@ -330,8 +383,21 @@ function PolicyList() {
   useEffect(() => {
     const id = customFunctions.getLocalStorage('group');
     setUserRole(id);
-    getRowData(1);
-  }, []);
+    if(activeMenu === 'Draft'){
+      getRowData(1);
+    } else {
+      getRowData(1);
+    }
+  }, [activeMenu]);
+
+// useEffect(() => {
+//   const id = customFunctions.getLocalStorage('group');
+//     setUserRole(id);
+//     getRowData(1);
+//     if(activeMenu === 'Activity'){
+//       getActivityData();
+//     }
+//   }, [activeMenu]);
 
   const handleChangeActiveStatus = async (selectedIds) => { // eslint-disable-line
     if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
@@ -522,7 +588,32 @@ function PolicyList() {
             </div>
           </div>
           <hr />
-
+           <div className="nav-tabs-btn mb-3">
+            <nav className="nav border-0">
+              <a
+                href="#"
+                className={`nav-link mr-5 ${
+                  activeMenu === 'Parent' ? 'active' : ''
+                }`}
+                onClick={() => {
+                  setActiveMenu('Parent');
+                }}
+              >
+                Parent
+              </a>
+              <a
+                href="#"
+                className={`nav-link mr-5 ${
+                  activeMenu === 'Draft' ? 'active' : ''
+                }`}
+                onClick={() => {
+                  setActiveMenu('Draft');
+                }}
+              >
+                Draft
+              </a>
+            </nav>
+          </div>
           <CustomTable
             columns={columns}
             rows={rowData}
@@ -582,49 +673,92 @@ function PolicyList() {
               />
             )}
            {
-             policyModal && (
+             (policyModal && Number(userRole) === 4 || Number(userRole) === 3) && (
+                <ModalInput
+                size="md"
+                centered
+                show={policyModal}
+                onHide={onCancel}
+                label={policyData.title}
+                // label={employeeId ? 'Update Employee' : 'Add Employee'}
+                id="contained-modal-title-vcenter"
+                modalBody={
+                  <>
+                  {policyData.image && (
+                   <Row>
+                      <Col className="col-md-4">
+                        <Image
+                          className="card-img-top"
+                          src={policyData.image ?`${policyData.image}` :`${Api.s3UrlnoProfile}`}
+                          alt="Policy Image"
+                        />
+                      </Col>
+                    </Row>
+                    )}
+                    <Row className="mt-3">
+                      <Col className="col-md-12">
+                        <div className="policy-modal-description">
+                          <p >
+                          {policyData.description}</p>{' '}
+                        </div>
+                        <br />
+                      </Col>
+                      {/*
+                      <Col className="col-md-12">
+                        <p className="text-primary confirmation-date text-end">
+                          Created By: <br/> {policyData.createdBy}
+                        </p>{' '}
+                      </Col> */}
+                    </Row>
+                  </>
+                }
+              />
+            )
+          }
 
-        <ModalInput
-        size="md"
-        centered
-        show={policyModal}
-        onHide={onCancel}
-        label={policyData.title}
-        // label={employeeId ? 'Update Employee' : 'Add Employee'}
-        id="contained-modal-title-vcenter"
-        modalBody={
-          <>
-          {policyData.image && (
-           <Row>
-              <Col className="col-md-4">
-                <Image
-                  className="card-img-top"
-                  src={policyData.image ?`${policyData.image}` :`${Api.s3UrlnoProfile}`}
-                  alt="Policy Image"
-                />
-              </Col>
-            </Row>
-            )}
-            <Row className="mt-3">
-              <Col className="col-md-12">
-                <div className="policy-modal-description">
-                  <p >
-                  {policyData.description}</p>{' '}
-                </div>
-                <br />
-              </Col>
-              {/*
-              <Col className="col-md-12">
-                <p className="text-primary confirmation-date text-end">
-                  Created By: <br/> {policyData.createdBy}
-                </p>{' '}
-              </Col> */}
-            </Row>
-          </>
-        }
-      />
-              )
-           }
+           {
+             (draftPolicyModal && Number(userRole) === 5 || Number(userRole) === 6 || Number(userRole) === 1) && (
+                <ModalInput
+                size="md"
+                centered
+                show={draftPolicyModal}
+                onHide={onCancel}
+                label={policyDraftData.title}
+                // label={employeeId ? 'Update Employee' : 'Add Employee'}
+                id="contained-modal-title-vcenter"
+                modalBody={
+                  <>
+                  {policyDraftData.image && (
+                   <Row>
+                      <Col className="col-md-4">
+                        <Image
+                          className="card-img-top"
+                          src={policyDraftData.image ?`${policyDraftData.image}` :`${Api.s3UrlnoProfile}`}
+                          alt="Policy Image"
+                        />
+                      </Col>
+                    </Row>
+                    )}
+                    <Row className="mt-3">
+                      <Col className="col-md-12">
+                        <div className="policy-modal-description">
+                          <p >
+                          {policyDraftData.description}</p>{' '}
+                        </div>
+                        <br />
+                      </Col>
+                      {/*
+                      <Col className="col-md-12">
+                        <p className="text-primary confirmation-date text-end">
+                          Created By: <br/> {policyData.createdBy}
+                        </p>{' '}
+                      </Col> */}
+                    </Row>
+                  </>
+                }
+              />
+            )
+          }
         </Card.Body>
       </Card>
     </>

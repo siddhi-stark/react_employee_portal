@@ -18,6 +18,7 @@ const validator = new SimpleReactValidator();
 function AddPolicy(props) {
   const propsId = props;
   const polId = propsId.match.params.policyId;
+  const activeMenu = propsId.location.activeMenu;
   const history = useHistory();
   const [title, setTitle] = useState('');
   const items = [
@@ -27,9 +28,10 @@ function AddPolicy(props) {
   const [count, forceUpdate] = useState(0);
   const [policyId, setPolicyId] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-  const [checked, setChecked] = useState('');
+  const [checked, setChecked] = useState(''); // eslint-disable-line
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState(EditorState.createEmpty());
+  const [parentDescription, setParentDescription] = useState('');
   const [descriptionErr, setDescriptionErr] = useState('');
   const [imageUrl, setImageUrl] = useState('');
 
@@ -41,8 +43,13 @@ function AddPolicy(props) {
       swal(message, '', 'error');
     }
     if (data && data.data) {
+      const originalString = `${data.data.parent_description}`;
+      const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
+      const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+     
       setItemName(data.data.title);
       setImageUrl(data.data.image);
+      setParentDescription(decString);
       const dp = EditorState.createWithContent(
         ContentState.createFromBlockArray(
           convertFromHTML(data.data.description)
@@ -201,6 +208,17 @@ function AddPolicy(props) {
                     />
                   </Col>
                 </Row>
+                { (policyId && activeMenu === 'Draft') && (
+                  <TextInput
+                    label="Parent Description"
+                    containerClass="form-group"
+                    as="textarea" 
+                    rows={3} 
+                    name="parentDescription"
+                    value={parentDescription}
+                    disabled
+                  />
+                )}
                 <Form.Label>
                   Description
                   <span style={{ color: 'red' }}>*</span>
@@ -240,7 +258,8 @@ function AddPolicy(props) {
                 </div>
                 <span className="text-danger">{descriptionErr}</span>
                 <br />
-                <input
+
+               {/* <input
                   onChange={(e) => {
                     setChecked(e.target.checked);
                   }}
@@ -250,7 +269,7 @@ function AddPolicy(props) {
                   className="form-submit-buttons"
                   value={checked}
                 />
-                <span className="ms-2">Do you want to send Email ?</span>
+                <span className="ms-2">Do you want to send Email ?</span> */}
                 <div className="mt-3">
                   <Button variant="primary" type="submit">
                     {policyId ? 'Update' : 'Submit'}

@@ -74,10 +74,12 @@ function Broadcast() {
        render: ({ description }) => {
         const originalString = `${description}`;
         const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
+        const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+
         return (
           <>
             <span>{
-             `${strippedString}`
+             `${decString}`
             }
             </span>
           </>
