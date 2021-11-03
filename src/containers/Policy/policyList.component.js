@@ -41,8 +41,6 @@ function PolicyList() {
   const [activeMenu, setActiveMenu] = useState('Parent');
   const [draftPolicyModal, setDraftPolicyModal] = useState(false);
 
-  let timmer = null;
-
   const handleActionCallback = ({ id }) => {
     const actMenu = activeMenu === 'Draft' && 'Draft';
     return (
@@ -141,7 +139,7 @@ function PolicyList() {
           </Link>
           )}
 
-           {((Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && activeMenu === 'Draft') && (
+           {([1,5,6].includes(Number(userRole)) && activeMenu === 'Draft') && (
             <Link
             onClick={() => {
               getDraftPolicyById(id);
@@ -150,6 +148,12 @@ function PolicyList() {
           >
             {title}
           </Link>
+          ) }
+
+            {([1,5,6].includes(Number(userRole)) && activeMenu === 'Parent') && (
+            <span>
+            {title}
+          </span>
           ) }
           </>
         );
@@ -374,8 +378,7 @@ function PolicyList() {
   const onCancel = () => {
     setPolicyModal(false);
     setDraftPolicyModal(false);
-    if (timmer) clearTimeout(timmer);
-    timmer = setTimeout(() => {
+    setTimeout(() => {
       getRowData(1);
     }, 1000);
   };
@@ -673,7 +676,7 @@ function PolicyList() {
               />
             )}
            {
-             (policyModal && Number(userRole) === 4 || Number(userRole) === 3) && (
+             (policyModal && Number(userRole) === 4 || Number(userRole) === 3 || Number(userRole) === 2) && (
                 <ModalInput
                 size="md"
                 centered
@@ -717,7 +720,7 @@ function PolicyList() {
           }
 
            {
-             (draftPolicyModal && Number(userRole) === 5 || Number(userRole) === 6 || Number(userRole) === 1) && (
+             (draftPolicyModal) && (
                 <ModalInput
                 size="md"
                 centered
@@ -728,7 +731,7 @@ function PolicyList() {
                 id="contained-modal-title-vcenter"
                 modalBody={
                   <>
-                  {policyDraftData.image && (
+                 {/* policyDraftData.image && (
                    <Row>
                       <Col className="col-md-4">
                         <Image
@@ -738,7 +741,7 @@ function PolicyList() {
                         />
                       </Col>
                     </Row>
-                    )}
+                    )} */}
                     <Row className="mt-3">
                       <Col className="col-md-12">
                         <div className="policy-modal-description">
