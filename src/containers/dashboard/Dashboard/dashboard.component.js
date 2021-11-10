@@ -401,13 +401,15 @@ function Dashboard() {
       <Helmet title={title} />
       {(userRole !== 5 && userRole !== 6 && userRole !== 1) && (
        <div className="row">
+         { broadcastDescription.length > 0 && (
           <div className="regular-text-slider mt-4">
             <div>
               <p>
                 {broadcastDescription}
               </p>
             </div>
-        </div>
+          </div>
+         )}
       </div>
       )} 
       

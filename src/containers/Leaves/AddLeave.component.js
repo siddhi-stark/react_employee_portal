@@ -43,6 +43,16 @@ function AddLeave(props) {
   const [fromDateValue, setFromDateValue] = useState('');
   const [flag, setFlag] = useState(false);
   const [isShowLoader,setShowLoader] = useState(false);
+  const initialState = {
+    pendingLeavesCount:'',
+    takenLeavesCount:'',
+    totalLeavesCount:'',
+    unpaidLeavesCount:'',
+    noticeMessage:'',
+    confirmedMessage:'',
+  };
+  const [leavesCount,setLeavesCount] = useState(initialState);
+  const [sandwichMsg,setSandwichMsg] = useState('');
 
   const columns = [
     {
@@ -320,6 +330,7 @@ function AddLeave(props) {
 
   useEffect(() => {
     getLeaveType();
+    getLeavesCount();
   }, []);
   
   const getRowData = async (pageNo = 1) => {
@@ -364,13 +375,64 @@ function AddLeave(props) {
 
   useEffect(() => {
     if (startDate && flag && !leaveId) {
+      getLeavesMessage();
       getRowData(1);
     } else if(startDate && endDate && leaveId) {
+      getLeavesMessage();
       getRowData(1);
     } else if(startDate && leaveId && flag) {
+      getLeavesMessage();
       getRowData(1);
     }
   }, [startDate,endDate]);
+
+  useEffect(()=>{
+    if(id){
+      getLeavesCount();
+    }
+  },[id]);
+  
+  const getLeavesCount = async () => {
+    const empUserId = employeeId ? Number(employeeId) : Number(id);
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.leavesCountUrl}?user=${empUserId}`
+    );
+    if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+      return;
+    }
+    if(data && data.data && data.data[0]){
+      setLeavesCount({
+        pendingLeavesCount:data.data[0].pending_leave && data.data[0].pending_leave,
+        takenLeavesCount:data.data[0].total_leave_taken && data.data[0].total_leave_taken,
+        totalLeavesCount:data.data[0].total_leaves && data.data[0].total_leaves,
+        unpaidLeavesCount:data.data[0].unpaid_leave && data.data[0].unpaid_leave,
+        noticeMessage:data.data[0].on_notice_period && data.data[0].on_notice_period,
+        confirmedMessage:data.data[0].confirmed && data.data[0].confirmed,
+      });
+    }
+  };
+
+  const getLeavesMessage = async () => {
+    const newStartDate = startDate && customFunctions.getDate(startDate);
+    const newEndDate = (fromDateValue.value === 'Half Day') ? customFunctions.getDate(startDate) :customFunctions.getDate(endDate);
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.leaveCheckUrl}?start_date=${newStartDate}&end_date=${newEndDate}`
+    );
+    if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+      return;
+    }
+    if(data && data.data && data.data[0]){
+      setSandwichMsg(data.data[0].message);
+      }
+  };
 
   return (
     <>
@@ -384,22 +446,31 @@ function AddLeave(props) {
         <div className="mt-5">
           <Card body>
           <div className="container">
-          <div className="leave-app-button">
-          {viewLeaveOptions && (
-           <Button className="float-end" onClick= {() => {
-            history.push('/my-leaves');
-            if(viewOptions) {
-               history.push('/employee-leaves');
-            } else {
-              history.push('/leaves'); 
-            }
-           
-           }}>Back</Button>
-           )}
-          { (Number(id) !== Number(employeeId)) && leaveId && (
-            <p>Employee Name: {name} ({status})</p>
-          )}
-          </div>
+            <div className="leave-app-button">
+            {viewLeaveOptions && (
+             <Button className="float-end" onClick= {() => {
+              history.push('/my-leaves');
+              if(viewOptions) {
+                 history.push('/employee-leaves');
+              } else {
+                history.push('/leaves'); 
+              }
+             
+             }}>Back</Button>
+             )}
+            { (Number(id) !== Number(employeeId)) && leaveId && (
+              <p>Employee Name: {name} ({status})</p>
+            )}
+      
+            {leavesCount.totalLeavesCount >= 0 && <span>{`Total Leaves: ${leavesCount.totalLeavesCount}`}&nbsp;&nbsp;</span>}
+            {leavesCount.pendingLeavesCount >= 0 && <span>{`Pending Leaves: ${leavesCount.pendingLeavesCount}`}&nbsp;&nbsp;</span>}
+            {leavesCount.takenLeavesCount >= 0 && <span>{`Taken Leaves: ${leavesCount.takenLeavesCount}`}&nbsp;&nbsp;</span>}
+            {leavesCount.unpaidLeavesCount >= 0 && <span>{`Unpaid Leaves: ${leavesCount.unpaidLeavesCount}`}&nbsp;&nbsp;</span>}
+             <br/>
+            { !leavesCount.confirmedMessage && ( <span className="text-danger"> Leaves are unpaid as you are under probation period. </span>)}
+            { leavesCount.noticeMessage && ( <span className="text-danger"> If any leave taken it will extend the notice period as number of leaves taken.</span>)}
+
+            </div>
           </div>
 
             <StarkFormBuilder
@@ -450,46 +521,46 @@ function AddLeave(props) {
               <div className="mt-3">
                 { (totalCount > 0) && (status === 'Pending') &&  (
                   <>
-
                     <Card.Header>
                       <div className="d-flex align-items-center justify-content-between">
                         <h4 className="text-primary mt-2 mb-2">Employee Task List</h4>
                       </div>
                     </Card.Header>
-                      <Card.Body>
-                          <CustomTable
-                            columns={columns}
-                            rows={rowData}
-                            tableClass="table-striped"
-                            role={5}
-                            showPagination={true}
-                            paginationProps={{
-                              totalItems: totalCount,
-                              itemsPerPage: limit,
-                              activePage: currentPage,
-                              onPageChange: (pageNo) => {
-                                getRowData(pageNo);
-                              },
-                            }}
-                            emptyRender={() => {
-                              return 'No task available.';
-                            }}
-                          />
-                          <br />         
-                      </Card.Body>
-
+                    <Card.Body>
+                        <CustomTable
+                          columns={columns}
+                          rows={rowData}
+                          tableClass="table-striped"
+                          role={5}
+                          showPagination={true}
+                          paginationProps={{
+                            totalItems: totalCount,
+                            itemsPerPage: limit,
+                            activePage: currentPage,
+                            onPageChange: (pageNo) => {
+                              getRowData(pageNo);
+                            },
+                          }}
+                          emptyRender={() => {
+                            return 'No task available.';
+                          }}
+                        />
+                        <br />         
+                    </Card.Body>
                   </>
-                      )}
+                )}
 
-                   { (totalCount > 0 && flag)  && (
-                    <p className="text-danger">
-                    Note: The highlighted task shows the high priority and may
-                    affect the project deadline. Kindly look into and the
-                    apply for leave </p>
-                  )}
-                   { (totalCount === 0 && flag && status === 'Pending') && (
-                    <p className="text-success"> Note: Make sure No task affecting the project deadline and associated task are taken care. </p>
-                  )}
+                { sandwichMsg && ( <p className="text-danger">
+                  {sandwichMsg} </p>)}
+                { (totalCount > 0 && flag)  && (
+                  <p className="text-danger">
+                  Note: The highlighted task shows the high priority and may
+                  affect the project deadline. Kindly look into and the
+                  apply for leave </p>
+                )}
+                 { (totalCount === 0 && flag && status === 'Pending') && (
+                  <p className="text-success"> Note: Make sure No task affecting the project deadline and associated task are taken care. </p>
+                )}
                 { (totalCount === 0 && flag) && changeDate && (status === 'Pending') &&  (
                   <Button
                     onClick={() => {

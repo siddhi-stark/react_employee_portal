@@ -159,6 +159,10 @@ export default class Api extends Component {
 
   static policyStatusUrl = `${Api.baseUrl}policy-bulk-status/`;
 
+  static leavesCountUrl = `${Api.baseUrl}leave-count/`;
+
+  static leaveCheckUrl = `${Api.baseUrl}leave-check/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
 

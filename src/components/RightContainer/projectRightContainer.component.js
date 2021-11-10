@@ -59,17 +59,17 @@ function ProjectRightContainer(props) {
               )}
               {totalHrsSpend && (
                 <li>
-                  Total Hours Spent: <strong>{totalHrsSpend}</strong>
+                  Total Hours Spent: <strong>{totalHrsSpend.toFixed(2)}</strong>
                 </li>
               )}
               {totalHrsEstimate && (
                 <li>
-                  Total Hours Estimated: <strong>{totalHrsEstimate}</strong>
+                  Total Hours Estimated: <strong>{totalHrsEstimate.toFixed(2)}</strong>
                 </li>
               )}
               {totalHrsAllocated && (
                 <li>
-                  Total Hours Allocated: <strong>{totalHrsAllocated}</strong>
+                  Total Hours Allocated: <strong>{totalHrsAllocated.toFixed(2)}</strong>
                 </li>
               )}
               {projectCompletion && (
