@@ -110,6 +110,7 @@ function TemporaryAccount(props) {
                 <div className="mt-4 card">
                   <div className="card-body">
                   <div className="row">
+                    <div className="col-md-12 d-flex">
                     <div className="col-md-4">
                       <h6>Email - {personalInfo.email}</h6>
                     </div>
@@ -120,8 +121,9 @@ function TemporaryAccount(props) {
                       <h6>Pf Included - {(personalInfo.pf_included === true) ? 'Yes':'No'}</h6>
                     </div>
                   </div>
+                  </div>
                   <br />
-                  <div className="row">
+                  <div className="row d-flex">
                     <div className="col-md-12 d-flex">
                      <div className=" col-md-4">
                       <h6>Offered CTC - {personalInfo.offered_ctc}</h6>
