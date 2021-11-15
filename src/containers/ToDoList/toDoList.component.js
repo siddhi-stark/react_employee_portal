@@ -628,6 +628,7 @@ function ToDoList(props) {
   };
 
   const OnSaveProgress = async () => {
+    setLoader(true);
     const progressArr = [];
     rows && rows.map((rw) => {
       if(rw.oldProgress !== rw.progress) {
@@ -646,14 +647,23 @@ function ToDoList(props) {
     };
 
     const endPoint = `${Api.taskProgressUrl}`;
-    const { data } = await AuthApi.putDataToServer(endPoint,postData);
+    const { data, message } = await AuthApi.putDataToServer(endPoint,postData);
+
     if(data) {
-       swal(data.message[0], '', 'success').then((result) => {
+      setLoader(false);
+      swal(data.message[0], '', 'success').then((result) => {
         if (result) {
           getTableData(1);
         }
       });
+    } else {
+      setLoader(false);
+      swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
     }
+
   };
 
   return (

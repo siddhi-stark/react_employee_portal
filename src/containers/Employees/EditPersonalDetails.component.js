@@ -35,7 +35,7 @@ useEffect(() => {
         const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
         itemData.maxDate = maxdate;
          }
-          if (item.name === 'confirmation_date' || item.name === 'relieving_date') {
+          if (item.name === 'confirmation_date') {
       const date = new Date();
       itemData.minDate = date;
     }
