@@ -242,9 +242,10 @@ function EmailTemplatesComponent() {
                 {templateId === eml.id && (
                   <>
                     <b>{eml.name}</b>
+                    <div className="editor-description-box">
                     <Editor
                       // readOnly={viewType}
-                      wrapperClassName="demo-wrapper mt-4"
+                      wrapperClassName="demo-wrapper"
                       editorClassName="demo-editor"
                       editorState={eml.content}
                       onEditorStateChange={(e) => {
@@ -276,6 +277,7 @@ function EmailTemplatesComponent() {
                         },
                       }}
                     />
+                    </div>
                   </>
                 )}
               </>

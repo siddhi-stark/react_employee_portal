@@ -47,6 +47,7 @@ function Profile() {
   const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
   const [reliveDate, setReliveDate] = useState('');
+  const [auth, setAuth] = useState('');
 
   const personalColumns = [
     {
@@ -258,6 +259,7 @@ function Profile() {
       companyEmail,
       mobile,
       profile: profileId,
+      teamwork_token:auth
     };
 
     if (imageUrl) {
@@ -737,6 +739,27 @@ function Profile() {
                     </span>
                   </Col>
                 </Row>
+              </Col>
+            </Row>
+             <Row>
+              <Col sm={12}>
+                <TextInput
+                  onInputChange={(e) => {
+                      setAuth(e.target.value);
+                  }}
+                  label="Teamwork Authentication Token"
+                  containerClass="form-group"
+                  asterisk="*"
+                  type="text"
+                  name="auth"
+                  value={auth}
+                  placeholder="Token"
+                  errorMessage={validator.message(
+                    'Teamwork Authentication Token',
+                    auth,
+                    'required'
+                  )}
+                />
               </Col>
             </Row>
             <div className="float-end">
