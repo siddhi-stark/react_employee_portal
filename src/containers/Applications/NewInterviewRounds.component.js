@@ -72,7 +72,7 @@ function NewInterviewRounds(props) {
         : '',
       description: more.description
         ? more.description
-        : '',
+        : 'Please attend the interview',
         comments: more.comments ? more.comments : '',
         status: more.status_name ? more.status_name.value : '',
       applicant: id || '',
