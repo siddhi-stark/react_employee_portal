@@ -48,6 +48,7 @@ function Profile() {
   const [rowOtherData, setRowOtherData] = useState([]);
   const [reliveDate, setReliveDate] = useState('');
   const [auth, setAuth] = useState('');
+  const [authShow, setAuthShow] = useState(false);
 
   const personalColumns = [
     {
@@ -187,6 +188,7 @@ function Profile() {
       setSelectedMentor(mentorList.length > 0 ? mentorList.join(', ') : '');
       setSelectedManager(managerList.length > 0 ? managerList.join(', ') : '');
       setDate(data.data.date_joined ? new Date(data.data.date_joined) : '');
+      setAuth(data.data.teamwork_token ? data.data.teamwork_token:'' );
     }
   };
 
@@ -283,10 +285,33 @@ function Profile() {
           setName('');
           setEmail('');
           setMobile('');
+          setAuth('');
+          if(authShow){
+            authentication();
+          }
         }
       });
     } else {
       setShowLoader(false);
+      swal(data && data.message[0], '', 'error');
+    }
+  };
+
+  const authentication = async () => {
+    setShowLoader(true);
+
+    const { data } = await AuthApi.postDataToServer(
+      `${Api.teamworkAuthUrl}`,
+    );
+    if (data) {
+      setShowLoader(false);
+      swal(data && data.message[0], '', 'success');
+      setAuth('');
+      setAuthShow(false);
+    } else {
+      setShowLoader(false);
+      setAuthShow(false);
+      setAuth('');
       swal(data && data.message[0], '', 'error');
     }
   };
@@ -745,7 +770,8 @@ function Profile() {
               <Col sm={12}>
                 <TextInput
                   onInputChange={(e) => {
-                      setAuth(e.target.value);
+                    setAuth(e.target.value);
+                    setAuthShow(true);
                   }}
                   label="Teamwork Authentication Token"
                   containerClass="form-group"
