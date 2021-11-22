@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
@@ -12,6 +11,8 @@ import AuthApi from '../../../helper/authApi';
 import customFunctions from '../../../helper/customFunctions';
 
 function ResetPassword(props) {
+  const { history, match } = props;
+
   const validator = useRef(
     new SimpleReactValidator({
       messages: {
@@ -39,14 +40,14 @@ function ResetPassword(props) {
     }
     if (!data) {
       swal('Token is invalid', '', 'error');
-      props.history.push('/login');
+      history.push('/login');
     }
   };
 
   useEffect(() => {
     setTitle('Reset Password');
     dispatch({ type: 'LOGIN', value: false });
-    const matchUrltoken = props.match.params.token;
+    const matchUrltoken = match.params.token;
     setToken(matchUrltoken);
     if (!matchUrltoken) {
       window.location = '/login';
@@ -75,7 +76,7 @@ function ResetPassword(props) {
       setLoader(false);
       setDisableButton(false);
       swal('Password changed successfully', '', 'success');
-      props.history.push('/login');
+      history.push('/login');
     } else {
       setLoader(false);
       setDisableButton(false);

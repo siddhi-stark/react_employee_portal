@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
@@ -13,13 +12,15 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './onboard.json';
 
 function OnBoard(props) {
+  const { match,history } = props;
+
   const [defaultValues, updateDefaultValues] = useState({});
-  const [options, updateOptions] = useState({}); //eslint-disable-line
+  const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [twEmployee, setTwEmployee] = useState([]);
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-  const applicantId = props.match.params.ID; //eslint-disable-line
+  const applicantId = match.params.ID;
   const items = [{ to: '/', label: 'Home' }, { label: 'Add Employee' }];
 
   const formSchema = [...FormSections];
@@ -100,7 +101,7 @@ function OnBoard(props) {
         icon: 'success',
       }).then((okAction) => {
         if (okAction) {
-          props.history.push('/employees');
+          history.push('/employees');
           customFunctions.setLocalStorage('isShowOnBoard', 'true');
         }
       });
@@ -320,7 +321,7 @@ function OnBoard(props) {
             btnContainerClass="form-submit-buttons"
             isStepForm={false}
             onFormReset={() => {
-              props.history.push('/candidates');
+              history.push('/candidates');
             }}
           />
         </Card>

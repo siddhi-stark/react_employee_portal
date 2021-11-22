@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import $ from 'jquery';
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
@@ -11,10 +10,10 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './addTechnology.json';
 
 function AddTechnology(props) {
-  const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  const [options, updateOptions] = useState({}); // eslint-disable-line
-  const [currentUser, updateCurrentUser] = useState(0); // eslint-disable-line
-  const [count, forceUpdate] = useState(0); // eslint-disable-line
+  const { afterSubmitTech,onChange } = props;
+
+  const [defaultValues, updateDefaultValues] = useState({});
+  const [count, forceUpdate] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);
   const technologyId = props;
 
@@ -42,10 +41,10 @@ function AddTechnology(props) {
     swal(data && data.message[0], '', 'success').then((result) => {
       if (result) {
         $('.clearTechnology form').trigger('reset');
-        props.onChange();
+        onChange();
         updateDefaultValues({});
         forceUpdate(count + 1);
-        props.afterSubmitTech();
+        afterSubmitTech();
       }
     });
   };
@@ -77,10 +76,8 @@ function AddTechnology(props) {
         onFormSubmit={(formValues) => {
           submitForm(formValues);
         }}
-        options={options}
         callbacks={{}}
         defaultFormValues={defaultValues}
-        currentUser={currentUser}
         submitBtnText="Add"
         showResetBtn={true}
         showBtnClass={true}

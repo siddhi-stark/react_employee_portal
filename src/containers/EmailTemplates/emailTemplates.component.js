@@ -226,10 +226,8 @@ function EmailTemplatesComponent() {
               ))}
           </Row>
           {emailContent &&
-            emailContent.map((eml, index) => {
-              if (!templateId) return;
-              return (
-                // eslint-disable-line
+            emailContent.map((eml, index) => 
+              templateId && ( 
                 <>
                   {templateId === eml.id && (
                     <>
@@ -273,8 +271,8 @@ function EmailTemplatesComponent() {
                     </>
                   )}
                 </>
-              );
-            })}
+              )
+            )}
         </p>
       </Card>
     </>

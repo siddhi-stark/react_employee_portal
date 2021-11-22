@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -10,6 +9,8 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './educationalFormschema.json';
 
 function EducationalDetails(props) {
+  const {getParentsData} = props;
+
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
   const applicantId = accProps.props.applicantId;
@@ -92,7 +93,6 @@ function EducationalDetails(props) {
   }, []);
 
   const fileUpload = async (formValues) => {
-    // eslint-disable-line
 
     const formData = new FormData();
 
@@ -117,10 +117,10 @@ function EducationalDetails(props) {
     if (!customFunctions.checkIfEmpty(data) && data.success) {
       return data.data.id;
     }
+    return formValues;
   };
 
   const getApplicantPercentage = async () => {
-    // eslint-disable-line
     const endPoint = applicantId
       ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`
       : `${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
@@ -134,7 +134,7 @@ function EducationalDetails(props) {
       });
     }
     if (!customFunctions.checkIfEmpty(data) && data.success && data.data) {
-      props.getParentsData(data.data.completion);
+      getParentsData(data.data.completion);
     }
   };
 

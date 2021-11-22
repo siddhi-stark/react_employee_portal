@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import { setHours, setMinutes } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
@@ -25,6 +24,8 @@ import Task from './Task.component';
 const validator = new SimpleReactValidator();
 
 function ToDoList(props) {
+  const { onMorningSendScrum, onClockoutReport} = props;
+
   const hrsProps = props;
   const totalHours = hrsProps.totalHrs;
   const [rows, setRows] = useState([]);
@@ -100,12 +101,12 @@ function ToDoList(props) {
       label: 'Status',
       roleAccess: [1, 2, 3, 4, 5, 6],
       render: ({ progress, id, indexOf, eta, status, twId, at }) => {
+        const newAt = at ? `${at}` : '0 Hrs';
         return (
           <>
             {progress === 100 ? (
-              <span>
-                {status}({twId ? (at ? at : '0 Hrs') : eta})
-              </span> // eslint-disable-line
+              <span>{status}({twId ? newAt : eta})
+              </span>
             ) : (
               <div className="progress-bar-dashboard">
                 <div className="progress-main">
@@ -406,8 +407,8 @@ function ToDoList(props) {
     );
     setDisableButton(false);
     if (data && data.success) {
-      if (props.onMorningSendScrum) props.onMorningSendScrum();
-      if (props.onClockoutReport) props.onClockoutReport();
+      if (onMorningSendScrum) onMorningSendScrum();
+      if (onClockoutReport) onClockoutReport();
       setClockinClockoutStorage();
       if (morningMail && !signOutMail) {
         setSelectedId([]);

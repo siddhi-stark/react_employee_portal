@@ -146,7 +146,6 @@ function Team(props) {
 
   // Declare methods table method
   const getRowData = async (pageNo = 1) => {
-    // eslint-disable-line
     const employeeData = [];
     const employeeEstimatedHrs = [];
     const employeeSpendingHrs = [];
@@ -289,6 +288,7 @@ function Team(props) {
         allowOutsideClick: false,
       });
     }
+    return page;
   };
 
   useEffect(() => {

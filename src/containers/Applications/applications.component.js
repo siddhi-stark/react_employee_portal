@@ -51,9 +51,11 @@ function Applications(props) {
         <Button
           className="float-end"
           onClick={() => {
-            Interview
-              ? history.push('/interview-listing')
-              : history.push('/recruitment'); // eslint-disable-line
+            if(Interview){
+              history.push('/interview-listing');
+            } else{
+              history.push('/recruitment');
+            }
           }}
         >
           Back
@@ -93,9 +95,11 @@ function Applications(props) {
                         isBasicInfoId={isBasicInfoId}
                         onProfDetInfo={(value) => {
                           setProfessionalInfo(value);
-                          {
-                            id ? setIsPD(false) : setIsPD(true);
-                          } //eslint-disable-line
+                          if(id){
+                            setIsPD(false);
+                          } else {
+                            setIsPD(true);
+                          }
                         }}
                       />
                     )}

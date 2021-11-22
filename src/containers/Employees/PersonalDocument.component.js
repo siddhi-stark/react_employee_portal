@@ -28,7 +28,6 @@ function PersonalDocument(props) {
   }, []);
 
   const fileUpload = async (formValues) => {
-    // eslint-disable-line
     const formData = new FormData();
 
     formData.append('file_name', formValues[0]);
@@ -49,6 +48,7 @@ function PersonalDocument(props) {
     if (!customFunctions.checkIfEmpty(data) && data.success) {
       return data.data.id;
     }
+    return formValues;
   };
 
   // Submit Form

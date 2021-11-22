@@ -877,8 +877,7 @@ function Dashboard() {
                                               <TextInput
                                                 onInputChange={(e) => {
                                                   setCount(e.target.value);
-                                                  empdata.greetMessage =
-                                                    e.target.value; // eslint-disable-line
+                                                  empdata.greetMessage = e.target.value; // eslint-disable-line
                                                   setNewBirthdayData(
                                                     appreciationData
                                                   );

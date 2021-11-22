@@ -165,6 +165,10 @@ export default class Api extends Component {
 
   static leaveCheckUrl = `${Api.baseUrl}leave-check/`;
 
+  static workloadUrl = `${Api.baseUrl}workload/`;
+
+  static employeeActivityUrl = `${Api.baseUrl}employee-activity/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

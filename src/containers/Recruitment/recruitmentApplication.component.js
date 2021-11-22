@@ -77,14 +77,8 @@ function RecruitmentApplicationComponent() {
   const handleActionCallback = ({
     id,
     status_name,
-    name,
-    applied_for_name,
     notes,
-    offered_ctc,
-    joining_date,
-    pf_included,
   }) => {
-    //eslint-disable-line
 
     return (
       <>
@@ -213,11 +207,9 @@ function RecruitmentApplicationComponent() {
             onSelectHandler={(select) => {
               setStatusId(status_name.id);
               // {select.label === 'decined'}
-              {
-                select.label === 'declined' || select.label === 'shortlisted'
-                  ? setModalShow(true)
-                  : '';
-              } //eslint-disable-line
+              {//eslint-disable-line
+                (select.label === 'declined' || select.label === 'shortlisted') && setModalShow(true);
+              }
               setStatusData(select);
             }}
             isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line

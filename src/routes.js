@@ -69,6 +69,8 @@ import Broadcast from './containers/Broadcast/broadcast.component';
 import AddBroadcast from './containers/Broadcast/addBroadcast.component';
 import Policy from './containers/Policy/policy.component';
 import AddPolicy from './containers/Policy/addPolicy.component';
+import Workload from './containers/Employee/workload.component';
+import EmployeeActivity from './containers/Employee/employeeActivity.component';
 
 function Routes() {
   return (
@@ -198,6 +200,8 @@ function Routes() {
       <Route path="/policy" exact component={Policy} />
       <Route path="/add-policy" exact component={AddPolicy} />
       <Route path="/edit-policy/:policyId" exact component={AddPolicy} />
+      <Route path="/workload" exact component={Workload} />
+      <Route path="/employee-activity" exact component={EmployeeActivity} />
       <Route component={NotFound} />
     </Switch>
   );

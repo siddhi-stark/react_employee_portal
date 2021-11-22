@@ -43,14 +43,7 @@ function MyInterviews() {
   const handleActionCallback = ({
     id,
     status_name,
-    name,
-    applied_for_name,
-    notes,
-    offered_ctc,
-    joining_date,
-    pf_included,
   }) => {
-    //eslint-disable-line
 
     return (
       <>

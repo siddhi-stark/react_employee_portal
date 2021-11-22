@@ -28,7 +28,6 @@ function EducationalDocument(props) {
   }, []);
 
   const fileUpload = async (formValues) => {
-    // eslint-disable-line
 
     const formData = new FormData();
 
@@ -51,6 +50,7 @@ function EducationalDocument(props) {
     if (!customFunctions.checkIfEmpty(data) && data.success) {
       return data.data.id;
     }
+    return formValues;
   };
 
   // Submit Form

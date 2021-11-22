@@ -142,8 +142,8 @@ function EmployementHistory(props) {
       }
       return rp;
     });
-    for (const [index, history] of formValues.addmore.entries()) {
-      // eslint-disable-line
+    const  addEntry = formValues.addmore.entries();
+    for (const [index, history] of addEntry ) { // eslint-disable-line
       const candidateHistory = {
         designation: history.designation,
         company_name: history.company_name,

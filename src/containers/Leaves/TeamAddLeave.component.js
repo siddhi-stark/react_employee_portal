@@ -41,8 +41,7 @@ function TeamAddLeave(props) {
     setTitle(!viewOptions ? 'Edit Leaves' : 'View Leaves');
   }, []);
 
-  const submitForm = async (value) => {
-    // eslint-disable-line
+  const submitForm = async (value) => { // eslint-disable-line
     const reasonLabel = Number(value) === 2 ? 'accept' : 'declined';
     const postData = {
       id: leaveId,

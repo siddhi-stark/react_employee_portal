@@ -17,6 +17,7 @@ function BirthdayWishes() {
   const EmployeeName = customFunctions.getLocalStorage('EmpName');
   const showAnniversary = customFunctions.getLocalStorage('isAnniversary');
   const showBirthday = customFunctions.getLocalStorage('isBirthday');
+  const customMessage = ( showAnniversary === 'true' ? 'Congrats on your work anniversary!' : 'Wishing you a day filled with happiness and a year filled with joy. Happy birthday!');
 
   const getBirthdayWishes = async (GrtId) => {
     const endPoint = `${Api.greetingWishesUrl}?greeting_id=${GrtId}&type=all`;
@@ -105,11 +106,7 @@ function BirthdayWishes() {
             <div className="media birthday-media-section">
               <div className="media-body">
                 {
-                  greetingMsg
-                    ? greetingMsg
-                    : showAnniversary === 'true'
-                    ? 'Congrats on your work anniversary!'
-                    : 'Wishing you a day filled with happiness and a year filled with joy. Happy birthday!' // eslint-disable-line
+                  greetingMsg ? `${greetingMsg}` : customMessage
                 }
               </div>
             </div>

@@ -62,7 +62,7 @@ function Sidebar() {
       setBirthdayData(data.data);
       if (bdayData.length > 0) {
         setIsBirthDayPresent(
-          bdayData.filter((e) => Number(e.dob) >= day).length > 0 ? true : false
+          bdayData.filter((e) => Number(e.dob) >= day).length > 0 ? 'true' : 'false' 
         ); // eslint-disable-line
       }
       customFunctions.setLocalStorage('Employee', JSON.stringify(data.data));
@@ -190,10 +190,7 @@ function Sidebar() {
                             <UserRestrictions
                               permittedUsers={submenuItem.roleaccess}
                             >
-                              <li
-                                onClick={() => {
-                                  onSubActiveClass();
-                                }} // eslint-disable-line
+                              <li onClick={() => {onSubActiveClass();}} // eslint-disable-line
                                 className={`nav-sub-item ${
                                   submenuItem.path === window.location.pathname
                                     ? 'show active'
@@ -312,9 +309,7 @@ function Sidebar() {
                                           </span>
                                         </p>
 
-                                        <p
-                                          onClick={() => {
-                                            // eslint-disable-line
+                                        <p onClick={() => { // eslint-disable-line
                                             if (bday.greeting) {
                                               if (Number(bday.dob) > day)
                                                 return false;

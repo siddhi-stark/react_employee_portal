@@ -30,7 +30,6 @@ function AddBondHistory(props) {
   }, []);
 
   const fileUpload = async (formValues) => {
-    // eslint-disable-line
     const formData = new FormData();
 
     formData.append('file_name', formValues[0]);
@@ -48,6 +47,7 @@ function AddBondHistory(props) {
     if (!customFunctions.checkIfEmpty(data) && data.success) {
       return data.data.id;
     }
+    return formValues;
   };
 
   const submitForm = async (formValues) => {

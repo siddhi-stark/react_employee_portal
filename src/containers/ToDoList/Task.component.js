@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import { setHours, setMinutes } from 'date-fns';
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
@@ -12,6 +11,8 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function Task(props) {
+  const { show, edit, onChanges, handleModalCLose } = props;
+
   const validator = useRef(new SimpleReactValidator());
   const [count, forceUpdate] = useState(0);
   const [taskModalShow, setTaskModalShow] = useState(false);
@@ -73,7 +74,7 @@ function Task(props) {
   };
 
   useEffect(() => {
-    setTaskModalShow(props.show);
+    setTaskModalShow(show);
     setTaskList([defaultTask]);
 
     const taskId = customFunctions.getLocalStorage('taskid');
@@ -85,7 +86,7 @@ function Task(props) {
   }, []);
 
   useEffect(() => {
-    if (props.edit && id) {
+    if (edit && id) {
       getTaskById(id);
     }
   }, [id]);
@@ -125,20 +126,20 @@ function Task(props) {
 
     if (data) {
       setShowLoader(false);
-      props.handleModalCLose(false);
+      handleModalCLose(false);
       swal(data && data.message[0], '', 'success').then((result) => {
         if (result) {
           setDisableButton(false);
           setTaskList([]);
-          props.handleModalCLose(false);
-          props.onChanges();
+          handleModalCLose(false);
+          onChanges();
         }
       });
     } else {
       setShowLoader(false);
       setDisableButton(false);
       swal(data && data.message[0], '', 'error');
-      props.handleModalCLose(false);
+      handleModalCLose(false);
     }
   };
 
@@ -160,7 +161,7 @@ function Task(props) {
     validator.current.hideMessages();
     setTaskList([]);
     setTaskModalShow(false);
-    props.handleModalCLose(false);
+    handleModalCLose(false);
   };
 
   const addMoreTask = () => {

@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import { enc } from 'crypto-js';
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'react-bootstrap';
@@ -12,7 +11,8 @@ import Api from '../../../helper/api';
 import AuthApi from '../../../helper/authApi';
 import CustomFunctions from '../../../helper/customFunctions';
 
-function Login(props) {
+function Login() {
+
   const dispatch = useDispatch();
   const validator = useRef(new SimpleReactValidator());
   const [count, forceUpdate] = useState(0);
@@ -207,7 +207,7 @@ function Login(props) {
               {' '}
               <a
                 href="javascript:void(0)"
-                onClick={() => props.history.push('/forget-password')}
+                onClick={() =>  history.push('/forget-password')}
               >
                 Forgot password ?
               </a>

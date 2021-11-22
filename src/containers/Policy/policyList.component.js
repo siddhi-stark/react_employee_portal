@@ -402,64 +402,6 @@ function PolicyList() {
   //     }
   //   }, [activeMenu]);
 
-  const handleChangeActiveStatus = async (selectedIds) => {
-    // eslint-disable-line
-    if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
-      const params = {
-        status: 1,
-        ids: selectedIds,
-      };
-      const endpoint = `${Api.policyStatusUrl}`;
-      const successHandle = (e) => {
-        swal(e.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-        }).then(() => {
-          getRowData(currentPage);
-        });
-      };
-
-      const errorHandle = (e) => swal(e, '', 'error');
-
-      await customFunctions.changeStatus(
-        endpoint,
-        params,
-        'put',
-        successHandle,
-        errorHandle
-      );
-    }
-  };
-
-  const handleChangeInactiveStatus = async (selectedIds) => {
-    // eslint-disable-line
-    if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
-      const params = {
-        status: 2,
-        ids: selectedIds,
-      };
-      const endpoint = `${Api.policyStatusUrl}`;
-      const successHandle = (e) => {
-        swal(e.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-        }).then(() => {
-          getRowData(currentPage);
-        });
-      };
-
-      const errorHandle = (e) => swal(e, '', 'error');
-
-      await customFunctions.changeStatus(
-        endpoint,
-        params,
-        'put',
-        successHandle,
-        errorHandle
-      );
-    }
-  };
-
   const handleChangeDeleteStatus = async (selectedIds) => {
     if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
       const params = {

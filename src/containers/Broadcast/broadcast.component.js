@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory, Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
-import { Image, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
@@ -11,7 +11,6 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 
 function Broadcast() {
-  const history = useHistory();
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Broadcast' }];
 
@@ -26,37 +25,36 @@ function Broadcast() {
   const [limit, setLimit] = useState(10);
   const [isShowLoader, setShowLoader] = useState(false);
 
-  const handleActionCallback = ({ id }) => {
-    // eslint-disable-line
-    return (
-      <span className="d-flex">
-        <a
-          href="javascript:void(0)"
-          className=""
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/edit-broadcast/${id}`);
-          }}
-        >
-          <Image
-            src="/images/edit-button.svg"
-            className="delete-edit-view"
-            alt="Edit Broadcast"
-          />
-        </a>
-        <a
-          href="javascript:void(0)"
-          className="ml-2"
-          onClick={() => {
-            deleteQuotes(id);
-          }}
-        >
-          <Image src="/images/delete.png" className="" alt="Delete Broadcast" />
-        </a>
-      </span>
-    );
-  };
+  // const handleActionCallback = ({ id }) => {
+  //   return (
+  //     <span className="d-flex">
+  //       <a
+  //         href="javascript:void(0)"
+  //         className=""
+  //         onClick={(e) => {
+  //           e.preventDefault();
+  //           e.stopPropagation();
+  //           history.push(`/edit-broadcast/${id}`);
+  //         }}
+  //       >
+  //         <Image
+  //           src="/images/edit-button.svg"
+  //           className="delete-edit-view"
+  //           alt="Edit Broadcast"
+  //         />
+  //       </a>
+  //       <a
+  //         href="javascript:void(0)"
+  //         className="ml-2"
+  //         onClick={() => {
+  //           deleteQuotes(id);
+  //         }}
+  //       >
+  //         <Image src="/images/delete.png" className="" alt="Delete Broadcast" />
+  //       </a>
+  //     </span>
+  //   );
+  // };
 
   // Declare columns
   const columns = [
@@ -91,41 +89,41 @@ function Broadcast() {
     // },
   ];
 
-  const deleteQuotes = (id) => {
-    if (id) {
-      swal({
-        title: 'Are you sure?',
-        text: 'Are you sure that you want to delete this record?',
-        icon: 'warning',
-        dangerMode: true,
-        buttons: true,
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      }).then(async (result) => {
-        if (result) {
-          const { data, message } = await AuthApi.deleteDataFromServer(
-            `${Api.quotesUrl}${id}/`
-          );
-          if (data) {
-            swal(data && data.message[0], '', 'success', {
-              closeOnClickOutside: false,
-              allowOutsideClick: false,
-              buttons: false,
-              timer: 2000,
-            }).then(() => {
-              swal.close();
-              getRowData(1);
-            });
-          } else {
-            swal(message, '', 'error', {
-              closeOnClickOutside: false,
-              allowOutsideClick: false,
-            });
-          }
-        }
-      });
-    }
-  };
+  // const deleteQuotes = (id) => {
+  //   if (id) {
+  //     swal({
+  //       title: 'Are you sure?',
+  //       text: 'Are you sure that you want to delete this record?',
+  //       icon: 'warning',
+  //       dangerMode: true,
+  //       buttons: true,
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //     }).then(async (result) => {
+  //       if (result) {
+  //         const { data, message } = await AuthApi.deleteDataFromServer(
+  //           `${Api.quotesUrl}${id}/`
+  //         );
+  //         if (data) {
+  //           swal(data && data.message[0], '', 'success', {
+  //             closeOnClickOutside: false,
+  //             allowOutsideClick: false,
+  //             buttons: false,
+  //             timer: 2000,
+  //           }).then(() => {
+  //             swal.close();
+  //             getRowData(1);
+  //           });
+  //         } else {
+  //           swal(message, '', 'error', {
+  //             closeOnClickOutside: false,
+  //             allowOutsideClick: false,
+  //           });
+  //         }
+  //       }
+  //     });
+  //   }
+  // };
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {

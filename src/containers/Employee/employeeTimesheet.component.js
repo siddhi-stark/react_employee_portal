@@ -3,6 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col, Image } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
+import moment from 'moment';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './employeeListformschema.json';
 import customFunctions from '../../helper/customFunctions';
@@ -46,6 +47,7 @@ function EmployeeTimesheet() {
   });
 
   const handleActionCallback = (row) => {
+
     const userName = customFunctions.getLocalStorage('name');
     return (
       <>
@@ -68,6 +70,24 @@ function EmployeeTimesheet() {
               )}
             </a>
           )}
+          &nbsp;
+        {Number(currentUser) === 1 && (
+          <a
+            href="/"
+            title="View employee activity"
+            className="pl-2"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              history.push('/employee-activity', {
+                userId: row.user_id,
+                date: moment(moment(`${row.date}`, 'DD-MM-YYYY')).format('YYYY-MM-DD'),
+              });
+            }}
+          >
+            <Image src="/images/overload.png" />
+          </a>
+        )}
       </>
     );
   };
@@ -375,6 +395,19 @@ function EmployeeTimesheet() {
                 ? `Employee Timesheet for ${filterData.full_name.label}`
                 : 'Employees Timesheet'
             }`}</h5>
+             {(Number(currentUser) === 1 || Number(currentUser) === 3) && (
+            <div className="d-flex align-items-center justify-content-end">
+                <a
+                  href="#"
+                  onClick={() => {
+                    history.push('/workload');
+                  }}
+                  className="btn-link"
+                >
+                  Workload
+                </a>
+              </div>
+              )}
           </div>
           <hr />
           {filterData.is_detail &&

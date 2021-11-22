@@ -1,0 +1,88 @@
+[
+	{
+		"sectionName": "workloadfilter",
+		"sectionTitle": "Workload filter",
+		"layout": { "label": "1 Column", "value": "1column" },
+		"containerClass": "",
+		"displaySection": true,
+		"displaySectionTitle": false,
+		"fields": [
+			{
+				"name": "start_date",
+				"type": "date",
+				"label": "",
+				"id": "",
+				"placeholder": "Select from date",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [
+							{ "name": "end_date", "value": "end_date", "condition": "!empty" }
+						],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "",
+				"dateFormat":"dd/MM/yyyy",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": { "label": "1 Column", "value": "1column" },
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			},
+			{
+				"name": "end_date",
+				"type": "date",
+				"label": "",
+				"id": "",
+				"placeholder": "Select to date",
+				"dateFormat":"dd/MM/yyyy",
+				"inputClass": "",
+				"containerClass": "",
+				"validations": [
+					{
+						"type": "required",
+						"applyWhen": [
+							{
+								"name": "start_date",
+								"value": "start_date",
+								"condition": "!empty"
+							}
+						],
+						"applyWhenRelation": "OR"
+					}
+				],
+				"displayWhen": {},
+				"haveValidations": "true",
+				"haveDisplayOptions": "false",
+				"callback": "",
+				"callbackUrl": "",
+				"inputToChange": "",
+				"minDateSelector": "start_date",
+				"maxDateSelector": "",
+				"disabled": false,
+				"isMulti": false,
+				"allowedUsers": [],
+				"fieldsToReset": [],
+				"fieldLayout": { "label": "1 Column", "value": "1column" },
+				"fields": [],
+				"optionCallback": "",
+				"options": []
+			}
+		],
+		"allowedUsers": [],
+		"sectionLayout": "2column"
+	}
+]

@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -10,6 +9,8 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './personalFormschema.json';
 
 function Personal(props) {
+  const {getParentsData} = props;
+
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
   const applicantId = accProps.props.applicantId;
@@ -86,7 +87,7 @@ function Personal(props) {
   }, []);
 
   const fileUpload = async (formValues) => {
-    // eslint-disable-line
+
     const formData = new FormData();
 
     formData.append('file_name', formValues[0]);
@@ -109,6 +110,7 @@ function Personal(props) {
     if (!customFunctions.checkIfEmpty(data) && data.success) {
       return data.data.id;
     }
+    return formValues;
   };
 
   const getApplicantPercentage = async () => {
@@ -126,7 +128,7 @@ function Personal(props) {
       });
     }
     if (!customFunctions.checkIfEmpty(data) && data.success && data.data) {
-      props.getParentsData(data.data.completion);
+      getParentsData(data.data.completion);
     }
   };
 

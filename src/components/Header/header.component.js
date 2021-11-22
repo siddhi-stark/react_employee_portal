@@ -193,10 +193,7 @@ function Header() {
                 <div className="header-navheading">
                   <p className="main-notification-text">
                     You have {notificationCount} unread notification
-                    <span
-                      className="badge badge-pill badge-primary ml-3"
-                      onClick={() => {
-                        onNotification(1); // eslint-disable-line
+                    <span className="badge badge-pill badge-primary ml-3" onClick={() => {onNotification(1); // eslint-disable-line
                       }}
                     >
                       View all
@@ -212,14 +209,7 @@ function Header() {
                       <>
                         <div className="media new">
                           <div className="media-body">
-                            <p
-                              onClick={() => {
-                                onMessageClick(note.id);
-                                onNotification(1);
-                              }}
-                              className={
-                                note.is_read === false ? 'active-media' : ''
-                              } // eslint-disable-line
+                            <p onClick={() => { onMessageClick(note.id); onNotification(1); }} className={note.is_read === false ? 'active-media' : ''} // eslint-disable-line
                             >
                               {note.message}
                             </p>

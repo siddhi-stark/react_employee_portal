@@ -107,11 +107,10 @@ function InterviewerRoundsStatus(props) {
       }).then(() => {
         swal.close();
       });
-
-      {
-        Interview // eslint-disable-line
-          ? history.push('/interview-listing')
-          : history.push('/recruitment');
+      if(Interview){
+        history.push('/interview-listing');
+      } else {
+        history.push('/recruitment');
       }
     } else {
       swal(message, '', 'error', {

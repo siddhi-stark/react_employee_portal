@@ -52,8 +52,8 @@ function NewInterviewRounds(props) {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
     const postData = [];
-    for (const more of formValues.addmore) {
-      // eslint-disable-line
+    const formsAddmoreValue = formValues.addmore;
+    for (const more of  formsAddmoreValue) { // eslint-disable-line
 
       const round = {
         int_date: more.int_date ? customFunctions.getDate(more.int_date) : '',
