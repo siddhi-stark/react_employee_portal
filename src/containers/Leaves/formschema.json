@@ -1,90 +1,90 @@
 [
-	{
-		"sectionName": "leavesfilter",
-		"sectionTitle": "Leaves Filter ",
-		"layout": { "label": "3 Column", "value": "3column" },
-		"containerClass": "mt-3",
-		"displaySection": true,
-		"displaySectionTitle": false,
-		"fields": [
-			{
-				"name": "start_date",
-				"type": "date",
-				"label": "",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"dateFormat": "dd/MM/yyyy",
-				"placeholder": "Select form date",
-				"validations": [
-					{
-						"type": "required",
-						"applyWhen": [
-							{ "name": "end_date", "value": "end_date", "condition": "!empty" }
-						],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": { "label": "1 Column", "value": "1column" },
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			},
-			{
-				"name": "end_date",
-				"type": "date",
-				"label": "",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"dateFormat": "dd/MM/yyyy",
-				"placeholder": "Select to date",
-				"validations": [
-					{
-						"type": "required",
-						"applyWhen": [
-							{
-								"name": "start_date",
-								"value": "Start_date",
-								"condition": "!empty"
-							}
-						],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "start_date",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": { "label": "1 Column", "value": "1column" },
-				"fields": [],
-				"optionCallback": "",
-				"options": []
-			}
-		],
-		"allowedUsers": [],
-		"sectionLayout": "3column"
-	}
+  {
+    "sectionName": "leavesfilter",
+    "sectionTitle": "Leaves Filter ",
+    "layout": { "label": "3 Column", "value": "3column" },
+    "containerClass": "mt-3",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "date",
+        "label": "",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "dateFormat": "dd/MM/yyyy",
+        "placeholder": "Select form date",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              { "name": "end_date", "value": "end_date", "condition": "!empty" }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "end_date",
+        "type": "date",
+        "label": "",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "dateFormat": "dd/MM/yyyy",
+        "placeholder": "Select to date",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              {
+                "name": "start_date",
+                "value": "Start_date",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "start_date",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "3column"
+  }
 ]

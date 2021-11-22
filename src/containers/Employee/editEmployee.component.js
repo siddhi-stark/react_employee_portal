@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Button } from 'react-bootstrap';
-import StarkFormBuilder from 'stark-form-builder';
+import React, { useEffect, useState } from 'react';
+import { Button, Card } from 'react-bootstrap';
+import { useHistory, withRouter } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
+import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
-import customFunctions from '../../helper/customFunctions';
-import FormSections from './editEmployee.json';
-import AuthApi from '../../helper/authApi';
-import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
+import FormSections from './editEmployee.json';
 
 function EditEmployee(props) {
-
+  const { match } = props;
   const [currentUser, updateCurrentUser] = useState(0);
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -29,7 +29,7 @@ function EditEmployee(props) {
   const datee = customFunctions.getLocalStorage('date');
   const dataaa = datee.split('-');
   const newDate = `${dataaa[2]}-${dataaa[1]}-${dataaa[0]}`;
-  
+
   const columns = [
     {
       id: 'index',
@@ -73,10 +73,10 @@ function EditEmployee(props) {
   useEffect(() => {
     getUserRole();
   }, []);
-  
+
   const submitForm = async (formValues) => {
     setShowLoader(true);
-    const id = props.match.params.employeeId;
+    const id = match.params.employeeId;
     const postData = {
       user_id: Number(id),
       content: formValues.task,
@@ -97,12 +97,12 @@ function EditEmployee(props) {
       });
     }
   };
-  
+
   const getRowData = async (pageNo = 1) => {
     const ID = customFunctions.getLocalStorage('userId');
     const page = pageNo || currentPage;
     const endPoint = `${Api.dailyReportUrl}`;
-    
+
     const params = {
       date: newDate,
       user_id: ID,
@@ -129,9 +129,9 @@ function EditEmployee(props) {
       });
       setRowData((data && data.data && data.data.evening_data) || []);
     } else {
-       swal(message, '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
       });
     }
   };
@@ -152,25 +152,24 @@ function EditEmployee(props) {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <div className="mt-4 edit-timelog">
         <Card body>
-        <div className="edit-timelog-btn text-end">
-          <Button
-            className="float-end"
-            onClick={() => history.push('/emp-timesheet')}
-          >
-            Back
-          </Button>
+          <div className="edit-timelog-btn text-end">
+            <Button
+              className="float-end"
+              onClick={() => history.push('/emp-timesheet')}
+            >
+              Back
+            </Button>
           </div>
           <div className="container">
             <div className="row  mt-4 w-100">
-            <div className="col-md-6">
-              <p>
-                Employee Name: {customFunctions.getLocalStorage('employeeName')}
-              </p>
+              <div className="col-md-6">
+                <p>
+                  Employee Name:{' '}
+                  {customFunctions.getLocalStorage('employeeName')}
+                </p>
               </div>
               <div className="col-md-6">
-              <p>
-                Date: {customFunctions.getLocalStorage('date')}
-              </p>
+                <p>Date: {customFunctions.getLocalStorage('date')}</p>
               </div>
             </div>
           </div>

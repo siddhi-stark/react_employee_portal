@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Card } from 'react-bootstrap';
+import { useHistory, withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
-import {Card } from 'react-bootstrap';
 import swal from 'sweetalert';
-import FormSections from './formschema.json';
-import { Helmet } from '../../components/FormInputs';
-import customFunctions from '../../helper/customFunctions';
-import AuthApi from '../../helper/authApi';
-import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import { Helmet } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
+import FormSections from './formschema.json';
 
 function AddQuotes(props) {
+  const { match } = props;
   const history = useHistory();
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Add Quote' }];
@@ -44,16 +45,14 @@ function AddQuotes(props) {
     const callback = quotesId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
-    const endPoint = quotesId
-      ? `${Api.quotesUrl}${quotesId}/`
-      : Api.quotesUrl;
+    const endPoint = quotesId ? `${Api.quotesUrl}${quotesId}/` : Api.quotesUrl;
     const { data, message } = await callback(endPoint, payload);
 
     if (!data) {
       setShowLoader(false);
       swal(message, '', 'error');
     }
-    
+
     setShowLoader(false);
     swal(data && data.message[0], '', 'success').then((result) => {
       if (result) {
@@ -61,7 +60,6 @@ function AddQuotes(props) {
         history.push('/quotes');
       }
     });
-    
   };
 
   const getData = async (id) => {
@@ -69,12 +67,12 @@ function AddQuotes(props) {
     if (!data) {
       return;
     }
-    updateDefaultValues({content: data.data.content});
+    updateDefaultValues({ content: data.data.content });
   };
 
   useEffect(() => {
-    const id = props.match.params.qid;
-    if(id){
+    const id = match.params.qid;
+    if (id) {
       setQuotesId(id);
       getData(id);
     }
@@ -95,8 +93,8 @@ function AddQuotes(props) {
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 ">Add Quote</h5>
-            </div>  
-            <hr/>
+            </div>
+            <hr />
             <StarkFormBuilder
               containerClass=""
               formHeaderClass=""

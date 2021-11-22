@@ -33,16 +33,19 @@ function ArchivedProject() {
   // Variable declarations Filter State
   const [currentUser, updateCurrentUser] = useState(0);
 
-  const handleActionCallback = ({id}) => {
+  const handleActionCallback = ({ id }) => {
     return (
-      <span className ="d-flex">
+      <span className="d-flex">
         <a
           href="/"
           className="pl-2"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-             history.push(`/view-project/${id}`,{isView:true, archived:true});
+            history.push(`/view-project/${id}`, {
+              isView: true,
+              archived: true,
+            });
           }}
         >
           <Image alt="view" src="/images/eye.svg" />
@@ -53,14 +56,17 @@ function ArchivedProject() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/edit-project/${id}`,{isView:false,archived:true});
+            history.push(`/edit-project/${id}`, {
+              isView: false,
+              archived: true,
+            });
           }}
         >
           <Image src="/images/edit-button.svg" />
         </a>
       </span>
     );
-  };    
+  };
 
   // Declare columns
   const columns = [
@@ -68,7 +74,7 @@ function ArchivedProject() {
       id: 'id',
       label: 'Id',
       roleAccess: [4],
-      isDisplay: false
+      isDisplay: false,
     },
     {
       id: 'index',
@@ -88,10 +94,10 @@ function ArchivedProject() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                history.push(`/team-project/${id}`,{archived:true});
+                history.push(`/team-project/${id}`, { archived: true });
               }}
             >
-            <strong> {name} </strong> 
+              <strong> {name} </strong>
             </a>
           </>
         );
@@ -110,8 +116,14 @@ function ArchivedProject() {
       },
     },
     {
-      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hourly_cost',
-      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hourly Rate',
+      id:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'hourly_cost',
+      label:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'Hourly Rate',
       roleAccess: [1],
     },
     {
@@ -119,51 +131,67 @@ function ArchivedProject() {
       label: 'Estimated Hrs',
       roleAccess: [4],
       render: ({ allocated }) => {
-        return (
-        <> {allocated.toFixed(2)} </>
-        );
-      }
+        return <> {allocated.toFixed(2)} </>;
+      },
     },
     {
-      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hours_allocated' ,
-      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hours Allocated',
+      id:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'hours_allocated',
+      label:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'Hours Allocated',
       roleAccess: [1],
       render: ({ hours_allocated }) => {
         return (
-         <span>
-            {
-              ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && (hours_allocated.toFixed(2)) 
-            }
+          <span>
+            {((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+              Number(currentUser) === 1) &&
+              hours_allocated.toFixed(2)}
           </span>
         );
-      }
+      },
     },
     {
-      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 )&& 'cost_allocated',
-      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Project Cost',
+      id:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'cost_allocated',
+      label:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'Project Cost',
       roleAccess: [1],
     },
     {
       id: 'Action',
-      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Action',
-      render: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && handleActionCallback
+      label:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'Action',
+      render:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        handleActionCallback,
     },
   ];
 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
-    const endPoint = `${Api.getProjects}`; 
+    const endPoint = `${Api.getProjects}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
-      sort_by:'name',
-      sort_direction:'ascending',
+      sort_by: 'name',
+      sort_direction: 'ascending',
       page,
       limit,
-      status:'inactive',
+      status: 'inactive',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -173,7 +201,7 @@ function ArchivedProject() {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      
+
       const newData = [...data.data];
       newData.map((item, i) => {
         const newItem = item;
@@ -196,8 +224,8 @@ function ArchivedProject() {
     setTitle('Archived Project');
   }, [filterData]);
 
-  // Get user role Filter 
-  const getUserRole = async() => {
+  // Get user role Filter
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
@@ -208,35 +236,46 @@ function ArchivedProject() {
 
   // Submit Form
   const submitForm = async (formValue) => {
-    let payload ={};
-    const formValues = (typeof formValue === 'object' && Object.keys(formValue).length) && formValue;
-      payload = {
-        project_id: formValues.project_id && formValues.project_id.value && Number(formValues.project_id.value),
-      };
+    let payload = {};
+    const formValues =
+      typeof formValue === 'object' &&
+      Object.keys(formValue).length &&
+      formValue;
+    payload = {
+      project_id:
+        formValues.project_id &&
+        formValues.project_id.value &&
+        Number(formValues.project_id.value),
+    };
 
     setFilterData(payload);
   };
-  
+
   useEffect(() => {
     submitForm();
   }, []);
 
   const getProjectList = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name&status=inactive&type=all`);
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.projectListUrl}?sort_by=name&status=inactive&type=all`
+    );
 
-    if(!data) {
-     swal(message, '', 'error', {
+    if (!data) {
+      swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
-      return { label: op.name, value: op.id };
-    });
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
 
     options.project_id = dpOptions;
     const allOptions = options;
-    await updateOptions({...allOptions});
+    await updateOptions({ ...allOptions });
   };
 
   useEffect(() => {
@@ -254,42 +293,44 @@ function ArchivedProject() {
 
       <section className="content-area">
         <div className="mt-5">
-            <Card>
-                <Card.Body>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                  </div>
-                  <hr/>
-                  <div className="filter-box-main">
-                  <StarkFormBuilder
-                    containerClass=''
-                    formHeaderClass=''
-                    formSections={FormSections}
-                    formHeading="Project Filter"
-                    onFormSubmit={(formValues) => {submitForm(formValues);}}
-                    callbacks={{}}
-                    options={options}
-                    currentUser={currentUser}
-                    submitBtnText="Apply"
-                    showResetBtn={true}
-                    showBtnClass={false}
-                    btnContainerClass="col-md-4 filter-apply-btns"
-                    formClass="row"
-                    resetBtnText="Clear"
-                    isStepForm={false}
-                    onFormReset={() => {
-                      setFilterData({});
-                    }}
-                  />
-                  </div>
-                </Card.Body>
-            </Card>
+          <Card>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>
+              <hr />
+              <div className="filter-box-main">
+                <StarkFormBuilder
+                  containerClass=""
+                  formHeaderClass=""
+                  formSections={FormSections}
+                  formHeading="Project Filter"
+                  onFormSubmit={(formValues) => {
+                    submitForm(formValues);
+                  }}
+                  callbacks={{}}
+                  options={options}
+                  currentUser={currentUser}
+                  submitBtnText="Apply"
+                  showResetBtn={true}
+                  showBtnClass={false}
+                  btnContainerClass="col-md-4 filter-apply-btns"
+                  formClass="row"
+                  resetBtnText="Clear"
+                  isStepForm={false}
+                  onFormReset={() => {
+                    setFilterData({});
+                  }}
+                />
+              </div>
+            </Card.Body>
+          </Card>
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Project</h5>
               </div>
-              <hr/>
+              <hr />
               <CustomTable
                 columns={columns}
                 rows={rowData}

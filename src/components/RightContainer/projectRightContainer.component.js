@@ -64,12 +64,14 @@ function ProjectRightContainer(props) {
               )}
               {totalHrsEstimate && (
                 <li>
-                  Total Hours Estimated: <strong>{totalHrsEstimate.toFixed(2)}</strong>
+                  Total Hours Estimated:{' '}
+                  <strong>{totalHrsEstimate.toFixed(2)}</strong>
                 </li>
               )}
               {totalHrsAllocated && (
                 <li>
-                  Total Hours Allocated: <strong>{totalHrsAllocated.toFixed(2)}</strong>
+                  Total Hours Allocated:{' '}
+                  <strong>{totalHrsAllocated.toFixed(2)}</strong>
                 </li>
               )}
               {projectCompletion && (

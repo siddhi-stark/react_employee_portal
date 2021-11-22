@@ -1,222 +1,19 @@
-[{
-	"sectionName": "rounds",
-	"sectionTitle": "rounds",
-	"layout": {
-		"label": "2 Column",
-		"value": "2column"
-	},
-	"containerClass": "rounds-form",
-	"displaySection": true,
-	"displaySectionTitle": false,
-	"fields": [{
-		"name": "addmore",
-		"type": "addmore",
-		"label": "",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [],
-		"displayWhen": {
-			
-		},
-		"haveValidations": "false",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": "2column",
-		"fields": [
-			{
-			"name": "int_date",
-			"type": "date",
-			"label": "Date",
-			"id": "",
-     		"dateFormat": "dd/MM/yyyy",
-			"placeholder": "",
-			"inputClass": "",
-			"containerClass": "",
-			"validations": [{
-				"type": "required",
-				"applyWhen": [],
-				"applyWhenRelation": "OR"
-			}],
-			"displayWhen": {},
-			"haveValidations": "true",
-			"haveDisplayOptions": "false",
-			"callback": "",
-			"callbackUrl": "",
-			"inputToChange": "",
-			"minDateSelector": "",
-			"maxDateSelector": "",
-			"disabled": false,
-			"isMulti": false,
-			"allowedUsers": [],
-			"fieldsToReset": [],
-			"fieldLayout": {
-				"label": "2 Column",
-				"value": "2column"
-			},
-			"options": [],
-			"fields": []
-		},
-
-		 {
-			"name": "int_time",
-			"type": "date",
-			"label": "Time",
-			"id": "",
-			"placeholder": "",
-			"inputClass": "",
-			"containerClass": "",
-			"validations": [{
-				"type": "required",
-				"applyWhen": [],
-				"applyWhenRelation": "OR"
-			}],
-			"displayWhen": {},
-			"haveValidations": "true",
-			"haveDisplayOptions": "false",
-			"callback": "",
-			"callbackUrl": "",
-			"inputToChange": "",
-			"dateFormat": "h:mm aa",
-			"showTimeSelect": "showTimeSelect",
-			"showTimeSelectOnly": "showTimeSelectOnly",
-			"minDateSelector": "",
-			"maxDateSelector": "",
-			"maxTime": "",
-			"maxDate": "",
-			"minTime": "",
-			"minDate": "",
-			"disabled": false,
-			"isMulti": false,
-			"allowedUsers": [],
-			"fieldsToReset": [],
-			"fieldLayout": {
-				"label": "1 Column",
-				"value": "1column"
-			},
-			"fields": [],
-			"options": []
-		}, {
-			"name": "interviewer",
-			"type": "select",
-			"label": "Interviewer",
-			"id": "",
-			"placeholder": "",
-			"inputClass": "",
-			"containerClass": "",
-			"validations": [
-				{
-								"type": "required",
-								"applyWhen": [],
-								"applyWhenRelation": "OR"
-							}
-			],
-			"displayWhen": {},
-			"haveValidations": "false",
-			"haveDisplayOptions": "false",
-			"callback": "",
-			"callbackUrl": "",
-			"inputToChange": "",
-			"minDateSelector": "",
-			"maxDateSelector": "",
-			"disabled": false,
-			"isMulti": false,
-			"allowedUsers": [],
-			"fieldsToReset": [],
-			"fieldLayout": {
-				"label": "1 Column",
-				"value": "1column"
-			},
-			"fields": [],
-			"optionCallback": "getInterviewer",
-			"optionsCallbackUrl": "employeeUrl",
-			"options": []
-		}, {
-			"name": "interviewerRounds",
-			"type": "select",
-			"label": "Round",
-			"id": "",
-			"placeholder": "",
-			"inputClass": "",
-			"containerClass": "",
-			"validations": [
-				{
-								"type": "required",
-								"applyWhen": [],
-								"applyWhenRelation": "OR"
-							}
-			],
-			"displayWhen": {},
-			"haveValidations": "false",
-			"haveDisplayOptions": "false",
-			"callback": "getinterviewvalue",
-			"callbackUrl": "",
-			"inputToChange": "",
-			"minDateSelector": "",
-			"maxDateSelector": "",
-			"disabled": false,
-			"isMulti": false,
-			"allowedUsers": [],
-			"fieldsToReset": [],
-			"fieldLayout": {
-				"label": "1 Column",
-				"value": "1column"
-			},
-			"fields": [],
-			"optionCallback": "getInterviewRounds",
-			"optionsCallbackUrl": "InterviewRoundsUrl",
-			"options": []
-		},
-		{
-			"name": "interview_type",
-			"type": "select",
-			"label": "Interview Type",
-			"id": "",
-			"placeholder": "",
-			"inputClass": "",
-			"containerClass": "",
-			"validations": [
-				{
-								"type": "required",
-								"applyWhen": [],
-								"applyWhenRelation": "OR"
-							}
-			],
-			"displayWhen": {},
-			"haveValidations": "false",
-			"haveDisplayOptions": "false",
-			"callback": "",
-			"callbackUrl": "",
-			"inputToChange": "",
-			"minDateSelector": "",
-			"maxDateSelector": "",
-			"disabled": false,
-			"isMulti": false,
-			"allowedUsers": [],
-			"fieldsToReset": [],
-			"fieldLayout": {
-				"label": "1 Column",
-				"value": "1column"
-			},
-			"fields": [],
-			"optionCallback": "",
-			"optionsCallbackUrl": "",
-			"options": [{"label":"Telephonic","value":"1"},
-				{"label":"Google Meet", "value":"2"},{"label":"Face To Face", "value":"3"}]
-		},
-		{
-        "name": "description",
-        "type": "textarea",
-        "label": "Description",
+[
+  {
+    "sectionName": "rounds",
+    "sectionTitle": "rounds",
+    "layout": {
+      "label": "2 Column",
+      "value": "2column"
+    },
+    "containerClass": "rounds-form",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "addmore",
+        "type": "addmore",
+        "label": "",
         "id": "",
         "placeholder": "",
         "inputClass": "",
@@ -225,6 +22,7 @@
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",
+        "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
         "minDateSelector": "",
@@ -233,105 +31,318 @@
         "isMulti": false,
         "allowedUsers": [],
         "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
-        "fields": [],
+        "fieldLayout": "2column",
+        "fields": [
+          {
+            "name": "int_date",
+            "type": "date",
+            "label": "Date",
+            "id": "",
+            "dateFormat": "dd/MM/yyyy",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "validations": [
+              {
+                "type": "required",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
+            ],
+            "displayWhen": {},
+            "haveValidations": "true",
+            "haveDisplayOptions": "false",
+            "callback": "",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "2 Column",
+              "value": "2column"
+            },
+            "options": [],
+            "fields": []
+          },
+
+          {
+            "name": "int_time",
+            "type": "date",
+            "label": "Time",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "validations": [
+              {
+                "type": "required",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
+            ],
+            "displayWhen": {},
+            "haveValidations": "true",
+            "haveDisplayOptions": "false",
+            "callback": "",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "dateFormat": "h:mm aa",
+            "showTimeSelect": "showTimeSelect",
+            "showTimeSelectOnly": "showTimeSelectOnly",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "maxTime": "",
+            "maxDate": "",
+            "minTime": "",
+            "minDate": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "options": []
+          },
+          {
+            "name": "interviewer",
+            "type": "select",
+            "label": "Interviewer",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "validations": [
+              {
+                "type": "required",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
+            ],
+            "displayWhen": {},
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callback": "",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "getInterviewer",
+            "optionsCallbackUrl": "employeeUrl",
+            "options": []
+          },
+          {
+            "name": "interviewerRounds",
+            "type": "select",
+            "label": "Round",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "validations": [
+              {
+                "type": "required",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
+            ],
+            "displayWhen": {},
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callback": "getinterviewvalue",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "getInterviewRounds",
+            "optionsCallbackUrl": "InterviewRoundsUrl",
+            "options": []
+          },
+          {
+            "name": "interview_type",
+            "type": "select",
+            "label": "Interview Type",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "validations": [
+              {
+                "type": "required",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
+            ],
+            "displayWhen": {},
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callback": "",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "",
+            "optionsCallbackUrl": "",
+            "options": [
+              { "label": "Telephonic", "value": "1" },
+              { "label": "Google Meet", "value": "2" },
+              { "label": "Face To Face", "value": "3" }
+            ]
+          },
+          {
+            "name": "description",
+            "type": "textarea",
+            "label": "Description",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "validations": [],
+            "displayWhen": {},
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "",
+            "options": []
+          },
+          {
+            "name": "status_name",
+            "type": "select",
+            "label": "Round Status",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "displayWhen": {},
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callback": "onTaskName",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "getRoundsStatus",
+            "optionsCallbackUrl": "InterviewRoundsUrl",
+            "options": []
+          },
+          {
+            "name": "comments",
+            "type": "textarea",
+            "label": "Feedback",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "displayWhen": {},
+            "maxLength": "250",
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callback": "onTaskName",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "",
+            "options": []
+          },
+          {
+            "name": "id",
+            "type": "hidden",
+            "label": "ID",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "displayWhen": {},
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callback": "",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "maxTime": "",
+            "maxDate": "",
+            "minTime": "",
+            "minDate": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "options": []
+          }
+        ],
         "optionCallback": "",
         "options": []
-      },{
-        "name": "status_name",
-        "type": "select",
-        "label": "Round Status",
-        "id": "",
-        "placeholder": "",
-        "inputClass": "",
-        "containerClass": "",
-        "displayWhen": {},
-        "haveValidations": "false",
-        "haveDisplayOptions": "false",
-        "callback": "onTaskName",
-        "callbackUrl": "",
-        "inputToChange": "",
-        "minDateSelector": "",
-        "maxDateSelector": "",
-        "disabled": false,
-        "isMulti": false,
-        "allowedUsers": [],
-        "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
-        "fields": [],
-        "optionCallback": "getRoundsStatus",
-				"optionsCallbackUrl": "InterviewRoundsUrl",
-        "options": []
-      },{
-        "name": "comments",
-        "type": "textarea",
-        "label": "Feedback",
-        "id": "",
-        "placeholder": "",
-        "inputClass": "",
-        "containerClass": "",
-        "displayWhen": {},
-        "maxLength": "250",
-        "haveValidations": "false",
-        "haveDisplayOptions": "false",
-        "callback": "onTaskName",
-        "callbackUrl": "",
-        "inputToChange": "",
-        "minDateSelector": "",
-        "maxDateSelector": "",
-        "disabled": false,
-        "isMulti": false,
-        "allowedUsers": [],
-        "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
-        "fields": [],
-        "optionCallback": "",
-        "options": []
-      },
-     {
-			"name": "id",
-			"type": "hidden",
-			"label": "ID",
-			"id": "",
-			"placeholder": "",
-			"inputClass": "",
-			"containerClass": "",
-			"displayWhen": {
-				
-			},
-			"haveValidations": "false",
-			"haveDisplayOptions": "false",
-			"callback": "",
-			"callbackUrl": "",
-			"inputToChange": "",
-			"maxTime": "",
-			"maxDate": "",
-			"minTime": "",
-			"minDate": "",
-			"disabled": false,
-			"isMulti": false,
-			"allowedUsers": [],
-			"fieldsToReset": [],
-			"fieldLayout": {
-				"label": "1 Column",
-				"value": "1column"
-			},
-			"fields": [],
-			"options": []
-		}],
-		"optionCallback": "",
-		"options": []
-	}
-],
-	"allowedUsers": [],
-	"sectionLayout": "1column"
-}]
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "1column"
+  }
+]

@@ -9,12 +9,11 @@ import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
 
 function EmployeePolicyList() {
-
   const [totalCount, setTotalCount] = useState(9);
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(9);
   const [isShowLoader, setShowLoader] = useState(false);
-  const initialData ={
+  const initialData = {
     title: '',
     description: '',
     image: '',
@@ -48,9 +47,7 @@ function EmployeePolicyList() {
   }, []);
 
   const getBroadcastById = async (id) => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.policyUrl}${id}/`
-    );
+    const { data } = await AuthApi.getDataFromServer(`${Api.policyUrl}${id}/`);
     if (data && data.data) {
       setPolicyData({
         title: data.data.title,
@@ -72,63 +69,62 @@ function EmployeePolicyList() {
   return (
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-        <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
-          {policy &&
-            policy.map((pl) => (
-              <Col className="mb-4">
-                  <Card className="h-100 pie-chart-graph">
-                    <Card.Header className="purple-bg">
-                      <strong>{pl.title}</strong>
-                    </Card.Header>
-                    <Card.Body>
-                        <Row className="align-items-center">
-                      <Col className="col-md-4">
-                        <span className="mini-stat-icon bg-purple mr-0 float-right">
-                          <Image
-                            className="card-img-top"
-                            // src={pl.image ? `${pl.image}` : `${Api.s3UrlnoProfile}`}
-                            src="/images/5.jpg"
-                            alt="Card image cap"
-                          />
-                        </span>
-                      </Col>
-                    </Row>
-                    <Row className="mt-3">
-                      <Col className="col-md-12">
-                        <p className="text-primary confirmation-date">
-                          {pl.description}
-                        </p>{' '}
-                        <br />
-                      </Col>
-                       
-                    </Row>
-                    </Card.Body>
-                    <Card.Footer className="card-footer-view d-flex align-items-center justify-content-end">
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        setModalShow(true);
-                        getBroadcastById(pl.id);
-                      }}
-                    >
-                      View
-                    </Button>
-                  </Card.Footer>
-                  </Card>
-              </Col>
-            ))}
-        </div>
-        <Pagination
-          totalItems={totalCount}
-          current_page={currentPage}
-          itemsPerPage={limit}
-          onPageChange={(pageNo) => {
-            getPolicyData(pageNo);
-          }}
-        />
-        {totalCount < 1 && <p className="text-center"> No records found</p>}
+      <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
+        {policy &&
+          policy.map((pl) => (
+            <Col className="mb-4">
+              <Card className="h-100 pie-chart-graph">
+                <Card.Header className="purple-bg">
+                  <strong>{pl.title}</strong>
+                </Card.Header>
+                <Card.Body>
+                  <Row className="align-items-center">
+                    <Col className="col-md-4">
+                      <span className="mini-stat-icon bg-purple mr-0 float-right">
+                        <Image
+                          className="card-img-top"
+                          // src={pl.image ? `${pl.image}` : `${Api.s3UrlnoProfile}`}
+                          src="/images/5.jpg"
+                          alt="Card image cap"
+                        />
+                      </span>
+                    </Col>
+                  </Row>
+                  <Row className="mt-3">
+                    <Col className="col-md-12">
+                      <p className="text-primary confirmation-date">
+                        {pl.description}
+                      </p>{' '}
+                      <br />
+                    </Col>
+                  </Row>
+                </Card.Body>
+                <Card.Footer className="card-footer-view d-flex align-items-center justify-content-end">
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      setModalShow(true);
+                      getBroadcastById(pl.id);
+                    }}
+                  >
+                    View
+                  </Button>
+                </Card.Footer>
+              </Card>
+            </Col>
+          ))}
+      </div>
+      <Pagination
+        totalItems={totalCount}
+        current_page={currentPage}
+        itemsPerPage={limit}
+        onPageChange={(pageNo) => {
+          getPolicyData(pageNo);
+        }}
+      />
+      {totalCount < 1 && <p className="text-center"> No records found</p>}
 
-        <ModalInput
+      <ModalInput
         size="md"
         centered
         show={modalShow}
@@ -151,7 +147,7 @@ function EmployeePolicyList() {
             <Row className="mt-3">
               <Col className="col-md-12">
                 <div className="policy-modal-description">
-                  <p >{policyData.description}</p>{' '}
+                  <p>{policyData.description}</p>{' '}
                 </div>
                 <br />
               </Col>

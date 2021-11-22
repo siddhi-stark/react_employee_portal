@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+/* eslint-disable react/destructuring-assignment */
+import { enc } from 'crypto-js';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
+import { useHistory, withRouter } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
-import { Button } from 'react-bootstrap';
-import { enc } from 'crypto-js';
-import CustomFunctions from '../../../helper/customFunctions';
-import AuthApi from '../../../helper/authApi';
-import Api from '../../../helper/api';
 import { Helmet } from '../../../components/FormInputs';
 import Loader from '../../../components/Loader/index';
+import Api from '../../../helper/api';
+import AuthApi from '../../../helper/authApi';
+import CustomFunctions from '../../../helper/customFunctions';
 
 function Login(props) {
   const dispatch = useDispatch();
@@ -79,10 +80,7 @@ function Login(props) {
     );
     if (data && data.data && data.data.token && data.data.token.access_token) {
       setLoader(false);
-      CustomFunctions.setLocalStorage(
-        'quote',
-        data.data.quote
-      );
+      CustomFunctions.setLocalStorage('quote', data.data.quote);
       CustomFunctions.setLocalStorage(
         'access_token',
         data.data.token.access_token
@@ -105,13 +103,13 @@ function Login(props) {
       CustomFunctions.setLocalStorage('userId', data.data.id);
       CustomFunctions.setLocalStorage('password', envryptedPassword.toString());
       CustomFunctions.setLocalStorage('group', data.data.group);
-      CustomFunctions.setLocalStorage('department',data.data.department_id);
+      CustomFunctions.setLocalStorage('department', data.data.department_id);
       CustomFunctions.setLocalStorage('name', data.data.full_name);
       setDisableButton(false);
       dispatch({ type: 'LOGIN', value: true });
       const timer = setInterval(async () => {
         const token = CustomFunctions.getLocalStorage('access_token');
-        if(token){
+        if (token) {
           clearInterval(timer);
           window.location.href = '/';
         }
@@ -141,7 +139,7 @@ function Login(props) {
     <>
       <Helmet title={title} />
       <Loader showLoader={loader} needFullPage={false} />
-     
+
       <div className="login-page d-flex align-items-center justify-content-center flex-column">
         <div className="logo text-center">
           <a href="#">

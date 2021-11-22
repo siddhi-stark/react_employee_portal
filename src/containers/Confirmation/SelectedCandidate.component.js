@@ -6,7 +6,6 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
 function SelectedCandidate() {
-  
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);

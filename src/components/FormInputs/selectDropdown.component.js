@@ -16,8 +16,7 @@ export default function SelectDropdown(props) {
     asterisk,
     placeholder,
     disabled,
-    isOptionDisabled
-
+    isOptionDisabled,
   } = props;
 
   const CustomStyle = {

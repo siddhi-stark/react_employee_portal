@@ -11,15 +11,14 @@ import customFunctions from '../../helper/customFunctions';
 import ApprovalStatus from './appovalStatus.component';
 
 function PolicyList() {
-
-  const initialData ={
+  const initialData = {
     title: '',
     description: '',
     image: '',
     createdBy: '',
   };
 
-  const draftData ={
+  const draftData = {
     title: '',
     description: '',
     image: '',
@@ -50,7 +49,8 @@ function PolicyList() {
           Number(userRole) === 6) && (
           <Link
             to={{
-              pathname: `/edit-policy/${id}`,activeMenu:actMenu
+              pathname: `/edit-policy/${id}`,
+              activeMenu: actMenu,
             }}
             className="btn-link"
           >
@@ -75,10 +75,10 @@ function PolicyList() {
     );
   };
 
-  const handleApprovalAction = ({ id,is_admin_approved}) => {
+  const handleApprovalAction = ({ id, is_admin_approved }) => {
     return (
       <span className="d-flex">
-        {(Number(userRole) === 1) ? (
+        {Number(userRole) === 1 ? (
           <Link
             onClick={() => {
               setApprovalStatus(is_admin_approved);
@@ -98,18 +98,19 @@ function PolicyList() {
   const handlePublishAction = ({ id, is_publish, is_admin_approved }) => {
     return (
       <span className="d-flex">
-        {((Number(userRole) === 1 ||
-                Number(userRole) === 5 ||
-                Number(userRole) === 6) && is_admin_approved === true) ? (
+        {(Number(userRole) === 1 ||
+          Number(userRole) === 5 ||
+          Number(userRole) === 6) &&
+        is_admin_approved === true ? (
           <Link
             onClick={() => {
               changePublishStatus(id, is_publish);
             }}
           >
-            {is_publish === true ? 'Publish':'Draft'}
+            {is_publish === true ? 'Publish' : 'Draft'}
           </Link>
         ) : (
-          <span>{is_publish === true ? 'Publish':'Draft'}</span>
+          <span>{is_publish === true ? 'Publish' : 'Draft'}</span>
         )}
       </span>
     );
@@ -128,33 +129,32 @@ function PolicyList() {
       render: ({ id, title }) => {
         return (
           <>
-          {(Number(userRole) !== 1 && Number(userRole) !== 5 && Number(userRole) !== 6) && (
-            <Link
-            onClick={() => {
-              getPolicyById(id);
-              setPolicyModal(true);
-            }}
-          >
-            {title}
-          </Link>
-          )}
+            {Number(userRole) !== 1 &&
+              Number(userRole) !== 5 &&
+              Number(userRole) !== 6 && (
+                <Link
+                  onClick={() => {
+                    getPolicyById(id);
+                    setPolicyModal(true);
+                  }}
+                >
+                  {title}
+                </Link>
+              )}
 
-           {([1,5,6].includes(Number(userRole)) && activeMenu === 'Draft') && (
-            <Link
-            onClick={() => {
-              getDraftPolicyById(id);
-              setDraftPolicyModal(true);
-            }}
-          >
-            {title}
-          </Link>
-          ) }
+            {[1, 5, 6].includes(Number(userRole)) && activeMenu === 'Draft' && (
+              <Link
+                onClick={() => {
+                  getDraftPolicyById(id);
+                  setDraftPolicyModal(true);
+                }}
+              >
+                {title}
+              </Link>
+            )}
 
-            {([1,5,6].includes(Number(userRole)) && activeMenu === 'Parent') && (
-            <span>
-            {title}
-          </span>
-          ) }
+            {[1, 5, 6].includes(Number(userRole)) &&
+              activeMenu === 'Parent' && <span>{title}</span>}
           </>
         );
       },
@@ -176,16 +176,22 @@ function PolicyList() {
     //   },
     // },
     {
-      id: (Number(userRole) === 4 || Number(userRole) === 3) ? '' : 'created_by_name',
-      label: (Number(userRole) === 4 || Number(userRole) === 3) ? '' : 'Added By',
+      id:
+        Number(userRole) === 4 || Number(userRole) === 3
+          ? ''
+          : 'created_by_name',
+      label: Number(userRole) === 4 || Number(userRole) === 3 ? '' : 'Added By',
     },
     {
-      id: (Number(userRole) === 4 || Number(userRole) === 3) ? '' : 'is_admin_approved;',
+      id:
+        Number(userRole) === 4 || Number(userRole) === 3
+          ? ''
+          : 'is_admin_approved;',
       label: 'Approval Status',
       render: handleApprovalAction,
     },
     {
-      id: (Number(userRole) === 4 || Number(userRole) === 3 ) ? '' : 'is_publish',
+      id: Number(userRole) === 4 || Number(userRole) === 3 ? '' : 'is_publish',
       label: 'Publish Status',
       render: handlePublishAction,
     },
@@ -194,9 +200,7 @@ function PolicyList() {
       label: 'Date',
       render: ({ created_at }) => {
         return (
-          <span>
-           {created_at && customFunctions.getDMYDate(created_at)}
-          </span>
+          <span>{created_at && customFunctions.getDMYDate(created_at)}</span>
         );
       },
     },
@@ -234,13 +238,13 @@ function PolicyList() {
     const params = {
       page,
       limit,
-      sort_direction:'descending',
+      sort_direction: 'descending',
     };
 
-    if(activeMenu === 'Parent'){
+    if (activeMenu === 'Parent') {
       params.is_parent = true;
     }
-    if(activeMenu === 'Draft'){
+    if (activeMenu === 'Draft') {
       params.is_draft = true;
     }
     const url = customFunctions.generateUrl(endPoint, params);
@@ -309,12 +313,13 @@ function PolicyList() {
         allowOutsideClick: false,
       }).then(async (result) => {
         if (result) {
-        const params = {
-          status: 6,
-          ids: [policyId],
-        };
+          const params = {
+            status: 6,
+            ids: [policyId],
+          };
           const { data, message } = await AuthApi.putDataToServer(
-            `${Api.policyStatusUrl}`,params
+            `${Api.policyStatusUrl}`,
+            params
           );
           if (data) {
             swal(data && data.message[0], '', 'success', {
@@ -338,13 +343,11 @@ function PolicyList() {
   };
 
   const getPolicyById = async (id) => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.policyUrl}${id}/`
-    );
+    const { data } = await AuthApi.getDataFromServer(`${Api.policyUrl}${id}/`);
     if (data && data.data) {
       const originalString = `${data.data.description}`;
-      const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
-      const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+      const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ''); // eslint-disable-line
+      const decString = strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
 
       setPolicyData({
         title: data.data.title,
@@ -356,19 +359,16 @@ function PolicyList() {
   };
 
   const getDraftPolicyById = async (id) => {
-
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.policyUrl}${id}/`
-    );
+    const { data } = await AuthApi.getDataFromServer(`${Api.policyUrl}${id}/`);
 
     if (data && data.data) {
       const originalString = `${data.data.parent_description}`;
-      const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
-      const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
-     
+      const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ''); // eslint-disable-line
+      const decString = strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+
       setPolicyDraftData({
         title: data.data.parent_title,
-        description:decString,
+        description: decString,
         // image: data.data.image,
         // createdBy: data.data.created_by_name,
       });
@@ -386,23 +386,24 @@ function PolicyList() {
   useEffect(() => {
     const id = customFunctions.getLocalStorage('group');
     setUserRole(id);
-    if(activeMenu === 'Draft'){
+    if (activeMenu === 'Draft') {
       getRowData(1);
     } else {
       getRowData(1);
     }
   }, [activeMenu]);
 
-// useEffect(() => {
-//   const id = customFunctions.getLocalStorage('group');
-//     setUserRole(id);
-//     getRowData(1);
-//     if(activeMenu === 'Activity'){
-//       getActivityData();
-//     }
-//   }, [activeMenu]);
+  // useEffect(() => {
+  //   const id = customFunctions.getLocalStorage('group');
+  //     setUserRole(id);
+  //     getRowData(1);
+  //     if(activeMenu === 'Activity'){
+  //       getActivityData();
+  //     }
+  //   }, [activeMenu]);
 
-  const handleChangeActiveStatus = async (selectedIds) => { // eslint-disable-line
+  const handleChangeActiveStatus = async (selectedIds) => {
+    // eslint-disable-line
     if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
       const params = {
         status: 1,
@@ -430,7 +431,8 @@ function PolicyList() {
     }
   };
 
-  const handleChangeInactiveStatus = async (selectedIds) => { // eslint-disable-line
+  const handleChangeInactiveStatus = async (selectedIds) => {
+    // eslint-disable-line
     if (!customFunctions.checkIfEmpty(selectedIds, 'A')) {
       const params = {
         status: 2,
@@ -578,7 +580,9 @@ function PolicyList() {
           <div className="d-flex align-items-center justify-content-between">
             <h5 className="card-title mb-0 mt-2 ">Policy</h5>
             <div className="d-flex align-items-center justify-content-end">
-              {(Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && (
+              {(Number(userRole) === 1 ||
+                Number(userRole) === 5 ||
+                Number(userRole) === 6) && (
                 <Link
                   to={{
                     pathname: '/add-policy',
@@ -591,7 +595,7 @@ function PolicyList() {
             </div>
           </div>
           <hr />
-           <div className="nav-tabs-btn mb-3">
+          <div className="nav-tabs-btn mb-3">
             <nav className="nav border-0">
               <a
                 href="#"
@@ -657,81 +661,83 @@ function PolicyList() {
                 getRowData(pageNo);
               },
             }}
-            showCheckbox={[4,3,2].includes(Number(userRole)) ? false : true} // eslint-disable-line
+            showCheckbox={[4, 3, 2].includes(Number(userRole)) ? false : true} // eslint-disable-line
             tableClass="table-striped"
             emptyRender={() => {
               return 'No record found.';
             }}
           />
 
-           {modalShow && (
-              <ApprovalStatus
-                show={modalShow}
-                approvalStatus={approvalStatus}
-                approvalId={approvalId}
-                handleModalCLose={(e) => setModalShow(e)}
-                onStatusUpdate={() => {
-                  getRowData(1);
-                }}
-              />
-            )}
-           {
-             (policyModal && Number(userRole) === 4 || Number(userRole) === 3 || Number(userRole) === 2) && (
-                <ModalInput
-                size="md"
-                centered
-                show={policyModal}
-                onHide={onCancel}
-                label={policyData.title}
-                // label={employeeId ? 'Update Employee' : 'Add Employee'}
-                id="contained-modal-title-vcenter"
-                modalBody={
-                  <>
+          {modalShow && (
+            <ApprovalStatus
+              show={modalShow}
+              approvalStatus={approvalStatus}
+              approvalId={approvalId}
+              handleModalCLose={(e) => setModalShow(e)}
+              onStatusUpdate={() => {
+                getRowData(1);
+              }}
+            />
+          )}
+          {((policyModal && Number(userRole) === 4) ||
+            Number(userRole) === 3 ||
+            Number(userRole) === 2) && (
+            <ModalInput
+              size="md"
+              centered
+              show={policyModal}
+              onHide={onCancel}
+              label={policyData.title}
+              // label={employeeId ? 'Update Employee' : 'Add Employee'}
+              id="contained-modal-title-vcenter"
+              modalBody={
+                <>
                   {policyData.image && (
-                   <Row>
+                    <Row>
                       <Col className="col-md-4">
                         <Image
                           className="card-img-top"
-                          src={policyData.image ?`${policyData.image}` :`${Api.s3UrlnoProfile}`}
+                          src={
+                            policyData.image
+                              ? `${policyData.image}`
+                              : `${Api.s3UrlnoProfile}`
+                          }
                           alt="Policy Image"
                         />
                       </Col>
                     </Row>
-                    )}
-                    <Row className="mt-3">
-                      <Col className="col-md-12">
-                        <div className="policy-modal-description">
-                          <p >
-                          {policyData.description}</p>{' '}
-                        </div>
-                        <br />
-                      </Col>
-                      {/*
+                  )}
+                  <Row className="mt-3">
+                    <Col className="col-md-12">
+                      <div className="policy-modal-description">
+                        <p>{policyData.description}</p>{' '}
+                      </div>
+                      <br />
+                    </Col>
+                    {/*
                       <Col className="col-md-12">
                         <p className="text-primary confirmation-date text-end">
                           Created By: <br/> {policyData.createdBy}
                         </p>{' '}
                       </Col> */}
-                    </Row>
-                  </>
-                }
-              />
-            )
-          }
+                  </Row>
+                </>
+              }
+            />
+          )}
 
-           {
-             (draftPolicyModal) && (
-                <ModalInput
-                size="md"
-                centered
-                show={draftPolicyModal}
-                onHide={onCancel}
-                label={policyDraftData.title}
-                // label={employeeId ? 'Update Employee' : 'Add Employee'}
-                id="contained-modal-title-vcenter"
-                modalBody={
-                  <>
-                 {/* policyDraftData.image && (
+          {draftPolicyModal && (
+            <ModalInput
+              size="md"
+              centered
+              show={draftPolicyModal}
+              onHide={onCancel}
+              label={policyDraftData.title}
+              // label={employeeId ? 'Update Employee' : 'Add Employee'}
+              id="contained-modal-title-vcenter"
+              modalBody={
+                <>
+                  {/* policyDraftData.image && (
                    <Row>
                       <Col className="col-md-4">
                         <Image
@@ -742,26 +748,24 @@ function PolicyList() {
                       </Col>
                     </Row>
                     )} */}
-                    <Row className="mt-3">
-                      <Col className="col-md-12">
-                        <div className="policy-modal-description">
-                          <p >
-                          {policyDraftData.description}</p>{' '}
-                        </div>
-                        <br />
-                      </Col>
-                      {/*
+                  <Row className="mt-3">
+                    <Col className="col-md-12">
+                      <div className="policy-modal-description">
+                        <p>{policyDraftData.description}</p>{' '}
+                      </div>
+                      <br />
+                    </Col>
+                    {/*
                       <Col className="col-md-12">
                         <p className="text-primary confirmation-date text-end">
                           Created By: <br/> {policyData.createdBy}
                         </p>{' '}
                       </Col> */}
-                    </Row>
-                  </>
-                }
-              />
-            )
-          }
+                  </Row>
+                </>
+              }
+            />
+          )}
         </Card.Body>
       </Card>
     </>

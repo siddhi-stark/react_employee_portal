@@ -1,30 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import swal from 'sweetalert';
-
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './AddBasicInfo.json';
+import swal from 'sweetalert';
+import Loader from '../../components/Loader/index';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
-import Loader from '../../components/Loader/index';
+import FormSections from './AddBasicInfo.json';
 
 function BasicInformation(props) {
- 
-  const [defaultValues, updateDefaultValues] = useState({}); 
+  const { onBasicInfo, match } = props;
+  const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [appicantId, setAppicantId] = useState('');
-  const [isShowLoader,setShowLoader] = useState(false);
- 
+  const [isShowLoader, setShowLoader] = useState(false);
+
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
 
   useEffect(() => {
-    updateDefaultValues({is_fresher:'0'});
+    updateDefaultValues({ is_fresher: '0' });
     getUserRole();
     getDesignation();
     getTechnology();
@@ -32,7 +31,11 @@ function BasicInformation(props) {
 
   useEffect(() => {
     const formSchema = [...FormSections];
-    if ((Number(currentUser) === 2) || (Number(currentUser) === 4) || (Number(currentUser) === 3)) {
+    if (
+      Number(currentUser) === 2 ||
+      Number(currentUser) === 4 ||
+      Number(currentUser) === 3
+    ) {
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
@@ -44,8 +47,8 @@ function BasicInformation(props) {
             item.name === 'applied_for' ||
             item.name === 'education' ||
             item.name === 'email' ||
-            item.name === 'mobile' || 
-            item.name === 'is_fresher'||
+            item.name === 'mobile' ||
+            item.name === 'is_fresher' ||
             item.name === 'alternative_no'
           )
             itemData.disabled = true;
@@ -63,7 +66,7 @@ function BasicInformation(props) {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.applicantsUrl}${id}/`
     );
-    
+
     if (data) {
       setShowLoader(false);
       customFunctions.setLocalStorage('notes', data.data.notes);
@@ -86,10 +89,10 @@ function BasicInformation(props) {
         ...data.data,
         applied_for: ds,
         tech_stack: techStack,
-        is_fresher: (String(data.data.is_fresher) === 'false') ? '0' : '1'
+        is_fresher: String(data.data.is_fresher) === 'false' ? '0' : '1',
       };
 
-      props.onBasicInfo(data.data.id);
+      onBasicInfo(data.data.id);
 
       updateDefaultValues({ ...obj }); // updateDefaultValues(data);
       customFunctions.setLocalStorage('applicantId', data.data.id);
@@ -97,7 +100,6 @@ function BasicInformation(props) {
   };
 
   const submitForm = async (formValues) => {
-
     setShowLoader(true);
 
     let postData = {
@@ -108,7 +110,7 @@ function BasicInformation(props) {
       ...postData,
       tech_stack: formValues.tech_stack ? formValues.tech_stack.value : '',
       applied_for: formValues.applied_for ? formValues.applied_for.value : '',
-      is_fresher: formValues.is_fresher ? Number(formValues.is_fresher) : ''
+      is_fresher: formValues.is_fresher ? Number(formValues.is_fresher) : '',
     };
 
     const callback = appicantId
@@ -121,10 +123,9 @@ function BasicInformation(props) {
 
     if (data) {
       setShowLoader(false);
-      props.onBasicInfo(data.data.id);
+      onBasicInfo(data.data.id);
       customFunctions.setLocalStorage('applicantId', data.data.id);
       swal(data && data.message[0], '', 'success');
-      
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -151,7 +152,7 @@ function BasicInformation(props) {
       dpOptions.push({ label: op.name, value: op.id });
       return op;
     });
-    
+
     options.applied_for = dpOptions;
     const allOptions = options;
     await updateOptions({ ...allOptions });
@@ -181,7 +182,7 @@ function BasicInformation(props) {
   };
 
   useEffect(() => {
-    const ApplicantId = props.match.params.ID;
+    const ApplicantId = match.params.ID;
     if (ApplicantId) {
       setAppicantId(ApplicantId);
     }
@@ -189,7 +190,7 @@ function BasicInformation(props) {
 
   return (
     <>
-    <Loader showLoader={isShowLoader} needFullPage={false} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass="mt-3"
         formHeaderClass=""
@@ -202,10 +203,19 @@ function BasicInformation(props) {
         callbacks={{}}
         defaultFormValues={defaultValues}
         currentUser={currentUser}
-        submitBtnText={(Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? '' : 'Save'}
-        
+        submitBtnText={
+          Number(currentUser) === 2 ||
+          Number(currentUser) === 4 ||
+          Number(currentUser) === 3
+            ? ''
+            : 'Save'
+        }
         btnContainerClass={`form-submit-buttons mb-4 ${
-          (Number(currentUser) === 2) || (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'd-none' : ''
+          Number(currentUser) === 2 ||
+          Number(currentUser) === 4 ||
+          Number(currentUser) === 3
+            ? 'd-none'
+            : ''
         }`}
         showResetBtn={false}
         showBtnClass={true}

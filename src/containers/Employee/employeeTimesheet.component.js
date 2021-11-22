@@ -17,7 +17,7 @@ function EmployeeTimesheet() {
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); 
+  const [filterData, setFilterData] = useState({});
   const [dataShow, setDataShow] = useState(false);
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState({});
@@ -49,25 +49,25 @@ function EmployeeTimesheet() {
     const userName = customFunctions.getLocalStorage('name');
     return (
       <>
-      { (Number(departmentId) !== Number(7) && Number(departmentId) !== Number(8)) && (
-        <a
-          href="/"
-          className="pl-2"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/edit-employee/${row.user_id}`);
-            customFunctions.setLocalStorage('employeeName', row.emp_name);
-            customFunctions.setLocalStorage('userId', row.user_id);
-            customFunctions.setLocalStorage('date', row.date);
-          }}
-        >
-          {!(String(userName) === row.emp_name) && (
-            <Image src="/images/edit-button.svg" />
+        {Number(departmentId) !== Number(7) &&
+          Number(departmentId) !== Number(8) && (
+            <a
+              href="/"
+              className="pl-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/edit-employee/${row.user_id}`);
+                customFunctions.setLocalStorage('employeeName', row.emp_name);
+                customFunctions.setLocalStorage('userId', row.user_id);
+                customFunctions.setLocalStorage('date', row.date);
+              }}
+            >
+              {!(String(userName) === row.emp_name) && (
+                <Image src="/images/edit-button.svg" />
+              )}
+            </a>
           )}
-        </a>
-        )
-      }
       </>
     );
   };
@@ -87,14 +87,10 @@ function EmployeeTimesheet() {
       id: 'emp_id',
       label: dataShow ? '' : 'ID',
 
-      render: ({ emp_id }) => { 
+      render: ({ emp_id }) => {
         return (
           <>
-            <span>
-              {
-                dataShow ? '' : `SDMS ${emp_id}` 
-              }
-            </span>
+            <span>{dataShow ? '' : `SDMS ${emp_id}`}</span>
           </>
         );
       },
@@ -116,7 +112,9 @@ function EmployeeTimesheet() {
       render: ({ row }) => {
         return (
           <>
-            <span>{dataShow ? customFunctions.getNewFormattedDate(row.date) : ''}</span>
+            <span>
+              {dataShow ? customFunctions.getNewFormattedDate(row.date) : ''}
+            </span>
           </>
         );
       },
@@ -176,14 +174,19 @@ function EmployeeTimesheet() {
       render: ({ row }) => {
         return (
           <>
-            <span>{dataShow ? '' : customFunctions.getNewFormattedDate(row.date)}</span>
+            <span>
+              {dataShow ? '' : customFunctions.getNewFormattedDate(row.date)}
+            </span>
           </>
         );
       },
     },
-     {
+    {
       id: 'action',
-      label: (Number(departmentId) !== 7 && Number(departmentId) !== 8) ?'Action':'',
+      label:
+        Number(departmentId) !== 7 && Number(departmentId) !== 8
+          ? 'Action'
+          : '',
       render: handleActionCallback,
     },
   ];
@@ -205,7 +208,6 @@ function EmployeeTimesheet() {
         : '',
       is_detail: filterData.is_detail ? filterData.is_detail[0] : '',
       employee_id: filterData.full_name ? filterData.full_name.value : '',
-      
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -255,7 +257,6 @@ function EmployeeTimesheet() {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-
       setDetails((data && data.data) || []);
     } else {
       swal(message, '', 'error', {
@@ -270,11 +271,10 @@ function EmployeeTimesheet() {
   };
 
   useEffect(() => {
-   
-    if(filterData.is_detail){
+    if (filterData.is_detail) {
       getTimesheetDetails();
       getRowData(1);
-    } else{
+    } else {
       getRowData(1);
     }
   }, [filterData]);
@@ -288,7 +288,7 @@ function EmployeeTimesheet() {
     getUserRole();
     setTitle('Employee Timesheet');
   }, []);
-  
+
   const submitForm = async (formValues) => {
     if (!formValues) return;
     setDataShow(true);
@@ -335,63 +335,62 @@ function EmployeeTimesheet() {
         </div>
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-          <Card>
-            <Card.Body>
-              <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-              </div>  
-              <hr/>
-              <div className="filter-box-main">
-              <StarkFormBuilder
-                containerClass=""
-                formHeaderClass=""
-                formSections={FormSections}
-                formHeading=""
-                onFormSubmit={(formValues) => {
-                  submitForm(formValues);
-                }}
-                options={options}
-                callbacks={{}}
-                currentUser={currentUser}
-                submitBtnText="Apply"
-                showResetBtn={true}
-                showBtnClass={true}
-                resetBtnText="Clear"
-                btnContainerClass="form-submit-buttons pull-right"
-                isStepForm={false}
-                onFormReset={() => {
-                  setDataShow(false);
-                  onResetForm();
-                }}
-              />
-              </div>  
-            </Card.Body>
-          </Card>
-        <Card>
-          <Card.Body>
-           <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">{`${
-                  filterData.full_name
-                    ? `Employee Timesheet for ${filterData.full_name.label}`
-                    : 'Employees Timesheet'
-                }`}</h5>
-            </div>
-            <hr/>
-            {(filterData.is_detail && filterData.is_detail[0] && filterData.full_name && filterData.full_name.value) && (
+      <Card>
+        <Card.Body>
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+          </div>
+          <hr />
+          <div className="filter-box-main">
+            <StarkFormBuilder
+              containerClass=""
+              formHeaderClass=""
+              formSections={FormSections}
+              formHeading=""
+              onFormSubmit={(formValues) => {
+                submitForm(formValues);
+              }}
+              options={options}
+              callbacks={{}}
+              currentUser={currentUser}
+              submitBtnText="Apply"
+              showResetBtn={true}
+              showBtnClass={true}
+              resetBtnText="Clear"
+              btnContainerClass="form-submit-buttons pull-right"
+              isStepForm={false}
+              onFormReset={() => {
+                setDataShow(false);
+                onResetForm();
+              }}
+            />
+          </div>
+        </Card.Body>
+      </Card>
+      <Card>
+        <Card.Body>
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">{`${
+              filterData.full_name
+                ? `Employee Timesheet for ${filterData.full_name.label}`
+                : 'Employees Timesheet'
+            }`}</h5>
+          </div>
+          <hr />
+          {filterData.is_detail &&
+            filterData.is_detail[0] &&
+            filterData.full_name &&
+            filterData.full_name.value && (
               <Row>
                 <Col>
                   <p>
-
                     {' '}
                     No. of working days :{' '}
                     {details ? details.total_working_days : ''}
                   </p>
                 </Col>
                 <Col>
-                  <p>
-                    No. of leaves :{' '}
-                    {details ? details.total_leaves : ''}
-                  </p>
+                  <p>No. of leaves : {details ? details.total_leaves : ''}</p>
                 </Col>
                 <Col>
                   <p>
@@ -402,26 +401,26 @@ function EmployeeTimesheet() {
               </Row>
             )}
 
-              <CustomTable
-                columns={columns}
-                rows={rowData}
-                role={5}
-                showPagination={true}
-                tableClass="table-striped"
-                paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
+          <CustomTable
+            columns={columns}
+            rows={rowData}
+            role={5}
+            showPagination={true}
+            tableClass="table-striped"
+            paginationProps={{
+              totalItems: totalCount,
+              itemsPerPage: limit,
+              activePage: currentPage,
+              onPageChange: (pageNo) => {
                 getRowData(pageNo);
-                },
-                }}
-                emptyRender={() => {
-                return 'No record found.';
-                }}
-              />
-          </Card.Body>
-        </Card>
+              },
+            }}
+            emptyRender={() => {
+              return 'No record found.';
+            }}
+          />
+        </Card.Body>
+      </Card>
     </>
   );
 }

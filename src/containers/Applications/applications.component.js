@@ -40,21 +40,24 @@ function Applications(props) {
     }
   };
 
-  useEffect(()=>{
-    if(id)
-      setIsPD(false); 
-  },[]);
+  useEffect(() => {
+    if (id) setIsPD(false);
+  }, []);
 
   return (
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <Button 
-        className="float-end" 
-        onClick={()=> {
-          Interview ? history.push('/interview-listing') : history.push('/recruitment') // eslint-disable-line
-        }}  
-        >Back</Button>
+        <Button
+          className="float-end"
+          onClick={() => {
+            Interview
+              ? history.push('/interview-listing')
+              : history.push('/recruitment'); // eslint-disable-line
+          }}
+        >
+          Back
+        </Button>
         <h2 className="main-content-title tx-24 mg-b-5">Applications</h2>
         <Breadcrumb items={items} />
         <section className="content-area">
@@ -69,8 +72,8 @@ function Applications(props) {
                   {key === 'currentEmployee' && (
                     <BasicInformation
                       onBasicInfo={(value) => {
-                          setProfessionalInfo(value);
-                          
+                        setProfessionalInfo(value);
+
                         setBasicInfo(value);
                         setIsBI(false);
                       }}
@@ -90,7 +93,9 @@ function Applications(props) {
                         isBasicInfoId={isBasicInfoId}
                         onProfDetInfo={(value) => {
                           setProfessionalInfo(value);
-                          {(id) ? setIsPD(false) : setIsPD(true)} //eslint-disable-line
+                          {
+                            id ? setIsPD(false) : setIsPD(true);
+                          } //eslint-disable-line
                         }}
                       />
                     )}
@@ -104,7 +109,8 @@ function Applications(props) {
               >
                 {key === 'oldPeriod' && (
                   <div className="row ml-2">
-                    {(Number(group) === 4 || Number(group) === 3) && isProfessionalInfoId ? (
+                    {(Number(group) === 4 || Number(group) === 3) &&
+                    isProfessionalInfoId ? (
                       <InterviewerRoundsStatus
                         isProfessionalInfoId={isProfessionalInfoId}
                       />

@@ -16,16 +16,16 @@ const menu = [
         title: 'Current Project',
         path: '/current-project',
         icon: 'project.svg',
-        roleaccess: [1,2,3,4],
+        roleaccess: [1, 2, 3, 4],
       },
       {
         title: 'Archived Project',
         path: '/archived-project',
         icon: 'project.svg',
-        roleaccess: [1,2,3,4],
+        roleaccess: [1, 2, 3, 4],
       },
     ],
-    roleaccess: [1,2,3,4],
+    roleaccess: [1, 2, 3, 4],
   },
   // {
   //   title: 'Project',
@@ -39,21 +39,21 @@ const menu = [
     path: '/team-scheduler',
     icon: 'leaves.svg',
     submenu: [],
-    roleaccess: [1,2,3,4],
+    roleaccess: [1, 2, 3, 4],
   },
-   {
+  {
     title: 'Quotes',
     path: '/quotes',
     icon: 'quote.svg',
     submenu: [],
-    roleaccess: [1,3,5,6],
+    roleaccess: [1, 3, 5, 6],
   },
   {
     title: 'Employee Timesheet',
     path: '/emp-timesheet',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1,5,4, 6],
+    roleaccess: [1, 5, 4, 6],
   },
   {
     title: 'Employees',
@@ -62,7 +62,7 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 5, 6],
   },
-  
+
   // {
   //   title: 'Employees',
   //   path: '/employee',
@@ -75,22 +75,22 @@ const menu = [
     path: '/interview-listing',
     icon: 'recruitement.svg',
     submenu: [],
-    roleaccess: [1,2,3,4,5,6],
+    roleaccess: [1, 2, 3, 4, 5, 6],
   },
-  
+
   {
     title: 'Recruitment',
     path: '/recruitment',
     icon: 'recruitement.svg',
     roleaccess: [5],
   },
-  
+
   {
     title: 'Candidates',
     path: '/candidates',
     icon: 'candidate.svg',
     submenu: [],
-    roleaccess: [5,1,6],
+    roleaccess: [5, 1, 6],
   },
   {
     title: 'Leaves',
@@ -124,16 +124,16 @@ const menu = [
         title: 'HR Report',
         path: '/hr-reports',
         icon: 'report.svg',
-        roleaccess: [1,6],
+        roleaccess: [1, 6],
       },
       {
         title: 'Recruitment',
         path: '/recruitments',
         icon: 'recruitement.svg',
-        roleaccess: [1,6],
+        roleaccess: [1, 6],
       },
     ],
-    roleaccess: [1,6],
+    roleaccess: [1, 6],
   },
   {
     title: 'Email Templates',
@@ -142,7 +142,7 @@ const menu = [
     submenu: [],
     roleaccess: [1],
   },
-   {
+  {
     title: 'Leaves',
     path: '#',
     redirect: false,
@@ -151,55 +151,55 @@ const menu = [
       {
         title: 'My Leaves',
         path: '/my-leaves',
-        roleaccess: [2,3,6,5],
+        roleaccess: [2, 3, 6, 5],
       },
       {
         title: 'Team Leaves',
         path: '/team-leaves',
-        roleaccess: [2,3,6],
-      }, 
+        roleaccess: [2, 3, 6],
+      },
       {
         title: 'Employee Leaves',
         path: '/employee-leaves',
-        roleaccess: [1,6,5],
+        roleaccess: [1, 6, 5],
       },
     ],
-    roleaccess: [1,2,3,6,5],
+    roleaccess: [1, 2, 3, 6, 5],
   },
   {
     title: 'Policy',
     path: '/policy',
     icon: 'policy.svg',
     submenu: [],
-    roleaccess: [1,2,3,4,5,6],
+    roleaccess: [1, 2, 3, 4, 5, 6],
   },
   {
     title: 'Broadcast',
     path: '/broadcast',
     icon: 'broadcast.svg',
     submenu: [],
-    roleaccess: [1,5,6],
+    roleaccess: [1, 5, 6],
   },
   {
     title: 'Event',
     path: '/event',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [5,6,1,2,3,4],
+    roleaccess: [5, 6, 1, 2, 3, 4],
   },
   {
     title: 'Holidays',
     path: '/holidays',
     icon: 'holiday.svg',
     submenu: [],
-    roleaccess: [1,2,3,4,5,6],
+    roleaccess: [1, 2, 3, 4, 5, 6],
   },
   {
     title: 'Greetings',
     path: '/greetings',
     icon: 'greetings.svg',
     submenu: [],
-    roleaccess: [1,2,3,5,6],
+    roleaccess: [1, 2, 3, 5, 6],
   },
   {
     title: 'Reports',
@@ -218,24 +218,25 @@ const menu = [
         title: 'My Report',
         path: '/my-report',
         icon: 'report.svg',
-        roleaccess: [2, 3, 6,5],
+        roleaccess: [2, 3, 6, 5],
       },
       {
         title: 'Team Report',
         path: '/team-report',
         icon: 'report.svg',
-        roleaccess: [2,3,6],
-      },{
+        roleaccess: [2, 3, 6],
+      },
+      {
         title: 'Employee Report',
         path: '/employee-report',
         icon: 'report.svg',
-        roleaccess: [5,6],
+        roleaccess: [5, 6],
       },
     ],
     roleaccess: [2, 3, 6, 5],
   },
-   
-   {
+
+  {
     title: 'Reports',
     path: '/reports',
     icon: 'report.svg',
@@ -283,7 +284,7 @@ const menu = [
         path: '/project-fetch',
         icon: 'report.svg',
         roleaccess: [1],
-      }
+      },
     ],
     roleaccess: [1],
   },

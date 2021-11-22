@@ -20,7 +20,7 @@ function Policy() {
         <Breadcrumb items={items} />
       </div>
       <section className="content-area">
-        <PolicyList/>
+        <PolicyList />
       </section>
     </>
   );

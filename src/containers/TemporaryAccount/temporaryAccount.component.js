@@ -43,7 +43,7 @@ function TemporaryAccount(props) {
       setEmail(data.data.email);
       await setToggle(true);
     } else {
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
 
@@ -54,25 +54,25 @@ function TemporaryAccount(props) {
       setKey('educational');
     } else if (emp === 'employmentHistory') {
       setKey('employmentHistory');
-    }else if (emp === 'previousEmployment') {
+    } else if (emp === 'previousEmployment') {
       setKey('previousEmployment');
     }
   };
-  
+
   useEffect(() => {
     setId(personalInfo.id);
   }, [personalInfo]);
 
   useEffect(() => {
     getData();
-  }, []);  
+  }, []);
 
-  const getCompletionData =(value) =>{
+  const getCompletionData = (value) => {
     setCompletion(value);
   };
 
   useEffect(() => {
-    if(trigger) {
+    if (trigger) {
       getCompletionData();
     }
   }, [trigger]);
@@ -88,14 +88,14 @@ function TemporaryAccount(props) {
                 <Button
                   variant="primary"
                   onClick={() => {
-                    if(candidateId) {
+                    if (candidateId) {
                       history.push('/candidates');
                     } else {
                       history.push('/login');
                     }
                   }}
                 >
-                  {candidateId ? 'Back':'Logout'}
+                  {candidateId ? 'Back' : 'Logout'}
                 </Button>
               </div>
               <div className="profile-bg">
@@ -109,37 +109,55 @@ function TemporaryAccount(props) {
               <div className="table-projects">
                 <div className="mt-4 card">
                   <div className="card-body">
-                  <div className="row">
-                    <div className="col-md-12 d-flex">
-                    <div className="col-md-4">
-                      <h6>Email - {personalInfo.email}</h6>
+                    <div className="row">
+                      <div className="col-md-12 d-flex">
+                        <div className="col-md-4">
+                          <h6>Email - {personalInfo.email}</h6>
+                        </div>
+                        <div className="col-md-4">
+                          <h6>Contact No - {personalInfo.mobile}</h6>
+                        </div>
+                        <div className="col-md-4">
+                          <h6>
+                            Pf Included -{' '}
+                            {personalInfo.pf_included === true ? 'Yes' : 'No'}
+                          </h6>
+                        </div>
+                      </div>
                     </div>
-                    <div className="col-md-4">
-                      <h6>Contact No - {personalInfo.mobile}</h6>
+                    <br />
+                    <div className="row d-flex">
+                      <div className="col-md-12 d-flex">
+                        <div className=" col-md-4">
+                          <h6>Offered CTC - {personalInfo.offered_ctc}</h6>
+                        </div>
+                        <div className="col-md-4">
+                          <h6>
+                            Joining Date -{' '}
+                            {personalInfo.joining_date
+                              ? customFunctions.getDMYDate(
+                                  personalInfo.joining_date
+                                )
+                              : ''}
+                          </h6>
+                        </div>
+                        <h6>Profile Completion - &nbsp; &nbsp;</h6>
+                        <ProgressBar
+                          bsPrefix="progress pbar"
+                          variant="success"
+                          now={
+                            personalInfo.completion
+                              ? personalInfo.completion
+                              : completion
+                          }
+                          label={`${
+                            personalInfo.completion
+                              ? personalInfo.completion
+                              : completion
+                          }% completed`}
+                        />
+                      </div>
                     </div>
-                    <div className="col-md-4">
-                      <h6>Pf Included - {(personalInfo.pf_included === true) ? 'Yes':'No'}</h6>
-                    </div>
-                  </div>
-                  </div>
-                  <br />
-                  <div className="row d-flex">
-                    <div className="col-md-12 d-flex">
-                     <div className=" col-md-4">
-                      <h6>Offered CTC - {personalInfo.offered_ctc}</h6>
-                    </div>
-                    <div className="col-md-4">
-                      <h6>Joining Date - { personalInfo.joining_date ?customFunctions.getDMYDate(personalInfo.joining_date):''}</h6>
-                    </div>
-                      <h6>Profile Completion - &nbsp; &nbsp;</h6> 
-                      <ProgressBar
-                        bsPrefix="progress pbar"
-                        variant="success"
-                        now={personalInfo.completion ? personalInfo.completion : completion}
-                        label={`${personalInfo.completion ? personalInfo.completion : completion}% completed`}
-                      />
-                    </div>
-                  </div>
                   </div>
                 </div>
               </div>
@@ -149,55 +167,46 @@ function TemporaryAccount(props) {
                 onSelect={(e) => handleSelect(e)}
               >
                 <Tab eventKey="Personal" title="Personal Documents">
-                 {((key === 'Personal') && toggle) && (
-                  <div className="row ml-2">
-                    <Personal
-                      token={tokenProps}
-                      password={passwordProps}
-                      name={name}
-                      email={email}
-                      applicantId={id}
-                      getParentsData={(value) => {
-                        if(value){
-                          setTrigger(true);
-                          getCompletionData(value);
-                        }
-                      }}
-                    />
-                  </div>
+                  {key === 'Personal' && toggle && (
+                    <div className="row ml-2">
+                      <Personal
+                        token={tokenProps}
+                        password={passwordProps}
+                        name={name}
+                        email={email}
+                        applicantId={id}
+                        getParentsData={(value) => {
+                          if (value) {
+                            setTrigger(true);
+                            getCompletionData(value);
+                          }
+                        }}
+                      />
+                    </div>
                   )}
                 </Tab>
-                <Tab
-                  eventKey="educational"
-                  title="Educational Documents"
-                >
-               
-                  {
-                    (String(key) === 'educational' ) && (
-                      <div className="row ml-2">
-                        <EducationalDetails
-                          token={tokenProps}
-                          name={name}
-                          email={email}
-                          applicantId={id}
-                          password={passwordProps}
-                          getParentsData={(value) => {
-                            if(value){
-                              setTrigger(true);
-                              getCompletionData(value);
-                            }
-                          }}
-                        />
-                      </div>
-                    )}
+                <Tab eventKey="educational" title="Educational Documents">
+                  {String(key) === 'educational' && (
+                    <div className="row ml-2">
+                      <EducationalDetails
+                        token={tokenProps}
+                        name={name}
+                        email={email}
+                        applicantId={id}
+                        password={passwordProps}
+                        getParentsData={(value) => {
+                          if (value) {
+                            setTrigger(true);
+                            getCompletionData(value);
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
                 </Tab>
-                {!personalInfo.is_fresher &&(
-                <Tab
-                  eventKey="employmentHistory"
-                  title="Employment History"
-                >
-
-                  {( key === 'employmentHistory' ) && (
+                {!personalInfo.is_fresher && (
+                  <Tab eventKey="employmentHistory" title="Employment History">
+                    {key === 'employmentHistory' && (
                       <div className="row ml-2">
                         <EmployementHistory
                           token={tokenProps}
@@ -207,22 +216,22 @@ function TemporaryAccount(props) {
                           applicantId={id}
                           password={passwordProps}
                           getParentsData={(value) => {
-                             if(value){
+                            if (value) {
                               setTrigger(true);
                               getCompletionData(value);
-                            };
+                            }
                           }}
                         />
                       </div>
                     )}
-                </Tab>
+                  </Tab>
                 )}
-                {!personalInfo.is_fresher &&(
-                <Tab
-                  eventKey="previousEmployment"
-                  title="Previous Employment"
-                >
-                  {(key === 'previousEmployment') && (
+                {!personalInfo.is_fresher && (
+                  <Tab
+                    eventKey="previousEmployment"
+                    title="Previous Employment"
+                  >
+                    {key === 'previousEmployment' && (
                       <div className="row ml-2">
                         <PreviousEmployement
                           name={name}
@@ -231,7 +240,7 @@ function TemporaryAccount(props) {
                           token={tokenProps}
                           password={passwordProps}
                           getParentsData={(value) => {
-                             if(value){
+                            if (value) {
                               setTrigger(true);
                               getCompletionData(value);
                             }
@@ -239,9 +248,8 @@ function TemporaryAccount(props) {
                         />
                       </div>
                     )}
-                </Tab>
+                  </Tab>
                 )}
-
               </Tabs>
             </div>
           </div>

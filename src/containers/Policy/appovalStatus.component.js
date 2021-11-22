@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './formschema.json';
+import swal from 'sweetalert';
 import { ModalInput } from '../../components/FormInputs';
-import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import FormSections from './formschema.json';
 
 function AppovalStatus(props) {
-
+  const { show, approvalId, onStatusUpdate, handleModalCLose } = props;
   const [currentUser, updateCurrentUser] = useState(0);
-  const [show, setShow] = useState(false);
+  const [shows, setShow] = useState(false);
   const [statusId, setStatusId] = useState(null);
 
   const getUserRole = async () => {
@@ -60,7 +60,7 @@ function AppovalStatus(props) {
             allowOutsideClick: false,
           }).then(() => {
             onCancelButton();
-            props.onStatusUpdate();
+            onStatusUpdate();
             swal.close();
           });
         }
@@ -69,12 +69,12 @@ function AppovalStatus(props) {
   };
 
   useEffect(() => {
-    setShow(props.show);
-    setStatusId(props.approvalId);
+    setShow(show);
+    setStatusId(approvalId);
   }, []);
 
   const onCancelButton = () => {
-    props.handleModalCLose(false);
+    handleModalCLose(false);
   };
 
   return (
@@ -82,7 +82,7 @@ function AppovalStatus(props) {
       <ModalInput
         size="md"
         centered
-        show={show}
+        show={shows}
         onHide={onCancelButton}
         className="status-reason-popup"
         id="contained-modal-title-center"

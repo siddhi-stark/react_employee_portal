@@ -15,11 +15,13 @@
         "placeholder": "Please select team",
         "inputClass": "",
         "containerClass": "",
-        "validations": [{
+        "validations": [
+          {
             "type": "required",
             "applyWhen": [],
             "applyWhenRelation": "OR"
-          }],
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",
@@ -46,8 +48,8 @@
         "placeholder": "Please select month",
         "inputClass": "",
         "containerClass": "",
-        "dateFormat":"MM/yyyy",
-        "showMonthYearPicker":"yes",
+        "dateFormat": "MM/yyyy",
+        "showMonthYearPicker": "yes",
         "validations": [],
         "displayWhen": {},
         "haveValidations": "false",

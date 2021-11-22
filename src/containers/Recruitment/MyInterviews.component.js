@@ -14,7 +14,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 
 function MyInterviews() {
-	const group = customFunctions.getLocalStorage('group');
+  const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
   const [rowData, setRowData] = useState([]);
@@ -40,7 +40,17 @@ function MyInterviews() {
     return sectionData;
   });
 
-  const handleActionCallback = ({ id, status_name, name, applied_for_name, notes, offered_ctc, joining_date, pf_included, }) => { //eslint-disable-line 
+  const handleActionCallback = ({
+    id,
+    status_name,
+    name,
+    applied_for_name,
+    notes,
+    offered_ctc,
+    joining_date,
+    pf_included,
+  }) => {
+    //eslint-disable-line
 
     return (
       <>
@@ -54,9 +64,8 @@ function MyInterviews() {
               e.stopPropagation();
               history.push(`/applications/${id}`, {
                 statusObj: status_name,
-                isInterview: true
+                isInterview: true,
               });
-
             }}
           >
             <Image src="/images/edit-button.svg" />
@@ -79,20 +88,26 @@ function MyInterviews() {
     );
   };
 
-  const handleResumeCallback = ({resume,name}) => {
+  const handleResumeCallback = ({ resume, name }) => {
     return (
       <>
         <span> {name} </span>
         {resume ? (
-
-          <a href={resume} className="ms-2 pl-2" title="View Resume" target="_Blank">
+          <a
+            href={resume}
+            className="ms-2 pl-2"
+            title="View Resume"
+            target="_Blank"
+          >
             <Image src="/images/download-file.svg" />
           </a>
-          ) : ''}
+        ) : (
+          ''
+        )}
       </>
     );
   };
- 
+
   const columns = [
     {
       id: 'offered_ctc',
@@ -139,32 +154,34 @@ function MyInterviews() {
     {
       id: 'round_one',
       label: 'Round 1',
-      render :(round_one) =>{
-      const categoryData = round_one.round_one; //eslint-disable-line
-      return(
-      <>
-       <span>
-       {`${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
-       } 
-       </span> 
-      </>
-      );
-      }
+      render: (round_one) => {
+        const categoryData = round_one.round_one; //eslint-disable-line
+        return (
+          <>
+            <span>
+              {
+                `${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
+              }
+            </span>
+          </>
+        );
+      },
     },
     {
       id: 'round_two',
       label: 'Round 2',
-      render :(round_two) =>{
-      const categoryData = round_two.round_two; //eslint-disable-line
-      return(
-      <>
-       <span>
-       {`${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
-       } 
-       </span> 
-      </>
-      );
-      }
+      render: (round_two) => {
+        const categoryData = round_two.round_two; //eslint-disable-line
+        return (
+          <>
+            <span>
+              {
+                `${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
+              }
+            </span>
+          </>
+        );
+      },
     },
     {
       id: 'action',
@@ -172,7 +189,7 @@ function MyInterviews() {
       render: handleActionCallback,
     },
   ];
- 
+
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -184,14 +201,13 @@ function MyInterviews() {
         : {};
 
     const params = {
-      
-      my_interview:true,
+      my_interview: true,
       page,
       limit,
       sort_direction: 'descending',
       sort_by: 'round_date',
       my_interview_round: 'true',
-      ...filterList
+      ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -203,11 +219,11 @@ function MyInterviews() {
       setCurrentPage(Number(data.paginator.current_page));
 
       const newInterwArr = await data.data.map((dt) => {
-       if (dt.applicant_round_list && dt.applicant_round_list.length > 0) {
-       dt.round_two = dt.applicant_round_list[0]; //eslint-disable-line
-       dt.round_one = dt.applicant_round_list[1]; //eslint-disable-line
-       }
-       return dt;
+        if (dt.applicant_round_list && dt.applicant_round_list.length > 0) {
+          dt.round_two = dt.applicant_round_list[0]; //eslint-disable-line
+          dt.round_one = dt.applicant_round_list[1]; //eslint-disable-line
+        }
+        return dt;
       });
 
       const newData = [newInterwArr];
@@ -217,10 +233,10 @@ function MyInterviews() {
         return newItem;
       });
 
-      setRowData((newInterwArr) || []);
+      setRowData(newInterwArr || []);
     } else {
       setShowLoader(false);
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
 
@@ -232,7 +248,7 @@ function MyInterviews() {
   const submitForm = async (formValues) => {
     setFilterData(formValues);
   };
-    
+
   return (
     <>
       <Helmet title={title} />
@@ -242,40 +258,42 @@ function MyInterviews() {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
-         <Card>
-            <Card.Body>
-              <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-              </div>  
-              <hr/>
-            <div className="filter-box-main">
-              <StarkFormBuilder
-              containerClass=''
-              formHeaderClass=''
-              formSections={SearchFormSections}
-              formHeading=""
-              onFormSubmit={(formValues) => {submitForm(formValues);}}
-              callbacks={{}}
-              submitBtnText="Apply"
-              showResetBtn={true}
-              resetBtnText="Clear"
-              showBtnClass={false}
-              btnContainerClass="col-md-4 filter-apply-btns"
-              formClass="row"
-              isStepForm={false}
-              onFormReset={() => {
-                setFilterData();
-              }}
-            />
-            </div>
-            </Card.Body>
-          </Card>
         <Card>
           <Card.Body>
-           <div className="d-flex align-items-center justify-content-between">
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+            </div>
+            <hr />
+            <div className="filter-box-main">
+              <StarkFormBuilder
+                containerClass=""
+                formHeaderClass=""
+                formSections={SearchFormSections}
+                formHeading=""
+                onFormSubmit={(formValues) => {
+                  submitForm(formValues);
+                }}
+                callbacks={{}}
+                submitBtnText="Apply"
+                showResetBtn={true}
+                resetBtnText="Clear"
+                showBtnClass={false}
+                btnContainerClass="col-md-4 filter-apply-btns"
+                formClass="row"
+                isStepForm={false}
+                onFormReset={() => {
+                  setFilterData();
+                }}
+              />
+            </div>
+          </Card.Body>
+        </Card>
+        <Card>
+          <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 "> My Interviews</h5>
             </div>
-            <hr/>
+            <hr />
             <CustomTable
               tableContainerClass="mt-2"
               columns={columns}

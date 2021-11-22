@@ -14,18 +14,23 @@ function TeamMemberProject(props) {
   const teamid = props;
   const teamMemberId = teamid.match.params.teamMemberId;
   const getTeamId = customFunctions.getLocalStorage('departmentName');
-  const schedular = teamid.location.state ? teamid.location.state.schedular
+  const schedular = teamid.location.state
+    ? teamid.location.state.schedular
     : '';
-  const teamId = teamid.location.state ? teamid.location.state.teamMemberId
-    : ''; 
-  const teamName = teamid.location.state ? teamid.location.state.teamMemberName
+  const teamId = teamid.location.state
+    ? teamid.location.state.teamMemberId
     : '';
-  const archived = teamid.location.state ? teamid.location.state.archived
+  const teamName = teamid.location.state
+    ? teamid.location.state.teamMemberName
     : '';
+  const archived = teamid.location.state ? teamid.location.state.archived : '';
   const teamMemberName = customFunctions.getLocalStorage('teamMemberName');
   const items = [
     { to: '/', label: 'Home' },
-    { to:  archived ? '/archived-project' : '/current-project', label:  archived ? 'Archived Project' : 'Current Project' },
+    {
+      to: archived ? '/archived-project' : '/current-project',
+      label: archived ? 'Archived Project' : 'Current Project',
+    },
   ];
 
   const history = useHistory();
@@ -36,14 +41,14 @@ function TeamMemberProject(props) {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isShowLoader,setShowLoader] = useState(false);
-  
+  const [isShowLoader, setShowLoader] = useState(false);
+
   // Declare columns
   const columns = [
     {
       id: 'id',
       label: 'Id',
-      isDisplay: false
+      isDisplay: false,
     },
     {
       id: 'project_name',
@@ -57,10 +62,8 @@ function TeamMemberProject(props) {
       id: 'allocated',
       label: 'Estimated Hours',
       render: ({ allocated }) => {
-        return (
-          <> {allocated.toFixed(2)} </>
-          );
-      }
+        return <> {allocated.toFixed(2)} </>;
+      },
     },
     {
       id: 'remaining',
@@ -68,11 +71,9 @@ function TeamMemberProject(props) {
       render: ({ remaining }) => {
         return (
           <>
-           { Math.sign(remaining) === 1 ||
-            Math.sign(remaining) === 0 ? (
+            {Math.sign(remaining) === 1 || Math.sign(remaining) === 0 ? (
               <span>
-                {remaining}{' '}
-                {Math.sign(remaining) === 0 ? 'Hr' : 'Hrs'}
+                {remaining} {Math.sign(remaining) === 0 ? 'Hr' : 'Hrs'}
               </span>
             ) : (
               <span className="text-danger">{remaining} Hrs</span>
@@ -94,8 +95,8 @@ function TeamMemberProject(props) {
             <span>{completion} %</span>
           </>
         );
-      }, 
-    }, 
+      },
+    },
     {
       id: 'rt_support',
       label: 'RT Support',
@@ -109,7 +110,7 @@ function TeamMemberProject(props) {
             />
           </>
         );
-      }, 
+      },
     },
   ];
 
@@ -127,12 +128,17 @@ function TeamMemberProject(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      setTotalCount(data && data.data && data.data.project_data && data.data.project_data.length);
+      setTotalCount(
+        data &&
+          data.data &&
+          data.data.project_data &&
+          data.data.project_data.length
+      );
       setLimit(10);
       const startIndex = currentPage * 10 - 10;
       const endIndex = startIndex + 10;
       const projectData = data && data.data && data.data.project_data;
-      setRowData((projectData.slice(startIndex, endIndex)) || []);
+      setRowData(projectData.slice(startIndex, endIndex) || []);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -156,33 +162,43 @@ function TeamMemberProject(props) {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <Card body className="mt-4">
-       <span>{teamName ? `${teamName} Projects and Work` : `${teamMemberName} Projects and Work`}</span>
-         <Button className="float-end mb-3" onClick= {() =>{ if(schedular){
-            history.push('/team-scheduler'); 
-         } else if(archived) {
-           history.push(`/team/${getTeamId}`,{archived:true});
-         } else {
-           history.push(`/team/${getTeamId}`) ;
-          }
-         }}>Back</Button>
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              tableClass="table-striped"
-              showPagination={true}
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                  setCurrentPage(Number(pageNo));
-                },
-              }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
-            />
+        <span>
+          {teamName
+            ? `${teamName} Projects and Work`
+            : `${teamMemberName} Projects and Work`}
+        </span>
+        <Button
+          className="float-end mb-3"
+          onClick={() => {
+            if (schedular) {
+              history.push('/team-scheduler');
+            } else if (archived) {
+              history.push(`/team/${getTeamId}`, { archived: true });
+            } else {
+              history.push(`/team/${getTeamId}`);
+            }
+          }}
+        >
+          Back
+        </Button>
+        <CustomTable
+          columns={columns}
+          rows={rowData}
+          tableClass="table-striped"
+          showPagination={true}
+          paginationProps={{
+            totalItems: totalCount,
+            itemsPerPage: limit,
+            activePage: currentPage,
+            onPageChange: (pageNo) => {
+              getRowData(pageNo);
+              setCurrentPage(Number(pageNo));
+            },
+          }}
+          emptyRender={() => {
+            return 'No record found.';
+          }}
+        />
       </Card>
     </>
   );

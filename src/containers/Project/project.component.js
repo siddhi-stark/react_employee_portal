@@ -36,16 +36,16 @@ function Project() {
   // Variable declarations Filter State
   const [currentUser, updateCurrentUser] = useState(0);
 
-  const handleActionCallback = ({id}) => {
+  const handleActionCallback = ({ id }) => {
     return (
-      <span className ="d-flex">
+      <span className="d-flex">
         <a
           href="/"
           className="pl-2"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-             history.push(`/view-project/${id}`,{isView:true});
+            history.push(`/view-project/${id}`, { isView: true });
           }}
         >
           <Image alt="view" src="/images/eye.svg" />
@@ -56,14 +56,14 @@ function Project() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/edit-project/${id}`,{isView:false});
+            history.push(`/edit-project/${id}`, { isView: false });
           }}
         >
           <Image src="/images/edit-button.svg" />
         </a>
       </span>
     );
-  };    
+  };
 
   // Declare columns
   const columns = [
@@ -71,7 +71,7 @@ function Project() {
       id: 'id',
       label: 'Id',
       roleAccess: [4],
-      isDisplay: false
+      isDisplay: false,
     },
     {
       id: 'index',
@@ -94,7 +94,7 @@ function Project() {
                 history.push(`/team-project/${id}`);
               }}
             >
-          <strong> {name} </strong>
+              <strong> {name} </strong>
             </a>
           </>
         );
@@ -113,8 +113,14 @@ function Project() {
       },
     },
     {
-      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hourly_cost',
-      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hourly Rate',
+      id:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'hourly_cost',
+      label:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'Hourly Rate',
       roleAccess: [1],
     },
     {
@@ -123,54 +129,72 @@ function Project() {
       roleAccess: [4],
       render: ({ allocated }) => {
         return (
-        <>
-        <span> {allocated.toFixed(2)} </span>
-        </>
+          <>
+            <span> {allocated.toFixed(2)} </span>
+          </>
         );
-      }
+      },
     },
     {
-      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'hours_allocated' ,
-      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && 'Hours Allocated',
+      id:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'hours_allocated',
+      label:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'Hours Allocated',
       roleAccess: [1],
-      render: ({ hours_allocated }) => { 
+      render: ({ hours_allocated }) => {
         return (
           <>
             <span>
-              {
-                ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 ) && (hours_allocated.toFixed(2)) 
-              }
+              {((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+                Number(currentUser) === 1) &&
+                hours_allocated.toFixed(2)}
             </span>
           </>
         );
       },
     },
     {
-      id: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1 )&& 'cost_allocated',
-      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Project Cost',
+      id:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'cost_allocated',
+      label:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'Project Cost',
       roleAccess: [1],
     },
     {
       id: 'Action',
-      label: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && 'Action',
-      render: ((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && handleActionCallback
+      label:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        'Action',
+      render:
+        ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
+          Number(currentUser) === 1) &&
+        handleActionCallback,
     },
   ];
 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
-    const endPoint = `${Api.getProjects}`; 
+    const endPoint = `${Api.getProjects}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
-      sort_by:'name',
-      sort_direction:'ascending',
+      sort_by: 'name',
+      sort_direction: 'ascending',
       page,
       limit,
-      status:'active',
+      status: 'active',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -180,7 +204,7 @@ function Project() {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      
+
       const newData = [...data.data];
       newData.map((item, i) => {
         const newItem = item;
@@ -203,8 +227,8 @@ function Project() {
     setTitle('Current Project');
   }, [filterData]);
 
-  // Get user role Filter 
-  const getUserRole = async() => {
+  // Get user role Filter
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
@@ -215,43 +239,54 @@ function Project() {
 
   // Submit Form
   const submitForm = async (formValue) => {
-    let payload ={};
-    const formValues = (typeof formValue === 'object' && Object.keys(formValue).length) ? formValue : allData;
-      payload = {
-        project_id: formValues.project_id && formValues.project_id.value && Number(formValues.project_id.value),
-      };
+    let payload = {};
+    const formValues =
+      typeof formValue === 'object' && Object.keys(formValue).length
+        ? formValue
+        : allData;
+    payload = {
+      project_id:
+        formValues.project_id &&
+        formValues.project_id.value &&
+        Number(formValues.project_id.value),
+    };
     // if(String(tabStatus) === 'active' || String(tabStatus) === 'inactive'){
     //   payload.status = tabStatus;
     // } else if(String(tabStatus) === 'late' || String(tabStatus) === 'current'){
     //   payload.sub_status = String(tabStatus) === 'late' ? 'late' :'current';
     // }
 
-    if(formValues) {
+    if (formValues) {
       setAllData(payload);
     }
     setFilterData(payload);
   };
-  
+
   // useEffect(() => {
   //   submitForm();
   // }, [tabStatus]);
 
   const getProjectList = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name&status=active&type=all`);
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.projectListUrl}?sort_by=name&status=active&type=all`
+    );
 
-    if(!data) {
-     swal(message, '', 'error', {
+    if (!data) {
+      swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
-      return { label: op.name, value: op.id };
-    });
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
 
     options.project_id = dpOptions;
     const allOptions = options;
-    await updateOptions({...allOptions});
+    await updateOptions({ ...allOptions });
   };
 
   useEffect(() => {
@@ -269,42 +304,44 @@ function Project() {
 
       <section className="content-area">
         <div className="mt-5">
-            <Card>
-                <Card.Body>
-                  <h5 className="card-title mb-0 mt-2 ">Filter</h5>
-                  <hr/>
-                  <div className="filter-box-main">
-                  <StarkFormBuilder
-                    containerClass=''
-                    formHeaderClass=''
-                    formSections={FormSections}
-                    formHeading="Project Filter"
-                    onFormSubmit={(formValues) => {submitForm(formValues);}}
-                    callbacks={{}}
-                    options={options}
-                    currentUser={currentUser}
-                    submitBtnText="Apply"
-                    showResetBtn={true}
-                    showBtnClass={false}
-                    btnContainerClass="col-md-4 filter-apply-btns"
-                    formClass="row"
-                    resetBtnText="Clear"
-                    isStepForm={false}
-                    onFormReset={() => {
-                      setFilterData({});
-                      setAllData({});
-                    }}
-                  />
-                  </div>
-                </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Project</h5>
-                </div>
-                <hr/>
-         {/*   <div className="recruitment-links-wrapper">
+          <Card>
+            <Card.Body>
+              <h5 className="card-title mb-0 mt-2 ">Filter</h5>
+              <hr />
+              <div className="filter-box-main">
+                <StarkFormBuilder
+                  containerClass=""
+                  formHeaderClass=""
+                  formSections={FormSections}
+                  formHeading="Project Filter"
+                  onFormSubmit={(formValues) => {
+                    submitForm(formValues);
+                  }}
+                  callbacks={{}}
+                  options={options}
+                  currentUser={currentUser}
+                  submitBtnText="Apply"
+                  showResetBtn={true}
+                  showBtnClass={false}
+                  btnContainerClass="col-md-4 filter-apply-btns"
+                  formClass="row"
+                  resetBtnText="Clear"
+                  isStepForm={false}
+                  onFormReset={() => {
+                    setFilterData({});
+                    setAllData({});
+                  }}
+                />
+              </div>
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Project</h5>
+              </div>
+              <hr />
+              {/*   <div className="recruitment-links-wrapper">
             {((Number(currentUser) === 4 && Number(departmentId) === 8) || Number(currentUser) === 1) && (
               <>
               <a

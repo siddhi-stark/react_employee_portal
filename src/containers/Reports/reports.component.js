@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Row, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Row } from 'react-bootstrap';
+import { useHistory, withRouter } from 'react-router-dom';
 import { Helmet } from '../../components/FormInputs';
-import Table from '../../components/ReactTable/simpletable.component';
-import AuthApi from '../../helper/authApi';
-import Api from '../../helper/api';
-import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
+import Table from '../../components/ReactTable/simpletable.component';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function Reports(props) {
+  const { match } = props;
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
   const [reportDate, setReportDate] = useState('');
@@ -17,11 +18,14 @@ function Reports(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
   const report = props;
-  const employeeReport = report.location.state ? report.location.state.employeeReport
-    : ''; 
-  const teamReport = report.location.state ? report.location.state.teamReport
-    : ''; 
-  const reporterName = report.location.state ? report.location.state.reporterName
+  const employeeReport = report.location.state
+    ? report.location.state.employeeReport
+    : '';
+  const teamReport = report.location.state
+    ? report.location.state.teamReport
+    : '';
+  const reporterName = report.location.state
+    ? report.location.state.reporterName
     : '';
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -52,7 +56,7 @@ function Reports(props) {
     },
     {
       id: showButton ? '' : 'at',
-      label: showButton ? '' : 'AT' ,
+      label: showButton ? '' : 'AT',
       roleAccess: [1, 2, 3, 4, 5],
     },
     {
@@ -65,10 +69,8 @@ function Reports(props) {
   const getTableData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pagination.current_page || pageNo;
-    const dt = customFunctions.getDate(
-      new Date(Number(props.match.params.date))
-    );
-    const userId = props.match.params.id;
+    const dt = customFunctions.getDate(new Date(Number(match.params.date)));
+    const userId = match.params.id;
     setReportDate(customFunctions.getFormattedDate(dt));
     const endPoint = `${Api.dailyReportUrl}`;
     const params = {
@@ -103,7 +105,7 @@ function Reports(props) {
           project: proj.project_name,
           eta: proj.estimation,
           status: proj.task_status,
-          at: proj.actual_estimation
+          at: proj.actual_estimation,
         };
         row.push(setRowData);
         return proj;
@@ -124,7 +126,10 @@ function Reports(props) {
         <Card>
           <Card.Body>
             <Row>
-              <Card.Title>{(employeeReport || teamReport) ? `Name: ${reporterName}`:''} &nbsp; &nbsp; Date: {reportDate} </Card.Title>
+              <Card.Title>
+                {employeeReport || teamReport ? `Name: ${reporterName}` : ''}{' '}
+                &nbsp; &nbsp; Date: {reportDate}{' '}
+              </Card.Title>
               <div className="light-bg buttons align-items-center mt-3">
                 <Button
                   type="button"
@@ -149,10 +154,12 @@ function Reports(props) {
                 <Button
                   type="button"
                   onClick={() => {
-                    if(teamReport){
-                      history.push(teamReport ? '/team-report':'/my-report');
+                    if (teamReport) {
+                      history.push(teamReport ? '/team-report' : '/my-report');
                     } else {
-                      history.push(employeeReport ? '/employee-report':'/my-report');
+                      history.push(
+                        employeeReport ? '/employee-report' : '/my-report'
+                      );
                     }
                   }}
                   className="float-end"

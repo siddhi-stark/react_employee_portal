@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Button, Image } from 'react-bootstrap';
+import { Link, useHistory, withRouter } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
-import { Image, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
+import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+import { Helmet } from '../../components/FormInputs';
+import Loader from '../../components/Loader/index';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
+import AddBondHistory from './AddBondHistory.component';
 import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
-import AuthApi from '../../helper/authApi';
-import Api from '../../helper/api';
-import customFunctions from '../../helper/customFunctions';
-import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import Loader from '../../components/Loader/index';
-import { Helmet } from '../../components/FormInputs';
-import AddBondHistory from './AddBondHistory.component';
 
 function EmployeeProfile(props) {
+  const { match } = props;
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});
@@ -25,19 +26,18 @@ function EmployeeProfile(props) {
   const [rowPersonalData, setRowPersonalData] = useState([]);
   const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
-  const [isShowLoader,setShowLoader] = useState(false);
-  const [showBond,setShowBond] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
+  const [showBond, setShowBond] = useState(false);
   const [bondList, setBondList] = useState([]);
   const [bondData, setBondData] = useState({});
-  const employeeData = {props};
-  const employeeID = employeeData.props.match.params.id;
+  const employeeID = match.params.id;
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
 
   const getEmployeeDetails = async () => {
     setShowLoader(true);
-    const employeeId = props.match.params.id;
+    const employeeId = match.params.id;
     customFunctions.setLocalStorage('id', employeeId);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${employeeId}/`
@@ -51,7 +51,7 @@ function EmployeeProfile(props) {
 
   const getEmployeeHIstory = async () => {
     setShowLoader(true);
-    const employeeId = props.match.params.id;
+    const employeeId = match.params.id;
     const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
@@ -68,11 +68,14 @@ function EmployeeProfile(props) {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
-            > 
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
+            >
               <Image src="/images/download-file.svg" />
             </a>
           </>
@@ -89,10 +92,13 @@ function EmployeeProfile(props) {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -110,10 +116,13 @@ function EmployeeProfile(props) {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {  // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank"  // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -131,10 +140,13 @@ function EmployeeProfile(props) {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -232,7 +244,7 @@ function EmployeeProfile(props) {
 
   const getBondHistory = async () => {
     setShowLoader(true);
-    const employeeId = props.match.params.id;
+    const employeeId = match.params.id;
     const endPoint = `${Api.employeeBondDetailsUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
@@ -240,7 +252,7 @@ function EmployeeProfile(props) {
       setBondList(data.data);
     }
   };
-  
+
   const onChangeInBondHistory = () => {
     getBondHistory();
   };
@@ -291,7 +303,12 @@ function EmployeeProfile(props) {
         </div>
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-      <Button className="float-end mt-2 mb-2 mr-3" onClick={() => history.push('/employees')} >Back</Button>
+      <Button
+        className="float-end mt-2 mb-2 mr-3"
+        onClick={() => history.push('/employees')}
+      >
+        Back
+      </Button>
       <div className="col-xl-12" id="main-content">
         <div className="employee-new-profile">
           <div className="profile-bg">
@@ -324,93 +341,92 @@ function EmployeeProfile(props) {
             ) : (
               <div className="mt-4 card">
                 <div className="card-body">
-
-                <div className=" d-flex align-items-center justify-content-between mb-2">
-                  <div className="date-edit-option d-flex align-items-center justify-content-between w-100">
-                    <h6 className="me-5">
-                      DOB -{' '}
-                      {employeeDetails.dob
-                        ? customFunctions.getDMYDate(employeeDetails.dob)
-                        : ''}
-                    </h6>
-                    <a
-                      href="javascript:void()"
-                      onClick={() => {
-                        setShowPersonalDetails(true);
-                      }}
-                    >
-                      {!employeeDetails.relieved && (
-                        <Image
-                          src="/images/edit-button.svg"
-                          alt="Edit Profile"
-                        />
-                      )}
-                    </a>
+                  <div className=" d-flex align-items-center justify-content-between mb-2">
+                    <div className="date-edit-option d-flex align-items-center justify-content-between w-100">
+                      <h6 className="me-5">
+                        DOB -{' '}
+                        {employeeDetails.dob
+                          ? customFunctions.getDMYDate(employeeDetails.dob)
+                          : ''}
+                      </h6>
+                      <a
+                        href="javascript:void()"
+                        onClick={() => {
+                          setShowPersonalDetails(true);
+                        }}
+                      >
+                        {!employeeDetails.relieved && (
+                          <Image
+                            src="/images/edit-button.svg"
+                            alt="Edit Profile"
+                          />
+                        )}
+                      </a>
+                    </div>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-3">
-                    <h6>
-                      Joining Date -{' '}
-                      {employeeDetails.date_joined
-                        ? customFunctions.getDMYDate(
-                            employeeDetails.date_joined
-                          )
-                        : ''}
-                    </h6>
-                  </div>
-                  <div className="col-md-4">
-                    <h6>Email - {employeeDetails.email}</h6>
-                  </div>
-                  <div className="col-md-5">
-                    <h6>Personal Email - {employeeDetails.personal_email}</h6>
-                  </div>
-                </div>
-                <br />
-                <div className="row">
-                  <div className="col-md-3">
-                    <h6>Contact No - {employeeDetails.mobile}</h6>
-                  </div>
-                  <div className="col-md-4">
-                    {employeeDetails.relieving_date ? (
+                  <div className="row">
+                    <div className="col-md-3">
                       <h6>
-                        Relieving Date -{' '}
-                        {employeeDetails.relieving_date
+                        Joining Date -{' '}
+                        {employeeDetails.date_joined
                           ? customFunctions.getDMYDate(
-                              employeeDetails.relieving_date
+                              employeeDetails.date_joined
                             )
                           : ''}
                       </h6>
-                    ) : (
-                      <h6>
-                        Confirmation Date -{' '}
-                        {employeeDetails.confirmation_date
-                          ? customFunctions.getDMYDate(
-                              employeeDetails.confirmation_date
-                            )
-                          : ''}
-                      </h6>
-                    )}
+                    </div>
+                    <div className="col-md-4">
+                      <h6>Email - {employeeDetails.email}</h6>
+                    </div>
+                    <div className="col-md-5">
+                      <h6>Personal Email - {employeeDetails.personal_email}</h6>
+                    </div>
                   </div>
-                  <div className="col-md-5">
-                    {employeeDetails &&
-                      !employeeDetails.confirmation_date &&
-                      !employeeDetails.relieving_date && (
-                        <button
-                          onClick={() => {
-                            history.push('/confirmation');
-                          }}
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          Confirm
-                        </button>
+                  <br />
+                  <div className="row">
+                    <div className="col-md-3">
+                      <h6>Contact No - {employeeDetails.mobile}</h6>
+                    </div>
+                    <div className="col-md-4">
+                      {employeeDetails.relieving_date ? (
+                        <h6>
+                          Relieving Date -{' '}
+                          {employeeDetails.relieving_date
+                            ? customFunctions.getDMYDate(
+                                employeeDetails.relieving_date
+                              )
+                            : ''}
+                        </h6>
+                      ) : (
+                        <h6>
+                          Confirmation Date -{' '}
+                          {employeeDetails.confirmation_date
+                            ? customFunctions.getDMYDate(
+                                employeeDetails.confirmation_date
+                              )
+                            : ''}
+                        </h6>
                       )}
+                    </div>
+                    <div className="col-md-5">
+                      {employeeDetails &&
+                        !employeeDetails.confirmation_date &&
+                        !employeeDetails.relieving_date && (
+                          <button
+                            onClick={() => {
+                              history.push('/confirmation');
+                            }}
+                            type="button"
+                            className="btn btn-primary"
+                          >
+                            Confirm
+                          </button>
+                        )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-             )}
+            )}
           </div>
           <div className="profile-details">
             <div className="row">
@@ -510,20 +526,23 @@ function EmployeeProfile(props) {
                         <h5 className="card-title">Bond History</h5>
                       )}
 
-                        { (!employeeDetails.on_notice_period && !employeeDetails.relieved) && (
-                        <button
-                          onClick={() => {
-                            setShowBond(true);
-                            customFunctions.removeLocalStorage('bondHistoryID');
-                          }}
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          Add Bond
-                        </button>
+                      {!employeeDetails.on_notice_period &&
+                        !employeeDetails.relieved && (
+                          <button
+                            onClick={() => {
+                              setShowBond(true);
+                              customFunctions.removeLocalStorage(
+                                'bondHistoryID'
+                              );
+                            }}
+                            type="button"
+                            className="btn btn-primary"
+                          >
+                            Add Bond
+                          </button>
                         )}
                     </div>
-                   {showBond && (
+                    {showBond && (
                       <div className="mt-4 card">
                         <AddBondHistory
                           optionsData={bondData}
@@ -541,17 +560,30 @@ function EmployeeProfile(props) {
                             <div className="media">
                               <div className="media-body">
                                 <p>
-                                  Start Date: {bond.start_date && customFunctions.getDMYDate( bond.start_date)} &nbsp;
-                                  End Date: {bond.end_date && customFunctions.getDMYDate(bond.end_date)} <br/>
-                                
-                                Document Link: 
+                                  Start Date:{' '}
+                                  {bond.start_date &&
+                                    customFunctions.getDMYDate(
+                                      bond.start_date
+                                    )}{' '}
+                                  &nbsp; End Date:{' '}
+                                  {bond.end_date &&
+                                    customFunctions.getDMYDate(
+                                      bond.end_date
+                                    )}{' '}
+                                  <br />
+                                  Document Link:
                                   <Link
                                     className="mt-3 ms-2"
                                     title="Document Link"
-                                    to={{ pathname: `${bond.file_name}`}}
+                                    to={{ pathname: `${bond.file_name}` }}
                                     target="_blank"
                                   >
-                                   { bond.file_name && decodeURI(bond.file_name.split(decodeURI(Api.s3url))).substring(55)}
+                                    {bond.file_name &&
+                                      decodeURI(
+                                        bond.file_name.split(
+                                          decodeURI(Api.s3url)
+                                        )
+                                      ).substring(55)}
                                   </Link>
                                 </p>
                               </div>
@@ -588,96 +620,106 @@ function EmployeeProfile(props) {
                       ))}
                   </div>
                 </div>
-               
-               {employeeDocument && employeeDocument.length > 0 ?  (
+
+                {employeeDocument && employeeDocument.length > 0 ? (
                   <>
-                  <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <h5 className="card-title mb-0 mt-2 ">Documents</h5>
-                      <button
-                          onClick={() => {
-                            setShowBond(true);
-                            history.push(`/addemployement-history/${employeeID}`,{email:employeeDetails.email,name: employeeDetails.full_name});
-                          }}
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          Add Documents
-                        </button>
-                   </div> 
-                   <hr/> 
-                   <div className="row">
-                    {employeeDocument &&
-                      employeeDocument.map((document) => (
-                        <>
-                          {document.title === 'Personal' && (
-                            <div className="col-md-4">
-                              <h5 className="mb-3">Personal</h5>
-                              <CustomTable
-                                tableContainerClass="mt-2"
-                                columns={personalColumns}
-                                rows={rowPersonalData}
-                                tableClass="table-striped"
-                                showPagination={true}
-                                emptyRender={() => {
-                                  return 'No record found.';
-                                }}
-                              />
-                            </div>
-                          )}
-                          {document.title === 'Educational' && (
-                            <div className="col-md-4">
-                              <h5 className="mb-3">Educational</h5>
-                              <CustomTable
-                                tableContainerClass="mt-2"
-                                columns={educationalColumns}
-                                rows={rowEducationalData}
-                                tableClass="table-striped"
-                                showPagination={true}
-                                emptyRender={() => {
-                                  return 'No record found.';
-                                }}
-                              />
-                            </div>
-                          )}
-                          {document.title === 'Employment' && (
-                            <div className="col-md-4">
-                              <h5 className="mb-3">Previous Employment</h5>
-                              <CustomTable
-                                tableContainerClass="mt-2"
-                                columns={employmentColumns}
-                                rows={rowEmploymentData}
-                                tableClass="table-striped"
-                                showPagination={true}
-                                emptyRender={() => {
-                                  return 'No record found.';
-                                }}
-                              />
-                            </div>
-                          )}
-                          {document.title === 'Other Documents' && (
-                            <div className="col-md-4">
-                              <h5 className="mb-3">Other Documents</h5>
-                              <CustomTable
-                                tableContainerClass="mt-2"
-                                columns={otherColumns}
-                                rows={rowOtherData}
-                                tableClass="table-striped"
-                                showPagination={true}
-                                emptyRender={() => {
-                                  return 'No record found.';
-                                }}
-                              />
-                            </div>
-                          )}
-                        </>
-                      ))}
-                   </div>
-                  </div>
-                </div>
+                    <div className="card">
+                      <div className="card-body">
+                        <div className="d-flex align-items-center justify-content-between">
+                          <h5 className="card-title mb-0 mt-2 ">Documents</h5>
+                          <button
+                            onClick={() => {
+                              setShowBond(true);
+                              history.push(
+                                `/addemployement-history/${employeeID}`,
+                                {
+                                  email: employeeDetails.email,
+                                  name: employeeDetails.full_name,
+                                }
+                              );
+                            }}
+                            type="button"
+                            className="btn btn-primary"
+                          >
+                            Add Documents
+                          </button>
+                        </div>
+                        <hr />
+                        <div className="row">
+                          {employeeDocument &&
+                            employeeDocument.map((document) => (
+                              <>
+                                {document.title === 'Personal' && (
+                                  <div className="col-md-4">
+                                    <h5 className="mb-3">Personal</h5>
+                                    <CustomTable
+                                      tableContainerClass="mt-2"
+                                      columns={personalColumns}
+                                      rows={rowPersonalData}
+                                      tableClass="table-striped"
+                                      showPagination={true}
+                                      emptyRender={() => {
+                                        return 'No record found.';
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                                {document.title === 'Educational' && (
+                                  <div className="col-md-4">
+                                    <h5 className="mb-3">Educational</h5>
+                                    <CustomTable
+                                      tableContainerClass="mt-2"
+                                      columns={educationalColumns}
+                                      rows={rowEducationalData}
+                                      tableClass="table-striped"
+                                      showPagination={true}
+                                      emptyRender={() => {
+                                        return 'No record found.';
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                                {document.title === 'Employment' && (
+                                  <div className="col-md-4">
+                                    <h5 className="mb-3">
+                                      Previous Employment
+                                    </h5>
+                                    <CustomTable
+                                      tableContainerClass="mt-2"
+                                      columns={employmentColumns}
+                                      rows={rowEmploymentData}
+                                      tableClass="table-striped"
+                                      showPagination={true}
+                                      emptyRender={() => {
+                                        return 'No record found.';
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                                {document.title === 'Other Documents' && (
+                                  <div className="col-md-4">
+                                    <h5 className="mb-3">Other Documents</h5>
+                                    <CustomTable
+                                      tableContainerClass="mt-2"
+                                      columns={otherColumns}
+                                      rows={rowOtherData}
+                                      tableClass="table-striped"
+                                      showPagination={true}
+                                      emptyRender={() => {
+                                        return 'No record found.';
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                              </>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
                   </>
-                 ) : ''}
+                ) : (
+                  ''
+                )}
               </div>
             </div>
           </div>

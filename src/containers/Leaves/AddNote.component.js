@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './note.json';
+import swal from 'sweetalert';
 import { ModalInput } from '../../components/FormInputs';
-import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import FormSections from './note.json';
 
 function AddNote(props) {
-  const noteData = props;
-  const note = noteData.note;
+  const { show, leaveId, statusId, note, onStatusUpdate, handleModalCLose } =
+    props;
 
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote, setShowNote] = useState(false);
-  const [leaveId, setLeaveId] = useState(null);
-  const [statusId, setStatusId] = useState(null);
- 
+  const [leaveIds, setLeaveId] = useState(null);
+  const [statusIds, setStatusId] = useState(null);
+
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -27,12 +27,12 @@ function AddNote(props) {
   useEffect(() => {
     getUserRole();
   }, []);
-  
+
   const submitForm = async (formValues) => {
-    const reasonLabel = (statusId === 2) ? 'approve' : 'decline';
+    const reasonLabel = statusIds === 2 ? 'approve' : 'decline';
     const postData = {
-      id: leaveId,
-      status: Number(statusId),
+      id: leaveIds,
+      status: Number(statusIds),
       declined_reason: formValues ? formValues.notes : '',
     };
 
@@ -62,14 +62,13 @@ function AddNote(props) {
           }).then(() => {
             swal.close();
           });
-          
         } else {
           swal(data && data.message[0], '', 'success', {
             closeOnClickOutside: false,
             allowOutsideClick: false,
           }).then(() => {
             onCancelButton();
-            props.onStatusUpdate();
+            onStatusUpdate();
             swal.close();
           });
         }
@@ -88,13 +87,13 @@ function AddNote(props) {
     if (value === 'true') {
       getData();
     }
-    setShowNote(props.show);
-    setLeaveId(props.leaveId);
-    setStatusId(props.statusId);
+    setShowNote(show);
+    setLeaveId(leaveId);
+    setStatusId(statusId);
   }, []);
 
   const onCancelButton = () => {
-    props.handleModalCLose(false);
+    handleModalCLose(false);
   };
 
   return (

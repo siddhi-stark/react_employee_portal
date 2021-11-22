@@ -85,7 +85,7 @@ function SelectedCandidateListing() {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
   const title = 'Employees List';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
@@ -118,8 +118,8 @@ function SelectedCandidateListing() {
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
       });
     }
   };
@@ -138,7 +138,6 @@ function SelectedCandidateListing() {
   }, []);
 
   const submitForm = async (formValues) => {
-
     setFilterData(formValues);
   };
 
@@ -196,61 +195,61 @@ function SelectedCandidateListing() {
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-        <Card>
-          <Card.Body>
-            <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-            </div>  
-            <hr/>
-            <Card.Title>
-              <StarkFormBuilder
-                containerClass=""
-                formHeaderClass=""
-                formSections={FormSections}
-                onFormSubmit={(formValues) => {
-                  submitForm(formValues);
-                }}
-                options={options}
-                callbacks={{}}
-                defaultFormValues={defaultValues}
-                currentUser={currentUser}
-                submitBtnText="Submit"
-                showResetBtn={true}
-                showBtnClass={true}
-                resetBtnText="Clear"
-                btnContainerClass="form-submit-buttons pull-right"
-                isStepForm={false}
-                onFormReset={() => {}}
-              />
-            </Card.Title>
-          </Card.Body>
-        </Card>
-
-        <Card>
-          <Card.Body>
-            <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">Employees List</h5>
-            </div>  
-            <hr/>
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              tableClass="table-striped"
-              showPagination={true}
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
+      <Card>
+        <Card.Body>
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+          </div>
+          <hr />
+          <Card.Title>
+            <StarkFormBuilder
+              containerClass=""
+              formHeaderClass=""
+              formSections={FormSections}
+              onFormSubmit={(formValues) => {
+                submitForm(formValues);
               }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
+              options={options}
+              callbacks={{}}
+              defaultFormValues={defaultValues}
+              currentUser={currentUser}
+              submitBtnText="Submit"
+              showResetBtn={true}
+              showBtnClass={true}
+              resetBtnText="Clear"
+              btnContainerClass="form-submit-buttons pull-right"
+              isStepForm={false}
+              onFormReset={() => {}}
             />
-          </Card.Body>
-        </Card>
+          </Card.Title>
+        </Card.Body>
+      </Card>
+
+      <Card>
+        <Card.Body>
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">Employees List</h5>
+          </div>
+          <hr />
+          <CustomTable
+            columns={columns}
+            rows={rowData}
+            tableClass="table-striped"
+            showPagination={true}
+            paginationProps={{
+              totalItems: totalCount,
+              itemsPerPage: limit,
+              activePage: currentPage,
+              onPageChange: (pageNo) => {
+                getRowData(pageNo);
+              },
+            }}
+            emptyRender={() => {
+              return 'No record found.';
+            }}
+          />
+        </Card.Body>
+      </Card>
     </>
   );
 }

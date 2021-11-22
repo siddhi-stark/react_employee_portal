@@ -1,8 +1,8 @@
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 
 class SharedService {
   static clockIn = new Subject();
-  
+
   static clockOut = new Subject();
 }
 

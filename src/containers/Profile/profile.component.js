@@ -5,7 +5,12 @@ import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import { TextInput, ModalInput, Helmet, Datepicker } from '../../components/FormInputs';
+import {
+  TextInput,
+  ModalInput,
+  Helmet,
+  Datepicker,
+} from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
@@ -29,9 +34,8 @@ function Profile() {
   const [modalShow, setModalShow] = useState('');
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
-  const [selectedDesignationOption, setSelectedDesignationOption] = useState(
-    null
-  );
+  const [selectedDesignationOption, setSelectedDesignationOption] =
+    useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedManager, setSelectedManager] = useState([]);
   const [selectedMentor, setSelectedMentor] = useState([]);
@@ -39,8 +43,8 @@ function Profile() {
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
   const [profileId, setProfileId] = useState('');
-  const [companyList,setCompanyList] = useState([]);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [companyList, setCompanyList] = useState([]);
+  const [isShowLoader, setShowLoader] = useState(false);
   const [employeeDocument, setEmployeeDocument] = useState([]);
   const [rowEducationalData, setRowEducationalData] = useState([]);
   const [rowPersonalData, setRowPersonalData] = useState([]);
@@ -58,11 +62,14 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
-            > 
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
+            >
               <Image src="/images/download-file.svg" />
             </a>
           </>
@@ -79,10 +86,13 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -100,10 +110,13 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {  // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank"  // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -121,10 +134,13 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -173,12 +189,18 @@ function Profile() {
       setName(data.data.full_name);
       setMobile(data.data.mobile);
       setId(data.data.emp_code);
-      setBirthdate(data.data.dob ? customFunctions.getDMYDate(data.data.dob):'-');
+      setBirthdate(
+        data.data.dob ? customFunctions.getDMYDate(data.data.dob) : '-'
+      );
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
       setProfileId(data.data.profile_id);
-      setReliveDate(data.data.relieving_date ? customFunctions.getDMYDate(data.data.relieving_date):'');
+      setReliveDate(
+        data.data.relieving_date
+          ? customFunctions.getDMYDate(data.data.relieving_date)
+          : ''
+      );
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
       });
@@ -188,7 +210,7 @@ function Profile() {
       setSelectedMentor(mentorList.length > 0 ? mentorList.join(', ') : '');
       setSelectedManager(managerList.length > 0 ? managerList.join(', ') : '');
       setDate(data.data.date_joined ? new Date(data.data.date_joined) : '');
-      setAuth(data.data.teamwork_token ? data.data.teamwork_token:'' );
+      setAuth(data.data.teamwork_token ? data.data.teamwork_token : '');
     }
   };
 
@@ -205,8 +227,8 @@ function Profile() {
     return depart;
   };
 
-   const getEmployeeHIstory = async () => {
-    setShowLoader(true); 
+  const getEmployeeHIstory = async () => {
+    setShowLoader(true);
     const employeeId = customFunctions.getLocalStorage('userId');
     const endPoint = `${Api.historyUrl}?sort_direction=descending&employee_id=${employeeId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
@@ -261,7 +283,7 @@ function Profile() {
       companyEmail,
       mobile,
       profile: profileId,
-      teamwork_token:auth
+      teamwork_token: auth,
     };
 
     if (imageUrl) {
@@ -286,7 +308,7 @@ function Profile() {
           setEmail('');
           setMobile('');
           setAuth('');
-          if(authShow){
+          if (authShow) {
             authentication();
           }
         }
@@ -300,9 +322,7 @@ function Profile() {
   const authentication = async () => {
     setShowLoader(true);
 
-    const { data } = await AuthApi.postDataToServer(
-      `${Api.teamworkAuthUrl}`,
-    );
+    const { data } = await AuthApi.postDataToServer(`${Api.teamworkAuthUrl}`);
     if (data) {
       setShowLoader(false);
       swal(data && data.message[0], '', 'success');
@@ -326,7 +346,7 @@ function Profile() {
     }
   };
 
- const getEmployeeDocument = async (fullName) => {
+  const getEmployeeDocument = async (fullName) => {
     setShowLoader(true);
     const formData = new FormData();
 
@@ -362,7 +382,7 @@ function Profile() {
 
   return (
     <>
-     <Helmet title={title} />
+      <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <h2 className="main-content-title tx-24 mg-b-5">My Profile</h2>
@@ -407,20 +427,24 @@ function Profile() {
                   className="edit-profile-image mb-4"
                   style={{ height: '70px' }}
                 >
-
                   {imageProfile ? (
-
                     <img
-                      src={`${imageProfile}` ? `${imageProfile}` : `${Api.s3UrlnoProfile}`}
-                      // src={imageProfile} 
+                      src={
+                        `${imageProfile}`
+                          ? `${imageProfile}`
+                          : `${Api.s3UrlnoProfile}`
+                      }
+                      // src={imageProfile}
                       alt="Edit Profile"
-                      style={{ 'height': '100%' }} />
-                  ) : <img
-                    src={Api.s3UrlnoProfile}
-                    alt="Edit Profile"
-                    style={{ 'height': '100%' }}
-                  />}
-
+                      style={{ height: '100%' }}
+                    />
+                  ) : (
+                    <img
+                      src={Api.s3UrlnoProfile}
+                      alt="Edit Profile"
+                      style={{ height: '100%' }}
+                    />
+                  )}
                 </div>
               </Col>
               <Col sm={9}>
@@ -430,7 +454,10 @@ function Profile() {
                 <h5 className="mt-5">Personal Information</h5>
                 <div className="personal-info-date-number">
                   <Form.Label>
-                    <UserRestrictions permittedUsers={[2, 3, 4,5]} roleId={role}>
+                    <UserRestrictions
+                      permittedUsers={[2, 3, 4, 5]}
+                      roleId={role}
+                    >
                       <Image
                         src="/images/up-coming-birthday.svg"
                         className="svg me-3"
@@ -438,13 +465,9 @@ function Profile() {
                       <span>{birthDate}</span>
                     </UserRestrictions>
                     <UserRestrictions permittedUsers={[1]} roleId={role}>
-                      <Image
-                        src="/images/mail.svg"
-                        className="svg me-3"
-                      />
+                      <Image src="/images/mail.svg" className="svg me-3" />
                       <span> {companyEmail} </span>
                     </UserRestrictions>
-
                   </Form.Label>
 
                   <Form.Label>
@@ -460,15 +483,14 @@ function Profile() {
                   <h5 className="mt-5">Job Information</h5>
                   <Row>
                     <Col sm={3}>
-                    <Datepicker
-                  label="Joining Date"
-                  disabled
-                  className="form-control"
-                  selected={date}
-                  placeholder="dd/mm/yyyy"
-                  dateFormat="dd/MM/yyyy"
-                 
-                />
+                      <Datepicker
+                        label="Joining Date"
+                        disabled
+                        className="form-control"
+                        selected={date}
+                        placeholder="dd/mm/yyyy"
+                        dateFormat="dd/MM/yyyy"
+                      />
                     </Col>
                     <Col sm={3}>
                       <TextInput
@@ -519,14 +541,16 @@ function Profile() {
                     </Col>
                     <Col sm={6}>
                       <TextInput
-                        onInputChange={(e) => setSelectedManager(e.target.value)}
+                        onInputChange={(e) =>
+                          setSelectedManager(e.target.value)
+                        }
                         label="Reporting To"
                         containerClass="form-group"
                         name="selectedManager"
                         value={selectedManager}
                         disabled
                       />
-                    </Col> 
+                    </Col>
                     <Col sm={6}>
                       <TextInput
                         onInputChange={(e) => setSelectedMentor(e.target.value)}
@@ -553,128 +577,138 @@ function Profile() {
           </Form>
         </Card.Body>
       </Card>
-     
-     {companyList && companyList.length >= 1 ? (
-      <div className="profile-details">
-            <div className="row">
-              <div className="col-sm-12">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <h5 className="card-title mb-0 mt-2 ">Employment History</h5>
-                   </div> 
-                   <hr/> 
-                    {companyList &&
-                      companyList.map((comp) => (
-                        <>
-                          <div className="d-flex align-items-start justify-content-between">
-                            <div className="media">
-                              <Image
-                                src={(comp.company_name === 'Stark Digital') ? '/images/stark-logo.png':'/images/sample-logo.png'}
-                                className="mr-3"
-                                alt="image"
-                              />
-                              <div className="media-body">
-                                <h5 className="mt-0">{comp.designation}</h5>
-                                <p>{comp.company_name}</p>
-                                <p>
-                                  {comp.start_date_formate} -{' '}
-                                  {comp.end_date_formate} {comp.date}|{' '}
-                                  {comp.duration}
-                                </p>
-                                <h6>{comp.location}</h6>
-                              </div>
+
+      {companyList && companyList.length >= 1 ? (
+        <div className="profile-details">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="card">
+                <div className="card-body">
+                  <div className="d-flex align-items-center justify-content-between">
+                    <h5 className="card-title mb-0 mt-2 ">
+                      Employment History
+                    </h5>
+                  </div>
+                  <hr />
+                  {companyList &&
+                    companyList.map((comp) => (
+                      <>
+                        <div className="d-flex align-items-start justify-content-between">
+                          <div className="media">
+                            <Image
+                              src={
+                                comp.company_name === 'Stark Digital'
+                                  ? '/images/stark-logo.png'
+                                  : '/images/sample-logo.png'
+                              }
+                              className="mr-3"
+                              alt="image"
+                            />
+                            <div className="media-body">
+                              <h5 className="mt-0">{comp.designation}</h5>
+                              <p>{comp.company_name}</p>
+                              <p>
+                                {comp.start_date_formate} -{' '}
+                                {comp.end_date_formate} {comp.date}|{' '}
+                                {comp.duration}
+                              </p>
+                              <h6>{comp.location}</h6>
                             </div>
                           </div>
-                          <hr />
-                        </>
-                      ))}
-                  </div>
+                        </div>
+                        <hr />
+                      </>
+                    ))}
                 </div>
               </div>
             </div>
           </div>
-       ) : ''}
-     
-       {employeeDocument && employeeDocument.length > 0 ? (
-                  <>
-                  <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex align-items-center justify-content-between">
-                      <h5 className="card-title mb-0 mt-2 ">Documents</h5>
-                   </div> 
-                   <hr/> 
-                            <div className="row">
-                    {employeeDocument &&
-                      employeeDocument.map((document) => (
-                        <>
-                          {document.title === 'Personal' && (
-                            <div className="col-md-4">
-                              <h5 className="mb-3">Personal</h5>
-                              <CustomTable
-                                tableContainerClass="mt-2"
-                                columns={personalColumns}
-                                rows={rowPersonalData}
-                                tableClass="table-striped"
-                                showPagination={true}
-                                emptyRender={() => {
-                                  return 'No record found.';
-                                }}
-                              />
-                            </div>
-                          )}
-                          {document.title === 'Educational' && (
-                            <div className="col-md-4">
-                              <h5 className="mb-3">Educational</h5>
-                              <CustomTable
-                                tableContainerClass="mt-2"
-                                columns={educationalColumns}
-                                rows={rowEducationalData}
-                                tableClass="table-striped"
-                                showPagination={true}
-                                emptyRender={() => {
-                                  return 'No record found.';
-                                }}
-                              />
-                            </div>
-                          )}
-                          {document.title === 'Employment' && (
-                            <div className="col-md-4">
-                              <h5 className="mb-3">Previous Employment</h5>
-                              <CustomTable
-                                tableContainerClass="mt-2"
-                                columns={employmentColumns}
-                                rows={rowEmploymentData}
-                                tableClass="table-striped"
-                                showPagination={true}
-                                emptyRender={() => {
-                                  return 'No record found.';
-                                }}
-                              />
-                            </div>
-                          )}
-                          {document.title === 'Other Documents' && (
-                            <div className="col-md-4">
-                              <h5 className="mb-3">Other Documents</h5>
-                              <CustomTable
-                                tableContainerClass="mt-2"
-                                columns={otherColumns}
-                                rows={rowOtherData}
-                                tableClass="table-striped"
-                                showPagination={true}
-                                emptyRender={() => {
-                                  return 'No record found.';
-                                }}
-                              />
-                            </div>
-                          )}
-                        </>
-                      ))}
-                  </div>
-                </div>
-                            </div>
-                  </>
-                  ) : ''}
+        </div>
+      ) : (
+        ''
+      )}
+
+      {employeeDocument && employeeDocument.length > 0 ? (
+        <>
+          <div className="card">
+            <div className="card-body">
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Documents</h5>
+              </div>
+              <hr />
+              <div className="row">
+                {employeeDocument &&
+                  employeeDocument.map((document) => (
+                    <>
+                      {document.title === 'Personal' && (
+                        <div className="col-md-4">
+                          <h5 className="mb-3">Personal</h5>
+                          <CustomTable
+                            tableContainerClass="mt-2"
+                            columns={personalColumns}
+                            rows={rowPersonalData}
+                            tableClass="table-striped"
+                            showPagination={true}
+                            emptyRender={() => {
+                              return 'No record found.';
+                            }}
+                          />
+                        </div>
+                      )}
+                      {document.title === 'Educational' && (
+                        <div className="col-md-4">
+                          <h5 className="mb-3">Educational</h5>
+                          <CustomTable
+                            tableContainerClass="mt-2"
+                            columns={educationalColumns}
+                            rows={rowEducationalData}
+                            tableClass="table-striped"
+                            showPagination={true}
+                            emptyRender={() => {
+                              return 'No record found.';
+                            }}
+                          />
+                        </div>
+                      )}
+                      {document.title === 'Employment' && (
+                        <div className="col-md-4">
+                          <h5 className="mb-3">Previous Employment</h5>
+                          <CustomTable
+                            tableContainerClass="mt-2"
+                            columns={employmentColumns}
+                            rows={rowEmploymentData}
+                            tableClass="table-striped"
+                            showPagination={true}
+                            emptyRender={() => {
+                              return 'No record found.';
+                            }}
+                          />
+                        </div>
+                      )}
+                      {document.title === 'Other Documents' && (
+                        <div className="col-md-4">
+                          <h5 className="mb-3">Other Documents</h5>
+                          <CustomTable
+                            tableContainerClass="mt-2"
+                            columns={otherColumns}
+                            rows={rowOtherData}
+                            tableClass="table-striped"
+                            showPagination={true}
+                            emptyRender={() => {
+                              return 'No record found.';
+                            }}
+                          />
+                        </div>
+                      )}
+                    </>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        ''
+      )}
       <ModalInput
         size="md"
         centered
@@ -760,13 +794,17 @@ function Profile() {
                 <Row>
                   <Col>
                     <span className="span-container">
-                      <img src={imageProfile || Api.s3UrlnoProfile} alt="Profile" style={{ 'height': '40px' }} />
+                      <img
+                        src={imageProfile || Api.s3UrlnoProfile}
+                        alt="Profile"
+                        style={{ height: '40px' }}
+                      />
                     </span>
                   </Col>
                 </Row>
               </Col>
             </Row>
-             <Row>
+            <Row>
               <Col sm={12}>
                 <TextInput
                   onInputChange={(e) => {
@@ -789,9 +827,8 @@ function Profile() {
               </Col>
             </Row>
             <div className="float-end">
-
               <Button variant="primary" type="submit" className="ms-4">
-                Update 
+                Update
               </Button>
               <Button variant="secondary ms-4" onClick={() => onCancel()}>
                 Cancel

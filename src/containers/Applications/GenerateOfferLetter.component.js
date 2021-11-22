@@ -19,16 +19,16 @@ function GenerateOfferLetter() {
   const [emailBody, setEmailBody] = useState('');
   const [document, setDocument] = useState('');
   const [checked, setChecked] = useState('');
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
 
   useEffect(() => {
     const CandidateId = customFunctions.getLocalStorage('applicantId');
-if (!CandidateId) {
-history.goBack();
-return;
-};
+    if (!CandidateId) {
+      history.goBack();
+      return;
+    }
     setTitle('Offer Letter');
     const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section) => {
@@ -44,8 +44,8 @@ return;
 
         return itemData;
       });
-      return s; 
-     });
+      return s;
+    });
     updateJsonSchema([...updatedSchema]);
     const Name = customFunctions.getLocalStorage('applicantName');
     const Designation = customFunctions.getLocalStorage('designation');
@@ -55,9 +55,9 @@ return;
     updateDefaultValues({
       name: Name,
       designation: Designation,
-      joining_date: (joiningdate !== 'null') ? new Date(joiningdate) :'',
-      offered_ctc: (OfferCtc !== 'null') ? Number(OfferCtc): '',
-      pf_included: (PfInclude === 'true') ? 'true':'false'
+      joining_date: joiningdate !== 'null' ? new Date(joiningdate) : '',
+      offered_ctc: OfferCtc !== 'null' ? Number(OfferCtc) : '',
+      pf_included: PfInclude === 'true' ? 'true' : 'false',
     });
   }, []);
 
@@ -85,9 +85,9 @@ return;
   const sendMail = async (body, doc) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
-    let EmailBody  = '';
+    let EmailBody = '';
     const reasonLabel = checked ? 'with' : 'without';
-    if(!checked){
+    if (!checked) {
       const postData = {
         name: 'Offer Letter',
         subject: 'Offer Letter',
@@ -99,7 +99,7 @@ return;
         Api.generateContentUrl,
         postData
       );
-      if(!customFunctions.checkIfEmpty(data, 'O') && data.data){
+      if (!customFunctions.checkIfEmpty(data, 'O') && data.data) {
         EmailBody = data.data.body;
       } else {
         setShowLoader(false);
@@ -110,7 +110,7 @@ return;
       }
     }
     setShowLoader(false);
-     swal({
+    swal({
       title: 'Are you sure?',
       text: `Do you want to send mail ${reasonLabel} annexture ?`,
       icon: 'warning',
@@ -120,48 +120,48 @@ return;
       allowOutsideClick: false,
     }).then(async (result) => {
       if (result) {
-      const postData = {
-        name: 'Offer Letter',
-        applicant_id: Number(id),
-        email_type: 'offer_letter',
-        subject: 'Offer Letter',
-        attachment: checked ? doc :'',
-        body,
-      };
-      if(EmailBody) postData.body = EmailBody;
-      const { data, message } = await AuthApi.postDataToServer(
-        Api.sendMailUrl,
-        postData
-      );
-      if (data) {
-        swal(data && data.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          customFunctions.removeLocalStorage('applicantName');
-          customFunctions.removeLocalStorage('designation');
-          customFunctions.removeLocalStorage('offerctc');
-          customFunctions.removeLocalStorage('joiningdate');
-          customFunctions.removeLocalStorage('pfInclude');
-          history.push('/recruitment');
-          swal.close();
-        });
-      } else {
-        swal(message, '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-        });
+        const postData = {
+          name: 'Offer Letter',
+          applicant_id: Number(id),
+          email_type: 'offer_letter',
+          subject: 'Offer Letter',
+          attachment: checked ? doc : '',
+          body,
+        };
+        if (EmailBody) postData.body = EmailBody;
+        const { data, message } = await AuthApi.postDataToServer(
+          Api.sendMailUrl,
+          postData
+        );
+        if (data) {
+          swal(data && data.message[0], '', 'success', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+            buttons: false,
+            timer: 2000,
+          }).then(() => {
+            customFunctions.removeLocalStorage('applicantName');
+            customFunctions.removeLocalStorage('designation');
+            customFunctions.removeLocalStorage('offerctc');
+            customFunctions.removeLocalStorage('joiningdate');
+            customFunctions.removeLocalStorage('pfInclude');
+            history.push('/recruitment');
+            swal.close();
+          });
+        } else {
+          swal(message, '', 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          });
+        }
       }
-     }
     });
   };
 
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
-    
+
     const postData = {
       name: 'Offer Letter',
       subject: 'Offer Letter',
@@ -217,64 +217,66 @@ return;
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <div className="mt-5">
-      <Card body>
-        <StarkFormBuilder
-          containerClass="mt-4"
-          formHeaderClass=""
-          formSections={jsonSchema}
-          onFormSubmit={(formValues) => {
-            setDocument('');
-            submitForm(formValues);
-          }}
-          callbacks={{}}
-          defaultFormValues={defaultValues}
-          currentUser={currentUser}
-          submitBtnText="Preview"
-          showResetBtn={false}
-          showBtnClass={true}
-          resetBtnText="Cancel"
-          btnContainerClass={checked ? 'form-submit-buttons mb-4': 'd-none'}
-          isStepForm={false}
-          onFormReset={() => {
-            history.push('/recruitment');
-          }}
-        />
-        <input
-          onChange={(e) =>{ setChecked(e.target.checked);}}
-          name="checked"
-          type="checkbox"
-          id="checked"
-          className="form-submit-buttons ms-4"
-          value={checked}
-        />
-        <span className="ms-2">Do you want to send Annexure ?</span>
-        <div className="container">
-          {(document && checked) && (
-            <>
-              <iframe
-                src={`${document}`}
-                title="Offer"
-                style={{ height: '500px', width: '500px' }}
-              />
-              <br />
-            </>
-          )}
-          <Button
-            className="mt-3 mb-4"
-            disabled={checked && !document ?'disabled':''}
-            onClick={() => sendMail(emailBody, document)}
-          >
-            Send Mail
-          </Button>
-          <Button
-            variant = "secondary"
-            className="mt-3 mb-4 ms-2"
-            onClick={() =>  history.push('/recruitment')}
-          >
-            Back
-          </Button>
-        </div>
-      </Card>
+        <Card body>
+          <StarkFormBuilder
+            containerClass="mt-4"
+            formHeaderClass=""
+            formSections={jsonSchema}
+            onFormSubmit={(formValues) => {
+              setDocument('');
+              submitForm(formValues);
+            }}
+            callbacks={{}}
+            defaultFormValues={defaultValues}
+            currentUser={currentUser}
+            submitBtnText="Preview"
+            showResetBtn={false}
+            showBtnClass={true}
+            resetBtnText="Cancel"
+            btnContainerClass={checked ? 'form-submit-buttons mb-4' : 'd-none'}
+            isStepForm={false}
+            onFormReset={() => {
+              history.push('/recruitment');
+            }}
+          />
+          <input
+            onChange={(e) => {
+              setChecked(e.target.checked);
+            }}
+            name="checked"
+            type="checkbox"
+            id="checked"
+            className="form-submit-buttons ms-4"
+            value={checked}
+          />
+          <span className="ms-2">Do you want to send Annexure ?</span>
+          <div className="container">
+            {document && checked && (
+              <>
+                <iframe
+                  src={`${document}`}
+                  title="Offer"
+                  style={{ height: '500px', width: '500px' }}
+                />
+                <br />
+              </>
+            )}
+            <Button
+              className="mt-3 mb-4"
+              disabled={checked && !document ? 'disabled' : ''}
+              onClick={() => sendMail(emailBody, document)}
+            >
+              Send Mail
+            </Button>
+            <Button
+              variant="secondary"
+              className="mt-3 mb-4 ms-2"
+              onClick={() => history.push('/recruitment')}
+            >
+              Back
+            </Button>
+          </div>
+        </Card>
       </div>
     </>
   );

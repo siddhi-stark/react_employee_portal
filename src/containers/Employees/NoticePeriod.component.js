@@ -9,7 +9,6 @@ import Pagination from '../../components/Pagination/pagination.component';
 import Loader from '../../components/Loader/index';
 
 function NoticePeriodComponent() {
-  
   const [employee, setEmployee] = useState([]);
   const [title, setTitle] = useState('');
   const [totalCount, setTotalCount] = useState(9);
@@ -150,9 +149,7 @@ function NoticePeriodComponent() {
             getEmployee(pageNo);
           }}
         />
-         {(totalCount < 1 ) && (
-        <p className="text-center"> No records found</p>
-      )}
+        {totalCount < 1 && <p className="text-center"> No records found</p>}
       </section>
     </>
   );

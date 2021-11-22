@@ -1,10 +1,7 @@
 import CustomTable from 'stark-custom-datatable';
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory, Link } from 'react-router-dom';
-import {
-  Card,
-  Image,
-} from 'react-bootstrap';
+import { Card, Image } from 'react-bootstrap';
 import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
@@ -15,11 +12,10 @@ import UserRestrictions from '../../components/UserRestrictions/userrestrictions
 import Loader from '../../components/Loader/index';
 
 function Events() {
-
   const initialState = {
-    imgURL:'',
-    eventTitle:'',
-    eventDescription:''
+    imgURL: '',
+    eventTitle: '',
+    eventDescription: '',
   };
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
@@ -33,54 +29,60 @@ function Events() {
   const employeeRole = customFunctions.getLocalStorage('group');
   const [showModal, setShowModal] = useState(false);
   const [eventDetails, setEventDetails] = useState(initialState);
-  
+
   const handleActionCallback = (row) => {
     return (
-      <> {Number(employeeRole) === 4 ||
+      <>
+        {' '}
+        {Number(employeeRole) === 4 ||
         Number(employeeRole) === 3 ||
         Number(employeeRole) === 2 ? (
           ''
         ) : (
-        <>
-
-        <a
-          href="/"
-          className="pl-2"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-             history.push(`/edit-event/${row.id}`, { isView: 'true' });
-          }}
-        >
-          <Image alt="view" src="/images/eye.svg" />
-        </a>
-       {(Number(employeeRole) === 4 || Number(employeeRole) === 3 || Number(employeeRole) === 2 ? '' : (
-         <>
-        <a
-          href="/"
-          className="pl-2 ms-1"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/edit-event/${row.id}`);
-          }}
-        >
-          <Image src="/images/edit-button.svg" />
-        </a>
-        <a
-          href="/"
-          className="pl-2 ms-1"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            removeHoliday(row.id);
-          }}
-        >
-          <Image src="/images/delete.png" />
-        </a>
-        </>
-        ))}
-       </>)}
+          <>
+            <a
+              href="/"
+              className="pl-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/edit-event/${row.id}`, { isView: 'true' });
+              }}
+            >
+              <Image alt="view" src="/images/eye.svg" />
+            </a>
+            {Number(employeeRole) === 4 ||
+            Number(employeeRole) === 3 ||
+            Number(employeeRole) === 2 ? (
+              ''
+            ) : (
+              <>
+                <a
+                  href="/"
+                  className="pl-2 ms-1"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    history.push(`/edit-event/${row.id}`);
+                  }}
+                >
+                  <Image src="/images/edit-button.svg" />
+                </a>
+                <a
+                  href="/"
+                  className="pl-2 ms-1"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    removeHoliday(row.id);
+                  }}
+                >
+                  <Image src="/images/delete.png" />
+                </a>
+              </>
+            )}
+          </>
+        )}
       </>
     );
   };
@@ -89,22 +91,25 @@ function Events() {
     {
       id: 'title',
       label: 'Title',
-      render: ({ title, image, description }) => { 
+      render: ({ title, image, description }) => {
         return (
           <>
-          {
-            image ?
-            (<Link
-               onClick={()=>{setEventDetails({
-                  imgURL:image,
-                  eventTitle:title,
-                  eventDescription:description
-               }); setShowModal(true);}}
+            {image ? (
+              <Link
+                onClick={() => {
+                  setEventDetails({
+                    imgURL: image,
+                    eventTitle: title,
+                    eventDescription: description,
+                  });
+                  setShowModal(true);
+                }}
               >
                 <strong> {title} </strong>
-              </Link>)
-            : <span>{title}</span>
-          }
+              </Link>
+            ) : (
+              <span>{title}</span>
+            )}
           </>
         );
       },
@@ -114,20 +119,25 @@ function Events() {
       label: 'Date',
     },
     {
-      id: (Number(employeeRole) === 4 ||
-              Number(employeeRole) === 3 ||
-              Number(employeeRole) === 2) ? '' :'action',
-      label:  ( Number(employeeRole) === 4 ||
-              Number(employeeRole) === 3 ||
-              Number(employeeRole) === 2) ? '' :'Action',
+      id:
+        Number(employeeRole) === 4 ||
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2
+          ? ''
+          : 'action',
+      label:
+        Number(employeeRole) === 4 ||
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2
+          ? ''
+          : 'Action',
       render: handleActionCallback,
     },
   ];
 
   const getRowData = async () => {
     setShowLoader(true);
-    const endPoint =
-      `${Api.eventsUrl}?type=all&sort_direction=descending`;
+    const endPoint = `${Api.eventsUrl}?type=all&sort_direction=descending`;
     const url = customFunctions.generateUrl(endPoint);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -140,9 +150,9 @@ function Events() {
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
-              closeOnClickOutside: false,
-              allowOutsideClick: false,
-            });
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
     }
   };
 
@@ -152,7 +162,7 @@ function Events() {
     setUserRole(Number(uRole));
   }, []);
 
-    const removeHoliday = (id) => {
+  const removeHoliday = (id) => {
     if (id) {
       swal({
         title: 'Are you sure?',
@@ -204,20 +214,23 @@ function Events() {
               <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Events</h5>
                 <div className="d-flex align-items-center justify-content-end">
-                  <UserRestrictions permittedUsers={[1,5,6]} roleId={userRole}>
+                  <UserRestrictions
+                    permittedUsers={[1, 5, 6]}
+                    roleId={userRole}
+                  >
                     <a
                       href="#"
-                        onClick={() => {
-                          history.push('/add-event');
-                        }}
+                      onClick={() => {
+                        history.push('/add-event');
+                      }}
                       className="btn-link"
                     >
                       Add Event
                     </a>
                   </UserRestrictions>
                 </div>
-               </div> 
-               <hr/> 
+              </div>
+              <hr />
               <CustomTable
                 columns={columns}
                 rows={rowData}
@@ -242,7 +255,7 @@ function Events() {
             size="md"
             centered
             show={showModal}
-            onHide={()=>setShowModal(false)}
+            onHide={() => setShowModal(false)}
             className="event-image-popup"
             id="contained-modal-title-center"
             modalHeaderClass="reson-text-title d-flex align-items-center"
@@ -253,7 +266,7 @@ function Events() {
               </div>
             }
             modalFooter={
-              eventDetails.eventDescription && (  
+              eventDetails.eventDescription && (
                 <span className="modal-description">
                   Description: {eventDetails.eventDescription}
                 </span>

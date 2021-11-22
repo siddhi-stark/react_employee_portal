@@ -16,44 +16,53 @@ function AddEmployementHistory(props) {
   const email = employee.location.state.email;
   const name = employee.location.state.name;
 
-	return (
-		<>
-		 <Helmet title={title} />
+  return (
+    <>
+      <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <Button 
-        className="float-end" 
-        onClick={()=> {
-          history.push('/employees') // eslint-disable-line
-        }}  
-        >Back</Button>
+        <Button
+          className="float-end"
+          onClick={() => {
+            history.push('/employees'); // eslint-disable-line
+          }}
+        >
+          Back
+        </Button>
         <h2 className="main-content-title tx-24 mg-b-5">Employement History</h2>
         <Breadcrumb items={items} />
-			<section className="content-area">
-				<div>
-					<Tabs defaultActiveKey="Personal">
-						<Tab eventKey="Personal" title="Personal Documents">
-							<div className="row ml-2">
-								<PersonalDocument ID={employeeId} email={email} name={name} />
-								
-							</div>
-						</Tab>
-						<Tab eventKey="currentEmployee" title="Educational Documents">
-							<div className="row ml-2">
-								<EducationalDetails ID={employeeId} email={email} name={name} />
-							</div>
-						</Tab>
+        <section className="content-area">
+          <div>
+            <Tabs defaultActiveKey="Personal">
+              <Tab eventKey="Personal" title="Personal Documents">
+                <div className="row ml-2">
+                  <PersonalDocument ID={employeeId} email={email} name={name} />
+                </div>
+              </Tab>
+              <Tab eventKey="currentEmployee" title="Educational Documents">
+                <div className="row ml-2">
+                  <EducationalDetails
+                    ID={employeeId}
+                    email={email}
+                    name={name}
+                  />
+                </div>
+              </Tab>
 
-						<Tab eventKey="previousEmployment" title="Previous Employment">
-							<div className="row ml-2">
-								<PreviousEmployement ID={employeeId} email={email} name={name} />
-							</div>
-						</Tab>
-					</Tabs>
-				</div>
-			</section>
-			</div>
-		</>
-	);
+              <Tab eventKey="previousEmployment" title="Previous Employment">
+                <div className="row ml-2">
+                  <PreviousEmployement
+                    ID={employeeId}
+                    email={email}
+                    name={name}
+                  />
+                </div>
+              </Tab>
+            </Tabs>
+          </div>
+        </section>
+      </div>
+    </>
+  );
 }
 
 export default withRouter(AddEmployementHistory);

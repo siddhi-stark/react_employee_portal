@@ -30,7 +30,7 @@ function ManagePassword() {
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
   const [disableButton, setDisableButton] = useState(false);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
     setTitle('Change Password');
@@ -176,8 +176,11 @@ function ManagePassword() {
                   >
                     Save
                   </Button>
-                  <Button variant="secondary" className="ms-4" onClick={() => history.push('/')}>
-
+                  <Button
+                    variant="secondary"
+                    className="ms-4"
+                    onClick={() => history.push('/')}
+                  >
                     Cancel
                   </Button>
                 </div>

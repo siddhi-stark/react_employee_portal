@@ -36,7 +36,7 @@ function EmployeeTechListing() {
     { label: 'Employee Technology Stack' },
   ];
 
-  const handleActionCallback = ({id}) => {
+  const handleActionCallback = ({ id }) => {
     return (
       <>
         <a
@@ -110,8 +110,8 @@ function EmployeeTechListing() {
       setRowData((data && data.data) || []);
     } else {
       swal(message, '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
       });
     }
   };
@@ -156,16 +156,19 @@ function EmployeeTechListing() {
     updateOptions(allOptions);
   };
 
-   const getTechnology = async () => {
+  const getTechnology = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.employeeStackUrl);
     if (!data) {
       // show error
       return;
     }
 
-    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
-      return { label: op.name, value: op.id };
-    });
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
 
     options.technology = dpOptions;
     const allOptions = options;
@@ -188,37 +191,37 @@ function EmployeeTechListing() {
       </div>
       <section className="content-area">
         <div className="mt-5">
-            <Card>
-                <Card.Body>
-                 <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-              </div>  
-              <hr/>
-                    <StarkFormBuilder
-                      containerClass=""
-                      formHeaderClass=""
-                      formSections={FormSections}
-                      onFormSubmit={(formValues) => {
-                        submitForm(formValues);
-                      }}
-                      options={options}
-                      callbacks={{}}
-                      defaultFormValues={defaultValues}
-                      currentUser={currentUser}
-                      submitBtnText="Submit"
-                      showResetBtn={true}
-                      resetBtnText="Clear"
-                      btnContainerClass="form-submit-buttons pull-right"
-                      isStepForm={false}
-                      onFormReset={() => {}}
-                    />
-                </Card.Body>
-            </Card>
           <Card>
             <Card.Body>
-             <div className="d-flex align-items-center justify-content-between">
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>
+              <hr />
+              <StarkFormBuilder
+                containerClass=""
+                formHeaderClass=""
+                formSections={FormSections}
+                onFormSubmit={(formValues) => {
+                  submitForm(formValues);
+                }}
+                options={options}
+                callbacks={{}}
+                defaultFormValues={defaultValues}
+                currentUser={currentUser}
+                submitBtnText="Submit"
+                showResetBtn={true}
+                resetBtnText="Clear"
+                btnContainerClass="form-submit-buttons pull-right"
+                isStepForm={false}
+                onFormReset={() => {}}
+              />
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Employees</h5>
-                 <div className="d-flex align-items-center justify-content-end">
+                <div className="d-flex align-items-center justify-content-end">
                   <a
                     href="#"
                     onClick={() => {
@@ -229,8 +232,8 @@ function EmployeeTechListing() {
                     Add Technology
                   </a>
                 </div>
-              </div>  
-              <hr/>
+              </div>
+              <hr />
               <Row>
                 <CustomTable
                   columns={columns}

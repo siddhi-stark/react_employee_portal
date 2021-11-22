@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
-import { Datepicker, Helmet, DropdownInput, TextInput } from '../../components/FormInputs';
+import {
+  Datepicker,
+  Helmet,
+  DropdownInput,
+  TextInput,
+} from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -35,32 +40,38 @@ function AllReports() {
     totalItems: 10,
   });
 
-  const handleActionCallback = ({id, createdDate, name }) => {
+  const handleActionCallback = ({ id, createdDate, name }) => {
     const newDate = customFunctions.getDate(createdDate);
     const dt = new Date(newDate).getTime();
     return (
-      <span className ="d-flex">
-          <>
-            <a href="javascript.void(0)" onClick={(e)=>{
+      <span className="d-flex">
+        <>
+          <a
+            href="javascript.void(0)"
+            onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              history.push(`/daily-report/${dt}/${id}`,{employeeReport:true, reporterName:name});}
-            }>
-              <span className="text-info">View Report</span>
-            </a>
-          </>
+              history.push(`/daily-report/${dt}/${id}`, {
+                employeeReport: true,
+                reporterName: name,
+              });
+            }}
+          >
+            <span className="text-info">View Report</span>
+          </a>
+        </>
       </span>
     );
-  }; 
+  };
 
   const columns = [
     {
       id: 'id',
       label: 'userId',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
       isDisplay: false,
     },
-   {
+    {
       id: 'createdDate',
       label: 'date',
       roleAccess: [1, 2, 3, 4, 5, 6],
@@ -101,7 +112,7 @@ function AllReports() {
       id: 'report',
       label: 'View Report',
       roleAccess: [1, 2, 3, 4, 5, 6],
-      render: handleActionCallback
+      render: handleActionCallback,
     },
   ];
 
@@ -162,7 +173,9 @@ function AllReports() {
   };
 
   const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?type=all&is_dropdown=1`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?type=all&is_dropdown=1`
+    );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setEmployeeList(data.data);
     }
@@ -170,10 +183,9 @@ function AllReports() {
 
   useEffect(() => {
     async function getData() {
-     
       getEmployee();
       setTitle('Reports');
-       const uRole = customFunctions.getLocalStorage('group');
+      const uRole = customFunctions.getLocalStorage('group');
       setUserRole(Number(uRole));
     }
     getData();
@@ -209,28 +221,28 @@ function AllReports() {
     e.preventDefault();
     let filterSearchErr = '';
     let isValid = true;
-   if (
-customFunctions.checkIfEmpty(searchKeyword) &&
-customFunctions.checkIfEmpty(selectedEmployee) &&
-customFunctions.checkIfEmpty(fromDate) &&
-customFunctions.checkIfEmpty(toDate)
-) {
-filterSearchErr = 'Please select atleast one filter';
-setFilterErr(filterSearchErr);
-isValid = false;
-}
+    if (
+      customFunctions.checkIfEmpty(searchKeyword) &&
+      customFunctions.checkIfEmpty(selectedEmployee) &&
+      customFunctions.checkIfEmpty(fromDate) &&
+      customFunctions.checkIfEmpty(toDate)
+    ) {
+      filterSearchErr = 'Please select atleast one filter';
+      setFilterErr(filterSearchErr);
+      isValid = false;
+    }
 
-if (!customFunctions.checkIfEmpty(fromDate)) {
-  if (customFunctions.checkIfEmpty(toDate)) {
-    filterSearchErr = 'Please select To date';
-    setFilterErr(filterSearchErr);
-    isValid = false;
-  }
-} else if (!customFunctions.checkIfEmpty(toDate)) {
-  filterSearchErr = 'Please select From date';
-  setFilterErr(filterSearchErr);
-  isValid = false;
-}
+    if (!customFunctions.checkIfEmpty(fromDate)) {
+      if (customFunctions.checkIfEmpty(toDate)) {
+        filterSearchErr = 'Please select To date';
+        setFilterErr(filterSearchErr);
+        isValid = false;
+      }
+    } else if (!customFunctions.checkIfEmpty(toDate)) {
+      filterSearchErr = 'Please select From date';
+      setFilterErr(filterSearchErr);
+      isValid = false;
+    }
     if (isValid) {
       setFilterErr('');
       getReports(1);
@@ -247,128 +259,130 @@ if (!customFunctions.checkIfEmpty(fromDate)) {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-            <Card>
-                <Card.Body>
-                 <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                 </div> 
-               <hr/> 
-                  <Card.Title>
-                    <Form onSubmit={(e) => filterSearch(e)}>
-                      {filterErr && (
-                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
-                          <div className="img-text">
-                            <img src="/images/fail.svg" alt="Success" />{' '}
-                            {filterErr}
-                          </div>
-                        </div>
-                      )}
-                      <Row className="mt-3">
-                       <UserRestrictions permittedUsers={[1,2,3,4,6,5]} roleId={userRole}>
-                          <Col sm={3}>
-                           <TextInput
-                              value={searchKeyword}
-                              placeholder="Search employee name"
-                              onInputChange={(e) => {
-                                setSearchKeyword(e.target.value);
-                              }}
-                            />
-                          </Col>
-                        <Col sm={3}>
-                          <div className="search-bar-input">
-                             <DropdownInput
-                              options={getEmployeeList()}
-                              placeholder="Select employee"
-                              defaultValue={selectedEmployee}
-                              onSelectHandler={(select) => {
-                                setFilterErr('');
-                                setSelectedEmployee(select);
-                              }}
-                              isMulti
-                            />
-                          </div>
-                        </Col>
-                        </UserRestrictions>
-                        <Col sm={3}>
-                          <Datepicker
-                            className="form-control"
-                            selected={fromDate}
-                            onChange={(e) => {
-                              setFilterErr('');
-                              setFromDate(e);
-                            }}
-                            autoComplete="off"
-                            name="startDate"
-                            dateFormat="dd/MM/yyyy"
-                            placeholder="From Date"
-                            maxDate={new Date()}
-                          />
-                        </Col>
-
-                        <Col sm={3}>
-                          <Datepicker
-                            className="form-control"
-                            selected={toDate}
-                            onChange={(e) => {
-                              setFilterErr('');
-                              setToDate(e);
-                            }}
-                            autoComplete="off"
-                            minDate={fromDate}
-                            name="startDate"
-                            dateFormat="dd/MM/yyyy"
-                            placeholder="To Date"
-                            maxDate={new Date()}
-                          />
-                        </Col>
-                         
-                        <Col sm={12}>
-                          <div className="filter-btn pull-right filter-btn-report">
-                            <Button
-                              variant="primary"
-                              type="submit"
-                              className="ms-4"
-                            >
-                              Apply
-                            </Button>
-                            <Button
-                              variant="secondary"
-                              type="button"
-                              className="ms-4"
-                              onClick={() => onClear()}
-                            >
-                              Clear
-                            </Button>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </Card.Title>
-                </Card.Body>
-            </Card>
           <Card>
-          <Card.Body>
-          <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Employee Reports</h5>
-                 </div> 
-               <hr/> 
-            <Row>
-              <Table
-                tableClass="table table-striped"
-                columns={columns}
-                rows={rows}
-                showPagination
-                paginationProps={{
-                  ...pagination,
-                  activePage: pagination.current_page,
-                  onPageChange: (pageNo) => {
-                    getReports(pageNo);
-                  },
-                }}
-                dropdownContainerClass="mb-3"
-              />
-            </Row>
-          </Card.Body>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>
+              <hr />
+              <Card.Title>
+                <Form onSubmit={(e) => filterSearch(e)}>
+                  {filterErr && (
+                    <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                      <div className="img-text">
+                        <img src="/images/fail.svg" alt="Success" /> {filterErr}
+                      </div>
+                    </div>
+                  )}
+                  <Row className="mt-3">
+                    <UserRestrictions
+                      permittedUsers={[1, 2, 3, 4, 6, 5]}
+                      roleId={userRole}
+                    >
+                      <Col sm={3}>
+                        <TextInput
+                          value={searchKeyword}
+                          placeholder="Search employee name"
+                          onInputChange={(e) => {
+                            setSearchKeyword(e.target.value);
+                          }}
+                        />
+                      </Col>
+                      <Col sm={3}>
+                        <div className="search-bar-input">
+                          <DropdownInput
+                            options={getEmployeeList()}
+                            placeholder="Select employee"
+                            defaultValue={selectedEmployee}
+                            onSelectHandler={(select) => {
+                              setFilterErr('');
+                              setSelectedEmployee(select);
+                            }}
+                            isMulti
+                          />
+                        </div>
+                      </Col>
+                    </UserRestrictions>
+                    <Col sm={3}>
+                      <Datepicker
+                        className="form-control"
+                        selected={fromDate}
+                        onChange={(e) => {
+                          setFilterErr('');
+                          setFromDate(e);
+                        }}
+                        autoComplete="off"
+                        name="startDate"
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="From Date"
+                        maxDate={new Date()}
+                      />
+                    </Col>
+
+                    <Col sm={3}>
+                      <Datepicker
+                        className="form-control"
+                        selected={toDate}
+                        onChange={(e) => {
+                          setFilterErr('');
+                          setToDate(e);
+                        }}
+                        autoComplete="off"
+                        minDate={fromDate}
+                        name="startDate"
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="To Date"
+                        maxDate={new Date()}
+                      />
+                    </Col>
+
+                    <Col sm={12}>
+                      <div className="filter-btn pull-right filter-btn-report">
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          className="ms-4"
+                        >
+                          Apply
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          type="button"
+                          className="ms-4"
+                          onClick={() => onClear()}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
+                </Form>
+              </Card.Title>
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Employee Reports</h5>
+              </div>
+              <hr />
+              <Row>
+                <Table
+                  tableClass="table table-striped"
+                  columns={columns}
+                  rows={rows}
+                  showPagination
+                  paginationProps={{
+                    ...pagination,
+                    activePage: pagination.current_page,
+                    onPageChange: (pageNo) => {
+                      getReports(pageNo);
+                    },
+                  }}
+                  dropdownContainerClass="mb-3"
+                />
+              </Row>
+            </Card.Body>
           </Card>
         </div>
       </section>

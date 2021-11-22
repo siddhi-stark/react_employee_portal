@@ -3,11 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { Form, Button, Card, Row, Col } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import {
-  EditorState,
-  convertFromHTML,
-  ContentState,
-} from 'draft-js';
+import { EditorState, convertFromHTML, ContentState } from 'draft-js';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import { Datepicker, Helmet, DropdownInput } from '../../components/FormInputs';
@@ -29,7 +25,9 @@ function Confirmation() {
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Confirmation' }];
 
-  const [selectedDesignationOption, setSelectedDesignationOption] = useState([]);
+  const [selectedDesignationOption, setSelectedDesignationOption] = useState(
+    []
+  );
   const [designation, setDesignation] = useState([]);
 
   const getDesignation = async () => {
@@ -64,10 +62,11 @@ function Confirmation() {
     );
     if (data) {
       setEmailBody(data.data.body);
-        const dp = data.data.body &&
-          EditorState.createWithContent(
-            ContentState.createFromBlockArray(convertFromHTML(data.data.body))
-          );
+      const dp =
+        data.data.body &&
+        EditorState.createWithContent(
+          ContentState.createFromBlockArray(convertFromHTML(data.data.body))
+        );
       setEmailContent(dp);
     } else {
       swal(message, '', 'error');
@@ -80,7 +79,9 @@ function Confirmation() {
       subject: 'Employee Confirmation',
       employee_id: id,
       body: emlBody,
-      designation_id: selectedDesignationOption ? Number(selectedDesignationOption.id):'',
+      designation_id: selectedDesignationOption
+        ? Number(selectedDesignationOption.id)
+        : '',
       confirmation_date: confirmationDate
         ? customFunctions.getDate(confirmationDate)
         : '',
@@ -112,7 +113,9 @@ function Confirmation() {
   const sendMail = async () => {
     const postData = {
       employee_id: id,
-      designation_id: selectedDesignationOption ? Number(selectedDesignationOption.id):'',
+      designation_id: selectedDesignationOption
+        ? Number(selectedDesignationOption.id)
+        : '',
       confirmation_date: confirmationDate
         ? customFunctions.getDate(confirmationDate)
         : '',
@@ -121,7 +124,7 @@ function Confirmation() {
       name: 'ConfirmationLetter',
       body: emailBody,
     };
-  
+
     const endPoint = `${Api.generateContentUrl}`;
     const { data } = await AuthApi.postDataToServer(endPoint, postData);
     if (data) {
@@ -157,81 +160,79 @@ function Confirmation() {
               }}
               autocomplete="off"
             >
-            <Row>
-            <Col>
-              <Datepicker
-                label="Confirmation Date"
-                asterisk="*"
-                className="form-control"
-                selected={confirmationDate}
-                placeholder="dd/mm/yyyy"
-                dateFormat="dd/MM/yyyy"
-                minDate={new Date()}
-                onChange={(e) => {
-                  setConfirmationDate(e);
-                }}
-                errorMessage={validator.message(
-                  'Confirm Date',
-                  confirmationDate,
-                  'required'
-                )}
-              />
-            </Col>
-            <Col>
-              <DropdownInput
-                label="Position"
-                options={getDesignationList()}
-                placeholder="Select Position"
-                asterisk="*"
-                defaultValue={selectedDesignationOption}
-                onSelectHandler={(select) => {
-                  setSelectedDesignationOption(select);
-                }}
-                errorMessage={validator.message(
-                  'position',
-                  selectedDesignationOption,
-                  'required'
-                )}
-              />
-            </Col>
-               </Row>
+              <Row>
+                <Col>
+                  <Datepicker
+                    label="Confirmation Date"
+                    asterisk="*"
+                    className="form-control"
+                    selected={confirmationDate}
+                    placeholder="dd/mm/yyyy"
+                    dateFormat="dd/MM/yyyy"
+                    minDate={new Date()}
+                    onChange={(e) => {
+                      setConfirmationDate(e);
+                    }}
+                    errorMessage={validator.message(
+                      'Confirm Date',
+                      confirmationDate,
+                      'required'
+                    )}
+                  />
+                </Col>
+                <Col>
+                  <DropdownInput
+                    label="Position"
+                    options={getDesignationList()}
+                    placeholder="Select Position"
+                    asterisk="*"
+                    defaultValue={selectedDesignationOption}
+                    onSelectHandler={(select) => {
+                      setSelectedDesignationOption(select);
+                    }}
+                    errorMessage={validator.message(
+                      'position',
+                      selectedDesignationOption,
+                      'required'
+                    )}
+                  />
+                </Col>
+              </Row>
               <div className="justify-content-left mt-4 preview-send-btn mb-4">
                 <Button type="submit" variant="primary">
                   Save and Send Mail
                 </Button>
               </div>
-              {
-               emailContent && (
-              <Editor
-                wrapperClassName="demo-wrapper"
-                editorClassName="demo-editor"
-                editorState={emailContent}
-                toolbar={{
-                  options: [
-                    'inline',
-                    'fontSize',
-                    'fontFamily',
-                    'list',
-                    'textAlign',
-                    'link',
-                    'history',
-                  ],
-                  fontSize: {
+              {emailContent && (
+                <Editor
+                  wrapperClassName="demo-wrapper"
+                  editorClassName="demo-editor"
+                  editorState={emailContent}
+                  toolbar={{
                     options: [
-                      7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-                      22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-                      36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-                      50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
-                      78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100,
+                      'inline',
+                      'fontSize',
+                      'fontFamily',
+                      'list',
+                      'textAlign',
+                      'link',
+                      'history',
                     ],
-                  },
-                  list: {
-                    options: ['unordered', 'ordered'],
-                  },
-                }}
-              />
+                    fontSize: {
+                      options: [
+                        7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                        22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+                        36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+                        50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76,
+                        78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100,
+                      ],
+                    },
+                    list: {
+                      options: ['unordered', 'ordered'],
+                    },
+                  }}
+                />
               )}
-
             </Form>
           </section>
         </div>

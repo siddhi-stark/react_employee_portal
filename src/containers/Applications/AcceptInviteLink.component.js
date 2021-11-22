@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import swal from 'sweetalert';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function AcceptInviteLink(props) {
+  const { history, match } = props;
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
   const [candidateData, setCandidateData] = useState([]);
   const [hideButtons, setHideButtons] = useState(false);
-  const [hideDeclineButton,setHideDeclineButton] = useState(false);
-  const [showButton,isShowButtons] = useState(false);
+  const [hideDeclineButton, setHideDeclineButton] = useState(false);
+  const [showButton, isShowButtons] = useState(false);
 
   const verifyToken = async (tkn) => {
     const { data } = await AuthApi.getDataFromServer(
@@ -30,13 +30,13 @@ function AcceptInviteLink(props) {
 
     if (!data) {
       swal('Token is invalid', '', 'error');
-      props.history.push('/login');
+      history.push('/login');
     }
   };
 
   useEffect(() => {
     dispatch({ type: 'LOGIN', value: false });
-    const matchUrltoken = props.match.params.offerToken;
+    const matchUrltoken = match.params.offerToken;
     setToken(matchUrltoken);
     if (!matchUrltoken) {
       window.location = '/login';
@@ -56,11 +56,11 @@ function AcceptInviteLink(props) {
     if (data) {
       isShowButtons(true);
 
-       if(type === 0) {
-      setHideButtons(true);
-    }else {
-      setHideDeclineButton(true);
-    }
+      if (type === 0) {
+        setHideButtons(true);
+      } else {
+        setHideDeclineButton(true);
+      }
     }
   };
 
@@ -77,41 +77,47 @@ function AcceptInviteLink(props) {
           </a>
         </div>
 
-         {hideButtons === true && (
-        <p>Thank You for accepting the offer. Please check your email for further process. <br /> For any queries, contact on hr@starkdigital.net </p>
+        {hideButtons === true && (
+          <p>
+            Thank You for accepting the offer. Please check your email for
+            further process. <br /> For any queries, contact on
+            hr@starkdigital.net{' '}
+          </p>
+        )}
 
-          )}
-
-        {hideDeclineButton === true && (
-        <p>Thank You for your response.</p>
-        )}  
+        {hideDeclineButton === true && <p>Thank You for your response.</p>}
 
         {showButton === true ? (
           ''
-          ) : 
- <>
-        <p>Dear <strong>{candidateData.name}</strong>, please click on accept button to accept the offer for the position of {candidateData.applied_for_name} </p>
-         <div className="float-end">
+        ) : (
+          <>
+            <p>
+              Dear <strong>{candidateData.name}</strong>, please click on accept
+              button to accept the offer for the position of{' '}
+              {candidateData.applied_for_name}{' '}
+            </p>
+            <div className="float-end">
               <Button
                 variant="success"
                 type="button"
-                onClick={() => {onAcceptBtn(0); }}
+                onClick={() => {
+                  onAcceptBtn(0);
+                }}
               >
                 Accept
               </Button>
-              <Button variant="danger" 
-               className="ms-4"
-                onClick={() => {onAcceptBtn(1);}}
-
-               >
+              <Button
+                variant="danger"
+                className="ms-4"
+                onClick={() => {
+                  onAcceptBtn(1);
+                }}
+              >
                 Declined
               </Button>
-
             </div>
-
-            </>
-        }
-
+          </>
+        )}
       </div>
     </>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory, Link } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
-import { Row, Col, Card, Button, Image,Form } from 'react-bootstrap';
+import { Row, Col, Card, Button, Image, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import {
@@ -22,19 +22,19 @@ function CurrentEmployee() {
   const currentdate = new Date();
   const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
 
-  const validator = new SimpleReactValidator(
-    {
-      validators: {
-        emailValidate: {
-          message: 'The :attribute domain name should be starkdigital.net.',
-          rule: (val, params, valid) => {
-
-            return valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) && params.indexOf(val) === -1;
-          }
-        }
-      }
-    }
-  );
+  const validator = new SimpleReactValidator({
+    validators: {
+      emailValidate: {
+        message: 'The :attribute domain name should be starkdigital.net.',
+        rule: (val, params, valid) => {
+          return (
+            valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) &&
+            params.indexOf(val) === -1
+          );
+        },
+      },
+    },
+  });
 
   const [employee, setEmployee] = useState([]);
   const [totalCount, setTotalCount] = useState(9);
@@ -45,7 +45,7 @@ function CurrentEmployee() {
   const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
-  
+
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [employeeId, setEmployeeId] = useState(null);
@@ -61,9 +61,8 @@ function CurrentEmployee() {
   const [manager, setManager] = useState([]);
   const [selectedManager, setSelectedManager] = useState([]);
   const [teamLead, setTeamLead] = useState([]);
-  const [selectedDesignationOption, setSelectedDesignationOption] = useState(
-    null
-  );
+  const [selectedDesignationOption, setSelectedDesignationOption] =
+    useState(null);
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [selectedTeamLead, setSelectedTeamLead] = useState('');
@@ -75,8 +74,8 @@ function CurrentEmployee() {
   const [empCode, setEmpCode] = useState('');
   const [employeetwId, setEmployeeTwId] = useState('');
   const [joiningDate, setJoiningDate] = useState('');
-  const [newDepartment,setNewDepartment] = useState([]);
-  const [projectTeam,setProjectTeam] = useState([]);
+  const [newDepartment, setNewDepartment] = useState([]);
+  const [projectTeam, setProjectTeam] = useState([]);
   const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedMentor, setSelectedMentor] = useState([]);
@@ -117,7 +116,7 @@ function CurrentEmployee() {
     getEmployeeName();
     getPosition();
   }, [filterData]);
-  
+
   const submitForm = async (formValues) => {
     setFilterData(formValues); //eslint-disable-line
   };
@@ -139,7 +138,9 @@ function CurrentEmployee() {
   };
 
   const getPosition = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.designationUrl}?type=all`
+    );
     if (!data) {
       return;
     }
@@ -156,7 +157,8 @@ function CurrentEmployee() {
     await updateOptions({ ...allOptions });
   };
 
-  const getEmployeeById = async (id) => { // eslint-disable-line
+  const getEmployeeById = async (id) => {
+    // eslint-disable-line
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${id}/`
     );
@@ -180,10 +182,10 @@ function CurrentEmployee() {
       });
 
       projectTeam.map((pt) => {
-        if(pt.id === data.data.team_id) {
+        if (pt.id === data.data.team_id) {
           setSelectedProjectTeam({
-          id: pt.id,
-          label: pt.name,
+            id: pt.id,
+            label: pt.name,
           });
         }
         return pt;
@@ -192,7 +194,6 @@ function CurrentEmployee() {
       manager.map((mngr) => {
         data.data.assigned_managers.map((assgnmgmr) => {
           if (mngr.id === assgnmgmr) {
-           
             managerList.push({
               id: mngr.id,
               label: mngr.full_name,
@@ -208,7 +209,6 @@ function CurrentEmployee() {
       mentorData.map((mntr) => {
         data.data.assigned_mentors.map((assgnmntr) => {
           if (mntr.id === assgnmntr) {
-           
             mentorList.push({
               id: mntr.id,
               label: mntr.full_name,
@@ -231,30 +231,39 @@ function CurrentEmployee() {
 
       newDepartment.map((dept) => {
         if (data.data.department_id === dept.id) {
-           setSelectedDepartment({
-              id: dept.id,
-              label: dept.name,
-            });
+          setSelectedDepartment({
+            id: dept.id,
+            label: dept.name,
+          });
         }
         return dept;
       });
-      setSelectedDesignationOption(data.data.designation_id ? {
+      setSelectedDesignationOption(
+        data.data.designation_id
+          ? {
+              label: data.data.designation_name,
+              id: data.data.designation_id,
+            }
+          : ''
+      );
 
-        label: data.data.designation_name,
-        id: data.data.designation_id,
-      } : '');
-
-      setSelectedRole(data.data.role_id ? {
-        label: data.data.role_name,
-        id: data.data.role_id,
-      } : '');
+      setSelectedRole(
+        data.data.role_id
+          ? {
+              label: data.data.role_name,
+              id: data.data.role_id,
+            }
+          : ''
+      );
 
       setFullName(data.data.full_name);
       setEmail(data.data.email);
       setPassword(data.data.password);
       setMobile(data.data.mobile);
       setDate(data.data.dob ? new Date(data.data.dob) : null);
-      setJoiningDate(data.data.date_joined ? new Date(data.data.date_joined) : null);
+      setJoiningDate(
+        data.data.date_joined ? new Date(data.data.date_joined) : null
+      );
       setEmpCode(data.data.emp_code);
     }
   };
@@ -262,7 +271,6 @@ function CurrentEmployee() {
   const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.designationUrl}?type=all`
-      
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setDesignation(data.data);
@@ -272,7 +280,6 @@ function CurrentEmployee() {
   const getNewDapartment = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.InterviewRoundsUrl}?constant_type=department`
-      
     );
     if (data && data.data) {
       setNewDepartment(data.data.department);
@@ -323,12 +330,14 @@ function CurrentEmployee() {
   };
 
   const getTeam = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
-    if(data && data.data) {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=team`
+    );
+    if (data && data.data) {
       setProjectTeam(data.data.team);
     }
   };
-  
+
   useEffect(() => {
     async function getData() {
       const uRole = customFunctions.getLocalStorage('group');
@@ -431,7 +440,7 @@ function CurrentEmployee() {
     }
 
     const mentorList = [];
-    if(selectedMentor && selectedMentor.length > 0) {
+    if (selectedMentor && selectedMentor.length > 0) {
       selectedMentor.map((mt) => {
         mentorList.push(mt.id);
         return mt;
@@ -445,21 +454,24 @@ function CurrentEmployee() {
       role: selectedRole.id,
       team: selectedProjectTeam.id,
       password,
-      emp_code: empCode && !employeeId  ? Number(empCode.split('-')[1]) : '',
+      emp_code: empCode && !employeeId ? Number(empCode.split('-')[1]) : '',
       team_leads: teamIdList,
       managers: managerList,
       dob: date ? customFunctions.getDate(date) : null,
       date_joined: joiningDate ? customFunctions.getDate(joiningDate) : null,
       tw_emp: twId,
       department: selectedDepartment.id,
-      mentor:mentorList
+      mentor: mentorList,
     };
     if (selectedDesignationOption) {
       postData.designation = selectedDesignationOption.id;
     }
 
     const isFind = twEmployee.find(
-      (item) => selectedEmployee && selectedEmployee.label && item.full_name === selectedEmployee.label
+      (item) =>
+        selectedEmployee &&
+        selectedEmployee.label &&
+        item.full_name === selectedEmployee.label
     );
     if (isFind) {
       postData.tw_emp = isFind.tw_id;
@@ -510,12 +522,11 @@ function CurrentEmployee() {
       swal({
         title: message,
         icon: 'error',
-      })
-        .then(okAction => {
-          if (okAction) {
-            setModalShow(true);
-          }
-        });
+      }).then((okAction) => {
+        if (okAction) {
+          setModalShow(true);
+        }
+      });
       setDisableButton(false);
     }
   };
@@ -553,20 +564,19 @@ function CurrentEmployee() {
       return op.push({
         label: emp.full_name,
         id: emp.tw_id,
-
       });
     });
     return op;
   };
 
   const getMentorData = () => {
-    if(!mentorData) return [];
+    if (!mentorData) return [];
     const op = [];
     mentorData.map((mntr) => {
       return op.push({
         label: mntr.full_name,
         id: mntr.id,
-        value: mntr.full_name
+        value: mntr.full_name,
       });
     });
     return op;
@@ -613,7 +623,7 @@ function CurrentEmployee() {
   const getTeamLeadList = () => {
     if (!teamLead) return [];
     const op = [];
-    if(Number(selectedRole && selectedRole.id) !== 3){
+    if (Number(selectedRole && selectedRole.id) !== 3) {
       teamLead.map((data) => {
         return op.push({
           label: data.full_name,
@@ -656,10 +666,9 @@ function CurrentEmployee() {
     } else if (event.length > 6) {
       event = event.substring(0, 5);
     }
-    return event !== '' ? `SDMS-${event}` : ''; 
-
+    return event !== '' ? `SDMS-${event}` : '';
   };
- 
+
   validator.purgeFields();
 
   return (
@@ -668,54 +677,55 @@ function CurrentEmployee() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-            <Card>
+          <Card>
             <Card.Body>
-             <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-              { (Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && (
-                <Link
-                  className="float-end btn btn-primary"
-                  title="Add Employee"
-                  onClick={() => {
-                    setModalShow(true);
-                    setAddButton(true);
-                    setEmployeeId('');
-                    setEmail('');
-                    setPassword('');
-                    setSelectedTeamLead('');
-                    
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                {(Number(userRole) === 1 ||
+                  Number(userRole) === 5 ||
+                  Number(userRole) === 6) && (
+                  <Link
+                    className="float-end btn btn-primary"
+                    title="Add Employee"
+                    onClick={() => {
+                      setModalShow(true);
+                      setAddButton(true);
+                      setEmployeeId('');
+                      setEmail('');
+                      setPassword('');
+                      setSelectedTeamLead('');
+                    }}
+                  >
+                    Add Employee
+                  </Link>
+                )}
+              </div>
+              <hr />
+              <div className="filter-box-main">
+                <StarkFormBuilder
+                  containerClass=""
+                  formHeaderClass=""
+                  formSections={FormSections}
+                  formHeading="filter form"
+                  onFormSubmit={(formValues) => {
+                    submitForm(formValues);
                   }}
-                >
-                  Add Employee
-                </Link>
-            )}
-            </div>  
-            <hr/>
-            <div className="filter-box-main">
-              <StarkFormBuilder
-                containerClass=""
-                formHeaderClass=""
-                formSections={FormSections}
-                formHeading="filter form"
-                onFormSubmit={(formValues) => {
-                  submitForm(formValues);
-                }}
-                options={options}
-                callbacks={{}}
-                defaultFormValues={defaultValues}
-                submitBtnText="Apply"
-                showResetBtn={true}
-                showBtnClass={true}
-                resetBtnText="Clear"
-                btnContainerClass="form-submit-buttons pull-right"
-                isStepForm={false}
-                onFormReset={() => {
-                  setFilterData({});
-                }}
-              />
+                  options={options}
+                  callbacks={{}}
+                  defaultFormValues={defaultValues}
+                  submitBtnText="Apply"
+                  showResetBtn={true}
+                  showBtnClass={true}
+                  resetBtnText="Clear"
+                  btnContainerClass="form-submit-buttons pull-right"
+                  isStepForm={false}
+                  onFormReset={() => {
+                    setFilterData({});
+                  }}
+                />
               </div>
             </Card.Body>
-            </Card>
+          </Card>
         </div>
         <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
           {employee &&
@@ -741,7 +751,9 @@ function CurrentEmployee() {
                         </span>
                       </Col>
                       <Col className="col-md-8">
-                      { (Number(userRole) === 1 || Number(userRole) === 5 || Number(userRole) === 6) && (
+                        {(Number(userRole) === 1 ||
+                          Number(userRole) === 5 ||
+                          Number(userRole) === 6) && (
                           <>
                             <Link
                               className="float-end ml-2"
@@ -802,9 +814,23 @@ function CurrentEmployee() {
                             emp.notice_period_date &&
                             customFunctions.getDMYDate(emp.relieving_date)}
                         </p>{' '}
-                        <h6> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].start_date && `Bond start date- ${customFunctions.getDMYDate(emp.bond_details_list[0].start_date)}`}
+                        <h6>
+                          {' '}
+                          {emp.bond_details_list &&
+                            emp.bond_details_list[0] &&
+                            emp.bond_details_list[0].start_date &&
+                            `Bond start date- ${customFunctions.getDMYDate(
+                              emp.bond_details_list[0].start_date
+                            )}`}
                         </h6>
-                        <h6> {emp.bond_details_list && emp.bond_details_list[0] && emp.bond_details_list[0].end_date && `Bond end date- ${customFunctions.getDMYDate(emp.bond_details_list[0].end_date)}`}
+                        <h6>
+                          {' '}
+                          {emp.bond_details_list &&
+                            emp.bond_details_list[0] &&
+                            emp.bond_details_list[0].end_date &&
+                            `Bond end date- ${customFunctions.getDMYDate(
+                              emp.bond_details_list[0].end_date
+                            )}`}
                         </h6>
                         <br />
                       </Col>
@@ -840,11 +866,9 @@ function CurrentEmployee() {
             getEmployeeData(pageNo);
           }}
         />
-        {(totalCount < 1 ) && (
-        <p className="text-center"> No records found</p>
-      )}
+        {totalCount < 1 && <p className="text-center"> No records found</p>}
       </section>
-       <ModalInput
+      <ModalInput
         size="lg"
         centered
         show={modalShow}
@@ -860,7 +884,6 @@ function CurrentEmployee() {
           >
             <Row>
               {!employeeId && (
-
                 <Col sm={6}>
                   <DropdownInput
                     label="TW Employee"
@@ -909,7 +932,6 @@ function CurrentEmployee() {
                   containerClass="form-group"
                   type="text"
                   disabled={(employeeId || employeetwId) && 'disabled'}
-
                   value={email}
                   placeholder="Enter email"
                   errorMessage={validator.message(
@@ -932,14 +954,19 @@ function CurrentEmployee() {
                     name="passwordTitle"
                     value={password}
                     placeholder="Enter Password"
-                    errorMessage={!employeeId && validator.message('password', password, 'required|min:6')}
+                    errorMessage={
+                      !employeeId &&
+                      validator.message('password', password, 'required|min:6')
+                    }
                   />
                 </Col>
               )}
 
               <Col sm={6}>
                 <TextInput
-                  onInputChange={(e) => { setEmpCode(getMobile(e.target.value)); }}
+                  onInputChange={(e) => {
+                    setEmpCode(getMobile(e.target.value));
+                  }}
                   autocomplete="off"
                   label="Employee Code"
                   asterisk="*"
@@ -1029,7 +1056,7 @@ function CurrentEmployee() {
                   defaultValue={selectedRole}
                   onSelectHandler={(select) => {
                     setSelectedRole(select);
-                    if(Number(select && select.id) === 3){
+                    if (Number(select && select.id) === 3) {
                       setSelectedTeamLead('');
                     }
                   }}
@@ -1107,34 +1134,31 @@ function CurrentEmployee() {
                 />
               </Col>
               {employeeId && (
-             <Col sm={6}>
-                <DropdownInput
-                  label="Reporting Person"
-                  options={getMentorData()}
-                  placeholder="Select Mentor"
-                  defaultValue={selectedMentor}
-                  isMulti
-                  onSelectHandler={(select) => {
-                    setSelectedMentor(select);
-                  }}
-                />
-              </Col>
-                )}
-
+                <Col sm={6}>
+                  <DropdownInput
+                    label="Reporting Person"
+                    options={getMentorData()}
+                    placeholder="Select Mentor"
+                    defaultValue={selectedMentor}
+                    isMulti
+                    onSelectHandler={(select) => {
+                      setSelectedMentor(select);
+                    }}
+                  />
+                </Col>
+              )}
             </Row>
             <div className="float-end">
-              <Button
-                variant="primary"
-                type="submit"
-                disabled={disableButton}
-              >
+              <Button variant="primary" type="submit" disabled={disableButton}>
                 {employeeId ? 'Update' : 'Add'}
               </Button>
-              <Button variant="secondary" 
-               className="ms-4" onClick={() => onCancel()}>
+              <Button
+                variant="secondary"
+                className="ms-4"
+                onClick={() => onCancel()}
+              >
                 Cancel
               </Button>
-
             </div>
           </Form>
         }

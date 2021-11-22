@@ -41,7 +41,7 @@ function TeamProjectScheduler() {
       id: 'emp_id',
       label: 'id',
       roleAccess: [4],
-      isDisplay:false
+      isDisplay: false,
     },
     {
       id: 'emp_name',
@@ -56,10 +56,14 @@ function TeamProjectScheduler() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                history.push(`/my-project/${emp_id}`,{schedular:true,teamMemberName:emp_name,teamMemberId:emp_id});
+                history.push(`/my-project/${emp_id}`, {
+                  schedular: true,
+                  teamMemberName: emp_name,
+                  teamMemberId: emp_id,
+                });
               }}
             >
-            <strong> {emp_name} </strong>
+              <strong> {emp_name} </strong>
             </a>
           </>
         );
@@ -101,20 +105,20 @@ function TeamProjectScheduler() {
             />
           </>
         );
-      }, 
-    }
+      },
+    },
   ];
 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
-    const endPoint = `${Api.projectSchedularUrl}`; 
+    const endPoint = `${Api.projectSchedularUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
         : {};
     const params = {
-      show_percentage:1, 
+      show_percentage: 1,
       team_id: !filterList ? '' : Number(teamId),
       page,
       limit,
@@ -124,12 +128,17 @@ function TeamProjectScheduler() {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      setTotalCount(data && data.data && data.data.employees_data && data.data.employees_data.length);
+      setTotalCount(
+        data &&
+          data.data &&
+          data.data.employees_data &&
+          data.data.employees_data.length
+      );
       setLimit(10);
       const startIndex = currentPage * 10 - 10;
       const endIndex = startIndex + 10;
       const projectData = data && data.data && data.data.employees_data;
-      setRowData((projectData.slice(startIndex, endIndex)) || []);
+      setRowData(projectData.slice(startIndex, endIndex) || []);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -140,7 +149,7 @@ function TeamProjectScheduler() {
   };
 
   useEffect(() => {
-    if(filterData){
+    if (filterData) {
       getRowData(currentPage);
     }
     setTitle('Project Scheduler');
@@ -149,9 +158,9 @@ function TeamProjectScheduler() {
   useEffect(() => {
     getRowData(currentPage);
   }, [currentPage]);
-  
+
   // Get user role Filter
-  const getUserRole = async() => {
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
@@ -162,36 +171,44 @@ function TeamProjectScheduler() {
 
   // Submit Form Filter
   const submitForm = async (formValues) => {
-    const payload ={
+    const payload = {
       date: formValues.month && customFunctions.getDate(formValues.month),
-      team_id: formValues.team_id && formValues.team_id.value && Number(formValues.team_id.value),
+      team_id:
+        formValues.team_id &&
+        formValues.team_id.value &&
+        Number(formValues.team_id.value),
     };
     setFilterData(payload);
   };
-    
+
   const getTeam = async () => {
-  const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
-    if(!data) {
-     swal(message, '', 'error', {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=team`
+    );
+    if (!data) {
+      swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       const dpOptions = [];
-      data && data.data && data.data.team && data.data.team.map((op) => {
-        // Change appropriate keys
-        dpOptions.push({label: op.name, value: op.id});
-        return op;
-      });
+      data &&
+        data.data &&
+        data.data.team &&
+        data.data.team.map((op) => {
+          // Change appropriate keys
+          dpOptions.push({ label: op.name, value: op.id });
+          return op;
+        });
       const allOptions = {
         ...options,
         ...filterOptions,
-        team_id: dpOptions
+        team_id: dpOptions,
       };
-      filterOptions = {...allOptions};
+      filterOptions = { ...allOptions };
       updateOptions(allOptions);
-    };
+    }
   };
 
   useEffect(() => {
@@ -202,26 +219,30 @@ function TeamProjectScheduler() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Team Project Scheduler</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">
+          Team Project Scheduler
+        </h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-        {currentUser !== 3 && (
+          {currentUser !== 3 && (
             <Card>
-                <Card.Body>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                  </div>
-                  <hr/>
-                  <div className="filter-box-main">
-                   <StarkFormBuilder
-                    containerClass=''
-                    formHeaderClass=''
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                </div>
+                <hr />
+                <div className="filter-box-main">
+                  <StarkFormBuilder
+                    containerClass=""
+                    formHeaderClass=""
                     formSections={FormSections}
                     formHeading="Filter"
-                    onFormSubmit={(formValues) => {submitForm(formValues);}}
+                    onFormSubmit={(formValues) => {
+                      submitForm(formValues);
+                    }}
                     options={options}
                     callbacks={{}}
                     defaultFormValues={defaultValues}
@@ -236,16 +257,18 @@ function TeamProjectScheduler() {
                       setFilterData();
                     }}
                   />
-                  </div>
-                </Card.Body>
+                </div>
+              </Card.Body>
             </Card>
           )}
           <Card>
             <Card.Body>
-             <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Team Project Scheduler</h5>
-                </div>
-                <hr/>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">
+                  Team Project Scheduler
+                </h5>
+              </div>
+              <hr />
               <CustomTable
                 columns={columns}
                 rows={rowData}

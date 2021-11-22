@@ -17,8 +17,8 @@ function Header() {
   const [time, setTime] = useState('');
   const [clockedInTime, setClockInTime] = useState('');
   const [userRole, setUserRole] = useState('');
-  const [notification,setNotificationData] = useState([]);
-  const [notificationCount,setNotificationCount] = useState('');
+  const [notification, setNotificationData] = useState([]);
+  const [notificationCount, setNotificationCount] = useState('');
   const history = useHistory();
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
@@ -33,23 +33,22 @@ function Header() {
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
 
     if (data && data.data) {
-
       setDesignation(data.data.designation_name);
       setEmpId(data.data.emp_code);
       setEmployeeName(data.data.full_name);
       setImageProfile(data.data.profile_image_url);
-      customFunctions.setLocalStorage('greetingId',data.data.greeting);
-      customFunctions.setLocalStorage('team_id',data.data.team_id);
-      customFunctions.setLocalStorage('birthday',data.data.is_birthday);
+      customFunctions.setLocalStorage('greetingId', data.data.greeting);
+      customFunctions.setLocalStorage('team_id', data.data.team_id);
+      customFunctions.setLocalStorage('birthday', data.data.is_birthday);
     }
     return true;
   };
 
-   const getNotificationCount = async () => {
+  const getNotificationCount = async () => {
     const endPoint = `${Api.notificationCountUrl}`;
 
-    const {data} = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
       setNotificationCount(data.data.count);
     }
   };
@@ -84,9 +83,9 @@ function Header() {
     getProfile();
     getCLocTIme();
     getClockOutTime();
-    setInterval(()=>{
+    setInterval(() => {
       getNotificationCount();
-    },500000);
+    }, 500000);
 
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
@@ -97,10 +96,9 @@ function Header() {
       if (
         extractedPath !== 'login' &&
         extractedPath !== 'forget-password' &&
-        extractedPath !== 'password' && 
-        extractedPath !== 'verify' && 
-         extractedPath !== 'temporary'
-        
+        extractedPath !== 'password' &&
+        extractedPath !== 'verify' &&
+        extractedPath !== 'temporary'
       ) {
         history.push('/login');
       }
@@ -110,16 +108,18 @@ function Header() {
   }, []);
 
   const onMenuChange = () => {
-    
     document.dispatchEvent(eventMenu);
     return true;
   };
 
   const onNotification = async (type) => {
-    const endPoint = type === 1 ? `${Api.notificationUrl}?type=all` : `${Api.notificationUrl}?limit=${3}`;
+    const endPoint =
+      type === 1
+        ? `${Api.notificationUrl}?type=all`
+        : `${Api.notificationUrl}?limit=${3}`;
 
-    const {data} = await AuthApi.getDataFromServer(endPoint);
-    if(data) {
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
       setNotificationData(data.data);
     }
   };
@@ -128,11 +128,11 @@ function Header() {
     const endPoint = `${Api.notificationUrl}`;
 
     const postData = {
-     'is_read': true,
-    'notifications': [notificatioId] 
+      is_read: true,
+      notifications: [notificatioId],
     };
-    const {data} = await AuthApi.putDataToServer(endPoint,postData);
-    if(data && data.data.is_read) {
+    const { data } = await AuthApi.putDataToServer(endPoint, postData);
+    if (data && data.data.is_read) {
       getNotificationCount();
     }
   };
@@ -169,50 +169,68 @@ function Header() {
               <h6>{employeeName}</h6>
               <div className="profile-img">
                 <a href="#">
-
                   {imageProfile ? (
-
-                    <img
-                      src={imageProfile}
-                      alt="Profile" />
-                  ) : <img
-                    src={Api.s3UrlnoProfile}
-                    alt="Edit Profile"
-                  />}
+                    <img src={imageProfile} alt="Profile" />
+                  ) : (
+                    <img src={Api.s3UrlnoProfile} alt="Edit Profile" />
+                  )}
                 </a>
               </div>
             </div>
-            
-            <div className="dropdown main-header-notification"> 
-              <a className="nav-link icon" href="javascript:void(0)" onClick={() => onNotification(0)}> 
+
+            <div className="dropdown main-header-notification">
+              <a
+                className="nav-link icon"
+                href="javascript:void(0)"
+                onClick={() => onNotification(0)}
+              >
                 <img src="/images/notification.png" alt="notification" />
-                <span className="badge badge-danger nav-link-badge">{notificationCount === 0 ? '' : notificationCount}</span> 
-              </a> 
-              <div className="dropdown-menu"> 
-                <div className="header-navheading"> 
-                  <p className="main-notification-text">You have {notificationCount} unread notification
-                    <span className="badge badge-pill badge-primary ml-3" onClick={() => {onNotification(1); // eslint-disable-line
-                    }} 
-                    >View all</span>
+                <span className="badge badge-danger nav-link-badge">
+                  {notificationCount === 0 ? '' : notificationCount}
+                </span>
+              </a>
+              <div className="dropdown-menu">
+                <div className="header-navheading">
+                  <p className="main-notification-text">
+                    You have {notificationCount} unread notification
+                    <span
+                      className="badge badge-pill badge-primary ml-3"
+                      onClick={() => {
+                        onNotification(1); // eslint-disable-line
+                      }}
+                    >
+                      View all
+                    </span>
                   </p>
                 </div>
-                <div className="main-notification-list"> 
-
-                    { notification.map((note,i) => ( //eslint-disable-line
+                <div className="main-notification-list">
+                  {notification.map(
+                    (
+                      note,
+                      i //eslint-disable-line
+                    ) => (
                       <>
-                  <div className="media new"> 
-                   
-                    <div className="media-body"> 
-                     <p onClick={() => {onMessageClick(note.id); onNotification(1);}} className= {note.is_read === false ? "active-media" : ''}  // eslint-disable-line
-                      >
-                      {note.message}</p>
-                      <span>{note.time}</span> 
-                    </div> 
-                  </div>  
-                  </>
-                    )) }
-                </div> 
-              </div> 
+                        <div className="media new">
+                          <div className="media-body">
+                            <p
+                              onClick={() => {
+                                onMessageClick(note.id);
+                                onNotification(1);
+                              }}
+                              className={
+                                note.is_read === false ? 'active-media' : ''
+                              } // eslint-disable-line
+                            >
+                              {note.message}
+                            </p>
+                            <span>{note.time}</span>
+                          </div>
+                        </div>
+                      </>
+                    )
+                  )}
+                </div>
+              </div>
             </div>
             <div className="dropdown d-md-flex header-settings">
               <a
@@ -227,24 +245,34 @@ function Header() {
               <div className="main-header-menu-icon">
                 <div className="dropdown-menu">
                   <div className="header-navheading text-center">
-                    <h5 className="main-notification-title">{employeeName || ''}</h5>
+                    <h5 className="main-notification-title">
+                      {employeeName || ''}
+                    </h5>
 
-                    {
-                      designation && (
-                        <p className="main-notification-text" style={{ 'font-size': '13px' }}>({designation})</p>
-                      )
-                    }
-                    {
-                      empId && (
-                        <UserRestrictions permittedUsers={[2, 3, 4]} roleId={userRole}>
-                          <small>Employee ID {`SDMS${empId}`}</small>
-                        </UserRestrictions>
-                      )
-                    }
+                    {designation && (
+                      <p
+                        className="main-notification-text"
+                        style={{ 'font-size': '13px' }}
+                      >
+                        ({designation})
+                      </p>
+                    )}
+                    {empId && (
+                      <UserRestrictions
+                        permittedUsers={[2, 3, 4]}
+                        roleId={userRole}
+                      >
+                        <small>Employee ID {`SDMS${empId}`}</small>
+                      </UserRestrictions>
+                    )}
                   </div>
                   <ul className="m-0 list-unstyled p-0">
                     <li>
-                      <Link className="dropdown-item border-top" to="/profile" onClick={onMenuChange}>
+                      <Link
+                        className="dropdown-item border-top"
+                        to="/profile"
+                        onClick={onMenuChange}
+                      >
                         <img
                           src="/images/user.svg"
                           alt="User"
@@ -254,7 +282,11 @@ function Header() {
                       </Link>
                     </li>
                     <li>
-                      <Link className="dropdown-item" to="/manage-password" onClick={onMenuChange}>
+                      <Link
+                        className="dropdown-item"
+                        to="/manage-password"
+                        onClick={onMenuChange}
+                      >
                         <img
                           src="/images/change-password.svg"
                           alt="Change"
@@ -284,7 +316,6 @@ function Header() {
                       </a>
                     </li>
                   </ul>
-
                 </div>
               </div>
             </div>

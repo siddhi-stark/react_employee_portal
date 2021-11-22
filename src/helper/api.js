@@ -3,7 +3,8 @@ import { Component } from 'react';
 export default class Api extends Component {
   static baseUrl = Api.getBaseUrl();
 
-  static s3UrlnoProfile = 'https://empportal-serverless.s3.ap-south-1.amazonaws.com/noProfile.jpeg';
+  static s3UrlnoProfile =
+    'https://empportal-serverless.s3.ap-south-1.amazonaws.com/noProfile.jpeg';
 
   static s3Url = 'https://empportal-serverless.s3.amazonaws.com/media/';
 
@@ -64,21 +65,21 @@ export default class Api extends Component {
   static employeeTimesheet = `${Api.baseUrl}employee-timesheet/`;
 
   static historyUrl = `${Api.baseUrl}employementhistory/`;
-  
+
   static applicantsUrl = `${Api.baseUrl}applicants/`;
 
   static roundsUrl = `${Api.baseUrl}applicant-rounds/`;
 
-  static interviewUrl =  `${Api.baseUrl}interviewer/`;
+  static interviewUrl = `${Api.baseUrl}interviewer/`;
 
   static generateContentUrl = `${Api.baseUrl}generate-content/`;
 
   static sendMailUrl = `${Api.baseUrl}send-email/`;
 
-  static batchUploadUrl =  `${Api.baseUrl}batch-upload/`;
+  static batchUploadUrl = `${Api.baseUrl}batch-upload/`;
 
   static bulkStatusUrl = `${Api.baseUrl}applicants-bulk-status/`;
-  
+
   static hrReportUrl = `${Api.baseUrl}report-count/`;
 
   static offerUrl = `${Api.baseUrl}offer-list/`;
@@ -96,12 +97,12 @@ export default class Api extends Component {
   static timesheetDetailsUrl = `${Api.baseUrl}employee-timesheet-detail/`;
 
   static applicantHistoryUrl = `${Api.baseUrl}applicant-history/`;
-  
-  static offerTokenUrl = `${Api.baseUrl}verify/offer/`; 
 
-  static offerStatusUrl = `${Api.baseUrl}offer-status/`;  
+  static offerTokenUrl = `${Api.baseUrl}verify/offer/`;
 
-  static temporaryAccountUrl = `${Api.baseUrl}verify/account/`;   
+  static offerStatusUrl = `${Api.baseUrl}offer-status/`;
+
+  static temporaryAccountUrl = `${Api.baseUrl}verify/account/`;
 
   static applicantDocumentUrl = `${Api.baseUrl}applicant-document/`;
 
@@ -124,35 +125,36 @@ export default class Api extends Component {
   static holidayUrl = `${Api.baseUrl}upcoming-holiday/`;
 
   static leavesApplied = `${Api.baseUrl}leave-applied/`;
-  
+
   static socialMediaUrl = `${Api.baseUrl}instagram-post/`;
 
   static driveUploadDocumentUrl = `${Api.baseUrl}google-drive-list/`;
 
   static leavesUrl = `${Api.baseUrl}leave/`;
 
-  static birthdayUrl =  `${Api.baseUrl}upcoming-birthday/`;
+  static birthdayUrl = `${Api.baseUrl}upcoming-birthday/`;
 
-  static greetingsUrl =  `${Api.baseUrl}greetings/`;
+  static greetingsUrl = `${Api.baseUrl}greetings/`;
 
-  static greetingWishesUrl =  `${Api.baseUrl}greeting-wishes/`;
+  static greetingWishesUrl = `${Api.baseUrl}greeting-wishes/`;
 
-  static projectSchedularUrl =  `${Api.baseUrl}project-schedular/`;
+  static projectSchedularUrl = `${Api.baseUrl}project-schedular/`;
 
-  static departmentReportUrl =  `${Api.baseUrl}department-report/`;
+  static departmentReportUrl = `${Api.baseUrl}department-report/`;
 
   static projectDetails = `${Api.baseUrl}projects-details/`;
 
   static projectListUrl = `${Api.baseUrl}project-dropdown-list/`;
 
-  static fetchTeamworkDataUrl = 'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
+  static fetchTeamworkDataUrl =
+    'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
 
   static employeeBondDetailsUrl = `${Api.baseUrl}employee-bond-details/`;
-  
+
   static taskProgressUrl = `${Api.baseUrl}progress-tasks/`;
 
   static tasksActivityUrl = `${Api.baseUrl}tasks-activity/`;
-  
+
   static broadcastUrl = `${Api.baseUrl}broadcast/`;
 
   static policyUrl = `${Api.baseUrl}policy/`;
@@ -165,22 +167,20 @@ export default class Api extends Component {
 
   // Get base URL of APIs
   static getBaseUrl() {
-
     const env = 'dev';
 
     let url = '';
     switch (env) {
       case 'production':
         url = 'https://liveapi.starkdigital.in/api/v1/';
-        break; 
+        break;
 
       case 'dev':
         url = 'https://developmentapi.starkdigital.in/api/v1/';
         break;
       // Default: development server
       default:
-        url =
-          'https://developmentapi.starkdigital.in/api/v1/';
+        url = 'https://developmentapi.starkdigital.in/api/v1/';
         break;
     }
     return url;

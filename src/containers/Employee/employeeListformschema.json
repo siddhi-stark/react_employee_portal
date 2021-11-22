@@ -92,7 +92,7 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-           {
+          {
             "type": "required",
             "applyWhen": [
               {
@@ -124,7 +124,7 @@
         "optionCallback": "",
         "options": []
       },
-       {
+      {
         "name": "is_detail",
         "type": "checkbox",
         "label": "",
@@ -147,12 +147,12 @@
         "fieldsToReset": [],
         "inline": true,
         "fieldLayout": {
-        "label": "1 Column",
-        "value": "1column"
+          "label": "1 Column",
+          "value": "1column"
         },
         "fields": [],
         "optionCallback": "",
-        "options": [{"label":"Detailed View", "value":"true"}]
+        "options": [{ "label": "Detailed View", "value": "true" }]
       }
     ],
     "allowedUsers": [],

@@ -4,11 +4,10 @@ import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import FormSections from './AddEmployment.json.json';
 import Api from '../../helper/api';
-import AuthApi from '../../helper/authApi';    
+import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function PreviousEmployment(props) {
-
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const [options, updateOptions] = useState({}); //eslint-disable-line
@@ -16,10 +15,10 @@ function PreviousEmployment(props) {
   const Employee = props;
   const EmployeeID = Employee.ID;
   const EmployeeEmail = Employee.email;
-  const EmployeeName = Employee.name;   
+  const EmployeeName = Employee.name;
 
   // Get user role
-  const getUserRole = async() => {
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
@@ -28,7 +27,8 @@ function PreviousEmployment(props) {
     getUserRole();
   }, []);
 
-  const fileUpload = async (formValues) => { // eslint-disable-line
+  const fileUpload = async (formValues) => {
+    // eslint-disable-line
     const formData = new FormData();
 
     formData.append('file_name', formValues[0]);
@@ -40,20 +40,19 @@ function PreviousEmployment(props) {
       `${Api.googleFileUploadUrl}`,
       formData
     );
-     if(customFunctions.checkIfEmpty(data)) {
+    if (customFunctions.checkIfEmpty(data)) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    if (!customFunctions.checkIfEmpty(data) && data.success) { 
+    if (!customFunctions.checkIfEmpty(data) && data.success) {
       return data.data.id;
     }
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
-
     const slip1fileUrl = '';
     let slip1fileUrlId = '';
     const slip2fileUrl = '';
@@ -65,23 +64,33 @@ function PreviousEmployment(props) {
     const experiencefileUrl = '';
     let experiencefileUrlId = '';
 
-     if (formValues.salary_slip1) {
-      slip1fileUrlId = (typeof formValues.salary_slip1 === 'object') && await fileUpload(formValues.salary_slip1);
+    if (formValues.salary_slip1) {
+      slip1fileUrlId =
+        typeof formValues.salary_slip1 === 'object' &&
+        (await fileUpload(formValues.salary_slip1));
     }
     if (formValues.salary_slip2) {
-      slip2fileUrlId = (typeof formValues.salary_slip2 === 'object') && await fileUpload(formValues.salary_slip2);
+      slip2fileUrlId =
+        typeof formValues.salary_slip2 === 'object' &&
+        (await fileUpload(formValues.salary_slip2));
     }
     if (formValues.salary_slip3) {
-      slip3fileUrlId = (typeof formValues.salary_slip3 === 'object') && await fileUpload(formValues.salary_slip3);
+      slip3fileUrlId =
+        typeof formValues.salary_slip3 === 'object' &&
+        (await fileUpload(formValues.salary_slip3));
     }
     if (formValues.reliving_letter) {
-      relivingfileUrlId = (typeof formValues.reliving_letter === 'object') && await fileUpload(formValues.reliving_letter);
-    } 
+      relivingfileUrlId =
+        typeof formValues.reliving_letter === 'object' &&
+        (await fileUpload(formValues.reliving_letter));
+    }
     if (formValues.experience_letter) {
-      experiencefileUrlId = (typeof formValues.experience_letter === 'object') && await fileUpload(formValues.experience_letter);
+      experiencefileUrlId =
+        typeof formValues.experience_letter === 'object' &&
+        (await fileUpload(formValues.experience_letter));
     }
 
-       const postData = {
+    const postData = {
       applicant_id: EmployeeID ? Number(EmployeeID) : '',
       doc_type: 3,
       applicant_documents: [
@@ -127,10 +136,15 @@ function PreviousEmployment(props) {
       ],
     };
 
-    const { data, message } = (!customFunctions.checkIfEmpty(slip1fileUrlId) || slip1fileUrl && !customFunctions.checkIfEmpty(slip2fileUrlId) || slip2fileUrl && !customFunctions.checkIfEmpty(slip3fileUrlId) || slip3fileUrl && !customFunctions.checkIfEmpty(relivingfileUrlId)||relivingfileUrl && !customFunctions.checkIfEmpty(experiencefileUrlId)||experiencefileUrl) && await AuthApi.postDataToServer(
-      `${Api.applicantDocumentUrl}`,
-      postData
-    );
+    const { data, message } =
+      (!customFunctions.checkIfEmpty(slip1fileUrlId) ||
+        (slip1fileUrl && !customFunctions.checkIfEmpty(slip2fileUrlId)) ||
+        (slip2fileUrl && !customFunctions.checkIfEmpty(slip3fileUrlId)) ||
+        (slip3fileUrl && !customFunctions.checkIfEmpty(relivingfileUrlId)) ||
+        (relivingfileUrl &&
+          !customFunctions.checkIfEmpty(experiencefileUrlId)) ||
+        experiencefileUrl) &&
+      (await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData));
     if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -145,33 +159,31 @@ function PreviousEmployment(props) {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        
         swal.close();
       });
     }
-      
   };
 
-	return (
-		
-  <StarkFormBuilder
-    containerClass='mt-3'
-    formHeaderClass=''
-    formSections={FormSections}
-    onFormSubmit={(formValues) => {submitForm(formValues);}}
-    options={options}
-    callbacks={{}}
-    defaultFormValues={defaultValues}
-    currentUser={currentUser}
-    submitBtnText="Submit"
-    showResetBtn={true}
-    resetBtnText="Clear"
-    btnContainerClass="form-submit-buttons"
-    showBtnClass={true}
-    isStepForm={false}
-  />
-
-		);
+  return (
+    <StarkFormBuilder
+      containerClass="mt-3"
+      formHeaderClass=""
+      formSections={FormSections}
+      onFormSubmit={(formValues) => {
+        submitForm(formValues);
+      }}
+      options={options}
+      callbacks={{}}
+      defaultFormValues={defaultValues}
+      currentUser={currentUser}
+      submitBtnText="Submit"
+      showResetBtn={true}
+      resetBtnText="Clear"
+      btnContainerClass="form-submit-buttons"
+      showBtnClass={true}
+      isStepForm={false}
+    />
+  );
 }
 
 export default withRouter(PreviousEmployment);

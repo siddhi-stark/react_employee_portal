@@ -15,7 +15,7 @@ function NewInterviewRounds(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
   const [count, forceUpdate] = useState(0);
   const { isProfessionalInfoId } = props;
 
@@ -28,7 +28,7 @@ function NewInterviewRounds(props) {
           const itemData = it;
           const date = new Date();
           if (it.name === 'int_date') itemData.minDate = date;
-          if(it.name === 'id') itemData.disabled = true;
+          if (it.name === 'id') itemData.disabled = true;
 
           return it;
         });
@@ -51,41 +51,34 @@ function NewInterviewRounds(props) {
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
-    const postData =[];
-    for(const more of  formValues.addmore) {  // eslint-disable-line
+    const postData = [];
+    for (const more of formValues.addmore) {
+      // eslint-disable-line
 
-    const round = {
-      int_date: more.int_date
-        ? customFunctions.getDate(more.int_date)
-        : '',
-      int_time: more.int_time
-        ? `${customFunctions.getTime(more.int_time)}`
-        : '',
-      round_type: more.interviewerRounds
-        ? more.interviewerRounds.value
-        : '',
-      interviewer: more.interviewer
-        ? more.interviewer.value
-        : '',
-      interview_type: more.interview_type
-        ? Number(more.interview_type.value)
-        : '',
-      description: more.description
-        ? more.description
-        : 'Please attend the interview',
+      const round = {
+        int_date: more.int_date ? customFunctions.getDate(more.int_date) : '',
+        int_time: more.int_time
+          ? `${customFunctions.getTime(more.int_time)}`
+          : '',
+        round_type: more.interviewerRounds ? more.interviewerRounds.value : '',
+        interviewer: more.interviewer ? more.interviewer.value : '',
+        interview_type: more.interview_type
+          ? Number(more.interview_type.value)
+          : '',
+        description: more.description
+          ? more.description
+          : 'Please attend the interview',
         comments: more.comments ? more.comments : '',
         status: more.status_name ? more.status_name.value : '',
-      applicant: id || '',
-      id: more.id || '',
-    };
-    postData.push(round);
-
+        applicant: id || '',
+        id: more.id || '',
+      };
+      postData.push(round);
     }
 
-    const { data, message } = await AuthApi.postDataToServer(
-      Api.roundsUrl,
-      { 'data':postData}
-    );
+    const { data, message } = await AuthApi.postDataToServer(Api.roundsUrl, {
+      data: postData,
+    });
 
     if (data) {
       setShowLoader(false);
@@ -95,9 +88,8 @@ function NewInterviewRounds(props) {
         buttons: false,
         timer: 2000,
       }).then(() => {
-        
         swal.close();
-         getData(isProfessionalInfoId);
+        getData(isProfessionalInfoId);
       });
     } else {
       setShowLoader(false);
@@ -124,13 +116,17 @@ function NewInterviewRounds(props) {
       const interviewData = [];
 
       data.data.map((dt) => {
-
         if (!customFunctions.checkIfEmpty(dt.int_date)) {
           newDate = new Date(dt.int_date);
         }
-        if (!customFunctions.checkIfEmpty(dt.int_date) && !customFunctions.checkIfEmpty(dt.int_time)) {
+        if (
+          !customFunctions.checkIfEmpty(dt.int_date) &&
+          !customFunctions.checkIfEmpty(dt.int_time)
+        ) {
           newTime = new Date(
-            `${customFunctions.getDate( dt.int_date )}T${customFunctions.convertTime12to24(dt.int_time)}`
+            `${customFunctions.getDate(
+              dt.int_date
+            )}T${customFunctions.convertTime12to24(dt.int_time)}`
           );
         }
 
@@ -142,11 +138,16 @@ function NewInterviewRounds(props) {
           },
           int_date: newDate,
           int_time: newTime,
-          status_name: {label:dt.status_name, value:dt.status},
+          status_name: { label: dt.status_name, value: dt.status },
           comments: dt.comments,
-          interview_type:  { label: dt.interview_type_name, value: dt.interview_type_id },
-          description: dt.description ? dt.description: 'Please attend the interview',
-          id: dt.id
+          interview_type: {
+            label: dt.interview_type_name,
+            value: dt.interview_type_id,
+          },
+          description: dt.description
+            ? dt.description
+            : 'Please attend the interview',
+          id: dt.id,
         });
       });
       if (interviewData) {
@@ -182,7 +183,7 @@ function NewInterviewRounds(props) {
     };
     defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
-  };  
+  };
 
   const getRoundsStatus = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -193,10 +194,11 @@ function NewInterviewRounds(props) {
     }
 
     const dpOptions = [];
-    await data.data && data.data.applicant_round_status.map((op) => {
-      dpOptions.push({ label: op.name, value: op.id });
-      return op;
-    });
+    (await data.data) &&
+      data.data.applicant_round_status.map((op) => {
+        dpOptions.push({ label: op.name, value: op.id });
+        return op;
+      });
     const allOptions = {
       ...options,
       ...defaultFilterOptions,
@@ -228,7 +230,7 @@ function NewInterviewRounds(props) {
     defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
-  
+
   useEffect(() => {
     getInterviewer();
     getRoundsStatus();
@@ -237,36 +239,39 @@ function NewInterviewRounds(props) {
 
   return (
     <>
-    <Loader showLoader={isShowLoader} needFullPage={false} />
-    <div className="mt-3">
-    {notes === 'null' ? (
-      ''
-      ) : 
-    <p><strong>Notes: </strong>{notes}</p>
-  }
-      <div>
-        <StarkFormBuilder
-          containerClass=""
-          formHeaderClass=""
-          formSections={jsonSchema}
-          formHeading="form"
-          onFormSubmit={(formValues) => {
-            submitForm(formValues);
-          }}
-          options={options}
-          defaultFormValues={defaultValues}
-          refreshCounter={count}
-          currentUser={currentUser}
-          submitBtnText="Submit Round"
-          showResetBtn={false}
-          showBtnClass={true}
-          resetBtnText="Clear"
-          btnContainerClass="form-submit-buttons mb-4 pb-4"
-          isStepForm={false}
-          onFormReset={() => {}}
-        />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+      <div className="mt-3">
+        {notes === 'null' ? (
+          ''
+        ) : (
+          <p>
+            <strong>Notes: </strong>
+            {notes}
+          </p>
+        )}
+        <div>
+          <StarkFormBuilder
+            containerClass=""
+            formHeaderClass=""
+            formSections={jsonSchema}
+            formHeading="form"
+            onFormSubmit={(formValues) => {
+              submitForm(formValues);
+            }}
+            options={options}
+            defaultFormValues={defaultValues}
+            refreshCounter={count}
+            currentUser={currentUser}
+            submitBtnText="Submit Round"
+            showResetBtn={false}
+            showBtnClass={true}
+            resetBtnText="Clear"
+            btnContainerClass="form-submit-buttons mb-4 pb-4"
+            isStepForm={false}
+            onFormReset={() => {}}
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 }

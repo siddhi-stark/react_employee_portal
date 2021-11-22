@@ -15,8 +15,12 @@ import Loader from '../../components/Loader/index';
 function AddLeave(props) {
   const idProps = props;
   const leaveId = idProps.match.params.leaveId;
-  const viewOptions = idProps.location.state ? idProps.location.state.isView : '';
-  const viewLeaveOptions = idProps.location.state ? idProps.location.state.isViewLeave : '';
+  const viewOptions = idProps.location.state
+    ? idProps.location.state.isView
+    : '';
+  const viewLeaveOptions = idProps.location.state
+    ? idProps.location.state.isViewLeave
+    : '';
   const employeeId = customFunctions.getLocalStorage('userId');
 
   const history = useHistory();
@@ -42,24 +46,24 @@ function AddLeave(props) {
   const [id, setId] = useState(null);
   const [fromDateValue, setFromDateValue] = useState('');
   const [flag, setFlag] = useState(false);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
   const initialState = {
-    pendingLeavesCount:'',
-    takenLeavesCount:'',
-    totalLeavesCount:'',
-    unpaidLeavesCount:'',
-    noticeMessage:'',
-    confirmedMessage:'',
+    pendingLeavesCount: '',
+    takenLeavesCount: '',
+    totalLeavesCount: '',
+    unpaidLeavesCount: '',
+    noticeMessage: '',
+    confirmedMessage: '',
   };
-  const [leavesCount,setLeavesCount] = useState(initialState);
-  const [sandwichMsg,setSandwichMsg] = useState('');
+  const [leavesCount, setLeavesCount] = useState(initialState);
+  const [sandwichMsg, setSandwichMsg] = useState('');
 
   const columns = [
     {
       id: 'id',
       label: 'id',
-      isDisplay:false
-    }, 
+      isDisplay: false,
+    },
     {
       id: 'index',
       label: 'Sr.No',
@@ -75,7 +79,7 @@ function AddLeave(props) {
     {
       id: 'start_date',
       label: 'Task Start Date',
-      render: ({ start_date }) => { 
+      render: ({ start_date }) => {
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(start_date)}</span>
@@ -86,7 +90,7 @@ function AddLeave(props) {
     {
       id: 'end_date',
       label: 'Task Completion Date',
-      render: ({ end_date }) => { 
+      render: ({ end_date }) => {
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(end_date)}</span>
@@ -101,22 +105,25 @@ function AddLeave(props) {
     {
       id: 'project_end_date',
       label: 'Project Deadline',
-      render: ({ project_end_date }) => { 
+      render: ({ project_end_date }) => {
         return (
           <>
-            <span>{project_end_date ? customFunctions.getNewFormattedDate(project_end_date) :'' 
-            }</span>
+            <span>
+              {project_end_date
+                ? customFunctions.getNewFormattedDate(project_end_date)
+                : ''}
+            </span>
           </>
         );
       },
     },
   ];
 
- useEffect(() => {
+  useEffect(() => {
     const formViewSchema = [...FormSections];
-   let updatedSchema = [];
-   if(viewLeaveOptions) {
-     updatedSchema = formViewSchema.map((section) => {
+    let updatedSchema = [];
+    if (viewLeaveOptions) {
+      updatedSchema = formViewSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
           const itemData = item;
@@ -135,11 +142,8 @@ function AddLeave(props) {
       });
 
       updateJsonSchema([...updatedSchema]);
-   }
-     
-     else{
-
-       updatedSchema = formViewSchema.map((section) => {
+    } else {
+      updatedSchema = formViewSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
           const itemData = item;
@@ -156,8 +160,8 @@ function AddLeave(props) {
         });
         return s;
       });
-    }  
-      updateJsonSchema([...updatedSchema]);
+    }
+    updateJsonSchema([...updatedSchema]);
   }, [status]);
 
   const getUserRole = async () => {
@@ -180,46 +184,62 @@ function AddLeave(props) {
 
   useEffect(() => {
     getUserRole();
-    if(!leaveId){
-      updateDefaultValues({leave_from_type:{label:'Full Day', value:'Full Day'}});
+    if (!leaveId) {
+      updateDefaultValues({
+        leave_from_type: { label: 'Full Day', value: 'Full Day' },
+      });
     }
-    setTitle((viewLeaveOptions || viewOptions) ? 'View Leaves' : 'Edit Leaves');
+    setTitle(viewLeaveOptions || viewOptions ? 'View Leaves' : 'Edit Leaves');
   }, []);
 
- const ApplyLeave = async (formValues) => {
-     setShowLoader(true);
-    const defaultValuesFromType = 
-    defaultValues.leave_from_type && (defaultValues.leave_from_type === 'Full Day')
+  const ApplyLeave = async (formValues) => {
+    setShowLoader(true);
+    const defaultValuesFromType =
+      defaultValues.leave_from_type &&
+      defaultValues.leave_from_type === 'Full Day'
         ? 2
         : 1;
 
     const fromType =
       formValues.leave_from_type &&
-      (formValues.leave_from_type.value === 'Full Day') 
+      formValues.leave_from_type.value === 'Full Day'
         ? 2
         : 1;
     const postData = {
-      leave_type: formValues.leave_type ? formValues.leave_type.value : defaultValues.leave_type.value,
+      leave_type: formValues.leave_type
+        ? formValues.leave_type.value
+        : defaultValues.leave_type.value,
       reason: formValues.reason ? formValues.reason : defaultValues.reason,
       leave_from_date: formValues.leave_from_date
         ? customFunctions.getDate(formValues.leave_from_date)
         : customFunctions.getDate(defaultValues.leave_from_date),
-      leave_from_type: formValues.leave_from_type ? fromType : defaultValuesFromType,
-      leave_to_date: (formValues.leave_from_type && formValues.leave_from_type.value === 'Half Day')
-        ? customFunctions.getDate(formValues.leave_from_date)
-        : customFunctions.getDate(formValues.leave_to_date),
+      leave_from_type: formValues.leave_from_type
+        ? fromType
+        : defaultValuesFromType,
+      leave_to_date:
+        formValues.leave_from_type &&
+        formValues.leave_from_type.value === 'Half Day'
+          ? customFunctions.getDate(formValues.leave_from_date)
+          : customFunctions.getDate(formValues.leave_to_date),
     };
     if (leaveId) postData.id = Number(leaveId);
-    if (defaultValues && defaultValues.leave_to_date && customFunctions.getDate(defaultValues.leave_to_date) === customFunctions.getDate(formValues.leave_to_date)) {
-      postData.leave_to_date = defaultValues.leave_to_date ? customFunctions.getDate(defaultValues.leave_to_date):'';
-    } 
+    if (
+      defaultValues &&
+      defaultValues.leave_to_date &&
+      customFunctions.getDate(defaultValues.leave_to_date) ===
+        customFunctions.getDate(formValues.leave_to_date)
+    ) {
+      postData.leave_to_date = defaultValues.leave_to_date
+        ? customFunctions.getDate(defaultValues.leave_to_date)
+        : '';
+    }
     const callback = leaveId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
 
     const endPoint = Api.leavesUrl;
-    if(!customFunctions.checkIfEmpty(rowData)) {
-    const { data, message } = await callback(endPoint, postData);
+    if (!customFunctions.checkIfEmpty(rowData)) {
+      const { data, message } = await callback(endPoint, postData);
 
       if (!data) {
         setShowLoader(false);
@@ -243,19 +263,19 @@ function AddLeave(props) {
       }
     }
   };
- 
+
   const submitForm = async (formValues) => {
-    if(formValues.leave_from_date){
+    if (formValues.leave_from_date) {
       setStartDate(formValues.leave_from_date);
       setFlag(true);
     }
 
-    if(formValues.leave_to_date) {
+    if (formValues.leave_to_date) {
       setEndDate(formValues.leave_to_date);
-    } 
+    }
     setFormValuesData(formValues);
   };
-  
+
   const getData = async () => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
@@ -264,7 +284,7 @@ function AddLeave(props) {
     if (!data) {
       return;
     }
-    if(data && data.data){
+    if (data && data.data) {
       setShowLoader(false);
       setStartDate(data.data.leave_from_date);
       setEndDate(data.data.leave_to_date);
@@ -304,7 +324,7 @@ function AddLeave(props) {
       },
     });
   };
-  
+
   useEffect(() => {
     if (leaveId) getData();
   }, [status]);
@@ -317,7 +337,6 @@ function AddLeave(props) {
 
     const dpOptions = [];
     data.data.map((op) => {
-      
       dpOptions.push({ label: op.title, value: op.id });
       return op;
     });
@@ -332,7 +351,7 @@ function AddLeave(props) {
     getLeaveType();
     getLeavesCount();
   }, []);
-  
+
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const userId = customFunctions.getLocalStorage('userId');
@@ -343,7 +362,10 @@ function AddLeave(props) {
       limit,
       user_id: userId ? Number(userId) : leaveId,
       start_date: startDate && customFunctions.getDate(startDate),
-      end_date: (fromDateValue.value === 'Half Day') ? customFunctions.getDate(startDate) :customFunctions.getDate(endDate),
+      end_date:
+        fromDateValue.value === 'Half Day'
+          ? customFunctions.getDate(startDate)
+          : customFunctions.getDate(endDate),
       sort_direction: 'descending',
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -377,21 +399,21 @@ function AddLeave(props) {
     if (startDate && flag && !leaveId) {
       getLeavesMessage();
       getRowData(1);
-    } else if(startDate && endDate && leaveId) {
+    } else if (startDate && endDate && leaveId) {
       getLeavesMessage();
       getRowData(1);
-    } else if(startDate && leaveId && flag) {
+    } else if (startDate && leaveId && flag) {
       getLeavesMessage();
       getRowData(1);
     }
-  }, [startDate,endDate]);
+  }, [startDate, endDate]);
 
-  useEffect(()=>{
-    if(id){
+  useEffect(() => {
+    if (id) {
       getLeavesCount();
     }
-  },[id]);
-  
+  }, [id]);
+
   const getLeavesCount = async () => {
     const empUserId = employeeId ? Number(employeeId) : Number(id);
     const { data, message } = await AuthApi.getDataFromServer(
@@ -404,21 +426,29 @@ function AddLeave(props) {
       });
       return;
     }
-    if(data && data.data && data.data[0]){
+    if (data && data.data && data.data[0]) {
       setLeavesCount({
-        pendingLeavesCount:data.data[0].pending_leave && data.data[0].pending_leave,
-        takenLeavesCount:data.data[0].total_leave_taken && data.data[0].total_leave_taken,
-        totalLeavesCount:data.data[0].total_leaves && data.data[0].total_leaves,
-        unpaidLeavesCount:data.data[0].unpaid_leave && data.data[0].unpaid_leave,
-        noticeMessage:data.data[0].on_notice_period && data.data[0].on_notice_period,
-        confirmedMessage:data.data[0].confirmed && data.data[0].confirmed,
+        pendingLeavesCount:
+          data.data[0].pending_leave && data.data[0].pending_leave,
+        takenLeavesCount:
+          data.data[0].total_leave_taken && data.data[0].total_leave_taken,
+        totalLeavesCount:
+          data.data[0].total_leaves && data.data[0].total_leaves,
+        unpaidLeavesCount:
+          data.data[0].unpaid_leave && data.data[0].unpaid_leave,
+        noticeMessage:
+          data.data[0].on_notice_period && data.data[0].on_notice_period,
+        confirmedMessage: data.data[0].confirmed && data.data[0].confirmed,
       });
     }
   };
 
   const getLeavesMessage = async () => {
     const newStartDate = startDate && customFunctions.getDate(startDate);
-    const newEndDate = (fromDateValue.value === 'Half Day') ? customFunctions.getDate(startDate) :customFunctions.getDate(endDate);
+    const newEndDate =
+      fromDateValue.value === 'Half Day'
+        ? customFunctions.getDate(startDate)
+        : customFunctions.getDate(endDate);
     const { data, message } = await AuthApi.getDataFromServer(
       `${Api.leaveCheckUrl}?start_date=${newStartDate}&end_date=${newEndDate}`
     );
@@ -429,9 +459,9 @@ function AddLeave(props) {
       });
       return;
     }
-    if(data && data.data && data.data[0]){
+    if (data && data.data && data.data[0]) {
       setSandwichMsg(data.data[0].message);
-      }
+    }
   };
 
   return (
@@ -445,33 +475,69 @@ function AddLeave(props) {
       <section className="content-area">
         <div className="mt-5">
           <Card body>
-          <div className="container">
-            <div className="leave-app-button">
-            {viewLeaveOptions && (
-             <Button className="float-end" onClick= {() => {
-              history.push('/my-leaves');
-              if(viewOptions) {
-                 history.push('/employee-leaves');
-              } else {
-                history.push('/leaves'); 
-              }
-             
-             }}>Back</Button>
-             )}
-            { (Number(id) !== Number(employeeId)) && leaveId && (
-              <p>Employee Name: {name} ({status})</p>
-            )}
-      
-            {leavesCount.totalLeavesCount >= 0 && <span>{`Total Leaves: ${leavesCount.totalLeavesCount}`}&nbsp;&nbsp;</span>}
-            {leavesCount.pendingLeavesCount >= 0 && <span>{`Pending Leaves: ${leavesCount.pendingLeavesCount}`}&nbsp;&nbsp;</span>}
-            {leavesCount.takenLeavesCount >= 0 && <span>{`Taken Leaves: ${leavesCount.takenLeavesCount}`}&nbsp;&nbsp;</span>}
-            {leavesCount.unpaidLeavesCount >= 0 && <span>{`Unpaid Leaves: ${leavesCount.unpaidLeavesCount}`}&nbsp;&nbsp;</span>}
-             <br/>
-            { !leavesCount.confirmedMessage && ( <span className="text-danger"> Leaves are unpaid as you are under probation period. </span>)}
-            { leavesCount.noticeMessage && ( <span className="text-danger"> If any leave taken it will extend the notice period as number of leaves taken.</span>)}
+            <div className="container">
+              <div className="leave-app-button">
+                {viewLeaveOptions && (
+                  <Button
+                    className="float-end"
+                    onClick={() => {
+                      history.push('/my-leaves');
+                      if (viewOptions) {
+                        history.push('/employee-leaves');
+                      } else {
+                        history.push('/leaves');
+                      }
+                    }}
+                  >
+                    Back
+                  </Button>
+                )}
+                {Number(id) !== Number(employeeId) && leaveId && (
+                  <p>
+                    Employee Name: {name} ({status})
+                  </p>
+                )}
 
+                {leavesCount.totalLeavesCount >= 0 && (
+                  <span>
+                    {`Total Leaves: ${leavesCount.totalLeavesCount}`}
+                    &nbsp;&nbsp;
+                  </span>
+                )}
+                {leavesCount.pendingLeavesCount >= 0 && (
+                  <span>
+                    {`Pending Leaves: ${leavesCount.pendingLeavesCount}`}
+                    &nbsp;&nbsp;
+                  </span>
+                )}
+                {leavesCount.takenLeavesCount >= 0 && (
+                  <span>
+                    {`Taken Leaves: ${leavesCount.takenLeavesCount}`}
+                    &nbsp;&nbsp;
+                  </span>
+                )}
+                {leavesCount.unpaidLeavesCount >= 0 && (
+                  <span>
+                    {`Unpaid Leaves: ${leavesCount.unpaidLeavesCount}`}
+                    &nbsp;&nbsp;
+                  </span>
+                )}
+                <br />
+                {!leavesCount.confirmedMessage && (
+                  <span className="text-danger">
+                    {' '}
+                    Leaves are unpaid as you are under probation period.{' '}
+                  </span>
+                )}
+                {leavesCount.noticeMessage && (
+                  <span className="text-danger">
+                    {' '}
+                    If any leave taken it will extend the notice period as
+                    number of leaves taken.
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
 
             <StarkFormBuilder
               containerClass="add-lv"
@@ -484,7 +550,7 @@ function AddLeave(props) {
               }}
               options={options}
               callbacks={{
-                getHandleFromDate : () => {
+                getHandleFromDate: () => {
                   setChangeDate(false);
                 },
                 getHandleToDate: () => {
@@ -492,7 +558,7 @@ function AddLeave(props) {
                 },
                 onFromLeaveType: (value) => {
                   setFromDateValue(value);
-                }
+                },
               }}
               defaultFormValues={defaultValues}
               currentUser={currentUser}
@@ -500,15 +566,17 @@ function AddLeave(props) {
               showResetBtn={true}
               showBtnClass={true}
               resetBtnText="Cancel"
-              btnContainerClass= {(!viewLeaveOptions) ? 'form-submit-buttons':'d-none'}
+              btnContainerClass={
+                !viewLeaveOptions ? 'form-submit-buttons' : 'd-none'
+              }
               isStepForm={false}
               onFormReset={() => {
                 history.push('/leaves');
               }}
             />
             <div className="container">
-            { (leaveId && Boolean(viewLeaveOptions)) && (
-              <TextInput
+              {leaveId && Boolean(viewLeaveOptions) && (
+                <TextInput
                   inputClass="form-control"
                   label="Note"
                   containerClass="form-group"
@@ -517,62 +585,71 @@ function AddLeave(props) {
                   name="reason"
                   value={reason}
                 />
-            )}
+              )}
               <div className="mt-3">
-                { (totalCount > 0) && (status === 'Pending') &&  (
+                {totalCount > 0 && status === 'Pending' && (
                   <>
                     <Card.Header>
                       <div className="d-flex align-items-center justify-content-between">
-                        <h4 className="text-primary mt-2 mb-2">Employee Task List</h4>
+                        <h4 className="text-primary mt-2 mb-2">
+                          Employee Task List
+                        </h4>
                       </div>
                     </Card.Header>
                     <Card.Body>
-                        <CustomTable
-                          columns={columns}
-                          rows={rowData}
-                          tableClass="table-striped"
-                          role={5}
-                          showPagination={true}
-                          paginationProps={{
-                            totalItems: totalCount,
-                            itemsPerPage: limit,
-                            activePage: currentPage,
-                            onPageChange: (pageNo) => {
-                              getRowData(pageNo);
-                            },
-                          }}
-                          emptyRender={() => {
-                            return 'No task available.';
-                          }}
-                        />
-                        <br />         
+                      <CustomTable
+                        columns={columns}
+                        rows={rowData}
+                        tableClass="table-striped"
+                        role={5}
+                        showPagination={true}
+                        paginationProps={{
+                          totalItems: totalCount,
+                          itemsPerPage: limit,
+                          activePage: currentPage,
+                          onPageChange: (pageNo) => {
+                            getRowData(pageNo);
+                          },
+                        }}
+                        emptyRender={() => {
+                          return 'No task available.';
+                        }}
+                      />
+                      <br />
                     </Card.Body>
                   </>
                 )}
 
-                { sandwichMsg && ( <p className="text-danger">
-                  {sandwichMsg} </p>)}
-                { (totalCount > 0 && flag)  && (
+                {sandwichMsg && <p className="text-danger">{sandwichMsg} </p>}
+                {totalCount > 0 && flag && (
                   <p className="text-danger">
-                  Note: The highlighted task shows the high priority and may
-                  affect the project deadline. Kindly look into and the
-                  apply for leave </p>
+                    Note: The highlighted task shows the high priority and may
+                    affect the project deadline. Kindly look into and the apply
+                    for leave{' '}
+                  </p>
                 )}
-                 { (totalCount === 0 && flag && status === 'Pending') && (
-                  <p className="text-success"> Note: Make sure No task affecting the project deadline and associated task are taken care. </p>
+                {totalCount === 0 && flag && status === 'Pending' && (
+                  <p className="text-success">
+                    {' '}
+                    Note: Make sure No task affecting the project deadline and
+                    associated task are taken care.{' '}
+                  </p>
                 )}
-                { (totalCount === 0 && flag) && changeDate && (status === 'Pending') &&  (
-                  <Button
-                    onClick={() => {
-                      ApplyLeave(formValuesData);
-                    }}
-                    className="mb-4"
-                  >
-                    Apply Leave
-                  </Button>
-                )}
+                {totalCount === 0 &&
+                  flag &&
+                  changeDate &&
+                  status === 'Pending' && (
+                    <Button
+                      onClick={() => {
+                        ApplyLeave(formValuesData);
+                      }}
+                      className="mb-4"
+                    >
+                      Apply Leave
+                    </Button>
+                  )}
               </div>
-              </div>
+            </div>
           </Card>
         </div>
       </section>

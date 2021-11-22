@@ -36,17 +36,17 @@ function ProjectScheduler() {
   const [currentUser, updateCurrentUser] = useState(0);
   let filterOptions = {};
 
-  const handleActionCallback = ({tw_id}) => {
+  const handleActionCallback = ({ tw_id }) => {
     return (
-       <span className ="d-flex">
-        <a href={`${constants.project}${tw_id}`} target="_blank" >
+      <span className="d-flex">
+        <a href={`${constants.project}${tw_id}`} target="_blank">
           <span>
             <Image src="/images/redirect.png" />
           </span>
         </a>
       </span>
     );
-  };    
+  };
 
   // Declare columns
   const columns = [
@@ -54,7 +54,7 @@ function ProjectScheduler() {
       id: 'id',
       label: 'id',
       roleAccess: [4],
-      isDisplay:false
+      isDisplay: false,
     },
     {
       id: 'coordinator',
@@ -75,7 +75,7 @@ function ProjectScheduler() {
             <span>{completion} %</span>
           </>
         );
-      }, 
+      },
     },
     {
       id: 'developer',
@@ -89,26 +89,28 @@ function ProjectScheduler() {
       render: ({ expected_clc }) => {
         return (
           <>
-            <span>{expected_clc && customFunctions.getDMYDate(expected_clc)}</span>
+            <span>
+              {expected_clc && customFunctions.getDMYDate(expected_clc)}
+            </span>
           </>
         );
       },
     },
     {
-      id:  'comment',
+      id: 'comment',
       label: 'Comments',
     },
     {
       id: 'tw_id',
       label: 'Teamwork Project Link',
-      render: handleActionCallback
+      render: handleActionCallback,
     },
   ];
 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
-    const endPoint = `${Api.projectSchedularUrl}`; 
+    const endPoint = `${Api.projectSchedularUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
@@ -142,7 +144,7 @@ function ProjectScheduler() {
   }, [filterData]);
 
   // Get user role Filter
-  const getUserRole = async() => {
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
@@ -155,46 +157,61 @@ function ProjectScheduler() {
   const submitForm = async (formValues) => {
     const coordinator = [];
     const developer = [];
-    formValues && formValues.coordinator && formValues.coordinator.map((co)=>{
-      return coordinator.push(co.value);
-    }); 
+    formValues &&
+      formValues.coordinator &&
+      formValues.coordinator.map((co) => {
+        return coordinator.push(co.value);
+      });
 
-    formValues && formValues.developer && formValues.developer.map((dev)=>{
-      return developer.push(dev.value);
-    });
-    const payload ={
+    formValues &&
+      formValues.developer &&
+      formValues.developer.map((dev) => {
+        return developer.push(dev.value);
+      });
+    const payload = {
       date: formValues.month && customFunctions.getDate(formValues.month),
-      team_id: formValues.team_id && formValues.team_id.value && Number(formValues.team_id.value),
+      team_id:
+        formValues.team_id &&
+        formValues.team_id.value &&
+        Number(formValues.team_id.value),
       coordinator_id: coordinator && coordinator,
       developer_id: developer && developer,
-      project_id: formValues.project_id && formValues.project_id.value && Number(formValues.project_id.value)
+      project_id:
+        formValues.project_id &&
+        formValues.project_id.value &&
+        Number(formValues.project_id.value),
     };
     setFilterData(payload);
   };
-    
+
   const getTeam = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
-    if(!data) {
-     swal(message, '', 'error', {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=team`
+    );
+    if (!data) {
+      swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       const dpOptions = [];
-      data && data.data && data.data.team && data.data.team.map((op) => {
-        // Change appropriate keys
-        dpOptions.push({label: op.name, value: op.id});
-        return op;
-      });
+      data &&
+        data.data &&
+        data.data.team &&
+        data.data.team.map((op) => {
+          // Change appropriate keys
+          dpOptions.push({ label: op.name, value: op.id });
+          return op;
+        });
       const allOptions = {
         ...options,
         ...filterOptions,
-        team_id: dpOptions
+        team_id: dpOptions,
       };
-      filterOptions = {...allOptions};
+      filterOptions = { ...allOptions };
       updateOptions(allOptions);
-    };
+    }
   };
 
   useEffect(() => {
@@ -202,48 +219,57 @@ function ProjectScheduler() {
   }, []);
 
   const getProjectList = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.projectListUrl}?sort_by=name`);
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.projectListUrl}?sort_by=name`
+    );
 
-    if(!data) {
-     swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
-    }
-    const dpOptions = await data && data.data.length > 0 && data.data.map((op) => {
-      return { label: op.name, value: op.id };
-    });
-
-    options.project_id = dpOptions;
-    const allOptions = options;
-    await updateOptions({...allOptions});
-  };
-
-  useEffect(() => {
-    getProjectList();
-  }, []);
-      
-  const getCoordinator = async () => {
-    const {data, message} = await AuthApi.getDataFromServer(`${Api.employeeUrl}?department_id=9`);
-    if(!data) {
+    if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
+
+    options.project_id = dpOptions;
+    const allOptions = options;
+    await updateOptions({ ...allOptions });
+  };
+
+  useEffect(() => {
+    getProjectList();
+  }, []);
+
+  const getCoordinator = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?department_id=9`
+    );
+    if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+
     const dpOptions = [];
-    data && data.data && data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({label: op.full_name, value: op.id});
-      return op;
-    });
+    data &&
+      data.data &&
+      data.data.map((op) => {
+        // Change appropriate keys
+        dpOptions.push({ label: op.full_name, value: op.id });
+        return op;
+      });
     const allOptions = {
       ...options,
       ...filterOptions,
-      coordinator: dpOptions
+      coordinator: dpOptions,
     };
-    filterOptions = {...allOptions};
+    filterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
 
@@ -252,34 +278,38 @@ function ProjectScheduler() {
   }, []);
 
   useEffect(() => {
-    if(developerValue){
+    if (developerValue) {
       getDeveloper();
     }
     getDeveloper();
   }, [developerValue]);
-      
+
   const getDeveloper = async () => {
-    const endPoint = developerValue ? `${Api.employeeUrl}?team_id=${developerValue.value}` : `${Api.employeeUrl}?type=all`;
-    const {data,message} = await AuthApi.getDataFromServer(endPoint);
-    if(!data) {
+    const endPoint = developerValue
+      ? `${Api.employeeUrl}?team_id=${developerValue.value}`
+      : `${Api.employeeUrl}?type=all`;
+    const { data, message } = await AuthApi.getDataFromServer(endPoint);
+    if (!data) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    
+
     const dpOptions = [];
-    data && data.data && data.data.map((op) => {
-      // Change appropriate keys
-      dpOptions.push({label: op.full_name, value: op.id});
-      return op;
-    });
+    data &&
+      data.data &&
+      data.data.map((op) => {
+        // Change appropriate keys
+        dpOptions.push({ label: op.full_name, value: op.id });
+        return op;
+      });
     const allOptions = {
       ...options,
       ...filterOptions,
-      developer: dpOptions
+      developer: dpOptions,
     };
-    filterOptions = {...allOptions};
+    filterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
 
@@ -292,64 +322,66 @@ function ProjectScheduler() {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
-            <Card>
-                <Card.Body>
-                <div className="d-flex align-items-center justify-content-between">
-                    <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                  </div>
-                  <hr/>
-
-                    <StarkFormBuilder
-                      containerClass=''
-                      formHeaderClass=''
-                      formSections={FormSections}
-                      formHeading="Filter"
-                      onFormSubmit={(formValues) => {submitForm(formValues);}}
-                      options={options}
-                      callbacks={{
-                        getDeveloper: (value) => {
-                          setDeveloperValue(value);
-                        },
-                      }}
-                      currentUser={currentUser}
-                      submitBtnText="Apply"
-                      showResetBtn={true}
-                      showBtnClass={true}
-                      resetBtnText="Clear"
-                      btnContainerClass="form-submit-buttons pull-right"
-                      isStepForm={false}
-                      onFormReset={() => {
-                        setFilterData();
-                        setDeveloperValue();
-                      }}
-                    />
-                </Card.Body>
-            </Card>
-          <Card>
-            <Card.Body className="schedular">
+        <Card>
+          <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
-                    <h5 className="card-title mb-0 mt-2 ">Project Scheduler</h5>
-                  </div>
-                  <hr/>
-              <CustomTable
-                columns={columns}
-                rows={rowData}
-                showPagination={true}
-                tableClass="table-striped"
-                paginationProps={{
-                  totalItems: totalCount,
-                  itemsPerPage: limit,
-                  activePage: currentPage,
-                  onPageChange: (pageNo) => {
-                    getRowData(pageNo);
-                  },
-                }}
-                emptyRender={() => {
-                  return 'No record found.';
-                }}
-              />
-            </Card.Body>
-          </Card>
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+            </div>
+            <hr />
+
+            <StarkFormBuilder
+              containerClass=""
+              formHeaderClass=""
+              formSections={FormSections}
+              formHeading="Filter"
+              onFormSubmit={(formValues) => {
+                submitForm(formValues);
+              }}
+              options={options}
+              callbacks={{
+                getDeveloper: (value) => {
+                  setDeveloperValue(value);
+                },
+              }}
+              currentUser={currentUser}
+              submitBtnText="Apply"
+              showResetBtn={true}
+              showBtnClass={true}
+              resetBtnText="Clear"
+              btnContainerClass="form-submit-buttons pull-right"
+              isStepForm={false}
+              onFormReset={() => {
+                setFilterData();
+                setDeveloperValue();
+              }}
+            />
+          </Card.Body>
+        </Card>
+        <Card>
+          <Card.Body className="schedular">
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Project Scheduler</h5>
+            </div>
+            <hr />
+            <CustomTable
+              columns={columns}
+              rows={rowData}
+              showPagination={true}
+              tableClass="table-striped"
+              paginationProps={{
+                totalItems: totalCount,
+                itemsPerPage: limit,
+                activePage: currentPage,
+                onPageChange: (pageNo) => {
+                  getRowData(pageNo);
+                },
+              }}
+              emptyRender={() => {
+                return 'No record found.';
+              }}
+            />
+          </Card.Body>
+        </Card>
       </section>
     </>
   );

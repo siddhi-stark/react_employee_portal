@@ -1,110 +1,122 @@
-[{
-	"sectionName": "addform",
-	"sectionTitle": "add form",
-	"layout": {
-		"label": "1 Column",
-		"value": "1column"
-	},
-	"containerClass": "",
-	"displaySection": true,
-	"displaySectionTitle": false,
-	"fields": [{
-		"name": "doc_link_pan_card",
-		"type": "file",
-		"label": "Pan Card",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "col-md-6",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}, {
-		"name": "doc_link_adhar_card",
-		"type": "file",
-		"label": "Adhar Card",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "col-md-6",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}, {
-		"name": "doc_link_photo",
-		"type": "file",
-		"label": "Photo",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "col-md-6",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "",
-		"options": []
-	}],
-	"allowedUsers": [],
-	"sectionLayout": "1column"
-}]
+[
+  {
+    "sectionName": "addform",
+    "sectionTitle": "add form",
+    "layout": {
+      "label": "1 Column",
+      "value": "1column"
+    },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "doc_link_pan_card",
+        "type": "file",
+        "label": "Pan Card",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-6",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "doc_link_adhar_card",
+        "type": "file",
+        "label": "Adhar Card",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-6",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "doc_link_photo",
+        "type": "file",
+        "label": "Photo",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-6",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "1column"
+  }
+]

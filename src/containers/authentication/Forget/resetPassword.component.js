@@ -1,14 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+/* eslint-disable react/destructuring-assignment */
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
-import { Form, Button } from 'react-bootstrap';
-import { TextInput, Helmet } from '../../../components/FormInputs';
+import { Helmet, TextInput } from '../../../components/FormInputs';
+import Loader from '../../../components/Loader/index';
 import Api from '../../../helper/api';
 import AuthApi from '../../../helper/authApi';
 import customFunctions from '../../../helper/customFunctions';
-import Loader from '../../../components/Loader/index';
 
 function ResetPassword(props) {
   const validator = useRef(

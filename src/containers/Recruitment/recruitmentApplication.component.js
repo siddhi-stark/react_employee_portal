@@ -74,11 +74,21 @@ function RecruitmentApplicationComponent() {
     return sectionData;
   });
 
-  const handleActionCallback = ({ id, status_name, name, applied_for_name, notes, offered_ctc, joining_date, pf_included, }) => { //eslint-disable-line 
+  const handleActionCallback = ({
+    id,
+    status_name,
+    name,
+    applied_for_name,
+    notes,
+    offered_ctc,
+    joining_date,
+    pf_included,
+  }) => {
+    //eslint-disable-line
 
     return (
       <>
-        {status_name !== 'declined' ? ( 
+        {status_name !== 'declined' ? (
           <a
             href="/"
             className="pl-2"
@@ -89,7 +99,6 @@ function RecruitmentApplicationComponent() {
               history.push(`/applications/${id}`, {
                 statusObj: status_name,
               });
-
             }}
           >
             <Image src="/images/edit-button.svg" />
@@ -110,7 +119,13 @@ function RecruitmentApplicationComponent() {
             <Image src="/images/notes.svg" />
           </a>
         )}
-        {(Number(group) === 4 || Number(group) === 3) || status_name === 'pending' || status_name === 'shortlisted' || status_name === 'reject' || status_name === 'declined' || status_name === 'rejected' ? ( //eslint-disable-line
+        {Number(group) === 4 ||
+        Number(group) === 3 ||
+        status_name === 'pending' ||
+        status_name === 'shortlisted' ||
+        status_name === 'reject' ||
+        status_name === 'declined' ||
+        status_name === 'rejected' ? ( //eslint-disable-line
           ''
         ) : (
           <a
@@ -160,12 +175,18 @@ function RecruitmentApplicationComponent() {
   const handleResumeCallback = (resume) => {
     return (
       <>
-      {resume.resume ? (
-
-        <a href={resume.resume} className="pl-2" title="View Resume" target="_Blank">
-          <Image src="/images/download-file.svg" />
-        </a>
-        ) : ''}
+        {resume.resume ? (
+          <a
+            href={resume.resume}
+            className="pl-2"
+            title="View Resume"
+            target="_Blank"
+          >
+            <Image src="/images/download-file.svg" />
+          </a>
+        ) : (
+          ''
+        )}
       </>
     );
   };
@@ -174,10 +195,12 @@ function RecruitmentApplicationComponent() {
     const data = ApplicantStatus.filter((i) => i.label === val);
     return data.length > 0 ? data[0] : {};
   };
-  const handleStatus = (status_name) => { // eslint-disable-line
+  const handleStatus = (status_name) => {
+    // eslint-disable-line
     return (
       <>
-        {status_name.status_name === 'pending' && (Number(group) === 5 || Number(group) === 6 || Number(group) === 1 ) ? ( // eslint-disable-line
+        {status_name.status_name === 'pending' &&
+        (Number(group) === 5 || Number(group) === 6 || Number(group) === 1) ? ( // eslint-disable-line
           <DropdownInput
             asterisk="*"
             options={getDepartment()}
@@ -190,10 +213,13 @@ function RecruitmentApplicationComponent() {
             onSelectHandler={(select) => {
               setStatusId(status_name.id);
               // {select.label === 'decined'}
-              { select.label === 'declined' || select.label === 'shortlisted' ? setModalShow(true) : ''; } //eslint-disable-line
+              {
+                select.label === 'declined' || select.label === 'shortlisted'
+                  ? setModalShow(true)
+                  : '';
+              } //eslint-disable-line
               setStatusData(select);
             }}
-           
             isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line
           />
         ) : (
@@ -227,12 +253,13 @@ function RecruitmentApplicationComponent() {
     {
       id: `{{'int_date'} ? 'int_date': 'created_at'}`, // eslint-disable-line
       label: 'Date',
-      render: ({ created_at }) => { // eslint-disable-line
+      render: ({ created_at }) => {
+        // eslint-disable-line
         return (
           <>
             <span>{customFunctions.getNewFormattedDate(created_at)}</span>
           </>
-        ); 
+        );
       },
     },
     {
@@ -262,10 +289,11 @@ function RecruitmentApplicationComponent() {
       id: 'status_name',
       label: 'Status',
       render: handleStatus,
-      isDisplay: (activeMenu.includes('Pending') || activeMenu.includes('all')) &&  true,
+      isDisplay:
+        (activeMenu.includes('Pending') || activeMenu.includes('all')) && true,
     },
     {
-      id:  'round_status_name',
+      id: 'round_status_name',
       label: 'Round Status',
     },
     {
@@ -287,7 +315,7 @@ function RecruitmentApplicationComponent() {
     });
     return depart;
   };
-  
+
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -323,7 +351,7 @@ function RecruitmentApplicationComponent() {
       setRowData((data && data.data) || []);
     } else {
       setShowLoader(false);
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
 
@@ -345,31 +373,48 @@ function RecruitmentApplicationComponent() {
 
   const submitForm = async (formValue) => {
     let payload = {};
-    const formValues = (typeof formValue === 'object' && Object.keys(formValue).length) ? formValue : allData;
-      payload = {
-        keyword: formValues && formValues.keyword ? formValues.keyword : formValues.keyword,
-        designation_id: formValues && formValues.designation_id && formValues.designation_id.value
+    const formValues =
+      typeof formValue === 'object' && Object.keys(formValue).length
+        ? formValue
+        : allData;
+    payload = {
+      keyword:
+        formValues && formValues.keyword
+          ? formValues.keyword
+          : formValues.keyword,
+      designation_id:
+        formValues &&
+        formValues.designation_id &&
+        formValues.designation_id.value
           ? formValues.designation_id.value
           : formValues.designation_id,
-        technology_stack_id: formValues && formValues.technology_stack_id && formValues.technology_stack_id.value
+      technology_stack_id:
+        formValues &&
+        formValues.technology_stack_id &&
+        formValues.technology_stack_id.value
           ? formValues.technology_stack_id.value
           : formValues.technology_stack_id,
-        start_date: formValues && formValues.start_date
+      start_date:
+        formValues && formValues.start_date
           ? customFunctions.getDate(formValues.start_date)
           : formValues.start_date,
-        end_date: formValues && formValues.end_date
+      end_date:
+        formValues && formValues.end_date
           ? customFunctions.getDate(formValues.end_date)
           : formValues.end_date,
-        created_by_id: formValues && formValues.role_id && formValues.role_id.value ? formValues.role_id.value : formValues.created_by_id,
-      };
-      
-      payload.status = status;
-      
-      if(Number(status) === 0){
-        payload.status = '';
-      }
-    
-    if(formValues) {
+      created_by_id:
+        formValues && formValues.role_id && formValues.role_id.value
+          ? formValues.role_id.value
+          : formValues.created_by_id,
+    };
+
+    payload.status = status;
+
+    if (Number(status) === 0) {
+      payload.status = '';
+    }
+
+    if (formValues) {
       setAllData(payload);
     }
     setFilterData(payload);
@@ -402,7 +447,10 @@ function RecruitmentApplicationComponent() {
   };
 
   const getHrName = async (role) => {
-    const endPoint = (Number(role) === 1 ) ? `${Api.employeeUrl}?role_id=5&is_dropdown=1` :`${Api.teamUrl}?type=all`;
+    const endPoint =
+      Number(role) === 1
+        ? `${Api.employeeUrl}?role_id=5&is_dropdown=1`
+        : `${Api.teamUrl}?type=all`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (!data) {
       return;
@@ -410,7 +458,10 @@ function RecruitmentApplicationComponent() {
 
     const dpOptions = [];
     data.data.map((op) => {
-      dpOptions.push({ label: (Number(role) === 1 ) ? op.full_name : op.employee_name, value:  (Number(role) === 1 ) ? op.id : op.employee_id });
+      dpOptions.push({
+        label: Number(role) === 1 ? op.full_name : op.employee_name,
+        value: Number(role) === 1 ? op.id : op.employee_id,
+      });
       return op;
     });
     const allOptions = {
@@ -423,7 +474,9 @@ function RecruitmentApplicationComponent() {
   };
 
   const getTechnology = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeStackUrl}?type=all`
+    );
     if (!data) {
       return;
     }
@@ -457,39 +510,39 @@ function RecruitmentApplicationComponent() {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
-          <Card>
-            <Card.Body>
-              <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-              </div>  
-              <hr/>
-              <div className="filter-box-main">
+        <Card>
+          <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+            </div>
+            <hr />
+            <div className="filter-box-main">
               <StarkFormBuilder
-                  containerClass="select-options"
-                  formHeaderClass=""
-                  formSections={FormSections}
-                  formHeading="Filter Form"
-                  onFormSubmit={(formValues) => {
-                    submitForm(formValues);
-                  }}
-                  options={options}
-                  callbacks={{}}
-                  // defaultFormValues={defaultValues}
-                  currentUser={currentUser}
-                  submitBtnText="Apply"
-                  showResetBtn={true}
-                  resetBtnText="Clear"
-                  showBtnClass={true}
-                  btnContainerClass="form-submit-buttons pull-right"
-                  isStepForm={false}
-                  onFormReset={() => {
-                    setFilterData({});
-                    setAllData({});
-                  }}
-                />
-                </div>
-              </Card.Body>
-          </Card>
+                containerClass="select-options"
+                formHeaderClass=""
+                formSections={FormSections}
+                formHeading="Filter Form"
+                onFormSubmit={(formValues) => {
+                  submitForm(formValues);
+                }}
+                options={options}
+                callbacks={{}}
+                // defaultFormValues={defaultValues}
+                currentUser={currentUser}
+                submitBtnText="Apply"
+                showResetBtn={true}
+                resetBtnText="Clear"
+                showBtnClass={true}
+                btnContainerClass="form-submit-buttons pull-right"
+                isStepForm={false}
+                onFormReset={() => {
+                  setFilterData({});
+                  setAllData({});
+                }}
+              />
+            </div>
+          </Card.Body>
+        </Card>
         <Card>
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
@@ -502,15 +555,21 @@ function RecruitmentApplicationComponent() {
                   }}
                   className="btn-link"
                 >
-                  {Number(group) === 4 || Number(group) === 3 ||  Number(group) === 2
+                  {Number(group) === 4 ||
+                  Number(group) === 3 ||
+                  Number(group) === 2
                     ? ''
                     : 'Add Applicant'}
                 </a>
-              </div>  
+              </div>
             </div>
-            <hr/>
+            <hr />
             <div className="text-end">
-              {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
+              {!(
+                Number(group) === 4 ||
+                Number(group) === 3 ||
+                Number(group) === 2
+              ) && (
                 <Button
                   variant="primary"
                   className="mb-2"
@@ -523,31 +582,34 @@ function RecruitmentApplicationComponent() {
               )}
             </div>
             <div className="recruitment-links-wrapper">
-            
-              {!(Number(group) === 4 || Number(group) === 3 || Number(group) === 2) && (
+              {!(
+                Number(group) === 4 ||
+                Number(group) === 3 ||
+                Number(group) === 2
+              ) && (
                 <>
-              <a
-                href="#"
-                className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveMenu('all');
-                  setStatus(0);
-                }}
-              >
-                All
-              </a>
-              <a
-                href="#"
-                className={`ml-2 mb-2 ${
-                  activeMenu === 'selected' ? 'active' : ''
-                }`}
-                onClick={() => {
-                  setActiveMenu('selected');
-                  setStatus(1);
-                }}
-              >
-                Selected
-              </a>
+                  <a
+                    href="#"
+                    className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveMenu('all');
+                      setStatus(0);
+                    }}
+                  >
+                    All
+                  </a>
+                  <a
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'selected' ? 'active' : ''
+                    }`}
+                    onClick={() => {
+                      setActiveMenu('selected');
+                      setStatus(1);
+                    }}
+                  >
+                    Selected
+                  </a>
                   <a
                     href="#"
                     className={`ml-2 mb-2 ${

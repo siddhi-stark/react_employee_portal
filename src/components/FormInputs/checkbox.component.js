@@ -2,15 +2,8 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 
 export default function CheckboxComponent(props) {
-  const {
-    id,
-    value,
-    onSelectCheckbox,
-    type,
-    disabled,
-    options,
-    className,
-  } = props;
+  const { id, value, onSelectCheckbox, type, disabled, options, className } =
+    props;
 
   return (
     <>

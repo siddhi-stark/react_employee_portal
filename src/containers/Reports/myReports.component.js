@@ -33,28 +33,28 @@ function AllReports() {
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'name',
       label: 'Name',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
       isDisplay: false,
     },
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockin',
       label: 'In',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'clockout',
       label: 'Out',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'total',
@@ -74,7 +74,7 @@ function AllReports() {
     const endPoint = `${Api.reportListingUrl}`;
 
     const params = {
-      'my_report':true,
+      my_report: true,
       page,
       limit: pagination.itemsPerPage,
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
@@ -129,10 +129,7 @@ function AllReports() {
     let filterSearchErr = '';
     let isValid = true;
 
-    if (
-      !fromDate &&
-      !toDate
-    ) {
+    if (!fromDate && !toDate) {
       filterSearchErr = 'Please select dates';
       setFilterErr(filterSearchErr);
       isValid = false;
@@ -161,104 +158,102 @@ function AllReports() {
 
       <section className="content-area">
         <div className="mt-5">
-            <Card>
-                <Card.Body>
-                 <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                 </div> 
-               <hr/> 
-                  <Card.Title>
-                    <Form onSubmit={(e) => filterSearch(e)}>
-                      {filterErr && (
-                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
-                          <div className="img-text">
-                            <img src="/images/fail.svg" alt="Success" />{' '}
-                            {filterErr}
-                          </div>
-                        </div>
-                      )}
-                      <Row className="mt-3">
-
-                        <Col sm={4}>
-                          <Datepicker
-                            className="form-control"
-                            selected={fromDate}
-                            onChange={(e) => {
-                              setFromDate(e);
-                            }}
-                            autoComplete="off"
-                            name="startDate"
-                            dateFormat="dd/MM/yyyy"
-                            maxDate={new Date()}
-                            placeholder="From Date"
-                          />
-                        </Col>
-
-                        <Col sm={4}>
-                          <Datepicker
-                            className="form-control"
-                            selected={toDate}
-                            onChange={(e) => {
-                              setToDate(e);
-                            }}
-                            autoComplete="off"
-                            minDate={fromDate}
-                            maxDate={new Date()}
-                            name="startDate"
-                            dateFormat="dd/MM/yyyy"
-                            placeholder="To Date"
-                          />
-                        </Col>
-                        <Col sm={4}>
-                          <div className="filter-btn">
-                            <Button
-                              variant="primary"
-                              type="submit"
-                              className="ms-4"
-                            >
-                              Apply
-                            </Button>
-                            <Button
-                              variant="secondary"
-                              type="button"
-                              className="ms-4"
-                              onClick={() => onClear()}
-                            >
-                              Clear
-                            </Button>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </Card.Title>
-                </Card.Body>
-            </Card>
           <Card>
-          <Card.Body>
-          <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">My Report</h5>
-                 </div> 
-               <hr/> 
-            <Row>
-            <Table
-                columns={columns}
-                rows={rows}
-                showPagination
-                paginationProps={{
-                  ...pagination,
-                  activePage: pagination.current_page,
-                  onPageChange: (pageNo) => {
-                    getReports(pageNo);
-                  },
-                }}
-                tableClass="table-striped"
-                dropdownContainerClass="mb-3"
-                emptyRender={() => (
-                  <p className="text-center mb-0">No record found</p>
-                )}
-              />
-            </Row>
-          </Card.Body>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>
+              <hr />
+              <Card.Title>
+                <Form onSubmit={(e) => filterSearch(e)}>
+                  {filterErr && (
+                    <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                      <div className="img-text">
+                        <img src="/images/fail.svg" alt="Success" /> {filterErr}
+                      </div>
+                    </div>
+                  )}
+                  <Row className="mt-3">
+                    <Col sm={4}>
+                      <Datepicker
+                        className="form-control"
+                        selected={fromDate}
+                        onChange={(e) => {
+                          setFromDate(e);
+                        }}
+                        autoComplete="off"
+                        name="startDate"
+                        dateFormat="dd/MM/yyyy"
+                        maxDate={new Date()}
+                        placeholder="From Date"
+                      />
+                    </Col>
+
+                    <Col sm={4}>
+                      <Datepicker
+                        className="form-control"
+                        selected={toDate}
+                        onChange={(e) => {
+                          setToDate(e);
+                        }}
+                        autoComplete="off"
+                        minDate={fromDate}
+                        maxDate={new Date()}
+                        name="startDate"
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="To Date"
+                      />
+                    </Col>
+                    <Col sm={4}>
+                      <div className="filter-btn">
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          className="ms-4"
+                        >
+                          Apply
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          type="button"
+                          className="ms-4"
+                          onClick={() => onClear()}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
+                </Form>
+              </Card.Title>
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">My Report</h5>
+              </div>
+              <hr />
+              <Row>
+                <Table
+                  columns={columns}
+                  rows={rows}
+                  showPagination
+                  paginationProps={{
+                    ...pagination,
+                    activePage: pagination.current_page,
+                    onPageChange: (pageNo) => {
+                      getReports(pageNo);
+                    },
+                  }}
+                  tableClass="table-striped"
+                  dropdownContainerClass="mb-3"
+                  emptyRender={() => (
+                    <p className="text-center mb-0">No record found</p>
+                  )}
+                />
+              </Row>
+            </Card.Body>
           </Card>
         </div>
       </section>

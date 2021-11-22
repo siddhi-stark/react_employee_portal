@@ -89,7 +89,6 @@ function OldEmployee() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
-       
         <div className="row mt-3">
           {employee &&
             employee.map((emp) => (
@@ -154,9 +153,7 @@ function OldEmployee() {
             getEmployee(pageNo);
           }}
         />
-         {(totalCount < 1 ) && (
-        <p className="text-center"> No records found</p>
-      )}
+        {totalCount < 1 && <p className="text-center"> No records found</p>}
       </section>
     </>
   );

@@ -36,7 +36,7 @@ function ForgetPassword() {
       email: userData.email,
     };
 
- setLoader(true);
+    setLoader(true);
 
     const postData = customFunctions.cleanObject(payload, 'O');
     const { data, message } = await AuthApi.postDataToServer(

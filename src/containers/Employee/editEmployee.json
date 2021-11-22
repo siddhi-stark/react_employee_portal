@@ -8,7 +8,7 @@
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
-        {
+      {
         "name": "task",
         "type": "text",
         "label": "Task Name",
@@ -84,9 +84,9 @@
         "label": "Start Time",
         "id": "",
         "placeholder": "",
-        "dateFormat":"h:mm aa",
-        "showTimeSelect":"showTimeSelect",
-        "showTimeSelectOnly":"showTimeSelectOnly",
+        "dateFormat": "h:mm aa",
+        "showTimeSelect": "showTimeSelect",
+        "showTimeSelectOnly": "showTimeSelectOnly",
         "inputClass": "",
         "containerClass": "",
         "validations": [
@@ -122,9 +122,9 @@
         "label": "End Time",
         "id": "",
         "placeholder": "",
-        "dateFormat":"h:mm aa",
-        "showTimeSelect":"showTimeSelect",
-        "showTimeSelectOnly":"showTimeSelectOnly",
+        "dateFormat": "h:mm aa",
+        "showTimeSelect": "showTimeSelect",
+        "showTimeSelectOnly": "showTimeSelectOnly",
         "inputClass": "",
         "containerClass": "",
         "validations": [
@@ -135,8 +135,8 @@
           }
         ],
         "displayWhen": {},
-         "minTime": "",
-         "minDate":"",
+        "minTime": "",
+        "minDate": "",
         "maxTime": "",
         "haveValidations": "true",
         "haveDisplayOptions": "false",

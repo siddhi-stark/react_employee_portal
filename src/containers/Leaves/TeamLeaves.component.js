@@ -32,21 +32,24 @@ function TeamLeaves() {
       id: 'user_name',
       label: 'Name',
       roleAccess: [4],
-      render: ({ user_name, id }) => { 
+      render: ({ user_name, id }) => {
         return (
           <>
-           <a
+            <a
               href="/"
               className="pl-2"
               title="View Leave"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                  history.push(`/view-leave/${id}`, { isView: 'true', isViewLeave : true });
+                history.push(`/view-leave/${id}`, {
+                  isView: 'true',
+                  isViewLeave: true,
+                });
               }}
             >
-            {user_name}
-           </a>
+              {user_name}
+            </a>
           </>
         );
       },
@@ -55,14 +58,12 @@ function TeamLeaves() {
       id: 'leave_date',
       label: 'Leave Date',
       roleAccess: [3],
-      render: ({ leave_from_date, leave_to_date }) => { 
+      render: ({ leave_from_date, leave_to_date }) => {
         return (
           <>
             <span>{`${customFunctions.getNewFormattedDate(
               leave_from_date
-            )} to ${customFunctions.getNewFormattedDate(
-              leave_to_date
-            )}`}</span>
+            )} to ${customFunctions.getNewFormattedDate(leave_to_date)}`}</span>
           </>
         );
       },
@@ -79,41 +80,41 @@ function TeamLeaves() {
     {
       id: 'status_name',
       label: 'Status',
-       render: ({ id, status_name,leave_from_date }) => { 
+      render: ({ id, status_name, leave_from_date }) => {
         return (
           <>
-         
-         { (status_name === 'Pending' && customFunctions.getDate(new Date()) <= leave_from_date)? (
-                <>
-                  <Image
-                    title = "Accept"
-                    onClick={() => {
-                      setLeaveId(id);
-                      setStatusId(2);
-                      setModalShow(true);
-                    }}
-                    alt="Accept"
-                    src="/images/success.svg"
-                  />
-                  <Image
-                    title = "Declined"
-                    onClick={() => {
-                      setLeaveId(id);
-                      setStatusId(3);
-                      setModalShow(true);
-                    }}
-                    alt="Declined"
-                    src="/images/fail.svg"
-                    className="ms-2"
-                  />
-                </>
-                ) :(
-           <span> {status_name} </span>
-           )}
+            {status_name === 'Pending' &&
+            customFunctions.getDate(new Date()) <= leave_from_date ? (
+              <>
+                <Image
+                  title="Accept"
+                  onClick={() => {
+                    setLeaveId(id);
+                    setStatusId(2);
+                    setModalShow(true);
+                  }}
+                  alt="Accept"
+                  src="/images/success.svg"
+                />
+                <Image
+                  title="Declined"
+                  onClick={() => {
+                    setLeaveId(id);
+                    setStatusId(3);
+                    setModalShow(true);
+                  }}
+                  alt="Declined"
+                  src="/images/fail.svg"
+                  className="ms-2"
+                />
+              </>
+            ) : (
+              <span> {status_name} </span>
+            )}
           </>
         );
-      }
-      }
+      },
+    },
   ];
 
   // Declare variable
@@ -127,7 +128,7 @@ function TeamLeaves() {
   const [modalShow, setModalShow] = useState(false);
   const [statusId, setStatusId] = useState('');
   const [leaveId, setLeaveId] = useState('');
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
   const [filterData, setFilterData] = useState({});
 
   const history = useHistory();
@@ -144,10 +145,10 @@ function TeamLeaves() {
     const params = {
       page,
       limit,
-      my_team:true,
+      my_team: true,
       sort_by: 'leave_from_date',
-      sort_direction:'descending',
-      ...filterList
+      sort_direction: 'descending',
+      ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -174,7 +175,7 @@ function TeamLeaves() {
   };
 
   // Get user role
-  const getUserRole = async() => {
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
@@ -187,10 +188,10 @@ function TeamLeaves() {
     getRowData(1);
     setTitle('Leaves');
   }, [filterData]);
-   
+
   const submitForm = async (formValues) => {
     const filterValues = {
-       start_date: formValues.start_date
+      start_date: formValues.start_date
         ? customFunctions.getDate(formValues.start_date)
         : '',
       end_date: formValues.end_date
@@ -208,34 +209,36 @@ function TeamLeaves() {
         <h2 className="main-content-title tx-24 mg-b-5">Team Leaves</h2>
         <Breadcrumb items={items} />
       </div>
-    <Loader showLoader={isShowLoader} needFullPage={false} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
-          <Card>
+        <Card>
           <Card.Body>
-             <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                 <div className="d-flex align-items-center justify-content-end">
-                  <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
-                    <a
-                      href="#"
-                      onClick={() => {
-                        history.push('/add-leave');
-                      }}
-                      className="btn-link"
-                    >
-                      Apply Leave
-                    </a>
-                  </UserRestrictions>
-                </div>
-               </div> 
-               <hr/>
-              <div className="filter-box-main">
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              <div className="d-flex align-items-center justify-content-end">
+                <UserRestrictions permittedUsers={[4]} roleId={currentUser}>
+                  <a
+                    href="#"
+                    onClick={() => {
+                      history.push('/add-leave');
+                    }}
+                    className="btn-link"
+                  >
+                    Apply Leave
+                  </a>
+                </UserRestrictions>
+              </div>
+            </div>
+            <hr />
+            <div className="filter-box-main">
               <StarkFormBuilder
-                containerClass=''
-                formHeaderClass=''
+                containerClass=""
+                formHeaderClass=""
                 formSections={SearchFormSections}
                 formHeading=""
-                onFormSubmit={(formValues) => {submitForm(formValues);}}
+                onFormSubmit={(formValues) => {
+                  submitForm(formValues);
+                }}
                 callbacks={{}}
                 submitBtnText="Apply"
                 showResetBtn={true}
@@ -248,46 +251,46 @@ function TeamLeaves() {
                   setFilterData();
                 }}
               />
-              </div>
-            </Card.Body>
-            </Card>
-            <Card>
-            <Card.Body>
+            </div>
+          </Card.Body>
+        </Card>
+        <Card>
+          <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Team Leaves</h5>
-               </div> 
-               <hr/> 
-              <CustomTable
-                columns={columns}
-                rows={rowData}
-                showPagination={true}
-                tableClass="table-striped"
-                paginationProps={{
-                  totalItems: totalCount,
-                  itemsPerPage: limit,
-                  activePage: currentPage,
-                  onPageChange: (pageNo) => {
-                    getRowData(pageNo);
-                  },
-                }}
-                emptyRender={() => {
-                  return 'No record found.';
-                }}
-              />
-            </Card.Body>
+              <h5 className="card-title mb-0 mt-2 ">Team Leaves</h5>
+            </div>
+            <hr />
+            <CustomTable
+              columns={columns}
+              rows={rowData}
+              showPagination={true}
+              tableClass="table-striped"
+              paginationProps={{
+                totalItems: totalCount,
+                itemsPerPage: limit,
+                activePage: currentPage,
+                onPageChange: (pageNo) => {
+                  getRowData(pageNo);
+                },
+              }}
+              emptyRender={() => {
+                return 'No record found.';
+              }}
+            />
+          </Card.Body>
 
-            {modalShow && (
-              <AddNote
-                show={modalShow}
-                statusId={statusId}
-                leaveId={leaveId}
-                handleModalCLose={(e) => setModalShow(e)}
-                onStatusUpdate={() => {
-                  getRowData(1);
-                }}
-              />
-            )}
-          </Card>
+          {modalShow && (
+            <AddNote
+              show={modalShow}
+              statusId={statusId}
+              leaveId={leaveId}
+              handleModalCLose={(e) => setModalShow(e)}
+              onStatusUpdate={() => {
+                getRowData(1);
+              }}
+            />
+          )}
+        </Card>
       </section>
     </>
   );

@@ -183,11 +183,7 @@ function TeamProject(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (
-      data &&
-      data.data &&
-      data.success
-    ) {
+    if (data && data.data && data.success) {
       let designHrs = '';
       let developmentHrs = '';
       let qaHrs = '';
@@ -201,8 +197,8 @@ function TeamProject(props) {
         datasets: [
           {
             data: [
-              newCompletion ? Number(newCompletion) :0,
-              newRemaining_perc? Number(newRemaining_perc):0
+              newCompletion ? Number(newCompletion) : 0,
+              newRemaining_perc ? Number(newRemaining_perc) : 0,
             ],
             backgroundColor: ['#8cc540', '#e3e3e3'],
           },
@@ -234,11 +230,11 @@ function TeamProject(props) {
       setProjectStatus(total);
       setGraphData(graph);
 
-     await data &&
+      (await data) &&
         data.data &&
         data.data.project_dept_time_list &&
         data.data.project_dept_time_list.length > 0 &&
-      await  data.data.project_dept_time_list.map((projectDept) => {
+        (await data.data.project_dept_time_list.map((projectDept) => {
           switch (projectDept.team_name) {
             case 'Project Management':
               managementHrs =
@@ -268,12 +264,12 @@ function TeamProject(props) {
               return !projectDept.team_name;
           }
           return projectDept;
-        });
+        }));
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
       setName(data.data.name);
-     await newData.push(
+      await newData.push(
         {
           team: 'Design',
           rowClass:
@@ -441,10 +437,13 @@ function TeamProject(props) {
       let spendAllocated = '';
       let totalAllocated = '';
       let hrsAllocated = '';
-      if(data && data.data && data.data.total){
-        hrsAllocated = data && data.data && data.data.total && data.data.hours_allocated;
-        totalAllocated =  data && data.data && data.data.total && data.data.total.allocated;
-        spendAllocated =  data && data.data && data.data.total && data.data.total.spends;
+      if (data && data.data && data.data.total) {
+        hrsAllocated =
+          data && data.data && data.data.total && data.data.hours_allocated;
+        totalAllocated =
+          data && data.data && data.data.total && data.data.total.allocated;
+        spendAllocated =
+          data && data.data && data.data.total && data.data.total.spends;
       }
       setBarGraphData({
         labels: ['Allocated Hours  Estimated Hours  Spending Hours'],
@@ -453,25 +452,19 @@ function TeamProject(props) {
             label: 'Allocated Hours',
             backgroundColor: '#3ad2e3',
             borderWidth: 1,
-            data: [
-              hrsAllocated ? Number(hrsAllocated) : 0
-            ],
+            data: [hrsAllocated ? Number(hrsAllocated) : 0],
           },
           {
             label: 'Estimated Hours',
             backgroundColor: '#8cc540',
             borderWidth: 1,
-            data: [
-             totalAllocated ? Number(totalAllocated) : 0
-            ],
+            data: [totalAllocated ? Number(totalAllocated) : 0],
           },
           {
             label: 'Spent Hours',
             backgroundColor: '#f4c222 ',
             borderWidth: 1,
-            data: [
-              spendAllocated ? Number(spendAllocated) : 0
-            ],
+            data: [spendAllocated ? Number(spendAllocated) : 0],
           },
         ],
       });
@@ -505,18 +498,14 @@ function TeamProject(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (
-      data &&
-      data.data &&
-      data.success
-    ) {
+    if (data && data.data && data.success) {
       setShowLoader(false);
 
-      const obj =  Object.keys(data.data).length > 0 && Object.entries(data.data);
-      if(obj){
-        setActivityData(obj);  
-      }
-      else{
+      const obj =
+        Object.keys(data.data).length > 0 && Object.entries(data.data);
+      if (obj) {
+        setActivityData(obj);
+      } else {
         setActivityData([]);
       }
     } else {
@@ -659,7 +648,9 @@ function TeamProject(props) {
           <div className="row">
             <div className="col-sm-8">
               {/* loop for date */}
-              { activityData && activityData.length > 0 && activityData.map((datekey, datevalueobject) => (
+              {activityData &&
+                activityData.length > 0 &&
+                activityData.map((datekey, datevalueobject) => (
                   <section className="card">
                     <div className="purple-bg card-header d-flex align-items-center">
                       <h5
@@ -671,7 +662,9 @@ function TeamProject(props) {
                     </div>
                     <section className="card-body">
                       {/* emnployee loop */}
-                      {datevalueobject && Object.keys(datevalueobject)  && Object.keys(datevalueobject).length > 0 &&
+                      {datevalueobject &&
+                        Object.keys(datevalueobject) &&
+                        Object.keys(datevalueobject).length > 0 &&
                         Object.entries(datevalueobject) &&
                         Object.entries(datevalueobject).length > 0 &&
                         Object.entries(datevalueobject).map(
@@ -681,7 +674,8 @@ function TeamProject(props) {
                               <ul className="timeline">
                                 {/* task loop */}
                                 {taskData &&
-                                  Object.keys(taskData) && Object.keys(taskData).length > 0 &&
+                                  Object.keys(taskData) &&
+                                  Object.keys(taskData).length > 0 &&
                                   Object.entries(taskData).length > 0 &&
                                   Object.entries(taskData).map(([task]) => (
                                     <li

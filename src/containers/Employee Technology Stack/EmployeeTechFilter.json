@@ -1,89 +1,89 @@
 [
-	{
-		"sectionName": "employeefilter",
-		"sectionTitle": "Employee Filter",
-		"layout": {
-			"label": "2 Column",
-			"value": "2column"
-		},
-		"containerClass": "",
-		"displaySection": true,
-		"displaySectionTitle": false,
-		"fields": [
-			{
-				"name": "employee",
-				"type": "select",
-				"label": "Employee Name",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{
-						"type": "required",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "getEmployee",
-				"optionsCallbackUrl": "employeeUrl",
-				"options": []
-			},
-			{
-				"name": "technology",
-				"type": "select",
-				"label": "Technology",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [
-					{
-						"type": "",
-						"applyWhen": [],
-						"applyWhenRelation": "OR"
-					}
-				],
-				"displayWhen": {},
-				"haveValidations": "true",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": true,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": {
-					"label": "1 Column",
-					"value": "1column"
-				},
-				"fields": [],
-				"optionCallback": "getTechnology",
-				"optionsCallbackUrl": "designationUrl",
-				"options": []
-			}
-		],
-		"allowedUsers": [],
-		"sectionLayout": "2column"
-	}
+  {
+    "sectionName": "employeefilter",
+    "sectionTitle": "Employee Filter",
+    "layout": {
+      "label": "2 Column",
+      "value": "2column"
+    },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "employee",
+        "type": "select",
+        "label": "Employee Name",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getEmployee",
+        "optionsCallbackUrl": "employeeUrl",
+        "options": []
+      },
+      {
+        "name": "technology",
+        "type": "select",
+        "label": "Technology",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": true,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getTechnology",
+        "optionsCallbackUrl": "designationUrl",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "2column"
+  }
 ]

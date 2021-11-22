@@ -38,15 +38,15 @@ function InterviewRounds() {
 
   const updatedJsonSchema = async () => {
     updateJsonSchema([]);
-    if (Number(currentUser) !== 4 || Number(currentUser) !== 3 ) {
+    if (Number(currentUser) !== 4 || Number(currentUser) !== 3) {
       const formSchema = [...hrInterviewFormSections];
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
         s.fields = section.fields.filter((item) => {
           const itemData = item;
-          if(item.name === 'int_date' || item.name === 'int_time') itemData.disabled = true;
+          if (item.name === 'int_date' || item.name === 'int_time')
+            itemData.disabled = true;
           return !['feedback'].includes(item.name);
-
         });
         return s;
       });
@@ -60,8 +60,8 @@ function InterviewRounds() {
         const s = { ...section };
         s.fields = section.fields.filter((item) => {
           const itemData = item;
-          if(item.name === 'date') itemData.disabled = true;
-          if(item.name === 'time') itemData.disabled = true;
+          if (item.name === 'date') itemData.disabled = true;
+          if (item.name === 'time') itemData.disabled = true;
 
           return !['interviewer', 'round', 'feedback'].includes(item.name);
         });
@@ -72,55 +72,61 @@ function InterviewRounds() {
   };
 
   const getData = async () => {
-
     const section = hrInterviewFormSections[0].fields[3].options;
-    const {data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
-      if(data) {
-        
-    const intDate = data.data.int_date ? customFunctions.getDate(data.data.int_date) : '';
-    data.data.int_date = intDate ? new Date(intDate) : '';
-    data.data.int_time = data.data.int_time ? new Date(intDate + ' ' + data.data.int_time) : ''; //eslint-disable-line
-  
-     const ds = data.data.interviewer_id ? {
-        label: data.data.interviewer_name,
-        value: data.data.interviewer_id
-      } : ''   
+    const { data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
+    if (data) {
+      const intDate = data.data.int_date
+        ? customFunctions.getDate(data.data.int_date)
+        : '';
+      data.data.int_date = intDate ? new Date(intDate) : '';
+      data.data.int_time = data.data.int_time
+        ? new Date(intDate + ' ' + data.data.int_time)
+        : ''; //eslint-disable-line
 
-       const interw = data.data.round_type ? {
-        label: data.data.round_type_name,
-        value: data.data.round_type
-      } : ''  
+      const ds = data.data.interviewer_id
+        ? {
+            label: data.data.interviewer_name,
+            value: data.data.interviewer_id,
+          }
+        : '';
 
-     const obj = {
-       ...data.data,
-       interviewer: ds,
-       round_status: interw
-     };
+      const interw = data.data.round_type
+        ? {
+            label: data.data.round_type_name,
+            value: data.data.round_type,
+          }
+        : '';
 
-     updateDefaultValues({...obj})    // updateDefaultValues(data);
-      }
+      const obj = {
+        ...data.data,
+        interviewer: ds,
+        round_status: interw,
+      };
 
+      updateDefaultValues({ ...obj }); // updateDefaultValues(data);
+    }
   };
 
   useEffect(() => {
-
     getData();
-  },[])
-
+  }, []);
 
   const submitAddMoreForm = async (formValues) => {
     const postData = {
-      int_date: formValues.int_date ? customFunctions.getFormattedDate(formValues.int_date) : '',
-      int_time: formValues.int_time ? customFunctions.getTime(formValues.int_time) : '',
-      round_status: formValues.round_status ? formValues.round_status.value : '',
+      int_date: formValues.int_date
+        ? customFunctions.getFormattedDate(formValues.int_date)
+        : '',
+      int_time: formValues.int_time
+        ? customFunctions.getTime(formValues.int_time)
+        : '',
+      round_status: formValues.round_status
+        ? formValues.round_status.value
+        : '',
       interviewer: formValues.interviewer ? formValues.interviewer.value : '',
-    }
-    const { data } = await AuthApi.postDataToServer(
-      Api.roundsUrl,
-      postData
-    );
+    };
+    const { data } = await AuthApi.postDataToServer(Api.roundsUrl, postData);
     if (data) {
-      console.log('data',data);
+      console.log('data', data);
     }
   };
 
@@ -149,18 +155,21 @@ function InterviewRounds() {
   const submitForm = async (formValues) => {
     const id = customFunctions.getLocalStorage('applicantId');
     const postData = {
-      int_date: formValues.int_date ? customFunctions.getDate(formValues.int_date) : '',
-      int_time: formValues.int_time ? customFunctions.getTime(formValues.int_time) : '',
-      round_status: formValues.round_status ? formValues.round_status.value : '',
+      int_date: formValues.int_date
+        ? customFunctions.getDate(formValues.int_date)
+        : '',
+      int_time: formValues.int_time
+        ? customFunctions.getTime(formValues.int_time)
+        : '',
+      round_status: formValues.round_status
+        ? formValues.round_status.value
+        : '',
       interviewer: formValues.interviewer ? formValues.interviewer.value : '',
-      applicant: id
-    }
-    const { data } = await AuthApi.postDataToServer(
-      Api.roundsUrl,
-      postData
-    );
+      applicant: id,
+    };
+    const { data } = await AuthApi.postDataToServer(Api.roundsUrl, postData);
     if (data) {
-      console.log('data',data);
+      console.log('data', data);
     }
   };
 
@@ -210,14 +219,14 @@ function InterviewRounds() {
 
   const OnReschedule = async () => {
     const js = jsonSchema[0].fields;
-   const updatedSchema = await js.map((item) => {
+    const updatedSchema = await js.map((item) => {
       const itemData = item;
-          if(item.name === 'int_date') itemData.disabled = false;
-          if(item.name === 'int_time') itemData.disabled = false;
-   return itemData;
-    })
+      if (item.name === 'int_date') itemData.disabled = false;
+      if (item.name === 'int_time') itemData.disabled = false;
+      return itemData;
+    });
     updateJsonSchema([...updatedSchema]);
-  }
+  };
 
   return (
     <>
@@ -231,13 +240,14 @@ function InterviewRounds() {
             OnReschedule();
             submitForm(formValues);
           }}
-
           options={options}
           callbacks={{}}
           defaultFormValues={defaultValues}
           currentUser={currentUser}
           submitBtnText={
-            (Number(currentUser) === 4 || Number(currentUser) === 3) ? 'Reschedule' : 'Schedule Interview'
+            Number(currentUser) === 4 || Number(currentUser) === 3
+              ? 'Reschedule'
+              : 'Schedule Interview'
           }
           showResetBtn={false}
           resetBtnText="Clear"
@@ -275,7 +285,12 @@ function InterviewRounds() {
       )}
       <UserRestrictions permittedUsers={[4, 3]} roleId={currentUser}>
         <div className="mt-3">
-          <Button onClick={() =>{setFlag(true); history.push('/interviewer-round');}}>
+          <Button
+            onClick={() => {
+              setFlag(true);
+              history.push('/interviewer-round');
+            }}
+          >
             Approval
           </Button>
         </div>

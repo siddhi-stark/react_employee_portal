@@ -72,7 +72,7 @@ class CustomFunctions extends Component {
     return formattedate;
   };
 
-    getNewFormattedDate = (dateTime) => {
+  getNewFormattedDate = (dateTime) => {
     const newdate = new Date(dateTime);
     const d = newdate.getDate();
     const m = newdate.getMonth() + 1;
@@ -90,7 +90,13 @@ class CustomFunctions extends Component {
     const d = newdate.getDate();
     const m = newdate.getMonth() + 1;
     const y = newdate.getFullYear();
-    const formattedate = (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y +       formatTime; //eslint-disable-line
+    const formattedate =
+      (d <= 9 ? '0' + d : d) +
+      '/' +
+      (m <= 9 ? '0' + m : m) +
+      '/' +
+      y +
+      formatTime; //eslint-disable-line
     return formattedate;
   };
 
@@ -197,7 +203,8 @@ class CustomFunctions extends Component {
   };
 
   validateEmail = (email) => {
-    var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
+    var emailReg =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
     return emailReg.test(email);
   };
 
@@ -394,18 +401,18 @@ class CustomFunctions extends Component {
     return `${hours}:${minutes}`;
   };
 
-  onLogout = () =>{
+  onLogout = () => {
     const check = this.getLocalStorage('checkbox');
     const pass = this.getLocalStorage('password');
     const emailAddress = this.getLocalStorage('email');
     localStorage.clear();
     localStorage.removeItem('greetingId');
-    if(check){
-      this.setLocalStorage('checkbox',check);
-      this.setLocalStorage('password',pass);
-      this.setLocalStorage('email',emailAddress); 
+    if (check) {
+      this.setLocalStorage('checkbox', check);
+      this.setLocalStorage('password', pass);
+      this.setLocalStorage('email', emailAddress);
     }
-  }
+  };
 }
 
 export default new CustomFunctions();

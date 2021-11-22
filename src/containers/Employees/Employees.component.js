@@ -17,16 +17,15 @@ function Employees() {
   const group = customFunctions.getLocalStorage('group');
 
   useEffect(() => {
-    
     setTitle('Employees');
   }, []);
 
-  const handleSelect = (emp)=>{
-    if(emp === 'currentEmployee'){
+  const handleSelect = (emp) => {
+    if (emp === 'currentEmployee') {
       setKey('currentEmployee');
-    } else if(emp === 'noticePeriod') {
+    } else if (emp === 'noticePeriod') {
       setKey('noticePeriod');
-    } else if(emp === 'oldEmployee'){
+    } else if (emp === 'oldEmployee') {
       setKey('oldEmployee');
     }
   };
@@ -44,32 +43,28 @@ function Employees() {
         <div>
           <Tabs
             defaultActiveKey="currentEmployee"
-            onSelect={(e)=>handleSelect(e)}
+            onSelect={(e) => handleSelect(e)}
             // id="uncontrolled-tab-example"
           >
             <Tab eventKey="currentEmployee" title="Current Employee">
-            { (key ==='currentEmployee') && (
-              <CurrentEmployee key='1'/>
-            )}
+              {key === 'currentEmployee' && <CurrentEmployee key="1" />}
             </Tab>
 
             {Number(group) !== 2 ? (
-
-            <Tab eventKey="noticePeriod" title="Serving Notice Period">
-            { (key ==='noticePeriod') && (
-              <NoticePeriod key={key}/>
+              <Tab eventKey="noticePeriod" title="Serving Notice Period">
+                {key === 'noticePeriod' && <NoticePeriod key={key} />}
+              </Tab>
+            ) : (
+              ''
             )}
-            </Tab>
-              ) : ''}
 
-              {Number(group) !== 2 ? (
-
-            <Tab eventKey="oldEmployee" title="Old Employee">
-            { (key ==='oldEmployee') && (
-              <OldEmployee />
+            {Number(group) !== 2 ? (
+              <Tab eventKey="oldEmployee" title="Old Employee">
+                {key === 'oldEmployee' && <OldEmployee />}
+              </Tab>
+            ) : (
+              ''
             )}
-            </Tab>
-                ) : ''}
           </Tabs>
         </div>
       </section>

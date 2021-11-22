@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable react/destructuring-assignment */
+import { setHours, setMinutes } from 'date-fns';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import { Row, Col, Button, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
-import { setHours, setMinutes } from 'date-fns';
-import customFunctions from '../../helper/customFunctions';
-import { ModalInput, TextInput, Datepicker } from '../../components/FormInputs';
-import AuthApi from '../../helper/authApi';
-import Api from '../../helper/api';
+import { Datepicker, ModalInput, TextInput } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function Task(props) {
   const validator = useRef(new SimpleReactValidator());
@@ -17,10 +18,9 @@ function Task(props) {
   const [id, setId] = useState(null);
   const [disableButton, setDisableButton] = useState(false);
   const [taskList, setTaskList] = useState([]);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
 
   const defaultTask = {
-
     id: '',
     taskStartTime: '',
     taskEndTime: '',
@@ -31,7 +31,6 @@ function Task(props) {
     startMinutes: '',
     taskHrs: '',
     taskMins: '',
-
   };
 
   const getTaskById = async (tid) => {
@@ -75,18 +74,14 @@ function Task(props) {
 
   useEffect(() => {
     setTaskModalShow(props.show);
-    setTaskList([
-      defaultTask
-    ]);
+    setTaskList([defaultTask]);
 
     const taskId = customFunctions.getLocalStorage('taskid');
-    if (taskId)
-      setId(taskId);
+    if (taskId) setId(taskId);
 
-    return (() => {
+    return () => {
       setId('');
-    });
-
+    };
   }, []);
 
   useEffect(() => {
@@ -100,7 +95,6 @@ function Task(props) {
     const selectedTask = [];
 
     taskList.map((task) => {
-
       const obj = {
         start_time: customFunctions.getTime(task.taskStartTime),
         end_time: customFunctions.getTime(task.taskEndTime),
@@ -197,20 +191,18 @@ function Task(props) {
               submitForm(e);
             }}
           >
-            {
-              !id && (
-                <div className="add-break d-flex align-items-center justify-content-between">
-                  <h3 className="mb-1">{'  '}</h3>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => addMoreTask()}
-                  >
-                    Add Task
+            {!id && (
+              <div className="add-break d-flex align-items-center justify-content-between">
+                <h3 className="mb-1">{'  '}</h3>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => addMoreTask()}
+                >
+                  Add Task
                 </button>
-                </div>
-              )
-            }
+              </div>
+            )}
             {taskList.map((data, i) => (
               <>
                 <Row>
@@ -220,7 +212,6 @@ function Task(props) {
                         taskList[i].taskName = e.target.value;
                         setTaskList([...taskList]);
                       }}
-
                       label="Add Task Name"
                       asterisk="*"
                       id={`taskName${i + 1}`}
@@ -235,7 +226,6 @@ function Task(props) {
                         'required'
                       )}
                     />
-
                   </Col>
                   <Col sm={6}>
                     <TextInput
@@ -243,7 +233,6 @@ function Task(props) {
                         taskList[i].description = e.target.value;
                         setTaskList([...taskList]);
                       }}
-
                       label="Description"
                       containerClass="form-group"
                       asterisk="*"
@@ -281,7 +270,6 @@ function Task(props) {
                         taskList[i].startMinutes = e.getMinutes();
                         setTaskList([...taskList]);
                       }}
-
                       showTimeSelect="showTimeSelect"
                       showTimeSelectOnly="showTimeSelectOnly"
                       timeIntervals="10"
@@ -293,7 +281,7 @@ function Task(props) {
                       )}
                     />
                   </Col>
-                  
+
                   <Col sm={2}>
                     <Datepicker
                       className="form-control"
@@ -305,8 +293,13 @@ function Task(props) {
                       selected={data.taskEndTime}
                       minDate={new Date(data.taskStartTime)}
                       minTime={setHours(
-                        setMinutes(new Date(), parseInt(data.startMinutes, 10) + 1),
-                        parseInt(data.startMinutes, 10) > 58 ? parseInt(data.startHours, 10) + 1 : data.startHours
+                        setMinutes(
+                          new Date(),
+                          parseInt(data.startMinutes, 10) + 1
+                        ),
+                        parseInt(data.startMinutes, 10) > 58
+                          ? parseInt(data.startHours, 10) + 1
+                          : data.startHours
                       )}
                       maxTime={setHours(setMinutes(new Date(), 59), 23)}
                       onChange={(e) => {
@@ -316,8 +309,9 @@ function Task(props) {
                         if (e && data.taskStartTime) {
                           const tEndTime = new Date(e);
                           const tStartTime = new Date(data.taskStartTime);
-                          const diffMs = (tEndTime - tStartTime);
-                          const { hours: diffHrs, minutes: diffMins } = customFunctions.msToTime(diffMs);
+                          const diffMs = tEndTime - tStartTime;
+                          const { hours: diffHrs, minutes: diffMins } =
+                            customFunctions.msToTime(diffMs);
                           taskList[i].taskHrs = `${diffHrs}`;
                           taskList[i].taskMins = `${diffMins}`;
                         }
@@ -347,7 +341,7 @@ function Task(props) {
                     <div className="form-group">
                       <label htmlFor="" className="col-form-label">
                         Progress
-                  </label>
+                      </label>
                       <div className="progress-main">
                         <div className="progress">
                           <div className="progress-bar bg-secondary w-100">
@@ -391,11 +385,8 @@ function Task(props) {
                     </div>
                   </Col>
                 </Row>
-
               </>
-
-            ))
-            }
+            ))}
             <div className="float-end">
               <Button variant="secondary" onClick={() => onTaskCancel()}>
                 Cancel

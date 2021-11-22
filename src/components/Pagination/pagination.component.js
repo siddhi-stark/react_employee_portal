@@ -51,7 +51,8 @@ export default class Pagination extends Component {
     };
   }
 
-  UNSAFE_componentWillReceiveProps(props) { // eslint-disable-line
+  UNSAFE_componentWillReceiveProps(props) {
+    // eslint-disable-line
 
     this.setState({ activePage: props.current_page });
   }

@@ -26,7 +26,7 @@ export default function InputComponent(props) {
     accept,
     optionalLabel,
     style,
-    autocomplete
+    autocomplete,
   } = props;
 
   return (

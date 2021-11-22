@@ -42,11 +42,9 @@ export default function SimpleTable(props) {
   };
   const [allSelected, setAllSelected] = useState(false);
   const [selectedAction, setSelectedAction] = useState('');
-  
+
   const [selectedRows, setSelectedRows] = useState(
-    
     rows.filter((row) => {
-      
       return selectedRowItems.includes(Number(row.id));
     })
   );
@@ -56,11 +54,11 @@ export default function SimpleTable(props) {
   const allColumnIds = columns.map((column) => column.id);
 
   useEffect(() => {
-    setSelectedRows(  rows.filter((row) => {
-      
-      return selectedRowItems.includes(Number(row.id));
-    })
-  );
+    setSelectedRows(
+      rows.filter((row) => {
+        return selectedRowItems.includes(Number(row.id));
+      })
+    );
   }, [rows]);
 
   useEffect(() => {
@@ -152,7 +150,7 @@ export default function SimpleTable(props) {
       );
     }
   };
- 
+
   return (
     <>
       <div className={`table-projects table-responsive ${tableContainerClass}`}>
@@ -257,7 +255,10 @@ export default function SimpleTable(props) {
                         value={row.id}
                         type="checkbox"
                         // checked={selectedRowIndexes.includes(row.id)}
-                        checked={selectedRowItems.includes(Number(row.id)) || selectedRowIndexes.includes(row.id)}
+                        checked={
+                          selectedRowItems.includes(Number(row.id)) ||
+                          selectedRowIndexes.includes(row.id)
+                        }
                         onChange={(e) => {
                           onSelectRow(e.target.checked, rowIndex);
                         }}

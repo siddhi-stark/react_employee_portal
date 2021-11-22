@@ -1,44 +1,44 @@
 [
-	{
-		"sectionName": "approvalstatus",
-		"sectionTitle": "Approval Status",
-		"layout": { "label": "1 Column", "value": "1column" },
-		"containerClass": "",
-		"displaySection": true,
-		"displaySectionTitle": false,
-		"fields": [
-			{
-				"name": "approval_status",
-				"type": "radio",
-				"label": "",
-				"id": "",
-				"placeholder": "",
-				"inputClass": "",
-				"containerClass": "",
-				"validations": [],
-				"displayWhen": {},
-				"haveValidations": "false",
-				"haveDisplayOptions": "false",
-				"callback": "",
-				"callbackUrl": "",
-				"inputToChange": "",
-				"minDateSelector": "",
-				"maxDateSelector": "",
-				"disabled": false,
-				"isMulti": false,
-				"inline":true,
-				"allowedUsers": [],
-				"fieldsToReset": [],
-				"fieldLayout": { "label": "2 Column", "value": "2column" },
-				"fields": [],
-				"optionCallback": "",
-				"options": [
-					{ "label": "Approve", "value": "4" },
-					{ "label": "Reject", "value": "5" }
-				]
-			}
-		],
-		"allowedUsers": [],
-		"sectionLayout": "1column"
-	}
+  {
+    "sectionName": "approvalstatus",
+    "sectionTitle": "Approval Status",
+    "layout": { "label": "1 Column", "value": "1column" },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "approval_status",
+        "type": "radio",
+        "label": "",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "inline": true,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": { "label": "2 Column", "value": "2column" },
+        "fields": [],
+        "optionCallback": "",
+        "options": [
+          { "label": "Approve", "value": "4" },
+          { "label": "Reject", "value": "5" }
+        ]
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "1column"
+  }
 ]

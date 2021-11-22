@@ -104,29 +104,57 @@ function Routes() {
       <Route path="/edit-employee/:employeeId" exact component={EditEmployee} />
       <Route path="/employees" exact component={Employees} />
       <Route path="/applications" exact component={Applications} />
-       <Route path="/applications/:ID" exact component={Applications} />
+      <Route path="/applications/:ID" exact component={Applications} />
       <Route path="/batch-upload" exact component={RecruitmentFileComponent} />
-      <Route path="/add-technology-stack" exact component={AddTechnologyStack} />
-      <Route path="/edit-technology-stack/:stackId" exact component={AddTechnologyStack} />
+      <Route
+        path="/add-technology-stack"
+        exact
+        component={AddTechnologyStack}
+      />
+      <Route
+        path="/edit-technology-stack/:stackId"
+        exact
+        component={AddTechnologyStack}
+      />
       <Route path="/employee-profile/:id" exact component={EmployeeProfile} />
       <Route path="/confirmation" exact component={Confirmation} />
-      <Route path="/interviewer-round" exact component={InterviewerRoundStatus} />
+      <Route
+        path="/interviewer-round"
+        exact
+        component={InterviewerRoundStatus}
+      />
       <Route path="/selected" exact component={SelectedCandidate} />
-      <Route path="/candidate-listing" exact component={SelectedCandidateListing} />
+      <Route
+        path="/candidate-listing"
+        exact
+        component={SelectedCandidateListing}
+      />
       <Route path="/email-templates" exact component={EmailTemplates} />
       <Route path="/recruitment" exact component={RecruitmentApplication} />
-       <Route path="/recruitment/:id" exact component={Applications} />
+      <Route path="/recruitment/:id" exact component={Applications} />
       <Route path="/recruitments" exact component={RecruitmentApplication} />
-       <Route path="/recruitments/:id" exact component={Applications} />
-       <Route path="/hr-reports" exact component={HrReports} />
-       <Route path='/hr-listing' exact component={HRListing} />
-       <Route path='/quotes' exact component={Quotes} />
-       <Route path='/add-quotes' exact component={AddQuotes} />
-       <Route path='/edit-quotes/:qid' exact component={AddQuotes} />
-       <Route path='/generate-offerletter' exact component={GenerateOfferLetter} />
-       <Route path='/verify/offer/:offerToken' exact component={AcceptInviteLink} />
-       <Route path='/candidates' exact component={CandidateListing} />
-       <Route path='/temporary/account/:token' exact component={RequiredDocument} />
+      <Route path="/recruitments/:id" exact component={Applications} />
+      <Route path="/hr-reports" exact component={HrReports} />
+      <Route path="/hr-listing" exact component={HRListing} />
+      <Route path="/quotes" exact component={Quotes} />
+      <Route path="/add-quotes" exact component={AddQuotes} />
+      <Route path="/edit-quotes/:qid" exact component={AddQuotes} />
+      <Route
+        path="/generate-offerletter"
+        exact
+        component={GenerateOfferLetter}
+      />
+      <Route
+        path="/verify/offer/:offerToken"
+        exact
+        component={AcceptInviteLink}
+      />
+      <Route path="/candidates" exact component={CandidateListing} />
+      <Route
+        path="/temporary/account/:token"
+        exact
+        component={RequiredDocument}
+      />
       <Route path="/candidates/:ID" exact component={TemporaryAccount} />
       <Route path="/onboard/:ID" exact component={OnBoard} />
       <Route path="/leaves" exact component={Leaves} />
@@ -144,14 +172,26 @@ function Routes() {
       <Route path="/current-project" exact component={Project} />
       <Route path="/edit-project/:projectId" exact component={EditProject} />
       <Route path="/view-project/:projectId" exact component={EditProject} />
-      <Route path="/team-project/:teamProjectId" exact component={TeamProject} />
+      <Route
+        path="/team-project/:teamProjectId"
+        exact
+        component={TeamProject}
+      />
       <Route path="/team/:teamId" exact component={Team} />
-      <Route path="/my-project/:teamMemberId" exact component={TeamMemberProject} />
+      <Route
+        path="/my-project/:teamMemberId"
+        exact
+        component={TeamMemberProject}
+      />
       <Route path="/scheduler" exact component={ProjectScheduler} />
       <Route path="/team-scheduler" exact component={TeamProjectScheduler} />
       <Route path="/project-fetch" exact component={ProjectFetch} />
       <Route path="/archived-project" exact component={ArchivedProject} />
-      <Route path="/addemployement-history/:ID" exact component={AddEmployementHistory} />
+      <Route
+        path="/addemployement-history/:ID"
+        exact
+        component={AddEmployementHistory}
+      />
       <Route path="/broadcast" exact component={Broadcast} />
       <Route path="/add-broadcast" exact component={AddBroadcast} />
       <Route path="/edit-broadcast/:broadid" exact component={AddBroadcast} />

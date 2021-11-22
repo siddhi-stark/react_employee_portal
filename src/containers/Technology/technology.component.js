@@ -14,14 +14,13 @@ import AddTechnology from './AddTechnology.component';
 import Loader from '../../components/Loader/index';
 
 function Technology() {
-  
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterData, setFilterData] = useState({}); 
+  const [filterData, setFilterData] = useState({});
   const [technologyId, setTechnologyId] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
   const [title, setTitle] = useState('');
   const limit = 10;
@@ -45,8 +44,8 @@ function Technology() {
           href="javascript:void(0)"
           className="ml-2"
           onClick={() => {
-          //   e.preventDefault();
-          //   e.stopPropagation();
+            //   e.preventDefault();
+            //   e.stopPropagation();
             deleteTechnolody(id);
           }}
         >
@@ -76,12 +75,15 @@ function Technology() {
     setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeStackUrl}`;
-    const filterList = filterData && !customFunctions.checkIfEmpty(filterData, 'O') ? customFunctions.jsonParse(filterData) : {};
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
     const params = {
       page,
       limit,
       sort_by: 'name',
-      ...filterList
+      ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -102,16 +104,15 @@ function Technology() {
       setRowData((data && data.data) || []);
     } else {
       setShowLoader(false);
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
 
   useEffect(() => {
-    
     getRowData(1);
     setTitle('Technology');
   }, [filterData]);
-  
+
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -120,7 +121,7 @@ function Technology() {
   useEffect(() => {
     getUserRole();
   }, []);
- 
+
   const submitFilterForm = async (formValues) => {
     setFilterData(formValues);
   };
@@ -171,50 +172,50 @@ function Technology() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-            <Card>
-                <Card.Body>
-                   <div className="d-flex align-items-center justify-content-between">
-                    <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                  </div>  
-                  <hr/>
-                  <div className="filter-box-main">
-                    <StarkFormBuilder
-                      containerClass=""
-                      formHeaderClass=""
-                      formSections={FilterFormSections}
-                      onFormSubmit={(formValues) => {
-                        submitFilterForm(formValues);
-                      }}
-                      callbacks={{}}
-                      currentUser={currentUser}
-                      submitBtnText="Apply"
-                      showResetBtn={true} 
-                      resetBtnText="Clear"
-                      showBtnClass={false}
-                      btnContainerClass="col-md-4 filter-apply-btns"
-                      formClass="row"
-                      isStepForm={false}
-                      onFormReset={() => {
-                        setFilterData('');
-                      }}
-                    />
-                    </div>
-                </Card.Body>
-            </Card>
           <Card>
             <Card.Body>
-             <div className="d-flex align-items-center justify-content-between">
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>
+              <hr />
+              <div className="filter-box-main">
+                <StarkFormBuilder
+                  containerClass=""
+                  formHeaderClass=""
+                  formSections={FilterFormSections}
+                  onFormSubmit={(formValues) => {
+                    submitFilterForm(formValues);
+                  }}
+                  callbacks={{}}
+                  currentUser={currentUser}
+                  submitBtnText="Apply"
+                  showResetBtn={true}
+                  resetBtnText="Clear"
+                  showBtnClass={false}
+                  btnContainerClass="col-md-4 filter-apply-btns"
+                  formClass="row"
+                  isStepForm={false}
+                  onFormReset={() => {
+                    setFilterData('');
+                  }}
+                />
+              </div>
+            </Card.Body>
+          </Card>
+          <Card>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Technology</h5>
-              </div>  
-              <hr/>
+              </div>
+              <hr />
               <Row className="mt-3">
                 <Col>
-                  <AddTechnology 
-                  onChange ={()=>getRowData(1)}
-                  technologyId={technologyId} 
-                  afterSubmitTech={() => {
-                    setTechnologyId('');
-                  }}
+                  <AddTechnology
+                    onChange={() => getRowData(1)}
+                    technologyId={technologyId}
+                    afterSubmitTech={() => {
+                      setTechnologyId('');
+                    }}
                   />
                 </Col>
                 <Col>

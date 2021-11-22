@@ -16,12 +16,10 @@ const columns = [
   {
     id: 'emp_id',
     label: 'ID',
-    render: ({ emp_id }) => { 
+    render: ({ emp_id }) => {
       return (
         <>
-          <span>{
-            `SDMS ${emp_id}`
-          }</span>
+          <span>{`SDMS ${emp_id}`}</span>
         </>
       );
     },
@@ -122,10 +120,13 @@ function EmployeeListComponent() {
     <>
       <Card className="mb-3">
         <Card.Body>
-         <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 "> Employee Timesheet - {n}({dateNew})</h5>
-              </div>  
-              <hr/>
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">
+              {' '}
+              Employee Timesheet - {n}({dateNew})
+            </h5>
+          </div>
+          <hr />
           <CustomTable
             columns={columns}
             rows={rowData}

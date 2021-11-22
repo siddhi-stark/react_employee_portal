@@ -29,16 +29,16 @@ export default {
         const data = await error.response;
         if (
           data &&
-          (data.status === 401 || data.status === 403 || data.statusText === 'Unauthorized')
+          (data.status === 401 ||
+            data.status === 403 ||
+            data.statusText === 'Unauthorized')
         ) {
-
           customFucntions.localStorageClear();
-        if (window.location.pathname !== '/login') {
-
-          localStorage.clear();
-          // window.location.replace = '/login';
-          window.location.reload();
-        }
+          if (window.location.pathname !== '/login') {
+            localStorage.clear();
+            // window.location.replace = '/login';
+            window.location.reload();
+          }
           return Promise.reject(error.response.data);
         }
         return Promise.reject(error.response);

@@ -1,28 +1,27 @@
-import React, { useState,useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import swal from 'sweetalert';
-
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './note.json';
-import {ModalInput} from '../../components/FormInputs';
-import AuthApi from '../../helper/authApi';
-import Api from '../../helper/api';    
-import customFunctions from '../../helper/customFunctions';
+import swal from 'sweetalert';
+import { ModalInput } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
+import FormSections from './note.json';
 
 function AddNote(props) {
-  const noteData = props;
-  const note = noteData.note;
+  const { note, handleModalCLose, onStatusUpdate, show, statusId, statusData } =
+    props;
 
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
-  const [showNote,setShowNote] = useState(false);
-  const [id,setStatusId] = useState('');
-  const [status,setStatusData] = useState('');
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [showNote, setShowNote] = useState(false);
+  const [id, setStatusId] = useState('');
+  const [status, setStatusData] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
   // Get user role
-  const getUserRole = async() => {
+  const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
@@ -34,75 +33,77 @@ function AddNote(props) {
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const postData = {
-    	notes:formValues ? formValues.notes : '',
-    	ids: [id],
-    	status: status.label === 'declined' ? 6 : 2
+      notes: formValues ? formValues.notes : '',
+      ids: [id],
+      status: status.label === 'declined' ? 6 : 2,
     };
-    
-      const { data } = await AuthApi.putDataToServer(`${Api.bulkStatusUrl}`, postData);
-      
-      if(data) {
-        setShowLoader(false);
-        props.handleModalCLose(false);
-           swal({
+
+    const { data } = await AuthApi.putDataToServer(
+      `${Api.bulkStatusUrl}`,
+      postData
+    );
+
+    if (data) {
+      setShowLoader(false);
+      handleModalCLose(false);
+      swal({
         title: data.message[0],
         icon: 'success',
-      })
-        .then(okAction => {
-          if (okAction) {
-
-          props.handleModalCLose(false);
-          props.onStatusUpdate();
-          }
-        });
-      }
-      
+      }).then((okAction) => {
+        if (okAction) {
+          handleModalCLose(false);
+          onStatusUpdate();
+        }
+      });
+    }
   };
 
   const getData = async () => {
     const NotesData = {
-      notes: note && note
+      notes: note && note,
     };
     updateDefaultValues(NotesData);
   };
 
   useEffect(() => {
-    if(value === 'true') {
-     getData();
+    if (value === 'true') {
+      getData();
     }
-    setShowNote(props.show);
-    setStatusId(props.statusId);
-    setStatusData(props.statusData);
+    setShowNote(show);
+    setStatusId(statusId);
+    setStatusData(statusData);
   }, []);
 
   const onCancelButton = () => {
-  	props.handleModalCLose(false);
+    handleModalCLose(false);
     customFunctions.removeLocalStorage('isClicked');
-  };  
+  };
 
-	return (
-		<>
+  return (
+    <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-       <ModalInput
+      <ModalInput
         size="sm"
         centered
         show={showNote}
         onHide={onCancelButton}
-        className= "status-reason-popup"
+        className="status-reason-popup"
         id="contained-modal-title-center"
         modalHeaderClass="reson-text-title d-flex align-items-center"
         label="Reason"
         modalBody={
           <>
             <StarkFormBuilder
-              containerClass=''
-              formHeaderClass=''
+              containerClass=""
+              formHeaderClass=""
               formSections={FormSections}
-              onFormSubmit={(formValues) => {submitForm(formValues);}}
+              onFormSubmit={(formValues) => {
+                submitForm(formValues);
+              }}
               callbacks={{}}
               defaultFormValues={defaultValues}
               currentUser={currentUser}
-              submitBtnText= 'Submit'
+              submitBtnText="Submit"
               showResetBtn={false}
               showBtnClass={true}
               resetBtnText="Cancel"
@@ -111,9 +112,9 @@ function AddNote(props) {
             />
           </>
         }
-        />
-		</>
-		);
+      />
+    </>
+  );
 }
 
 export default withRouter(AddNote);

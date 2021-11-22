@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Row, Col } from 'react-bootstrap';
 import StarkFormBuilder from 'stark-form-builder';
-import {
-  EditorState,
-  ContentState,
-  convertFromHTML,
-} from 'draft-js';
+import { EditorState, ContentState, convertFromHTML } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import { stateToHTML } from 'draft-js-export-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -22,7 +18,7 @@ function EmailTemplatesComponent() {
   const title = 'Employees List';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Email Templates' }];
- 
+
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
@@ -30,7 +26,7 @@ function EmailTemplatesComponent() {
   const [templateId, setTemplateId] = useState(null);
   const [placeholdersData, setPlaceholdersData] = useState([]);
   const [toggle, setToggle] = useState(false);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
   let [description] = useState(EditorState.createEmpty());
 
   const getEmailTemplateData = async () => {
@@ -39,7 +35,6 @@ function EmailTemplatesComponent() {
     );
     if (data) {
       data.data.map((email) => {
-
         const dp =
           email.body &&
           EditorState.createWithContent(
@@ -72,7 +67,6 @@ function EmailTemplatesComponent() {
   };
 
   const onEditorStateChange = (editorState, index) => {
-    
     const emlContent = [...emailContent];
     const data = emlContent.map((d, i) => {
       if (i === index) {
@@ -82,14 +76,13 @@ function EmailTemplatesComponent() {
     });
     setEmailContent([...data]);
   };
- 
+
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
 
   useEffect(() => {
-     
     getUserRole();
     getPlaceholders();
   }, []);
@@ -103,7 +96,6 @@ function EmailTemplatesComponent() {
     emailContent &&
       emailContent.map((emp) => {
         if (emp.id === templateId) {
-
           description = emp.content;
         }
         return emp;
@@ -136,7 +128,6 @@ function EmailTemplatesComponent() {
     } else {
       setShowLoader(false);
       swal(message, '', 'error');
-      
     }
   };
 
@@ -234,56 +225,57 @@ function EmailTemplatesComponent() {
                 </Col>
               ))}
           </Row>
-        {emailContent &&
-          emailContent.map((eml, index) => {
-            if (!templateId) return;
-            return ( // eslint-disable-line
-              <>
-                {templateId === eml.id && (
-                  <>
-                    <b>{eml.name}</b>
-                    <div className="editor-description-box">
-                    <Editor
-                      // readOnly={viewType}
-                      wrapperClassName="demo-wrapper"
-                      editorClassName="demo-editor"
-                      editorState={eml.content}
-                      onEditorStateChange={(e) => {
-                        onEditorStateChange(e, index);
-                      }}
-                      toolbar={{
-                        options: [
-                          'inline',
-                          'fontSize',
-                          'fontFamily',
-                          'list',
-                          'textAlign',
-                          'link',
-                          'history',
-                          'image',
-                        ],
-                        fontSize: {
-                          options: [
-                            7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                            21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
-                            34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46,
-                            47, 48, 49, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68,
-                            70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94,
-                            96, 98, 100,
-                          ],
-                        },
-                        list: {
-                          options: ['unordered', 'ordered'],
-                        },
-                      }}
-                    />
-                    </div>
-                  </>
-                )}
-              </>
-            );
-          })}
-          </p>
+          {emailContent &&
+            emailContent.map((eml, index) => {
+              if (!templateId) return;
+              return (
+                // eslint-disable-line
+                <>
+                  {templateId === eml.id && (
+                    <>
+                      <b>{eml.name}</b>
+                      <div className="editor-description-box">
+                        <Editor
+                          // readOnly={viewType}
+                          wrapperClassName="demo-wrapper"
+                          editorClassName="demo-editor"
+                          editorState={eml.content}
+                          onEditorStateChange={(e) => {
+                            onEditorStateChange(e, index);
+                          }}
+                          toolbar={{
+                            options: [
+                              'inline',
+                              'fontSize',
+                              'fontFamily',
+                              'list',
+                              'textAlign',
+                              'link',
+                              'history',
+                              'image',
+                            ],
+                            fontSize: {
+                              options: [
+                                7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+                                20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+                                32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+                                44, 45, 46, 47, 48, 49, 50, 52, 54, 56, 58, 60,
+                                62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84,
+                                86, 88, 90, 92, 94, 96, 98, 100,
+                              ],
+                            },
+                            list: {
+                              options: ['unordered', 'ordered'],
+                            },
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </>
+              );
+            })}
+        </p>
       </Card>
     </>
   );

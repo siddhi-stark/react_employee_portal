@@ -32,13 +32,13 @@ function HrReports() {
     }
     return sectionData;
   });
- 
-const [rowData, setRowData] = useState([]);
-const [totalCount, setTotalCount] = useState(10);
-const [limit, setLimit] = useState(10);
-const [currentPage, setCurrentPage] = useState(1);
-const [filterData, setFilterData] = useState({});
-const [isShowLoader,setShowLoader] = useState(false);
+
+  const [rowData, setRowData] = useState([]);
+  const [totalCount, setTotalCount] = useState(10);
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterData, setFilterData] = useState({});
+  const [isShowLoader, setShowLoader] = useState(false);
 
   const columns = [
     {
@@ -56,13 +56,13 @@ const [isShowLoader,setShowLoader] = useState(false);
   ];
 
   const initialState = {
-      shortlistedCount:null,
-      totalApplicantCount:null,
-      rejectedCount:null,
-      pendingCount:null,
-      declinedCount:null,
-      selectedCount:null,
-      finalCount:null
+    shortlistedCount: null,
+    totalApplicantCount: null,
+    rejectedCount: null,
+    pendingCount: null,
+    declinedCount: null,
+    selectedCount: null,
+    finalCount: null,
   };
 
   const [shortlistedGraph, setShortlistedGraph] = useState(initialState);
@@ -77,7 +77,6 @@ const [isShowLoader,setShowLoader] = useState(false);
   };
 
   useEffect(() => {
-    
     getUserRole();
   }, []);
 
@@ -86,13 +85,17 @@ const [isShowLoader,setShowLoader] = useState(false);
       hr_id: formValues.hr_name && formValues.hr_name.value,
       designation_id: formValues.position && formValues.position.value,
       technology_id: formValues.technology && formValues.technology.value,
-      start_date: formValues.from_date && customFunctions.getDate(formValues.from_date),
-      end_date: formValues.to_date && customFunctions.getDate(formValues.to_date)
+      start_date:
+        formValues.from_date && customFunctions.getDate(formValues.from_date),
+      end_date:
+        formValues.to_date && customFunctions.getDate(formValues.to_date),
     });
   };
 
   const getHrName = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeUrl}?role_id=5&is_dropdown=1`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?role_id=5&is_dropdown=1`
+    );
     if (!data) {
       return;
     }
@@ -116,7 +119,9 @@ const [isShowLoader,setShowLoader] = useState(false);
   }, []);
 
   const getPosition = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.designationUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.designationUrl}?type=all`
+    );
     if (!data) {
       return;
     }
@@ -140,7 +145,9 @@ const [isShowLoader,setShowLoader] = useState(false);
   }, []);
 
   const getTechnology = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.employeeStackUrl}?type=all`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeStackUrl}?type=all`
+    );
     if (!data) {
       return;
     }
@@ -163,45 +170,51 @@ const [isShowLoader,setShowLoader] = useState(false);
     getTechnology();
   }, []);
 
-const getRowData = async (pageNo=1) =>{
+  const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = Api.offerUrl;
-      const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
- 
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
+
     const params = {
       page,
       limit,
       sort_by: 'name',
-      ...filterList
+      ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
-    
+
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setRowData(data && data.data || []);
+      setRowData((data && data.data) || []);
     }
-};
+  };
 
-useEffect(()=>{
-  getRowData(1);
-},[filterData]);
+  useEffect(() => {
+    getRowData(1);
+  }, [filterData]);
 
   const getGraphData = async () => {
     setShowLoader(true);
     const endPoint = Api.hrReportUrl;
-    const filterList = filterData && !customFunctions.checkIfEmpty(filterData,'O') ? customFunctions.jsonParse(filterData) : {};
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
     const params = {
-      ...filterList
-      };
+      ...filterList,
+    };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
 
-    if(data){
+    if (data) {
       setShowLoader(false);
       const graph = [
         { x: 'Shortlisted', y: data.data.shortlisted_percentage },
@@ -224,15 +237,15 @@ useEffect(()=>{
       //   { name: `Shortlisted ${data.data.total_final_percentage}%`, symbol: { fill: 'none' } },
       // ];
       setShortlistedGraph({
-        shortlistedCount:data.data.shortlisted_count,
-        declinedCount:data.data.declined_count,
-        pendingCount:data.data.pending_count,
-        totalApplicantCount:data.data.total_applicant_count,
+        shortlistedCount: data.data.shortlisted_count,
+        declinedCount: data.data.declined_count,
+        pendingCount: data.data.pending_count,
+        totalApplicantCount: data.data.total_applicant_count,
         selectedCount: data.data.shortlisted_final_count,
-        rejectedCount:data.data.rejected_final_count,
-        finalCount:data.data.total_final_count,
+        rejectedCount: data.data.rejected_final_count,
+        finalCount: data.data.total_final_count,
         applicant: data.data.total_applicant_percentage,
-        shortlisted : data.data.total_final_percentage
+        shortlisted: data.data.total_final_percentage,
       });
       setShortlistedData([...selectedGraph]);
       // setLegendData([...legData]);
@@ -241,9 +254,9 @@ useEffect(()=>{
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getGraphData();
-  },[filterData]);
+  }, [filterData]);
 
   return (
     <>
@@ -281,12 +294,17 @@ useEffect(()=>{
         <Row className="mt-4 doughnut-graph-section">
           <h5>HR Activity</h5>
           <Col className="col-sm-6 d-flex pb-4">
-          <p>Shortlisted: {shortlistedGraph.shortlistedCount}<br/>
-          Declined: {shortlistedGraph.declinedCount}<br/>
-          Pending: {shortlistedGraph.pendingCount}<br/>
-          Total Applicant: {shortlistedGraph.totalApplicantCount}<br/>
-          Applicant: {shortlistedGraph.applicant}%<br/>
-          </p>
+            <p>
+              Shortlisted: {shortlistedGraph.shortlistedCount}
+              <br />
+              Declined: {shortlistedGraph.declinedCount}
+              <br />
+              Pending: {shortlistedGraph.pendingCount}
+              <br />
+              Total Applicant: {shortlistedGraph.totalApplicantCount}
+              <br />
+              Applicant: {shortlistedGraph.applicant}%<br />
+            </p>
             <Doughnut
               ref={graphref}
               id="dougnut"
@@ -314,10 +332,14 @@ useEffect(()=>{
             />
           </Col>
           <Col className="col-sm-6 d-flex">
-          <p>Selected: {shortlistedGraph.selectedCount} <br/>
-            Rejected: {shortlistedGraph.rejectedCount}<br/>
-            Total Shortlisted: {shortlistedGraph.finalCount}<br/>
-            Shortlisted: {shortlistedGraph.shortlisted}%</p>
+            <p>
+              Selected: {shortlistedGraph.selectedCount} <br />
+              Rejected: {shortlistedGraph.rejectedCount}
+              <br />
+              Total Shortlisted: {shortlistedGraph.finalCount}
+              <br />
+              Shortlisted: {shortlistedGraph.shortlisted}%
+            </p>
             <Doughnut
               ref={graphref}
               id="dougnut"

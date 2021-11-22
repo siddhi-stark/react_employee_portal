@@ -1,115 +1,88 @@
-[{
-	"sectionName": "technolgystack",
-	"sectionTitle": "technolgy stack",
-	"layout": {
-		"label": "1 Column",
-		"value": "1column"
-	},
-	"containerClass": "",
-	"displaySection": true,
-	"displaySectionTitle": false,
-	"fields": [{
-		"name": "employee",
-		"type": "select",
-		"label": "Employee",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "col-md-4",
-		"validations": [{
-			"type": "required",
-			"applyWhen": [],
-			"applyWhenRelation": "OR"
-		}],
-		"displayWhen": {},
-		"haveValidations": "true",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "getEmployee",
-		"optionsCallbackUrl": "designationUrl",
-		"options": []
-	}, {
-		"name": "addmore",
-		"type": "addmore",
-		"label": "Addmore",
-		"id": "",
-		"placeholder": "",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [],
-		"displayWhen": {},
-		"haveValidations": "false",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": "2column",
-		"fields": [{
-			"name": "technology",
-			"type": "select",
-			"label": "Technology",
-			"id": "",
-			"placeholder": "",
-			"inputClass": "",
-			"containerClass": "",
-			"validations": [{
-				"type": "required",
-				"applyWhen": [],
-				"applyWhenRelation": "OR"
-			}],
-			"displayWhen": {},
-			"haveValidations": "true",
-			"haveDisplayOptions": "false",
-			"callback": "",
-			"callbackUrl": "",
-			"inputToChange": "",
-			"minDateSelector": "",
-			"maxDateSelector": "",
-			"disabled": false,
-			"isMulti": false,
-			"allowedUsers": [],
-			"fieldsToReset": [],
-			"fieldLayout": {
-				"label": "1 Column",
-				"value": "1column"
-			},
-			"optionCallback": "getTechnology",
-			"optionsCallbackUrl": "designationUrl",
-			"options": [],
-			"fields": []
-		}, {
-            "name": "isINterviewer",
-            "type": "checkbox",
-            "label": "IsINterviewer",
+[
+  {
+    "sectionName": "technolgystack",
+    "sectionTitle": "technolgy stack",
+    "layout": {
+      "label": "1 Column",
+      "value": "1column"
+    },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "employee",
+        "type": "select",
+        "label": "Employee",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "col-md-4",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getEmployee",
+        "optionsCallbackUrl": "designationUrl",
+        "options": []
+      },
+      {
+        "name": "addmore",
+        "type": "addmore",
+        "label": "Addmore",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": "2column",
+        "fields": [
+          {
+            "name": "technology",
+            "type": "select",
+            "label": "Technology",
             "id": "",
             "placeholder": "",
-            "inputClass": "col-md-4",
+            "inputClass": "",
             "containerClass": "",
             "validations": [
-                {
-                    "type": "required",
-                    "applyWhen": [],
-                    "applyWhenRelation": "OR"
-                }
+              {
+                "type": "required",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
             ],
             "displayWhen": {},
             "haveValidations": "true",
@@ -124,25 +97,64 @@
             "allowedUsers": [],
             "fieldsToReset": [],
             "fieldLayout": {
-                "label": "1 Column",
-                "value": "1column"
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "optionCallback": "getTechnology",
+            "optionsCallbackUrl": "designationUrl",
+            "options": [],
+            "fields": []
+          },
+          {
+            "name": "isINterviewer",
+            "type": "checkbox",
+            "label": "IsINterviewer",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "col-md-4",
+            "containerClass": "",
+            "validations": [
+              {
+                "type": "required",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
+            ],
+            "displayWhen": {},
+            "haveValidations": "true",
+            "haveDisplayOptions": "false",
+            "callback": "",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": false,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
             },
             "fields": [],
             "optionCallback": "",
             "options": [
-                {
-                    "label": "yes",
-                    "value": "Yes"
-                },
-                {
-                    "label": "no",
-                    "value": "No"
-                }
+              {
+                "label": "yes",
+                "value": "Yes"
+              },
+              {
+                "label": "no",
+                "value": "No"
+              }
             ]
-        }],
-		"optionCallback": "",
-		"options": []
-	}],
-	"allowedUsers": [],
-	"sectionLayout": "1column"
-}]
+          }
+        ],
+        "optionCallback": "",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "1column"
+  }
+]

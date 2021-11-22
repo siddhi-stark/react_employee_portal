@@ -26,7 +26,8 @@ function Broadcast() {
   const [limit, setLimit] = useState(10);
   const [isShowLoader, setShowLoader] = useState(false);
 
-  const handleActionCallback = ({ id }) => { // eslint-disable-line
+  const handleActionCallback = ({ id }) => {
+    // eslint-disable-line
     return (
       <span className="d-flex">
         <a
@@ -62,7 +63,7 @@ function Broadcast() {
     {
       id: 'id',
       label: 'Sr. No',
-      isDisplay:false
+      isDisplay: false,
     },
     {
       id: 'title',
@@ -71,17 +72,14 @@ function Broadcast() {
     {
       id: 'description',
       label: 'Description',
-       render: ({ description }) => {
+      render: ({ description }) => {
         const originalString = `${description}`;
-        const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ""); // eslint-disable-line
-        const decString =  strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
+        const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ''); // eslint-disable-line
+        const decString = strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
 
         return (
           <>
-            <span>{
-             `${decString}`
-            }
-            </span>
+            <span>{`${decString}`}</span>
           </>
         );
       },
@@ -137,7 +135,7 @@ function Broadcast() {
     const params = {
       limit,
       page,
-      sort_direction:'descending'
+      sort_direction: 'descending',
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);

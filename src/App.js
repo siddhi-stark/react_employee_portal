@@ -21,10 +21,9 @@ function App() {
       if (
         extractedPath !== 'login' &&
         extractedPath !== 'forget-password' &&
-        extractedPath !== 'password' && 
-        extractedPath !== 'verify' && 
+        extractedPath !== 'password' &&
+        extractedPath !== 'verify' &&
         extractedPath !== 'temporary'
-         
       ) {
         history.push('/login');
         setIsLoggedIn(true);
@@ -45,21 +44,39 @@ function App() {
     const roleId = customFunctions.getLocalStorage('group');
     const path = window.location.pathname;
 
-    const result = Menu && Menu.filter((role)=>{return (path === role.path);});
-    
-    Menu && Menu.map((role)=> {
-      if(role.path === '#' && role.submenu && role.submenu.length > 0 ){
-        const subResult = role && role.submenu.filter((sub)=>{return (path === sub.path);});
-        if(subResult && subResult.length > 0 && !subResult[0].roleaccess.includes(Number(roleId))){
+    const result =
+      Menu &&
+      Menu.filter((role) => {
+        return path === role.path;
+      });
+
+    Menu &&
+      Menu.map((role) => {
+        if (role.path === '#' && role.submenu && role.submenu.length > 0) {
+          const subResult =
+            role &&
+            role.submenu.filter((sub) => {
+              return path === sub.path;
+            });
+          if (
+            subResult &&
+            subResult.length > 0 &&
+            !subResult[0].roleaccess.includes(Number(roleId))
+          ) {
             history.push('/');
+          }
         }
-      }
-      return role;
-    });
-    if(result && result.length > 0 && result[0].submenu && result[0].submenu.length === 0){
+        return role;
+      });
+    if (
+      result &&
+      result.length > 0 &&
+      result[0].submenu &&
+      result[0].submenu.length === 0
+    ) {
       const access = result[0].roleaccess.includes(Number(roleId));
-      if(!access){
-          history.push('/');
+      if (!access) {
+        history.push('/');
       }
     }
   }, []);

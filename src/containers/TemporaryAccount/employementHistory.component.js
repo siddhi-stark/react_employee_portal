@@ -18,7 +18,7 @@ function EmployementHistory(props) {
 
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -101,7 +101,7 @@ function EmployementHistory(props) {
       updateDefaultValues({ addmore: [...addmoreData] });
     } else {
       setShowLoader(false);
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
 
@@ -142,7 +142,8 @@ function EmployementHistory(props) {
       }
       return rp;
     });
-    for (const [index, history] of formValues.addmore.entries()) { // eslint-disable-line
+    for (const [index, history] of formValues.addmore.entries()) {
+      // eslint-disable-line
       const candidateHistory = {
         designation: history.designation,
         company_name: history.company_name,
@@ -174,7 +175,6 @@ function EmployementHistory(props) {
       }).then(() => {
         swal.close();
       });
-      
     } else {
       setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
@@ -191,7 +191,7 @@ function EmployementHistory(props) {
 
   return (
     <>
-     <Loader showLoader={isShowLoader} needFullPage={false} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass=""
         formHeaderClass=""

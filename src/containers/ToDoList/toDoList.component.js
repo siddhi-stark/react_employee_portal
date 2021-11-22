@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/destructuring-assignment */
+import { setHours, setMinutes } from 'date-fns';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
+import SweetAlert from 'react-bootstrap-sweetalert';
 import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
-import SweetAlert from 'react-bootstrap-sweetalert';
-import { setHours, setMinutes } from 'date-fns';
-import customFunctions from '../../helper/customFunctions';
 import {
+  Datepicker,
+  DropdownInput,
   ModalInput,
   TextInput,
-  DropdownInput,
-  Datepicker,
 } from '../../components/FormInputs';
-import Table from '../../components/ReactTable/simpletable.component';
-import AuthApi from '../../helper/authApi';
-import Api from '../../helper/api';
-import constants from '../../helper/constant';
-import Task from './Task.component';
-import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
+import Table from '../../components/ReactTable/simpletable.component';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import Api from '../../helper/api';
+import AuthApi from '../../helper/authApi';
+import constants from '../../helper/constant';
+import customFunctions from '../../helper/customFunctions';
 import SharedService from '../../services/SharedService/sharedServices';
+import Task from './Task.component';
 
 const validator = new SimpleReactValidator();
 
@@ -63,84 +64,84 @@ function ToDoList(props) {
     {
       id: 'id',
       label: 'Id',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
       isDisplay: false,
     },
     {
       id: 'twId',
       label: 'twId',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
       isDisplay: false,
     },
     {
       id: 'taskType',
       label: 'taskType',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
       isDisplay: false,
     },
 
     {
       id: 'todo',
       label: 'To Do Tasks',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'projects',
       label: 'Projects',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
       id: 'eta',
       label: 'ETA',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
     },
-      {
+    {
       id: 'progress',
       label: 'Status',
       roleAccess: [1, 2, 3, 4, 5, 6],
-      render: ({ progress,id, indexOf,eta, status,twId, at }) => {
-        return(
+      render: ({ progress, id, indexOf, eta, status, twId, at }) => {
+        return (
           <>
-          {progress === 100 ? 
-            <span>{status}({twId ? (at ? at : '0 Hrs') : eta})</span> // eslint-disable-line
-            : (
+            {progress === 100 ? (
+              <span>
+                {status}({twId ? (at ? at : '0 Hrs') : eta})
+              </span> // eslint-disable-line
+            ) : (
               <div className="progress-bar-dashboard">
-              <div className="progress-main">
-                <div className="progress">
-                  <div className="progress-bar bg-secondary w-100">
-                    <h5 className="justify-content-start">
-                       {progress}%{' '}
-                    </h5>
-                    <input
-                      type="range"
-                      id={`progress${id+ 1}`}
-                      name="rangeInput"
-                      min="0"
-                      max="100"
-                      value={Number(progress)}
-                      onChange={(e) => {
-                        rows[indexOf].progress = e.target.value;
-                        setTimeout(() => {
-                          setRows([...rows]);
-                        }, 500);
-                      }}
-                    />
+                <div className="progress-main">
+                  <div className="progress">
+                    <div className="progress-bar bg-secondary w-100">
+                      <h5 className="justify-content-start">{progress}% </h5>
+                      <input
+                        type="range"
+                        id={`progress${id + 1}`}
+                        name="rangeInput"
+                        min="0"
+                        max="100"
+                        value={Number(progress)}
+                        onChange={(e) => {
+                          rows[indexOf].progress = e.target.value;
+                          setTimeout(() => {
+                            setRows([...rows]);
+                          }, 500);
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-              </div>
             )}
           </>
-          );
-      }
+        );
+      },
     },
     {
       id: 'action',
       label: 'Action',
-      roleAccess: [1, 2, 3, 4, 5,6],
+      roleAccess: [1, 2, 3, 4, 5, 6],
       render: ({ id, twId, taskType }) => {
         return (
-          <span className ="d-flex">
+          <span className="d-flex">
             {taskType === 'tw' ? (
               <a
                 href={`${constants.link}${twId}`}
@@ -150,22 +151,22 @@ function ToDoList(props) {
                 <Image src="/images/redirect.png" />
               </a>
             ) : (
-                <a
-                  href="/"
-                  className=""
-                  onClick={(e) => {
-                    setModalShow(true);
-                    setEditShow(true);
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setTaskId(id);
-                    setCntClearFilter(cntClearFilter + 1);
-                    customFunctions.setLocalStorage('taskid', id);
-                  }}
-                >
-                  <Image src="/images/edit-button.svg" />
-                </a>
-              )}
+              <a
+                href="/"
+                className=""
+                onClick={(e) => {
+                  setModalShow(true);
+                  setEditShow(true);
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setTaskId(id);
+                  setCntClearFilter(cntClearFilter + 1);
+                  customFunctions.setLocalStorage('taskid', id);
+                }}
+              >
+                <Image src="/images/edit-button.svg" />
+              </a>
+            )}
             <a
               href="/"
               className="ml-2"
@@ -281,9 +282,15 @@ function ToDoList(props) {
         const spentNew = spent.split('Hrs');
 
         const spent1 = spentNew.length > 1 ? spentNew[0].trim() : 0;
-        const spentNewMins = spentNew.length > 1 ? spentNew[1].split('Mins') : spentNew[0].split('Mins');
+        const spentNewMins =
+          spentNew.length > 1
+            ? spentNew[1].split('Mins')
+            : spentNew[0].split('Mins');
         const spent2 = spentNewMins.length > 0 ? spentNewMins[0].trim() : 0;
-        const filterBreak = BreakList.filter((breakObj) => breakObj.label.toLowerCase() === task.content.toLowerCase());
+        const filterBreak = BreakList.filter(
+          (breakObj) =>
+            breakObj.label.toLowerCase() === task.content.toLowerCase()
+        );
         selectedBreak.push({
           id: task.id,
           selectedBreakOption: filterBreak.length ? filterBreak[0] : '',
@@ -341,9 +348,7 @@ function ToDoList(props) {
   }, [cntClearFilter]);
 
   useEffect(() => {
-    if (showBreak)
-      getBreakList();
-
+    if (showBreak) getBreakList();
   }, [showBreak]);
 
   useEffect(() => {
@@ -363,7 +368,6 @@ function ToDoList(props) {
 
       const min = dt.getMinutes();
       setTimeMinutes(min);
-
     }
   };
 
@@ -380,12 +384,10 @@ function ToDoList(props) {
   };
 
   const onSendScrum = async () => {
-
     setLoader(true);
 
     breakData.map((e) => {
-      if (e.id)
-        selectedId.push(Number(e.id));
+      if (e.id) selectedId.push(Number(e.id));
 
       return e;
     });
@@ -489,16 +491,14 @@ function ToDoList(props) {
       swal({
         title: 'Break added successfully, now you can send your logout report.',
         icon: 'success',
-      })
-        .then(okAction => {
-          if (okAction) {
-            getBreakList();
-            setShowBreak(true);
-          }
-        });
+      }).then((okAction) => {
+        if (okAction) {
+          getBreakList();
+          setShowBreak(true);
+        }
+      });
 
       getTableData(1);
-
     } else {
       setShowSendReport(false);
       setShowBreak(false);
@@ -568,7 +568,7 @@ function ToDoList(props) {
     const data = [...breakData];
     data.splice(idx, 1);
     setShowSendReport(true);
-    if (data.filter(item => !item.id).length > 0) {
+    if (data.filter((item) => !item.id).length > 0) {
       setShowSendReport(false);
     }
     setBreakData([...data]);
@@ -581,7 +581,6 @@ function ToDoList(props) {
       setShowMsg(true);
     } else {
       setShowMsg(false);
-
     }
   };
 
@@ -592,8 +591,9 @@ function ToDoList(props) {
     if (e && breakData[i].startTime) {
       const endTimeNew = new Date(e);
       const startTimeNew = new Date(breakData[i].startTime);
-      const diffMs = (endTimeNew - startTimeNew);
-      const { hours: diffHrs, minutes: diffMins } = customFunctions.msToTime(diffMs);
+      const diffMs = endTimeNew - startTimeNew;
+      const { hours: diffHrs, minutes: diffMins } =
+        customFunctions.msToTime(diffMs);
       breakData[i].hrs = diffHrs;
       breakData[i].mins = diffMins;
       breakData[i].timeHours = diffHrs;
@@ -610,15 +610,22 @@ function ToDoList(props) {
     breakData[i].endTime = new Date(startTime.setHours(newHours));
     await setBreakData([...breakData]);
     if (fromFunc) {
-      await setMinSpendTime({ target: { value: breakData[i].timeMins } }, i, false);
+      await setMinSpendTime(
+        { target: { value: breakData[i].timeMins } },
+        i,
+        false
+      );
     }
   };
 
   const setMinSpendTime = async (e, i, fromFunc = true) => {
-
     breakData[i].timeMins = e.target.value;
     if (fromFunc) {
-      await setHoursSpendTime({ target: { value: breakData[i].timeHours } }, i, false);
+      await setHoursSpendTime(
+        { target: { value: breakData[i].timeHours } },
+        i,
+        false
+      );
     }
     const endTime = new Date(breakData[i].endTime);
     const getMinutes = endTime.getMinutes();
@@ -630,26 +637,26 @@ function ToDoList(props) {
   const OnSaveProgress = async () => {
     setLoader(true);
     const progressArr = [];
-    rows && rows.map((rw) => {
-      if(rw.oldProgress !== rw.progress) {
-      progressArr.push({
-        id: rw.id,
-        progress: Number(rw.progress),
-        tw_id: rw.twId ? Number(rw.twId) : null
-      }
-        );
-      }
-      return rw;
-    });
+    rows &&
+      rows.map((rw) => {
+        if (rw.oldProgress !== rw.progress) {
+          progressArr.push({
+            id: rw.id,
+            progress: Number(rw.progress),
+            tw_id: rw.twId ? Number(rw.twId) : null,
+          });
+        }
+        return rw;
+      });
 
     const postData = {
-      data : progressArr
+      data: progressArr,
     };
 
     const endPoint = `${Api.taskProgressUrl}`;
-    const { data, message } = await AuthApi.putDataToServer(endPoint,postData);
+    const { data, message } = await AuthApi.putDataToServer(endPoint, postData);
 
-    if(data) {
+    if (data) {
       setLoader(false);
       swal(data.message[0], '', 'success').then((result) => {
         if (result) {
@@ -659,11 +666,10 @@ function ToDoList(props) {
     } else {
       setLoader(false);
       swal(message, '', 'error', {
-              closeOnClickOutside: false,
-              allowOutsideClick: false,
-            });
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
     }
-
   };
 
   return (
@@ -728,14 +734,14 @@ function ToDoList(props) {
       <Loader showLoader={loader} needFullPage={false} />
       <section className="content-area">
         <div className="0">
-          <UserRestrictions permittedUsers={[2, 3, 4, 5,6]} roleId={userRole}>
+          <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
             <Card>
               <Card.Body>
-               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 "> To Do</h5>
-                 <div className="d-flex align-items-center justify-content-end">
+                <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 "> To Do</h5>
+                  <div className="d-flex align-items-center justify-content-end">
                     <a
-                      href='#'
+                      href="#"
                       onClick={() => {
                         customFunctions.removeLocalStorage('taskid');
                         setModalShow(true);
@@ -743,11 +749,11 @@ function ToDoList(props) {
                       }}
                       className="btn-link"
                     >
-                      Add Task 
+                      Add Task
                     </a>
                   </div>
-              </div>  
-              <hr/>
+                </div>
+                <hr />
                 <Row>
                   <Table
                     columns={columns}
@@ -764,10 +770,10 @@ function ToDoList(props) {
                     dropdownContainerClass="mb-3"
                     selectedRowItems={selectedId}
                     onSelectRowsIndexes={async (rowIndex) => {
-                      const arr = [...selectedId,...rowIndex];
+                      const arr = [...selectedId, ...rowIndex];
                       const arrNew = [];
-                      await arr.filter(e => {
-                        if(!arrNew.includes(e)) {
+                      await arr.filter((e) => {
+                        if (!arrNew.includes(e)) {
                           arrNew.push(e);
                         }
                         return e;
@@ -782,7 +788,7 @@ function ToDoList(props) {
                 </Row>
                 <div className="d-flex justify-content-end mr-3">
                   {pagination.totalItems > 0 && (
-                   <Button
+                    <Button
                       variant="primary"
                       className="mb-3 ms-4"
                       onClick={() => {
@@ -791,7 +797,7 @@ function ToDoList(props) {
                     >
                       Update Progress
                     </Button>
-                    )}
+                  )}
                   {!morningMail && !signOutMail && pagination.totalItems > 0 && (
                     <Button
                       variant="primary"
@@ -803,17 +809,19 @@ function ToDoList(props) {
                       Clock In & Send Scrum
                     </Button>
                   )}
-                  {!signOutMail && morningMail && (String(totalHours) !== '0 Hrs 0 Mins') && (
-                    <Button
-                      variant="primary"
-                      className="mb-3 ms-2"
-                      onClick={() => {
-                        setShowBreak(true);
-                      }}
-                    >
-                      Clockout & Send Report
-                    </Button>
-                  )}
+                  {!signOutMail &&
+                    morningMail &&
+                    String(totalHours) !== '0 Hrs 0 Mins' && (
+                      <Button
+                        variant="primary"
+                        className="mb-3 ms-2"
+                        onClick={() => {
+                          setShowBreak(true);
+                        }}
+                      >
+                        Clockout & Send Report
+                      </Button>
+                    )}
                 </div>
               </Card.Body>
             </Card>
@@ -830,231 +838,254 @@ function ToDoList(props) {
           }}
         />
       )}
-      {
-        showBreak && (
-          <ModalInput
-            size="md"
-            centered
-            show={showBreak}
-            onHide={() => { setShowBreak(false); getTableData(1); setShowMsg(false); }}
-            label={<h4 variant="primary">Add Break</h4>}
-            id="contained-modal-title-vcenter"
-            modalBody={
-              <Form onSubmit={onBreakSubmit}
-              >
-                <div className="add-break d-flex align-items-center justify-content-between">
-                  <h3 className="mb-1">{'  '}</h3>
-                  <button
-                    type="button"
-                    className="btn btn-primary mb-3"
-                    onClick={() => addBreak()}
-                  >
-                    Add Break
-              </button>
-                </div>
-                {showMsg && (
-                  <div className="p-3 mb-4 bg-success text-white mt-1 bg-success-main">
-                    <div className="img-text">
-                      <img src="/images/success.svg" alt="Success" /> You have skipped all the breaks !
-          </div>
-                    <div className="close">
-                      <button
-                        type="button"
-                        className="close"
-                        onClick={() => setShowMsg(false)}
-                        data-dismiss="modal"
-                        aria-label="Close"
-                      >
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
+      {showBreak && (
+        <ModalInput
+          size="md"
+          centered
+          show={showBreak}
+          onHide={() => {
+            setShowBreak(false);
+            getTableData(1);
+            setShowMsg(false);
+          }}
+          label={<h4 variant="primary">Add Break</h4>}
+          id="contained-modal-title-vcenter"
+          modalBody={
+            <Form onSubmit={onBreakSubmit}>
+              <div className="add-break d-flex align-items-center justify-content-between">
+                <h3 className="mb-1">{'  '}</h3>
+                <button
+                  type="button"
+                  className="btn btn-primary mb-3"
+                  onClick={() => addBreak()}
+                >
+                  Add Break
+                </button>
+              </div>
+              {showMsg && (
+                <div className="p-3 mb-4 bg-success text-white mt-1 bg-success-main">
+                  <div className="img-text">
+                    <img src="/images/success.svg" alt="Success" /> You have
+                    skipped all the breaks !
                   </div>
-                )}
+                  <div className="close">
+                    <button
+                      type="button"
+                      className="close"
+                      onClick={() => setShowMsg(false)}
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+              )}
 
-                {breakData &&
-                  breakData.length > 0 &&
-                  breakData.map((data, i) => (
-                    <>
-                      <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
-                        <label htmlFor="exampleFormControlSelect1">
-                          Break Type <sup className="text-danger">*</sup>
-                        </label>
-                        <div className="skip-form">
+              {breakData &&
+                breakData.length > 0 &&
+                breakData.map((data, i) => (
+                  <>
+                    <div className="d-flex align-items-center justify-content-between skip-type mb-1 mt-2">
+                      <label htmlFor="exampleFormControlSelect1">
+                        Break Type <sup className="text-danger">*</sup>
+                      </label>
+                      <div className="skip-form">
+                        <a
+                          href="/"
+                          className="pl-2"
+                          onClick={(e) => {
+                            setIndex(i);
+                            setShowSkipBreak(true);
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                        >
+                          <img src="/images/skip.svg" alt="skip" />
+                        </a>
+                        {breakData.length > 1 && (
                           <a
                             href="/"
-                            className="pl-2"
                             onClick={(e) => {
-                              setIndex(i);
-                              setShowSkipBreak(true);
-                              e.preventDefault();
-                              e.stopPropagation();
+                              onDeleteBreakHandler(i, e);
                             }}
                           >
-                            <img src="/images/skip.svg" alt="skip" />
+                            <img
+                              src="/images/delete.png"
+                              className="ml-2"
+                              alt="delete"
+                            />
                           </a>
-                          {breakData.length > 1 && (
-                            <a
-                              href="/"
-                              onClick={(e) => {
-                                onDeleteBreakHandler(i, e);
-                              }}
-                            >
-                              <img
-                                src="/images/delete.png"
-                                className="ml-2"
-                                alt="delete"
-                              />
-                            </a>
-                          )}
-                        </div>
+                        )}
                       </div>
-                      <Row>
-                        <DropdownInput
-                          options={getBreakTypes()}
-                          asterisk="*"
-                          defaultValue={data.selectedBreakOption}
-                          onSelectHandler={(select) => {
-                            breakData[i].selectedBreakOption = select;
-                            setSelectedBreakOption([...breakData]);
+                    </div>
+                    <Row>
+                      <DropdownInput
+                        options={getBreakTypes()}
+                        asterisk="*"
+                        defaultValue={data.selectedBreakOption}
+                        onSelectHandler={(select) => {
+                          breakData[i].selectedBreakOption = select;
+                          setSelectedBreakOption([...breakData]);
+                        }}
+                        errorMessage={validator.message(
+                          'selectedBreakOption',
+                          data.selectedBreakOption,
+                          'required'
+                        )}
+                      />
+                    </Row>
+                    <Row>
+                      <Col sm={4}>
+                        <Datepicker
+                          className="form-control"
+                          label="Start Time"
+                          selected={data.startTime}
+                          minDate={new Date(clockInDate)}
+                          minTime={setHours(
+                            setMinutes(
+                              clockInDate,
+                              parseInt(timeMinutes, 10) + 1
+                            ),
+                            parseInt(timeMinutes, 10) > 58
+                              ? parseInt(timeHour, 10) + 1
+                              : timeHour
+                          )}
+                          maxTime={setHours(
+                            setMinutes(new Date(), new Date().getMinutes()),
+                            new Date().getHours()
+                          )}
+                          onChange={(e) => {
+                            breakData[i].startTime = e;
+                            breakData[i].sthrs = e.getHours();
+                            breakData[i].stmins = e.getMinutes();
+                            breakData[i].hrs = 0;
+                            breakData[i].mins = 0;
+                            breakData[i].endTime = null;
+
+                            setBreakData([...breakData]);
                           }}
+                          showTimeSelect="showTimeSelect"
+                          showTimeSelectOnly="showTimeSelectOnly"
+                          timeIntervals="1"
+                          dateFormat="h:mm aa"
                           errorMessage={validator.message(
-                            'selectedBreakOption',
-                            data.selectedBreakOption,
+                            'Start Time',
+                            breakData[i].startTime,
                             'required'
                           )}
                         />
-                      </Row>
-                      <Row>
+                      </Col>
+                      <Col md={4}>
+                        <Datepicker
+                          className="form-control"
+                          label="End Time"
+                          selected={data.endTime}
+                          minDate={new Date(data.startTime)}
+                          minTime={setHours(
+                            setMinutes(
+                              new Date(),
+                              parseInt(data.stmins, 10) + 1
+                            ),
+                            parseInt(data.stmins, 10) > 58
+                              ? parseInt(data.sthrs, 10) + 1
+                              : data.sthrs
+                          )}
+                          maxTime={setHours(setMinutes(new Date(), 59), 23)}
+                          disabled={data.startTime === ''}
+                          onChange={(e) => {
+                            onChangeEndTime(e, i);
+                          }}
+                          showTimeSelect="showTimeSelect"
+                          showTimeSelectOnly="showTimeSelectOnly"
+                          timeIntervals="1"
+                          dateFormat="h:mm aa"
+                          errorMessage={validator.message(
+                            'End Time',
+                            breakData[i].endTime,
+                            'required'
+                          )}
+                        />
+                      </Col>
 
-                        <Col sm={4}>
-                          <Datepicker
-                            className="form-control"
-                            label="Start Time"
-                            selected={data.startTime}
-                            minDate={new Date(clockInDate)}
-
-                            minTime={setHours(
-                              setMinutes(clockInDate, parseInt(timeMinutes, 10) + 1),
-                              parseInt(timeMinutes, 10) > 58 ? parseInt(timeHour, 10) + 1 : timeHour
-                            )}
-                            maxTime={setHours(setMinutes(new Date(), new Date().getMinutes()), new Date().getHours())}
-                            onChange={(e) => {
-                              breakData[i].startTime = e;
-                              breakData[i].sthrs = e.getHours();
-                              breakData[i].stmins = e.getMinutes();
-                              breakData[i].hrs = 0;
-                              breakData[i].mins = 0;
-                              breakData[i].endTime = null;
-
-                              setBreakData([...breakData]);
-                            }}
-                            showTimeSelect="showTimeSelect"
-                            showTimeSelectOnly="showTimeSelectOnly"
-                            timeIntervals="1"
-                            dateFormat="h:mm aa"
-                            errorMessage={validator.message(
-                              'Start Time',
-                              breakData[i].startTime,
-                              'required'
-                            )}
-                          />
-                        </Col>
-                        <Col md={4}>
-                          <Datepicker
-                            className="form-control"
-                            label="End Time"
-                            selected={data.endTime}
-                            minDate={new Date(data.startTime)}
-                            minTime={setHours(
-                              setMinutes(new Date(), parseInt(data.stmins, 10) + 1),
-                              parseInt(data.stmins, 10) > 58 ? parseInt(data.sthrs, 10) + 1 : data.sthrs
-                            )}
-                            maxTime={setHours(setMinutes(new Date(), 59), 23)}
-                            disabled={data.startTime === ''}
-                            onChange={(e) => { onChangeEndTime(e, i); }}
-                            showTimeSelect="showTimeSelect"
-                            showTimeSelectOnly="showTimeSelectOnly"
-                            timeIntervals="1"
-                            dateFormat="h:mm aa"
-                            errorMessage={validator.message(
-                              'End Time',
-                              breakData[i].endTime,
-                              'required'
-                            )}
-                          />
-                        </Col>
-
-                        <Col md={4}>
-                          <Row>
-                          
-                            <Col md={6}>
-                              <TextInput
-                                onInputChange={(e) => {
-                                  setHoursSpendTime(e, i);
-                                }
-                                }
-                                label="Time"
-                                containerClass="form-group"
-                                type="text"
-                                disabled={data.startTime === '' || data.endTime === null}
-                                name="designationtitle"
-                                // value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs}` : timeSpentHours}
-                                value={data.timeHours}
-                              />
-                              <h7 className='mb-1'>hours</h7>
-                            </Col>
-                            <Col md={6}>
-                              <TextInput
-                                onInputChange={(e) => {
-                                  setMinSpendTime(e, i);
-                                  // const re = /^[a-zA-Z ]*$/;
-                                  // if (!e.target.value || re.test(e.target.value)) {
-                                  //   setTimeSpentMinutes(e.target.value);
-                                  // }
-                                }}
-                                label="Spent"
-                                containerClass="form-group"
-                                type="text"
-                                disabled={data.startTime === '' || data.endTime === null}
-                                name="designationtitle"
-                                // value={breakData[i].endTime && breakData[i].startTime ? `${data.mins}` : timeSpentMinutes}
-                                value={data.timeMins}
-
-                              />
-                              <p className='mb-2'>minutes</p>
-                            </Col>
-                          </Row>
-                        </Col>
-                      </Row>
-                    </>
-                  ))}
-                <div className="float-end">
-                  {
-                    breakData && breakData.length > 0 ? (
-
-                      <Button type="submit" disabled={disableButton || showSendReport}
-                        // onClick={(e) => onBreakSubmit(e)}
-                        variant={`${!showSendReport ? 'primary ml-1' : 'secondary ml-1'}`}
-                      >
-                        Confirm
-                      </Button>
-                    ) : ''
-                  }
-
-                  <Button disabled={disableButton || !showSendReport} className="ms-4"
-                    onClick={(e) => {
-                      onSubmit(e);
-                    }}
-                    variant={`${showSendReport ? 'primary ml-1' : 'secondary ml-1'}`}
+                      <Col md={4}>
+                        <Row>
+                          <Col md={6}>
+                            <TextInput
+                              onInputChange={(e) => {
+                                setHoursSpendTime(e, i);
+                              }}
+                              label="Time"
+                              containerClass="form-group"
+                              type="text"
+                              disabled={
+                                data.startTime === '' || data.endTime === null
+                              }
+                              name="designationtitle"
+                              // value={breakData[i].endTime && breakData[i].startTime ? `${data.hrs}` : timeSpentHours}
+                              value={data.timeHours}
+                            />
+                            <h7 className="mb-1">hours</h7>
+                          </Col>
+                          <Col md={6}>
+                            <TextInput
+                              onInputChange={(e) => {
+                                setMinSpendTime(e, i);
+                                // const re = /^[a-zA-Z ]*$/;
+                                // if (!e.target.value || re.test(e.target.value)) {
+                                //   setTimeSpentMinutes(e.target.value);
+                                // }
+                              }}
+                              label="Spent"
+                              containerClass="form-group"
+                              type="text"
+                              disabled={
+                                data.startTime === '' || data.endTime === null
+                              }
+                              name="designationtitle"
+                              // value={breakData[i].endTime && breakData[i].startTime ? `${data.mins}` : timeSpentMinutes}
+                              value={data.timeMins}
+                            />
+                            <p className="mb-2">minutes</p>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  </>
+                ))}
+              <div className="float-end">
+                {breakData && breakData.length > 0 ? (
+                  <Button
+                    type="submit"
+                    disabled={disableButton || showSendReport}
+                    // onClick={(e) => onBreakSubmit(e)}
+                    variant={`${
+                      !showSendReport ? 'primary ml-1' : 'secondary ml-1'
+                    }`}
                   >
-                    Send Report
-              </Button>
-                </div>
-              </Form>
-            }
-          />
-        )
-      }
+                    Confirm
+                  </Button>
+                ) : (
+                  ''
+                )}
+
+                <Button
+                  disabled={disableButton || !showSendReport}
+                  className="ms-4"
+                  onClick={(e) => {
+                    onSubmit(e);
+                  }}
+                  variant={`${
+                    showSendReport ? 'primary ml-1' : 'secondary ml-1'
+                  }`}
+                >
+                  Send Report
+                </Button>
+              </div>
+            </Form>
+          }
+        />
+      )}
 
       <ModalInput
         size="sm"

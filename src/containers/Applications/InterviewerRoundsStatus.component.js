@@ -28,7 +28,7 @@ function InterviewerRoundsStatus(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [interviewData, setInterviewData] = useState(initialState);
   const [interviewId, setInterviewId] = useState('');
-  const [applicantRoundsId,setApplicantRoundsId] = useState('');
+  const [applicantRoundsId, setApplicantRoundsId] = useState('');
   const history = useHistory();
   const { isProfessionalInfoId } = props;
 
@@ -48,9 +48,7 @@ function InterviewerRoundsStatus(props) {
   }, []);
 
   const getData = async (id) => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.roundsUrl}${id}/`
-    );
+    const { data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${id}/`);
     if (data) {
       setApplicantRoundsId(data.data.applicant_rounds);
       setInterviewData({
@@ -59,7 +57,10 @@ function InterviewerRoundsStatus(props) {
         interviewSelector: data.data.applicant_rounds[0].interviewer_name,
         interviewRound: data.data.applicant_rounds[0].status_name,
       });
-      updateDefaultValues({status:String(data.data.applicant_rounds[0].status), comments: data.data.applicant_rounds[0].comments});
+      updateDefaultValues({
+        status: String(data.data.applicant_rounds[0].status),
+        comments: data.data.applicant_rounds[0].comments,
+      });
     }
   };
 
@@ -69,17 +70,16 @@ function InterviewerRoundsStatus(props) {
   }, [isProfessionalInfoId]);
 
   const submitForm = async (formValues) => {
-      const applicantId = customFunctions.getLocalStorage('applicantId');
+    const applicantId = customFunctions.getLocalStorage('applicantId');
 
     const postData = [];
-    applicantRoundsId.map((intrw,i) => {
-      if(i !== 0) {
-
-      postData.push({
-        id:intrw.applicant_round_id,
-        comments:intrw.comments,
-        status:intrw.status,
-        applicant: applicantId
+    applicantRoundsId.map((intrw, i) => {
+      if (i !== 0) {
+        postData.push({
+          id: intrw.applicant_round_id,
+          comments: intrw.comments,
+          status: intrw.status,
+          applicant: applicantId,
         });
       }
       return intrw;
@@ -87,19 +87,16 @@ function InterviewerRoundsStatus(props) {
 
     const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
     const abc = {
-      id:newId ? Number(newId) : Number(interviewId),
-        comments:formValues ? formValues.comments :'',
-        status:formValues ? formValues.status :'',
-        applicant: applicantId
-
+      id: newId ? Number(newId) : Number(interviewId),
+      comments: formValues ? formValues.comments : '',
+      status: formValues ? formValues.status : '',
+      applicant: applicantId,
     };
 
-    postData.push( 
-      abc
-    );
+    postData.push(abc);
     const { data, message } = await AuthApi.postDataToServer(
       `${Api.roundsUrl}`,
-      { 'data':postData}
+      { data: postData }
     );
     if (data) {
       swal(data && data.message[0], '', 'success', {
@@ -111,11 +108,11 @@ function InterviewerRoundsStatus(props) {
         swal.close();
       });
 
-      {Interview ? // eslint-disable-line
-        history.push('/interview-listing') : 
-        history.push('/recruitment');
+      {
+        Interview // eslint-disable-line
+          ? history.push('/interview-listing')
+          : history.push('/recruitment');
       }
-
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -123,7 +120,7 @@ function InterviewerRoundsStatus(props) {
       });
     }
   };
- 
+
   return (
     <>
       <Helmet title={title} />
@@ -132,59 +129,56 @@ function InterviewerRoundsStatus(props) {
         <Breadcrumb items={items} />
       </div>
 
-       {
-         applicantRoundsId.length > 0 && applicantRoundsId.map((round,i) => (
-         <>
-         {
-           i !== 0 && (
-          <Card body className="mt-4">
+      {applicantRoundsId.length > 0 &&
+        applicantRoundsId.map((round, i) => (
+          <>
+            {i !== 0 && (
+              <Card body className="mt-4">
+                <Row>
+                  <Col md={6}>
+                    <p>
+                      Interview Date -{' '}
+                      {round.int_date
+                        ? customFunctions.getDDMMYYYYDate(round.int_date)
+                        : ''}{' '}
+                    </p>
+                  </Col>
+                  <Col md={6}>
+                    <p>Interview Time - {round.int_time} </p>
+                  </Col>
+                </Row>
 
-          <Row>
-          <Col md={6}>
-            <p>Interview Date - {round.int_date ? customFunctions.getDDMMYYYYDate(round.int_date) : ''} </p>
-
-          </Col>
-          <Col md={6}>
-
-            <p>Interview Time - {round.int_time} </p>
-          </Col>
-
-          </Row>
-
-          <Row>
-          <Col md={6}>
-
-            <p>Round Name - {round.round_type_name} </p>
-          </Col>
-          <Col md={6}>
-
-            <p>Round Status - {round.status_name} </p>
-          </Col>
-
-          </Row>
-            <Col md={5}>
-
-            <p>Comment - {round.comments} </p>
-
-            </Col>
-         </Card>
-
-           )
-         }
-         </>
-         ))
-       }
+                <Row>
+                  <Col md={6}>
+                    <p>Round Name - {round.round_type_name} </p>
+                  </Col>
+                  <Col md={6}>
+                    <p>Round Status - {round.status_name} </p>
+                  </Col>
+                </Row>
+                <Col md={5}>
+                  <p>Comment - {round.comments} </p>
+                </Col>
+              </Card>
+            )}
+          </>
+        ))}
 
       <Card body className="mt-4">
         <Row className="mt-3">
           <Col>
-            <p>Interview Date - {interviewData.interviewDate ? customFunctions.getDDMMYYYYDate(interviewData.interviewDate) : ''} </p>
+            <p>
+              Interview Date -{' '}
+              {interviewData.interviewDate
+                ? customFunctions.getDDMMYYYYDate(interviewData.interviewDate)
+                : ''}{' '}
+            </p>
           </Col>
           <Col>
             <p>Interview Time - {interviewData.interviewTime} </p>
           </Col>
         </Row>
-       
+
         <StarkFormBuilder
           containerClass=""
           formHeaderClass=""
@@ -200,7 +194,7 @@ function InterviewerRoundsStatus(props) {
           showResetBtn={false}
           showBtnClass={true}
           resetBtnText="Clear"
-          btnContainerClass='form-submit-buttons'
+          btnContainerClass="form-submit-buttons"
           isStepForm={false}
           onFormReset={() => {}}
         />

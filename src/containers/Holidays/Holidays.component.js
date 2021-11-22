@@ -169,48 +169,45 @@ function Holidays() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
-          <Card className="mt-5 schedular">
-            <Card.Body>
-             <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Holidays</h5>
-                 <div className="d-flex align-items-center justify-content-end">
-                  <UserRestrictions
-                    permittedUsers={[1, 5, 6]}
-                    roleId={userRole}
+        <Card className="mt-5 schedular">
+          <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Holidays</h5>
+              <div className="d-flex align-items-center justify-content-end">
+                <UserRestrictions permittedUsers={[1, 5, 6]} roleId={userRole}>
+                  <a
+                    href="#"
+                    onClick={() => {
+                      history.push('/add-holiday');
+                    }}
+                    className="btn-link"
                   >
-                    <a
-                      href="#"
-                      onClick={() => {
-                        history.push('/add-holiday');
-                      }}
-                      className="btn-link"
-                    >
-                      Add Holiday
-                    </a>
-                  </UserRestrictions>
-                </div>
-               </div> 
-               <hr/> 
-              <CustomTable
-                columns={columns}
-                rows={rowData}
-                role={5}
-                showPagination={true}
-                tableClass="table-striped"
-                paginationProps={{
-                  totalItems: totalCount,
-                  itemsPerPage: limit,
-                  activePage: currentPage,
-                  onPageChange: (pageNo) => {
-                    getRowData(pageNo);
-                  },
-                }}
-                emptyRender={() => {
-                  return 'No record found.';
-                }}
-              />
-            </Card.Body>
-          </Card>
+                    Add Holiday
+                  </a>
+                </UserRestrictions>
+              </div>
+            </div>
+            <hr />
+            <CustomTable
+              columns={columns}
+              rows={rowData}
+              role={5}
+              showPagination={true}
+              tableClass="table-striped"
+              paginationProps={{
+                totalItems: totalCount,
+                itemsPerPage: limit,
+                activePage: currentPage,
+                onPageChange: (pageNo) => {
+                  getRowData(pageNo);
+                },
+              }}
+              emptyRender={() => {
+                return 'No record found.';
+              }}
+            />
+          </Card.Body>
+        </Card>
       </section>
     </>
   );

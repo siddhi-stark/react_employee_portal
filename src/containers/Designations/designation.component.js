@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
-import {
-  Card,
-  Row,
-  Col,
-  Button,
-  Form,
-  Image,
-} from 'react-bootstrap';
+import { Card, Row, Col, Button, Form, Image } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import { TextInput, Helmet } from '../../components/FormInputs';
@@ -33,7 +26,7 @@ function Designation() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [designation, setDesignation] = useState('');
   const [title, setTitle] = useState('');
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -99,7 +92,6 @@ function Designation() {
 
   useEffect(() => {
     async function getData() {
-     
       getTableData(pagination.current_page);
       setTitle('Designation');
       const uRole = customFunctions.getLocalStorage('group');
@@ -239,7 +231,7 @@ function Designation() {
   };
 
   const onClear = () => {
-    searchFormSubmit= false;
+    searchFormSubmit = false;
     setFilterErr('');
     setSearchKeyword('');
     setCntClearFilter(cntClearFilter + 1);
@@ -271,7 +263,7 @@ function Designation() {
       isValid = false;
     }
     if (isValid) {
-      searchFormSubmit=true;
+      searchFormSubmit = true;
       setFilterErr('');
       getTableData(1);
     }
@@ -284,7 +276,7 @@ function Designation() {
       actionCallback: (selectedIndexes) => {
         const endPoint = `${Api.bullkDesignation}`;
         if (!customFunctions.checkIfEmpty(selectedIndexes, 'A')) {
-          const params = { designations: selectedIndexes};
+          const params = { designations: selectedIndexes };
           swal({
             title: 'Are you sure?',
             text: 'Are you sure that you want to delete this record?',
@@ -323,7 +315,7 @@ function Designation() {
           });
         }
       },
-    }
+    },
   ];
 
   return (
@@ -336,67 +328,65 @@ function Designation() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-            <Card>
-            
-                <Card.Body>
-                  <div className="d-flex align-items-center justify-content-between">
-                    <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                  </div>  
-                  <hr/>
-                  <Card.Title>
-                    <Form onSubmit={(e) => filterSearch(e)}>
-                      {filterErr && (
-                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
-                          <div className="img-text">
-                            <img src="/images/fail.svg" alt="Success" />{' '}
-                            {filterErr}
-                          </div>
-                        </div>
-                      )}
-                      <Row className="mt-3">
-                        <Col sm={4}>
-                          <div className="search-bar-input">
-                            <TextInput
-                              inputClass="form-control"
-                              value={searchKeyword}
-                              placeholder="search designation"
-                              onInputChange={(e) => {
-                                setFilterErr('');
-                                setSearchKeyword(e.target.value);
-                              }}
-                            />
-                          </div>
-                        </Col>
-                        <Col sm={3}>
-                          <div className="filter-btn">
-                            <Button
-                              variant="primary"
-                              type="submit"
-                              className="ms-4"
-                            >
-                              Apply
-                            </Button>
-                            <Button
-                              variant="secondary"
-                              type="button"
-                              className="ms-4"
-                              onClick={() => onClear()}
-                            >
-                              Clear
-                            </Button>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </Card.Title>
-                </Card.Body>
-            </Card>
+          <Card>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>
+              <hr />
+              <Card.Title>
+                <Form onSubmit={(e) => filterSearch(e)}>
+                  {filterErr && (
+                    <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                      <div className="img-text">
+                        <img src="/images/fail.svg" alt="Success" /> {filterErr}
+                      </div>
+                    </div>
+                  )}
+                  <Row className="mt-3">
+                    <Col sm={4}>
+                      <div className="search-bar-input">
+                        <TextInput
+                          inputClass="form-control"
+                          value={searchKeyword}
+                          placeholder="search designation"
+                          onInputChange={(e) => {
+                            setFilterErr('');
+                            setSearchKeyword(e.target.value);
+                          }}
+                        />
+                      </div>
+                    </Col>
+                    <Col sm={3}>
+                      <div className="filter-btn">
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          className="ms-4"
+                        >
+                          Apply
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          type="button"
+                          className="ms-4"
+                          onClick={() => onClear()}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
+                </Form>
+              </Card.Title>
+            </Card.Body>
+          </Card>
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Designation</h5>
-              </div>  
-              <hr/>
+              </div>
+              <hr />
               <Row className="mt-3">
                 <Col>
                   <Form autoComplete="off" onSubmit={(e) => submitForm(e)}>
@@ -425,7 +415,7 @@ function Designation() {
                     <Button variant="primary" type="submit">
                       {designationId ? 'Update' : 'Add'}
                     </Button>
-                    
+
                     <Button
                       variant="secondary"
                       className="ms-2"
@@ -438,7 +428,6 @@ function Designation() {
                     >
                       Cancel
                     </Button>
-                    
                   </Form>
                 </Col>
                 <Col>

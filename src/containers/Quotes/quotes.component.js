@@ -30,7 +30,7 @@ function Quotes() {
 
   const handleActionCallback = ({ id }) => {
     return (
-      <span className ="d-flex">
+      <span className="d-flex">
         <a
           href="javascript:void(0)"
           className=""
@@ -40,7 +40,11 @@ function Quotes() {
             history.push(`/edit-quotes/${id}`);
           }}
         >
-          <Image src="/images/edit-button.svg" className="delete-edit-view" alt="Edit Quotes" />
+          <Image
+            src="/images/edit-button.svg"
+            className="delete-edit-view"
+            alt="Edit Quotes"
+          />
         </a>
         <a
           href="javascript:void(0)"
@@ -136,12 +140,11 @@ function Quotes() {
       setRowData((data && data.data) || []);
     } else {
       setShowLoader(false);
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
 
   useEffect(() => {
-     
     getRowData(1);
   }, []);
 
@@ -160,19 +163,19 @@ function Quotes() {
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 ">Quotes</h5>
-                <div className="d-flex align-items-center justify-content-end">
-                  <a
-                    href="#"
-                    onClick={() => {
-                      history.push('/add-quotes');
-                    }}
-                    className="btn-link"
-                  >
-                    Add Quote
-                  </a>
+              <div className="d-flex align-items-center justify-content-end">
+                <a
+                  href="#"
+                  onClick={() => {
+                    history.push('/add-quotes');
+                  }}
+                  className="btn-link"
+                >
+                  Add Quote
+                </a>
               </div>
             </div>
-            <hr/>
+            <hr />
             <CustomTable
               columns={columns}
               rows={rowData}

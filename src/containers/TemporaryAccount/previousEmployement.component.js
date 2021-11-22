@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/destructuring-assignment */
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './employmentFormschema.json';
+import swal from 'sweetalert';
+import Loader from '../../components/Loader/index';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
-import Loader from '../../components/Loader/index';
+import FormSections from './employmentFormschema.json';
 
 function PreviousEmployement(props) {
   const accProps = { props };
@@ -22,7 +23,7 @@ function PreviousEmployement(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [docId, setDocId] = useState([]);
-  const [isShowLoader,setShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -42,52 +43,57 @@ function PreviousEmployement(props) {
     let relive = '';
     let experience = '';
 
-    const endPoint = candidateId ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`:`${Api.applicantInfoUrl}`;
+    const endPoint = candidateId
+      ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
+      : `${Api.applicantInfoUrl}`;
 
     const postData = {
-        email_hash: tokenProps,
-        password: passwordProps,
-      };
+      email_hash: tokenProps,
+      password: passwordProps,
+    };
 
-    const { data, message } = applicantId ? await AuthApi.postDataToServer(endPoint,postData) :
-    await AuthApi.postDataToServer(endPoint);
+    const { data, message } = applicantId
+      ? await AuthApi.postDataToServer(endPoint, postData)
+      : await AuthApi.postDataToServer(endPoint);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      data.data && data.data.applicant_history &&
-      data.data.applicant_history.map((op) => {
-          obj =  { label: op.company_name, value: op.company_name };
-        return op;
-      });
+      data.data &&
+        data.data.applicant_history &&
+        data.data.applicant_history.map((op) => {
+          obj = { label: op.company_name, value: op.company_name };
+          return op;
+        });
 
-      data.data && data.data.applicant_documents && 
+      data.data &&
+        data.data.applicant_documents &&
         data.data.applicant_documents.map((doc) => {
-        if(doc.doc_title === 'Salary Slip 1'){
-          salary1 = doc.document_url;
-        } else if(doc.doc_title === 'Salary Slip 2'){
-          salary2 = doc.document_url;
-        } else if(doc.doc_title === 'Salary Slip 3'){
-          salary3 = doc.document_url;
-        } else if(doc.doc_title === 'Reliving Letter'){
-          relive = doc.document_url;
-        } else if(doc.doc_title === 'Experience Letter'){
-          experience = doc.document_url;
-        }
-       
+          if (doc.doc_title === 'Salary Slip 1') {
+            salary1 = doc.document_url;
+          } else if (doc.doc_title === 'Salary Slip 2') {
+            salary2 = doc.document_url;
+          } else if (doc.doc_title === 'Salary Slip 3') {
+            salary3 = doc.document_url;
+          } else if (doc.doc_title === 'Reliving Letter') {
+            relive = doc.document_url;
+          } else if (doc.doc_title === 'Experience Letter') {
+            experience = doc.document_url;
+          }
+
           docIdArr.push({ name: doc.doc_title, id: doc.doc_id });
           return doc;
         });
 
-        updateDefaultValues({
-          employee: obj,
-          salary_slip1: salary1,
-          salary_slip2: salary2,
-          salary_slip3: salary3,
-          reliving_letter: relive,
-          experience_letter: experience,
-        });
+      updateDefaultValues({
+        employee: obj,
+        salary_slip1: salary1,
+        salary_slip2: salary2,
+        salary_slip3: salary3,
+        reliving_letter: relive,
+        experience_letter: experience,
+      });
       setDocId(docIdArr);
     } else {
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
   useEffect(() => {
@@ -96,7 +102,8 @@ function PreviousEmployement(props) {
     }
   }, []);
 
-  const fileUpload = async (formValues) => { // eslint-disable-line
+  const fileUpload = async (formValues) => {
+    // eslint-disable-line
 
     const formData = new FormData();
 
@@ -111,29 +118,32 @@ function PreviousEmployement(props) {
       `${Api.googleFileUploadUrl}`,
       formData
     );
-     if(customFunctions.checkIfEmpty(data)) {
+    if (customFunctions.checkIfEmpty(data)) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    if (!customFunctions.checkIfEmpty(data) && data.success) { 
+    if (!customFunctions.checkIfEmpty(data) && data.success) {
       return data.data.id;
     }
   };
 
-  const getApplicantPercentage = async () => { // eslint-disable-line
-    const endPoint = applicantId ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`:`${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
+  const getApplicantPercentage = async () => {
+    // eslint-disable-line
+    const endPoint = applicantId
+      ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`
+      : `${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
 
     const { data, message } = await AuthApi.getDataFromServer(endPoint);
-    
-    if(customFunctions.checkIfEmpty(data)) {
+
+    if (customFunctions.checkIfEmpty(data)) {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
     }
-    if (!customFunctions.checkIfEmpty(data) && data.success && data.data ) { 
+    if (!customFunctions.checkIfEmpty(data) && data.success && data.data) {
       props.getParentsData(data.data.completion);
     }
   };
@@ -169,19 +179,29 @@ function PreviousEmployement(props) {
       });
 
     if (formValues.salary_slip1) {
-      slip1fileUrlId = (typeof formValues.salary_slip1 === 'object') && await fileUpload(formValues.salary_slip1);
+      slip1fileUrlId =
+        typeof formValues.salary_slip1 === 'object' &&
+        (await fileUpload(formValues.salary_slip1));
     }
     if (formValues.salary_slip2) {
-      slip2fileUrlId = (typeof formValues.salary_slip2 === 'object') && await fileUpload(formValues.salary_slip2);
+      slip2fileUrlId =
+        typeof formValues.salary_slip2 === 'object' &&
+        (await fileUpload(formValues.salary_slip2));
     }
     if (formValues.salary_slip3) {
-      slip3fileUrlId = (typeof formValues.salary_slip3 === 'object') && await fileUpload(formValues.salary_slip3);
+      slip3fileUrlId =
+        typeof formValues.salary_slip3 === 'object' &&
+        (await fileUpload(formValues.salary_slip3));
     }
     if (formValues.reliving_letter) {
-      relivingfileUrlId = (typeof formValues.reliving_letter === 'object') && await fileUpload(formValues.reliving_letter);
-    } 
+      relivingfileUrlId =
+        typeof formValues.reliving_letter === 'object' &&
+        (await fileUpload(formValues.reliving_letter));
+    }
     if (formValues.experience_letter) {
-      experiencefileUrlId = (typeof formValues.experience_letter === 'object') && await fileUpload(formValues.experience_letter);
+      experiencefileUrlId =
+        typeof formValues.experience_letter === 'object' &&
+        (await fileUpload(formValues.experience_letter));
     }
 
     const postData = {
@@ -232,10 +252,15 @@ function PreviousEmployement(props) {
       ],
     };
 
-    const { data, message } = (!customFunctions.checkIfEmpty(slip1fileUrlId) || slip1fileUrl && !customFunctions.checkIfEmpty(slip2fileUrlId) || slip2fileUrl && !customFunctions.checkIfEmpty(slip3fileUrlId) || slip3fileUrl && !customFunctions.checkIfEmpty(relivingfileUrlId)||relivingfileUrl && !customFunctions.checkIfEmpty(experiencefileUrlId)||experiencefileUrl) && await AuthApi.postDataToServer(
-      `${Api.applicantDocumentUrl}`,
-      postData
-    );
+    const { data, message } =
+      (!customFunctions.checkIfEmpty(slip1fileUrlId) ||
+        (slip1fileUrl && !customFunctions.checkIfEmpty(slip2fileUrlId)) ||
+        (slip2fileUrl && !customFunctions.checkIfEmpty(slip3fileUrlId)) ||
+        (slip3fileUrl && !customFunctions.checkIfEmpty(relivingfileUrlId)) ||
+        (relivingfileUrl &&
+          !customFunctions.checkIfEmpty(experiencefileUrlId)) ||
+        experiencefileUrl) &&
+      (await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData));
     if (!data) {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -253,7 +278,7 @@ function PreviousEmployement(props) {
         allowOutsideClick: false,
       }).then(() => {
         getApplicantPercentage();
-        if(candidateId){
+        if (candidateId) {
           getData();
         }
         swal.close();
@@ -279,9 +304,11 @@ function PreviousEmployement(props) {
     }
 
     const dpOptions = [];
-    data && data.data && data.data.applicant_history && 
+    data &&
+      data.data &&
+      data.data.applicant_history &&
       data.data.applicant_history.map((op) => {
-          dpOptions.push({ label: op.company_name, value: op.company_name });
+        dpOptions.push({ label: op.company_name, value: op.company_name });
         return op;
       });
     const allOptions = {
@@ -299,7 +326,7 @@ function PreviousEmployement(props) {
 
   return (
     <>
-     <Loader showLoader={isShowLoader} needFullPage={false} />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass=""
         formHeaderClass=""

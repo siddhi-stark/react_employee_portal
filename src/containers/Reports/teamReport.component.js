@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Row, Col, Form, Button } from 'react-bootstrap';
-import { Helmet, Datepicker, DropdownInput, TextInput } from '../../components/FormInputs';
+import {
+  Helmet,
+  Datepicker,
+  DropdownInput,
+  TextInput,
+} from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -37,37 +42,37 @@ function TeamReport() {
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [3,2,6,5],
+      roleAccess: [3, 2, 6, 5],
     },
     {
       id: 'name',
       label: 'Name',
-      roleAccess: [3,2,6,5],
+      roleAccess: [3, 2, 6, 5],
     },
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [3,2,6,5],
+      roleAccess: [3, 2, 6, 5],
     },
     {
       id: 'clockin',
       label: 'In',
-      roleAccess: [3,2,6,5],
+      roleAccess: [3, 2, 6, 5],
     },
     {
       id: 'clockout',
       label: 'Out',
-      roleAccess: [3,2,6,5],
+      roleAccess: [3, 2, 6, 5],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [3,2,6,5],
+      roleAccess: [3, 2, 6, 5],
     },
     {
       id: 'report',
       label: 'View Report',
-      roleAccess: [3,2,6,5],
+      roleAccess: [3, 2, 6, 5],
     },
   ];
 
@@ -87,17 +92,17 @@ function TeamReport() {
 
     let postData = {};
     const employeeList = [];
-   if (selectedEmployee && selectedEmployee.length > 0) {
-        selectedEmployee.map((emp) => {
+    if (selectedEmployee && selectedEmployee.length > 0) {
+      selectedEmployee.map((emp) => {
         team.map((tem) => {
-        if(tem.id === emp.id) {
-          employeeList.push(tem.employee_id);
-        }
-        return tem;
+          if (tem.id === emp.id) {
+            employeeList.push(tem.employee_id);
+          }
+          return tem;
         });
         return emp;
-        });
-        }
+      });
+    }
 
     postData = {
       users: employeeList,
@@ -128,11 +133,17 @@ function TeamReport() {
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,
           report: (
-             <a href="javascript.void(0)" onClick={(e)=>{
-              e.preventDefault();
-              e.stopPropagation();
-              history.push(`/daily-report/${dt}/${report.user_id}`,{teamReport:true, reporterName:report.user});}
-            }>
+            <a
+              href="javascript.void(0)"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/daily-report/${dt}/${report.user_id}`, {
+                  teamReport: true,
+                  reporterName: report.user,
+                });
+              }}
+            >
               <span className="text-info">View Report</span>
             </a>
           ),
@@ -206,7 +217,7 @@ function TeamReport() {
       getReports(1);
     }
   };
-  
+
   return (
     <>
       <Helmet title={title} />
@@ -218,110 +229,109 @@ function TeamReport() {
 
       <section className="content-area">
         <div className="mt-5">
-            <Card>
-                <Card.Body>
-                 <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-                 </div> 
-               <hr/> 
-                  <Card.Title>
-                    <Form onSubmit={(e) => filterSearch(e)}>
-                      {filterErr && (
-                        <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
-                          <div className="img-text">
-                            <img src="/images/fail.svg" alt="Success" />{' '}
-                            {filterErr}
-                          </div>
-                        </div>
-                      )}
-                      <Row className="mt-3">
-                      <Col sm={3}>
-                       <TextInput
-                          value={searchKeyword}
-                          placeholder="Search employee name"
-                          onInputChange={(e) => {
-                            setSearchKeyword(e.target.value);
+          <Card>
+            <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              </div>
+              <hr />
+              <Card.Title>
+                <Form onSubmit={(e) => filterSearch(e)}>
+                  {filterErr && (
+                    <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                      <div className="img-text">
+                        <img src="/images/fail.svg" alt="Success" /> {filterErr}
+                      </div>
+                    </div>
+                  )}
+                  <Row className="mt-3">
+                    <Col sm={3}>
+                      <TextInput
+                        value={searchKeyword}
+                        placeholder="Search employee name"
+                        onInputChange={(e) => {
+                          setSearchKeyword(e.target.value);
+                        }}
+                      />
+                    </Col>
+                    <Col sm={3}>
+                      <div className="search-bar-input">
+                        <DropdownInput
+                          options={getTeamList()}
+                          placeholder="Select Employee"
+                          defaultValue={selectedEmployee}
+                          onSelectHandler={(select) => {
+                            setSelectedEmployee(select);
                           }}
+                          isMulti
                         />
-                      </Col>
-                        <Col sm={3}>
-                          <div className="search-bar-input">
-                            <DropdownInput
-                              options={getTeamList()}
-                              placeholder="Select Employee"
-                              defaultValue={selectedEmployee}
-                              onSelectHandler={(select) => {
-                                setSelectedEmployee(select);
-                              }}
-                              isMulti
-                            />
-                          </div>
-                        </Col>
+                      </div>
+                    </Col>
 
-                        <Col sm={3}>
-                          <Datepicker
-                            className="form-control"
-                            selected={fromDate}
-                            onChange={(e) => {
-                              setFromDate(e);
-                            }}
-                            autoComplete="off"
-                            name="startDate"
-                            placeholder="From Date"
-                            dateFormat="dd/MM/yyyy"
-                            maxDate={new Date()}
-                          />
-                        </Col>
+                    <Col sm={3}>
+                      <Datepicker
+                        className="form-control"
+                        selected={fromDate}
+                        onChange={(e) => {
+                          setFromDate(e);
+                        }}
+                        autoComplete="off"
+                        name="startDate"
+                        placeholder="From Date"
+                        dateFormat="dd/MM/yyyy"
+                        maxDate={new Date()}
+                      />
+                    </Col>
 
-                        <Col sm={3}>
-                          <Datepicker
-                            className="form-control"
-                            selected={toDate}
-                            onChange={(e) => {
-                              setToDate(e);
-                            }}
-                            autoComplete="off"
-                            minDate={fromDate}
-                            name="startDate"
-                            dateFormat="dd/MM/yyyy"
-                            placeholder="To Date"
-                            maxDate={new Date()}
-                          />
-                        </Col>
-                         
-                        <Col sm={12}>
-                          <div className="filter-btn pull-right filter-btn-report">
-                            <Button
-                              variant="primary"
-                              type="submit"
-                              className="ms-4"
-                            >
-                              Apply
-                            </Button>
-                            <Button
-                              variant="secondary"
-                              type="button"
-                              className="ms-4"
-                              onClick={() => onClear()}
-                            >
-                              Clear
-                            </Button>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </Card.Title>
-                </Card.Body>
-            </Card>
+                    <Col sm={3}>
+                      <Datepicker
+                        className="form-control"
+                        selected={toDate}
+                        onChange={(e) => {
+                          setToDate(e);
+                        }}
+                        autoComplete="off"
+                        minDate={fromDate}
+                        name="startDate"
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="To Date"
+                        maxDate={new Date()}
+                      />
+                    </Col>
+
+                    <Col sm={12}>
+                      <div className="filter-btn pull-right filter-btn-report">
+                        <Button
+                          variant="primary"
+                          type="submit"
+                          className="ms-4"
+                        >
+                          Apply
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          type="button"
+                          className="ms-4"
+                          onClick={() => onClear()}
+                        >
+                          Clear
+                        </Button>
+                      </div>
+                    </Col>
+                  </Row>
+                </Form>
+              </Card.Title>
+            </Card.Body>
+          </Card>
         </div>
       </section>
       <div className="mt-3">
         <Card>
           <Card.Body>
-           <div className="d-flex align-items-center justify-content-between">
-            <h5 className="card-title mb-0 mt-2 ">Team Reports</h5>
-           </div> 
-           <hr/> 
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Team Reports</h5>
+            </div>
+            <hr />
             <Table
               tableClass="table table-striped"
               columns={columns}

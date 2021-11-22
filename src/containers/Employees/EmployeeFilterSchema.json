@@ -1,72 +1,77 @@
-[{
-	"sectionName": "filter",
-	"sectionTitle": "filter",
-	"layout": {
-		"label": "2Column",
-		"value": "2column"
-	},
-	"containerClass": "",
-	"displaySection": true,
-	"displaySectionTitle": false,
-	"fields": [{
-		"name": "employee",
-		"type": "select",
-		"label": "",
-		"id": "",
-		"placeholder": "Select Employee",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [],
-		"displayWhen": {},
-		"haveValidations": "false",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "getEmployeeName",
-		"optionsCallbackUrl": "employeeUrl",
-		"options": []
-	}, {
-		"name": "position",
-		"type": "select",
-		"label": "",
-		"id": "",
-		"placeholder": "Select Position",
-		"inputClass": "",
-		"containerClass": "",
-		"validations": [],
-		"displayWhen": {},
-		"haveValidations": "false",
-		"haveDisplayOptions": "false",
-		"callback": "",
-		"callbackUrl": "",
-		"inputToChange": "",
-		"minDateSelector": "",
-		"maxDateSelector": "",
-		"disabled": false,
-		"isMulti": false,
-		"allowedUsers": [],
-		"fieldsToReset": [],
-		"fieldLayout": {
-			"label": "1 Column",
-			"value": "1column"
-		},
-		"fields": [],
-		"optionCallback": "getPosition",
-		"optionsCallbackUrl": "designationUrl",
-		"options": []
-	}],
-	"allowedUsers": [],
-	"sectionLayout": "2column"
-}]
+[
+  {
+    "sectionName": "filter",
+    "sectionTitle": "filter",
+    "layout": {
+      "label": "2Column",
+      "value": "2column"
+    },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "employee",
+        "type": "select",
+        "label": "",
+        "id": "",
+        "placeholder": "Select Employee",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getEmployeeName",
+        "optionsCallbackUrl": "employeeUrl",
+        "options": []
+      },
+      {
+        "name": "position",
+        "type": "select",
+        "label": "",
+        "id": "",
+        "placeholder": "Select Position",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getPosition",
+        "optionsCallbackUrl": "designationUrl",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "2column"
+  }
+]

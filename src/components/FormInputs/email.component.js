@@ -2,15 +2,8 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 
 export default function EmailComponent(props) {
-  const {
-    label,
-    value,
-    onChangeEmail,
-    name,
-    placeholder,
-    type,
-    className,
-  } = props;
+  const { label, value, onChangeEmail, name, placeholder, type, className } =
+    props;
 
   return (
     <>

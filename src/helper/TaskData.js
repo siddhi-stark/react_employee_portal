@@ -10,8 +10,7 @@ const taskdata = [
   },
   {
     id: 4,
-    date:
-      'Product Single/Shop Landing - please dont  redirect user to show cart',
+    date: 'Product Single/Shop Landing - please dont  redirect user to show cart',
     startime: 'Stark Product',
     endtime: 'Open',
     total: '2 hrs 35 minutes',
@@ -27,8 +26,7 @@ const taskdata = [
   },
   {
     id: 4,
-    date:
-      'Product Single/Shop Landing - please dont  redirect user to show cart',
+    date: 'Product Single/Shop Landing - please dont  redirect user to show cart',
     startime: 'Stark Prodcut',
     endtime: 'Open',
     total: '2 hrs 35 minutes',

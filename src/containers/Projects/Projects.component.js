@@ -188,7 +188,7 @@ function Projects() {
       render: ({ twID }) => {
         return (
           <>
-            <a href={`${constants.project}${twID}`} target="_blank" >
+            <a href={`${constants.project}${twID}`} target="_blank">
               <span>
                 <Image src="/images/redirect.png" />
               </span>
@@ -213,7 +213,7 @@ function Projects() {
       setProjectId(null);
       setRtSupport('');
       getTableData(pagination.current_page); // eslint-disable-line
-    }else{
+    } else {
       disableButton = false;
     }
   };
@@ -275,16 +275,15 @@ function Projects() {
   useEffect(() => {
     setTitle('Projects');
     const uRole = customFunctions.getLocalStorage('group');
-      setUserRole(Number(uRole));
+    setUserRole(Number(uRole));
   }, []);
 
   useEffect(() => {
-    
     getTableData(1);
   }, [cntClearFilter]);
 
   const onClear = () => {
-    searchFormSubmit= false;
+    searchFormSubmit = false;
     setFilterErr('');
     setSearchKeyword('');
     setCntClearFilter(cntClearFilter + 1);
@@ -302,7 +301,7 @@ function Projects() {
       isValid = false;
     }
     if (isValid) {
-      searchFormSubmit=true;
+      searchFormSubmit = true;
       setFilterErr('');
       getTableData(1);
     }
@@ -312,26 +311,24 @@ function Projects() {
     <>
       <Helmet title={title} />
       <UserRestrictions permittedUsers={[2]} roleId={userRole}>
-      {(showUpdate) &&  (
-        <SweetAlert
-          title="Are you sure you want to change RT support?"
-          error
-          showCancel
-          confirmBtnBsStyle="btn btn-primary btn-lg"
-          cancelBtnBsStyle="btn btn-lg btn-secondary"
-          onConfirm={() => {
-            if(disableButton) return;
-            disableButton = true;
-            onRtSupport(projectId, rtSupport);
-            // disableButton = false;
-            
-          }}
-          onCancel={() => {
-            setShowUpdate(false);
-            
-          }}
-        />
-      )}
+        {showUpdate && (
+          <SweetAlert
+            title="Are you sure you want to change RT support?"
+            error
+            showCancel
+            confirmBtnBsStyle="btn btn-primary btn-lg"
+            cancelBtnBsStyle="btn btn-lg btn-secondary"
+            onConfirm={() => {
+              if (disableButton) return;
+              disableButton = true;
+              onRtSupport(projectId, rtSupport);
+              // disableButton = false;
+            }}
+            onCancel={() => {
+              setShowUpdate(false);
+            }}
+          />
+        )}
       </UserRestrictions>
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Projects</h2>
@@ -403,14 +400,14 @@ function Projects() {
             </Card>
           </Accordion>
           <Card>
-          <Card.Header>
-          <div className="d-flex align-items-center justify-content-between">
+            <Card.Header>
+              <div className="d-flex align-items-center justify-content-between">
                 <h4 className="text-primary mt-2 mb-2">Projects</h4>
               </div>
-          </Card.Header>
-          <Card.Body>
-            <Row>
-            <Table
+            </Card.Header>
+            <Card.Body>
+              <Row>
+                <Table
                   columns={columns}
                   rows={rows}
                   showPagination
@@ -427,8 +424,8 @@ function Projects() {
                     <p className="text-center mb-0">No record found</p>
                   )}
                 />
-            </Row>
-          </Card.Body>
+              </Row>
+            </Card.Body>
           </Card>
         </div>
       </section>
