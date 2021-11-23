@@ -523,13 +523,13 @@ function AddLeave(props) {
                   </span>
                 )}
                 <br />
-                {!leavesCount.confirmedMessage && (
+                {(!leavesCount.confirmedMessage && !leavesCount.noticeMessage) && (
                   <span className="text-danger">
                     {' '}
                     Leaves are unpaid as you are under probation period.{' '}
                   </span>
                 )}
-                {leavesCount.noticeMessage && (
+                {!leavesCount.confirmedMessage && leavesCount.noticeMessage && (
                   <span className="text-danger">
                     {' '}
                     If any leave taken it will extend the notice period as

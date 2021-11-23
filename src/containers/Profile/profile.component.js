@@ -51,6 +51,7 @@ function Profile() {
   const [rowEmploymentData, setRowEmploymentData] = useState([]);
   const [rowOtherData, setRowOtherData] = useState([]);
   const [reliveDate, setReliveDate] = useState('');
+  const [confirmationDate, setConfirmationDate] = useState('');
   const [auth, setAuth] = useState('');
   const [authShow, setAuthShow] = useState(false);
 
@@ -199,6 +200,11 @@ function Profile() {
       setReliveDate(
         data.data.relieving_date
           ? customFunctions.getDMYDate(data.data.relieving_date)
+          : ''
+      );  
+      setConfirmationDate(
+        data.data.confirmation_date
+          ? customFunctions.getDMYDate(data.data.confirmation_date)
           : ''
       );
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
@@ -563,7 +569,16 @@ function Profile() {
                     </Col>
                     <Col sm={6}>
                       <TextInput
-                        label="Reliving Date"
+                        label="Confirmation Date"
+                        containerClass="form-group"
+                        name="confirmationDate"
+                        value={confirmationDate}
+                        disabled
+                      />
+                    </Col>
+                    <Col sm={6}>
+                      <TextInput
+                        label="Relieving Date"
                         containerClass="form-group"
                         name="reliveDate"
                         value={reliveDate}
