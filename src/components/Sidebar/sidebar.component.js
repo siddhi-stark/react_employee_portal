@@ -61,9 +61,7 @@ function Sidebar() {
       const bdayData = data.data;
       setBirthdayData(data.data);
       if (bdayData.length > 0) {
-        setIsBirthDayPresent(
-          bdayData.filter((e) => Number(e.dob) >= day).length > 0 ? 'true' : 'false' 
-        ); // eslint-disable-line
+        setIsBirthDayPresent(bdayData.filter((e) => Number(e.dob) >= day).length > 0 ? true : false); // eslint-disable-line
       }
       customFunctions.setLocalStorage('Employee', JSON.stringify(data.data));
     }
@@ -190,7 +188,7 @@ function Sidebar() {
                             <UserRestrictions
                               permittedUsers={submenuItem.roleaccess}
                             >
-                              <li onClick={() => {onSubActiveClass();}} // eslint-disable-line
+                              <li onClick={() => { onSubActiveClass(); }} // eslint-disable-line
                                 className={`nav-sub-item ${
                                   submenuItem.path === window.location.pathname
                                     ? 'show active'

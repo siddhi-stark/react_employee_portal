@@ -336,7 +336,9 @@ function Team(props) {
                     <strong>Task Status</strong>
                   </Card.Header>
                   <Card.Body>
+                  {Object.keys(graphData).length && (
                     <Pie data={graphData} />
+                  )}
                   </Card.Body>
                 </Card>
               </Col>
@@ -346,6 +348,7 @@ function Team(props) {
                     <strong>Hours Analysis</strong>
                   </Card.Header>
                   <Card.Body>
+                  {Object.keys(barGraphData).length && (
                     <Bar
                       data={barGraphData}
                       options={{
@@ -360,6 +363,7 @@ function Team(props) {
                         },
                       }}
                     />
+                  )}
                   </Card.Body>
                 </Card>
               </Col>
@@ -369,6 +373,7 @@ function Team(props) {
                     <strong>Team's Performance</strong>
                   </Card.Header>
                   <Card.Body>
+                  {Object.keys(employeeGraphData).length && (
                     <Bar
                       data={employeeGraphData}
                       options={{
@@ -383,6 +388,7 @@ function Team(props) {
                         },
                       }}
                     />
+                  )}
                   </Card.Body>
                 </Card>
               </Col>

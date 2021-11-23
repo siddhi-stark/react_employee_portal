@@ -4471,6 +4471,10 @@
      }
  }
  
+ tr.trow.policy-approved .form-check {
+     display: none;
+ }
+ 
  @media (min-width: 1920px) {
      .birthday-wish-section-row .col {
          min-width: 33.33%;

@@ -70,6 +70,8 @@ function AddBroadcast(props) {
       title: itemName,
       description: stringDescription,
       is_email_send: checked,
+      self_check: true,
+      self_cc: true,
       display_date: customFunctions.getDate(broadcastDate),
       id: broadcastId ? Number(broadcastId) : '',
     };

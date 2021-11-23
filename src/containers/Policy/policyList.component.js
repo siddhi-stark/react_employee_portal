@@ -41,7 +41,7 @@ function PolicyList() {
   const [draftPolicyModal, setDraftPolicyModal] = useState(false);
 
   const handleActionCallback = ({ id }) => {
-    const actMenu = activeMenu === 'Draft' && 'Draft';
+    const actMenu = activeMenu === 'Unpublish' && 'Unpublish';
     return (
       <span className="d-flex">
         {(Number(userRole) === 1 ||
@@ -75,21 +75,21 @@ function PolicyList() {
     );
   };
 
-  const handleApprovalAction = ({ id, is_admin_approved }) => {
+  const handleApprovalAction = ({ id, is_admin_approved_name }) => {
     return (
       <span className="d-flex">
         {Number(userRole) === 1 ? (
           <Link
             onClick={() => {
-              setApprovalStatus(is_admin_approved);
+              setApprovalStatus(is_admin_approved_name);
               setApprovalId(id);
               setModalShow(true);
             }}
           >
-            {is_admin_approved === true ? 'Approve' : 'Pending'}
+            {is_admin_approved_name}
           </Link>
         ) : (
-          <span>{is_admin_approved === true ? 'Approve' : 'Pending'}</span>
+          <span>{is_admin_approved_name}</span>
         )}
       </span>
     );
@@ -102,15 +102,16 @@ function PolicyList() {
           Number(userRole) === 5 ||
           Number(userRole) === 6) &&
         is_admin_approved === true ? (
-          <Link
+          <a
+            href='#'
             onClick={() => {
               changePublishStatus(id, is_publish);
             }}
           >
-            {is_publish === true ? 'Publish' : 'Draft'}
-          </Link>
+            {is_publish === true ? 'Publish' : 'Unpublish'}
+          </a>
         ) : (
-          <span>{is_publish === true ? 'Publish' : 'Draft'}</span>
+          <span>{is_publish === true ? 'Publish' : 'Unpublish'}</span>
         )}
       </span>
     );
@@ -132,25 +133,27 @@ function PolicyList() {
             {Number(userRole) !== 1 &&
               Number(userRole) !== 5 &&
               Number(userRole) !== 6 && (
-                <Link
+                <a
+                  href='#'
                   onClick={() => {
                     getPolicyById(id);
                     setPolicyModal(true);
                   }}
                 >
                   {title}
-                </Link>
+                </a>
               )}
 
-            {[1, 5, 6].includes(Number(userRole)) && activeMenu === 'Draft' && (
-              <Link
+            {[1, 5, 6].includes(Number(userRole)) && activeMenu === 'Unpublish' && (
+              <a
+                href='#'
                 onClick={() => {
                   getDraftPolicyById(id);
                   setDraftPolicyModal(true);
                 }}
               >
                 {title}
-              </Link>
+              </a>
             )}
 
             {[1, 5, 6].includes(Number(userRole)) &&
@@ -244,7 +247,7 @@ function PolicyList() {
     if (activeMenu === 'Parent') {
       params.is_parent = true;
     }
-    if (activeMenu === 'Draft') {
+    if (activeMenu === 'Unpublish') {
       params.is_draft = true;
     }
     const url = customFunctions.generateUrl(endPoint, params);
@@ -255,7 +258,12 @@ function PolicyList() {
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
-      setRowData((data && data.data) || []);
+      const newData =[...data.data];
+      data && data.data && data.data.map((dt,i)=>{
+        newData[i].rowClass = dt.is_admin_approved_name !== 'approve' ? 'policy-approved':'';
+        return dt;
+      });
+      setRowData((newData) || []);
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -376,8 +384,12 @@ function PolicyList() {
   };
 
   const onCancel = () => {
-    setPolicyModal(false);
-    setDraftPolicyModal(false);
+    if(policyModal === true){
+      setPolicyModal(false);
+    } 
+    if(draftPolicyModal === true){
+      setDraftPolicyModal(false);
+    }
     setTimeout(() => {
       getRowData(1);
     }, 1000);
@@ -386,7 +398,7 @@ function PolicyList() {
   useEffect(() => {
     const id = customFunctions.getLocalStorage('group');
     setUserRole(id);
-    if (activeMenu === 'Draft') {
+    if (activeMenu === 'Unpublish') {
       getRowData(1);
     } else {
       getRowData(1);
@@ -553,10 +565,10 @@ function PolicyList() {
               <a
                 href="#"
                 className={`nav-link mr-5 ${
-                  activeMenu === 'Draft' ? 'active' : ''
+                  activeMenu === 'Unpublish' ? 'active' : ''
                 }`}
                 onClick={() => {
-                  setActiveMenu('Draft');
+                  setActiveMenu('Unpublish');
                 }}
               >
                 Draft
@@ -603,13 +615,12 @@ function PolicyList() {
                 getRowData(pageNo);
               },
             }}
-            showCheckbox={[4, 3, 2].includes(Number(userRole)) ? false : true} // eslint-disable-line
+            showCheckbox={([4, 3, 2].includes(Number(userRole))) ? false : true} // eslint-disable-line
             tableClass="table-striped"
             emptyRender={() => {
               return 'No record found.';
             }}
           />
-
           {modalShow && (
             <ApprovalStatus
               show={modalShow}
