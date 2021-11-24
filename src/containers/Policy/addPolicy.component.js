@@ -262,7 +262,7 @@ function AddPolicy(props) {
                 <span className="text-danger">{descriptionErr}</span>
                 <br />
 
-                <input
+               {/*  <input
                   onChange={(e) => {
                     setChecked(e.target.checked);
                   }}
@@ -272,7 +272,8 @@ function AddPolicy(props) {
                   className="form-submit-buttons"
                   value={checked}
                 />
-                <span className="ms-2">Do you want to send Email ?</span>
+                <span className="ms-2">Do you want to send Email ?</span> */}
+                
                 <div className="mt-3">
                   <Button variant="primary" type="submit">
                     {policyId ? 'Update' : 'Submit'}

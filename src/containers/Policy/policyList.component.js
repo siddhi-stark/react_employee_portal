@@ -62,14 +62,15 @@ function PolicyList() {
           </Link>
         )}
         {Number(userRole) === 1 && (
-          <Link
+          <a
+            href='#'
             className="ml-2"
             onClick={() => {
               deletePolicy(id);
             }}
           >
             <Image src="/images/delete.png" className="" alt="Delete Policy" />
-          </Link>
+          </a>
         )}
       </span>
     );
@@ -79,7 +80,8 @@ function PolicyList() {
     return (
       <span className="d-flex">
         {Number(userRole) === 1 ? (
-          <Link
+          <a
+            href='#'
             onClick={() => {
               setApprovalStatus(is_admin_approved_name);
               setApprovalId(id);
@@ -87,7 +89,7 @@ function PolicyList() {
             }}
           >
             {is_admin_approved_name}
-          </Link>
+          </a>
         ) : (
           <span>{is_admin_approved_name}</span>
         )}
@@ -228,7 +230,7 @@ function PolicyList() {
     // },
     {
       id: 'action',
-      label: '',
+      label:  Number(userRole) === 1 ? 'Action' : '',
       render: handleActionCallback,
     },
   ];
