@@ -169,6 +169,10 @@ export default class Api extends Component {
 
   static employeeActivityUrl = `${Api.baseUrl}employee-activity/`;
 
+  static policyCategoryUrl = `${Api.baseUrl}policy-categories/`;
+
+  static teamMemberUrl = `${Api.baseUrl}team-member/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

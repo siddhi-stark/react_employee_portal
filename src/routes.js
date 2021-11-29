@@ -71,6 +71,8 @@ import Policy from './containers/Policy/policy.component';
 import AddPolicy from './containers/Policy/addPolicy.component';
 import Workload from './containers/Employee/workload.component';
 import EmployeeActivity from './containers/Employee/employeeActivity.component';
+import PolicyCategory from './containers/Policy/category.component';
+import AddCategory from './containers/Policy/addCategory.component';
 
 function Routes() {
   return (
@@ -202,6 +204,9 @@ function Routes() {
       <Route path="/edit-policy/:policyId" exact component={AddPolicy} />
       <Route path="/workload" exact component={Workload} />
       <Route path="/employee-activity" exact component={EmployeeActivity} />
+      <Route path="/policy-category" exact component={PolicyCategory} />
+      <Route path="/add-policy-category" exact component={AddCategory} />
+      <Route path="/edit-policy-category/:categoryId" exact component={AddCategory} />
       <Route component={NotFound} />
     </Switch>
   );

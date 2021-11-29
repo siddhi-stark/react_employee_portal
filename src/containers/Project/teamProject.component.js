@@ -13,6 +13,7 @@ import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 import ProjectRightContainer from '../../components/RightContainer/projectRightContainer.component';
+import EmployeeBugList from './employeeBugList.component';
 
 function TeamProject(props) {
   const teamid = props;
@@ -570,6 +571,7 @@ function TeamProject(props) {
                     </Card.Body>
                   </Card>
                 </Col>
+                  <EmployeeBugList projectId={teamProjectId} />
                 <Card className="p-0">
                   <Card.Body>
                     <div className="d-flex align-items-center justify-content-between">

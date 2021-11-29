@@ -127,6 +127,10 @@ function PolicyList() {
       isDisplay: false,
     },
     {
+      id: Number(userRole) === 4 || Number(userRole) === 3 ? '' : 'policy_categories_name',
+      label: 'Category',
+    },
+    {
       id: 'title',
       label: 'Title',
       render: ({ id, title }) => {
@@ -539,14 +543,24 @@ function PolicyList() {
               {(Number(userRole) === 1 ||
                 Number(userRole) === 5 ||
                 Number(userRole) === 6) && (
+                <>
+                <Link
+                  to={{
+                    pathname: '/policy-category',
+                  }}
+                  className="btn-link"
+                >
+                  Policy Category
+                </Link>
                 <Link
                   to={{
                     pathname: '/add-policy',
                   }}
-                  className="btn-link"
+                  className="btn-link ms-3"
                 >
                   Add Policy
                 </Link>
+                </>
               )}
             </div>
           </div>

@@ -6,7 +6,7 @@ import swal from 'sweetalert';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, ContentState, convertFromHTML } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
-import { Helmet, TextInput } from '../../components/FormInputs';
+import { Helmet, TextInput, DropdownInput } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -34,6 +34,8 @@ function AddPolicy(props) {
   const [parentDescription, setParentDescription] = useState('');
   const [descriptionErr, setDescriptionErr] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [categoryOption, setCategoryOption] = useState(null);
+  const [categoryList, setCategoryList] = useState([]);
 
   const getData = async (id) => {
     const { data, message } = await AuthApi.getDataFromServer(
@@ -49,6 +51,7 @@ function AddPolicy(props) {
 
       setItemName(data.data.title);
       setImageUrl(data.data.image);
+      setCategoryOption({label:data.data.policy_categories_name,value:data.data.policy_categories_id});
       setParentDescription(decString);
       const dp = EditorState.createWithContent(
         ContentState.createFromBlockArray(
@@ -66,6 +69,7 @@ function AddPolicy(props) {
       setPolicyId(polId);
       getData(polId);
     }
+    getCategoryData();
   }, []);
 
   const handleImageFileUpload = (e) => {
@@ -97,6 +101,7 @@ function AddPolicy(props) {
       title: itemName,
       description: stringDescription,
       is_email_send: checked,
+      policy_categories: categoryOption ? Number(categoryOption.value) :'',
       self_check: true,
       self_cc: true,
       id: policyId ? Number(policyId) : '',
@@ -136,6 +141,35 @@ function AddPolicy(props) {
   const onCancel = () => {
     validator.hideMessages();
     history.push('/policy');
+  };
+    // Declare methods
+  const getCategoryData = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.policyCategoryUrl}?type=all`;
+    const url = customFunctions.generateUrl(endPoint);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
+      setCategoryList((data && data.data) || []);
+    } else {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
+  const getCategoryTypes = () => {
+    if (!categoryList) return [];
+    const categoryTypes = [];
+    categoryList.map((cat) => {
+      return categoryTypes.push({
+        label: cat.name,
+        value: cat.id,
+      });
+    });
+    return categoryTypes;
   };
 
   const onEditorStateChange = (editorState) => {
@@ -181,6 +215,24 @@ function AddPolicy(props) {
               <hr />
               <Form autoComplete="off" onSubmit={(e) => onPolicySubmit(e)}>
                 <Row>
+                  <Col>
+                    <DropdownInput
+                      label="Policy Category"
+                      asterisk="*"
+                      name="categoryOption"
+                      options={getCategoryTypes()}
+                      defaultValue={categoryOption}
+                      onSelectHandler={(select) => {                 
+                        setCategoryOption(select);
+                      }}
+                      placeholder="Select category"
+                      errorMessage={validator.message(
+                        'policy category',
+                        categoryOption,
+                        'required'
+                      )}
+                    />
+                  </Col>
                   <Col>
                     <TextInput
                       onInputChange={(e) => setItemName(e.target.value)}

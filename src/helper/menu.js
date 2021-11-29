@@ -167,20 +167,6 @@ const menu = [
     roleaccess: [1, 2, 3, 6, 5],
   },
   {
-    title: 'Policy',
-    path: '/policy',
-    icon: 'policy.svg',
-    submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6],
-  },
-  {
-    title: 'Broadcast',
-    path: '/broadcast',
-    icon: 'broadcast.svg',
-    submenu: [],
-    roleaccess: [1, 5, 6],
-  },
-  {
     title: 'Event',
     path: '/event',
     icon: 'timesheet.svg',
@@ -242,6 +228,20 @@ const menu = [
     icon: 'report.svg',
     submenu: [],
     roleaccess: [1],
+  },
+  {
+    title: 'Policy',
+    path: '/policy',
+    icon: 'policy.svg',
+    submenu: [],
+    roleaccess: [1, 2, 3, 4, 5, 6],
+  },
+  {
+    title: 'Broadcast',
+    path: '/broadcast',
+    icon: 'broadcast.svg',
+    submenu: [],
+    roleaccess: [1, 5, 6],
   },
   // {
   //   title: 'Projects',
