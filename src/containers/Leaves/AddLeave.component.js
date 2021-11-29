@@ -45,6 +45,9 @@ function AddLeave(props) {
   const [name, setName] = useState('');
   const [id, setId] = useState(null);
   const [fromDateValue, setFromDateValue] = useState('');
+  const [isProbation, setIsProbation] = useState(false);
+  const [isNotice, setIsNotice] = useState(false);
+  const [isSandwich, setIsSandwich] = useState(false);
   const [flag, setFlag] = useState(false);
   const [isShowLoader, setShowLoader] = useState(false);
   const initialState = {
@@ -292,6 +295,10 @@ function AddLeave(props) {
       setReason(data.data.declined_reason);
       setName(data.data.user_name);
       setId(data.data.user_id);
+      setIsNotice(data.data.is_notice_period);
+      setIsProbation(data.data.is_probation);
+      setIsSandwich(data.data.is_sandwich);
+
     }
 
     updateDefaultValues({
@@ -523,13 +530,14 @@ function AddLeave(props) {
                   </span>
                 )}
                 <br />
-                {(!leavesCount.confirmedMessage && !leavesCount.noticeMessage) && (
+                {((!leavesCount.confirmedMessage && !leavesCount.noticeMessage && !viewLeaveOptions) || (isProbation && !isNotice))&& (
                   <span className="text-danger">
                     {' '}
                     Leaves are unpaid as you are under probation period.{' '}
                   </span>
                 )}
-                {!leavesCount.confirmedMessage && leavesCount.noticeMessage && (
+
+                {((!leavesCount.confirmedMessage && leavesCount.noticeMessage && !viewLeaveOptions) || (isNotice && !isProbation) || (isNotice && isProbation))&& (
                   <span className="text-danger">
                     {' '}
                     If any leave taken it will extend the notice period as
@@ -620,7 +628,7 @@ function AddLeave(props) {
                   </>
                 )}
 
-                {sandwichMsg && <p className="text-danger">{sandwichMsg} </p>}
+                {(sandwichMsg || isSandwich) && <p className="text-danger">{sandwichMsg} </p>}
                 {totalCount > 0 && flag && (
                   <p className="text-danger">
                     Note: The highlighted task shows the high priority and may
