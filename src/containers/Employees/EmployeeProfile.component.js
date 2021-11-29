@@ -414,7 +414,7 @@ function EmployeeProfile(props) {
                         !employeeDetails.relieving_date && (
                           <button
                             onClick={() => {
-                              history.push('/confirmation');
+                              history.push('/confirmation', { employeeID: Number(employeeID) });
                             }}
                             type="button"
                             className="btn btn-primary"

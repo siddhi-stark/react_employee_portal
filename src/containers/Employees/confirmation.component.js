@@ -12,7 +12,9 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 
-function Confirmation() {
+function Confirmation(props) {
+  const propsData = props;
+  const employeeID = propsData.location.state ? propsData.location.state.employeeID:'';
   const history = useHistory();
   const name = customFunctions.getLocalStorage('employeeName');
   const id = localStorage.getItem('candidateId');
@@ -147,6 +149,12 @@ function Confirmation() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
+       <Button
+        className="float-end mt-2 mb-2 mr-3"
+        onClick={() => history.push(`/employee-profile/${employeeID}`)}
+      >
+        Back
+      </Button>
         <h2 className="main-content-title tx-24 mg-b-5">Confirmation</h2>
         <Breadcrumb items={items} />
       </div>
@@ -164,20 +172,13 @@ function Confirmation() {
                 <Col>
                   <Datepicker
                     label="Confirmation Date"
-                    asterisk="*"
                     className="form-control"
                     selected={confirmationDate}
                     placeholder="dd/mm/yyyy"
                     dateFormat="dd/MM/yyyy"
-                    minDate={new Date()}
                     onChange={(e) => {
                       setConfirmationDate(e);
                     }}
-                    errorMessage={validator.message(
-                      'Confirm Date',
-                      confirmationDate,
-                      'required'
-                    )}
                   />
                 </Col>
                 <Col>
