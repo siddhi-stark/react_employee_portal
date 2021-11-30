@@ -67,12 +67,14 @@ function EmployeeBugList(props) {
       const newData = [...data.data.team_member_bug_count];
       newData.map((item) => {
         const newItem = item;
-        const qualityCount =
-          (100 * (item.bug_count + item.employee_reopen_count * 2)) /
-          (item.employee_tasks - item.bug_count);
+        const qualityCount = (100 * (item.bug_count + item.employee_reopen_count * 2)) / (item.employee_tasks - item.bug_count);
+        const qualityCnt = `${qualityCount.toFixed(2)}`;
+        const totalQualityCnt = 100 - Number(qualityCnt);
         newItem.tasks = item.employee_tasks - item.bug_count;
-        newItem.quality = `${qualityCount.toFixed(2)} %`;
-        newItem.rowClass = qualityCount < 70 ? 'alert-danger' : '';
+        newItem.quality = `${totalQualityCnt} %`;
+        newItem.rowClass = totalQualityCnt < 0 && 'alert-danger';
+        newItem.rowClass = (totalQualityCnt > 0 && totalQualityCnt < 70) && 'alert-warning';
+        newItem.rowClass = totalQualityCnt > 70 && 'alert-success';
         return newItem;
       });
 
