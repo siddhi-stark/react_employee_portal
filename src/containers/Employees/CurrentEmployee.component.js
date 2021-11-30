@@ -795,7 +795,7 @@ function CurrentEmployee() {
                           {' '}
                           {emp.confirmation_date &&
                             !emp.on_notice_period &&
-                            `confirmation Date-`}
+                            `Confirmation Date-`}
                           {emp.confirmation_date &&
                             !emp.on_notice_period &&
                             customFunctions.getDMYDate(emp.confirmation_date)}
