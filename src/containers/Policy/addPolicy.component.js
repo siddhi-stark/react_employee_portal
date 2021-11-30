@@ -215,7 +215,7 @@ function AddPolicy(props) {
               <hr />
               <Form autoComplete="off" onSubmit={(e) => onPolicySubmit(e)}>
                 <Row>
-                  <Col>
+                  <Col className="select-category-option">
                     <DropdownInput
                       label="Policy Category"
                       asterisk="*"

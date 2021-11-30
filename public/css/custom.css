@@ -16205,6 +16205,11 @@ tr.trow.policy-approved .form-check {
   display: none;
 }
 
+.card .card-body .select-category-option {
+  position: relative;
+  z-index: 11;
+}
+
 @media (min-width: 1920px) {
   .birthday-wish-section-row .col {
     min-width: 33.33%;

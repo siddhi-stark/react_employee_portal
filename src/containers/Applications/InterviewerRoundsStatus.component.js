@@ -13,10 +13,10 @@ import customFunctions from '../../helper/customFunctions';
 function InterviewerRoundsStatus(props) {
   const items = [
     { to: '/', label: 'Home' },
-    { to: '/intervie', label: 'Interviewer Rounds' },
+    { to: '/intervie', label: 'Interview Rounds' },
   ];
 
-  const title = 'Interviewer Rounds';
+  const title = 'Interview Rounds';
   const initialState = {
     interviewDate: '',
     interviewTime: '',
@@ -124,7 +124,7 @@ function InterviewerRoundsStatus(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Interviewer Rounds</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Interview Rounds</h2>
         <Breadcrumb items={items} />
       </div>
 
