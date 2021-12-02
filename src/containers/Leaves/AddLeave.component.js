@@ -60,6 +60,7 @@ function AddLeave(props) {
   };
   const [leavesCount, setLeavesCount] = useState(initialState);
   const [sandwichMsg, setSandwichMsg] = useState('');
+  const [leavesMsg, setLeavesMsg] = useState(true);
 
   const columns = [
     {
@@ -288,6 +289,8 @@ function AddLeave(props) {
       return;
     }
     if (data && data.data) {
+      setLeavesMsg(false);
+
       setShowLoader(false);
       setStartDate(data.data.leave_from_date);
       setEndDate(data.data.leave_to_date);
@@ -334,7 +337,7 @@ function AddLeave(props) {
 
   useEffect(() => {
     if (leaveId) getData();
-  }, [status]);
+  }, [status, leavesMsg]);
 
   const getLeaveType = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.undefined);
@@ -422,7 +425,7 @@ function AddLeave(props) {
   }, [id]);
 
   const getLeavesCount = async () => {
-    const empUserId = employeeId ? Number(employeeId) : Number(id);
+    const empUserId = id ? Number(id) : Number(employeeId);
     const { data, message } = await AuthApi.getDataFromServer(
       `${Api.leavesCountUrl}?user=${empUserId}`
     );
@@ -447,8 +450,10 @@ function AddLeave(props) {
           data.data[0].on_notice_period && data.data[0].on_notice_period,
         confirmedMessage: data.data[0].confirmed && data.data[0].confirmed,
       });
-      setIsNotice(data.data[0].on_notice_period && data.data[0].on_notice_period);
-      setIsProbation(!data.data[0].confirmed && data.data[0].confirmed);
+      if(leavesMsg){
+        setIsNotice(data.data[0].on_notice_period && data.data[0].on_notice_period);
+        setIsProbation(!data.data[0].confirmed && data.data[0].confirmed);
+      }
     }
   };
 
