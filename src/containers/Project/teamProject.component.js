@@ -437,7 +437,7 @@ function TeamProject(props) {
           },
           {
             label: 'Spent Hours',
-            backgroundColor: '#f4c222 ',
+            backgroundColor: '#f4c222',
             borderWidth: 1,
             data: [
               data && data.data && data.data.total && data.data.total.spends,

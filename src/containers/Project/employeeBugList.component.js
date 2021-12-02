@@ -77,16 +77,21 @@ function EmployeeBugList(props) {
         newItem.rowClass = totalQualityCnt > 70 && 'alert-success';
         return newItem;
       });
-
+      
       const graph = {
-        labels: ['Total Count', 'Reopen'],
+        labels: ['Total Count', 'Reopen', 'Resolve', 'Confirm', 'Close', 'Inprogress','Invalid'],
         datasets: [
           {
             data: [
               data && data.data && data.data.total_count,
               data && data.data && data.data.reopen_count,
+              data && data.data && data.data.resolve_count,
+              data && data.data && data.data.confirm_count,
+              data && data.data && data.data.close_count,
+              data && data.data && data.data.in_progress_count,
+              data && data.data && data.data.invalid_count,
             ],
-            backgroundColor: ['#8cc540', '#e3e3e3'],
+            backgroundColor: ['#449c2c', '#b82b21','#21b8a1', '#f4c222','#e3e3e3', '#6b4fc9', '#187070'],
           },
         ],
       };
