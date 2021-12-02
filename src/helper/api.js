@@ -171,6 +171,8 @@ export default class Api extends Component {
 
   static teamMemberUrl = `${Api.baseUrl}team-member/`;
 
+  static teamworkAuthUrl = `${Api.baseUrl}teamwork-auth/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
