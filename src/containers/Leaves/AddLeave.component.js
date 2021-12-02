@@ -447,6 +447,8 @@ function AddLeave(props) {
           data.data[0].on_notice_period && data.data[0].on_notice_period,
         confirmedMessage: data.data[0].confirmed && data.data[0].confirmed,
       });
+      setIsNotice(data.data[0].on_notice_period && data.data[0].on_notice_period);
+      setIsProbation(!data.data[0].confirmed && data.data[0].confirmed);
     }
   };
 

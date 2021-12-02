@@ -593,6 +593,7 @@ function PolicyList() {
           </div>
           <CustomTable
             columns={columns}
+            tableContainerClass="policy-list-table"
             rows={rowData}
             bulkActionsLabel="Apply"
             bulkActions={

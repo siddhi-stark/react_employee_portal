@@ -1,3 +1,5 @@
 .stark-form-header , .stark-form-builder hr{
 display: none;
 }
+
+.policy-list-table #chkAll{ display: none }

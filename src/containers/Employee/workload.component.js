@@ -53,6 +53,10 @@ function Workload() {
       label: 'Estimation',
     },
     {
+      id: 'spend',
+      label: 'Spend Hrs',
+    },
+    {
       id: 'opened_task',
       label: 'Open Task',
     },
@@ -63,11 +67,7 @@ function Workload() {
     {
       id: 'total_project',
       label: 'Total Project',
-    },
-    {
-      id: 'spend',
-      label: 'Spend Hrs',
-    },
+    }
   ];
 
   // Declare methods
