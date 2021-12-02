@@ -3,8 +3,7 @@ import { Component } from 'react';
 export default class Api extends Component {
   static baseUrl = Api.getBaseUrl();
 
-  static s3UrlnoProfile =
-    'https://empportal-serverless.s3.ap-south-1.amazonaws.com/noProfile.jpeg';
+  static s3UrlnoProfile = 'https://empportal-serverless.s3.ap-south-1.amazonaws.com/noProfile.jpeg';
 
   static s3Url = 'https://empportal-serverless.s3.amazonaws.com/media/';
 
@@ -146,8 +145,7 @@ export default class Api extends Component {
 
   static projectListUrl = `${Api.baseUrl}project-dropdown-list/`;
 
-  static fetchTeamworkDataUrl =
-    'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
+  static fetchTeamworkDataUrl = 'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
 
   static employeeBondDetailsUrl = `${Api.baseUrl}employee-bond-details/`;
 

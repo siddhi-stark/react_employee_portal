@@ -34,8 +34,7 @@ function Profile() {
   const [modalShow, setModalShow] = useState('');
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
-  const [selectedDesignationOption, setSelectedDesignationOption] =
-    useState(null);
+  const [selectedDesignationOption, setSelectedDesignationOption] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedManager, setSelectedManager] = useState([]);
   const [selectedMentor, setSelectedMentor] = useState([]);
@@ -63,13 +62,10 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {
-        // eslint-disable-line
+      render: ({ document_url }) => { // eslint-disable-line
         return (
           <>
-            <a
-              href={document_url}
-              target="_blank" // eslint-disable-line
+            <a href={document_url} target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -87,13 +83,10 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {
-        // eslint-disable-line
+      render: ({ document_url }) => { // eslint-disable-line
         return (
           <>
-            <a
-              href={document_url}
-              target="_blank" // eslint-disable-line
+            <a href={document_url} target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -111,13 +104,10 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {
-        // eslint-disable-line
+      render: ({ document_url }) => { // eslint-disable-line
         return (
           <>
-            <a
-              href={document_url}
-              target="_blank" // eslint-disable-line
+            <a href={document_url} target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -135,13 +125,10 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => {
-        // eslint-disable-line
+      render: ({ document_url }) => { // eslint-disable-line
         return (
           <>
-            <a
-              href={document_url}
-              target="_blank" // eslint-disable-line
+            <a href={document_url} target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -197,16 +184,8 @@ function Profile() {
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
       setProfileId(data.data.profile_id);
-      setReliveDate(
-        data.data.relieving_date
-          ? customFunctions.getDMYDate(data.data.relieving_date)
-          : ''
-      );  
-      setConfirmationDate(
-        data.data.confirmation_date
-          ? customFunctions.getDMYDate(data.data.confirmation_date)
-          : ''
-      );
+      setReliveDate(data.data.relieving_date ? customFunctions.getDMYDate(data.data.relieving_date) : '');  
+      setConfirmationDate(data.data.confirmation_date ? customFunctions.getDMYDate(data.data.confirmation_date) : '');
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
       });
@@ -435,11 +414,7 @@ function Profile() {
                 >
                   {imageProfile ? (
                     <img
-                      src={
-                        `${imageProfile}`
-                          ? `${imageProfile}`
-                          : `${Api.s3UrlnoProfile}`
-                      }
+                      src={`${imageProfile}` ? `${imageProfile}` : `${Api.s3UrlnoProfile}`}
                       // src={imageProfile}
                       alt="Edit Profile"
                       style={{ height: '100%' }}
