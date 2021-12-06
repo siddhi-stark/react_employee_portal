@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
 import { Form, Button, Image } from 'react-bootstrap';
@@ -17,6 +17,7 @@ function ForgetPassword() {
   const [title, setTitle] = useState('');
   const [disableButton, setDisableButton] = useState(false);
   const [loader, setLoader] = useState(false);
+  const history = useHistory();
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -46,12 +47,19 @@ function ForgetPassword() {
 
     if (data) {
       setLoader(false);
-      swal('Email has been sent successfully.');
-      setDisableButton(false);
+      swal('Email has been sent successfully.','', 'success',{
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+        history.push('/login');
+        swal.close();
+        setDisableButton(false);
+      });
     } else {
       setLoader(false);
       swal(message);
       setDisableButton(false);
+      history.push('/login');
     }
   };
 
