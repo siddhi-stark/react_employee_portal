@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, Link } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Jumbotron, Card, Button, Row, Col, Image } from 'react-bootstrap';
 import { Helmet, ModalInput, TextInput } from '../../../components/FormInputs';
@@ -49,6 +49,7 @@ function Dashboard() {
   const [, setCount] = useState(''); // eslint-disable-line
   const [newBirthdayData, setNewBirthdayData] = useState([]);
   const [broadcastDescription, setBroadcastDescription] = useState([]);
+  const [confirmationEmployee, setConfirmationEmployee] = useState([]);
 
   const d = new Date();
   const day = d.getDate(); // eslint-disable-line
@@ -251,6 +252,7 @@ function Dashboard() {
       getInstagramPost();
       getAnniversary();
       getAppreciation();
+      getUpcomingConfirmationEmployee();
     }
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
@@ -411,6 +413,14 @@ function Dashboard() {
         setBroadcastDescription(broad.title);
         return broad;
       });
+    }
+  };
+  
+  const getUpcomingConfirmationEmployee = async () => {
+    const endPoint = `${Api.employeeUrl}?show_dashboard=true`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
+      setConfirmationEmployee(data.data);
     }
   };
 
@@ -999,6 +1009,47 @@ function Dashboard() {
                   </div>
                 </Card>
               )}
+              <UserRestrictions permittedUsers={[1, 5, 6]} roleId={userRole}>
+              {confirmationEmployee && confirmationEmployee.length > 0 && (
+                <Card classNameName="dark-blue-bg mb-4 col-md-12">
+                  <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
+                    {confirmationEmployee && confirmationEmployee.length > 0 ? (
+                      <div className="purple-bg card-header">
+                        <span>Upcoming Confirmation</span>
+                      </div>
+                    ) : (
+                      ''
+                    )}
+
+                    <div className="card-body">
+                      <div className="birth-name d-flex align-items-center mb-0">
+                        {confirmationEmployee &&
+                          confirmationEmployee.length > 0 &&
+                          confirmationEmployee.map((confEmp, i) => (
+                            <>
+                              <div className="birthday-employees">
+                                <h5 className="card-title">
+                                <Link
+                                  className="mt-2"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    history.push(`/employee-profile/${confEmp.id}`);
+                                  }}
+                                >
+                                  {i > 0 ? ', ' : ''} &nbsp;
+                                  {confEmp.full_name}
+                                </Link>
+                                </h5>
+                              </div>
+                            </>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              )}
+            </UserRestrictions>
             </div>
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-0">

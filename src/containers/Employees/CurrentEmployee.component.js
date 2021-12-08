@@ -792,28 +792,12 @@ function CurrentEmployee() {
                     <Row className="mt-3">
                       <Col className="col-md-12">
                         <p className="text-primary confirmation-date">
-                          {' '}
-                          {emp.confirmation_date &&
-                            !emp.on_notice_period &&
-                            `Confirmation Date-`}
-                          {emp.confirmation_date &&
-                            !emp.on_notice_period &&
-                            customFunctions.getDMYDate(emp.confirmation_date)}
-                          {!emp.confirmation_date &&
-                            emp.date_joined &&
-                            !emp.on_notice_period &&
-                            `Joining Date-`}
-                          {!emp.confirmation_date &&
-                            emp.date_joined &&
-                            !emp.on_notice_period &&
-                            customFunctions.getDMYDate(emp.date_joined)}
-                          {emp.on_notice_period &&
-                            emp.notice_period_date &&
-                            `Relieving Date-`}
-                          {emp.on_notice_period &&
-                            emp.notice_period_date &&
-                            customFunctions.getDMYDate(emp.relieving_date)}
-                        </p>{' '}
+                          {emp.date_joined && `Joining Date- ${customFunctions.getDMYDate(emp.date_joined)}`} {emp.date_joined && <br />}
+                          {emp.confirmation_date && `Confirmation Date- ${customFunctions.getDMYDate(emp.confirmation_date)}`} {emp.confirmation_date && <br />} 
+                          {(emp.expected_confirmation_date && !emp.confirmation_date) && `Expected Confirmation Date- ${customFunctions.getDMYDate(emp.expected_confirmation_date)}`}
+                          {(emp.expected_confirmation_date && !emp.confirmation_date) && <br />}
+                          {(emp.on_notice_period && emp.notice_period_date) && `Relieving Date- ${customFunctions.getDMYDate(emp.relieving_date)}`}{(emp.on_notice_period && emp.notice_period_date) && <br />} 
+                        </p>
                         <h6>
                           {' '}
                           {emp.bond_details_list &&

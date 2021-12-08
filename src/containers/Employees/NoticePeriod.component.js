@@ -114,16 +114,19 @@ function NoticePeriodComponent() {
                           {emp.full_name}
                           <span> {emp.designation_name} </span>
                         </p>
-                        <p className="text-primary confirmation-date">
-                          {' '}
-                          Relieving Date-{' '}
-                          {emp.relieving_date
-                            ? customFunctions.getDMYDate(emp.relieving_date)
-                            : null}
-                        </p>{' '}
-                        <br />
-                      </Col>
-                    </Row>
+                         </Col>
+                      </Row>
+                      <Row className="mt-3">
+                        <Col className="col-md-12">
+                          <p className="text-primary confirmation-date">
+                            {emp.date_joined && `Joining Date- ${customFunctions.getDMYDate(emp.date_joined)}`}{emp.date_joined && <br />}
+                            {emp.confirmation_date && `Confirmation Date- ${customFunctions.getDMYDate(emp.confirmation_date)}`}{emp.confirmation_date && <br />}
+                            {emp.relieving_date && `Expected Relieving Date- ${customFunctions.getDMYDate(emp.relieving_date)}`}{emp.relieving_date && <br />}
+                          </p>{' '}
+                         
+                          <br />
+                        </Col>
+                      </Row>
                     <Card.Footer className="card-footer-view">
                       <h4 className="text-primary">SDMS{emp.emp_code}</h4>
                       <Button

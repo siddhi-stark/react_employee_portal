@@ -118,12 +118,14 @@ function OldEmployee() {
                           {emp.full_name}
                           <span> {emp.designation_name} </span>
                         </p>
+                          </Col>
+                      </Row>
+                      <Row className="mt-3">
+                        <Col className="col-md-12">
                         <p className="text-primary confirmation-date">
-                          {' '}
-                          Relieved Date-{' '}
-                          {emp.relieving_date
-                            ? customFunctions.getDMYDate(emp.relieving_date)
-                            : null}
+                           {emp.date_joined && `Joining Date- ${customFunctions.getDMYDate(emp.date_joined)}`}{emp.date_joined && <br />}
+                            {emp.confirmation_date && `Confirmation Date- ${customFunctions.getDMYDate(emp.confirmation_date)}`}{emp.confirmation_date && <br />}
+                            {emp.relieving_date && `Relieving Date- ${customFunctions.getDMYDate(emp.relieving_date)}`}{emp.relieving_date && <br />}
                         </p>{' '}
                         <br />
                       </Col>

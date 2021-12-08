@@ -399,12 +399,15 @@ function EmployeeProfile(props) {
                         </h6>
                       ) : (
                         <h6>
-                          Confirmation Date -{' '}
+                          {employeeDetails.confirmation_date
+                            ? `Confirmation Date -` : `Expected Confirmation Date-`}
                           {employeeDetails.confirmation_date
                             ? customFunctions.getDMYDate(
                                 employeeDetails.confirmation_date
                               )
-                            : ''}
+                            : employeeDetails.expected_confirmation_date && customFunctions.getDMYDate(
+                                employeeDetails.expected_confirmation_date
+                              )}
                         </h6>
                       )}
                     </div>
@@ -419,7 +422,7 @@ function EmployeeProfile(props) {
                             type="button"
                             className="btn btn-primary"
                           >
-                            Confirm
+                            Confirm Now
                           </button>
                         )}
                     </div>
