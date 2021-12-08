@@ -93,7 +93,7 @@ function OldEmployee() {
           {employee &&
             employee.map((emp) => (
               <Col className="col-md-4">
-                <Card>
+                <Card className="h-100">
                   <Card.Body>
                     <Row>
                       <Col className="col-md-4">
