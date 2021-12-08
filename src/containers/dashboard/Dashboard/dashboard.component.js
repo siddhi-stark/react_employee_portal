@@ -1035,6 +1035,9 @@ function Dashboard() {
                                     e.preventDefault();
                                     e.stopPropagation();
                                     history.push(`/employee-profile/${confEmp.id}`);
+                                    customFunctions.setLocalStorage('employeeName', confEmp.full_name);
+                                    customFunctions.setLocalStorage('title',confEmp.designation_name);
+                                    customFunctions.setLocalStorage('candidateId', confEmp.id);
                                   }}
                                 >
                                   {i > 0 ? ', ' : ''} &nbsp;
