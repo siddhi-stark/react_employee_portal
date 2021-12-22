@@ -34,6 +34,7 @@ function ProjectRightContainer(props) {
             <br />
             <a
               href="#"
+              disabled
               className={
                 projectStatus < 0
                   ? 'mt-4 btn text-danger'
@@ -47,48 +48,37 @@ function ProjectRightContainer(props) {
         <Card>
           <Card.Body>
             <ul className="list-unstyled p-0 project-information-total-hr">
-              {startDate && (
+              
+              <li>
+                Start Date: <strong>{!startDate ? '-' : startDate}</strong>
+              </li>
+              <li>
+                End Date: <strong>{!endDate ? '-' : endDate}</strong>
+              </li>
+              <li>
+                Total Hours Spent: <strong>{totalHrsSpend ? totalHrsSpend.toFixed(2) : '0.0'}</strong>
+              </li>
+              <li>
+                Total Hours Estimated:{' '}
+                <strong>{totalHrsEstimate ? totalHrsEstimate.toFixed(2) : '0.0'}</strong>
+              </li>
+              <li>
+                Total Hours Allocated:{' '}
+                <strong>{totalHrsAllocated ? totalHrsAllocated.toFixed(2) : '0.0'}</strong>
+              </li>
                 <li>
-                  Start Date: <strong>{startDate}</strong>
+                  Project Completion: <strong>{projectCompletion ? `${projectCompletion}%` : '0%'}</strong>
                 </li>
-              )}
-              {endDate && (
-                <li>
-                  End Date: <strong>{endDate}</strong>
-                </li>
-              )}
-              {totalHrsSpend && (
-                <li>
-                  Total Hours Spent: <strong>{totalHrsSpend.toFixed(2)}</strong>
-                </li>
-              )}
-              {totalHrsEstimate && (
-                <li>
-                  Total Hours Estimated:{' '}
-                  <strong>{totalHrsEstimate.toFixed(2)}</strong>
-                </li>
-              )}
-              {totalHrsAllocated && (
-                <li>
-                  Total Hours Allocated:{' '}
-                  <strong>{totalHrsAllocated.toFixed(2)}</strong>
-                </li>
-              )}
-              {projectCompletion && (
-                <li>
-                  Project Completion: <strong>{projectCompletion}%</strong>
-                </li>
-              )}
-              {url && (
                 <li>
                   Team work URL:{' '}
-                  <a href={`${constants.project}${url}`} target="_blank">
-                    <span>
-                      <Image src="/images/redirect.png" />
-                    </span>
-                  </a>
+                  {url ? (
+                      <a href={`${constants.project}${url}`} target="_blank">
+                        <span>
+                          <Image src="/images/redirect.png" />
+                        </span>
+                      </a>
+                  ):(<strong className="float-end">-</strong>)}
                 </li>
-              )}
             </ul>
             <hr />
           </Card.Body>
