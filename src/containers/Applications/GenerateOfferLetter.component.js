@@ -52,12 +52,14 @@ function GenerateOfferLetter() {
     const OfferCtc = customFunctions.getLocalStorage('offerctc');
     const joiningdate = customFunctions.getLocalStorage('joiningdate');
     const PfInclude = customFunctions.getLocalStorage('pfInclude');
+    const misInclude = customFunctions.getLocalStorage('misInclude');
     updateDefaultValues({
       name: Name,
       designation: Designation,
       joining_date: joiningdate !== 'null' ? new Date(joiningdate) : '',
       offered_ctc: OfferCtc !== 'null' ? Number(OfferCtc) : '',
       pf_included: PfInclude === 'true' ? 'true' : 'false',
+      miscellaneous_included: misInclude === 'true' ? 'true' : 'false',
     });
   }, []);
 
@@ -145,6 +147,7 @@ function GenerateOfferLetter() {
             customFunctions.removeLocalStorage('offerctc');
             customFunctions.removeLocalStorage('joiningdate');
             customFunctions.removeLocalStorage('pfInclude');
+            customFunctions.removeLocalStorage('misInclude');
             history.push('/recruitment');
             swal.close();
           });
@@ -170,6 +173,7 @@ function GenerateOfferLetter() {
       generate_offer: Boolean(true),
       offered_ctc: Number(formValues.offered_ctc),
       pf_included: formValues.pf_included === 'true' ? true : false, // eslint-disable-line
+      miscellaneous_included: formValues.miscellaneous_included === 'true' ? true : false, // eslint-disable-line
       joining_date: formValues.joining_date
         ? customFunctions.getDate(formValues.joining_date)
         : '',

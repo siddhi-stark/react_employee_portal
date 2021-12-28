@@ -153,6 +153,10 @@ function RecruitmentApplicationComponent() {
                     customFunctions.setLocalStorage(
                       'pfInclude',
                       dt.pf_included && dt.pf_included
+                    ); 
+                    customFunctions.setLocalStorage(
+                      'misInclude',
+                      dt.miscellaneous_included && dt.miscellaneous_included
                     );
                   }
                   return dt;
