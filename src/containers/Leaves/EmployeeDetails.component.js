@@ -62,7 +62,7 @@ function EmployeeDetails(props) {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       if(data && data.data){
-        setName(data.data[0].name)
+        setName(data.data[0].name);
       }
       setRowData((data && data.data) || []);
       setShowLoader(false);
