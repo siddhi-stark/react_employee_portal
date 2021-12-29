@@ -26,7 +26,7 @@ function CandidateListing() {
 
   const actionCallBack = (row) => {
     return (
-      <>
+      <span className="d-flex">
         <a
           href="/"
           title="Edit Candidate"
@@ -55,7 +55,7 @@ function CandidateListing() {
               <Image src="/images/onboard.svg" />
             </a>
           )}
-      </>
+      </span>
     );
   };
 
