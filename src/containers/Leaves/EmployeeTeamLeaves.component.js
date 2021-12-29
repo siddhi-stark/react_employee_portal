@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Card, Image } from 'react-bootstrap';
+import { Card, Image, Button, Row, Col } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import SearchFormSections from './searchFormschema.json';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import AddNote from './AddNote.component';
 import Loader from '../../components/Loader/index';
+import EmployeeLeavesDetails from './EmployeeLeavesDetails.component';
 
-function EmployeeTeamLeaves() {
+function EmployeeTeamLeaves(props) {
+  const { location } = props;
   // Declare columns
   const columns = [
     {
@@ -130,6 +132,11 @@ function EmployeeTeamLeaves() {
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
   const [filterData, setFilterData] = useState({});
+  const [year, setYear] = useState(null);
+  const [reportTable, setReportTable] = useState(false);
+  const [options, updateOptions] = useState({});
+  const [filters, setFilters] = useState({});
+  let filterOptions = {};
 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
@@ -174,9 +181,17 @@ function EmployeeTeamLeaves() {
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-    getRowData(1);
+    if(!reportTable){
+      getRowData(1);
+    }
     setTitle('Leaves');
-  }, [filterData]);
+  }, [filterData]); 
+
+  useEffect(() => {
+    if(location && location.reportTable){
+      setReportTable(location && location.reportTable);
+    }
+  }, [location]);
 
   const submitForm = async (formValues) => {
     const filterValues = {
@@ -186,9 +201,57 @@ function EmployeeTeamLeaves() {
       end_date: formValues.end_date
         ? customFunctions.getDate(formValues.end_date)
         : '',
-      keyword: formValues.keyword,
+      employee_id: formValues.full_name ? formValues.full_name.value : '',
     };
+    setFilters(filterValues);
     setFilterData(filterValues);
+  };
+  
+  const getEmployeeName = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?type=all&is_dropdown=1`
+    );
+    if (!data) {
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      dpOptions.push({ label: op.full_name, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...filterOptions,
+      ...options,
+      full_name: dpOptions,
+    };
+    filterOptions = { ...allOptions };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getEmployeeName();
+  }, []);
+
+  const getExportCSV = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.leaveExportCSVUrl}`;
+    const params = {
+      year: year && customFunctions.getYear(year)
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
+      window.open(`https://developmentapi.starkdigital.in/${data.data.csv_path}`, '_blank');
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
   };
 
   return (
@@ -225,6 +288,7 @@ function EmployeeTeamLeaves() {
                 formHeaderClass=""
                 formSections={SearchFormSections}
                 formHeading=""
+                options={options}
                 onFormSubmit={(formValues) => {
                   submitForm(formValues);
                 }}
@@ -237,7 +301,9 @@ function EmployeeTeamLeaves() {
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {
+                  setReportTable(false);
                   setFilterData();
+                  setYear(null);
                 }}
               />
             </div>
@@ -246,26 +312,87 @@ function EmployeeTeamLeaves() {
         <Card>
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">Employee Leaves</h5>
+              <h5 className="card-title">Employee Leaves </h5>
+              <div className="float-end">
+                <Row>
+                  <Col className="col-sm-2"/>
+                  <Col className="col-sm-3">
+                    <Datepicker
+                      className="form-control"
+                      selected={year}
+                      placeholder="Select Year"
+                      showYearPicker
+                      dateFormat="yyyy"
+                      minDate={new Date('2020-01-01')}
+                      maxDate={new Date()}
+                      onChange={(e) => {
+                        setYear(e);
+                      }}
+                    />
+                  </Col>
+                  <Col className="col-sm-7">
+                    <Button
+                      variant="primary"
+                      title="View Leaves Reports"
+                      onClick={() => {
+                        if(!year){
+                          swal({
+                            title: 'Please select Year',
+                            icon: 'warning',
+                            dangerMode: true,
+                            confirmButtons: true,
+                            closeOnClickOutside: false,
+                            allowOutsideClick: false,
+                          });
+                        } else{
+                          setFilters();
+                          setReportTable(true);
+                        }
+                      }}
+                      type="button"
+                      className="float-right"
+                    >
+                      View Leaves Reports
+                    </Button>
+
+                    {reportTable && (
+                     <Button
+                      variant="primary"
+                      title="Export CSV"
+                      onClick={() => {
+                        getExportCSV();
+                      }}
+                      type="button"
+                      className="float-right ms-3"
+                    >
+                      Export CSV
+                    </Button>
+                    )}
+                  </Col>
+                </Row>
+              </div>
             </div>
             <hr />
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              showPagination={true}
-              tableClass="table-striped"
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
-              }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
-            />
+            {
+              reportTable ? ( <EmployeeLeavesDetails filters={filters} year={year}/> ) : ( 
+              <CustomTable
+                columns={columns}
+                rows={rowData}
+                showPagination={true}
+                tableClass="table-striped"
+                paginationProps={{
+                  totalItems: totalCount,
+                  itemsPerPage: limit,
+                  activePage: currentPage,
+                  onPageChange: (pageNo) => {
+                    getRowData(pageNo);
+                  },
+                }}
+                emptyRender={() => {
+                  return 'No record found.';
+                }}
+              />
+            )}
           </Card.Body>
 
           {modalShow && (

@@ -173,6 +173,10 @@ export default class Api extends Component {
 
   static teamworkAuthUrl = `${Api.baseUrl}teamwork-auth/`;
 
+  static leaveExportCSVUrl = `${Api.baseUrl}leave-export-csv/`;
+
+  static leavesCountDataUrl = `${Api.baseUrl}leave-data/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

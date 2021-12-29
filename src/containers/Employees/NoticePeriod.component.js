@@ -85,10 +85,10 @@ function NoticePeriodComponent() {
       <Helmet title={title} />
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
-        <div className="row mt-3">
+       <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
           {employee &&
             employee.map((emp) => (
-              <Col className="col-md-4">
+              <Col>
                 <Card className="h-100">
                   <Card.Body>
                     <Row>
@@ -127,6 +127,7 @@ function NoticePeriodComponent() {
                           <br />
                         </Col>
                       </Row>
+                    </Card.Body>
                     <Card.Footer className="card-footer-view">
                       <h4 className="text-primary">SDMS{emp.emp_code}</h4>
                       <Button
@@ -139,7 +140,6 @@ function NoticePeriodComponent() {
                         View
                       </Button>
                     </Card.Footer>
-                  </Card.Body>
                 </Card>
               </Col>
             ))}

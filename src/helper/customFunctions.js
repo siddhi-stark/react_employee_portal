@@ -406,6 +406,14 @@ class CustomFunctions extends Component {
       this.setLocalStorage('email', emailAddress);
     }
   };
+
+  getYear = (dateTime) => {
+    const newdate = new Date(dateTime);
+    const y = newdate.getFullYear();
+    const formattedate =
+      y ; //eslint-disable-line
+    return formattedate;
+  };
 }
 
 export default new CustomFunctions();

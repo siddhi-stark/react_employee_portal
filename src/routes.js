@@ -73,6 +73,7 @@ import Workload from './containers/Employee/workload.component';
 import EmployeeActivity from './containers/Employee/employeeActivity.component';
 import PolicyCategory from './containers/Policy/category.component';
 import AddCategory from './containers/Policy/addCategory.component';
+import EmployeeDetails from './containers/Leaves/EmployeeDetails.component';
 
 function Routes() {
   return (
@@ -207,6 +208,7 @@ function Routes() {
       <Route path="/policy-category" exact component={PolicyCategory} />
       <Route path="/add-policy-category" exact component={AddCategory} />
       <Route path="/edit-policy-category/:categoryId" exact component={AddCategory} />
+      <Route path="/employee-leaves-report/:viewId" exact component={EmployeeDetails} />
       <Route component={NotFound} />
     </Switch>
   );

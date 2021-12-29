@@ -8,11 +8,11 @@
     "displaySectionTitle": false,
     "fields": [
       {
-        "name": "keyword",
-        "type": "text",
+        "name": "full_name",
+        "type": "select",
         "label": "",
         "id": "",
-        "placeholder": "Search by name",
+        "placeholder": "Select Employee",
         "inputClass": "",
         "containerClass": "",
         "validations": [],
@@ -28,9 +28,13 @@
         "isMulti": false,
         "allowedUsers": [],
         "fieldsToReset": [],
-        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
         "fields": [],
-        "optionCallback": "",
+        "optionCallback": "getEmployeeName",
+        "optionsCallbackUrl": "employeeUrl",
         "options": []
       },
       {
