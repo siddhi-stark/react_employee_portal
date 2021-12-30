@@ -70,6 +70,7 @@ function OnBoard(props) {
         ? Number(formValues.department.value)
         : '',
       designation: formValues.designation ? formValues.designation.value : '',
+      team: formValues.team ? formValues.team.value : '',
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : '',
       role: formValues.role ? formValues.role.value : '',
       emp_code: Number(formValues.emp_code),
@@ -291,6 +292,28 @@ function OnBoard(props) {
 
   useEffect(() => {
     getDepartment();
+  }, []);
+
+  const getTeam = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
+    if (!data) {
+      return;
+    }
+
+    const dpOptions =
+      (await data) &&
+      data.data && data.data.team.length > 0 &&
+      data.data.team.map((op) => {
+        return { label: op.name, value: op.id };
+      });
+
+    options.team = dpOptions;
+    const allOptions = options;
+    await updateOptions({ ...allOptions });
+  };
+
+  useEffect(() => {
+    getTeam();
   }, []);
 
   return (

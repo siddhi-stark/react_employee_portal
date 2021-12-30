@@ -421,6 +421,36 @@
         "optionCallback": "getDepartment",
         "optionsCallbackUrl": "InterviewRoundsUrl",
         "options": []
+      },
+      {
+        "name": "team",
+        "type": "select",
+        "label": "Team",
+        "id": "",
+        "placeholder": "Select Team",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getTeam",
+        "optionsCallbackUrl": "InterviewRoundsUrl",
+        "options": []
       }
     ],
     "allowedUsers": [],

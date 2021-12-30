@@ -319,6 +319,7 @@ function EmployeeTeamLeaves(props) {
                     <Datepicker
                       className="form-control"
                       selected={year}
+                      containerClass="mb-0"
                       placeholder="Select Year"
                       showYearPicker
                       dateFormat="yyyy"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory, Link } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import { Row, Col, Card, Button, Image, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
@@ -684,8 +684,9 @@ function CurrentEmployee() {
                 {(Number(userRole) === 1 ||
                   Number(userRole) === 5 ||
                   Number(userRole) === 6) && (
-                  <Link
-                    className="float-end btn btn-primary"
+                  <Button
+                    variant="primary"
+                    className="float-end"
                     title="Add Employee"
                     onClick={() => {
                       setModalShow(true);
@@ -697,7 +698,7 @@ function CurrentEmployee() {
                     }}
                   >
                     Add Employee
-                  </Link>
+                  </Button>
                 )}
               </div>
               <hr />
@@ -755,7 +756,8 @@ function CurrentEmployee() {
                           Number(userRole) === 5 ||
                           Number(userRole) === 6) && (
                           <>
-                            <Link
+                            <a
+                              href="#"
                               className="float-end ml-2"
                               onClick={(e) => {
                                 e.preventDefault();
@@ -765,8 +767,9 @@ function CurrentEmployee() {
                               }}
                             >
                               <Image src="/images/delete.png" />
-                            </Link>
-                            <Link
+                            </a>
+                            <a
+                              href="#"
                               className="float-end"
                               onClick={(e) => {
                                 e.preventDefault();
@@ -779,7 +782,7 @@ function CurrentEmployee() {
                               }}
                             >
                               <Image src="/images/edit-button.svg" />
-                            </Link>
+                            </a>
                           </>
                         )}
                         <Card.Title>{emp.name}</Card.Title>
