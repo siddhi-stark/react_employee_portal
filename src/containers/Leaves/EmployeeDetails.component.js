@@ -109,7 +109,7 @@ function EmployeeDetails(props) {
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">
-          Employee Leaves Report
+          Leaves Report
         </h2>
         <Breadcrumb items={items} />
       </div>
@@ -121,14 +121,14 @@ function EmployeeDetails(props) {
               <h5 className="card-title mb-0 mt-2 ">{name} Leaves Report</h5>
               <div className="float-right">
                 <Button
-                  title="Export CSV"
+                  title="Download Report"
                   onClick={() => {
                     getExportCSV();
                   }}
                   type="button"
                   className="btn btn-primary"
                 >
-                  Export CSV
+                  Download Report
                 </Button>
                 <Link
                   to={{ pathname: '/employee-leaves' , reportTable:true}}

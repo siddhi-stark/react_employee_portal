@@ -315,8 +315,7 @@ function EmployeeTeamLeaves(props) {
               <h5 className="card-title">Employee Leaves </h5>
               <div className="float-end">
                 <Row>
-                  <Col className="col-sm-2"/>
-                  <Col className="col-sm-3">
+                  <Col className="col-sm-4">
                     <Datepicker
                       className="form-control"
                       selected={year}
@@ -330,10 +329,10 @@ function EmployeeTeamLeaves(props) {
                       }}
                     />
                   </Col>
-                  <Col className="col-sm-7">
+                  <Col className="col-sm-8">
                     <Button
                       variant="primary"
-                      title="View Leaves Reports"
+                      title="Show Report"
                       onClick={() => {
                         if(!year){
                           swal({
@@ -352,20 +351,20 @@ function EmployeeTeamLeaves(props) {
                       type="button"
                       className="float-right"
                     >
-                      View Leaves Reports
+                      Show Report
                     </Button>
 
                     {reportTable && (
                      <Button
                       variant="primary"
-                      title="Export CSV"
+                      title="Download Report"
                       onClick={() => {
                         getExportCSV();
                       }}
                       type="button"
                       className="float-right ms-3"
                     >
-                      Export CSV
+                      Download Report
                     </Button>
                     )}
                   </Col>

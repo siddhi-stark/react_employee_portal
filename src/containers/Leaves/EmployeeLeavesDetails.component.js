@@ -65,19 +65,19 @@ function EmployeeLeavesDetails(props) {
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
-  const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [totalCount, setTotalCount] = useState(10);
+  // const [limit, setLimit] = useState(10);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [isShowLoader, setShowLoader] = useState(false);
 
   // Declare methods
-  const getRowData = async (pageNo = 1) => {
+  const getRowData = async () => {
     setShowLoader(true);
-    const page = pageNo || currentPage;
+    // const page = pageNo || currentPage;
     const endPoint = `${Api.leavesCountDataUrl}`;
     const params = {
-      page: filters ? '' : page,
-      limit: filters ? '' : limit,
+      // page: filters ? '' : page,
+      // limit: filters ? '' : limit,
       year: year && customFunctions.getYear(year),
       start_date: filters && filters.start_date,
       end_date: filters && filters.end_date,
@@ -88,16 +88,17 @@ function EmployeeLeavesDetails(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      setLimit(10);
-      const startIndex = currentPage * 10 - 10;
-      const endIndex = startIndex + 10;
-      setTotalCount(
-        data &&
-          data.data &&
-          data.data.length
-      );
-      const employeeData = data && data.data;
-      setRowData(filters ? employeeData : employeeData.slice(startIndex, endIndex) || []);
+      // setLimit(10);
+      // const startIndex = currentPage * 10 - 10;
+      // const endIndex = startIndex + 10;
+      // setTotalCount(
+      //   data &&
+      //     data.data &&
+      //     data.data.length
+      // );
+      // const employeeData = data && data.data;
+      // setRowData(filters ? employeeData : employeeData.slice(startIndex, endIndex) || []);
+      setRowData(data && data.data || []);
       setShowLoader(false);
     } else {
       setShowLoader(false);
@@ -109,11 +110,11 @@ function EmployeeLeavesDetails(props) {
   };
 
   useEffect(() => {
-    getRowData(currentPage);
-  }, [year,filters,currentPage]);
+    getRowData();
+  }, [year,filters]);
 
   return (
-    <>
+    <div className="schedular">
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <CustomTable
         columns={columns}
@@ -121,19 +122,19 @@ function EmployeeLeavesDetails(props) {
         tableClass="table-striped"
         showPagination={true}
         paginationProps={{
-          totalItems: totalCount,
-          itemsPerPage: limit,
-          activePage: currentPage,
+          // totalItems: totalCount,
+          // itemsPerPage: limit,
+          // activePage: currentPage,
           onPageChange: (pageNo) => {
             getRowData(pageNo);
-            setCurrentPage(Number(pageNo));
+            // setCurrentPage(Number(pageNo));
           },
         }}
         emptyRender={() => {
           return 'No record found.';
         }}
       />
-    </>
+    </div>
   );
 }
 

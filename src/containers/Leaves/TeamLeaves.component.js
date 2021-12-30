@@ -16,6 +16,7 @@ import Loader from '../../components/Loader/index';
 
 function TeamLeaves() {
   const [currentUser, updateCurrentUser] = useState(0);
+  const teamId = customFunctions.getLocalStorage('team_id');
 
   // Declare columns
   const columns = [
@@ -130,6 +131,8 @@ function TeamLeaves() {
   const [leaveId, setLeaveId] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   const [filterData, setFilterData] = useState({});
+  const [options, updateOptions] = useState({});
+  let filterOptions = {};
 
   const history = useHistory();
 
@@ -153,7 +156,7 @@ function TeamLeaves() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.data && data.success) {
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setItemsPerPage(data.paginator.limit);
@@ -197,10 +200,36 @@ function TeamLeaves() {
       end_date: formValues.end_date
         ? customFunctions.getDate(formValues.end_date)
         : '',
-      keyword: formValues.keyword,
+      employee: formValues.full_name ? formValues.full_name.value : '',
     };
     setFilterData(filterValues);
   };
+
+  const getEmployeeName = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?type=all&is_dropdown=1&team_id=${teamId}`
+    );
+    if (!data) {
+      return;
+    }
+
+    const dpOptions = [];
+    data.data.map((op) => {
+      dpOptions.push({ label: op.full_name, value: op.id });
+      return op;
+    });
+    const allOptions = {
+      ...filterOptions,
+      ...options,
+      full_name: dpOptions,
+    };
+    filterOptions = { ...allOptions };
+    updateOptions(allOptions);
+  };
+
+  useEffect(() => {
+    getEmployeeName();
+  }, []);
 
   return (
     <>
@@ -235,6 +264,7 @@ function TeamLeaves() {
                 containerClass=""
                 formHeaderClass=""
                 formSections={SearchFormSections}
+                options={options}
                 formHeading=""
                 onFormSubmit={(formValues) => {
                   submitForm(formValues);
