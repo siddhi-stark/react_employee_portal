@@ -135,11 +135,9 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
-        "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
-        ],
+        "validations": [],
         "displayWhen": {},
-        "haveValidations": "true",
+        "haveValidations": "false",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
