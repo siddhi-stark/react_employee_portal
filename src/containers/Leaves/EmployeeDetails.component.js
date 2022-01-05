@@ -23,18 +23,38 @@ function EmployeeDetails(props) {
     {
       id: 'total_leaves',
       label: 'Allocated',
+       render: ({ total_leaves }) => {
+        return (
+        <span>{total_leaves ? `${total_leaves}` : '0'}</span>
+        );
+      },
     },
     {
       id: 'total_leave_taken',
       label: 'Taken',
+      render: ({ total_leave_taken }) => {
+        return (
+        <span>{total_leave_taken ? `${total_leave_taken}` : '0'}</span>
+        );
+      },
     },
     {
       id: 'pending_leave',
       label: 'Pending',
+      render: ({ pending_leave }) => {
+        return (
+        <span>{pending_leave ? `${pending_leave}` : '0'}</span>
+        );
+      },
     },
     {
       id: 'unpaid_leave',
       label: 'Unpaid',
+       render: ({ unpaid_leave }) => {
+        return (
+        <span>{unpaid_leave ? `${unpaid_leave}` : '0'}</span>
+        );
+      },
     },
   ];
 
