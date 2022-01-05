@@ -13,7 +13,8 @@ import Loader from '../../components/Loader/index';
 
 function Holidays() {
   const employeeRole = customFunctions.getLocalStorage('group');
-
+  const weekday = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  
   const handleActionCallback = (row) => {
     return (
       <>
@@ -56,6 +57,18 @@ function Holidays() {
     {
       id: 'occasion',
       label: 'Occasion',
+    },
+    {
+      id: 'date',
+      label: 'Day',
+      render: ({ date }) => {
+        const dt = new Date(date);
+        return (
+          <>
+            <span>{`${weekday[dt.getDay()]}`}</span>
+          </>
+        );
+      },
     },
     {
       id: 'date',
