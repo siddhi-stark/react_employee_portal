@@ -338,9 +338,9 @@ function Dashboard() {
   };
 
   const postGreetingMessage = async (id, GreetingId, type = '') => {
-    if (!newBirthdayData[0].message) return;
     const newGreetData =
       newBirthdayData && newBirthdayData.filter((i) => i.id === id);
+    if (!newGreetData[0].message) return;
     const newData =
       newBirthdayData &&
       newBirthdayData[0] &&
@@ -778,7 +778,8 @@ function Dashboard() {
                                         />
                                         <a
                                           href="#"
-                                          onClick={() => {
+                                          onClick={(e) => {
+                                            e.preventDefault();
                                             postGreetingMessage(
                                               emp.id,
                                               emp.greeting_anniversary,
