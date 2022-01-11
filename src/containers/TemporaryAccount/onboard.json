@@ -51,7 +51,7 @@
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -79,10 +79,11 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
+          { "type": "required|email", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -113,7 +114,7 @@
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -144,7 +145,7 @@
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -175,7 +176,7 @@
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -211,7 +212,7 @@
           { "type": "phone", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -242,7 +243,7 @@
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -371,7 +372,7 @@
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -402,7 +403,7 @@
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
-        "haveValidations": "false",
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",

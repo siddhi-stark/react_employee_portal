@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import { Row, Col, Card, Button, Image, Form } from 'react-bootstrap';
@@ -21,8 +21,8 @@ import Pagination from '../../components/Pagination/pagination.component';
 function CurrentEmployee() {
   const currentdate = new Date();
   const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
-
-  const validator = new SimpleReactValidator({
+  const [employeeId, setEmployeeId] = useState(null);
+  const validator = useRef (new SimpleReactValidator({
     validators: {
       emailValidate: {
         message: 'The :attribute domain name should be starkdigital.net.',
@@ -32,9 +32,9 @@ function CurrentEmployee() {
             params.indexOf(val) === -1
           );
         },
-      },
+      }
     },
-  });
+  }));
 
   const [employee, setEmployee] = useState([]);
   const [totalCount, setTotalCount] = useState(9);
@@ -48,7 +48,6 @@ function CurrentEmployee() {
 
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
-  const [employeeId, setEmployeeId] = useState(null);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
@@ -399,7 +398,7 @@ function CurrentEmployee() {
   };
 
   const onCancel = () => {
-    validator.hideMessages();
+    validator.current.hideMessages();
     setEmployeeTwId('');
     setAddButton(false);
     setFullName('');
@@ -489,7 +488,7 @@ function CurrentEmployee() {
     const { data, message } = await callback(endPoint, payload);
     if (data) {
       setShowLoader(false);
-      validator.hideMessages();
+      validator.current.hideMessages();
       setAddButton(false);
       setSelectedDesignationOption();
       setModalShow(false);
@@ -536,10 +535,10 @@ function CurrentEmployee() {
     if (disableButton) return;
 
     setDisableButton(true);
-    if (validator.allValid()) {
+    if (validator.current.allValid()) {
       addEmployee();
     } else {
-      validator.showMessages();
+      validator.current.showMessages();
       forceUpdate(count + 1);
       setDisableButton(false);
     }
@@ -669,7 +668,14 @@ function CurrentEmployee() {
     return event !== '' ? `SDMS-${event}` : '';
   };
 
-  validator.purgeFields();
+  const getPasswordValidation = () => {
+    if (employeeId && validator.current.fields && validator.current.fields.password !== undefined) {
+      validator.current.fields.password = true;
+    }
+    return !employeeId ? validator.current.message('password', password, 'required|min:6') : '';
+  };
+
+  // validator.purgeFields();
 
   return (
     <>
@@ -779,6 +785,7 @@ function CurrentEmployee() {
                                 getEmployeeById(emp.id);
                                 setAddButton(true);
                                 setCntClearFilter(cntClearFilter + 1);
+                                getPasswordValidation();
                               }}
                             >
                               <Image src="/images/edit-button.svg" />
@@ -902,14 +909,13 @@ function CurrentEmployee() {
                   value={fullName}
                   disabled={(employeeId || employeetwId) && 'disabled'}
                   placeholder="Enter Full  Name"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'Full Name',
                     fullName,
                     'required'
                   )}
                 />
               </Col>
-
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => setEmail(e.target.value)}
@@ -921,7 +927,7 @@ function CurrentEmployee() {
                   disabled={(employeeId || employeetwId) && 'disabled'}
                   value={email}
                   placeholder="Enter email"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'email',
                     email,
                     'required|emailValidate|email' // eslint-disable-line
@@ -941,10 +947,7 @@ function CurrentEmployee() {
                     name="passwordTitle"
                     value={password}
                     placeholder="Enter Password"
-                    errorMessage={
-                      !employeeId &&
-                      validator.message('password', password, 'required|min:6')
-                    }
+                    errorMessage={getPasswordValidation()}
                   />
                 </Col>
               )}
@@ -964,10 +967,10 @@ function CurrentEmployee() {
                   disabled={employeeId ? 'disabled' : ''}
                   value={empCode}
                   placeholder="Enter Employee Code"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'Employee Code',
                     empCode,
-                    'required|'
+                    'required'
                   )}
                 />
               </Col>
@@ -984,7 +987,7 @@ function CurrentEmployee() {
                   onChange={(e) => {
                     setJoiningDate(e);
                   }}
-                  errorMessage={validator.message(
+                  errorMessage={joiningDate && validator.current.message(
                     'Joining Date',
                     joiningDate,
                     'required'
@@ -1009,7 +1012,7 @@ function CurrentEmployee() {
                   maxlength="10"
                   value={mobile}
                   placeholder="Enter Contact Number"
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'mobile',
                     mobile,
                     'required|phone|min:10'
@@ -1026,7 +1029,7 @@ function CurrentEmployee() {
                   onSelectHandler={(select) => {
                     setSelectedDesignationOption(select);
                   }}
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'Designation',
                     selectedDesignationOption,
                     'required'
@@ -1047,7 +1050,7 @@ function CurrentEmployee() {
                       setSelectedTeamLead('');
                     }
                   }}
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'Role',
                     selectedRole,
                     'required'
@@ -1087,11 +1090,11 @@ function CurrentEmployee() {
                   onChange={(e) => {
                     setDate(e);
                   }}
-                  errorMessage={validator.message(
-                    'DOB',
-                    date,
-                    `required | before_or_equal:${maxdate}`
-                  )}
+                  // errorMessage={validator.current.message(
+                  //   'DOB',
+                  //   date,
+                  //    `required | before_or_equal:${maxdate}`
+                  // )}
                 />
               </Col>
 
@@ -1104,7 +1107,7 @@ function CurrentEmployee() {
                   defaultValue={selectedDepartment}
                   onSelectHandler={(select) => setSelectedDepartment(select)}
                   isMulti={false}
-                  errorMessage={validator.message(
+                  errorMessage={validator.current.message(
                     'Department',
                     selectedDepartment,
                     'required'
