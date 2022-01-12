@@ -872,6 +872,7 @@ function CurrentEmployee() {
         modalBody={
           <Form
             onSubmit={(e) => {
+              getPasswordValidation();
               onSubmit(e);
             }}
             autocomplete="off"

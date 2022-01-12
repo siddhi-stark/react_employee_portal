@@ -80,7 +80,7 @@
         "containerClass": "",
         "validations": [
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
-          { "type": "required|email", "applyWhen": [], "applyWhenRelation": "OR" }
+          { "type": "required|regex:^[\\w.+-]+@starkdigital.net$", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
         "haveValidations": "true",
