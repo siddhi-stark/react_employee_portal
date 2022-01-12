@@ -142,7 +142,7 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+          { "type": "required|min:6", "applyWhen": [], "applyWhenRelation": "OR" }
         ],
         "displayWhen": {},
         "haveValidations": "true",
