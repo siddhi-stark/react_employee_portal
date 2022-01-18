@@ -673,6 +673,13 @@ function CurrentEmployee() {
       validator.current.fields.password = true;
     }
     return !employeeId ? validator.current.message('password', password, 'required|min:6') : '';
+  };  
+
+  const getTwEmployeeValidation = () => {
+    if (employeeId && validator.current.fields && validator.current.fields.TWEmployee !== undefined) {
+      validator.current.fields.TWEmployee = true;
+    }
+    return !employeeId ? validator.current.message('TWEmployee', selectedEmployee, 'required') : '';
   };
 
   // validator.purgeFields();
@@ -786,6 +793,7 @@ function CurrentEmployee() {
                                 setAddButton(true);
                                 setCntClearFilter(cntClearFilter + 1);
                                 getPasswordValidation();
+                                getTwEmployeeValidation();
                               }}
                             >
                               <Image src="/images/edit-button.svg" />
@@ -873,6 +881,7 @@ function CurrentEmployee() {
           <Form
             onSubmit={(e) => {
               getPasswordValidation();
+              getTwEmployeeValidation();
               onSubmit(e);
             }}
             autocomplete="off"
@@ -882,6 +891,7 @@ function CurrentEmployee() {
                 <Col sm={6}>
                   <DropdownInput
                     label="TW Employee"
+                    asterisk="*"
                     options={getEmployeeList()}
                     placeholder="Select Employee"
                     defaultValue={selectedEmployee}
@@ -891,6 +901,7 @@ function CurrentEmployee() {
                       setEmployeeTwId(select.id);
                     }}
                     disabled={employeeId && 'disabled'}
+                    errorMessage={getTwEmployeeValidation()}
                   />
                 </Col>
               )}
