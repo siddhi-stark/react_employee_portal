@@ -177,7 +177,7 @@ function AddLeave(props) {
   formSchema[1].fields.map((section) => {
     const sectionData = section;
     if (
-      sectionData.name === 'leave_from_date' ||
+      // sectionData.name === 'leave_from_date' ||
       sectionData.name === 'leave_to_date'
     ) {
       const date = new Date();
