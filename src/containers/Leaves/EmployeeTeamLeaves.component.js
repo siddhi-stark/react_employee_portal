@@ -81,11 +81,11 @@ function EmployeeTeamLeaves(props) {
     {
       id: 'status_name',
       label: 'Status',
-      render: ({ id, status_name, leave_from_date }) => {
+      render: ({ id, status_name }) => {
         return (
           <>
-            {status_name === 'Pending' &&
-            customFunctions.getDate(new Date()) <= leave_from_date ? (
+            {/* customFunctions.getDate(new Date()) <= leave_from_date ?  */}
+            {status_name === 'Pending' ? (
               <>
                 <Image
                   title="Accept"
