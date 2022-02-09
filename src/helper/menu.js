@@ -140,7 +140,7 @@ const menu = [
     path: '/email-templates',
     icon: 'template.svg',
     submenu: [],
-    roleaccess: [1],
+    roleaccess: [1,6],
   },
   {
     title: 'Leaves',
