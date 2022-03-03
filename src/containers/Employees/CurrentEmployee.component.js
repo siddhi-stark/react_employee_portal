@@ -765,10 +765,7 @@ function CurrentEmployee() {
                         </span>
                       </Col>
                       <Col className="col-md-8">
-                        {(Number(userRole) === 1 ||
-                          Number(userRole) === 5 ||
-                          Number(userRole) === 6) && (
-                          <>
+                        {(Number(userRole) === 1) && (
                             <a
                               href="#"
                               className="float-end ml-2"
@@ -781,6 +778,10 @@ function CurrentEmployee() {
                             >
                               <Image src="/images/delete.png" />
                             </a>
+                         )}
+                          {(Number(userRole) === 1 ||
+                          Number(userRole) === 5 ||
+                          Number(userRole) === 6) && (
                             <a
                               href="#"
                               className="float-end"
@@ -798,7 +799,6 @@ function CurrentEmployee() {
                             >
                               <Image src="/images/edit-button.svg" />
                             </a>
-                          </>
                         )}
                         <Card.Title>{emp.name}</Card.Title>
                         <p className="card-text employee-details">
