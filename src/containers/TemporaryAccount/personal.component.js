@@ -97,20 +97,22 @@ function Personal(props) {
     formData.append('employee_email', emailProps);
     formData.append('folder_name', 'Personal');
 
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,
       formData
     );
-    if (customFunctions.checkIfEmpty(data)) {
-      swal(message, '', 'error', {
+    let fileId = null;
+    if (!data || Object.keys(data).length === 0) {
+      swal('Document upload failed', '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
+      fileId = null;
+    } 
+    if (data && Object.keys(data).length && data.success) {
+      fileId = data.data.id;
     }
-    if (!customFunctions.checkIfEmpty(data) && data.success) {
-      return data.data.id;
-    }
-    return formValues;
+    return fileId;
   };
 
   const getApplicantPercentage = async () => {
@@ -191,35 +193,35 @@ function Personal(props) {
       ],
     };
 
-    const { data, message } =
-      (!customFunctions.checkIfEmpty(pancardfileUrlId) ||
-        (pancardfileUrl && !customFunctions.checkIfEmpty(adharfileUrlId)) ||
-        (adharfileUrl && !customFunctions.checkIfEmpty(photofileUrlId)) ||
-        photofileUrl) &&
-      (await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData));
+  if(pancardfileUrlId || (pancardfileUrl && adharfileUrlId) ||(adharfileUrl && photofileUrlId) ||
+        photofileUrl) {
+    const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
 
-    if (!data) {
-      setShowLoader(false);
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-      });
+      if (!data) {
+        setShowLoader(false);
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+        });
+      } else {
+        setShowLoader(false);
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+          getApplicantPercentage();
+          if (candidateId) {
+            getData();
+          }
+          swal.close();
+        });
+      }
     } else {
       setShowLoader(false);
-      swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      }).then(() => {
-        getApplicantPercentage();
-        if (candidateId) {
-          getData();
-        }
-        swal.close();
-      });
     }
   };
 

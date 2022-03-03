@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
+import Loader from '../../components/Loader/index';
 import FormSections from './AddEducationalDoc.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
-import customFunctions from '../../helper/customFunctions';
 
 function EducationalDocument(props) {
   // Variable declarations
@@ -16,6 +16,7 @@ function EducationalDocument(props) {
   const EmployeeID = Employee.ID;
   const EmployeeEmail = Employee.email;
   const EmployeeName = Employee.name;
+  const [isShowLoader, setShowLoader] = useState(false);
 
   // Get user role
   const getUserRole = async () => {
@@ -36,25 +37,29 @@ function EducationalDocument(props) {
     formData.append('employee_email', EmployeeEmail);
     formData.append('folder_name', 'Educational');
 
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,
       formData
     );
 
-    if (customFunctions.checkIfEmpty(data)) {
-      swal(message, '', 'error', {
+    let fileId = null;
+    if (!data || Object.keys(data).length === 0) {
+      swal('Document upload failed', '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
+      fileId = null;
+    } 
+    if (data && Object.keys(data).length && data.success) {
+      fileId = data.data.id;
     }
-    if (!customFunctions.checkIfEmpty(data) && data.success) {
-      return data.data.id;
-    }
-    return formValues;
+    return fileId;
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
+
     const sscfileUrl = '';
     let sscfileUrlId = '';
     const hscfileUrl = '';
@@ -108,14 +113,12 @@ function EducationalDocument(props) {
       ],
     };
 
-    const { data, message } =
-      (!customFunctions.checkIfEmpty(graduatefileUrlId) ||
-        (graduatefileUrl && !customFunctions.checkIfEmpty(hscfileUrlId)) ||
-        (hscfileUrl && !customFunctions.checkIfEmpty(postfileUrlId)) ||
-        (postfileUrl && !customFunctions.checkIfEmpty(sscfileUrlId)) ||
-        sscfileUrl) &&
-      (await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData));
+    if(graduatefileUrlId || (graduatefileUrl && hscfileUrlId) ||(hscfileUrl && postfileUrlId) ||
+        (postfileUrl && sscfileUrlId) || sscfileUrl) {
+
+    const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
     if (!data) {
+      setShowLoader(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -125,6 +128,7 @@ function EducationalDocument(props) {
         swal.close();
       });
     } else {
+      setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -132,9 +136,14 @@ function EducationalDocument(props) {
         swal.close();
       });
     }
+     } else {
+      setShowLoader(false);
+    }
   };
 
   return (
+    <>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
     <StarkFormBuilder
       containerClass="mt-3"
       formHeaderClass=""
@@ -153,6 +162,7 @@ function EducationalDocument(props) {
       showBtnClass={true}
       isStepForm={false}
     />
+    </>
   );
 }
 

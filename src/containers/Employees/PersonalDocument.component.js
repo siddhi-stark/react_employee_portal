@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
+import Loader from '../../components/Loader/index';
 import FormSections from './AddPersonalDoc.json';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
-import customFunctions from '../../helper/customFunctions';
 
 function PersonalDocument(props) {
   // Variable declarations
@@ -16,6 +16,7 @@ function PersonalDocument(props) {
   const EmployeeID = Employee.ID;
   const EmployeeEmail = Employee.email;
   const EmployeeName = Employee.name;
+  const [isShowLoader, setShowLoader] = useState(false);
 
   // Get user role
   const getUserRole = async () => {
@@ -35,24 +36,28 @@ function PersonalDocument(props) {
     formData.append('employee_email', EmployeeEmail);
     formData.append('folder_name', 'Personal');
 
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,
       formData
     );
-    if (customFunctions.checkIfEmpty(data)) {
-      swal(message, '', 'error', {
+    let fileId = null;
+    if (!data || Object.keys(data).length === 0) {
+      swal('Document upload failed', '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
+      fileId = null;
+    } 
+    if (data && Object.keys(data).length && data.success) {
+      fileId = data.data.id;
     }
-    if (!customFunctions.checkIfEmpty(data) && data.success) {
-      return data.data.id;
-    }
-    return formValues;
+    return fileId;
   };
 
   // Submit Form
   const submitForm = async (formValues) => {
+    setShowLoader(true);
+
     const pancardfileUrl = '';
     let pancardfileUrlId = '';
     const adharfileUrl = '';
@@ -94,34 +99,39 @@ function PersonalDocument(props) {
         },
       ],
     };
+    
+    if(pancardfileUrlId || (pancardfileUrl && adharfileUrlId) ||(adharfileUrl && photofileUrlId) ||
+        photofileUrl) {
 
-    const { data, message } =
-      (!customFunctions.checkIfEmpty(pancardfileUrlId) ||
-        (pancardfileUrl && !customFunctions.checkIfEmpty(adharfileUrlId)) ||
-        (adharfileUrl && !customFunctions.checkIfEmpty(photofileUrlId)) ||
-        photofileUrl) &&
-      (await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData));
+      const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
 
-    if (!data) {
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-      });
+      if (!data) {
+        setShowLoader(false);
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+        });
+      } else {
+        setShowLoader(false);
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+          swal.close();
+        });
+      }
     } else {
-      swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      }).then(() => {
-        swal.close();
-      });
+      setShowLoader(false);
     }
   };
 
   return (
+    <>
+    <Loader showLoader={isShowLoader} needFullPage={false} />
     <StarkFormBuilder
       containerClass="mt-3"
       formHeaderClass=""
@@ -140,6 +150,7 @@ function PersonalDocument(props) {
       showBtnClass={true}
       isStepForm={false}
     />
+    </>
   );
 }
 

@@ -113,20 +113,22 @@ function PreviousEmployement(props) {
     formData.append('email_hash', tokenProps);
     formData.append('password', passwordProps);
 
-    const { data, message } = await AuthApi.postDataToServer(
+    const { data } = await AuthApi.postDataToServer(
       `${Api.googleFileUploadUrl}`,
       formData
     );
-    if (customFunctions.checkIfEmpty(data)) {
-      swal(message, '', 'error', {
+    let fileId = null;
+    if (!data || Object.keys(data).length === 0) {
+      swal('Document upload failed', '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       });
+      fileId = null;
+    } 
+    if (data && Object.keys(data).length && data.success) {
+      fileId = data.data.id;
     }
-    if (!customFunctions.checkIfEmpty(data) && data.success) {
-      return data.data.id;
-    }
-    return formValues;
+    return fileId;
   };
 
   const getApplicantPercentage = async () => {
@@ -252,37 +254,35 @@ function PreviousEmployement(props) {
       ],
     };
 
-    const { data, message } =
-      (!customFunctions.checkIfEmpty(slip1fileUrlId) ||
-        (slip1fileUrl && !customFunctions.checkIfEmpty(slip2fileUrlId)) ||
-        (slip2fileUrl && !customFunctions.checkIfEmpty(slip3fileUrlId)) ||
-        (slip3fileUrl && !customFunctions.checkIfEmpty(relivingfileUrlId)) ||
-        (relivingfileUrl &&
-          !customFunctions.checkIfEmpty(experiencefileUrlId)) ||
-        experiencefileUrl) &&
-      (await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData));
-    if (!data) {
-      setShowLoader(false);
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-      });
+    if(slip1fileUrlId || (slip1fileUrl && slip2fileUrlId) ||(slip2fileUrl && slip3fileUrlId) || 
+      (slip3fileUrl && relivingfileUrlId) || (relivingfileUrl && experiencefileUrlId) || experiencefileUrl) {
+
+    const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
+      if (!data) {
+        setShowLoader(false);
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+        });
+      } else {
+        setShowLoader(false);
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+          getApplicantPercentage();
+          if (candidateId) {
+            getData();
+          }
+          swal.close();
+        });
+      }
     } else {
       setShowLoader(false);
-      swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      }).then(() => {
-        getApplicantPercentage();
-        if (candidateId) {
-          getData();
-        }
-        swal.close();
-      });
     }
   };
 
