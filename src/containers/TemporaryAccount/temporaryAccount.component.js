@@ -21,7 +21,7 @@ function TemporaryAccount(props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
-  const [personalInfo, setPersonalInfo] = useState([]);
+  const [personalInfo, setPersonalInfo] = useState(null);
   const [toggle, setToggle] = useState(false);
   const [key, setKey] = useState('Personal');
   const [completion, setCompletion] = useState(null);
@@ -73,9 +73,9 @@ function TemporaryAccount(props) {
 
   useEffect(() => {
     if (trigger) {
-      getCompletionData();
+      getCompletionData(completion);
     }
-  }, [trigger]);
+  }, [trigger,completion]);
 
   return (
     <>
@@ -146,14 +146,14 @@ function TemporaryAccount(props) {
                           bsPrefix="progress pbar"
                           variant="success"
                           now={
-                            personalInfo.completion
-                              ? personalInfo.completion
-                              : completion
+                            Number(completion)
+                              ? Number(completion)
+                              : personalInfo && personalInfo.completion
                           }
                           label={`${
-                            personalInfo.completion
-                              ? personalInfo.completion
-                              : completion
+                            Number(completion)
+                              ? Number(completion)
+                              : personalInfo && personalInfo.completion
                           }% completed`}
                         />
                       </div>
@@ -179,6 +179,7 @@ function TemporaryAccount(props) {
                           if (value) {
                             setTrigger(true);
                             getCompletionData(value);
+                            setCompletion(value);
                           }
                         }}
                       />
@@ -198,6 +199,7 @@ function TemporaryAccount(props) {
                           if (value) {
                             setTrigger(true);
                             getCompletionData(value);
+                            setCompletion(value);
                           }
                         }}
                       />
@@ -218,7 +220,9 @@ function TemporaryAccount(props) {
                           getParentsData={(value) => {
                             if (value) {
                               setTrigger(true);
+                              setCompletion(value);
                               getCompletionData(value);
+                              setCompletion(value);
                             }
                           }}
                         />
@@ -243,6 +247,7 @@ function TemporaryAccount(props) {
                             if (value) {
                               setTrigger(true);
                               getCompletionData(value);
+                              setCompletion(value);
                             }
                           }}
                         />
