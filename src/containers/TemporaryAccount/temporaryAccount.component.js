@@ -60,7 +60,7 @@ function TemporaryAccount(props) {
   };
 
   useEffect(() => {
-    setId(personalInfo.id);
+    if(personalInfo) setId(personalInfo.id);
   }, [personalInfo]);
 
   useEffect(() => {
@@ -104,23 +104,23 @@ function TemporaryAccount(props) {
                   <Image src={`${Api.s3UrlnoProfile}`} alt="Card image cap" />
                 </div>
               </div>
-              <h3>{personalInfo.name}</h3>
-              <h5>{personalInfo.applied_for_name}</h5>
+              <h3>{personalInfo && personalInfo.name}</h3>
+              <h5>{personalInfo && personalInfo.applied_for_name}</h5>
               <div className="table-projects">
                 <div className="mt-4 card">
                   <div className="card-body">
                     <div className="row">
                       <div className="col-md-12 d-flex">
                         <div className="col-md-4">
-                          <h6>Email - {personalInfo.email}</h6>
+                          <h6>Email - {personalInfo && personalInfo.email}</h6>
                         </div>
                         <div className="col-md-4">
-                          <h6>Contact No - {personalInfo.mobile}</h6>
+                          <h6>Contact No - {personalInfo && personalInfo.mobile}</h6>
                         </div>
                         <div className="col-md-4">
                           <h6>
                             Pf Included -{' '}
-                            {personalInfo.pf_included === true ? 'Yes' : 'No'}
+                            {personalInfo && personalInfo.pf_included === true ? 'Yes' : 'No'}
                           </h6>
                         </div>
                       </div>
@@ -129,12 +129,12 @@ function TemporaryAccount(props) {
                     <div className="row d-flex">
                       <div className="col-md-12 d-flex">
                         <div className=" col-md-4">
-                          <h6>Offered CTC - {personalInfo.offered_ctc}</h6>
+                          <h6>Offered CTC - {personalInfo && personalInfo.offered_ctc}</h6>
                         </div>
                         <div className="col-md-4">
                           <h6>
                             Joining Date -{' '}
-                            {personalInfo.joining_date
+                            {personalInfo && personalInfo.joining_date
                               ? customFunctions.getDMYDate(
                                   personalInfo.joining_date
                                 )
@@ -146,14 +146,14 @@ function TemporaryAccount(props) {
                           bsPrefix="progress pbar"
                           variant="success"
                           now={
-                            Number(completion)
+                            completion
                               ? Number(completion)
-                              : personalInfo && personalInfo.completion
+                              : (personalInfo && Number(personalInfo.completion))
                           }
                           label={`${
-                            Number(completion)
+                            completion
                               ? Number(completion)
-                              : personalInfo && personalInfo.completion
+                              : (personalInfo && Number(personalInfo.completion))
                           }% completed`}
                         />
                       </div>
@@ -206,7 +206,7 @@ function TemporaryAccount(props) {
                     </div>
                   )}
                 </Tab>
-                {!personalInfo.is_fresher && (
+                {personalInfo && !personalInfo.is_fresher && (
                   <Tab eventKey="employmentHistory" title="Employment History">
                     {key === 'employmentHistory' && (
                       <div className="row ml-2">
@@ -230,7 +230,7 @@ function TemporaryAccount(props) {
                     )}
                   </Tab>
                 )}
-                {!personalInfo.is_fresher && (
+                {personalInfo && !personalInfo.is_fresher && (
                   <Tab
                     eventKey="previousEmployment"
                     title="Previous Employment"
