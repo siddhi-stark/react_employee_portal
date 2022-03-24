@@ -103,7 +103,7 @@ function CandidateListing() {
       render: ({ joining_date }) => {
         return (
           <>
-            <span>{customFunctions.getDMYDate(joining_date)}</span>
+            <span>{joining_date ? customFunctions.getDMYDate(joining_date) :'-'}</span>
           </>
         );
       },
