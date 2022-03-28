@@ -50,7 +50,6 @@ function Dashboard() {
   const [newBirthdayData, setNewBirthdayData] = useState([]);
   const [broadcastDescription, setBroadcastDescription] = useState([]);
   const [confirmationEmployee, setConfirmationEmployee] = useState([]);
-
   const d = new Date();
   const day = d.getDate(); // eslint-disable-line
   const m_names = [
