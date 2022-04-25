@@ -20,9 +20,11 @@ function GenerateOfferLetter() {
   const [document, setDocument] = useState('');
   const [checked, setChecked] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
+  const [dateChangeToggle, setDateChangeToggle] = useState(true);
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
   const isFresher = customFunctions.getLocalStorage('isFresher');
+  const [joiningDate, setJoiningDate] = useState(null);
 
   useEffect(() => {
     const CandidateId = customFunctions.getLocalStorage('applicantId');
@@ -62,12 +64,19 @@ function GenerateOfferLetter() {
     updateDefaultValues({
       name: Name,
       designation: Designation,
-      joining_date: joiningdate !== 'null' ? new Date(joiningdate) : '',
+      joining_date: joiningdate !== 'null' ? new Date(joiningdate) : null,
       offered_ctc: OfferCtc !== 'null' ? Number(OfferCtc) : '',
       pf_included: PfInclude === 'true' ? 'true' : 'false',
       miscellaneous_included: misInclude === 'true' ? 'true' : 'false',
     });
   }, []);
+
+  useEffect(()=>{
+    if(defaultValues.joining_date){
+      setJoiningDate(defaultValues.joining_date);
+      setDateChangeToggle(false);
+    }
+  },[defaultValues]);
 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -102,6 +111,7 @@ function GenerateOfferLetter() {
         subject: letterStatus,
         applicant_id: Number(id),
         body: emailBody,
+        joining_date: joiningDate ? customFunctions.getDate(joiningDate) : null,
       };
 
       const { data, message } = await AuthApi.postDataToServer(
@@ -135,6 +145,7 @@ function GenerateOfferLetter() {
           email_type: 'offer_letter',
           subject: letterStatus,
           body,
+          joining_date: joiningDate ? customFunctions.getDate(joiningDate) : null,
         };
         if (isFresher !== 'true') postData.attachment = checked ? doc : '';
         if (EmailBody) postData.body = EmailBody;
@@ -184,7 +195,7 @@ function GenerateOfferLetter() {
       miscellaneous_included: formValues.miscellaneous_included === 'true' ? true : false, // eslint-disable-line
       joining_date: formValues.joining_date
         ? customFunctions.getDate(formValues.joining_date)
-        : '',
+        : null,
     };
 
     const { data, message } = await AuthApi.postDataToServer(
@@ -238,7 +249,12 @@ function GenerateOfferLetter() {
               setDocument('');
               submitForm(formValues);
             }}
-            callbacks={{}}
+            callbacks = {{
+              dateChange: (value) => { if(value){
+                setDateChangeToggle(false);
+                setJoiningDate(value);
+              }}
+            }}
             defaultFormValues={defaultValues}
             currentUser={currentUser}
             submitBtnText="Preview"
@@ -280,7 +296,16 @@ function GenerateOfferLetter() {
             <Button
               className="mt-3 mb-4"
               disabled={checked && !document ? 'disabled' : ''}
-              onClick={() => sendMail(emailBody, document)}
+              onClick={() => {
+                if(dateChangeToggle){
+                  swal('Please select joining date', '', 'error', {
+                    closeOnClickOutside: false,
+                    allowOutsideClick: false,
+                  });
+                } else {
+                  sendMail(emailBody, document);
+                }
+              }}
             >
               Send Mail
             </Button>

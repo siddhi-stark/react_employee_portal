@@ -88,7 +88,7 @@
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
-        "callback": "",
+        "callback": "dateChange",
         "callbackUrl": "",
         "inputToChange": "",
         "minDateSelector": "",
