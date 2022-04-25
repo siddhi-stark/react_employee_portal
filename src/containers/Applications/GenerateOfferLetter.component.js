@@ -22,6 +22,7 @@ function GenerateOfferLetter() {
   const [isShowLoader, setShowLoader] = useState(false);
   const [title, setTitle] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
+  const isFresher = customFunctions.getLocalStorage('isFresher');
 
   useEffect(() => {
     const CandidateId = customFunctions.getLocalStorage('applicantId');
@@ -33,17 +34,22 @@ function GenerateOfferLetter() {
     const formSchema = [...FormSections];
     const updatedSchema = formSchema.map((section) => {
       const s = { ...section };
-      s.fields = section.fields.map((item) => {
-        const itemData = item;
-        if (item.name === 'name' || item.name === 'designation')
-          itemData.disabled = true;
-        if (item.name === 'joining_date') {
-          const date = new Date();
-          itemData.minDate = date;
-        }
-
-        return itemData;
-      });
+       if(isFresher === 'true'){
+        s.fields = section.fields.filter((item) => {
+          return !['offered_ctc','miscellaneous_included','pf_included'].includes(item.name);
+        });
+       } else {
+        s.fields = section.fields.map((item) => {
+          const itemData = item;
+          if (item.name === 'name' || item.name === 'designation')
+            itemData.disabled = true;
+          if (item.name === 'joining_date') {
+            const date = new Date();
+            itemData.minDate = date;
+          }
+          return itemData;
+        });
+       }
       return s;
     });
     updateJsonSchema([...updatedSchema]);
@@ -74,9 +80,8 @@ function GenerateOfferLetter() {
   }, []);
 
   const getEmailTemplateData = async () => {
-    const { data, message } = await AuthApi.getDataFromServer(
-      `${Api.emailTemplates}?name=Offer Letter`
-    );
+    const endPoint = isFresher === 'true' ? `${Api.emailTemplates}?name=Trainee Selection Letter` : `${Api.emailTemplates}?name=Offer Letter`;
+    const { data, message } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
       setEmailBody(data.data.body);
     } else {
@@ -87,12 +92,14 @@ function GenerateOfferLetter() {
   const sendMail = async (body, doc) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('applicantId');
+    const letterStatus = isFresher === 'true' ? 'Trainee Selection Letter' : 'Offer Letter';
+
     let EmailBody = '';
     const reasonLabel = checked ? 'with' : 'without';
     if (!checked) {
       const postData = {
-        name: 'Offer Letter',
-        subject: 'Offer Letter',
+        name: letterStatus,
+        subject: letterStatus,
         applicant_id: Number(id),
         body: emailBody,
       };
@@ -114,7 +121,7 @@ function GenerateOfferLetter() {
     setShowLoader(false);
     swal({
       title: 'Are you sure?',
-      text: `Do you want to send mail ${reasonLabel} annexture ?`,
+      text: isFresher === 'true' ? 'Do you want to send mail ?' : `Do you want to send mail ${reasonLabel} annexture ?`,
       icon: 'warning',
       dangerMode: true,
       buttons: true,
@@ -123,13 +130,13 @@ function GenerateOfferLetter() {
     }).then(async (result) => {
       if (result) {
         const postData = {
-          name: 'Offer Letter',
+          name: letterStatus,
           applicant_id: Number(id),
           email_type: 'offer_letter',
-          subject: 'Offer Letter',
-          attachment: checked ? doc : '',
+          subject: letterStatus,
           body,
         };
+        if (isFresher !== 'true') postData.attachment = checked ? doc : '';
         if (EmailBody) postData.body = EmailBody;
         const { data, message } = await AuthApi.postDataToServer(
           Api.sendMailUrl,
@@ -148,6 +155,7 @@ function GenerateOfferLetter() {
             customFunctions.removeLocalStorage('joiningdate');
             customFunctions.removeLocalStorage('pfInclude');
             customFunctions.removeLocalStorage('misInclude');
+            customFunctions.removeLocalStorage('isFresher');
             history.push('/recruitment');
             swal.close();
           });
@@ -243,17 +251,21 @@ function GenerateOfferLetter() {
               history.push('/recruitment');
             }}
           />
-          <input
-            onChange={(e) => {
-              setChecked(e.target.checked);
-            }}
-            name="checked"
-            type="checkbox"
-            id="checked"
-            className="form-submit-buttons ms-4"
-            value={checked}
-          />
-          <span className="ms-2">Do you want to send Annexure ?</span>
+          {(isFresher !== 'true') && (
+            <>
+              <input
+                onChange={(e) => {
+                  setChecked(e.target.checked);
+                }}
+                name="checked"
+                type="checkbox"
+                id="checked"
+                className="form-submit-buttons ms-4"
+                value={checked}
+              />
+              <span className="ms-2">Do you want to send Annexure ?</span>
+            </>
+          )}
           <div className="container">
             {document && checked && (
               <>

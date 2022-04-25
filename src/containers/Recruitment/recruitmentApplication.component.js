@@ -158,6 +158,10 @@ function RecruitmentApplicationComponent() {
                       'misInclude',
                       dt.miscellaneous_included && dt.miscellaneous_included
                     );
+                    customFunctions.setLocalStorage(
+                      'isFresher',
+                      dt.is_fresher && dt.is_fresher
+                    );
                   }
                   return dt;
                 });
