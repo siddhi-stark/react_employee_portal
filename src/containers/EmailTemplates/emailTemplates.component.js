@@ -124,6 +124,7 @@ function EmailTemplatesComponent() {
         swal.close();
         updateDefaultValues({});
         setEmailContent([]);
+        setTemplateId(null);
       });
     } else {
       setShowLoader(false);
