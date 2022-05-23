@@ -3,3 +3,18 @@ display: none;
 }
 
 .policy-list-table #chkAll{ display: none }
+
+.disabled-link {
+    pointer-events: none;
+}
+
+.forget-input img {
+  left: 15px;
+  position: absolute;
+  top: 16px;
+  z-index: 9999;
+}
+
+.forget-input .input-group {
+  position: relative;
+}

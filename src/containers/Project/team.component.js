@@ -57,6 +57,7 @@ function Team(props) {
   const [graphAllocatedHrs, setGraphAllocatedHrs] = useState(null);
   const [graphData, setGraphData] = useState({});
   const [employeeGraphData, setEmployeeGraphData] = useState([]);
+  const managerName = customFunctions.getLocalStorage('managerName');
 
   // Declare columns
   const columns = [
@@ -432,6 +433,7 @@ function Team(props) {
               totalHrsEstimate={graphDetails.totalHrsEstimate}
               totalHrsAllocated={graphDetails.totalHrsAllocated}
               projectCompletion={graphDetails.projectCompletion}
+              managerName={managerName}
             />
           </Col>
         </Row>

@@ -90,7 +90,7 @@ export default function SimpleTable(props) {
               >
                 <option value="">Bulk Actions</option>
                 {bulkActions.map((action, index) => (
-                  <option value={index}>{action.actionTitle}</option>
+                  <option key={index} value={index}>{action.actionTitle}</option>
                 ))}
               </select>
 
@@ -163,8 +163,8 @@ export default function SimpleTable(props) {
                       </div>
                     </td>
                   )}
-                  {allColumnIds.map((rowDataId) => (
-                    <td>{row[rowDataId]}</td>
+                  {allColumnIds.map((rowDataId,i) => (
+                    <td key={i}>{row[rowDataId]}</td>
                   ))}
                 </tr>
               ))}

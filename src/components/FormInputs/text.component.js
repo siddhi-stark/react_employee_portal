@@ -56,7 +56,7 @@ export default function InputComponent(props) {
             name={name}
             type={type}
             placeholder={placeholder}
-            maxlength={maxlength}
+            maxLength={maxlength}
             className={inputClass}
             disabled={disabled}
             multiple={multiple}
@@ -64,11 +64,13 @@ export default function InputComponent(props) {
             rows={rows}
             as={as}
             style={style}
-            minlength={minlength}
-            autocomplete={autocomplete}
+            minLength={minlength}
+            autoComplete={autocomplete}
           />
         </InputGroup>
-        <p style={{ color: 'red' }}> {errorMessage} </p>
+        {errorMessage && (
+          <p style={{ color: 'red' }}> {errorMessage} </p>
+        )}
       </Form.Group>
     </>
   );

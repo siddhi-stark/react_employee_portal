@@ -242,7 +242,7 @@ function Header() {
                     {designation && (
                       <p
                         className="main-notification-text"
-                        style={{ 'font-size': '13px' }}
+                        style={{ fontSize : '13px' }}
                       >
                         ({designation})
                       </p>

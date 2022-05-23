@@ -1,12 +1,21 @@
 jQuery(document).ready(function () {
-  $('body').on('click', '.with-sub', function (event) {
+  // $('.nav-item').on('click', '.with-sub', function (event) {
+  //   if ($('.nav-item').not($(this).parent()).hasClass('show')) {
+  //     $('.nav-item').removeClass('show');
+  //   }
+  //   $(this).parent().toggleClass('show');
+  //   /*$('.nav-item').toggleClass('open');*/
+  // });
+
+  $('.nav-item').on('click', '.nav-link', function (event) {
     if ($('.nav-item').not($(this).parent()).hasClass('show')) {
       $('.nav-item').removeClass('show');
     }
-    $(this).parent().toggleClass('show');
-    /*$('.nav-item').toggleClass('open');*/
-  });
 
+    $(this).parent().toggleClass('show');
+    // $('.nav-item').toggleClass('open');
+  });
+  
   $('body').on('click', '.profile-img', function (event) {
     $(this).toggleClass('show');
     /*$('.nav-item').toggleClass('open');*/

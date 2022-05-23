@@ -177,6 +177,10 @@ export default class Api extends Component {
 
   static leavesCountDataUrl = `${Api.baseUrl}leave-data/`;
 
+  static projectSummaryUrl = `${Api.baseUrl}project-summary/`;
+
+  static projectProgressUrl = `${Api.baseUrl}project-progress/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

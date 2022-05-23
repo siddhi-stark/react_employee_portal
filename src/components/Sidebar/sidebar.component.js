@@ -183,12 +183,12 @@ function Sidebar() {
 
                     {hasSubMenu && (
                       <ul className="nav-sub list-unstyled">
-                        {menuItem.submenu.map((submenuItem) => {
+                        {menuItem.submenu.map((submenuItem,i) => {
                           return (
                             <UserRestrictions
                               permittedUsers={submenuItem.roleaccess}
                             >
-                              <li onClick={() => { onSubActiveClass(); }} // eslint-disable-line
+                              <li key={i} onClick={() => { onSubActiveClass(); }} // eslint-disable-line
                                 className={`nav-sub-item ${
                                   submenuItem.path === window.location.pathname
                                     ? 'show active'
@@ -236,9 +236,9 @@ function Sidebar() {
                     </div>
 
                     {events &&
-                      events.map((ev) => (
+                      events.map((ev,i) => (
                         <>
-                          <div className="event-title date d-flex align-items-center">
+                          <div key={i} className="event-title date d-flex align-items-center">
                             <p className="bday-date">
                               <img
                                 src="/images/calendar-img.png"
@@ -288,9 +288,9 @@ function Sidebar() {
 
                       <ul className="p-0 m-0 list-unstyled">
                         {birthdays &&
-                          birthdays.map((bday) => (
+                          birthdays.map((bday,i) => (
                             <>
-                              <li className="text-red">
+                              <li key={i} className="text-red">
                                 <a href="#">
                                   <>
                                     {Number(bday.dob) >= day ? (

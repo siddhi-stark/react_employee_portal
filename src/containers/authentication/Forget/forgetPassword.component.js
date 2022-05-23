@@ -91,20 +91,22 @@ function ForgetPassword() {
           <div className="title text-center">
             <h1>Recover Password</h1>
           </div>
-          <TextInput
-            inputIcon="/images/user.svg"
-            inputClass="form-control form-control-lg"
-            type="email"
-            name="email"
-            onInputChange={(e) => handleInputChange(e)}
-            value={userData.email}
-            placeholder="Enter your Email and instructions will be sent to you!"
-            errorMessage={validator.current.message(
-              'email',
-              userData.email,
-              'required|email'
-            )}
-          />
+          <div className='forget-input'>
+            <TextInput
+              inputIcon="/images/user.svg"
+              inputClass="form-control form-control-lg"
+              type="email"
+              name="email"
+              onInputChange={(e) => handleInputChange(e)}
+              value={userData.email}
+              placeholder="Enter your Email and instructions will be sent to you!"
+              errorMessage={validator.current.message(
+                'email',
+                userData.email,
+                'required|email'
+              )}
+            />
+          </div>
           <div className="text-center mt-3">
             <Button
               type="submit"

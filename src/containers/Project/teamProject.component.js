@@ -9,7 +9,7 @@ import { Card, Row, Col, Button } from 'react-bootstrap';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, TextInput } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 import ProjectRightContainer from '../../components/RightContainer/projectRightContainer.component';
@@ -23,6 +23,8 @@ function TeamProject(props) {
   const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
   const [activityData, setActivityData] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const [totalTask, setTotalTask] = useState(0);
 
   const items = [
     { to: '/', label: 'Home' },
@@ -64,6 +66,9 @@ function TeamProject(props) {
   const [projectStatus, setProjectStatus] = useState('');
   const [graphDataObj, setGraphDataObj] = useState(initialGraphValue);
   const [activeMenu, setActiveMenu] = useState('Summary');
+  const [managerName, setManagerName] = useState('');
+  const [remarksData, setRemarksData] = useState([]);
+  // const [taskRowData, setTaskRowData] = useState([]);
 
   // Declare columns
   const columns = [
@@ -90,6 +95,7 @@ function TeamProject(props) {
                     );
                     customFunctions.setLocalStorage('projectName', name);
                     customFunctions.setLocalStorage('departmentName', team);
+                    customFunctions.setLocalStorage('managerName', managerName);
                     e.preventDefault();
                     e.stopPropagation();
                     if (archived) {
@@ -139,23 +145,15 @@ function TeamProject(props) {
       id: 'allocated',
       label: 'Estimated Hours',
       render: ({ allocated }) => {
-        return (
-          <>
-          {allocated.toFixed(2)}
-          </>
-          );
-      }
+        return <>{allocated.toFixed(2)}</>;
+      },
     },
     {
       id: 'hours_allocated',
       label: 'Allocated Hours',
       render: ({ hours_allocated }) => {
-        return (
-        <>
-        {hours_allocated.toFixed(2)}
-        </>
-        );
-      }
+        return <>{hours_allocated.toFixed(2)}</>;
+      },
     },
     {
       id: 'remaining',
@@ -231,7 +229,7 @@ function TeamProject(props) {
         data && data.data && Number(data.data.hours_allocated);
       const spend_hrs = data && data.data && Number(data.data.spend);
       const total = Number(allocated_hrs) - Number(spend_hrs);
-
+      setManagerName(data.data.project_owner_name);
       setProjectStatus(total);
       setGraphData(graph);
 
@@ -456,7 +454,8 @@ function TeamProject(props) {
 
   useEffect(() => {
     getRowData(1);
-    if(activeMenu === 'Activity'){
+    getTaskCountData();
+    if (activeMenu === 'Activity') {
       getActivityData();
     }
   }, [activeMenu]);
@@ -481,10 +480,74 @@ function TeamProject(props) {
       setActivityData(data.data);
     } else {
       setShowLoader(false);
-      swal(message,'','error');
+      swal(message, '', 'error');
     }
   };
-     
+
+  const getTaskCountData = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.projectProgressUrl}`;
+    const params = {
+      project_id: teamProjectId,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+    if (data && data.data) {
+      setShowLoader(false);
+      const tableArr = [];
+      data.data.percentage &&
+        data.data.percentage.length &&
+        data.data.percentage.filter((dt) => {
+          if (dt.name === 'total_task') {
+            setTotalTask(dt.value);
+          }
+          if (
+            dt.name !== 'project_name' &&
+            dt.name !== 'project_id' &&
+            dt.name !== 'total_task'
+          )
+            tableArr.push(dt);
+          return dt;
+        });
+      setTableData(tableArr || []);
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
+  const getRemarksData = async (e) => {
+    e.preventDefault();
+    setShowLoader(true);
+    const newData = remarksData && remarksData.length && remarksData.filter((rm)=> rm.flag === true);
+    const postData = {
+        'progress': newData && newData[0].progress,
+        'remark': newData && newData[0].remark,
+        'project_id': Number(teamProjectId)
+    };
+    const payload = customFunctions.cleanObject(postData);
+
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.projectSummaryUrl}`;
+    const { data, message } = await callback(endPoint, payload);
+
+    if (!data) {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+
+    setShowLoader(false);
+    swal(data && data.message[0], '', 'success').then((result) => {
+      if (result) {
+        setShowLoader(false);
+        getTaskCountData();
+      }
+    });
+  };
+
   return (
     <>
       <Helmet title={title} />
@@ -534,15 +597,71 @@ function TeamProject(props) {
           <Row>
             <Col sm={8}>
               <Row>
+                <Card className="h-100 pie-chart-graph">
+                  <Card.Body>
+                    {/* <CustomTable
+                      columns={taskColumns}
+                      rows={tableData}
+                      tableclassName="table-striped"
+                      showPagination={false}
+                      emptyRender={() => {
+                        return 'No record found.';
+                      }}
+                    /> */}
+                    <div className="table-projects table-responsive ">
+                      <table className="table">
+                        <thead>
+                          <tr>
+                            <th>Total Task</th>
+                            <th>{totalTask}</th>
+                            <th>Remarks</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {tableData &&
+                            tableData.length &&
+                            tableData.map((td,i) => (
+                              <tr>
+                                <td>{td.name}</td>
+                                <td>{td.value}</td>
+                                <td>
+                                  <TextInput
+                                    onInputChange={(e) => {
+                                      tableData[i].remark = e.target.value;
+                                      tableData.map((tb)=> tb.name == td.name ? td.flag = false : td.flag = true); // eslint-disable-line
+                                      setRemarksData([...tableData]);
+                                    }}
+                                    autocomplete="off"
+                                    containerClass="mb-0"
+                                    type="text"
+                                    name="remark"
+                                    value={tableData[i].remark}
+                                  />
+                                </td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <Button
+                      onClick={(e) => getRemarksData(e)}
+                      className="float-end"
+                    >
+                      Update
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Row>
+              <Row>
                 <Col sm={4} className="mb-4">
                   <Card className="h-100 pie-chart-graph">
                     <Card.Header className="purple-bg">
                       <strong>Task Status</strong>
                     </Card.Header>
                     <Card.Body>
-                    {Object.keys(graphData).length && (
-                      <Pie data={graphData} />
-                    )}
+                      {Object.keys(graphData).length && (
+                        <Pie data={graphData} />
+                      )}
                     </Card.Body>
                   </Card>
                 </Col>
@@ -552,26 +671,26 @@ function TeamProject(props) {
                       <strong>Hours Analysis</strong>
                     </Card.Header>
                     <Card.Body>
-                     {Object.keys(barGraphData).length && (
-                      <Bar
-                        data={barGraphData}
-                        options={{
-                          title: {
-                            display: true,
-                            text: 'Team Bar Graph',
-                            fontSize: 20,
-                          },
-                          legend: {
-                            display: true,
-                            position: 'right',
-                          },
-                        }}
-                      />
+                      {Object.keys(barGraphData).length && (
+                        <Bar
+                          data={barGraphData}
+                          options={{
+                            title: {
+                              display: true,
+                              text: 'Team Bar Graph',
+                              fontSize: 20,
+                            },
+                            legend: {
+                              display: true,
+                              position: 'right',
+                            },
+                          }}
+                        />
                       )}
                     </Card.Body>
                   </Card>
                 </Col>
-                  <EmployeeBugList projectId={teamProjectId} />
+                <EmployeeBugList projectId={teamProjectId} />
                 <Card className="p-0">
                   <Card.Body>
                     <div className="d-flex align-items-center justify-content-between">
@@ -600,17 +719,18 @@ function TeamProject(props) {
               </Row>
             </Col>
             <Col sm={4}>
-            <ProjectRightContainer 
-              name = {name}
-              projectStatus = {projectStatus}
-              startDate ={graphDetails.start_date}
-              endDate ={graphDetails.end_date}
-              totalHrsSpend={graphDetails.totalHrsSpend}
-              totalHrsEstimate ={graphDetails.totalHrsEstimate}
-              totalHrsAllocated ={graphDetails.totalHrsAllocated}
-              projectCompletion ={graphDetails.projectCompletion}
-              url ={graphDetails.url}
-            />
+              <ProjectRightContainer
+                name={name}
+                projectStatus={projectStatus}
+                startDate={graphDetails.start_date}
+                endDate={graphDetails.end_date}
+                totalHrsSpend={graphDetails.totalHrsSpend}
+                totalHrsEstimate={graphDetails.totalHrsEstimate}
+                totalHrsAllocated={graphDetails.totalHrsAllocated}
+                projectCompletion={graphDetails.projectCompletion}
+                url={graphDetails.url}
+                managerName={managerName}
+              />
             </Col>
           </Row>
         </section>
@@ -620,47 +740,89 @@ function TeamProject(props) {
           <div className="row">
             <div className="col-sm-8">
               {/* loop for date */}
-              { Object.keys(activityData).length ? Object.entries(activityData).map(([datekey, datevalueobject]) => (
-                <section className="card">
-                  <div className="purple-bg card-header d-flex align-items-center">
-                    <h5 className="card-title mb-0" title="ZS Innovation Lab NEw Project">{datekey && (`${moment(datekey).format('dddd Do MMMM')}`)}</h5>
-                  </div>
-                  <section className="card-body">
-                    {/* emnployee loop */}
-                    { Object.keys(datevalueobject).length && Object.entries(datevalueobject).map(([employeeName, taskData]) => (
-                      <div className="clearfix">
-                        <h5>{employeeName}</h5>
-                        <ul className="timeline">
-                          {/* task loop */}
-                          { Object.keys(taskData).length && Object.entries(taskData).map((task) => (
-                            <li className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}>  
-                                 <h6 title={`${task[1].content}`} className="mb-0 task-name">{task[1].content.substring(0,40)}</h6>
-                                 <div className="d-flex align-items-center">
-                                    <h6 className="mr-5"> ETA: {task[1].estimation}</h6>
-                                    <h6>Status: {task[1].progress && task[1].progress}%
-                                      {task[1].progress === 100 ? (` ( ${task[1].hours_sum && task[1].hours_sum}) `) :''}
-                                    </h6>
-                                 </div>
-                            </li>
-                          ))}
-                        </ul>
+              {Object.keys(activityData).length ? (
+                Object.entries(activityData).map(
+                  ([datekey, datevalueobject]) => (
+                    <section className="card">
+                      <div className="purple-bg card-header d-flex align-items-center">
+                        <h5
+                          className="card-title mb-0"
+                          title="ZS Innovation Lab NEw Project"
+                        >
+                          {datekey &&
+                            `${moment(datekey).format('dddd Do MMMM')}`}
+                        </h5>
                       </div>
-                    ))}
-                  </section>
-                </section>
-              )) : <Card body className="d-flex align-items-center justify-content-between"> <span>No record found.</span></Card>}                     
+                      <section className="card-body">
+                        {/* emnployee loop */}
+                        {Object.keys(datevalueobject).length &&
+                          Object.entries(datevalueobject).map(
+                            ([employeeName, taskData]) => (
+                              <div className="clearfix">
+                                <h5>{employeeName}</h5>
+                                <ul className="timeline">
+                                  {/* task loop */}
+                                  {Object.keys(taskData).length &&
+                                    Object.entries(taskData).map((task) => (
+                                      <li
+                                        className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}
+                                      >
+                                        <h6
+                                          title={`${task[1].content}`}
+                                          className="mb-0 task-name"
+                                        >
+                                          {task[1].content.substring(0, 40)}
+                                        </h6>
+                                        <div className="d-flex align-items-center">
+                                          <h6 className="mr-5">
+                                            {' '}
+                                            ETA: {task[1].estimation}
+                                          </h6>
+                                          <h6>
+                                            Status:{' '}
+                                            {task[1].progress &&
+                                              task[1].progress}
+                                            %
+                                            {task[1].progress === 100
+                                              ? ` ( ${
+                                                  task[1].hours_sum &&
+                                                  task[1].hours_sum
+                                                }) `
+                                              : ''}
+                                          </h6>
+                                        </div>
+                                      </li>
+                                    ))}
+                                </ul>
+                              </div>
+                            )
+                          )}
+                      </section>
+                    </section>
+                  )
+                )
+              ) : (
+                <Card
+                  body
+                  className="d-flex align-items-center justify-content-between"
+                >
+                  {' '}
+                  <span>No record found.</span>
+                </Card>
+              )}
             </div>
-             <Col sm={4}>
-              <ProjectRightContainer 
-                name = {name}
-                projectStatus = {projectStatus}
-                startDate ={graphDetails.start_date}
-                endDate ={graphDetails.end_date}
+            <Col sm={4}>
+              <ProjectRightContainer
+                name={name}
+                projectStatus={projectStatus}
+                startDate={graphDetails.start_date}
+                endDate={graphDetails.end_date}
                 totalHrsSpend={graphDetails.totalHrsSpend}
-                totalHrsEstimate ={graphDetails.totalHrsEstimate}
-                totalHrsAllocated ={graphDetails.totalHrsAllocated}
-                projectCompletion ={graphDetails.projectCompletion}
-                url ={graphDetails.url}
+                totalHrsEstimate={graphDetails.totalHrsEstimate}
+                totalHrsAllocated={graphDetails.totalHrsAllocated}
+                projectCompletion={graphDetails.projectCompletion}
+                url={graphDetails.url}
+                managerName={managerName}
               />
             </Col>
           </div>
