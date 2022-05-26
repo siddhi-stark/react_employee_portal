@@ -48,13 +48,13 @@ const menu = [
     submenu: [],
     roleaccess: [1, 3, 5, 6],
   },
-  {
-    title: 'Employee Timesheet',
-    path: '/emp-timesheet',
-    icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [1, 5, 4, 6],
-  },
+  // {
+  //   title: 'Employee Timesheet',
+  //   path: '/emp-timesheet',
+  //   icon: 'timesheet.svg',
+  //   submenu: [],
+  //   roleaccess: [1, 5, 4, 6],
+  // },
   {
     title: 'Employees',
     path: '/employees',
@@ -121,9 +121,9 @@ const menu = [
     icon: 'hr activity.svg',
     submenu: [
       {
-        title: 'HR Report',
+        title: 'HR Timesheet',
         path: '/hr-reports',
-        icon: 'report.svg',
+        icon: 'timesheet.svg',
         roleaccess: [1, 6],
       },
       {
@@ -188,34 +188,34 @@ const menu = [
     roleaccess: [1, 2, 3, 5, 6],
   },
   {
-    title: 'Reports',
+    title: 'My Timesheet',
     path: '/report',
-    icon: 'report.svg',
+    icon: 'timesheet.svg',
     submenu: [],
     roleaccess: [4],
   },
   {
-    title: 'Reports',
+    title: 'Timesheet',
     path: '#',
     redirect: false,
-    icon: 'report.svg',
+    icon: 'timesheet.svg',
     submenu: [
       {
-        title: 'My Report',
+        title: 'My Timesheet',
         path: '/my-report',
-        icon: 'report.svg',
+        icon: 'timesheet.svg',
         roleaccess: [2, 3, 6, 5],
       },
       {
-        title: 'Team Report',
+        title: 'Team Timesheet',
         path: '/team-report',
-        icon: 'report.svg',
+        icon: 'timesheet.svg',
         roleaccess: [2, 3, 6],
       },
       {
-        title: 'Employee Report',
+        title: 'Employee Timesheet',
         path: '/employee-report',
-        icon: 'report.svg',
+        icon: 'timesheet.svg',
         roleaccess: [5, 6],
       },
     ],
@@ -223,9 +223,9 @@ const menu = [
   },
 
   {
-    title: 'Reports',
+    title: 'Employee Timesheet',
     path: '/reports',
-    icon: 'report.svg',
+    icon: 'timesheet.svg',
     submenu: [],
     roleaccess: [1],
   },

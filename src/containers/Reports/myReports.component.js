@@ -11,7 +11,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/my-report', label: 'My Report' },
+  { to: '/my-report', label: 'My Timesheet' },
 ];
 
 function AllReports() {
@@ -151,7 +151,7 @@ function AllReports() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">My Report</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">My Timesheet</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -231,7 +231,7 @@ function AllReports() {
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">My Report</h5>
+                <h5 className="card-title mb-0 mt-2 ">My Timesheet</h5>
               </div>
               <hr />
               <Row>

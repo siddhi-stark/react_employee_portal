@@ -16,7 +16,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/team-report', label: 'Team Reports' },
+  { to: '/team-report', label: 'Team Timesheet' },
 ];
 
 function TeamReport() {
@@ -222,7 +222,7 @@ function TeamReport() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Team Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Team Timesheet</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -329,7 +329,7 @@ function TeamReport() {
         <Card>
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">Team Reports</h5>
+              <h5 className="card-title mb-0 mt-2 ">Team Timesheet</h5>
             </div>
             <hr />
             <Table

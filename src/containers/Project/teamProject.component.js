@@ -522,17 +522,19 @@ function TeamProject(props) {
   const getRemarksData = async (e) => {
     e.preventDefault();
     setShowLoader(true);
-    const newData = remarksData && remarksData.length && remarksData.filter((rm)=> rm.flag === true);
-    const postData = {
-        'progress': newData && newData[0].progress,
-        'remark': newData && newData[0].remark,
+    const postData = [];
+    remarksData && remarksData.length && remarksData.map((r)=> {
+      postData.push({
+        'progress': r.progress,
+        'remark': r.remark,
         'project_id': Number(teamProjectId)
-    };
-    const payload = customFunctions.cleanObject(postData);
+      });
+      return postData;
+    });
 
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.projectSummaryUrl}`;
-    const { data, message } = await callback(endPoint, payload);
+    const { data, message } = await callback(endPoint, postData);
 
     if (!data) {
       setShowLoader(false);
