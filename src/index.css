@@ -18,3 +18,8 @@ display: none;
 .forget-input .input-group {
   position: relative;
 }
+
+.main-sidebar-body .nav li.active a {
+  background-color: #2D2E61;
+  color: #ffffff;
+}
