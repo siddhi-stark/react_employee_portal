@@ -610,7 +610,8 @@ function TeamProject(props) {
                         return 'No record found.';
                       }}
                     /> */}
-                    <div className="table-projects table-responsive ">
+                    <div className="table-projects d-flex justify-content-center table-responsive ">
+                    {(tableData && tableData.length) ? (
                       <table className="table">
                         <thead>
                           <tr>
@@ -620,37 +621,38 @@ function TeamProject(props) {
                           </tr>
                         </thead>
                         <tbody>
-                          {tableData &&
-                            tableData.length &&
-                            tableData.map((td,i) => (
-                              <tr>
-                                <td>{td.name}</td>
-                                <td>{td.value}</td>
-                                <td>
-                                  <TextInput
-                                    onInputChange={(e) => {
-                                      tableData[i].remark = e.target.value;
-                                      tableData.map((tb)=> tb.name == td.name ? td.flag = false : td.flag = true); // eslint-disable-line
-                                      setRemarksData([...tableData]);
-                                    }}
-                                    autocomplete="off"
-                                    containerClass="mb-0"
-                                    type="text"
-                                    name="remark"
-                                    value={tableData[i].remark}
-                                  />
-                                </td>
-                              </tr>
-                            ))}
+                          {tableData.map((td,i) => (
+                            <tr>
+                              <td>{td.name}</td>
+                              <td>{td.value}</td>
+                              <td>
+                                <TextInput
+                                  onInputChange={(e) => {
+                                    tableData[i].remark = e.target.value;
+                                    tableData.map((tb)=> tb.name == td.name ? td.flag = false : td.flag = true); // eslint-disable-line
+                                    setRemarksData([...tableData]);
+                                  }}
+                                  autocomplete="off"
+                                  containerClass="mb-0"
+                                  type="text"
+                                  name="remark"
+                                  value={tableData[i].remark}
+                                />
+                              </td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
+                    ):(<span>No record found.</span>)}
                     </div>
-                    <Button
-                      onClick={(e) => getRemarksData(e)}
-                      className="float-end"
-                    >
-                      Update
-                    </Button>
+                    {(tableData && tableData.length) && (
+                      <Button
+                        onClick={(e) => getRemarksData(e)}
+                        className="float-end"
+                      >
+                        Update
+                      </Button>
+                    )}
                   </Card.Body>
                 </Card>
               </Row>
