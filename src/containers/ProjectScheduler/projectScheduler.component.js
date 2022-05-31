@@ -15,7 +15,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/project', label: 'Project Scheduler' },
+  { label: 'Project Scheduler' },
 ];
 
 function ProjectScheduler() {
@@ -335,6 +335,7 @@ function ProjectScheduler() {
               formSections={FormSections}
               formHeading="Filter"
               onFormSubmit={(formValues) => {
+                if(!formValues.team_id && !formValues.project_id && !formValues.coordinator) return;
                 submitForm(formValues);
               }}
               options={options}
@@ -351,6 +352,7 @@ function ProjectScheduler() {
               btnContainerClass="form-submit-buttons pull-right"
               isStepForm={false}
               onFormReset={() => {
+                if(filterData && !Object.keys(filterData).length) return;
                 setFilterData();
                 setDeveloperValue();
               }}

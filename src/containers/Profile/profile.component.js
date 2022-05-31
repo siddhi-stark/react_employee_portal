@@ -21,7 +21,7 @@ const validator = new SimpleReactValidator();
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/profile', label: 'My Profile' },
+  { label: 'My Profile' },
 ];
 
 function Profile() {

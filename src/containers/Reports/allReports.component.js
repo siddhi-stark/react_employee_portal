@@ -17,7 +17,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/employee-report', label: 'Employee Timesheet' },
+  { label: 'Employee Timesheet' },
 ];
 
 function AllReports() {

@@ -11,7 +11,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/project', label: 'Project Fetch' },
+  { label: 'Project Fetch' },
 ];
 
 function ProjectFetch() {

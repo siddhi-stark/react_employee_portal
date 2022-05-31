@@ -28,7 +28,6 @@ function TeamMemberProject(props) {
   const items = [
     { to: '/', label: 'Home' },
     {
-      to: archived ? '/archived-project' : '/current-project',
       label: archived ? 'Archived Project' : 'Current Project',
     },
   ];

@@ -11,7 +11,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/my-report', label: 'My Timesheet' },
+  { label: 'My Timesheet' },
 ];
 
 function AllReports() {

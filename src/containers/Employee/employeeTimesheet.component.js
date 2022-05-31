@@ -368,6 +368,7 @@ function EmployeeTimesheet() {
               formSections={FormSections}
               formHeading=""
               onFormSubmit={(formValues) => {
+                if(!formValues.full_name && !formValues.fromDate) return;
                 submitForm(formValues);
               }}
               options={options}
@@ -380,6 +381,7 @@ function EmployeeTimesheet() {
               btnContainerClass="form-submit-buttons pull-right"
               isStepForm={false}
               onFormReset={() => {
+                if(filterData && !Object.keys(filterData).length) return;
                 setDataShow(false);
                 onResetForm();
               }}

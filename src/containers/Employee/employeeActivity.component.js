@@ -14,7 +14,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/employee-activity', label: 'Employee Activity' },
+  { label: 'Employee Activity' },
 ];
 
 function EmployeeActivity(props) {
@@ -124,6 +124,7 @@ function EmployeeActivity(props) {
                   formSections={FormSections}
                   formHeading="workload filter"
                   onFormSubmit={(formValues) => {
+                    if(!formValues.start_date) return;
                     submitForm(formValues);
                   }}
                   callbacks={{}}
@@ -135,6 +136,7 @@ function EmployeeActivity(props) {
                   showBtnClass={true}
                   isStepForm={false}
                   onFormReset={() => {
+                    if(filterData && !Object.keys(filterData).length) return;
                     setFilterData({});
                   }}
                 />

@@ -23,7 +23,7 @@ import UserRestrictions from '../../components/UserRestrictions/userrestrictions
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/projects', label: 'Projects' },
+  { label: 'Projects' },
 ];
 
 function Projects() {

@@ -16,7 +16,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/team-report', label: 'Team Timesheet' },
+  { label: 'Team Timesheet' },
 ];
 
 function TeamReport() {

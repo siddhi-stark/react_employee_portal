@@ -12,7 +12,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/change-password', label: 'Change Password' },
+  { label: 'Change Password' },
 ];
 
 function ManagePassword() {

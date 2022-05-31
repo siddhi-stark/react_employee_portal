@@ -264,6 +264,7 @@ function MyInterviews() {
                 formSections={SearchFormSections}
                 formHeading=""
                 onFormSubmit={(formValues) => {
+                  if(!formValues.keyword) return;
                   submitForm(formValues);
                 }}
                 callbacks={{}}
@@ -275,6 +276,7 @@ function MyInterviews() {
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {
+                  if(filterData && !Object.keys(filterData).length) return;
                   setFilterData();
                 }}
               />

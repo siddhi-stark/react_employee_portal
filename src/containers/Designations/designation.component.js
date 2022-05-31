@@ -13,7 +13,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/designation', label: 'Designation' },
+  { label: 'Designation' },
 ];
 
 function Designation() {

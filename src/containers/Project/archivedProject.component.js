@@ -14,7 +14,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/archived-project', label: 'Archived Project' },
+  { label: 'Archived Project' },
 ];
 
 function ArchivedProject() {
@@ -306,6 +306,7 @@ function ArchivedProject() {
                   formSections={FormSections}
                   formHeading="Project Filter"
                   onFormSubmit={(formValues) => {
+                    if(!formValues.project_id) return;
                     submitForm(formValues);
                   }}
                   callbacks={{}}
@@ -319,6 +320,7 @@ function ArchivedProject() {
                   resetBtnText="Clear"
                   isStepForm={false}
                   onFormReset={() => {
+                    if(filterData && !Object.keys(filterData).length) return;
                     setFilterData({});
                   }}
                 />

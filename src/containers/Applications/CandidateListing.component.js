@@ -183,6 +183,7 @@ function CandidateListing() {
                 formSections={SearchFormSections}
                 formHeading=""
                 onFormSubmit={(formValues) => {
+                  if(!formValues.keyword) return;
                   submitForm(formValues);
                 }}
                 callbacks={{}}
@@ -194,6 +195,7 @@ function CandidateListing() {
                 resetBtnText="Clear"
                 isStepForm={false}
                 onFormReset={() => {
+                  if(filterData && !Object.keys(filterData).length) return;
                   setFilterData();
                 }}
               />

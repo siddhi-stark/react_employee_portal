@@ -202,6 +202,7 @@ function EmployeeTechListing() {
                 formHeaderClass=""
                 formSections={FormSections}
                 onFormSubmit={(formValues) => {
+                  if(!formValues.employee && !formValues.technology) return;
                   submitForm(formValues);
                 }}
                 options={options}
@@ -213,7 +214,10 @@ function EmployeeTechListing() {
                 resetBtnText="Clear"
                 btnContainerClass="form-submit-buttons pull-right"
                 isStepForm={false}
-                onFormReset={() => {}}
+                onFormReset={() => {
+                  if(filterData && !Object.keys(filterData).length) return;
+                  setFilterData({});
+                }}
               />
             </Card.Body>
           </Card>

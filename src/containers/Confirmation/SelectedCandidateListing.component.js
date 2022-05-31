@@ -207,6 +207,7 @@ function SelectedCandidateListing() {
               formHeaderClass=""
               formSections={FormSections}
               onFormSubmit={(formValues) => {
+                if(!formValues.technology_stack && !formValues.position) return;
                 submitForm(formValues);
               }}
               options={options}
@@ -219,7 +220,10 @@ function SelectedCandidateListing() {
               resetBtnText="Clear"
               btnContainerClass="form-submit-buttons pull-right"
               isStepForm={false}
-              onFormReset={() => {}}
+              onFormReset={() => {
+                if(filterData && !Object.keys(filterData).length) return;
+                setFilterData();
+              }}
             />
           </Card.Title>
         </Card.Body>

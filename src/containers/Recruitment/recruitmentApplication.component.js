@@ -523,6 +523,7 @@ function RecruitmentApplicationComponent() {
                 formSections={FormSections}
                 formHeading="Filter Form"
                 onFormSubmit={(formValues) => {
+                  if(!formValues.keyword && !formValues.start_date) return;
                   submitForm(formValues);
                 }}
                 options={options}
@@ -536,6 +537,7 @@ function RecruitmentApplicationComponent() {
                 btnContainerClass="form-submit-buttons pull-right"
                 isStepForm={false}
                 onFormReset={() => {
+                  if(filterData && !Object.keys(filterData).length) return;
                   setFilterData({});
                   setAllData({});
                 }}

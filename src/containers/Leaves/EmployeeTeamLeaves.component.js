@@ -290,6 +290,7 @@ function EmployeeTeamLeaves(props) {
                 formHeading=""
                 options={options}
                 onFormSubmit={(formValues) => {
+                  if(!formValues.full_name && !formValues.start_date) return;
                   submitForm(formValues);
                 }}
                 callbacks={{}}
@@ -301,6 +302,7 @@ function EmployeeTeamLeaves(props) {
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {
+                  if(filterData && !Object.keys(filterData).length) return;
                   setReportTable(false);
                   setFilterData();
                   setYear(null);

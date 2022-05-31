@@ -29,7 +29,6 @@ function TeamProject(props) {
   const items = [
     { to: '/', label: 'Home' },
     {
-      to: archived ? '/archived-project' : '/current-project',
       label: archived ? 'Archived Project' : 'Current Project',
     },
   ];
@@ -615,16 +614,16 @@ function TeamProject(props) {
                       <table className="table">
                         <thead>
                           <tr>
-                            <th>Total Task</th>
-                            <th>{totalTask}</th>
-                            <th>Remarks</th>
+                            <th><b>Total Tasks</b></th>
+                            <th><b>{totalTask}</b></th>
+                            <th><b>Remarks</b></th>
                           </tr>
                         </thead>
                         <tbody>
                           {tableData.map((td,i) => (
                             <tr>
                               <td>{td.name}</td>
-                              <td>{td.value}</td>
+                              <td>{(td.name === 'Not Started(0%)' || td.name === 'Inprogress(1-99%)' || td.name === 'Completed(100%)') ? <b>{td.value}</b>:<i>{td.value}</i>}</td>
                               <td>
                                 <TextInput
                                   onInputChange={(e) => {

@@ -184,6 +184,7 @@ function Technology() {
                   formHeaderClass=""
                   formSections={FilterFormSections}
                   onFormSubmit={(formValues) => {
+                    if(!formValues.keyword) return;
                     submitFilterForm(formValues);
                   }}
                   callbacks={{}}
@@ -196,6 +197,7 @@ function Technology() {
                   formClass="row"
                   isStepForm={false}
                   onFormReset={() => {
+                    if(filterData && !Object.keys(filterData).length) return;
                     setFilterData('');
                   }}
                 />

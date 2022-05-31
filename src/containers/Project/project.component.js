@@ -14,7 +14,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/current-project', label: 'Current Project' },
+  { label: 'Current Project' },
 ];
 
 function Project() {
@@ -315,6 +315,7 @@ function Project() {
                   formSections={FormSections}
                   formHeading="Project Filter"
                   onFormSubmit={(formValues) => {
+                    if(!formValues.project_id) return;
                     submitForm(formValues);
                   }}
                   callbacks={{}}
@@ -328,6 +329,7 @@ function Project() {
                   resetBtnText="Clear"
                   isStepForm={false}
                   onFormReset={() => {
+                    if(filterData && !Object.keys(filterData).length) return;
                     setFilterData({});
                     setAllData({});
                   }}

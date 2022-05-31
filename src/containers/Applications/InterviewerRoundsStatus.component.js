@@ -13,7 +13,7 @@ import customFunctions from '../../helper/customFunctions';
 function InterviewerRoundsStatus(props) {
   const items = [
     { to: '/', label: 'Home' },
-    { to: '/intervie', label: 'Interview Rounds' },
+    { label: 'Interview Rounds' },
   ];
 
   const title = 'Interview Rounds';

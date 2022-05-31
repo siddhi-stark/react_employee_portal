@@ -268,6 +268,7 @@ function TeamLeaves() {
                 options={options}
                 formHeading=""
                 onFormSubmit={(formValues) => {
+                  if(!formValues.full_name && !formValues.start_date) return;
                   submitForm(formValues);
                 }}
                 callbacks={{}}
@@ -279,6 +280,7 @@ function TeamLeaves() {
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {
+                  if(filterData && !Object.keys(filterData).length) return;
                   setFilterData();
                 }}
               />

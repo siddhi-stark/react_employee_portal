@@ -14,7 +14,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/workload', label: 'Workload' },
+  { label: 'Workload' },
 ];
 
 function Workload() {

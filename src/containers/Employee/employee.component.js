@@ -20,7 +20,7 @@ import Loader from '../../components/Loader/index';
 
 const items = [
   { to: '/', label: 'Home' },
-  { to: '/reports', label: 'Employees' },
+  { label: 'Employees' },
 ];
 
 const currentdate = new Date();

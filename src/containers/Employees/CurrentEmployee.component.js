@@ -722,6 +722,7 @@ function CurrentEmployee() {
                   formSections={FormSections}
                   formHeading="filter form"
                   onFormSubmit={(formValues) => {
+                    if(!formValues.employee && !formValues.position) return;
                     submitForm(formValues);
                   }}
                   options={options}
@@ -734,6 +735,7 @@ function CurrentEmployee() {
                   btnContainerClass="form-submit-buttons pull-right"
                   isStepForm={false}
                   onFormReset={() => {
+                    if(filterData && !Object.keys(filterData).length) return;
                     setFilterData({});
                   }}
                 />

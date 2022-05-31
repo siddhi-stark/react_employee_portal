@@ -16,7 +16,7 @@ function HrReports() {
   let defaultFilterOptions = {};
   const items = [
     { to: '/', label: 'Home' },
-    { to: '/hr-reports', label: 'HR Reports' },
+    { label: 'HR Reports' },
   ];
 
   const title = 'HR Reports';
@@ -274,6 +274,7 @@ function HrReports() {
             formSections={FormSections}
             formHeading="Filter"
             onFormSubmit={(formValues) => {
+              if(!formValues.hr_name && !formValues.technology && !formValues.position) return;
               submitForm(formValues);
             }}
             options={options}
@@ -286,6 +287,7 @@ function HrReports() {
             btnContainerClass="form-submit-buttons pull-right"
             isStepForm={false}
             onFormReset={() => {
+              if(filterData && !Object.keys(filterData).length) return;
               setFilterData({});
             }}
           />
