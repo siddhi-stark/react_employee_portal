@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Button, Form, Row, Col } from 'react-bootstrap';
+import { Card, Button, Form, Row, Col, Image } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import { Editor } from 'react-draft-wysiwyg';
@@ -34,6 +34,7 @@ function AddPolicy(props) {
   const [parentDescription, setParentDescription] = useState('');
   const [descriptionErr, setDescriptionErr] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [imageFileUrl, setImageFileUrl] = useState('');
   const [categoryOption, setCategoryOption] = useState(null);
   const [categoryList, setCategoryList] = useState([]);
 
@@ -51,7 +52,11 @@ function AddPolicy(props) {
 
       setItemName(data.data.title);
       setImageUrl(data.data.image);
-      setCategoryOption({label:data.data.policy_categories_name,value:data.data.policy_categories_id});
+      setImageFileUrl(data.data.image);
+      setCategoryOption({
+        label: data.data.policy_categories_name,
+        value: data.data.policy_categories_id,
+      });
       setParentDescription(decString);
       const dp = EditorState.createWithContent(
         ContentState.createFromBlockArray(
@@ -100,24 +105,30 @@ function AddPolicy(props) {
     const postData = {
       title: itemName,
       description: stringDescription,
-      is_email_send: checked,
-      policy_categories: categoryOption ? Number(categoryOption.value) :'',
+      policy_categories: categoryOption ? Number(categoryOption.value) : '',
       self_check: true,
       self_cc: true,
       id: policyId ? Number(policyId) : '',
     };
+    if (checked) {
+      postData.is_email_send = checked;
+    } else {
+      postData.is_email_send = false;
+    }
 
     if (imageUrl) {
       postData.image = await uploadFile();
+    } else {
+      postData.image = null;
     }
 
-    const payload = customFunctions.cleanObject(postData);
+    // const payload = customFunctions.cleanObject(postData);
 
     const callback = policyId
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
     const endPoint = policyId ? Api.policyUrl : Api.policyUrl;
-    const { data, message } = await callback(endPoint, payload);
+    const { data, message } = await callback(endPoint, postData);
 
     if (!data) {
       setShowLoader(false);
@@ -142,7 +153,7 @@ function AddPolicy(props) {
     validator.hideMessages();
     history.push('/policy');
   };
-    // Declare methods
+  // Declare methods
   const getCategoryData = async () => {
     setShowLoader(true);
     const endPoint = `${Api.policyCategoryUrl}?type=all`;
@@ -222,7 +233,7 @@ function AddPolicy(props) {
                       name="categoryOption"
                       options={getCategoryTypes()}
                       defaultValue={categoryOption}
-                      onSelectHandler={(select) => {                 
+                      onSelectHandler={(select) => {
                         setCategoryOption(select);
                       }}
                       placeholder="Select category"
@@ -253,13 +264,55 @@ function AddPolicy(props) {
                       onInputChange={(e) => {
                         handleImageFileUpload(e);
                       }}
-                      label="Policy Image (Allowed file : JPG, PNG)"
-                      accept="image/jpeg,image/png,"
+                      label="Policy Image (Allowed file : JPG, PNG, PDF)"
+                      accept=".pdf,image/jpeg,image/png"
                       containerClass="form-group"
                       id="inlineFormInputGroup"
                       type="file"
                       inputClass="form-control"
                     />
+                    {imageFileUrl && (
+                      <div className="justify-content-end d-flex">
+                        <a href={imageFileUrl} target="_blank">
+                        <Image
+                          id="policyImage"
+                          src={
+                            imageFileUrl &&
+                            imageFileUrl.substring(
+                              imageFileUrl.length,
+                              imageFileUrl.lastIndexOf('.')
+                            ) === '.pdf'
+                              ? '/images/attachment.png'
+                              : imageFileUrl
+                          }
+                          title={imageFileUrl}
+                          style={{ cursor: 'pointer' }}
+                          width="50"
+                          height="50"
+                        />
+                        </a>
+                        <div className="float-right">
+                          <Image
+                            id="closeImage"
+                            src="/images/fail.svg"
+                            width="15"
+                            height="15"
+                            onClick={() => {
+                              swal({
+                                buttons: true,
+                                text: 'Are you sure, you want to delete?',
+                                icon: 'warning',
+                              }).then((result) => {
+                                if (result) {
+                                  setImageFileUrl('');
+                                  setImageUrl('');
+                                }
+                              });
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </Col>
                 </Row>
                 {policyId && activeMenu === 'Draft' && (
@@ -314,7 +367,7 @@ function AddPolicy(props) {
                 <span className="text-danger">{descriptionErr}</span>
                 <br />
 
-               {/*  <input
+                {/*  <input
                   onChange={(e) => {
                     setChecked(e.target.checked);
                   }}
@@ -325,7 +378,7 @@ function AddPolicy(props) {
                   value={checked}
                 />
                 <span className="ms-2">Do you want to send Email ?</span> */}
-                
+
                 <div className="mt-3">
                   <Button variant="primary" type="submit">
                     {policyId ? 'Update' : 'Submit'}
