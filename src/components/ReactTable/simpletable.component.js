@@ -158,7 +158,7 @@ export default function SimpleTable(props) {
           <>
             <div className={`mb-2 bulk-action-apply ${dropdownContainerClass}`}>
               <select
-                style={{ width: '150px' }}
+                style={{ width: '150px', borderRadius: '5px 0px 0px 5px' }}
                 value={selectedAction}
                 onBlur={() => {}}
                 onChange={(e) => {

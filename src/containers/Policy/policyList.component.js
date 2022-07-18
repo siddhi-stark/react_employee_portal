@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { Card, Image, Row, Col } from 'react-bootstrap';
-import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
+import ReactTable from '../../components/ReactTable/simpletable.component';
 import { ModalInput } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 import AuthApi from '../../helper/authApi';
@@ -28,10 +28,12 @@ function PolicyList() {
   const [policyDraftData, setPolicyDraftData] = useState(draftData);
   // Declare variable
   const [rowData, setRowData] = useState([]);
-  const [totalCount, setTotalCount] = useState(10);
   const [userRole, setUserRole] = useState('');
-  const [limit, setLimit] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    itemsPerPage: 10,
+    totalItems: 10,
+  });
   const [isShowLoader, setShowLoader] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [policyModal, setPolicyModal] = useState(false);
@@ -125,14 +127,17 @@ function PolicyList() {
       id: 'id',
       label: 'Sr. No',
       isDisplay: false,
+      roleAccess: [1,2,3,4,5,6]
     },
     {
       id: Number(userRole) === 4 || Number(userRole) === 3 ? '' : 'policy_categories_name',
       label: 'Category',
+      roleAccess: [1,2,3,4,5,6]
     },
     {
       id: 'title',
       label: 'Title',
+      roleAccess: [1,2,3,4,5,6],
       render: ({ id, title }) => {
         return (
           <>
@@ -190,6 +195,7 @@ function PolicyList() {
           ? ''
           : 'created_by_name',
       label: Number(userRole) === 4 || Number(userRole) === 3 ? '' : 'Added By',
+      roleAccess: [1,2,3,4,5,6],
     },
     {
       id:
@@ -197,16 +203,19 @@ function PolicyList() {
           ? ''
           : 'is_admin_approved;',
       label: 'Approval Status',
+      roleAccess: [1,2,3,4,5,6],
       render: handleApprovalAction,
     },
     {
       id: Number(userRole) === 4 || Number(userRole) === 3 ? '' : 'is_publish',
       label: 'Publish Status',
+      roleAccess: [1,2,3,4,5,6],
       render: handlePublishAction,
     },
     {
       id: 'created_at',
       label: 'Date',
+      roleAccess: [1,2,3,4,5,6],
       render: ({ created_at }) => {
         return (
           <span>{created_at && customFunctions.getDMYDate(created_at)}</span>
@@ -235,6 +244,7 @@ function PolicyList() {
     {
       id: 'action',
       label:  Number(userRole) === 1 ? 'Action' : '',
+      roleAccess: [1,2,5,6],
       render: handleActionCallback,
     },
   ];
@@ -242,11 +252,11 @@ function PolicyList() {
   // Declare methods
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
-    const page = pageNo || currentPage;
+    const page = pageNo || pagination.current_page;
     const endPoint = `${Api.policyUrl}`;
     const params = {
       page,
-      limit,
+      limit: pagination.itemsPerPage,
       sort_direction: 'descending',
     };
 
@@ -259,17 +269,33 @@ function PolicyList() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+    if (!customFunctions.checkIfEmpty(data, 'O')) {
       setShowLoader(false);
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-      const newData =[...data.data];
-      data && data.data && data.data.map((dt,i)=>{
-        newData[i].rowClass = dt.is_admin_approved_name !== 'approve' ? 'policy-approved':'';
+      setPagination({
+        current_page: Number(data.paginator.current_page),
+        activePage: data.paginator.current_page,
+        itemsPerPage: data.paginator.limit,
+        totalItems: data.paginator.total_count,
+      });
+      const row = [];
+
+      data && data.data && data.data.map((dt) => {
+        row.push({
+          id: dt.id,
+          title: dt.title,
+          description: dt.description,
+          created_by_name: dt.created_by_name,
+          is_admin_approved: dt.is_admin_approved,
+          policy_categories_name:dt.policy_categories_name,
+          is_publish: dt.is_publish,
+          created_at: dt.created_at,
+          status: dt.status,
+          is_admin_approved_name: dt.is_admin_approved_name,
+          rowClass: dt.is_admin_approved_name !== 'approve' ? 'trow policy-approved':''
+        });
         return dt;
       });
-      setRowData((newData) || []);
+      setRowData(row);
     } else {
       swal(message, '', 'error', {
         closeOnClickOutside: false,
@@ -432,7 +458,7 @@ function PolicyList() {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         }).then(() => {
-          getRowData(currentPage);
+          getRowData(pagination.current_page);
         });
       };
 
@@ -460,7 +486,7 @@ function PolicyList() {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         }).then(() => {
-          getRowData(currentPage);
+          getRowData(pagination.current_page);
         });
       };
 
@@ -488,7 +514,7 @@ function PolicyList() {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         }).then(() => {
-          getRowData(currentPage);
+          getRowData(pagination.current_page);
         });
       };
 
@@ -516,7 +542,7 @@ function PolicyList() {
           closeOnClickOutside: false,
           allowOutsideClick: false,
         }).then(() => {
-          getRowData(currentPage);
+          getRowData(pagination.current_page);
         });
       };
 
@@ -531,6 +557,37 @@ function PolicyList() {
       );
     }
   };
+  
+  const changeBulkPublishStatus = [
+    {
+      id: 'publish',
+      actionTitle: 'Publish',
+      actionCallback: (selectedIndexes) => handleChangePublishStatus(selectedIndexes)
+    },
+  ];
+
+  const bulkActions = [
+    {
+      id: 'approve',
+      actionTitle: 'Approve',
+      actionCallback: (selectedIndexes) => handleChangeApproveStatus(selectedIndexes)
+    },
+    {
+      id: 'disapprove',
+      actionTitle: 'Disapprove',
+      actionCallback: (selectedIndexes) => handleChangeDisapproveStatus(selectedIndexes)
+    },
+    {
+      id: 'publish',
+      actionTitle: 'Publish',
+      actionCallback: (selectedIndexes) => handleChangePublishStatus(selectedIndexes)
+    },
+    {
+      id: 'delete',
+      actionTitle: 'Delete',
+      actionCallback: (selectedIndexes) => handleChangeDeleteStatus(selectedIndexes)
+    },
+  ];
 
   return (
     <>
@@ -591,52 +648,26 @@ function PolicyList() {
               </a>
             </nav>
           </div>
-          <CustomTable
+          <ReactTable
             columns={columns}
-            tableContainerClass="policy-list-table"
             rows={rowData}
-            bulkActionsLabel="Apply"
-            bulkActions={
-              [5, 6].includes(Number(userRole))
-                ? [
-                    {
-                      actionTitle: 'Publish',
-                      actionCallback: handleChangePublishStatus,
-                    },
-                  ]
-                : [1].includes(Number(userRole)) && [
-                    {
-                      actionTitle: 'Approve',
-                      actionCallback: handleChangeApproveStatus,
-                    },
-                    {
-                      actionTitle: 'Disapprove',
-                      actionCallback: handleChangeDisapproveStatus,
-                    },
-                    {
-                      actionTitle: 'Publish',
-                      actionCallback: handleChangePublishStatus,
-                    },
-                    {
-                      actionTitle: 'Delete',
-                      actionCallback: handleChangeDeleteStatus,
-                    },
-                  ]
-            }
-            showPagination={true}
+            tableContainerClass="policy-list-table"
+            showPagination="true"
+            showCheckbox
             paginationProps={{
-              totalItems: totalCount,
-              itemsPerPage: limit,
-              activePage: currentPage,
+              ...pagination,
+              activePage: pagination.current_page,
               onPageChange: (pageNo) => {
                 getRowData(pageNo);
               },
             }}
-            showCheckbox={([4, 3, 2].includes(Number(userRole))) ? false : true} // eslint-disable-line
+            bulkActionsLabel="Apply"
+            bulkActions={Number(userRole) === 1 ? bulkActions : [5, 6].includes(Number(userRole)) && changeBulkPublishStatus }
             tableClass="table-striped"
-            emptyRender={() => {
-              return 'No record found.';
-            }}
+            dropdownContainerClass="mb-3"
+            emptyRender={() => (
+              <p className="text-center mb-0">No record found</p>
+            )}
           />
           {modalShow && (
             <ApprovalStatus
