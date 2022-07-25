@@ -98,7 +98,7 @@ function EmployeePolicyList() {
       const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ''); // eslint-disable-line
       const decString = strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
       const imgName = data.data.image ? data.data.image.split('https://empportaldev-serverless.s3.amazonaws.com/media/') :[];
-      // const imgName = data.data.image.split('https://empportal-serverless.s3.amazonaws.com/media/');
+      // const imgName = data.data.image ? data.data.image.split('https://empportal-serverless.s3.amazonaws.com/media/') :[];
       setPolicyData({
         title: data.data.title,
         description: decString,
