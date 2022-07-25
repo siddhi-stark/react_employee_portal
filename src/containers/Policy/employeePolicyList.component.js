@@ -18,12 +18,13 @@ function EmployeePolicyList() {
     title: '',
     description: '',
     image: '',
+    imageName: '',
   };
   const [policyData, setPolicyData] = useState(initialData);
   const [policyModal, setPolicyModal] = useState(false);
   const [rowData, setRowData] = useState([]);
 
-  let timmer = null;
+  // let timmer = null;
 
   // Declare columns
   const columns = [
@@ -39,7 +40,7 @@ function EmployeePolicyList() {
         return (
           <>
             <a
-              href="#"
+              href="javascript:void(0)"
               onClick={() => {
                 getPolicyById(id);
                 setPolicyModal(true);
@@ -96,11 +97,13 @@ function EmployeePolicyList() {
       const originalString = `${data.data.description}`;
       const strippedString = originalString.replace(/<\/?[^>]+(>|$)/g, ''); // eslint-disable-line
       const decString = strippedString.replace(/\&nbsp;/g, ''); // eslint-disable-line
-
+      const imgName = data.data.image ? data.data.image.split('https://empportaldev-serverless.s3.amazonaws.com/media/') :[];
+      // const imgName = data.data.image.split('https://empportal-serverless.s3.amazonaws.com/media/');
       setPolicyData({
         title: data.data.title,
         description: decString,
         image: data.data.image,
+        imageName: imgName.length && imgName[1],
       });
     }
   };
@@ -109,14 +112,14 @@ function EmployeePolicyList() {
     getRowData(1);
   }, []);
 
-  const onCancel = () => {
-    setPolicyModal(false);
+  // const onCancel = () => {
+  //   setPolicyModal(false);
 
-    if (timmer) clearTimeout(timmer);
-    timmer = setTimeout(() => {
-      getRowData(1);
-    }, 1000);
-  };
+  //   if (timmer) clearTimeout(timmer);
+  //   timmer = setTimeout(() => {
+  //     getRowData(1);
+  //   }, 1000);
+  // };
 
   return (
     <>
@@ -147,10 +150,10 @@ function EmployeePolicyList() {
         </Card.Body>
         {policyModal && (
             <ModalInput
-              size="md"
+              size="lg"
               centered
               show={policyModal}
-              onHide={onCancel}
+              onHide={()=>{ setPolicyModal(false); getRowData(1);}}
               label={policyData.title}
               // label={employeeId ? 'Update Employee' : 'Add Employee'}
               id="contained-modal-title-vcenter"
@@ -159,15 +162,26 @@ function EmployeePolicyList() {
                   {policyData.image && (
                     <Row>
                       <Col className="col-md-4">
+                        <a href={policyData.image} target="_blank">
                         <Image
-                          className="card-img-top"
+                          id="policyImage"
                           src={
-                            policyData.image
-                              ? `${policyData.image}`
-                              : `${Api.s3UrlnoProfile}`
+                            policyData.image &&
+                            policyData.image.substring(
+                              policyData.image.length,
+                              policyData.image.lastIndexOf('.')
+                            ) === '.pdf'
+                              ? '/images/attachment.png'
+                              : policyData.image
                           }
-                          alt="Policy Image"
+                          title={policyData.imageName}
+                          style={{ cursor: 'pointer' }}
+                          width="100"
+                          height="100"
+                          // className="card-img-top"
+                          // alt="Policy Image"
                         />
+                        </a>
                       </Col>
                     </Row>
                   )}

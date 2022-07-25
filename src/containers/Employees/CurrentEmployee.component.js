@@ -978,7 +978,7 @@ function CurrentEmployee() {
                   type="text"
                   name="codeTitle"
                   maxlength="11"
-                  disabled={employeeId ? 'disabled' : ''}
+                  // disabled={employeeId ? 'disabled' : ''}
                   value={empCode}
                   placeholder="Enter Employee Code"
                   errorMessage={validator.current.message(

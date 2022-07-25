@@ -523,7 +523,7 @@ function RecruitmentApplicationComponent() {
                 formSections={FormSections}
                 formHeading="Filter Form"
                 onFormSubmit={(formValues) => {
-                  if(!formValues.keyword && !formValues.start_date) return;
+                  if(!formValues.keyword && !formValues.start_date && !formValues.end_date && !formValues.role_id && !formValues.designation_id && !formValues.technology_stack_id) return;
                   submitForm(formValues);
                 }}
                 options={options}
