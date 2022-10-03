@@ -78,27 +78,27 @@ function BasicInformation(props) {
           }
         : '';
 
-      const techStack = data.data.tech_stack_id
-        ? {
-            label: data.data.tech_stack_name,
-            value: data.data.tech_stack_id,
-          }
-        : '';
-
+      const techStack = [];
+      data &&
+        data.data &&
+        data.data.tech_stack &&
+        data.data.tech_stack.length &&
+        data.data.tech_stack.map((op) => {
+          techStack.push({ label: op.name, value: op.id });
+          return op;
+        });
       const obj = {
         ...data.data,
         applied_for: ds,
         tech_stack: techStack,
         is_fresher: String(data.data.is_fresher) === 'false' ? '0' : '1',
       };
-
       onBasicInfo(data.data.id);
 
       updateDefaultValues({ ...obj }); // updateDefaultValues(data);
       customFunctions.setLocalStorage('applicantId', data.data.id);
     }
   };
-
   const submitForm = async (formValues) => {
     setShowLoader(true);
 
@@ -106,9 +106,11 @@ function BasicInformation(props) {
       ...formValues,
     };
 
+    const techData = [];
+    formValues.tech_stack.map((e) => techData.push(e.value));
     postData = {
       ...postData,
-      tech_stack: formValues.tech_stack ? formValues.tech_stack.value : '',
+      tech_stack: techData,
       applied_for: formValues.applied_for ? formValues.applied_for.value : '',
       is_fresher: formValues.is_fresher ? Number(formValues.is_fresher) : '',
     };
