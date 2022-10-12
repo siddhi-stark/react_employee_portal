@@ -84,7 +84,7 @@ function BasicInformation(props) {
         data.data.tech_stack &&
         data.data.tech_stack.length &&
         data.data.tech_stack.map((op) => {
-          techStack.push({ label: op.name, value: op.id });
+          techStack.push({ label: op.tech_name, value: op.tech_id });
           return op;
         });
       const obj = {
