@@ -114,12 +114,12 @@ function RecruitmentApplicationComponent() {
           </a>
         )}
         {Number(group) === 4 ||
-        Number(group) === 3 ||
-        status_name === 'pending' ||
-        status_name === 'shortlisted' ||
-        status_name === 'reject' ||
-        status_name === 'declined' ||
-        status_name === 'rejected' ? ( //eslint-disable-line
+          Number(group) === 3 ||
+          status_name === 'pending' ||
+          status_name === 'shortlisted' ||
+          status_name === 'reject' ||
+          status_name === 'declined' ||
+          status_name === 'rejected' ? ( //eslint-disable-line
           ''
         ) : (
           <a
@@ -153,7 +153,7 @@ function RecruitmentApplicationComponent() {
                     customFunctions.setLocalStorage(
                       'pfInclude',
                       dt.pf_included && dt.pf_included
-                    ); 
+                    );
                     customFunctions.setLocalStorage(
                       'misInclude',
                       dt.miscellaneous_included && dt.miscellaneous_included
@@ -202,7 +202,7 @@ function RecruitmentApplicationComponent() {
     return (
       <>
         {status_name.status_name === 'pending' &&
-        (Number(group) === 5 || Number(group) === 6 || Number(group) === 1) ? ( // eslint-disable-line
+          (Number(group) === 5 || Number(group) === 6 || Number(group) === 1) ? ( // eslint-disable-line
           <DropdownInput
             asterisk="*"
             options={getDepartment()}
@@ -344,7 +344,15 @@ function RecruitmentApplicationComponent() {
       const newData = [...data.data];
       newData.map((item, i) => {
         const newItem = item;
+        const stackArr = [];
+        if (newItem && newItem.tech_stack && newItem.tech_stack.length) {
+          newItem.tech_stack.map((it) => {
+            stackArr.push(it.tech_name);
+            return it;
+          });
+        }
         newItem.no = (page - 1) * limit + (i + 1);
+        newItem.tech_stack_name = stackArr.join(',');
         return newItem;
       });
 
@@ -384,14 +392,14 @@ function RecruitmentApplicationComponent() {
           : formValues.keyword,
       designation_id:
         formValues &&
-        formValues.designation_id &&
-        formValues.designation_id.value
+          formValues.designation_id &&
+          formValues.designation_id.value
           ? formValues.designation_id.value
           : formValues.designation_id,
       technology_stack_id:
         formValues &&
-        formValues.technology_stack_id &&
-        formValues.technology_stack_id.value
+          formValues.technology_stack_id &&
+          formValues.technology_stack_id.value
           ? formValues.technology_stack_id.value
           : formValues.technology_stack_id,
       start_date:
@@ -523,7 +531,7 @@ function RecruitmentApplicationComponent() {
                 formSections={FormSections}
                 formHeading="Filter Form"
                 onFormSubmit={(formValues) => {
-                  if(!formValues.keyword && !formValues.start_date && !formValues.end_date && !formValues.role_id && !formValues.designation_id && !formValues.technology_stack_id) return;
+                  if (!formValues.keyword && !formValues.start_date && !formValues.end_date && !formValues.role_id && !formValues.designation_id && !formValues.technology_stack_id) return;
                   submitForm(formValues);
                 }}
                 options={options}
@@ -537,7 +545,7 @@ function RecruitmentApplicationComponent() {
                 btnContainerClass="form-submit-buttons pull-right"
                 isStepForm={false}
                 onFormReset={() => {
-                  if(filterData && !Object.keys(filterData).length) return;
+                  if (filterData && !Object.keys(filterData).length) return;
                   setFilterData({});
                   setAllData({});
                 }}
@@ -558,8 +566,8 @@ function RecruitmentApplicationComponent() {
                   className="btn-link"
                 >
                   {Number(group) === 4 ||
-                  Number(group) === 3 ||
-                  Number(group) === 2
+                    Number(group) === 3 ||
+                    Number(group) === 2
                     ? ''
                     : 'Add Applicant'}
                 </a>
@@ -572,16 +580,16 @@ function RecruitmentApplicationComponent() {
                 Number(group) === 3 ||
                 Number(group) === 2
               ) && (
-                <Button
-                  variant="primary"
-                  className="mb-2"
-                  onClick={() => {
-                    history.push('/batch-upload');
-                  }}
-                >
-                  Bulk Upload
-                </Button>
-              )}
+                  <Button
+                    variant="primary"
+                    className="mb-2"
+                    onClick={() => {
+                      history.push('/batch-upload');
+                    }}
+                  >
+                    Bulk Upload
+                  </Button>
+                )}
             </div>
             <div className="recruitment-links-wrapper">
               {!(
@@ -589,91 +597,85 @@ function RecruitmentApplicationComponent() {
                 Number(group) === 3 ||
                 Number(group) === 2
               ) && (
-                <>
-                  <a
-                    href="#"
-                    className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
-                    onClick={() => {
-                      setActiveMenu('all');
-                      setStatus(0);
-                    }}
-                  >
-                    All
-                  </a>
-                  <a
-                    href="#"
-                    className={`ml-2 mb-2 ${
-                      activeMenu === 'selected' ? 'active' : ''
-                    }`}
-                    onClick={() => {
-                      setActiveMenu('selected');
-                      setStatus(1);
-                    }}
-                  >
-                    Selected
-                  </a>
-                  <a
-                    href="#"
-                    className={`ml-2 mb-2 ${
-                      activeMenu === 'Shortlisted' ? 'active' : ''
-                    }`}
-                    onClick={() => {
-                      setActiveMenu('Shortlisted');
-                      setStatus(2);
-                    }}
-                  >
-                    Shortlisted
-                  </a>
-                  <a
-                    href="#"
-                    className={`ml-2 mb-2 ${
-                      activeMenu === 'Rejected' ? 'active' : ''
-                    }`}
-                    onClick={() => {
-                      setActiveMenu('Rejected');
-                      setStatus(3);
-                    }}
-                  >
-                    Rejected
-                  </a>
-                  <a
-                    href="#"
-                    className={`ml-2 mb-2 ${
-                      activeMenu === 'Decline' ? 'active' : ''
-                    }`}
-                    onClick={() => {
-                      setActiveMenu('Decline');
-                      setStatus(6);
-                    }}
-                  >
-                    Declined
-                  </a>
-                  <a
-                    href="#"
-                    className={`ml-2 mb-2 ${
-                      activeMenu === 'Offer' ? 'active' : ''
-                    }`}
-                    onClick={() => {
-                      setActiveMenu('Offer');
-                      setStatus(4);
-                    }}
-                  >
-                    Offer Send
-                  </a>
-                  <a
-                    href="#"
-                    className={`ml-2 mb-2 ${
-                      activeMenu === 'Pending' ? 'active' : ''
-                    }`}
-                    onClick={() => {
-                      setActiveMenu('Pending');
-                      setStatus(5);
-                    }}
-                  >
-                    Pending
-                  </a>
-                </>
-              )}
+                  <>
+                    <a
+                      href="#"
+                      className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
+                      onClick={() => {
+                        setActiveMenu('all');
+                        setStatus(0);
+                      }}
+                    >
+                      All
+                    </a>
+                    <a
+                      href="#"
+                      className={`ml-2 mb-2 ${activeMenu === 'selected' ? 'active' : ''
+                        }`}
+                      onClick={() => {
+                        setActiveMenu('selected');
+                        setStatus(1);
+                      }}
+                    >
+                      Selected
+                    </a>
+                    <a
+                      href="#"
+                      className={`ml-2 mb-2 ${activeMenu === 'Shortlisted' ? 'active' : ''
+                        }`}
+                      onClick={() => {
+                        setActiveMenu('Shortlisted');
+                        setStatus(2);
+                      }}
+                    >
+                      Shortlisted
+                    </a>
+                    <a
+                      href="#"
+                      className={`ml-2 mb-2 ${activeMenu === 'Rejected' ? 'active' : ''
+                        }`}
+                      onClick={() => {
+                        setActiveMenu('Rejected');
+                        setStatus(3);
+                      }}
+                    >
+                      Rejected
+                    </a>
+                    <a
+                      href="#"
+                      className={`ml-2 mb-2 ${activeMenu === 'Decline' ? 'active' : ''
+                        }`}
+                      onClick={() => {
+                        setActiveMenu('Decline');
+                        setStatus(6);
+                      }}
+                    >
+                      Declined
+                    </a>
+                    <a
+                      href="#"
+                      className={`ml-2 mb-2 ${activeMenu === 'Offer' ? 'active' : ''
+                        }`}
+                      onClick={() => {
+                        setActiveMenu('Offer');
+                        setStatus(4);
+                      }}
+                    >
+                      Offer Send
+                    </a>
+                    <a
+                      href="#"
+                      className={`ml-2 mb-2 ${activeMenu === 'Pending' ? 'active' : ''
+                        }`}
+                      onClick={() => {
+                        setActiveMenu('Pending');
+                        setStatus(5);
+                      }}
+                    >
+                      Pending
+                    </a>
+                  </>
+                )}
             </div>
             <CustomTable
               tableContainerClass="mt-2"
