@@ -81,7 +81,7 @@ function RecruitmentApplicationComponent() {
   }) => {
 
     return (
-      <>
+      <span className="d-flex">
         {status_name !== 'declined' ? (
           <a
             href="/"
@@ -170,13 +170,13 @@ function RecruitmentApplicationComponent() {
             <Image src="/images/offer.svg" />
           </a>
         )}
-      </>
+      </span>
     );
   };
 
   const handleResumeCallback = (resume) => {
     return (
-      <>
+      <span className="d-flex">
         {resume.resume ? (
           <a
             href={resume.resume}
@@ -189,7 +189,7 @@ function RecruitmentApplicationComponent() {
         ) : (
           ''
         )}
-      </>
+      </span>
     );
   };
 
