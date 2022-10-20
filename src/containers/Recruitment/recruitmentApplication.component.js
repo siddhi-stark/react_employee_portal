@@ -562,6 +562,7 @@ function RecruitmentApplicationComponent() {
                   href="#"
                   onClick={() => {
                     history.push('/applications');
+                    customFunctions.removeLocalStorage('applicantId');
                   }}
                   className="btn-link"
                 >
