@@ -415,7 +415,7 @@ function Dashboard() {
       });
     }
   };
-  
+
   const getUpcomingConfirmationEmployee = async () => {
     const endPoint = `${Api.employeeUrl}?show_dashboard=true`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
@@ -551,7 +551,7 @@ function Dashboard() {
               >
                 <div className="p-3 mb-3 bg-success mt-3 bg-success-main log-time-bar">
                   <div className="img-text">
-                    Today's Logged Time: {`${totalHrs} ? ${totalHrs} :0`}
+                    Today's Logged Time: {`${totalHrs ? totalHrs : 0}`}
                   </div>
                 </div>
               </UserRestrictions>
@@ -888,7 +888,8 @@ function Dashboard() {
                                               <TextInput
                                                 onInputChange={(e) => {
                                                   setCount(e.target.value);
-                                                  empdata.greetMessage = e.target.value; // eslint-disable-line
+                                                  empdata.greetMessage =
+                                                    e.target.value; // eslint-disable-line
                                                   setNewBirthdayData(
                                                     appreciationData
                                                   );
@@ -1011,49 +1012,61 @@ function Dashboard() {
                 </Card>
               )}
               <UserRestrictions permittedUsers={[1, 5, 6]} roleId={userRole}>
-              {confirmationEmployee && confirmationEmployee.length > 0 && (
-                <Card classNameName="dark-blue-bg mb-4 col-md-12">
-                  <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
-                    {confirmationEmployee && confirmationEmployee.length > 0 ? (
-                      <div className="purple-bg card-header">
-                        <span>Upcoming Confirmation</span>
-                      </div>
-                    ) : (
-                      ''
-                    )}
+                {confirmationEmployee && confirmationEmployee.length > 0 && (
+                  <Card classNameName="dark-blue-bg mb-4 col-md-12">
+                    <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
+                      {confirmationEmployee &&
+                      confirmationEmployee.length > 0 ? (
+                        <div className="purple-bg card-header">
+                          <span>Upcoming Confirmation</span>
+                        </div>
+                      ) : (
+                        ''
+                      )}
 
-                    <div className="card-body">
-                      <div className="birth-name d-flex align-items-center mb-0">
-                        {confirmationEmployee &&
-                          confirmationEmployee.length > 0 &&
-                          confirmationEmployee.map((confEmp, i) => (
-                            <>
-                              <div className="birthday-employees">
-                                <h5 className="card-title">
-                                <Link
-                                  className="mt-2"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    history.push(`/employee-profile/${confEmp.id}`);
-                                    customFunctions.setLocalStorage('employeeName', confEmp.full_name);
-                                    customFunctions.setLocalStorage('title',confEmp.designation_name);
-                                    customFunctions.setLocalStorage('candidateId', confEmp.id);
-                                  }}
-                                >
-                                  {i > 0 ? ', ' : ''} &nbsp;
-                                  {confEmp.full_name}
-                                </Link>
-                                </h5>
-                              </div>
-                            </>
-                          ))}
+                      <div className="card-body">
+                        <div className="birth-name d-flex align-items-center mb-0">
+                          {confirmationEmployee &&
+                            confirmationEmployee.length > 0 &&
+                            confirmationEmployee.map((confEmp, i) => (
+                              <>
+                                <div className="birthday-employees">
+                                  <h5 className="card-title">
+                                    <Link
+                                      className="mt-2"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        history.push(
+                                          `/employee-profile/${confEmp.id}`
+                                        );
+                                        customFunctions.setLocalStorage(
+                                          'employeeName',
+                                          confEmp.full_name
+                                        );
+                                        customFunctions.setLocalStorage(
+                                          'title',
+                                          confEmp.designation_name
+                                        );
+                                        customFunctions.setLocalStorage(
+                                          'candidateId',
+                                          confEmp.id
+                                        );
+                                      }}
+                                    >
+                                      {i > 0 ? ', ' : ''} &nbsp;
+                                      {confEmp.full_name}
+                                    </Link>
+                                  </h5>
+                                </div>
+                              </>
+                            ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Card>
-              )}
-            </UserRestrictions>
+                  </Card>
+                )}
+              </UserRestrictions>
             </div>
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-0">
