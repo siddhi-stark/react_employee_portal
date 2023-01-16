@@ -213,6 +213,10 @@
               {
                 "label": "Rejected",
                 "value": "rejected"
+              },
+              {
+                "label": "Absent",
+                "value": "absent"
               }
             ]
           },
