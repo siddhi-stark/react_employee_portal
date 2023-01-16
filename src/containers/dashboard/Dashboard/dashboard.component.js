@@ -551,7 +551,7 @@ function Dashboard() {
               >
                 <div className="p-3 mb-3 bg-success mt-3 bg-success-main log-time-bar">
                   <div className="img-text">
-                    Today's Logged Time: {`totalHrs ? ${totalHrs} :0`}
+                    Today's Logged Time: {`${totalHrs} ? ${totalHrs} :0`}
                   </div>
                 </div>
               </UserRestrictions>
