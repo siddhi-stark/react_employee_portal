@@ -551,7 +551,7 @@ function Dashboard() {
               >
                 <div className="p-3 mb-3 bg-success mt-3 bg-success-main log-time-bar">
                   <div className="img-text">
-                    Today's Logged Time: {totalHrs}
+                    Today's Logged Time: {`${totalHrs ? totalHrs :0}`}
                   </div>
                 </div>
               </UserRestrictions>
@@ -888,8 +888,7 @@ function Dashboard() {
                                               <TextInput
                                                 onInputChange={(e) => {
                                                   setCount(e.target.value);
-                                                  empdata.greetMessage =
-                                                    e.target.value; // eslint-disable-line
+                                                  empdata.greetMessage = e.target.value; // eslint-disable-line
                                                   setNewBirthdayData(
                                                     appreciationData
                                                   );
