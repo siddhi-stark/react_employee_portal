@@ -40,7 +40,8 @@
         "options": [
           { "label": "Selected", "value": "1" },
           { "label": "Rejected", "value": "2" },
-          { "label": "Hold", "value": "3" }
+          { "label": "Hold", "value": "3" },
+          { "label": "Absent", "value": "5" }
         ]
       },
       {
