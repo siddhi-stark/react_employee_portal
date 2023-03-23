@@ -2,8 +2,8 @@
   {
     "sectionName": "keywordfilter",
     "sectionTitle": "keywordfilter",
-    "layout": { "label": "1 Column", "value": "1column" },
-    "containerClass": "col-md-4",
+    "layout": { "label": "2 Column", "value": "2column" },
+    "containerClass": "col-md-8",
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
@@ -32,9 +32,38 @@
         "fields": [],
         "optionCallback": "",
         "options": []
+      },
+      {
+        "name": "status_name",
+        "type": "select",
+        "label": "",
+        "id": "",
+        "placeholder": "Select status",
+        "inputClass": "",
+        "containerClass": "",
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getRoundsStatus",
+        "optionsCallbackUrl": "InterviewRoundsUrl",
+        "options": []
       }
     ],
     "allowedUsers": [],
-    "sectionLayout": "1column"
+    "sectionLayout": "2column"
   }
 ]

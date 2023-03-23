@@ -997,7 +997,7 @@ function Dashboard() {
                             <>
                               <div className="birthday-employees">
                                 <h5 className="card-title">
-                                  <a className="mt-2" href="/interview-listing">
+                                  <a className="mt-2" href={`/applications/${empInterview.id}`}>
                                     {i > 0 ? ', ' : ''} &nbsp;
                                     {empInterview.name}
                                   </a>

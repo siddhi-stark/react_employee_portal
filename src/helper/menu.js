@@ -141,7 +141,7 @@ const menu = [
     path: '/email-templates',
     icon: 'template.svg',
     submenu: [],
-    roleaccess: [1,6],
+    roleaccess: [1, 6],
   },
   {
     title: 'Leaves',
@@ -274,6 +274,13 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1,3,5,6],
   // },
+  {
+    title: 'Support Ticket',
+    path: '/support-ticket',
+    icon: 'ticket.svg',
+    submenu: [],
+    roleaccess: [1, 2, 3, 4],
+  },
   {
     title: 'Setting',
     path: '#',

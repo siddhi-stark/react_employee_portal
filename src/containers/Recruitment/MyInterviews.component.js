@@ -17,6 +17,7 @@ function MyInterviews() {
   const group = customFunctions.getLocalStorage('group');
   const items = [{ to: '/', label: 'Home' }, { label: 'My Interviews' }];
   const history = useHistory();
+  let defaultFilterOptions = {};
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
@@ -24,6 +25,7 @@ function MyInterviews() {
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   const [filterData, setFilterData] = useState({});
+  const [options, updateOptions] = useState({});
 
   const formSchema = [...FormSections];
   formSchema[0].fields.map((section) => {
@@ -40,11 +42,7 @@ function MyInterviews() {
     return sectionData;
   });
 
-  const handleActionCallback = ({
-    id,
-    status_name,
-  }) => {
-
+  const handleActionCallback = ({ id, status_name }) => {
     return (
       <>
         {status_name !== 'declined' ? ( //eslint-disable-line
@@ -233,13 +231,47 @@ function MyInterviews() {
     }
   };
 
+  const getRoundsStatus = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=applicant_status`
+    );
+    if (!data) {
+      return;
+    }
+
+    const dpOptions = [];
+    (await data.data) &&
+      data.data.applicant_status.map((op) => {
+        dpOptions.push({ label: op.name, value: op.id });
+        return op;
+      });
+    const allOptions = {
+      ...options,
+      ...defaultFilterOptions,
+      status_name: dpOptions,
+    };
+    defaultFilterOptions = { ...allOptions };
+    updateOptions(allOptions);
+  };
+
   useEffect(() => {
     getRowData(1);
     setTitle('Recruitment');
   }, [filterData]);
 
+  useEffect(() => {
+    getRoundsStatus();
+  }, []);
+
   const submitForm = async (formValues) => {
-    setFilterData(formValues);
+    const payload = {
+      keyword: formValues && formValues.keyword ? formValues.keyword : '',
+      status:
+        formValues && formValues.status_name && formValues.status_name.value
+          ? formValues.status_name.value
+          : '',
+    };
+    setFilterData(payload);
   };
 
   return (
@@ -263,8 +295,9 @@ function MyInterviews() {
                 formHeaderClass=""
                 formSections={SearchFormSections}
                 formHeading=""
+                options={options}
                 onFormSubmit={(formValues) => {
-                  if(!formValues.keyword) return;
+                  // if (!formValues.keyword || !formValues.status_name) return;
                   submitForm(formValues);
                 }}
                 callbacks={{}}
@@ -276,8 +309,8 @@ function MyInterviews() {
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {
-                  if(filterData && !Object.keys(filterData).length) return;
-                  setFilterData();
+                  if (filterData && !Object.keys(filterData).length) return;
+                  setFilterData({});
                 }}
               />
             </div>

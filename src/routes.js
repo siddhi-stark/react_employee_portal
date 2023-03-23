@@ -74,6 +74,8 @@ import EmployeeActivity from './containers/Employee/employeeActivity.component';
 import PolicyCategory from './containers/Policy/category.component';
 import AddCategory from './containers/Policy/addCategory.component';
 import EmployeeDetails from './containers/Leaves/EmployeeDetails.component';
+import SupportTicketComponent from './containers/SupportTicket/supportTicket.component';
+import AddSupportTicket from './containers/SupportTicket/addSupportTicket.component';
 
 function Routes() {
   return (
@@ -209,6 +211,9 @@ function Routes() {
       <Route path="/add-policy-category" exact component={AddCategory} />
       <Route path="/edit-policy-category/:categoryId" exact component={AddCategory} />
       <Route path="/employee-leaves-report/:viewId" exact component={EmployeeDetails} />
+      <Route path="/support-ticket" exact component={SupportTicketComponent} />
+      <Route path="/add-support-ticket" exact component={AddSupportTicket} />
+      <Route path="/edit-support-ticket/:supportId" exact component={AddSupportTicket} />
       <Route component={NotFound} />
     </Switch>
   );

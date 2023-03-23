@@ -181,6 +181,8 @@ export default class Api extends Component {
 
   static projectProgressUrl = `${Api.baseUrl}project-progress/`;
 
+  static supportTicketUrl = `${Api.baseUrl}support-ticket/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
