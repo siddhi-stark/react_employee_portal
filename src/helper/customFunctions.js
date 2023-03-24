@@ -414,6 +414,11 @@ class CustomFunctions extends Component {
       y ; //eslint-disable-line
     return formattedate;
   };
+
+  textAbstract = (text, length) => {
+    const output = text.split('', length).reduce((o, c) => o.length === length - 1 ? `${o}${c}...` : `${o}${c}`, '');
+    return output;
+  };
 }
 
 export default new CustomFunctions();

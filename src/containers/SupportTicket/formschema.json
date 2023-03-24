@@ -2,7 +2,10 @@
   {
     "sectionName": "support",
     "sectionTitle": "Suport Ticket",
-    "layout": { "label": "2 Column", "value": "2column" },
+    "layout": {
+      "label": "2 Column",
+      "value": "2column"
+    },
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
@@ -15,7 +18,11 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
         ],
         "displayWhen": {},
         "haveValidations": "true",
@@ -29,7 +36,10 @@
         "isMulti": false,
         "allowedUsers": [],
         "fieldsToReset": [],
-        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
         "fields": [],
         "optionCallback": "",
         "options": []
@@ -43,7 +53,11 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
         ],
         "displayWhen": {},
         "haveValidations": "true",
@@ -64,7 +78,28 @@
         "fields": [],
         "optionCallback": "",
         "optionsCallbackUrl": "",
-        "options": [{"label":"Infrastructure","value":"1"},{"label":"Laptop/Dekstop","value":"2"},{"label":"Accessories","value":"3"},{"label":"System OS","value":"4"},{"label":"Other","value":"5"}]
+        "options": [
+          {
+            "label": "Infrastructure",
+            "value": "1"
+          },
+          {
+            "label": "Laptop/Dekstop",
+            "value": "2"
+          },
+          {
+            "label": "Accessories",
+            "value": "3"
+          },
+          {
+            "label": "System OS",
+            "value": "4"
+          },
+          {
+            "label": "Other",
+            "value": "5"
+          }
+        ]
       },
       {
         "name": "description",
@@ -75,7 +110,11 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
         ],
         "displayWhen": {},
         "haveValidations": "true",
@@ -89,7 +128,10 @@
         "isMulti": false,
         "allowedUsers": [],
         "fieldsToReset": [],
-        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
         "fields": [],
         "optionCallback": "",
         "options": []
@@ -103,7 +145,11 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
         ],
         "displayWhen": {},
         "haveValidations": "true",
@@ -115,9 +161,15 @@
         "maxDateSelector": "",
         "disabled": false,
         "isMulti": false,
-        "allowedUsers": [1,2],
+        "allowedUsers": [
+          1,
+          2
+        ],
         "fieldsToReset": [],
-        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
         "fields": [],
         "optionCallback": "",
         "options": []
@@ -131,7 +183,13 @@
         "inputClass": "",
         "containerClass": "mt-4",
         "inline": "true",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -142,7 +200,10 @@
         "maxDateSelector": "",
         "disabled": false,
         "isMulti": false,
-        "allowedUsers": [1,2],
+        "allowedUsers": [
+          3,
+          4
+        ],
         "fieldsToReset": [],
         "fieldLayout": {
           "label": "1 Column",
@@ -151,8 +212,58 @@
         "fields": [],
         "optionCallback": "",
         "options": [
-          { "label": "Open", "value": "1" },
-          { "label": "Closed", "value": "2" }
+          {
+            "label": "Open",
+            "value": "1"
+          },
+          {
+            "label": "Closed",
+            "value": "2"
+          }
+        ]
+      },
+      {
+        "name": "admin_status",
+        "type": "radio",
+        "label": "Ticket status",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "mt-4",
+        "inline": "true",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [
+          1,
+          2
+        ],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": [
+          {
+            "label": "Resolved",
+            "value": "3"
+          }
         ]
       }
     ],

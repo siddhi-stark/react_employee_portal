@@ -105,5 +105,6 @@
     "react/jsx-boolean-value":"off",
     "jsx-a11y/aria-role":"off",
     "camelcase": "off",
+    "no-unneeded-ternary": "off"
   }
 }
