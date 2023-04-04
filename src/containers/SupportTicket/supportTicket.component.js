@@ -28,6 +28,7 @@ function SupportTicket() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isShowLoader, setShowLoader] = useState(false);
   const userRole = customFunctions.getLocalStorage('group');
+  const [filterErr, setFilterErr] = useState('');
   const limit = 10;
 
   // Variable declarations
@@ -39,23 +40,23 @@ function SupportTicket() {
   const handleActionCallback = ({ id, status_id }) => {
     return (
       <span className="d-flex">
-        {status_id !== 2 && (
-        <a
-          href="javascript:void(0)"
-          className=""
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/edit-support-ticket/${id}`);
-          }}
-        >
-          <Image
-            src="/images/edit-button.svg"
-            className="delete-edit-view"
-            alt="Edit SupportTicket"
-          />
-        </a>
-        )}
+        {status_id !== 2 ? (
+          <a
+            href="javascript:void(0)"
+            className=""
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              history.push(`/edit-support-ticket/${id}`);
+            }}
+          >
+            <Image
+              src="/images/edit-button.svg"
+              className="delete-edit-view"
+              alt="Edit SupportTicket"
+            />
+          </a>
+        ):'-'}
         {[9].includes(Number(userRole)) && (
           <a
             href="javascript:void(0)"
@@ -81,7 +82,7 @@ function SupportTicket() {
     {
       id: 'id',
       label: 'Ticket Number',
-      isDisplay: false
+      isDisplay: false,
     },
     {
       id: [1, 2].includes(Number(userRole)) && 'user_full_name',
@@ -91,14 +92,21 @@ function SupportTicket() {
       id: 'title',
       label: 'Title',
       render: ({ title }) => {
-        return <div title={title}> {customFunctions.textAbstract(title, 15)} </div>;
+        return (
+          <div title={title}> {customFunctions.textAbstract(title, 15)} </div>
+        );
       },
     },
     {
       id: 'comment',
       label: 'Comment',
       render: ({ comment }) => {
-        return <div title={comment}> {customFunctions.textAbstract(comment, 20)} </div>;
+        return (
+          <div title={comment}>
+            {' '}
+            {customFunctions.textAbstract(comment, 20)}{' '}
+          </div>
+        );
       },
     },
     {
@@ -168,6 +176,7 @@ function SupportTicket() {
     const params = {
       limit,
       page,
+      sort_direction: 'descending',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -230,6 +239,7 @@ function SupportTicket() {
           : '',
     };
     setFilterData(filterObj);
+    setFilterErr('');
   };
 
   const getEmployee = async () => {
@@ -272,19 +282,44 @@ function SupportTicket() {
                 <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               </div>
               <hr />
+              {filterErr && (
+                <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                  <div className="img-text">
+                    <img // eslint-disable-line
+                      src="/images/fail.svg"
+                      onClick={() => setFilterErr('')}
+                      alt="Success"
+                      className='rt-support-link'
+                    />{' '}
+                    {filterErr}
+                  </div>
+                </div>
+              )}
               <StarkFormBuilder
-                containerClass=""
+                containerClass="mt-2"
                 formHeaderClass=""
                 formSections={FormSections}
                 onFormSubmit={(formValues) => {
                   if (
-                    [1, 2].includes(Number(currentUser)) &&
-                    !formValues.employee &&
-                    !formValues.ticket_type &&
-                    !formValues.status
-                  )
-                    return;
-                  submitForm(formValues);
+                    ([1, 2].includes(Number(currentUser)) &&
+                      !formValues.employee &&
+                      !formValues.ticket_type &&
+                      !formValues.status) ||
+                    (![1, 2].includes(Number(currentUser)) &&
+                      !formValues.ticket_type &&
+                      !formValues.status)
+                  ) {
+                    setFilterErr(
+                      `${
+                        [1, 2].includes(Number(currentUser))
+                          ? 'Please select the ticket type or employee name or status'
+                          : 'Please select the ticket type or status'
+                      }`
+                    );
+                  } else {
+                    setFilterErr('');
+                    submitForm(formValues);
+                  }
                 }}
                 options={options}
                 callbacks={{}}
@@ -296,6 +331,7 @@ function SupportTicket() {
                 btnContainerClass="form-submit-buttons pull-right"
                 isStepForm={false}
                 onFormReset={() => {
+                  setFilterErr('');
                   if (filterData && !Object.keys(filterData).length) return;
                   setFilterData({});
                 }}
@@ -305,7 +341,7 @@ function SupportTicket() {
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Support Ticket</h5>
+                <h5 className="card-title mb-0 mt-2 ">Support Tickets</h5>
                 <div className="d-flex align-items-center justify-content-end">
                   <a
                     href="#"
@@ -314,7 +350,7 @@ function SupportTicket() {
                     }}
                     className="btn-link"
                   >
-                    Add Support Ticket
+                    Raise New Ticket
                   </a>
                 </div>
               </div>

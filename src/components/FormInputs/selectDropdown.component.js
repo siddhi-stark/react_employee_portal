@@ -25,10 +25,16 @@ export default function SelectDropdown(props) {
       color: '#212529',
       backgroundColor: state.isSelected ? 'white' : 'white',
     }),
-    control: (provided, state) => ({
-      ...provided,
-      color: '#212529',
-      backgroundColor: state.isSelected ? 'white' : 'white',
+    control: (provided, {isDisabled}) => ({
+      // ...provided,
+      // color: '#212529',
+      // backgroundColor: state.isSelected ? 'white' : 'white',
+      // return {
+        ...provided,
+        color: isDisabled ? '#999EA3' : 'white',
+        backgroundColor: isDisabled ? '#e9ecef' : 'white',
+        // fontStyle: isDisabled ? "italic" : "normal"
+      // }
     }),
     singleValue: (provided, state) => ({
       ...provided,

@@ -99,7 +99,7 @@
         "type": "select",
         "label": "",
         "id": "",
-        "placeholder": "Select ticket type",
+        "placeholder": "Select status",
         "inputClass": "",
         "containerClass": "",
         "validations": [],
