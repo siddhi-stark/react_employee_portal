@@ -22,7 +22,7 @@ function CurrentEmployee() {
   const currentdate = new Date();
   const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
   const [employeeId, setEmployeeId] = useState(null);
-  const validator = useRef (new SimpleReactValidator({
+  const validator = useRef(new SimpleReactValidator({
     validators: {
       emailValidate: {
         message: 'The :attribute domain name should be starkdigital.net.',
@@ -70,6 +70,7 @@ function CurrentEmployee() {
   const [date, setDate] = useState('');
   const [disableButton, setDisableButton] = useState(false);
   const [userRole, setUserRole] = useState('');
+  console.log('userRole', userRole);
   const [empCode, setEmpCode] = useState('');
   const [employeetwId, setEmployeeTwId] = useState('');
   const [joiningDate, setJoiningDate] = useState('');
@@ -240,18 +241,18 @@ function CurrentEmployee() {
       setSelectedDesignationOption(
         data.data.designation_id
           ? {
-              label: data.data.designation_name,
-              id: data.data.designation_id,
-            }
+            label: data.data.designation_name,
+            id: data.data.designation_id,
+          }
           : ''
       );
 
       setSelectedRole(
         data.data.role_id
           ? {
-              label: data.data.role_name,
-              id: data.data.role_id,
-            }
+            label: data.data.role_name,
+            id: data.data.role_id,
+          }
           : ''
       );
 
@@ -673,7 +674,7 @@ function CurrentEmployee() {
       validator.current.fields.password = true;
     }
     return !employeeId ? validator.current.message('password', password, 'required|min:6') : '';
-  };  
+  };
 
   const getTwEmployeeValidation = () => {
     if (employeeId && validator.current.fields && validator.current.fields.TWEmployee !== undefined) {
@@ -697,22 +698,22 @@ function CurrentEmployee() {
                 {(Number(userRole) === 1 ||
                   Number(userRole) === 5 ||
                   Number(userRole) === 6) && (
-                  <Button
-                    variant="primary"
-                    className="float-end"
-                    title="Add Employee"
-                    onClick={() => {
-                      setModalShow(true);
-                      setAddButton(true);
-                      setEmployeeId('');
-                      setEmail('');
-                      setPassword('');
-                      setSelectedTeamLead('');
-                    }}
-                  >
-                    Add Employee
-                  </Button>
-                )}
+                    <Button
+                      variant="primary"
+                      className="float-end"
+                      title="Add Employee"
+                      onClick={() => {
+                        setModalShow(true);
+                        setAddButton(true);
+                        setEmployeeId('');
+                        setEmail('');
+                        setPassword('');
+                        setSelectedTeamLead('');
+                      }}
+                    >
+                      Add Employee
+                    </Button>
+                  )}
               </div>
               <hr />
               <div className="filter-box-main">
@@ -722,7 +723,7 @@ function CurrentEmployee() {
                   formSections={FormSections}
                   formHeading="filter form"
                   onFormSubmit={(formValues) => {
-                    if(!formValues.employee && !formValues.position) return;
+                    if (!formValues.employee && !formValues.position) return;
                     submitForm(formValues);
                   }}
                   options={options}
@@ -735,7 +736,7 @@ function CurrentEmployee() {
                   btnContainerClass="form-submit-buttons pull-right"
                   isStepForm={false}
                   onFormReset={() => {
-                    if(filterData && !Object.keys(filterData).length) return;
+                    if (filterData && !Object.keys(filterData).length) return;
                     setFilterData({});
                   }}
                 />
@@ -768,20 +769,20 @@ function CurrentEmployee() {
                       </Col>
                       <Col className="col-md-8">
                         {(Number(userRole) === 1) && (
-                            <a
-                              href="#"
-                              className="float-end ml-2"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setEmployeeId(emp.id);
-                                deleteEmployee(emp.id);
-                              }}
-                            >
-                              <Image src="/images/delete.png" />
-                            </a>
-                         )}
-                          {(Number(userRole) === 1 ||
+                          <a
+                            href="#"
+                            className="float-end ml-2"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setEmployeeId(emp.id);
+                              deleteEmployee(emp.id);
+                            }}
+                          >
+                            <Image src="/images/delete.png" />
+                          </a>
+                        )}
+                        {(Number(userRole) === 1 ||
                           Number(userRole) === 5 ||
                           Number(userRole) === 6) && (
                             <a
@@ -801,7 +802,7 @@ function CurrentEmployee() {
                             >
                               <Image src="/images/edit-button.svg" />
                             </a>
-                        )}
+                          )}
                         <Card.Title>{emp.name}</Card.Title>
                         <p className="card-text employee-details">
                           {emp.full_name}
@@ -813,10 +814,10 @@ function CurrentEmployee() {
                       <Col className="col-md-12">
                         <p className="text-primary confirmation-date">
                           {emp.date_joined && `Joining Date- ${customFunctions.getDMYDate(emp.date_joined)}`} {emp.date_joined && <br />}
-                          {emp.confirmation_date && `Confirmation Date- ${customFunctions.getDMYDate(emp.confirmation_date)}`} {emp.confirmation_date && <br />} 
+                          {emp.confirmation_date && `Confirmation Date- ${customFunctions.getDMYDate(emp.confirmation_date)}`} {emp.confirmation_date && <br />}
                           {(emp.expected_confirmation_date && !emp.confirmation_date) && `Expected Confirmation Date- ${customFunctions.getDMYDate(emp.expected_confirmation_date)}`}
                           {(emp.expected_confirmation_date && !emp.confirmation_date) && <br />}
-                          {(emp.on_notice_period && emp.notice_period_date) && `Relieving Date- ${customFunctions.getDMYDate(emp.relieving_date)}`}{(emp.on_notice_period && emp.notice_period_date) && <br />} 
+                          {(emp.on_notice_period && emp.notice_period_date) && `Relieving Date- ${customFunctions.getDMYDate(emp.relieving_date)}`}{(emp.on_notice_period && emp.notice_period_date) && <br />}
                         </p>
                         <h6>
                           {' '}
@@ -948,24 +949,22 @@ function CurrentEmployee() {
                   )}
                 />
               </Col>
-              {!employeeId && (
+              {[1, 2].includes(userRole) ?
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
                     label="Password"
                     autocomplete="off"
-                    asterisk="*"
+                    asterisk="*" 
                     containerClass="form-group"
                     type="password"
                     // minlength="6"
                     name="passwordTitle"
                     value={password}
                     placeholder="Enter Password"
-                    errorMessage={getPasswordValidation()}
+                    errorMessage={!userRole === 1|| getPasswordValidation()}
                   />
-                </Col>
-              )}
-
+                </Col> : null}
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => {
@@ -1104,11 +1103,11 @@ function CurrentEmployee() {
                   onChange={(e) => {
                     setDate(e);
                   }}
-                  // errorMessage={validator.current.message(
-                  //   'DOB',
-                  //   date,
-                  //    `required | before_or_equal:${maxdate}`
-                  // )}
+                // errorMessage={validator.current.message(
+                //   'DOB',
+                //   date,
+                //    `required | before_or_equal:${maxdate}`
+                // )}
                 />
               </Col>
 

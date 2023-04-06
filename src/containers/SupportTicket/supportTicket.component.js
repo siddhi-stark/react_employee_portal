@@ -23,6 +23,7 @@ function SupportTicket() {
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
+  console.log('rowData', rowData);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -40,10 +41,28 @@ function SupportTicket() {
   const handleActionCallback = ({ id, status_id }) => {
     return (
       <span className="d-flex">
-        {status_id !== 2 ? (
+        {[1, 2].includes(Number(userRole)) ?
+          <div>
           <a
             href="javascript:void(0)"
             className=""
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              history.push(`/view-support-ticket/${id}`,{state:true});
+            }}
+          >
+            <Image
+              src="/images/eye.svg"
+              className="delete-edit-view"
+              alt="Edit SupportTicket"
+            />
+          </a>
+        </div> : null}
+        {status_id !== 2 ? (
+          <a
+            href="javascript:void(0)"
+            className="ml-2"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -56,7 +75,8 @@ function SupportTicket() {
               alt="Edit SupportTicket"
             />
           </a>
-        ):'-'}
+        ) : null}
+
         {[9].includes(Number(userRole)) && (
           <a
             href="javascript:void(0)"
@@ -112,6 +132,17 @@ function SupportTicket() {
     {
       id: 'ticket_type_name',
       label: 'Ticket Type',
+    },
+    {
+      id: 'date_and_time',
+      label: 'Date and Time',
+      render: ({ date }) => {
+        return (
+          <div>
+            {customFunctions.getTimeFormatter(date)}
+          </div>
+        )
+      }
     },
     {
       id: 'resolved_by_full_name',
@@ -192,14 +223,36 @@ function SupportTicket() {
       newData.map((item, i) => {
         const newItem = item;
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
+        // rowClass = 
+        // date > 4 && item.status === 'open'
+        //   ? 'alert-danger'
+        //   : '';
         return newItem;
       });
-      setRowData((data && data.data) || []);
+      const dateAndTime = data && data.data && data.data.map((item) => {
+        const addDate = item;
+        addDate.date = '2023-02-09T07:26:56.730911Z';
+        return addDate;
+      })
+      setRowData((dateAndTime) || []);
     } else {
       setShowLoader(false);
       swal(message, '', 'error');
     }
   };
+
+  // const getDateAndTimeDifference = (milestone) => {
+  //   const ndate = new Date(milestone);
+  //   let today = new Date().toISOString().slice(0, 10);
+
+  //   const startDate = ndate;
+  //   const endDate = today;
+
+  //   const diffInMs = new Date(startDate) - new Date(endDate);
+  //   const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+  //   return parseInt(diffInDays);
+  // };
 
   useEffect(() => {
     getRowData(1);
@@ -310,10 +363,9 @@ function SupportTicket() {
                       !formValues.status)
                   ) {
                     setFilterErr(
-                      `${
-                        [1, 2].includes(Number(currentUser))
-                          ? 'Please select the ticket type or employee name or status'
-                          : 'Please select the ticket type or status'
+                      `${[1, 2].includes(Number(currentUser))
+                        ? 'Please select the ticket type or employee name or status'
+                        : 'Please select the ticket type or status'
                       }`
                     );
                   } else {

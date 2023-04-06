@@ -4,7 +4,7 @@ const menu = [
     path: '/',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7],
   },
   {
     title: 'Project',
@@ -61,7 +61,7 @@ const menu = [
     path: '/employees',
     icon: 'Employee.svg',
     submenu: [],
-    roleaccess: [1, 2, 5, 6],
+    roleaccess: [1, 2, 5, 6, 7],
   },
 
   // {
@@ -279,7 +279,7 @@ const menu = [
     path: '/support-ticket',
     icon: 'ticket.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4],
+    roleaccess: [1, 2, 3, 4, 7],
   },
   {
     title: 'Setting',
@@ -301,7 +301,7 @@ const menu = [
     path: '#',
     icon: 'logout.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7],
   },
 ];
 

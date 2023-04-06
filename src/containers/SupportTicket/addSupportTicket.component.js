@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import { useHistory, withRouter } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
-// import swal from 'sweetalert';
+import swal from 'sweetalert';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet, TextInput, DropdownInput } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
@@ -10,6 +10,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
 function AddSupportTicket(props) {
+  console.log('props', props);
   const validator = useRef(
     new SimpleReactValidator({
       messages: {
@@ -17,14 +18,18 @@ function AddSupportTicket(props) {
       },
     })
   );
-  const { match } = props;
+  const { match, location } = props;
   const history = useHistory();
   const id = match.params.supportId;
+  const view = location?.state?.state;
+  console.log('view', view);
   const [title, setTitle] = useState('');
+  console.log('title', title);
 
   const items = [
     { to: '/', label: 'Home' },
-    { label: id ? 'Edit Support Ticket' : 'Add Support Ticket' },
+    view ? { label: 'View Support Ticket' } :
+      { label: id ? 'Edit Support Ticket' : 'Add Support Ticket' },
   ];
 
   // Variable declarations
@@ -36,6 +41,7 @@ function AddSupportTicket(props) {
     status: '',
     admin_status: '',
   });
+  console.log('supportDetails',supportDetails);
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
@@ -48,7 +54,18 @@ function AddSupportTicket(props) {
     { label: 'Open', value: 1 },
     { label: 'Close', value: 2 },
     { label: 'Resolve', value: 4 },
+    { label: 'Inprogress', value: 5 },
+    { label: 'Reopen', value: 6 },
   ]);
+
+  const statusArray = [
+    { label: 'Open', value: 1 },
+    { label: 'Close', value: 2 },
+    { label: 'Resolve', value: 4 },
+    { label: 'Inprogress', value: 5 },
+    { label: 'Reopen', value: 6 },
+  ]
+
   const ticketType = [
     {
       label: 'Infrastructure',
@@ -95,28 +112,29 @@ function AddSupportTicket(props) {
         : Number(supportDetails.admin_status),
     };
     if (supportId) postData.id = supportId;
-    console.log('status postData', postData);
-    return; // eslint-disable-line
-    // const callback = supportId
-    //   ? AuthApi.putDataToServer
-    //   : AuthApi.postDataToServer;
-    // const endPoint = supportId
-    //   ? `${Api.supportTicketUrl}${supportId}/`
-    //   : Api.supportTicketUrl;
-    // const { data, message } = await callback(endPoint, postData);
+    setShowLoader(false);
 
-    // if (!data) {
-    //   setShowLoader(false);
-    //   swal(message, '', 'error');
-    // }
+    // return; // eslint-disable-line
+    const callback = supportId
+      ? AuthApi.putDataToServer
+      : AuthApi.postDataToServer;
+    const endPoint = supportId
+      ? `${Api.supportTicketUrl}${supportId}/`
+      : Api.supportTicketUrl;
+    const { data, message } = await callback(endPoint, postData);
 
-    // setShowLoader(false);
-    // swal(data && data.message[0], '', 'success').then((result) => {
-    //   if (result) {
-    //     setShowLoader(false);
-    //     history.push('/support-ticket');
-    //   }
-    // });
+    if (!data) {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+
+    setShowLoader(false);
+    swal(data && data.message[0], '', 'success').then((result) => {
+      if (result) {
+        setShowLoader(false);
+        history.push('/support-ticket');
+      }
+    });
   };
 
   const getData = async (editId) => {
@@ -157,7 +175,7 @@ function AddSupportTicket(props) {
       comment: data.data.comment,
       description: data.data.description,
       status: !employeeCondition // eslint-disable-line
-        ? [3,4].includes(Number(currentUser)) && statusCondition ? statusCondition : null
+        ? [3, 4].includes(Number(currentUser)) && statusCondition ? statusCondition : null
         : data.data.status_id,
       admin_status: data.data.admin_status,
       ticket_type: {
@@ -166,11 +184,12 @@ function AddSupportTicket(props) {
       },
     });
   };
+
   useEffect(() => {
     if (id) {
       setSupportId(id);
       getData(id);
-      setTitle('Edit Support Ticket');
+      setTitle(view ? 'View Support Ticket' : 'Edit Support Ticket');
     } else {
       setTitle('Add Support Ticket');
     }
@@ -246,7 +265,13 @@ function AddSupportTicket(props) {
                 <h5 className="card-title mb-0 mt-2 ">{title}</h5>
               </div>
               <hr />
-              <Row>
+              { view === true ? 
+              <Row className='mb-5'>
+                <Col>Title: {supportDetails?.title} </Col>
+                <Col>description: {supportDetails?.ticket_type?.label}</Col>
+                <Col>comment: {supportDetails?.comment}</Col>
+              </Row>
+               : <Row>
                 <Col sm={6} md={6} lg={6}>
                   <TextInput
                     onInputChange={(e) =>
@@ -261,7 +286,7 @@ function AddSupportTicket(props) {
                     type="text"
                     name="title"
                     disabled={
-                      supportId && Number(supportDetails.admin_status) === 4
+                      supportId && Number(supportDetails.admin_status) === 4 || view === true
                     }
                     value={supportDetails.title}
                     placeholder="Enter title"
@@ -280,7 +305,7 @@ function AddSupportTicket(props) {
                     options={ticketType}
                     defaultValue={supportDetails.ticket_type}
                     disabled={
-                      supportId && Number(supportDetails.admin_status) === 4
+                      supportId && Number(supportDetails.admin_status) === 4 || view === true
                     }
                     onSelectHandler={(select) =>
                       setSupportDetails({
@@ -301,7 +326,7 @@ function AddSupportTicket(props) {
                     label="Description"
                     containerClass="form-group"
                     disabled={
-                      supportId && Number(supportDetails.admin_status) === 4
+                      supportId && Number(supportDetails.admin_status) === 4 || view === true
                     }
                     onInputChange={(e) =>
                       setSupportDetails({
@@ -322,42 +347,15 @@ function AddSupportTicket(props) {
                     )}
                   />
                 </Col>
-                {((Number(user) !== Number(userId) && supportId) ||
-                  ([3, 4].includes(Number(currentUser)) &&
-                    supportDetails.admin_status)) && (
-                  <Col sm={6} md={6} lg={6}>
-                    <TextInput
-                      label="Comment"
-                      containerClass="form-group"
-                      onInputChange={(e) =>
-                        setSupportDetails({
-                          ...supportDetails,
-                          comment: e.target.value,
-                        })
-                      }
-                      as="textarea"
-                      rows={3}
-                      asterisk="*"
-                      name="comment"
-                      disabled={[3, 4, 5, 6].includes(currentUser)}
-                      value={supportDetails.comment}
-                      placeholder="Enter comment"
-                      errorMessage={validator.current.message(
-                        'comment',
-                        supportDetails.comment,
-                        'required'
-                      )}
-                    />
-                  </Col>
-                )}
                 {(Number(user) !== Number(userId) && supportId) ||
-                ([3, 4].includes(Number(currentUser)) &&
-                  supportDetails.admin_status) ? (
+                  ([3, 4].includes(Number(currentUser)) &&
+                    supportDetails.admin_status) ? (
                   <Col sm={6} md={6} lg={6}>
                     <p>
                       Ticket Status <span className="text-danger">*</span>
                     </p>
                     {status.map((st) => {
+                      console.log('st', st);
                       return (
                         <>
                           <input
@@ -365,7 +363,6 @@ function AddSupportTicket(props) {
                               setSupportDetails({
                                 ...supportDetails,
                                 status: e.target.value,
-                                admin_status: e.target.value,
                               })
                             }
                             name={st.label}
@@ -392,25 +389,86 @@ function AddSupportTicket(props) {
                       );
                     })}
                     {(!supportDetails.admin_status &&
-                    [1, 2].includes(Number(currentUser)))
+                      [1, 2].includes(Number(currentUser)))
                       ? validator.current.message(
-                          'ticket_status',
-                          supportDetails.admin_status,
-                          'required',
-                          {
-                            className: 'text-danger',
-                          }
-                        )
+                        'ticket_status',
+                        supportDetails.admin_status,
+                        'required',
+                        {
+                          className: 'text-danger',
+                        }
+                      )
                       : validator.current.message(
-                          'ticket_status',
-                          supportDetails.status,
-                          'required',
-                          {
-                            className: 'text-danger',
-                          }
-                        )}
+                        'ticket_status',
+                        supportDetails.status,
+                        'required',
+                        {
+                          className: 'text-danger',
+                        }
+                      )}
                   </Col>
                 ) : null}
+              </Row>}
+              <Row>
+                {((Number(user) !== Number(userId) && supportId) ||
+                  ([3, 4].includes(Number(currentUser)) &&
+                    supportDetails.admin_status)) && (
+                    <>
+                      <Col>
+                        <TextInput
+                          label="Comment"
+                          containerClass="form-group"
+                          onInputChange={(e) =>
+                            setSupportDetails({
+                              ...supportDetails,
+                              comment: e.target.value,
+                            })
+                          }
+                          as="textarea"
+                          rows={3}
+                          asterisk="*"
+                          name="comment"
+                          disabled={[3, 4, 5, 6].includes(currentUser)}
+                          value={supportDetails.comment}
+                          placeholder="Enter comment"
+                          errorMessage={validator.current.message(
+                            'comment',
+                            supportDetails.comment,
+                            'required'
+                          )}
+                        />
+                      </Col>
+                      <Col className='col-4'>
+                        <DropdownInput
+                          label="Status"
+                          asterisk="*"
+                          name="TicketStatus"
+                          options={statusArray}
+                          defaultValue={supportDetails.ticket_type}
+                          // disabled={
+                          //   supportId && Number(supportDetails.admin_status) === 4
+                          // }
+                          // onSelectHandler={(select) =>
+                          //   setSupportDetails({
+                          //     ...supportDetails,
+                          //     ticket_type: select,
+                          //   })
+                          // }
+                          placeholder="Select ticket status"
+                          // errorMessage={validator.current.message(
+                          //   'ticket type',
+                          //   supportDetails.ticket_type,
+                          //   'required'
+                          // )}
+                        />
+                      </Col>
+                      <Row className='d-flex mb-5'>
+                        <Col className='col-1'>Hello</Col>
+                        <Col className='col-2'>Abhishek Shinde</Col>
+                        <Col>09/02/2023 12:56 AM</Col>
+                      </Row>
+                    </>
+                  )}
               </Row>
               <div className="float-end">
                 <Button

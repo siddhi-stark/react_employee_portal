@@ -20,6 +20,18 @@ class CustomFunctions extends Component {
     return dateNew;
   };
 
+  formatAMPM = (date) => {
+    const newdate = new Date(date);
+    let hours = newdate.getHours();
+    let minutes = newdate.getMinutes();
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    hours %= 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? `0 ${minutes}` : minutes;
+    const strTime = `${hours} : ${minutes} ${ampm.toUpperCase()}`;
+    return strTime;
+    };
+
   getTime = (time) => {
     const newDate = new Date(time);
     const h = newDate.getHours();
@@ -90,7 +102,7 @@ class CustomFunctions extends Component {
     const d = newdate.getDate();
     const m = newdate.getMonth() + 1;
     const y = newdate.getFullYear();
-    const formattedate = (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y + formatTime; //eslint-disable-line
+    const formattedate = (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y +" "+ formatTime; //eslint-disable-line
     return formattedate;
   };
 
