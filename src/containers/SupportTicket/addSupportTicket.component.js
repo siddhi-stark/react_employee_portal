@@ -111,6 +111,7 @@ function AddSupportTicket(props) {
         ? Number(supportDetails.status)
         : Number(supportDetails.admin_status),
     };
+    console.log('postData',postData);
     if (supportId) postData.id = supportId;
     setShowLoader(false);
 
@@ -267,7 +268,7 @@ function AddSupportTicket(props) {
               <hr />
               { view === true ? 
               <Row className='mb-5'>
-                <Col>Title: {supportDetails?.title} </Col>
+                <Col>Title: {supportDetails?.title}</Col>
                 <Col>description: {supportDetails?.ticket_type?.label}</Col>
                 <Col>comment: {supportDetails?.comment}</Col>
               </Row>
@@ -347,7 +348,7 @@ function AddSupportTicket(props) {
                     )}
                   />
                 </Col>
-                {(Number(user) !== Number(userId) && supportId) ||
+                {/* {(Number(user) !== Number(userId) && supportId) ||
                   ([3, 4].includes(Number(currentUser)) &&
                     supportDetails.admin_status) ? (
                   <Col sm={6} md={6} lg={6}>
@@ -407,7 +408,7 @@ function AddSupportTicket(props) {
                         }
                       )}
                   </Col>
-                ) : null}
+                ) : null} */}
               </Row>}
               <Row>
                 {((Number(user) !== Number(userId) && supportId) ||
@@ -444,16 +445,13 @@ function AddSupportTicket(props) {
                           asterisk="*"
                           name="TicketStatus"
                           options={statusArray}
-                          defaultValue={supportDetails.ticket_type}
+                          defaultValue={supportDetails.status}
                           // disabled={
                           //   supportId && Number(supportDetails.admin_status) === 4
                           // }
-                          // onSelectHandler={(select) =>
-                          //   setSupportDetails({
-                          //     ...supportDetails,
-                          //     ticket_type: select,
-                          //   })
-                          // }
+                          onSelectHandler={(select) =>
+                            setSupportDetails(select)
+                          }
                           placeholder="Select ticket status"
                           // errorMessage={validator.current.message(
                           //   'ticket type',
@@ -463,8 +461,7 @@ function AddSupportTicket(props) {
                         />
                       </Col>
                       <Row className='d-flex mb-5'>
-                        <Col className='col-1'>Hello</Col>
-                        <Col className='col-2'>Abhishek Shinde</Col>
+                        <Col className='col-1'>Abhishek Shinde</Col>
                         <Col>09/02/2023 12:56 AM</Col>
                       </Row>
                     </>

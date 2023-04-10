@@ -43,22 +43,22 @@ function SupportTicket() {
       <span className="d-flex">
         {[1, 2].includes(Number(userRole)) ?
           <div>
-          <a
-            href="javascript:void(0)"
-            className=""
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              history.push(`/view-support-ticket/${id}`,{state:true});
-            }}
-          >
-            <Image
-              src="/images/eye.svg"
-              className="delete-edit-view"
-              alt="Edit SupportTicket"
-            />
-          </a>
-        </div> : null}
+            <a
+              href="javascript:void(0)"
+              className=""
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                history.push(`/view-support-ticket/${id}`, { state: true });
+              }}
+            >
+              <Image
+                src="/images/eye.svg"
+                className="delete-edit-view"
+                alt="Edit SupportTicket"
+              />
+            </a>
+          </div> : null}
         {status_id !== 2 ? (
           <a
             href="javascript:void(0)"
@@ -212,7 +212,7 @@ function SupportTicket() {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-
+    console.log('data123', data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
