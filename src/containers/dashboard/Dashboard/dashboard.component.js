@@ -13,6 +13,7 @@ import UserRestrictions from '../../../components/UserRestrictions/userrestricti
 import SharedService from '../../../services/SharedService/sharedServices';
 import Loader from '../../../components/Loader/index';
 import EmployeeListComponent from '../../Employee/employeeList.component';
+import SupportTicket from '../../SupportTicket/supportTicket.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -803,6 +804,17 @@ function Dashboard() {
                     ))}
                 </>
               )}
+              {userRole ===7 &&  
+            <>
+            <section>
+            <Card>
+                <Card.Body>
+                  <SupportTicket/>
+                </Card.Body>
+              </Card>
+              </section>  
+            </>
+          }
               {appreciationData && appreciationData.length > 0 && (
                 <>
                   {appreciationData &&
