@@ -172,7 +172,7 @@ function Header() {
                   {imageProfile ? (
                     <img src={imageProfile} alt="Profile" />
                   ) : (
-                    <img src={Api.s3UrlnoProfile} alt="Edit Profile" />
+                    <img src="/images/user.svg" alt="Edit Profile" />
                   )}
                 </a>
               </div>

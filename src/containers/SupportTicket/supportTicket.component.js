@@ -48,17 +48,17 @@ function SupportTicket() {
   const [taskID, setTaskID] = useState();
 
   const statusArray = [
-    // userRole == 7
-    //   ? 
+    userRole == 7
+      ? 
       {
-          id: '2',
-          label: 'Resolved',
-        },
-      // :
-       {
           id: '3',
+          label: 'Resolved',
+        }
+      :
+       {
+          id: '2',
           label: 'close',
-        },
+        }
   ];
 
   // const handleActionCallback = ({ id, status_id }) => { // eslint-disable-line
@@ -125,6 +125,10 @@ function SupportTicket() {
 
   const columns = [
     {
+      id: 'index',
+      label: 'Sr.No'
+    },
+    {
       id: 'id',
       label: 'Ticket Id',
       render: (row) => {
@@ -149,8 +153,14 @@ function SupportTicket() {
       },
     },
     {
-      id: [1, 2].includes(Number(userRole)) && 'user_full_name',
-      label: [1, 2].includes(Number(userRole)) && 'Employee Name',
+      id: [1, 2, 7].includes(Number(userRole)) && 'user_full_name',
+      label: [1, 2, 7].includes(Number(userRole)) && 'Employee Name',
+      render: (row) =>{
+        console.log('row',row);
+        return(
+          <>{row?.user_name}</>
+        )
+      }
     },
     {
       id: 'title',
@@ -165,7 +175,7 @@ function SupportTicket() {
       id: 'created_at',
       label: 'Created Date',
       render: ({ created_at }) => {
-        return <div>{customFunctions.getTimeFormatter(created_at)}</div>;
+        return <div>{customFunctions.getTimeFormatter(created_at)}</div>
       },
     },
     {
@@ -206,6 +216,7 @@ function SupportTicket() {
       label: 'Status',
       id: 'status',
       render: (row) => {
+        console.log('row',row);
         return (
           <div>
             <DropdownInput
@@ -213,24 +224,17 @@ function SupportTicket() {
               placeholder=" Select Task"
               options={statusArray}
               defaultValue={
-                {
-                  label: row.status,
-                  id: row.status_id,
-                }
-                // ticketStatus
-                //   ? ticketStatus
-                //   : {
-                //       label: 'open',
-                //       id: '1',
-                //     }
+                {label: row.status, id: row.status_id}
               }
               onSelectHandler={(select) => {
                 // setTicketStatus(select);
                 row.status = select.label;
                 row.status_id = select.id;
-                if (select.label === 'Resolved') {
+                if (select.label === 'Resolved' ) {
                   setUpdateShow(true);
                   setCreateTask(row);
+                }else{
+
                 }
               }}
               id="document"

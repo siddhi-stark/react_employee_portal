@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState, useRef } from 'react';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
-import { useHistory, withRouter,useLocation } from 'react-router-dom';
+import { useHistory, withRouter, useLocation } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -20,8 +20,8 @@ function AddSupportTicket(props) {
     })
   );
   const { match, location } = props;
-  const {state} = useLocation()
-  console.log("stateeeeeeeee",state);
+  const { state } = useLocation()
+  console.log("stateeeeeeeee", state);
   const history = useHistory();
   const id = match.params.supportId;
   const view = location?.state?.state;
@@ -49,7 +49,7 @@ function AddSupportTicket(props) {
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
-  const [user, setUser] = useState(0);  
+  const [user, setUser] = useState(0);
   const [supportId, setSupportId] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   const userId = localStorage.getItem('userId');
@@ -167,7 +167,7 @@ function AddSupportTicket(props) {
       //           />
       //         </a>
       //       ) : null}
-    
+
       //       {[9].includes(Number(userRole)) && (
       //         <a
       //           href="javascript:void(0)"
@@ -483,73 +483,7 @@ function AddSupportTicket(props) {
                 ) : null} */}
                 </Row>
               )}
-              <Row>
-                {((Number(user) !== Number(userId) && supportId) ||
-                  ([3, 4].includes(Number(currentUser)) &&
-                    supportDetails.admin_status)) && (
-                  <>
-                    <Col>
-                      <TextInput
-                        label="Comment"
-                        containerClass="form-group"
-                        onInputChange={(e) =>
-                          setSupportDetails({
-                            ...supportDetails,
-                            comment: e.target.value,
-                          })
-                        }
-                        as="textarea"
-                        rows={3}
-                        asterisk="*"
-                        name="comment"
-                        disabled={[3, 4, 5, 6].includes(currentUser)}
-                        value={supportDetails.comment}
-                        placeholder="Enter comment"
-                        errorMessage={validator.current.message(
-                          'comment',
-                          supportDetails.comment,
-                          'required'
-                        )}
-                      />
-                    </Col>
-                    <Col className="col-4">
-                      <DropdownInput
-                        label="Status"
-                        asterisk="*"
-                        name="TicketStatus"
-                        options={statusArray}
-                        defaultValue={supportDetails.status}
-                        // disabled={
-                        //   supportId && Number(supportDetails.admin_status) === 4
-                        // }
-                        onSelectHandler={(select) => setSupportDetails(select)}
-                        placeholder="Select ticket status"
-                        // errorMessage={validator.current.message(
-                        //   'ticket type',
-                        //   supportDetails.ticket_type,
-                        //   'required'
-                        // )}
-                      />
-                    </Col>
-                    <Row className="d-flex mb-3 ml-2">
-                      <Col className="col-2">Abhishek Shinde</Col>
-                      <Col>09/02/2023 12:56 AM</Col>
-                      <Row>
-                        <div className="mt-2 ">
-                          <p className="col-9">
-                            Google Search is a search engine provided and
-                            operated by Google. Handling more than 3.5 billion
-                            searches per day, it has a 92% share of the global
-                            search engine market. It is the visited website in
-                            the world.
-                          </p>
-                        </div>
-                      </Row>
-                    </Row>
-                  </>
-                )}
-              </Row>
-              <div className="float-end">
+              {view ? null : <div className="float-end">
                 <Button
                   variant="primary"
                   type="submit"
@@ -564,7 +498,7 @@ function AddSupportTicket(props) {
                 >
                   Cancel
                 </Button>
-              </div>
+              </div>}
             </Card.Body>
           </Card>
         </Form>
