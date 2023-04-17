@@ -175,7 +175,7 @@ function SupportTicket() {
       id: 'created_at',
       label: 'Created Date',
       render: ({ created_at }) => {
-        return <div>{customFunctions.getTimeFormatter(created_at)}</div>
+        return <div>{`${customFunctions.getDMYDate(created_at)} ${customFunctions.formatAMPM(created_at)}`}</div>
       },
     },
     {
@@ -194,7 +194,7 @@ function SupportTicket() {
       id: 'updated_at',
       label: 'Updated Date',
       render: ({ updated_at }) => {
-        return <div>{customFunctions.getTimeFormatter(updated_at)}</div>;
+        return <div>{`${customFunctions.getDMYDate(updated_at)} ${customFunctions.formatAMPM(updated_at)}`}</div>
       },
     },
     // {
