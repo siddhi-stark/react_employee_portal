@@ -70,7 +70,6 @@ function CurrentEmployee() {
   const [date, setDate] = useState('');
   const [disableButton, setDisableButton] = useState(false);
   const [userRole, setUserRole] = useState('');
-  console.log('userRole', userRole);
   const [empCode, setEmpCode] = useState('');
   const [employeetwId, setEmployeeTwId] = useState('');
   const [joiningDate, setJoiningDate] = useState('');
@@ -79,9 +78,20 @@ function CurrentEmployee() {
   const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedMentor, setSelectedMentor] = useState([]);
+  const [currentUser, updateCurrentUser] = useState(0);
+
 
   let timmer = null;
   const history = useHistory();
+
+    const getUserRole = async () => {
+      const roleId = await localStorage.getItem('group');
+      updateCurrentUser(Number(roleId));
+    };
+  
+    useEffect(() => {
+      getUserRole();
+    }, []);
 
   const getEmployeeData = async (pageNo = 1) => {
     setShowLoader(true);
@@ -97,6 +107,7 @@ function CurrentEmployee() {
         filterData && filterData.position ? filterData.position.value : '',
       user_id:
         filterData && filterData.employee ? filterData.employee.value : '',
+      hide_admin: currentUser === 7 ? 1 : null,  //eslint-disable-line
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
@@ -360,7 +371,7 @@ function CurrentEmployee() {
 
   useEffect(() => {
     getEmployeeData(currentPage);
-  }, [cntClearFilter]);
+  }, [cntClearFilter, currentUser]);
 
   const deleteEmployee = (id) => {
     if (id) {

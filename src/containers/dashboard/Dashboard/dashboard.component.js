@@ -51,6 +51,7 @@ function Dashboard() {
   const [newBirthdayData, setNewBirthdayData] = useState([]);
   const [broadcastDescription, setBroadcastDescription] = useState([]);
   const [confirmationEmployee, setConfirmationEmployee] = useState([]);
+  const dashboardKey = 'Dashboard';
 
   const d = new Date();
   const day = d.getDate(); // eslint-disable-line
@@ -809,7 +810,10 @@ function Dashboard() {
             <section>
             <Card>
                 <Card.Body>
-                  <SupportTicket/>
+                  <SupportTicket
+                    data={dashboardKey}
+                    limit='5'
+                  />
                 </Card.Body>
               </Card>
               </section>  
