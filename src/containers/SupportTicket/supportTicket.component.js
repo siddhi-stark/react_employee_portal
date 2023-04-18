@@ -41,7 +41,8 @@ function SupportTicket(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   // console.log('currentUser', currentUser);
   const [filterData, setFilterData] = useState({});
-
+  const [user, updateUser] = useState(0);
+  console.log('user',user);
   const [createTask, setCreateTask] = useState();
 
   const statusArray = [
@@ -62,19 +63,18 @@ function SupportTicket(props) {
       {
         id: '3',
         label: 'Resolved',
-      },
-      {
-        id: '2',
-        label: 'close',
       }
   ];
 
   const statusArray2 = [
+    
     {
       id: '2',
       label: 'close',
     }
 ];
+
+
 
 
   // const handleActionCallback = ({ id, status_id }) => { // eslint-disable-line
@@ -262,11 +262,17 @@ function SupportTicket(props) {
       label: 'Status',
       id: 'status',
       render: (row) => {
+        console.log('row',row);
         return (
           <div>
+            {console.log('currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user'
+            ,currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)}
+            {console.log('currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1'
+            ,currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)}
             {
-              (currentUser == 1 && row.status_id === 1) || (currentUser == 7 && row.status_id === 3) ||
-              resolved_by_id != currentUser
+              (currentUser == 1 && row.status_id === 1 && row.status_id != 3 && row.user != user)
+              //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
+               || (currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1) 
                ?
                 <DropdownInput
                   // label={index === 0 ? "Document Type" : ""}
@@ -292,13 +298,18 @@ function SupportTicket(props) {
 
                 :
                 <>
+                {console.log('demo')}
+                {/* {console.log('currentUser === 1 && row.user === user && row.status_id === 1',
+                currentUser === 1 && row.user === user && row.status_id === 1)} */}
                   {props?.data || (currentUser === 7 && (row.status_id === 3 || row.status_id === 2)) ||
                     (currentUser != 7 && (row.status_id === 2 || row.status_id === 1))
+                    || currentUser === 1 && row.user != user || currentUser === 1 && row.user === user && row.status_id === 1
+                    || currentUser === 7 && row.user === user && row.status_id === 1
                     ? row?.status :
                     <DropdownInput
                       // label={index === 0 ? "Document Type" : ""}
                       placeholder=" Select Task"
-                      options={statusArray}
+                      options={currentUser === 7 && row.user === user ? statusArray2 : statusArray}
                       defaultValue={
                         { label: row.status, id: row.status_id } 
                       }
@@ -431,10 +442,12 @@ function SupportTicket(props) {
     getRowData(1);
   }, [filterData, !updateShow]);
 
-  // Get user role
+  // Get user role 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
+    const userId = await localStorage.getItem('userId');
+    updateUser(Number(userId));
   };
 
   useEffect(() => {
