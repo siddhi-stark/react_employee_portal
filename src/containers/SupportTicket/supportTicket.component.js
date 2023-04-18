@@ -378,6 +378,7 @@ function SupportTicket(props) {
         const hoursDifference = diffInsec / (1000 * 36000);
         if(hoursDifference >=4 ) {
           newItem.rowClass = 'bgred-color'
+          
         }
         // rowClass =
         // date > 4 && item.status === 'open'
