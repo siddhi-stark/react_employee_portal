@@ -12310,7 +12310,10 @@ input[type=checkbox]:checked {
 }
 
 .bgred-color {
-  background-color: #E4595D;
+  background-color: #f5b1b1 ;
+}
+.text-color {
+  background-color:#E4595D
 }
 
 .bgwhite-color {
