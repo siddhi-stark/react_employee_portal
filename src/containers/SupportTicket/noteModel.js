@@ -11,7 +11,7 @@ import Loader from '../../components/Loader';
 const Addtask = (props) => {
   const { show, fromComponent, tId, callback, updateShow, data } = props; // eslint-disable-line
 
-  console.log('props data', data);
+  // console.log('props data', data);
   const validator = useRef(new SimpleReactValidator());  // eslint-disable-line
 
   const [isShowLoader, setShowLoader] = useState(false);
@@ -25,7 +25,7 @@ const Addtask = (props) => {
   const [disableButton, setDisableButton] = useState(false);
 
   const ticketData=props.data
-  console.log("ticketData",ticketData);
+  // console.log("ticketData",ticketData);
   const [supportDetails, setSupportDetails] = useState({
     title: '',
     ticket_type: null,
@@ -40,7 +40,7 @@ const Addtask = (props) => {
     setSupportId(ticketData.id)
   },[])
  
-console.log("ticketData ==========>",supportId);
+// console.log("ticketData ==========>",supportId);
   const [status, setStatus] = useState([
     { label: 'Open', value: 1 },
     { label: 'Close', value: 2 },
@@ -50,13 +50,13 @@ console.log("ticketData ==========>",supportId);
   ]);
 
   const submitForm = async () => {
-      console.log("formmmmms");
+      // console.log("formmmmms");
     // setShowLoader(true);
     const payload=ticketData;
     if(note){
         payload.comment=note;
     }
-    console.log("payload",payload);
+    // console.log("payload",payload);
     const postData = {
         id:ticketData.id,
       title:ticketData.title,
@@ -69,10 +69,10 @@ console.log("ticketData ==========>",supportId);
         ? Number(ticketData.status_id)
         : Number(ticketData.admin_status),
     };
-    console.log('postData', postData);
+    // console.log('postData', postData);
     if (supportId) ticketData.id = supportId;
     setShowLoader(false);
-console.log("supportIdsupportId",supportId);
+// console.log("supportIdsupportId",supportId);
     // return; // eslint-disable-line
     const callback = supportId
       ? AuthApi.putDataToServer
@@ -80,7 +80,7 @@ console.log("supportIdsupportId",supportId);
     const endPoint = supportId
       ? `${Api.supportTicketUrl}${supportId}/`
       : Api.supportTicketUrl;
-   console.log("endpointt",endPoint);
+  //  console.log("endpointt",endPoint);
       const { data, message } = await callback(endPoint, postData);
 
       if (data && data.success === true) {
