@@ -279,14 +279,6 @@ function SupportTicket(props) {
     // },
   ];
 
-
-  // const submitData = () =>{
-  //   // setShowLoader(true);
-  //   if(supportDetails.title){
-  //     submitCloseTicket();
-  //   }
-  // }
-
   // const deleteTicket = (id) => {
   //   if (id) {
   //     swal({
