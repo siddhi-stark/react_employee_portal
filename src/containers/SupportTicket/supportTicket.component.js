@@ -286,13 +286,13 @@ function SupportTicket(props) {
       label: 'Status',
       id: 'status',
       render: (row) => {
-        console.log('row',row);
+        // console.log('row',row);
         return (
           <div>
-            {console.log('currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user'
+            {/* {console.log('currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user'
             ,currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)}
             {console.log('currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1'
-            ,currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)}
+            ,currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)} */}
             {
               (currentUser == 1 && row.status_id === 1 && row.status_id != 3 && row.user != user)
               //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
@@ -322,7 +322,7 @@ function SupportTicket(props) {
 
                 :
                 <>
-                {console.log('demo')}
+                {/* {console.log('demo')} */}
                 {/* {console.log('currentUser === 1 && row.user === user && row.status_id === 1',
                 currentUser === 1 && row.user === user && row.status_id === 1)} */}
                   {props?.data || (currentUser === 7 && (row.status_id === 3 || row.status_id === 2)) ||
