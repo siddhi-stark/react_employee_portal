@@ -636,7 +636,7 @@ function SupportTicket(props) {
           {/* // ) : null} */}
           <Card>
             <Card.Body>
-              {/* {userRole != 7 ? ( */}
+              {userRole != 7 && userRole != 1 ? (
               <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Support Tickets</h5>
                 <div className="d-flex align-items-center justify-content-end">
@@ -651,7 +651,7 @@ function SupportTicket(props) {
                   </a>
                 </div>
               </div>
-              {/* ) : null} */}
+               ) : null} 
               <hr />
               <CustomTable
                 columns={columns}
