@@ -11,7 +11,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
 function AddSupportTicket(props) {
-  console.log('props', props);
+  // console.log('props', props);
   const validator = useRef(
     new SimpleReactValidator({
       messages: {
@@ -21,13 +21,13 @@ function AddSupportTicket(props) {
   );
   const { match, location } = props;
   const { state } = useLocation()
-  console.log("stateeeeeeeee", state);
+  // console.log("stateeeeeeeee", state);
   const history = useHistory();
   const id = match.params.supportId;
   const view = location?.state?.state;
-  console.log('view', view);
+  // console.log('view', view);
   const [title, setTitle] = useState('');
-  console.log('title', title);
+  // console.log('title', title);
 
   const items = [
     { to: '/', label: 'Home' },
@@ -45,7 +45,7 @@ function AddSupportTicket(props) {
     status: '',
     admin_status: '',
   });
-  console.log('supportDetails', supportDetails);
+  // console.log('supportDetails', supportDetails);
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
@@ -114,7 +114,7 @@ function AddSupportTicket(props) {
         ? Number(supportDetails.status)
         : Number(supportDetails.admin_status),
     };
-    console.log('postData', postData);
+    // console.log('postData', postData);
     if (supportId) postData.id = supportId;
     setShowLoader(false);
 

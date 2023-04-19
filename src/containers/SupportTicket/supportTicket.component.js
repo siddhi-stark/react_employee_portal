@@ -28,6 +28,7 @@ function SupportTicket(props) {
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
+  
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -42,20 +43,41 @@ function SupportTicket(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [filterData, setFilterData] = useState({});
-
+  const [user, updateUser] = useState(0);
+  console.log('user',user);
   const [createTask, setCreateTask] = useState();
 
   const statusArray = [
-    userRole == 7
-      ? {
-          id: '3',
-          label: 'Resolved',
-        }
-      : {
-          id: '2',
-          label: 'close',
-        },
+    currentUser == 7
+      ?
+      {
+        id: '3',
+        label: 'Resolved',
+      }
+      :
+      {
+        id: '2',
+        label: 'close',
+      }
   ];
+
+  const statusArray1 = [
+      {
+        id: '3',
+        label: 'Resolved',
+      }
+  ];
+
+  const statusArray2 = [
+    
+    {
+      id: '2',
+      label: 'close',
+    }
+];
+
+
+
 
   // const handleActionCallback = ({ id, status_id }) => { // eslint-disable-line
   //   // eslint-disable-line
@@ -120,6 +142,7 @@ function SupportTicket(props) {
   // };
 
   const submitCloseTicket = (onChangeData = '') => {
+    // console.log('onChangeData', onChangeData);
     swal({
       title: 'Are you sure?',
       text: 'you want to close the ticket.',
@@ -184,8 +207,11 @@ function SupportTicket(props) {
       id: [1, 2, 7].includes(Number(userRole)) && 'user_full_name',
       label: [1, 2, 7].includes(Number(userRole)) && 'Name',
       render: (row) => {
-        return <> {row?.user_name}</>;
-      },
+        // console.log('row', row);
+        return (
+          <>{row?.user_name}</>
+        )
+      }
     },
     {
       id: 'title',
@@ -260,35 +286,74 @@ function SupportTicket(props) {
       label: 'Status',
       id: 'status',
       render: (row) => {
+        console.log('row',row);
         return (
           <div>
-            {props?.data ||
-            (currentUser === 7 &&
-              (row.status_id === 3 || row.status_id === 2)) ||
-            (currentUser != 7 &&
-              (row.status_id === 2 || row.status_id === 1)) ? (
-              row?.status
-            ) : (
-              <DropdownInput
-                // label={index === 0 ? "Document Type" : ""}
-                placeholder=" Select Task"
-                options={statusArray}
-                defaultValue={{ label: row.status, id: row.status_id }}
-                onSelectHandler={(select) => {
-                  // setTicketStatus(select);
-                  row.status = select.label;
-                  row.status_id = select.id;
-                  if (select.label === 'Resolved') {
-                    setUpdateShow(true);
-                    setCreateTask(row);
+            {console.log('currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user'
+            ,currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)}
+            {console.log('currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1'
+            ,currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)}
+            {
+              (currentUser == 1 && row.status_id === 1 && row.status_id != 3 && row.user != user)
+              //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
+               || (currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1) 
+               ?
+                <DropdownInput
+                  // label={index === 0 ? "Document Type" : ""}
+                  placeholder=" Select Task"
+                  options={currentUser == 7 ? statusArray2 : statusArray1 }
+                  defaultValue={
+                    { label: row.status, id: row.status_id }
                   }
-                  if (select.label === 'close') {
-                    submitCloseTicket(row, 'onChange');
-                  }
-                }}
-                id="document"
-              />
-            )}
+                  onSelectHandler={(select) => {
+                    // setTicketStatus(select);
+                    row.status = select.label;
+                    row.status_id = select.id;
+                    if (select.label === 'Resolved') {
+                      setUpdateShow(true);
+                      setCreateTask(row);
+                    }
+                    if (select.label === 'close') {
+                      submitCloseTicket(row, 'onChange')
+                    }
+                  }}
+                  id="document"
+                />
+
+                :
+                <>
+                {console.log('demo')}
+                {/* {console.log('currentUser === 1 && row.user === user && row.status_id === 1',
+                currentUser === 1 && row.user === user && row.status_id === 1)} */}
+                  {props?.data || (currentUser === 7 && (row.status_id === 3 || row.status_id === 2)) ||
+                    (currentUser != 7 && (row.status_id === 2 || row.status_id === 1))
+                    || currentUser === 1 && row.user != user || currentUser === 1 && row.user === user && row.status_id === 1
+                    || currentUser === 7 && row.user === user && row.status_id === 1
+                    ? row?.status :
+                    <DropdownInput
+                      // label={index === 0 ? "Document Type" : ""}
+                      placeholder=" Select Task"
+                      options={currentUser === 7 && row.user === user ? statusArray2 : statusArray}
+                      defaultValue={
+                        { label: row.status, id: row.status_id } 
+                      }
+                      onSelectHandler={(select) => {
+                        // setTicketStatus(select);
+                        row.status = select.label;
+                        row.status_id = select.id;
+                        if (select.label === 'Resolved') {
+                          setUpdateShow(true);
+                          setCreateTask(row);
+                        }
+                        if (select.label === 'close') {
+                          submitCloseTicket(row, 'onChange')
+                        }
+                      }}
+                      id="document"
+                    />}
+                </>
+            }
+
           </div>
         );
       },
@@ -298,13 +363,6 @@ function SupportTicket(props) {
     //   label: 'Action',
     // },
   ];
-
-  // const submitData = () =>{
-  //   // setShowLoader(true);
-  //   if(supportDetails.title){
-  //     submitCloseTicket();
-  //   }
-  // }
 
   // const deleteTicket = (id) => {
   //   if (id) {
@@ -368,6 +426,7 @@ function SupportTicket(props) {
 
       const newData = [...data.data];
       newData.map((item, i) => {
+        // console.log('item------------->', item);
         const newItem = item;
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
         const sDate = item.created_at;
@@ -419,10 +478,12 @@ function SupportTicket(props) {
     getRowData(1);
   }, [filterData, !updateShow]);
 
-  // Get user role
+  // Get user role 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
+    const userId = await localStorage.getItem('userId');
+    updateUser(Number(userId));
   };
 
   useEffect(() => {
