@@ -279,7 +279,7 @@ const menu = [
     path: '/support-ticket',
     icon: 'ticket.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 7],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7],
   },
   {
     title: 'Setting',

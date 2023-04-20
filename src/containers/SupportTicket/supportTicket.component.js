@@ -28,7 +28,7 @@ function SupportTicket(props) {
 
   // Declare variable
   const [rowData, setRowData] = useState([]);
-  
+
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -43,8 +43,9 @@ function SupportTicket(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [filterData, setFilterData] = useState({});
+  console.log('filterData', filterData);
   const [user, updateUser] = useState(0);
-  console.log('user',user);
+  // console.log('user',user);
   const [createTask, setCreateTask] = useState();
 
   const statusArray = [
@@ -57,27 +58,23 @@ function SupportTicket(props) {
       :
       {
         id: '2',
-        label: 'close',
+        label: 'Close',
       }
   ];
 
   const statusArray1 = [
-      {
-        id: '3',
-        label: 'Resolved',
-      }
+    {
+      id: '3',
+      label: 'Resolved',
+    }
   ];
 
   const statusArray2 = [
-    
     {
       id: '2',
-      label: 'close',
+      label: 'Close',
     }
-];
-
-
-
+  ];
 
   // const handleActionCallback = ({ id, status_id }) => { // eslint-disable-line
   //   // eslint-disable-line
@@ -142,39 +139,52 @@ function SupportTicket(props) {
   // };
 
   const submitCloseTicket = (onChangeData = '') => {
-    // console.log('onChangeData', onChangeData);
-    swal({
-      title: 'Are you sure?',
-      text: 'you want to close the ticket.',
-      icon: 'warning',
-      buttons: ['Cancel', true],
-      dangerMode: true,
-    }).then(async () => {
-      let postData = {
-        id: onChangeData?.id,
-        title: onChangeData.title,
-        description: onChangeData.description,
-        ticket_type: onChangeData.ticket_type,
-        comment: onChangeData.comment,
-        status: Number(onChangeData.status_id),
-      };
+    console.log('onChangeData', onChangeData);
+    if (onChangeData) {
+      swal({
+        title: 'Are you sure?',
+        text: 'you want to close the ticket.',
+        icon: 'warning',
+        buttons: ['Cancel', true],
+        dangerMode: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          let postData = {
+            id: onChangeData?.id,
+            title: onChangeData.title,
+            description: onChangeData.description,
+            ticket_type: onChangeData.ticket_type,
+            comment: onChangeData.comment,
+            status: Number(onChangeData.status_id),
+          };
 
-      setShowLoader(true);
-      const endPoint = `${Api.supportTicketUrl}${onChangeData?.id}/`;
-      const { data, message } = await AuthApi.putDataToServer(
-        endPoint,
-        postData
-      );
-      if (data && data.success === true) {
-        setShowLoader(false);
-      } else {
-        setShowLoader(false);
-        swal(typeof message === 'string' ? message : message[0], '', 'error');
-      }
-      setShowLoader(false);
-      swal(data && data.message[0], '', 'success');
-      getRowData();
-    });
+          setShowLoader(true);
+          const endPoint = `${Api.supportTicketUrl}${onChangeData?.id}/`;
+          const { data, message } = await AuthApi.putDataToServer(
+            endPoint,
+            postData
+          );
+          if (data) {
+            setShowLoader(false);
+            swal("Ticket status updated successfully!", "", "success", {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            }).then(() => {
+              swal.close();
+              getRowData();
+            });
+          } else {
+            swal(message, "", "error", {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+            setShowLoader(false);
+          }
+        }
+      });
+    }
   };
 
   const columns = [
@@ -183,10 +193,11 @@ function SupportTicket(props) {
       label: 'Ticket Id',
       render: (row) => {
         const rowData = row;
+        console.log('rowData',rowData);
         return (
           <div>
             <a
-          
+
               href="javascript:void(0)"
               className=""
               onClick={(e) => {
@@ -206,20 +217,20 @@ function SupportTicket(props) {
     {
       id: [1, 2, 7].includes(Number(userRole)) && 'user_full_name',
       label: [1, 2, 7].includes(Number(userRole)) && 'Name',
-      render: (row) => {
+      render: [1, 2, 7].includes(Number(userRole)) ? (row) => {
         // console.log('row', row);
         return (
           <>{row?.user_name}</>
         )
-      }
+      } : null
     },
     {
       id: 'title',
       label: 'Title',
-      render: ({ title,created_at,updated_at }) => {
+      render: ({ title }) => {
         return (
           <div
-          
+
             title={title}
           >
             {' '}
@@ -231,9 +242,9 @@ function SupportTicket(props) {
     {
       id: 'created_at',
       label: 'Created Date',
-      render: ({ created_at,updated_at }) => {
+      render: ({ created_at }) => {
         return (
-          <div  
+          <div
           >{`${customFunctions.getDMYDate(
             created_at
           )} ${customFunctions.formatAMPM(created_at)}`}</div>
@@ -246,26 +257,26 @@ function SupportTicket(props) {
       render: props?.data
         ? null
         : ({ comment }) => {
-            return (
-              <div title={comment}>
-                {' '}
-                {customFunctions.textAbstract(comment, 20)}{' '}
-              </div>
-            );
-          },
+          return (
+            <div title={comment}>
+              {' '}
+              {customFunctions.textAbstract(comment, 20)}{' '}
+            </div>
+          );
+        },
     },
     {
       id: props?.data ? null : 'updated_at',
       label: props?.data ? null : 'Updated Date',
-      render: props?.data
+      render: props?.data 
         ? null
-        : ({ updated_at }) => {
-            return (
-              <div>{`${customFunctions.getDMYDate(
-                updated_at
-              )} ${customFunctions.formatAMPM(updated_at)}`}</div>
-            );
-          },
+        : (rowData) => {
+          return (
+            <div>{rowData?.status_id == 1 ? '-' :(`${customFunctions.getDMYDate(
+              rowData?.updated_at
+            )} ${customFunctions.formatAMPM(rowData?.updated_at)}`)}</div>
+          );
+        },
     },
     // {
     //   id: 'ticket_type_name',
@@ -289,63 +300,57 @@ function SupportTicket(props) {
         // console.log('row',row);
         return (
           <div>
-            {/* {console.log('currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user'
-            ,currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)}
-            {console.log('currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1'
-            ,currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)} */}
             {
-              (currentUser == 1 && row.status_id === 1 && row.status_id != 3 && row.user != user)
-              //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
-               || (currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1) 
-               ?
-                <DropdownInput
-                  // label={index === 0 ? "Document Type" : ""}
-                  placeholder=" Select Task"
-                  options={currentUser == 7 ? statusArray2 : statusArray1 }
-                  defaultValue={
-                    { label: row.status, id: row.status_id }
-                  }
-                  onSelectHandler={(select) => {
-                    // setTicketStatus(select);
-                    row.status = select.label;
-                    row.status_id = select.id;
-                    if (select.label === 'Resolved') {
-                      setUpdateShow(true);
-                      setCreateTask(row);
-                    }
-                    if (select.label === 'close') {
-                      submitCloseTicket(row, 'onChange')
-                    }
-                  }}
-                  id="document"
-                />
+              // (currentUser == 1 && row.status_id === 1 && row.status_id === 2 && row.status_id != 3 && row.user != user)
+              //   //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
+              //   || (currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)
+              //   ?
+              //   <DropdownInput
+              //     // label={index === 0 ? "Document Type" : ""}
+              //     placeholder=" Select Task"
+              //     options={currentUser == 7 ? statusArray2 : statusArray1}
+              //     defaultValue={
+              //       { label: customFunctions.capitalizeFirstLetter(row.status), id: row.status_id }
+              //     }
+              //     onSelectHandler={(select) => {
+              //       // setTicketStatus(select);
+              //       row.status = select.label;
+              //       row.status_id = select.id;
+              //       if (select.label === 'Resolved') {
+              //         setUpdateShow(true);
+              //         setCreateTask(row);
+              //       }
+              //       if (select.label === 'Close') {
+              //         submitCloseTicket(row, 'onChange')
+              //       }
+              //     }}
+              //     id="document"
+              //   />
 
-                :
+              //   :
                 <>
-                {/* {console.log('demo')} */}
-                {/* {console.log('currentUser === 1 && row.user === user && row.status_id === 1',
-                currentUser === 1 && row.user === user && row.status_id === 1)} */}
                   {props?.data || (currentUser === 7 && (row.status_id === 3 || row.status_id === 2)) ||
                     (currentUser != 7 && (row.status_id === 2 || row.status_id === 1))
                     || currentUser === 1 && row.user != user || currentUser === 1 && row.user === user && row.status_id === 1
                     || currentUser === 7 && row.user === user && row.status_id === 1
-                    ? row?.status :
+                    ? customFunctions.capitalizeFirstLetter(row?.status) :
                     <DropdownInput
                       // label={index === 0 ? "Document Type" : ""}
                       placeholder=" Select Task"
                       options={currentUser === 7 && row.user === user ? statusArray2 : statusArray}
                       defaultValue={
-                        { label: row.status, id: row.status_id } 
+                        { label: row.status, id: row.status_id }
                       }
                       onSelectHandler={(select) => {
                         // setTicketStatus(select);
                         row.status = select.label;
                         row.status_id = select.id;
                         if (select.label === 'Resolved') {
+                          console.log('Resolved', select);
                           setUpdateShow(true);
                           setCreateTask(row);
                         }
-                        if (select.label === 'close') {
+                        if (select.label === 'Close') {
                           submitCloseTicket(row, 'onChange')
                         }
                       }}
@@ -415,6 +420,7 @@ function SupportTicket(props) {
       sort_direction: 'descending',
       ...filterList,
     };
+    console.log('params', params);
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -435,9 +441,8 @@ function SupportTicket(props) {
         const dateSecond = new Date(eDate);
         const diffInsec = dateSecond.getTime() - dateFirst.getTime();
         const hoursDifference = diffInsec / (1000 * 36000);
-        if(hoursDifference >=4 ) {
+        if (hoursDifference >= 4) {
           newItem.rowClass = 'bgred-color'
-          
         }
         // rowClass =
         // date > 4 && item.status === 'open'
@@ -604,10 +609,9 @@ function SupportTicket(props) {
                         !formValues.status)
                     ) {
                       setFilterErr(
-                        `${
-                          [1, 2].includes(Number(currentUser))
-                            ? 'Please select the ticket type or employee name or status'
-                            : 'Please select the ticket type or status'
+                        `${[1, 2].includes(Number(currentUser))
+                          ? 'Please select the ticket type or employee name or status'
+                          : 'Please select the ticket type or status'
                         }`
                       );
                     } else {
@@ -637,21 +641,21 @@ function SupportTicket(props) {
           <Card>
             <Card.Body>
               {userRole != 7 && userRole != 1 ? (
-              <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Support Tickets</h5>
-                <div className="d-flex align-items-center justify-content-end">
-                  <a
-                    href="#"
-                    onClick={() => {
-                      history.push('/add-support-ticket');
-                    }}
-                    className="btn-link"
-                  >
-                    Raise New Ticket
-                  </a>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">Support Tickets</h5>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <a
+                      href="#"
+                      onClick={() => {
+                        history.push('/add-support-ticket');
+                      }}
+                      className="btn-link"
+                    >
+                      Raise New Ticket
+                    </a>
+                  </div>
                 </div>
-              </div>
-               ) : null} 
+              ) : null}
               <hr />
               <CustomTable
                 columns={columns}

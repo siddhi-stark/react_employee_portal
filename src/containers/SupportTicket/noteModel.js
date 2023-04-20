@@ -224,7 +224,7 @@ const Addtask = (props) => {
               Submit
             </Button>
             <Button
-              className="ml-10"
+              className="ml-2"
               variant="secondary"
               onClick={() => {
                 validator.current.hideMessages();

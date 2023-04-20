@@ -56,6 +56,11 @@ class CustomFunctions extends Component {
     return formattedate;
   };
 
+  capitalizeFirstLetter = (string) => {
+    if (!string) return string;
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   // formatAMPM = (date) => {
   //   const newdate = new Date(date);
   //   let hours = newdate.getHours();

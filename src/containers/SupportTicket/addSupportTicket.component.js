@@ -11,7 +11,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
 function AddSupportTicket(props) {
-  // console.log('props', props);
+  console.log('props', props);
   const validator = useRef(
     new SimpleReactValidator({
       messages: {
@@ -45,7 +45,7 @@ function AddSupportTicket(props) {
     status: '',
     admin_status: '',
   });
-  // console.log('supportDetails', supportDetails);
+  console.log('supportDetails', supportDetails);
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
@@ -333,8 +333,9 @@ function AddSupportTicket(props) {
               <hr />
               {view ? (
                 <Row className="mb-5">
+                  <Col>TicketId: SST-{view}</Col>
                   <Col>Title: {supportDetails?.title}</Col>
-                  <Col>description: {supportDetails?.ticket_type?.label}</Col>
+                  <Col>description: {supportDetails?.description}</Col>
                   <Col>comment: {supportDetails?.comment}</Col>
                 </Row>
               ) : (
