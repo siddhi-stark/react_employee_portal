@@ -301,33 +301,32 @@ function SupportTicket(props) {
         return (
           <div>
             {
-              // (currentUser == 1 && row.status_id === 1 && row.status_id === 2 && row.status_id != 3 && row.user != user)
-              //   //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
-              //   || (currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)
-              //   ?
-              //   <DropdownInput
-              //     // label={index === 0 ? "Document Type" : ""}
-              //     placeholder=" Select Task"
-              //     options={currentUser == 7 ? statusArray2 : statusArray1}
-              //     defaultValue={
-              //       { label: customFunctions.capitalizeFirstLetter(row.status), id: row.status_id }
-              //     }
-              //     onSelectHandler={(select) => {
-              //       // setTicketStatus(select);
-              //       row.status = select.label;
-              //       row.status_id = select.id;
-              //       if (select.label === 'Resolved') {
-              //         setUpdateShow(true);
-              //         setCreateTask(row);
-              //       }
-              //       if (select.label === 'Close') {
-              //         submitCloseTicket(row, 'onChange')
-              //       }
-              //     }}
-              //     id="document"
-              //   />
-
-              //   :
+              (currentUser == 1 && row.status_id === 1 && row.user != user)
+                //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
+                // || (currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)
+                ?
+                <DropdownInput
+                  // label={index === 0 ? "Document Type" : ""}
+                  placeholder=" Select Task"
+                  options={currentUser == 7 ? statusArray2 : statusArray1}
+                  defaultValue={
+                    { label: customFunctions.capitalizeFirstLetter(row.status), id: row.status_id }
+                  }
+                  onSelectHandler={(select) => {
+                    // setTicketStatus(select);
+                    row.status = select.label;
+                    row.status_id = select.id;
+                    if (select.label === 'Resolved') {
+                      setUpdateShow(true);
+                      setCreateTask(row);
+                    }
+                    if (select.label === 'Close') {
+                      submitCloseTicket(row, 'onChange')
+                    }
+                  }}
+                  id="document"
+                />
+                :
                 <>
                   {props?.data || (currentUser === 7 && (row.status_id === 3 || row.status_id === 2)) ||
                     (currentUser != 7 && (row.status_id === 2 || row.status_id === 1))
@@ -358,7 +357,6 @@ function SupportTicket(props) {
                     />}
                 </>
             }
-
           </div>
         );
       },
@@ -420,7 +418,7 @@ function SupportTicket(props) {
       sort_direction: 'descending',
       ...filterList,
     };
-    console.log('params', params);
+    // console.log('params', params);
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -436,13 +434,16 @@ function SupportTicket(props) {
         const newItem = item;
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
         const sDate = item.created_at;
-        const eDate = item.updated_at;
+        const eDate = new Date();
         const dateFirst = new Date(sDate);
         const dateSecond = new Date(eDate);
-        const diffInsec = dateSecond.getTime() - dateFirst.getTime();
-        const hoursDifference = diffInsec / (1000 * 36000);
-        if (hoursDifference >= 4) {
-          newItem.rowClass = 'bgred-color'
+        // const diffInsec = dateSecond.getTime() - dateFirst.getTime();
+
+        var hours = Math.abs(dateFirst - dateSecond) / 36e5;
+        // console.log('hours',hours);
+        // const hoursDifference = diffInsec / (1000 * 36000);
+        if (hours > 4 && item.status === 'open') {
+          newItem.rowClass = 'alert-danger'
         }
         // rowClass =
         // date > 4 && item.status === 'open'

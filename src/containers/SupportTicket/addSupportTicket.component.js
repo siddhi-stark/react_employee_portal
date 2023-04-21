@@ -45,7 +45,7 @@ function AddSupportTicket(props) {
     status: '',
     admin_status: '',
   });
-  // console.log('supportDetails', supportDetails);
+  console.log('supportDetails', supportDetails);
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
@@ -205,6 +205,7 @@ function AddSupportTicket(props) {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.supportTicketUrl}${editId}/`
     );
+    console.log('data', data);
     if (!data) {
       return;
     }
@@ -233,6 +234,7 @@ function AddSupportTicket(props) {
     } else {
       statusCondition = 1;
     }
+    // console.log('data',data);
     setSupportDetails({
       ...supportDetails,
       title: data.data.title,
@@ -314,15 +316,15 @@ function AddSupportTicket(props) {
       <div className="page-header">
         <div className="title-breadcrumb-section">
           <Button
-              className="float-end mb-4 mr-6"
-              style={{ minWidth: "80px" }}
-              variant="btn btn-sm btn-primary"
-              onClick={() => {
-                history.push('/support-ticket');
-              }}
-            >
-              Back
-            </Button>
+            className="float-end mb-4 mr-6"
+            style={{ minWidth: "80px" }}
+            variant="btn btn-sm btn-primary"
+            onClick={() => {
+              history.push('/support-ticket');
+            }}
+          >
+            Back
+          </Button>
           <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
           <Breadcrumb items={items} />
         </div>
@@ -343,10 +345,15 @@ function AddSupportTicket(props) {
               <hr />
               {view ? (
                 <Row className="mb-5">
-                  <Col>TicketId: SST-{view}</Col>
-                  <Col>Title: {supportDetails?.title}</Col>
-                  <Col>description: {supportDetails?.description}</Col>
-                  <Col>comment: {supportDetails?.comment}</Col>
+                  <Col>
+                    <Col>TicketId: SST-{view}</Col>
+                    <Col className='mt-2'>Ticket type: {supportDetails?.ticket_type?.label}</Col>
+                    <Col className='mt-2'>Comment: {supportDetails?.comment}</Col>
+                  </Col>
+                  <Col>
+                    <Col >Title: {supportDetails?.title}</Col>
+                    <Col className='mt-2'>Description: {supportDetails?.description}</Col>
+                  </Col>
                 </Row>
               ) : (
                 <Row>
