@@ -509,9 +509,9 @@ function SupportTicket(props) {
         formValues.status && formValues.status.value
           ? formValues.status.value
           : '',
-      user_id:
-        formValues.employee && formValues.employee.value
-          ? formValues.employee.value
+      keyword:
+        formValues.employee && formValues.employee.label
+          ? formValues.employee.label
           : '',
       ticket_type:
         formValues.ticket_type && formValues.ticket_type.value

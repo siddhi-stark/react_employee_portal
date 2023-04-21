@@ -11,7 +11,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 
 function AddSupportTicket(props) {
-  console.log('props', props);
+  // console.log('props', props);
   const validator = useRef(
     new SimpleReactValidator({
       messages: {
@@ -45,7 +45,7 @@ function AddSupportTicket(props) {
     status: '',
     admin_status: '',
   });
-  console.log('supportDetails', supportDetails);
+  // console.log('supportDetails', supportDetails);
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
@@ -313,6 +313,16 @@ function AddSupportTicket(props) {
       <Helmet title={title} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
+          <Button
+              className="float-end mb-4 mr-6"
+              style={{ minWidth: "80px" }}
+              variant="btn btn-sm btn-primary"
+              onClick={() => {
+                history.push('/support-ticket');
+              }}
+            >
+              Back
+            </Button>
           <h2 className="main-content-title tx-24 mg-b-5">{title}</h2>
           <Breadcrumb items={items} />
         </div>
