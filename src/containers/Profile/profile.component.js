@@ -436,7 +436,7 @@ function Profile() {
                 <div className="personal-info-date-number">
                   <Form.Label>
                     <UserRestrictions
-                      permittedUsers={[2, 3, 4, 5]}
+                      permittedUsers={[2, 3, 4, 5, 7]}
                       roleId={role}
                     >
                       <Image
@@ -460,7 +460,7 @@ function Profile() {
                   </Form.Label>
                 </div>
 
-                <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={role}>
+                <UserRestrictions permittedUsers={[2, 3, 4, 5, 7]} roleId={role}>
                   <h5 className="mt-5">Job Information</h5>
                   <Row>
                     <Col sm={3}>

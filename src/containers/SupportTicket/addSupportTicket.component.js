@@ -9,6 +9,7 @@ import { Helmet, TextInput, DropdownInput } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import customFunctions from '../../helper/customFunctions';
 
 function AddSupportTicket(props) {
   // console.log('props', props);
@@ -44,6 +45,8 @@ function AddSupportTicket(props) {
     comment: '',
     status: '',
     admin_status: '',
+    created_at: '',
+    updated_at: ''
   });
   console.log('supportDetails', supportDetails);
   const [count, forceUpdate] = useState(0);
@@ -250,6 +253,8 @@ function AddSupportTicket(props) {
         label: data.data.ticket_type_name,
         value: data.data.ticket_type,
       },
+      created_at: data.data.created_at,
+      updated_at: data.data.updated_at
     });
   };
 
@@ -340,19 +345,26 @@ function AddSupportTicket(props) {
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">{title}</h5>
+                <h5 className="card-title mb-0 mt-2 ">Support Ticket: SST-{view}</h5>
               </div>
               <hr />
               {view ? (
                 <Row className="mb-5">
+                  {console.log('supportDetails', supportDetails)}
                   <Col>
-                    <Col>TicketId: SST-{view}</Col>
-                    <Col className='mt-2'>Ticket type: {supportDetails?.ticket_type?.label}</Col>
-                    <Col className='mt-2'>Comment: {supportDetails?.comment}</Col>
+                    <Col><strong>TicketId: </strong>SST-{view}</Col>
+                    <Col className='mt-2'><strong>Ticket type:</strong> {supportDetails?.ticket_type?.label}</Col>
+                    <Col className='mt-2'><strong>Created Date:</strong> {`${customFunctions.getDMYDate(supportDetails.created_at)} 
+                    ${customFunctions.formatAMPM(supportDetails.created_at)}`}
+                    </Col>
+                    <Col className='mt-2'><strong>{supportDetails?.comment == null ? null :'Comment:'}</strong> {supportDetails?.comment}</Col>
                   </Col>
                   <Col>
-                    <Col >Title: {supportDetails?.title}</Col>
-                    <Col className='mt-2'>Description: {supportDetails?.description}</Col>
+                    <Col ><strong>Title:</strong> {supportDetails?.title}</Col>
+                    <Col className='mt-2'><strong>Description:</strong> {supportDetails?.description}</Col>
+                    <Col className='mt-2'><strong>Updated Date:</strong> {`${customFunctions.getDMYDate(supportDetails.updated_at)} 
+                    ${customFunctions.formatAMPM(supportDetails.updated_at)}`}
+                    </Col>
                   </Col>
                 </Row>
               ) : (

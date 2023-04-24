@@ -354,9 +354,9 @@ function Dashboard() {
       message:
         newData && newData.length && newData[0].greetMessage
           ? newData &&
-            newData.length &&
-            newData[0].greetMessage &&
-            newData[0].greetMessage
+          newData.length &&
+          newData[0].greetMessage &&
+          newData[0].greetMessage
           : newGreetData && newGreetData.length && newGreetData[0].message,
     };
 
@@ -805,20 +805,16 @@ function Dashboard() {
                     ))}
                 </>
               )}
-              {userRole ===7 &&  
-            <>
-            <section>
-            <Card>
-                <Card.Body>
-                  <SupportTicket
-                    data={dashboardKey}
-                    limit='5'
-                  />
-                </Card.Body>
-              </Card>
-              </section>  
-            </>
-          }
+              {userRole === 7 &&
+                <>
+                  <section>
+                    <SupportTicket
+                      data={dashboardKey}
+                      limit='5'
+                    />
+                  </section>
+                </>
+              }
               {appreciationData && appreciationData.length > 0 && (
                 <>
                   {appreciationData &&
@@ -896,10 +892,10 @@ function Dashboard() {
 
                                       {(appr.comment_allow &&
                                         Number(empdata.id) ===
-                                          Number(UserID)) ||
+                                        Number(UserID)) ||
                                         (appr.comment_allow &&
                                           Number(empdata.id) !==
-                                            Number(UserID) && (
+                                          Number(UserID) && (
                                             <div className="birth-input-field mt-3">
                                               <TextInput
                                                 onInputChange={(e) => {
@@ -1031,7 +1027,7 @@ function Dashboard() {
                   <Card classNameName="dark-blue-bg mb-4 col-md-12">
                     <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
                       {confirmationEmployee &&
-                      confirmationEmployee.length > 0 ? (
+                        confirmationEmployee.length > 0 ? (
                         <div className="purple-bg card-header">
                           <span>Upcoming Confirmation</span>
                         </div>

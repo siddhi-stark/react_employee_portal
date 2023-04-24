@@ -36,7 +36,7 @@ function SupportTicket(props) {
   const userRole = customFunctions.getLocalStorage('group');
   const [filterErr, setFilterErr] = useState('');
   const [updateShow, setUpdateShow] = useState(false);
-  const limit = 10;
+  const limit = !props.data ? 10 : 5;
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
@@ -193,13 +193,13 @@ function SupportTicket(props) {
       label: 'Ticket Id',
       render: (row) => {
         const rowData = row;
-        console.log('rowData',rowData);
+        console.log('rowData', rowData);
         return (
           <div>
             <a
 
               href="javascript:void(0)"
-              className=""
+              className="pl-2 ms-1"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -208,7 +208,7 @@ function SupportTicket(props) {
                 });
               }}
             >
-              SST-{rowData.id}
+              <strong>SST-{rowData.id}</strong>
             </a>
           </div>
         );
@@ -230,7 +230,6 @@ function SupportTicket(props) {
       render: ({ title }) => {
         return (
           <div
-
             title={title}
           >
             {' '}
@@ -260,7 +259,7 @@ function SupportTicket(props) {
           return (
             <div title={comment}>
               {' '}
-              {customFunctions.textAbstract(comment, 20)}{' '}
+              {customFunctions.textAbstract(comment ? comment : '-', 20)}{' '}
             </div>
           );
         },
@@ -268,11 +267,11 @@ function SupportTicket(props) {
     {
       id: props?.data ? null : 'updated_at',
       label: props?.data ? null : 'Updated Date',
-      render: props?.data 
+      render: props?.data
         ? null
         : (rowData) => {
           return (
-            <div>{rowData?.status_id == 1 ? '-' :(`${customFunctions.getDMYDate(
+            <div>{rowData?.status_id == 1 ? '-' : (`${customFunctions.getDMYDate(
               rowData?.updated_at
             )} ${customFunctions.formatAMPM(rowData?.updated_at)}`)}</div>
           );
@@ -424,8 +423,8 @@ function SupportTicket(props) {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      setTotalCount(data.paginator.total_count);
-      setItemsPerPage(data.paginator.limit);
+      setTotalCount(props?.data ? null : data.paginator.total_count);
+      setItemsPerPage(props.data ? 5 : data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
 
       const newData = [...data.data];
@@ -566,7 +565,7 @@ function SupportTicket(props) {
 
       <div className="page-header">
         <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Support Ticket</h2>
+          <h2 className="main-content-title tx-24 mg-b-5">{(props.data) ? ' ' : 'Support Ticket'}</h2>
           <Breadcrumb items={items} />
         </div>
       </div>
@@ -641,6 +640,9 @@ function SupportTicket(props) {
           {/* // ) : null} */}
           <Card>
             <Card.Body>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">{props.data ? 'Support Tickets' : ' '}</h5>
+              </div>
               {userRole != 7 && userRole != 1 ? (
                 <div className="d-flex align-items-center justify-content-between">
                   <h5 className="card-title mb-0 mt-2 ">Support Tickets</h5>
@@ -676,6 +678,24 @@ function SupportTicket(props) {
                 }}
               />
             </Card.Body>
+            {
+              props.data  && (
+                <Card.Footer>
+                  <div>
+                    <a
+                      className="d-flex align-items-center justify-content-end"
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        history.push("/support-ticket");
+                      }}
+                    >
+                      View all
+                    </a>
+                  </div>
+                </Card.Footer>
+              )
+            }
           </Card>
         </div>
       </section>
