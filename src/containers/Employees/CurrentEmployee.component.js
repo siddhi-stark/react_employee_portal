@@ -708,6 +708,7 @@ function CurrentEmployee() {
                 <h5 className="card-title mb-0 mt-2 ">Filters</h5>
                 {(Number(userRole) === 1 ||
                   Number(userRole) === 5 ||
+                  Number(userRole) === 7 ||
                   Number(userRole) === 6) && (
                     <Button
                       variant="primary"
@@ -779,7 +780,7 @@ function CurrentEmployee() {
                         </span>
                       </Col>
                       <Col className="col-md-8">
-                        {(Number(userRole) === 1) && (
+                        {(Number(userRole) === 1) || (Number(userRole) === 7) && (
                           <a
                             href="#"
                             className="float-end ml-2"
@@ -795,6 +796,7 @@ function CurrentEmployee() {
                         )}
                         {(Number(userRole) === 1 ||
                           Number(userRole) === 5 ||
+                          Number(userRole) === 7 ||
                           Number(userRole) === 6) && (
                             <a
                               href="#"
@@ -960,13 +962,13 @@ function CurrentEmployee() {
                   )}
                 />
               </Col>
-              {[1, 2].includes(userRole) ?
+              {[1, 2, 7].includes(userRole) ?
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
                     label="Password"
                     autocomplete="off"
-                    asterisk="*" 
+                    asterisk={employeeId ? null : '*'} 
                     containerClass="form-group"
                     type="password"
                     // minlength="6"

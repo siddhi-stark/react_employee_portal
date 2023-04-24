@@ -641,7 +641,7 @@ function SupportTicket(props) {
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">{props.data ? 'Support Tickets' : ' '}</h5>
+                <h5 className="card-title mb-0 mt-2 ">{props.data ? 'Recently Added Tickets' : ' '}</h5>
               </div>
               {userRole != 7 && userRole != 1 ? (
                 <div className="d-flex align-items-center justify-content-between">
