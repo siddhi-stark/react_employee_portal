@@ -345,7 +345,7 @@ function AddSupportTicket(props) {
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Support Ticket: SST-{view}</h5>
+                <h5 className="card-title mb-0 mt-2 ">Support Ticket{`${props.data ? ': SST-'+view : ' '}`}</h5>
               </div>
               <hr />
               {view ? (
