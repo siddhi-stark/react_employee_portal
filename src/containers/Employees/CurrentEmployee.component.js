@@ -399,7 +399,7 @@ function CurrentEmployee() {
               getEmployeeData(currentPage);
             });
           } else {
-            swal(message, '', 'error', {
+            swal(message || 'Employee is deleted succesfully', '', 'error', {
               closeOnClickOutside: false,
               allowOutsideClick: false,
             });
@@ -780,7 +780,7 @@ function CurrentEmployee() {
                         </span>
                       </Col>
                       <Col className="col-md-8">
-                        {(Number(userRole) === 1) || (Number(userRole) === 7) && (
+                        {(Number(userRole) === 1) && (
                           <a
                             href="#"
                             className="float-end ml-2"
