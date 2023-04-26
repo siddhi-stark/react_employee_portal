@@ -249,6 +249,7 @@ function Dashboard() {
   useEffect(() => {
     const LoginToken = customFunctions.getLocalStorage('access_token');
     if (LoginToken) {
+      console.log('login');
       getUpcomingHoliday();
       getAppliedLeaves();
       getInstagramPost();
@@ -258,7 +259,7 @@ function Dashboard() {
     }
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
-    });
+    },[]);
 
     SharedService.clockOut.subscribe((value) => {
       if (value) {
@@ -494,7 +495,7 @@ function Dashboard() {
                   className="d-flex justify-content-space-between flex-wrap"
                 >
                   <UserRestrictions
-                    permittedUsers={[2, 3, 4, 5, 6]}
+                    permittedUsers={[2, 3, 4, 5, 6, 7]}
                     roleId={userRole}
                   >
                     <div className="check-in">
@@ -548,7 +549,7 @@ function Dashboard() {
             </Jumbotron>
             {showClockIn && (
               <UserRestrictions
-                permittedUsers={[2, 3, 4, 5, 6]}
+                permittedUsers={[2, 3, 4, 5, 6, 7]}
                 roleId={userRole}
               >
                 <div className="p-3 mb-3 bg-success mt-3 bg-success-main log-time-bar">
@@ -805,16 +806,6 @@ function Dashboard() {
                     ))}
                 </>
               )}
-              {userRole === 7 &&
-                <>
-                  <section>
-                    <SupportTicket
-                      data={dashboardKey}
-                      limit='5'
-                    />
-                  </section>
-                </>
-              }
               {appreciationData && appreciationData.length > 0 && (
                 <>
                   {appreciationData &&
@@ -944,7 +935,7 @@ function Dashboard() {
               {leavesUpdate && leavesUpdate.length > 0 && (
                 <div classnamename="dark-blue-bg mb-4 col-md-12 card">
                   <UserRestrictions
-                    permittedUsers={[1, 2, 3, 5, 6]}
+                    permittedUsers={[1, 2, 3, 5, 6, 7]}
                     roleId={userRole}
                   >
                     <div classnamename="pie-chart-graph card today-pending-leaves-interviews">
@@ -1098,7 +1089,16 @@ function Dashboard() {
                 </div>
               )}
             </UserRestrictions>
-
+            {userRole === 7 &&
+              <>
+                <section>
+                  <SupportTicket
+                    data={dashboardKey}
+                    limit='5'
+                  />
+                </section>
+              </>
+            }
             {showClockIn && (
               <ToDoList
                 onMorningSendScrum={getDailyActivity}
@@ -1161,7 +1161,7 @@ function Dashboard() {
               </Card>
             </UserRestrictions>
             <UserRestrictions
-              permittedUsers={[2, 3, 4, 5, 6]}
+              permittedUsers={[2, 3, 4, 5, 6, 7]}
               roleId={userRole}
             >
               <div className="table-projects time-sheet-table">
@@ -1251,7 +1251,7 @@ function Dashboard() {
                 </div>
 
                 <UserRestrictions
-                  permittedUsers={[2, 3, 4, 5, 6]}
+                  permittedUsers={[2, 3, 4, 5, 6, 7]}
                   roleId={userRole}
                 >
                   <div className="col-xl-6">

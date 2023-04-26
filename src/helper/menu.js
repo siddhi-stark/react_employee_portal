@@ -61,7 +61,7 @@ const menu = [
     path: '/employees',
     icon: 'Employee.svg',
     submenu: [],
-    roleaccess: [1, 2, 5, 6, 7],
+    roleaccess: [1, 2, 5, 6],
   },
 
   // {
@@ -76,7 +76,7 @@ const menu = [
     path: '/interview-listing',
     icon: 'recruitement.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7],
   },
 
   {
@@ -98,7 +98,7 @@ const menu = [
     path: '/leaves',
     icon: 'leaves.svg',
     submenu: [],
-    roleaccess: [4],
+    roleaccess: [4, 7],
   },
   {
     title: 'Designation',
@@ -172,14 +172,14 @@ const menu = [
     path: '/event',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [5, 6, 1, 2, 3, 4],
+    roleaccess: [5, 6, 1, 2, 3, 4, 7],
   },
   {
     title: 'Holidays',
     path: '/holidays',
     icon: 'holiday.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7],
   },
   {
     title: 'Greetings',
@@ -193,7 +193,7 @@ const menu = [
     path: '/report',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [4],
+    roleaccess: [4, 7],
   },
   {
     title: 'Timesheet',
@@ -235,7 +235,7 @@ const menu = [
     path: '/policy',
     icon: 'policy.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7],
   },
   {
     title: 'Broadcast',

@@ -139,7 +139,7 @@ function ToDoList(props) {
     {
       id: 'action',
       label: 'Action',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: ({ id, twId, taskType }) => {
         return (
           <span className="d-flex">
@@ -262,7 +262,7 @@ function ToDoList(props) {
   const getBreakList = async () => {
     const endPoint = `${Api.taskUrl}?show_only_breaks=true&page=1&limit=100`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-
+    console.log('data',data);
     if (data && data.data && data.data.length) {
       const selectedBreak = [];
       setShowSendReport(true);
@@ -735,7 +735,7 @@ function ToDoList(props) {
       <Loader showLoader={loader} needFullPage={false} />
       <section className="content-area">
         <div className="0">
-          <UserRestrictions permittedUsers={[2, 3, 4, 5, 6]} roleId={userRole}>
+          <UserRestrictions permittedUsers={[2, 3, 4, 5, 6, 7]} roleId={userRole}>
             <Card>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-between">

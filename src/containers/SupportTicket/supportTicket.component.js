@@ -16,6 +16,7 @@ import Loader from '../../components/Loader/index';
 import Addtask from './noteModel';
 
 function SupportTicket(props) {
+  // console.log('props',props);
   const history = useHistory();
   const [pageTitle, setTitle] = useState('');
   const items = props.data
@@ -43,7 +44,7 @@ function SupportTicket(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [filterData, setFilterData] = useState({});
-  console.log('filterData', filterData);
+  // console.log('filterData', filterData);
   const [user, updateUser] = useState(0);
   // console.log('user',user);
   const [createTask, setCreateTask] = useState();
@@ -139,7 +140,7 @@ function SupportTicket(props) {
   // };
 
   const submitCloseTicket = (onChangeData = '') => {
-    console.log('onChangeData', onChangeData);
+    // console.log('onChangeData', onChangeData);
     if (onChangeData) {
       swal({
         title: 'Are you sure?',
@@ -193,7 +194,7 @@ function SupportTicket(props) {
       label: 'Ticket Id',
       render: (row) => {
         const rowData = row;
-        console.log('rowData', rowData);
+        // console.log('rowData', rowData);
         return (
           <div>
             <a
@@ -344,7 +345,7 @@ function SupportTicket(props) {
                         row.status = select.label;
                         row.status_id = select.id;
                         if (select.label === 'Resolved') {
-                          console.log('Resolved', select);
+                          // console.log('Resolved', select);
                           setUpdateShow(true);
                           setCreateTask(row);
                         }
@@ -563,15 +564,16 @@ function SupportTicket(props) {
     <>
       <Helmet title={pageTitle} />
 
-      <div className="page-header">
+      { props.data ? null :
+        <div className="page-header">
         <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">{(props.data) ? ' ' : 'Support Ticket'}</h2>
+          <h2 className="main-content-title tx-24 mg-b-5">Support Ticket</h2>
           <Breadcrumb items={items} />
         </div>
-      </div>
+      </div>}
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
-        <div className="mt-5">
+        <div>
           {/* {userRole != 7 ? ( */}
 
           {props.data ? null : (

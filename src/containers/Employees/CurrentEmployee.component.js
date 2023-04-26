@@ -708,7 +708,7 @@ function CurrentEmployee() {
                 <h5 className="card-title mb-0 mt-2 ">Filters</h5>
                 {(Number(userRole) === 1 ||
                   Number(userRole) === 5 ||
-                  Number(userRole) === 7 ||
+                  // Number(userRole) === 7 ||
                   Number(userRole) === 6) && (
                     <Button
                       variant="primary"
@@ -796,7 +796,7 @@ function CurrentEmployee() {
                         )}
                         {(Number(userRole) === 1 ||
                           Number(userRole) === 5 ||
-                          Number(userRole) === 7 ||
+                          // Number(userRole) === 7 ||
                           Number(userRole) === 6) && (
                             <a
                               href="#"

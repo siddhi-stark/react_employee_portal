@@ -35,8 +35,9 @@ function Events() {
       <>
         {' '}
         {Number(employeeRole) === 4 ||
-        Number(employeeRole) === 3 ||
-        Number(employeeRole) === 2 ? (
+          Number(employeeRole) === 3 ||
+          Number(employeeRole) === 2 ||
+          Number(employeeRole) === 7 ? (
           ''
         ) : (
           <>
@@ -52,8 +53,9 @@ function Events() {
               <Image alt="view" src="/images/eye.svg" />
             </a>
             {Number(employeeRole) === 4 ||
-            Number(employeeRole) === 3 ||
-            Number(employeeRole) === 2 ? (
+              Number(employeeRole) === 3 ||
+              Number(employeeRole) === 2 ||
+              Number(employeeRole) === 7 ? (
               ''
             ) : (
               <>
@@ -121,14 +123,16 @@ function Events() {
     {
       id:
         Number(employeeRole) === 4 ||
-        Number(employeeRole) === 3 ||
-        Number(employeeRole) === 2
+          Number(employeeRole) === 3 ||
+          Number(employeeRole) === 2 ||
+          Number(employeeRole) === 7
           ? ''
           : 'action',
       label:
         Number(employeeRole) === 4 ||
-        Number(employeeRole) === 3 ||
-        Number(employeeRole) === 2
+          Number(employeeRole) === 3 ||
+          Number(employeeRole) === 2 ||
+          Number(employeeRole) === 7
           ? ''
           : 'Action',
       render: handleActionCallback,
