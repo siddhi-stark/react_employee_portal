@@ -8,6 +8,7 @@ import ProfessonalDetails from './ProfessionalDetails.component';
 import NewInterviewRounds from './NewInterviewRounds.component';
 import InterviewerRoundsStatus from './InterviewerRoundsStatus.component';
 import customFunctions from '../../helper/customFunctions';
+import NewInterviewRounds7 from './NewInterviewRound7';
 
 function Applications(props) {
   const title = 'Applications';
@@ -51,9 +52,9 @@ function Applications(props) {
         <Button
           className="float-end"
           onClick={() => {
-            if(Interview){
+            if (Interview) {
               history.push('/interview-listing');
-            } else{
+            } else {
               history.push('/recruitment');
             }
           }}
@@ -67,7 +68,7 @@ function Applications(props) {
             <Tabs
               defaultActiveKey="currentEmployee"
               onSelect={(e) => handleSelect(e)}
-              // id="uncontrolled-tab-example"
+            // id="uncontrolled-tab-example"
             >
               <Tab eventKey="currentEmployee" title="Basic Information">
                 <div className="row ml-2">
@@ -95,7 +96,7 @@ function Applications(props) {
                         isBasicInfoId={isBasicInfoId}
                         onProfDetInfo={(value) => {
                           setProfessionalInfo(value);
-                          if(id){
+                          if (id) {
                             setIsPD(false);
                           } else {
                             setIsPD(true);
@@ -111,10 +112,10 @@ function Applications(props) {
                 title="Interview Rounds"
                 disabled={isPD || paginationOptions === 'pending'}
               >
-                {key === 'oldPeriod' && (
+                {key === 'oldPeriod' && Number(group) !== 7 && (
                   <div className="row ml-2">
                     {(Number(group) === 4 || Number(group) === 3) &&
-                    isProfessionalInfoId ? (
+                      isProfessionalInfoId ? (
                       <InterviewerRoundsStatus
                         isProfessionalInfoId={isProfessionalInfoId}
                       />
@@ -125,6 +126,15 @@ function Applications(props) {
                     )}
                   </div>
                 )}
+                {key === 'oldPeriod' && Number(group) === 7 && (
+                  <div className="row ml-2">
+                    <NewInterviewRounds7
+                      isProfessionalInfoId={isProfessionalInfoId}
+                    />
+                  </div>
+                )
+
+                }
               </Tab>
             </Tabs>
           </div>

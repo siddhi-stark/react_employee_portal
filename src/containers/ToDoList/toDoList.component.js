@@ -65,41 +65,41 @@ function ToDoList(props) {
     {
       id: 'id',
       label: 'Id',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
       isDisplay: false,
     },
     {
       id: 'twId',
       label: 'twId',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
       isDisplay: false,
     },
     {
       id: 'taskType',
       label: 'taskType',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
       isDisplay: false,
     },
 
     {
       id: 'todo',
       label: 'To Do Tasks',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'projects',
       label: 'Projects',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'eta',
       label: 'ETA',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'progress',
       label: 'Status',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: ({ progress, id, indexOf, eta, status, twId, at }) => {
         const newAt = at ? `${at}` : '0 Hrs';
         return (

@@ -68,7 +68,6 @@
             "options": [],
             "fields": []
           },
-
           {
             "name": "int_time",
             "type": "date",
