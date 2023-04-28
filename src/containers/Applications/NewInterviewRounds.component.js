@@ -12,7 +12,6 @@ function NewInterviewRounds(props) {
   const notes = customFunctions.getLocalStorage('notes');
   let defaultFilterOptions = {};
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-  console.log('defaultValues',defaultValues);
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
