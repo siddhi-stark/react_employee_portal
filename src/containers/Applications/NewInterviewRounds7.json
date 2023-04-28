@@ -1,12 +1,12 @@
 [
   {
-    "sectionName": "bondHistory",
-    "sectionTitle": "bondHistory",
+    "sectionName": "rounds",
+    "sectionTitle": "rounds",
     "layout": {
       "label": "1 Column",
       "value": "1column"
     },
-    "containerClass": "",
+    "containerClass": "rounds-form",
     "displaySection": true,
     "displaySectionTitle": true,
     "fields": [
