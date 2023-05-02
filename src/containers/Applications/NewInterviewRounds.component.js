@@ -36,7 +36,7 @@ function NewInterviewRounds(props) {
       });
       return s;
     });
-    console.log('updatedSchema',updatedSchema);
+    // console.log('updatedSchema',updatedSchema);
     updateJsonSchema([...updatedSchema]);
   }, []);
 

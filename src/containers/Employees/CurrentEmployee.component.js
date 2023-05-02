@@ -80,7 +80,6 @@ function CurrentEmployee() {
   const [selectedMentor, setSelectedMentor] = useState([]);
   const [currentUser, updateCurrentUser] = useState(0);
 
-
   let timmer = null;
   const history = useHistory();
 

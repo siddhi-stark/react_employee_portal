@@ -249,7 +249,7 @@ function Dashboard() {
   useEffect(() => {
     const LoginToken = customFunctions.getLocalStorage('access_token');
     if (LoginToken) {
-      console.log('login');
+      // console.log('login');
       getUpcomingHoliday();
       getAppliedLeaves();
       getInstagramPost();

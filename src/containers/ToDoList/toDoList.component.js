@@ -262,7 +262,7 @@ function ToDoList(props) {
   const getBreakList = async () => {
     const endPoint = `${Api.taskUrl}?show_only_breaks=true&page=1&limit=100`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    console.log('data',data);
+    // console.log('data',data);
     if (data && data.data && data.data.length) {
       const selectedBreak = [];
       setShowSendReport(true);
