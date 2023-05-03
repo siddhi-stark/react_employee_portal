@@ -86,22 +86,22 @@ function Dashboard() {
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'clockin',
       label: 'In',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'clockout',
       label: 'Out',
-      roleAccess: [2, 3, 4, 5, 6],
+      roleAccess: [2, 3, 4, 5, 6, 7],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [2, 3, 4, 5, 6],
+      roleAccess: [2, 3, 4, 5, 6, 7],
     },
   ];
 

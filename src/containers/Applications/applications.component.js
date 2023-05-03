@@ -8,7 +8,7 @@ import ProfessonalDetails from './ProfessionalDetails.component';
 import NewInterviewRounds from './NewInterviewRounds.component';
 import InterviewerRoundsStatus from './InterviewerRoundsStatus.component';
 import customFunctions from '../../helper/customFunctions';
-import NewInterviewRounds7 from './NewInterviewRound7';
+// import NewInterviewRounds7 from './NewInterviewRound7';
 
 function Applications(props) {
   const title = 'Applications';
@@ -112,9 +112,9 @@ function Applications(props) {
                 title="Interview Rounds"
                 disabled={isPD || paginationOptions === 'pending'}
               >
-                {key === 'oldPeriod' && Number(group) !== 7 && (
+                {key === 'oldPeriod' && (
                   <div className="row ml-2">
-                    {(Number(group) === 4 || Number(group) === 3) &&
+                    {(Number(group) === 4 || Number(group) === 3) || Number(group) === 7 &&
                       isProfessionalInfoId ? (
                       <InterviewerRoundsStatus
                         isProfessionalInfoId={isProfessionalInfoId}
@@ -126,7 +126,7 @@ function Applications(props) {
                     )}
                   </div>
                 )}
-                {key === 'oldPeriod' && Number(group) === 7 && (
+                {/* {key === 'oldPeriod' &&  && (
                   <div className="row ml-2">
                     <NewInterviewRounds7
                       isProfessionalInfoId={isProfessionalInfoId}
@@ -134,7 +134,7 @@ function Applications(props) {
                   </div>
                 )
 
-                }
+                } */}
               </Tab>
             </Tabs>
           </div>

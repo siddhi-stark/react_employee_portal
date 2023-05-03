@@ -33,38 +33,38 @@ function AllReports() {
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'name',
       label: 'Name',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
       isDisplay: false,
     },
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'clockin',
       label: 'In',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'clockout',
       label: 'Out',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 7],
     },
     {
       id: 'report',
       label: 'View Report',
-      roleAccess: [1, 2, 3, 4, 5],
+      roleAccess: [1, 2, 3, 4, 5, 7],
     },
   ];
 
@@ -83,6 +83,7 @@ function AllReports() {
     const url = customFunctions.generateUrl(endPoint, params);
 
     const { data } = await AuthApi.postDataToServer(url);
+    // console.log('timesheet',data);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setShowLoader(false);
       setPagination({

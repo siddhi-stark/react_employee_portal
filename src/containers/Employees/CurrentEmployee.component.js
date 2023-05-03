@@ -106,7 +106,7 @@ function CurrentEmployee() {
         filterData && filterData.position ? filterData.position.value : '',
       user_id:
         filterData && filterData.employee ? filterData.employee.value : '',
-      hide_admin: currentUser === 7 ? 1 : null,  //eslint-disable-line
+      hide_admin:  1,  
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
