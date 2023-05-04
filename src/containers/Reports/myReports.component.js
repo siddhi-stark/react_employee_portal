@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
-import { Card, Row, Col, Form, Button } from 'react-bootstrap';
+import { withRouter, Link } from 'react-router-dom';
+import { Card, Row, Col, Form, Button} from 'react-bootstrap';
 import { Helmet, Datepicker } from '../../components/FormInputs';
 import Table from '../../components/ReactTable/simpletable.component';
 import AuthApi from '../../helper/authApi';
@@ -105,9 +105,9 @@ function AllReports() {
           clockout: report.sign_out,
           total: `${report.estimation} Hrs`,
           report: (
-            <a href={`/daily-report/${dt}/${report.user_id}`}>
+            <Link to={{pathname:`/daily-report/${dt}/${report.user_id}`, state:{clockin: report.sign_in,clockout: report.sign_out}}}>
               <span className="text-info">View Report</span>
-            </a>
+            </Link>
           ),
         };
         row.push(setRowData);

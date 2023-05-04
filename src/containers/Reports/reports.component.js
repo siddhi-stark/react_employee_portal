@@ -9,7 +9,8 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function Reports(props) {
-  const { match } = props;
+  const { match, location } = props;
+  console.log('props',props);
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
   const [reportDate, setReportDate] = useState('');
@@ -32,6 +33,9 @@ function Reports(props) {
     itemsPerPage: 10,
     totalItems: 10,
   });
+
+  const clockin = location?.state?.clockin;
+  const clockout = location?.state?.clockout;
 
   const columns = [
     {
@@ -132,8 +136,8 @@ function Reports(props) {
                     {employeeReport || teamReport ? `Name: ${reporterName}` : ''}{' '}
                     &nbsp; &nbsp; Date: {reportDate}{' '}
                   </h5>
-                  <h5 className='ml-3'>Sign in: 10:30 AM </h5>
-                  <h5 className='ml-3'>Sign out: 10:30 AM </h5>
+                  <h5 className='ml-3'>Sign in: {clockin} </h5>
+                  <h5 className='ml-3'>Sign out: {clockout} </h5>
                 </div>
               </Card.Title>
               <div className="light-bg buttons align-items-center mt-3">
