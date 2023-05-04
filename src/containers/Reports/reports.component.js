@@ -127,8 +127,14 @@ function Reports(props) {
           <Card.Body>
             <Row>
               <Card.Title>
-                {employeeReport || teamReport ? `Name: ${reporterName}` : ''}{' '}
-                &nbsp; &nbsp; Date: {reportDate}{' '}
+                <div className='d-flex'>
+                  <h5>
+                    {employeeReport || teamReport ? `Name: ${reporterName}` : ''}{' '}
+                    &nbsp; &nbsp; Date: {reportDate}{' '}
+                  </h5>
+                  <h5 className='ml-3'>Sign in: 10:30 AM </h5>
+                  <h5 className='ml-3'>Sign out: 10:30 AM </h5>
+                </div>
               </Card.Title>
               <div className="light-bg buttons align-items-center mt-3">
                 <Button
