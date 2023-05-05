@@ -10,7 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 
 function Reports(props) {
   const { match, location } = props;
-  console.log('props',props);
+  // console.log('props',props);
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
   const [reportDate, setReportDate] = useState('');
