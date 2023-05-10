@@ -18,6 +18,7 @@ import SupportTicket from '../../SupportTicket/supportTicket.component';
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
   const [showClockIn, setShowClockIn] = useState(false);
+  console.log('showClockIn',showClockIn);
   const [title, setTitle] = useState('');
   const [completed, setCompleted] = useState('');
   const [pending, setPending] = useState('');
@@ -522,7 +523,7 @@ function Dashboard() {
                         </div>
                       )}
 
-                      {!showClockIn && (
+                      {!showClockIn ? (
                         <Button
                           type="button"
                           className="btn btn-primary"
@@ -536,7 +537,7 @@ function Dashboard() {
                         >
                           Clock In
                         </Button>
-                      )}
+                      ) : null}
                     </div>
                   </UserRestrictions>
                 </Col>
