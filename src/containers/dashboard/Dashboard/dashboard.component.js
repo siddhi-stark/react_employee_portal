@@ -18,7 +18,6 @@ import SupportTicket from '../../SupportTicket/supportTicket.component';
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
   const [showClockIn, setShowClockIn] = useState(false);
-  console.log('showClockIn',showClockIn);
   const [title, setTitle] = useState('');
   const [completed, setCompleted] = useState('');
   const [pending, setPending] = useState('');

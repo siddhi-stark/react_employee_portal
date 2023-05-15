@@ -24,7 +24,7 @@ import Task from './Task.component';
 const validator = new SimpleReactValidator();
 
 function ToDoList(props) {
-  const { onMorningSendScrum, onClockoutReport} = props;
+  const { onMorningSendScrum, onClockoutReport } = props;
 
   const hrsProps = props;
   const totalHours = hrsProps.totalHrs;
@@ -54,6 +54,7 @@ function ToDoList(props) {
   const [timeHour, setTimeHour] = useState('');
   const [timeMinutes, setTimeMinutes] = useState('');
   const [showSendReport, setShowSendReport] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -212,10 +213,12 @@ function ToDoList(props) {
   ];
 
   const getTableData = async (pageNo = 0) => {
+    setShowLoader(true);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.taskUrl}?sort_by=id&sort_direction=descending&page=${page}&limit=${pagination.itemsPerPage}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
+      setShowLoader(false);
       setClockinClockoutStorage();
       setPagination({
         current_page: Number(data.paginator.current_page),
@@ -675,6 +678,7 @@ function ToDoList(props) {
 
   return (
     <>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       {ShowDelete && (
         <SweetAlert
           title="Are you sure, do you want to delete the task ?"
@@ -748,10 +752,20 @@ function ToDoList(props) {
                         setModalShow(true);
                         forceUpdate(count + 1);
                       }}
-                      className="btn-link"
+                      className="btn-link mr-3"
                     >
                       Add Task
                     </a>
+                    <div>
+                      <Button
+                        onClick={() => {
+                          getTableData();
+                        }}
+                        className="btn"
+                      >
+                        Refresh
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <hr />
@@ -1060,9 +1074,8 @@ function ToDoList(props) {
                     type="submit"
                     disabled={disableButton || showSendReport}
                     // onClick={(e) => onBreakSubmit(e)}
-                    variant={`${
-                      !showSendReport ? 'primary ml-1' : 'secondary ml-1'
-                    }`}
+                    variant={`${!showSendReport ? 'primary ml-1' : 'secondary ml-1'
+                      }`}
                   >
                     Confirm
                   </Button>
@@ -1076,9 +1089,8 @@ function ToDoList(props) {
                   onClick={(e) => {
                     onSubmit(e);
                   }}
-                  variant={`${
-                    showSendReport ? 'primary ml-1' : 'secondary ml-1'
-                  }`}
+                  variant={`${showSendReport ? 'primary ml-1' : 'secondary ml-1'
+                    }`}
                 >
                   Send Report
                 </Button>
