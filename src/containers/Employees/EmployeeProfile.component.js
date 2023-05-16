@@ -18,6 +18,7 @@ function EmployeeProfile(props) {
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});
+  // console.log('employeeDetails', employeeDetails);
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
   const [companyList, setCompanyList] = useState([]);
   const [title, setTitle] = useState('');
@@ -370,8 +371,8 @@ function EmployeeProfile(props) {
                         Joining Date -{' '}
                         {employeeDetails.date_joined
                           ? customFunctions.getDMYDate(
-                              employeeDetails.date_joined
-                            )
+                            employeeDetails.date_joined
+                          )
                           : ''}
                       </h6>
                     </div>
@@ -390,11 +391,11 @@ function EmployeeProfile(props) {
                     <div className="col-md-4">
                       {employeeDetails.relieving_date ? (
                         <h6>
-                          Relieving Date -{' '}
+                          Expected Relieving Date -{' '}
                           {employeeDetails.relieving_date
                             ? customFunctions.getDMYDate(
-                                employeeDetails.relieving_date
-                              )
+                              employeeDetails.relieving_date
+                            )
                             : ''}
                         </h6>
                       ) : (
@@ -403,14 +404,23 @@ function EmployeeProfile(props) {
                             ? `Confirmation Date -` : `Expected Confirmation Date-`}
                           {employeeDetails.confirmation_date
                             ? customFunctions.getDMYDate(
-                                employeeDetails.confirmation_date
-                              )
+                              employeeDetails.confirmation_date
+                            )
                             : employeeDetails.expected_confirmation_date && customFunctions.getDMYDate(
-                                employeeDetails.expected_confirmation_date
-                              )}
+                              employeeDetails.expected_confirmation_date
+                            )}
                         </h6>
                       )}
                     </div>
+                    {/* <button
+                      // onClick={() => {
+                      //   history.push('/confirmation', { employeeID: Number(employeeID) });
+                      // }}
+                      type="button"
+                      className="btn btn-primary"
+                    >
+                      Releave Now
+                    </button> */}
                     <div className="col-md-5">
                       {employeeDetails &&
                         !employeeDetails.confirmation_date &&

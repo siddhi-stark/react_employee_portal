@@ -48,7 +48,7 @@ function AddSupportTicket(props) {
     created_at: '',
     updated_at: ''
   });
-  console.log('supportDetails', supportDetails);
+  // console.log('supportDetails', supportDetails);
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);

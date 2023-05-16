@@ -1104,6 +1104,7 @@ function Dashboard() {
                 onMorningSendScrum={getDailyActivity}
                 onClockoutReport={getTimeSheetList}
                 totalHrs={totalHrs}
+                callback={getWorkingHrs}
               />
             )}
           </Col>

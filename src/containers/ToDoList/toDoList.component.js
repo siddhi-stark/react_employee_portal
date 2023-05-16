@@ -24,7 +24,8 @@ import Task from './Task.component';
 const validator = new SimpleReactValidator();
 
 function ToDoList(props) {
-  const { onMorningSendScrum, onClockoutReport } = props;
+  // console.log('props',props);
+  const { onMorningSendScrum, onClockoutReport, callback } = props;
 
   const hrsProps = props;
   const totalHours = hrsProps.totalHrs;
@@ -760,6 +761,7 @@ function ToDoList(props) {
                       <Button
                         onClick={() => {
                           getTableData();
+                          callback('refresh');
                         }}
                         className="btn"
                       >
