@@ -4,6 +4,7 @@ import { Link, useHistory, withRouter } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
+// import { Row, Col, Card, Button, Image } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 import Api from '../../helper/api';
@@ -12,14 +13,16 @@ import customFunctions from '../../helper/customFunctions';
 import AddBondHistory from './AddBondHistory.component';
 import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
+// import UpdateReleavingDate from './updateReleavingDate';
 
 function EmployeeProfile(props) {
   const { match } = props;
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});
-  // console.log('employeeDetails', employeeDetails);
+  console.log('employeeDetails', employeeDetails);
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
+  console.log('showPersonalDetails', showPersonalDetails);
   const [companyList, setCompanyList] = useState([]);
   const [title, setTitle] = useState('');
   const [employeeDocument, setEmployeeDocument] = useState([]);
@@ -31,6 +34,9 @@ function EmployeeProfile(props) {
   const [showBond, setShowBond] = useState(false);
   const [bondList, setBondList] = useState([]);
   const [bondData, setBondData] = useState({});
+  // const [modalShow, setShowModal] = useState(false);
+  // const [expectedReleavingDate, setExpectedReleavingDate] = useState('');
+  // console.log('expectedReleavingDate', expectedReleavingDate);
   const employeeID = match.params.id;
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
@@ -294,6 +300,45 @@ function EmployeeProfile(props) {
     }
   };
 
+  // console.log('employeeDetails.joining_date',employeeDetails.joining_date);
+
+  // const submitForm = async () => {
+  //   setShowLoader(true);
+  //   const id = customFunctions.getLocalStorage('id');
+
+  //   const postData = {
+  //     // designation: employeeDetails ? employeeDetails.designation_name : null,
+  //     // joining_date: employeeDetails && employeeDetails.date_joined
+  //     //   ? customFunctions.getDate(employeeDetails.date_joined)
+  //     //   : '',
+  //     // confirmation_date: employeeDetails && employeeDetails.confirmation_date
+  //     //   ? customFunctions.getDate(employeeDetails.confirmation_date)
+  //     //   : null,
+  //     // confirmed: employeeDetails && employeeDetails.confirmation_date ? true : false, // eslint-disable-line
+  //     // relieving_date: employeeDetails && employeeDetails.relieving_date
+  //     //   ? customFunctions.getDate(employeeDetails.relieving_date)
+  //     //   : null,
+  //     // relieved: employeeDetails.relieved ? true : false, // eslint-disable-line
+  //     // dob: employeeDetails.dob ? customFunctions.getDate(employeeDetails.dob) : null,
+  //     last_relieving_date: expectedReleavingDate ? customFunctions.getDate(expectedReleavingDate) : null
+  //   };
+  //   console.log('postData', postData);
+
+  //   const { data } = await AuthApi.putDataToServer(
+  //     `${Api.employeeUrl}${id}/`,
+  //     postData
+  //   );
+  //   console.log('data',data);
+  //   if (data) {
+  //     setShowLoader(false);
+  //     swal(data && data.message[0]);
+  //     setShowModal(false);
+  //   //   // onPersonalDetailChanges();
+  //   }else{
+  //     swal(data && data.message[0]);
+  //   }
+  // };
+
   return (
     <>
       <Helmet title={title} />
@@ -412,15 +457,16 @@ function EmployeeProfile(props) {
                         </h6>
                       )}
                     </div>
-                    {/* <button
-                      // onClick={() => {
-                      //   history.push('/confirmation', { employeeID: Number(employeeID) });
-                      // }}
+                    {/* <Button
+                      onClick={() => {
+                        setShowModal(true);
+                        console.log('data123test');
+                      }}
                       type="button"
-                      className="btn btn-primary"
+                      className="btn btn-primary col-1"
                     >
-                      Releave Now
-                    </button> */}
+                      Relieve Now
+                    </Button> */}
                     <div className="col-md-5">
                       {employeeDetails &&
                         !employeeDetails.confirmation_date &&
@@ -738,6 +784,49 @@ function EmployeeProfile(props) {
           </div>
         </div>
       </div>
+      {/* <ModalInput
+        size="md"
+        centered
+        show={modalShow}
+        onHide={() => setShowModal(false)}
+        className="event-image-popup"
+        id="contained-modal-title-center"
+        modalHeaderClass="reson-text-title d-flex align-items-center"
+        label={<h5>Last Releaving Date</h5>}
+        modalBody={
+          <Row>
+            <div className='event-img'>
+              <Datepicker
+                label='Select last releaving date'
+                className="form-control"
+                selected={expectedReleavingDate}
+                onChange={(e) => {
+                  setExpectedReleavingDate(e);
+                }}
+                autoComplete="off"
+                // minDate={fromDate}
+                name="startDate"
+                dateFormat="dd/MM/yyyy"
+                placeholder="Select Date"
+              // maxDate={new Date()}
+              />
+            </div>
+          </Row>
+        }
+        modalFooter={
+          <span>
+            <Button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                submitForm();
+              }}
+            >
+              Approval
+            </Button>
+          </span>
+        }
+      /> */}
     </>
   );
 }

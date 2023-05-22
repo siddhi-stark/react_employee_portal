@@ -177,7 +177,7 @@ function AddLeave(props) {
   formSchema[1].fields.map((section) => {
     const sectionData = section;
     if (
-       // sectionData.name === 'leave_from_date' ||
+      // sectionData.name === 'leave_from_date' ||
       sectionData.name === 'leave_to_date'
     ) {
       const date = new Date();
@@ -200,13 +200,13 @@ function AddLeave(props) {
     setShowLoader(true);
     const defaultValuesFromType =
       defaultValues.leave_from_type &&
-      defaultValues.leave_from_type === 'Full Day'
+        defaultValues.leave_from_type === 'Full Day'
         ? 2
         : 1;
 
     const fromType =
       formValues.leave_from_type &&
-      formValues.leave_from_type.value === 'Full Day'
+        formValues.leave_from_type.value === 'Full Day'
         ? 2
         : 1;
     const postData = {
@@ -222,7 +222,7 @@ function AddLeave(props) {
         : defaultValuesFromType,
       leave_to_date:
         formValues.leave_from_type &&
-        formValues.leave_from_type.value === 'Half Day'
+          formValues.leave_from_type.value === 'Half Day'
           ? customFunctions.getDate(formValues.leave_from_date)
           : customFunctions.getDate(formValues.leave_to_date),
     };
@@ -231,7 +231,7 @@ function AddLeave(props) {
       defaultValues &&
       defaultValues.leave_to_date &&
       customFunctions.getDate(defaultValues.leave_to_date) ===
-        customFunctions.getDate(formValues.leave_to_date)
+      customFunctions.getDate(formValues.leave_to_date)
     ) {
       postData.leave_to_date = defaultValues.leave_to_date
         ? customFunctions.getDate(defaultValues.leave_to_date)
@@ -450,7 +450,7 @@ function AddLeave(props) {
           data.data[0].on_notice_period && data.data[0].on_notice_period,
         confirmedMessage: data.data[0].confirmed && data.data[0].confirmed,
       });
-      if(leavesMsg){
+      if (leavesMsg) {
         setIsNotice(data.data[0].on_notice_period && data.data[0].on_notice_period);
         setIsProbation(!data.data[0].confirmed && data.data[0].confirmed);
       }
@@ -487,6 +487,17 @@ function AddLeave(props) {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
+        <div>
+          {((!leavesCount.confirmedMessage && leavesCount.noticeMessage && !viewLeaveOptions) || (isNotice && !isProbation) || (isNotice && isProbation)) && (
+            <span className='alert alert-info' role='alert'>
+              {' '}
+              {/* If any leave taken it will extend the notice period as
+                    number of leaves taken. */}
+              You are on notice period. If you apply for leave during
+              the notice period then your relived date will be extended as number of leaves taken.
+            </span>
+          )}
+        </div>
         <div className="mt-5">
           <Card body>
             <div className="container">
@@ -537,22 +548,18 @@ function AddLeave(props) {
                   </span>
                 )}
                 <br />
-                {((!leavesCount.confirmedMessage && !leavesCount.noticeMessage && !viewLeaveOptions) || (isProbation && !isNotice))&& (
+                {((!leavesCount.confirmedMessage && !leavesCount.noticeMessage && !viewLeaveOptions) || (isProbation && !isNotice)) && (
                   <span className="text-danger">
                     {' '}
                     Leaves are unpaid as you are under probation period.{' '}
                   </span>
                 )}
 
-                {((!leavesCount.confirmedMessage && leavesCount.noticeMessage && !viewLeaveOptions) || (isNotice && !isProbation) || (isNotice && isProbation))&& (
-                  <span className="text-danger">
-                    {' '}
-                    If any leave taken it will extend the notice period as
-                    number of leaves taken.
-                  </span>
-                )}
+
               </div>
             </div>
+
+
 
             <StarkFormBuilder
               containerClass="add-lv"

@@ -14,6 +14,7 @@ import SharedService from '../../../services/SharedService/sharedServices';
 import Loader from '../../../components/Loader/index';
 import EmployeeListComponent from '../../Employee/employeeList.component';
 import SupportTicket from '../../SupportTicket/supportTicket.component';
+import NoticePeriodLastDay from '../../Employees/noticePeriodLastDay.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -259,7 +260,7 @@ function Dashboard() {
     }
     document.addEventListener('ProfileUpdate', () => {
       getProfile();
-    },[]);
+    }, []);
 
     SharedService.clockOut.subscribe((value) => {
       if (value) {
@@ -547,6 +548,7 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
+            <NoticePeriodLastDay />
             {showClockIn && (
               <UserRestrictions
                 permittedUsers={[2, 3, 4, 5, 6, 7]}
