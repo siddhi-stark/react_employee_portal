@@ -28,7 +28,9 @@ function CurrentEmployee() {
         message: (('The :attribute domain name should be starkdigital.net.') || ('The :attribute domain name should be starkdigital.in.')),
         rule: (val, params, valid) => {
           return (
-            (valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) || valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.in$/i)) &&
+            (valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) ||
+             valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.in$/i) ||
+              valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.com$/i)) &&
             params.indexOf(val) === -1
           );
         },
