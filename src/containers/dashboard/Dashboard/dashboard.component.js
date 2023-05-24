@@ -14,7 +14,7 @@ import SharedService from '../../../services/SharedService/sharedServices';
 import Loader from '../../../components/Loader/index';
 import EmployeeListComponent from '../../Employee/employeeList.component';
 import SupportTicket from '../../SupportTicket/supportTicket.component';
-import NoticePeriodLastDay from '../../Employees/noticePeriodLastDay.component';
+// import NoticePeriodLastDay from '../../Employees/noticePeriodLastDay.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -548,7 +548,7 @@ function Dashboard() {
                 </Col>
               </Row>
             </Jumbotron>
-            <NoticePeriodLastDay />
+            {/* <NoticePeriodLastDay /> */}
             {showClockIn && (
               <UserRestrictions
                 permittedUsers={[2, 3, 4, 5, 6, 7]}

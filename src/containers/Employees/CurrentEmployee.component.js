@@ -25,15 +25,15 @@ function CurrentEmployee() {
   const validator = useRef(new SimpleReactValidator({
     validators: {
       emailValidate: {
-        message: 'The :attribute domain name should be starkdigital.net.',
+        message: (('The :attribute domain name should be starkdigital.net.') || ('The :attribute domain name should be starkdigital.in.')),
         rule: (val, params, valid) => {
           return (
-            valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) &&
+            (valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) || valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.in$/i)) &&
             params.indexOf(val) === -1
           );
         },
       }
-    },
+    }
   }));
 
   const [employee, setEmployee] = useState([]);
@@ -957,7 +957,7 @@ function CurrentEmployee() {
                   errorMessage={validator.current.message(
                     'email',
                     email,
-                    'required|emailValidate|email' // eslint-disable-line
+                    'required|email' // eslint-disable-line
                   )}
                 />
               </Col>
