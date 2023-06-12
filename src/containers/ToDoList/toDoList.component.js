@@ -30,7 +30,6 @@ function ToDoList(props) {
   const hrsProps = props;
   const totalHours = hrsProps.totalHrs;
   const [rows, setRows] = useState([]);
-  console.log('rows',rows);
   const [selectedId, setSelectedId] = useState([]);
   const [showMsg, setShowMsg] = useState(false);
   const [modalShow, setModalShow] = useState(false);
