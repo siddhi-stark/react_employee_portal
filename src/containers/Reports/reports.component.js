@@ -55,12 +55,12 @@ function Reports(props) {
     },
     {
       id: 'eta',
-      label: 'ETA',
+      label: 'Total ETA',
       roleAccess: [1, 2, 3, 4, 5, 7],
     },
     {
       id: 'actual_estimation',
-      label: 'Actual ETA',
+      label: 'Remaning ETA',
       roleAccess: [1, 2, 3, 4, 5, 7],
     },
     {
