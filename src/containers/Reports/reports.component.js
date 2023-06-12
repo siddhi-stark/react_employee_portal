@@ -59,6 +59,11 @@ function Reports(props) {
       roleAccess: [1, 2, 3, 4, 5, 7],
     },
     {
+      id: 'actual_estimation',
+      label: 'Actual ETA',
+      roleAccess: [1, 2, 3, 4, 5, 7],
+    },
+    {
       id: showButton ? '' : 'at',
       label: showButton ? '' : 'AT',
       roleAccess: [1, 2, 3, 4, 5, 7],
@@ -107,9 +112,10 @@ function Reports(props) {
             (i + 1),
           task: proj.activity,
           project: proj.project_name,
-          eta: proj.actual_estimation,
+          eta: proj.estimation,
           status: proj.task_status,
           at: proj.actual_estimation,
+          actual_estimation: proj.actual_estimation,
         };
         row.push(setRowData);
         return proj;
