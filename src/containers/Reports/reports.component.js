@@ -107,7 +107,7 @@ function Reports(props) {
             (i + 1),
           task: proj.activity,
           project: proj.project_name,
-          eta: proj.estimation,
+          eta: proj.actual_estimation,
           status: proj.task_status,
           at: proj.actual_estimation,
         };
