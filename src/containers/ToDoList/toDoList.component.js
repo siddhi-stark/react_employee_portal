@@ -393,7 +393,7 @@ function ToDoList(props) {
 
     breakData.map((e) => {
       if (e.id) selectedId.push(Number(e.id));
-
+      
       return e;
     });
 
@@ -473,6 +473,7 @@ function ToDoList(props) {
     const BreakPostData = [];
     setLoader(true);
     breakData.map((dt) => {
+      console.log('dt',dt);
       return BreakPostData.push({
         id: dt.id,
         content: `${dt.selectedBreakOption.label}`,
@@ -787,8 +788,11 @@ function ToDoList(props) {
                     dropdownContainerClass="mb-3"
                     selectedRowItems={selectedId}
                     onSelectRowsIndexes={async (rowIndex) => {
-                      const arr = [...selectedId, ...rowIndex];
+                      console.log('rowIndex',rowIndex);
+                      const arr = [...rowIndex];
+                      console.log('arr',arr);
                       const arrNew = [];
+                      console.log('arrNew',arrNew);
                       await arr.filter((e) => {
                         if (!arrNew.includes(e)) {
                           arrNew.push(e);

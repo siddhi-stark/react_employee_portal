@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Image } from 'react-bootstrap';
+import { Button, Image, Row } from 'react-bootstrap';
 import { Link, useHistory, withRouter } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
-// import { Row, Col, Card, Button, Image } from 'react-bootstrap';
-import { Helmet } from '../../components/FormInputs';
+// import { , Col, Card, Button, Image } from 'react-bootstrap';
+import { Helmet, ModalInput, Datepicker } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
@@ -14,6 +14,8 @@ import AddBondHistory from './AddBondHistory.component';
 import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
 // import UpdateReleavingDate from './updateReleavingDate';
+// import {  } from '../../components/FormInputs/index';
+// import {  } from '../../components/FormInputs/index';
 
 function EmployeeProfile(props) {
   const { match } = props;
@@ -34,9 +36,9 @@ function EmployeeProfile(props) {
   const [showBond, setShowBond] = useState(false);
   const [bondList, setBondList] = useState([]);
   const [bondData, setBondData] = useState({});
-  // const [modalShow, setShowModal] = useState(false);
-  // const [expectedReleavingDate, setExpectedReleavingDate] = useState('');
-  // console.log('expectedReleavingDate', expectedReleavingDate);
+  const [modalShow, setShowModal] = useState(false);
+  const [lastworkingDate, setLastWorkingDate] = useState('');
+  console.log('lastworkingDate', lastworkingDate);
   const employeeID = match.params.id;
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
@@ -300,44 +302,94 @@ function EmployeeProfile(props) {
     }
   };
 
-  // console.log('employeeDetails.joining_date',employeeDetails.joining_date);
+  console.log('employeeDetails',employeeDetails);
 
-  // const submitForm = async () => {
-  //   setShowLoader(true);
-  //   const id = customFunctions.getLocalStorage('id');
+  const submitForm = async () => {
+    setShowLoader(true);
+    // const id = customFunctions.getLocalStorage('id');
 
-  //   const postData = {
-  //     // designation: employeeDetails ? employeeDetails.designation_name : null,
-  //     // joining_date: employeeDetails && employeeDetails.date_joined
-  //     //   ? customFunctions.getDate(employeeDetails.date_joined)
-  //     //   : '',
-  //     // confirmation_date: employeeDetails && employeeDetails.confirmation_date
-  //     //   ? customFunctions.getDate(employeeDetails.confirmation_date)
-  //     //   : null,
-  //     // confirmed: employeeDetails && employeeDetails.confirmation_date ? true : false, // eslint-disable-line
-  //     // relieving_date: employeeDetails && employeeDetails.relieving_date
-  //     //   ? customFunctions.getDate(employeeDetails.relieving_date)
-  //     //   : null,
-  //     // relieved: employeeDetails.relieved ? true : false, // eslint-disable-line
-  //     // dob: employeeDetails.dob ? customFunctions.getDate(employeeDetails.dob) : null,
-  //     last_relieving_date: expectedReleavingDate ? customFunctions.getDate(expectedReleavingDate) : null
-  //   };
-  //   console.log('postData', postData);
+    // {
+    //   "full_name": "omkar",
+    //   "email": "tests10@starkdigital.net",
+    //   "mobile": "9877533210",
+    //   "emp_code": 127,
+    //   "tw_emp": 28,
+    //   "role": 4,
+    //   "designation": 6,
+    //   "department": 6,
+    //   "status": "active",
+    //   "dob": "1994-07-24",
+    //   "team_leads": [
+    //   109
+    //   ],
+    //   "managers": [
+    //   147
+    //   ],
+    //   "notice_period_date": "2021-01-01",
+    //   "confirmation_date": "2021-01-01",
+    //   "relieving_date": "2021-01-01",
+    //   "last_working_date": "2021-01-01"
+    //   }
 
-  //   const { data } = await AuthApi.putDataToServer(
-  //     `${Api.employeeUrl}${id}/`,
-  //     postData
-  //   );
-  //   console.log('data',data);
-  //   if (data) {
-  //     setShowLoader(false);
-  //     swal(data && data.message[0]);
-  //     setShowModal(false);
-  //   //   // onPersonalDetailChanges();
-  //   }else{
-  //     swal(data && data.message[0]);
-  //   }
-  // };
+    const managers = []; const teamLeds = [];
+
+    employeeDetails?.assigned_managers.map((item)=>{
+      return managers.push(item);
+    })
+
+    console.log('managers',managers);
+
+    employeeDetails?.assigned_team_leads.map((item)=>{
+      return teamLeds.push(item);
+    })
+
+    console.log('teamLeds',teamLeds)
+
+    const postData = {
+      full_name: employeeDetails?.full_name,
+      email: employeeDetails.email,
+      mobile: employeeDetails?.mobile ? employeeDetails?.mobile : null,
+      emp_code: employeeDetails?.emp_code,
+      tw_emp: employeeDetails?.tw_id,
+      role: employeeDetails?.role_id,
+      department: employeeDetails?.department_id,
+      status: employeeDetails?.status,
+      team_leads: teamLeds ? teamLeds : null,
+      managers: managers ? managers : null,
+      notice_period_date: employeeDetails?.notice_period_date ? customFunctions.getDate(employeeDetails?.notice_period_date) : null,
+      designation: employeeDetails ? employeeDetails.designation_id : null,
+      joining_date: employeeDetails && employeeDetails.date_joined
+        ? customFunctions.getDate(employeeDetails.date_joined)
+        : '',
+      confirmation_date: employeeDetails && employeeDetails.confirmation_date
+        ? customFunctions.getDate(employeeDetails.confirmation_date)
+        : null,
+      confirmed: employeeDetails && employeeDetails.confirmation_date ? true : false, // eslint-disable-line
+      relieving_date: employeeDetails && employeeDetails.relieving_date
+        ? customFunctions.getDate(employeeDetails.relieving_date)
+        : null,
+      relieved: employeeDetails.relieved ? true : false, // eslint-disable-line
+      dob: employeeDetails.dob ? customFunctions.getDate(employeeDetails.dob) : null,
+      last_relieving_date: lastworkingDate ? customFunctions.getDate(lastworkingDate) : null,
+      last_working_date: lastworkingDate ? customFunctions.getDate(lastworkingDate) : null,
+    };
+
+    console.log('postData', postData);
+    // return;
+    const { data } = await AuthApi.putDataToServer(
+      `${Api.employeeUrl}${employeeDetails?.id}/`,
+      postData
+    );
+    console.log('data',data);
+    if (data) {
+      setShowLoader(false);
+      swal(data && data.message[0]);
+      setShowModal(false);
+    //   // onPersonalDetailChanges();
+    }else{
+      swal(data && data.message[0]);
+    }
+  };
 
   return (
     <>
@@ -457,7 +509,7 @@ function EmployeeProfile(props) {
                         </h6>
                       )}
                     </div>
-                    {/* <Button
+                    <Button
                       onClick={() => {
                         setShowModal(true);
                         console.log('data123test');
@@ -466,7 +518,7 @@ function EmployeeProfile(props) {
                       className="btn btn-primary col-1"
                     >
                       Relieve Now
-                    </Button> */}
+                    </Button>
                     <div className="col-md-5">
                       {employeeDetails &&
                         !employeeDetails.confirmation_date &&
@@ -784,7 +836,7 @@ function EmployeeProfile(props) {
           </div>
         </div>
       </div>
-      {/* <ModalInput
+      <ModalInput
         size="md"
         centered
         show={modalShow}
@@ -799,9 +851,9 @@ function EmployeeProfile(props) {
               <Datepicker
                 label='Select last releaving date'
                 className="form-control"
-                selected={expectedReleavingDate}
+                selected={lastworkingDate}
                 onChange={(e) => {
-                  setExpectedReleavingDate(e);
+                  setLastWorkingDate(e);
                 }}
                 autoComplete="off"
                 // minDate={fromDate}
@@ -826,7 +878,7 @@ function EmployeeProfile(props) {
             </Button>
           </span>
         }
-      /> */}
+      />
     </>
   );
 }

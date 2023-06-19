@@ -22,6 +22,7 @@ const items = [
 
 function AllReports() {
   const [rows, setRows] = useState([]);
+  console.log('rows',rows);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
@@ -104,6 +105,11 @@ function AllReports() {
       roleAccess: [1, 2, 3, 4, 5, 6],
     },
     {
+      id: 'total_eta',
+      label: 'Todays Estimation',
+      roleAccess: [1, 2, 3, 4, 5, 6],
+    },
+    {
       id: 'total',
       label: 'Total Working',
       roleAccess: [1, 2, 3, 4, 5, 6],
@@ -164,6 +170,7 @@ function AllReports() {
           total: `${report.estimation} Hrs`,
           id: report.user_id,
           createdDate: report.created_at,
+          total_eta : `${report?.total_eta} Hrs`,
         };
         row.push(setRowData);
         return report;
