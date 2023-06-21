@@ -1,6 +1,7 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Row } from 'react-bootstrap';
-import { useHistory, withRouter } from 'react-router-dom';
+import { useHistory, withRouter,useLocation } from 'react-router-dom';
 import { Helmet } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 import Table from '../../components/ReactTable/simpletable.component';
@@ -19,12 +20,14 @@ function Reports(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
   const report = props;
+  console.log("report",report.match.params.id);
   const employeeReport = report.location.state
     ? report.location.state.employeeReport
     : '';
-  const teamReport = report.location.state
-    ? report.location.state.teamReport
+  const teamReport = report.location.state 
+    ? report.location.state
     : '';
+    console.log("teamReport",teamReport);
   const reporterName = report.location.state
     ? report.location.state.reporterName
     : '';
@@ -171,7 +174,12 @@ function Reports(props) {
                   type="button"
                   onClick={() => {
                     if (teamReport) {
-                      history.push(teamReport ? '/team-report' : '/my-report');
+                      history.push("/reports",{
+                        state:{
+                          EmpId:report.match.params.id,
+                          reporterName:report.location.state.reporterName
+                        }
+                      });
                     } else {
                       history.push(
                         employeeReport ? '/employee-report' : '/my-report'

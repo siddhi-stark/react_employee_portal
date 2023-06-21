@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, useLocation } from 'react-router-dom';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import {
   Datepicker,
@@ -15,14 +16,10 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
 
-const items = [
-  { to: '/', label: 'Home' },
-  { label: 'Employee Timesheet' },
-];
+const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
 
 function AllReports() {
   const [rows, setRows] = useState([]);
-  console.log('rows',rows);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
@@ -34,12 +31,35 @@ function AllReports() {
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
   const [searchKeyword, setSearchKeyword] = useState('');
+  const { state } = useLocation();
+  // setSelectedEmployee(state?.state?.reporterName);
 
+  console.log('state+==========', state);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
+
+  useEffect(() => {
+    if (!state) return;
+    if (state) {
+      setSelectedEmployee([
+        {
+          label: state?.state?.reporterName,
+          id: state?.state?.EmpId,
+          value: state?.state?.EmpId,
+        },
+      ]);
+      // getEmployeeById();
+    }
+  }, [state]);
+
+  // useEffect(()=>{
+  //   if(selectedEmployee != ''){
+  //     filterSearch();
+  //   }
+  // },[selectedEmployee])
 
   const handleActionCallback = ({ id, createdDate, name }) => {
     const newDate = customFunctions.getDate(createdDate);
@@ -123,6 +143,7 @@ function AllReports() {
   ];
 
   const getReports = async (pageNo = 0) => {
+    console.log('getReports',getReports);
     setShowLoader(true);
     const page = pageNo || pagination.current_page;
     const endPoint = `${Api.reportListingUrl}`;
@@ -170,7 +191,7 @@ function AllReports() {
           total: `${report.estimation} Hrs`,
           id: report.user_id,
           createdDate: report.created_at,
-          total_eta : `${report?.total_eta} Hrs`,
+          total_eta: `${report?.total_eta} Hrs`,
         };
         row.push(setRowData);
         return report;
@@ -178,6 +199,38 @@ function AllReports() {
       setRows(row);
     }
   };
+
+  useEffect(()=>{
+    if(selectedEmployee != '')
+    getEmployeReportById()
+  },[selectedEmployee])
+
+  const getEmployeReportById = async (pageNo = 0) => {
+    console.log("getEmployeReportById");
+    setShowLoader(true);
+    const page = pageNo || pagination.current_page;
+    const endPoint = `${Api.reportListingUrl}/${state.state.EmpId}/`;
+    console.log('endPointendPoint', endPoint);
+    const params = {
+      page,
+      limit: pagination.itemsPerPage,
+      keyword: searchKeyword && searchKeyword,
+      start_date: fromDate ? customFunctions.getDate(fromDate) : '',
+      end_date: toDate ? customFunctions.getDate(toDate) : '',
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await AuthApi.getDataFromServer(url,endPoint);
+    console.log("data_______________",data);
+
+  };
+
+  // const getEmployeeById = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(
+  //     `${Api.reportListingUrl}user_id=${state?.state?.EmpId}`
+  //   );
+  //   // setEmployeeList(data.data);
+  //   console.log('getEmployeeById+++++++++', data);
+  // };
 
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -223,6 +276,10 @@ function AllReports() {
     setSelectedEmployee([]);
     setCntClearFilter(cntClearFilter + 1);
   };
+
+  // useEffect(()=>{
+  //   filterSearch();
+  // },[state])
 
   const filterSearch = (e) => {
     e.preventDefault();
