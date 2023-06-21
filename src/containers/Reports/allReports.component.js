@@ -32,6 +32,8 @@ function AllReports() {
   const history = useHistory();
   const [searchKeyword, setSearchKeyword] = useState('');
   const { state } = useLocation();
+  const [currentPage , setCurrentPage] = useState()
+  console.log("currentPage]]]]]]]]]]]",currentPage);
   // setSelectedEmployee(state?.state?.reporterName);
 
   console.log('state+==========', state);
@@ -40,17 +42,28 @@ function AllReports() {
     itemsPerPage: 10,
     totalItems: 10,
   });
+  console.log('pagination.current_page', pagination.current_page);
+
+  useEffect(()=>{
+    
+  },[state])
+  
+  useEffect(()=>{
+    const currentpage = customFunctions.getLocalStorage('currentpage');
+    setCurrentPage(currentpage)
+   
+  },[state])
 
   useEffect(() => {
     if (!state) return;
     if (state) {
-      setSelectedEmployee([
-        {
-          label: state?.state?.reporterName,
-          id: state?.state?.EmpId,
-          value: state?.state?.EmpId,
-        },
-      ]);
+      // setSelectedEmployee([
+      //   {
+      //     label: state?.state?.reporterName,
+      //     id: state?.state?.EmpId,
+      //     value: state?.state?.EmpId,
+      //   },
+      // ]);
       // getEmployeeById();
     }
   }, [state]);
@@ -142,10 +155,14 @@ function AllReports() {
     },
   ];
 
+  useEffect(() => {
+    getReports(pagination.current_page);
+  }, [cntClearFilter]);
+
   const getReports = async (pageNo = 0) => {
-    console.log('getReports',getReports);
+    console.log('getReports', getReports);
     setShowLoader(true);
-    const page = pageNo || pagination.current_page;
+    const page = pageNo ? pageNo : pagination.current_page;
     const endPoint = `${Api.reportListingUrl}`;
 
     const params = {
@@ -155,6 +172,7 @@ function AllReports() {
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',
     };
+    console.log("params------------",params);
     const url = customFunctions.generateUrl(endPoint, params);
 
     let postData = {};
@@ -179,6 +197,7 @@ function AllReports() {
         itemsPerPage: Number(data.paginator.limit),
         totalItems: data.paginator.total_count,
       });
+      customFunctions.setLocalStorage('currentpage',( data.paginator.current_page));
       const row = [];
 
       data.data.map((report, i) => {
@@ -200,29 +219,27 @@ function AllReports() {
     }
   };
 
-  useEffect(()=>{
-    if(selectedEmployee != '')
-    getEmployeReportById()
-  },[selectedEmployee])
+  // useEffect(() => {
+  //   if (state != '') getEmployeReportById();
+  // }, [state]);
 
-  const getEmployeReportById = async (pageNo = 0) => {
-    console.log("getEmployeReportById");
-    setShowLoader(true);
-    const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.reportListingUrl}/${state.state.EmpId}/`;
-    console.log('endPointendPoint', endPoint);
-    const params = {
-      page,
-      limit: pagination.itemsPerPage,
-      keyword: searchKeyword && searchKeyword,
-      start_date: fromDate ? customFunctions.getDate(fromDate) : '',
-      end_date: toDate ? customFunctions.getDate(toDate) : '',
-    };
-    const url = customFunctions.generateUrl(endPoint, params);
-    const { data } = await AuthApi.getDataFromServer(url,endPoint);
-    console.log("data_______________",data);
-
-  };
+  // const getEmployeReportById = async (pageNo = 0) => {
+  //   console.log('getEmployeReportById');
+  //   setShowLoader(true);
+  //   const page = pageNo || pagination.current_page;
+  //   const endPoint = `${Api.reportListingUrl}/${state.state.EmpId}/`;
+  //   console.log('endPointendPoint', endPoint);
+  //   const params = {
+  //     page,
+  //     limit: pagination.itemsPerPage,
+  //     keyword: searchKeyword && searchKeyword,
+  //     start_date: fromDate ? customFunctions.getDate(fromDate) : '',
+  //     end_date: toDate ? customFunctions.getDate(toDate) : '',
+  //   };
+  //   const url = customFunctions.generateUrl(endPoint, params);
+  //   const { data } = await AuthApi.getDataFromServer(url, endPoint);
+  //   console.log('data_______________', data);
+  // };
 
   // const getEmployeeById = async () => {
   //   const { data } = await AuthApi.getDataFromServer(
@@ -250,10 +267,6 @@ function AllReports() {
     }
     getData();
   }, []);
-
-  useEffect(() => {
-    getReports(1);
-  }, [cntClearFilter]);
 
   const getEmployeeList = () => {
     if (!employeeList) return [];
@@ -343,29 +356,33 @@ function AllReports() {
                       permittedUsers={[1, 2, 3, 4, 6, 5]}
                       roleId={userRole}
                     >
-                      <Col sm={3}>
-                        <TextInput
-                          value={searchKeyword}
-                          placeholder="Search employee name"
-                          onInputChange={(e) => {
-                            setSearchKeyword(e.target.value);
-                          }}
-                        />
-                      </Col>
-                      <Col sm={3}>
-                        <div className="search-bar-input">
-                          <DropdownInput
-                            options={getEmployeeList()}
-                            placeholder="Select employee"
-                            defaultValue={selectedEmployee}
-                            onSelectHandler={(select) => {
-                              setFilterErr('');
-                              setSelectedEmployee(select);
-                            }}
-                            isMulti
-                          />
-                        </div>
-                      </Col>
+                      {[1, 2].includes(userRole) ? (
+                        <>
+                          <Col sm={3}>
+                            <TextInput
+                              value={searchKeyword}
+                              placeholder="Search employee name"
+                              onInputChange={(e) => {
+                                setSearchKeyword(e.target.value);
+                              }}
+                            />
+                          </Col>
+                          <Col sm={3}>
+                            <div className="search-bar-input">
+                              <DropdownInput
+                                options={getEmployeeList()}
+                                placeholder="Select employee"
+                                defaultValue={selectedEmployee}
+                                onSelectHandler={(select) => {
+                                  setFilterErr('');
+                                  setSelectedEmployee(select);
+                                }}
+                                isMulti
+                              />
+                            </div>
+                          </Col>
+                        </>
+                      ) : null}
                     </UserRestrictions>
                     <Col sm={3}>
                       <Datepicker
@@ -440,6 +457,7 @@ function AllReports() {
                     ...pagination,
                     activePage: pagination.current_page,
                     onPageChange: (pageNo) => {
+                      console.log("pageNopageNo",pageNo)
                       getReports(pageNo);
                     },
                   }}
