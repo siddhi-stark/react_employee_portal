@@ -98,7 +98,7 @@ const menu = [
     path: '/leaves',
     icon: 'leaves.svg',
     submenu: [],
-    roleaccess: [ 4, 7],
+    roleaccess: [4, 7],
   },
   {
     title: 'Designation',

@@ -33,7 +33,7 @@ function AllReports() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const { state } = useLocation();
   const [currentPage , setCurrentPage] = useState()
-  console.log("currentPage]]]]]]]]]]]",currentPage);
+  console.log("currentPage]]]]]]]]]]]",state);
   // setSelectedEmployee(state?.state?.reporterName);
 
   console.log('state+==========', state);
@@ -44,35 +44,31 @@ function AllReports() {
   });
   console.log('pagination.current_page', pagination.current_page);
 
-  useEffect(()=>{
-    
-  },[state])
-  
-  useEffect(()=>{
-    const currentpage = customFunctions.getLocalStorage('currentpage');
-    setCurrentPage(currentpage)
-   
-  },[state])
 
   useEffect(() => {
+    
     if (!state) return;
     if (state) {
-      // setSelectedEmployee([
-      //   {
-      //     label: state?.state?.reporterName,
-      //     id: state?.state?.EmpId,
-      //     value: state?.state?.EmpId,
-      //   },
-      // ]);
-      // getEmployeeById();
+      setSelectedEmployee(
+        {
+          label: state?.state?.reporterName,
+          id: state?.state?.EmpId,
+          value: state?.state?.EmpId,
+        });
     }
   }, [state]);
 
   // useEffect(()=>{
-  //   if(selectedEmployee != ''){
-  //     filterSearch();
-  //   }
-  // },[selectedEmployee])
+  //   const currentpage = customFunctions.getLocalStorage('currentpage');
+  //   console.log("currentpage",currentpage);
+  //   // setCurrentPage(currentpage);
+  //   // getReports(currentpage);
+  //   setPagination({
+  //     current_page: currentpage,
+  //     itemsPerPage: 10,
+  //     totalItems: 10,
+  //   })
+  // },[state])
 
   const handleActionCallback = ({ id, createdDate, name }) => {
     const newDate = customFunctions.getDate(createdDate);
@@ -88,6 +84,7 @@ function AllReports() {
               history.push(`/daily-report/${dt}/${id}`, {
                 employeeReport: true,
                 reporterName: name,
+                pagination:pagination
               });
             }}
           >
@@ -160,9 +157,9 @@ function AllReports() {
   }, [cntClearFilter]);
 
   const getReports = async (pageNo = 0) => {
-    console.log('getReports', getReports);
+    console.log('pageNo', pageNo);
     setShowLoader(true);
-    const page = pageNo ? pageNo : pagination.current_page;
+    const page = pageNo ;
     const endPoint = `${Api.reportListingUrl}`;
 
     const params = {
@@ -197,7 +194,6 @@ function AllReports() {
         itemsPerPage: Number(data.paginator.limit),
         totalItems: data.paginator.total_count,
       });
-      customFunctions.setLocalStorage('currentpage',( data.paginator.current_page));
       const row = [];
 
       data.data.map((report, i) => {

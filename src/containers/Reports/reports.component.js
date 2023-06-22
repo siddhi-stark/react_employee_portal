@@ -11,6 +11,8 @@ import customFunctions from '../../helper/customFunctions';
 
 function Reports(props) {
   const { match, location } = props;
+  const state = useLocation();
+  console.log('state',state)
   // console.log('props',props);
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
@@ -182,7 +184,11 @@ function Reports(props) {
                       });
                     } else {
                       history.push(
-                        employeeReport ? '/employee-report' : '/my-report'
+                        employeeReport ? '/employee-report' : '/my-report',{
+                          state:{
+                            pagination : state
+                          }
+                        }
                       );
                     }
                   }}
