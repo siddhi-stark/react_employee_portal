@@ -32,29 +32,25 @@ function AllReports() {
   const history = useHistory();
   const [searchKeyword, setSearchKeyword] = useState('');
   const { state } = useLocation();
-  const [currentPage , setCurrentPage] = useState()
-  console.log("currentPage]]]]]]]]]]]",state);
+  const [currentPage, setCurrentPage] = useState();
+  // console.log("currentPage]]]]]]]]]]]",state);
   // setSelectedEmployee(state?.state?.reporterName);
 
-  console.log('state+==========', state);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
-  console.log('pagination.current_page', pagination.current_page);
-
+  // console.log('pagination.current_page', pagination.current_page);
 
   useEffect(() => {
-    
     if (!state) return;
     if (state) {
-      setSelectedEmployee(
-        {
-          label: state?.state?.reporterName,
-          id: state?.state?.EmpId,
-          value: state?.state?.EmpId,
-        });
+      setSelectedEmployee({
+        label: state?.state?.reporterName,
+        id: state?.state?.EmpId,
+        value: state?.state?.EmpId,
+      });
     }
   }, [state]);
 
@@ -84,7 +80,7 @@ function AllReports() {
               history.push(`/daily-report/${dt}/${id}`, {
                 employeeReport: true,
                 reporterName: name,
-                pagination:pagination
+                pagination: pagination.current_page,
               });
             }}
           >
@@ -153,13 +149,12 @@ function AllReports() {
   ];
 
   useEffect(() => {
-    getReports(pagination.current_page);
+    getReports(state?.state?.pageee ? state?.state?.pageee : 1);
   }, [cntClearFilter]);
 
-  const getReports = async (pageNo = 0) => {
-    console.log('pageNo', pageNo);
+  const getReports = async (pageNo) => {
     setShowLoader(true);
-    const page = pageNo ;
+    const page = pageNo ? pageNo : 1;
     const endPoint = `${Api.reportListingUrl}`;
 
     const params = {
@@ -169,7 +164,7 @@ function AllReports() {
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',
     };
-    console.log("params------------",params);
+    // console.log("params------------",params);
     const url = customFunctions.generateUrl(endPoint, params);
 
     let postData = {};
@@ -453,7 +448,7 @@ function AllReports() {
                     ...pagination,
                     activePage: pagination.current_page,
                     onPageChange: (pageNo) => {
-                      console.log("pageNopageNo",pageNo)
+                      console.log('pageNopageNo', pageNo);
                       getReports(pageNo);
                     },
                   }}
