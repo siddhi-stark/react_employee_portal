@@ -36,6 +36,8 @@ function AllReports() {
   // console.log("currentPage]]]]]]]]]]]",state);
   // setSelectedEmployee(state?.state?.reporterName);
 
+console.log("selectedEmployeeselectedEmployee",selectedEmployee);
+
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -46,11 +48,11 @@ function AllReports() {
   useEffect(() => {
     if (!state) return;
     if (state) {
-      setSelectedEmployee({
+      setSelectedEmployee([{
         label: state?.state?.reporterName,
         id: state?.state?.EmpId,
         value: state?.state?.EmpId,
-      });
+      }]);
     }
   }, [state]);
 
