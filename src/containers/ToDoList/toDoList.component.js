@@ -793,14 +793,10 @@ function ToDoList(props) {
                     dropdownContainerClass="mb-3"
                     selectedRowItems={selectedId}
                     onSelectRowsIndexes={async (rowIndex) => {
-                      console.log('rowIndex', rowIndex);
                       const arr = [...rowIndex];
-                      console.log('arr', arr);
                       const arrNew = [];
-                      console.log('arrNew', arrNew);
                       await arr.filter((e) => {
                         if (!arrNew.includes(e)) {
-                          console.log('e', e);
                           arrNew.push(e);
                         }
                         return e;
