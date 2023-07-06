@@ -31,6 +31,7 @@ function ToDoList(props) {
   const totalHours = hrsProps.totalHrs;
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
+  console.log('selectedId', selectedId);
   const [showMsg, setShowMsg] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
@@ -107,7 +108,8 @@ function ToDoList(props) {
         return (
           <>
             {progress === 100 ? (
-              <span>{status}({twId ? newAt : eta})
+              <span>
+                {status}({twId ? newAt : eta})
               </span>
             ) : (
               <div className="progress-bar-dashboard">
@@ -393,7 +395,7 @@ function ToDoList(props) {
 
     breakData.map((e) => {
       if (e.id) selectedId.push(Number(e.id));
-      
+
       return e;
     });
 
@@ -473,7 +475,7 @@ function ToDoList(props) {
     const BreakPostData = [];
     setLoader(true);
     breakData.map((dt) => {
-      console.log('dt',dt);
+      console.log('dt', dt);
       return BreakPostData.push({
         id: dt.id,
         content: `${dt.selectedBreakOption.label}`,
@@ -741,7 +743,10 @@ function ToDoList(props) {
       <Loader showLoader={loader} needFullPage={false} />
       <section className="content-area">
         <div className="0">
-          <UserRestrictions permittedUsers={[2, 3, 4, 5, 6, 7]} roleId={userRole}>
+          <UserRestrictions
+            permittedUsers={[2, 3, 4, 5, 6, 7]}
+            roleId={userRole}
+          >
             <Card>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-between">
@@ -788,13 +793,14 @@ function ToDoList(props) {
                     dropdownContainerClass="mb-3"
                     selectedRowItems={selectedId}
                     onSelectRowsIndexes={async (rowIndex) => {
-                      console.log('rowIndex',rowIndex);
+                      console.log('rowIndex', rowIndex);
                       const arr = [...rowIndex];
-                      console.log('arr',arr);
+                      console.log('arr', arr);
                       const arrNew = [];
-                      console.log('arrNew',arrNew);
+                      console.log('arrNew', arrNew);
                       await arr.filter((e) => {
                         if (!arrNew.includes(e)) {
+                          console.log('e', e);
                           arrNew.push(e);
                         }
                         return e;
@@ -1080,8 +1086,9 @@ function ToDoList(props) {
                     type="submit"
                     disabled={disableButton || showSendReport}
                     // onClick={(e) => onBreakSubmit(e)}
-                    variant={`${!showSendReport ? 'primary ml-1' : 'secondary ml-1'
-                      }`}
+                    variant={`${
+                      !showSendReport ? 'primary ml-1' : 'secondary ml-1'
+                    }`}
                   >
                     Confirm
                   </Button>
@@ -1095,8 +1102,9 @@ function ToDoList(props) {
                   onClick={(e) => {
                     onSubmit(e);
                   }}
-                  variant={`${showSendReport ? 'primary ml-1' : 'secondary ml-1'
-                    }`}
+                  variant={`${
+                    showSendReport ? 'primary ml-1' : 'secondary ml-1'
+                  }`}
                 >
                   Send Report
                 </Button>

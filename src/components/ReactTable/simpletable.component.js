@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
 import Pagination from '../Pagination/pagination.component';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
+import ReactSelect from '../ReactSelect/reactSelect';
 
 const defaults = {
   columns: [],
@@ -18,9 +19,11 @@ const defaults = {
   role: '',
   emptyMessage: 'No record found.',
   bulkActionsLabel: 'Apply',
+  cancelLabel: 'Clear',
 };
 
-export default function SimpleTable(props) {
+
+const SimpleTable = (props) => {
   const {
     columns,
     rows,
@@ -36,69 +39,113 @@ export default function SimpleTable(props) {
     role,
     emptyMessage,
     bulkActionsLabel,
+    cancelLabel
   } = {
     ...defaults,
     ...props,
   };
-  const [allSelected, setAllSelected] = useState(false);
-  const [selectedAction, setSelectedAction] = useState('');
 
+  bulkActions.map((action) => {// eslint-disable-line
+    action.label = action.actionTitle;// eslint-disable-line
+    action.value = action.actionTitle;// eslint-disable-line
+  });
+
+  const [selectedAction, setSelectedAction] = useState('');
+  const [selectedActionIndex, setSelectedActionIndex] = useState('');
   const [selectedRows, setSelectedRows] = useState(
     rows.filter((row) => {
-      return selectedRowItems.includes(Number(row.id));
+      return selectedRowItems.includes(String(row.id));
     })
   );
   const [selectedRowIndexes, setSelectedRowIndexes] = useState([
     ...selectedRowItems,
   ]);
+  const [allSelectedPages, setAllSelectedPages] = useState([]);
   const allColumnIds = columns.map((column) => column.id);
 
-  useEffect(() => {
-    setSelectedRows(
-      rows.filter((row) => {
-        return selectedRowItems.includes(Number(row.id));
-      })
-    );
-  }, [rows]);
-
-  useEffect(() => {
-    setSelectedRowIndexes([...selectedRowItems]);
-  }, [selectedRowItems]);
-
-  const onSelectHead = (isChecked) => {
-    const selectedIndexes = [];
-    const selectedItems = rows.filter((row) => {
-      // eslint-disable-line
-      if (isChecked) selectedIndexes.push(Number(row.id));
-      return isChecked;
-    });
-    setSelectedRows([...selectedItems]);
-    setSelectedRowIndexes([...selectedIndexes]);
-    setAllSelected(isChecked);
-    if (onSelectRowsIndexes) {
-      onSelectRowsIndexes(selectedIndexes);
+  const onSelectHead = async (isChecked) => {
+    const selectedIndexes = [...selectedRowIndexes];
+    setSelectedRowIndexes([]);
+    const selectedItems = [...selectedRows];
+    for (let i = 0, n = rows.length; i < n; i++) {  // eslint-disable-line
+      const findRowIndex = await selectedItems.findIndex( // eslint-disable-line
+        (e) => e.id === rows[i].id
+      );
+      if (isChecked && findRowIndex === -1) {
+        selectedItems.push(rows[i]);
+        selectedIndexes.push(String(rows[i].id));
+      } else if (findRowIndex > -1 && !isChecked) {
+        selectedItems.splice(findRowIndex, 1);
+        selectedIndexes.splice(findRowIndex, 1);
+      }
+      if (i + 1 === n) {
+        setSelectedRows([...selectedItems]);
+        setSelectedRowIndexes([...selectedIndexes]);
+        // setAllSelected(isChecked);
+        const selectedPages = [...allSelectedPages];
+        setAllSelectedPages([]);
+        const currentPage = paginationProps.currentPage;
+        const isCurrentPageAddedAlready = await allSelectedPages.findIndex(  // eslint-disable-line
+          (e) => e === currentPage
+        );
+        if (isChecked && isCurrentPageAddedAlready === -1) {
+          selectedPages.push(currentPage);
+        } else if (!isChecked && isCurrentPageAddedAlready !== -1) {
+          selectedPages.splice(isCurrentPageAddedAlready, 1);
+        }
+        setAllSelectedPages([...selectedPages]);
+        if (onSelectRowsIndexes) {
+          onSelectRowsIndexes(selectedIndexes); 
+        }
+      }
     }
   };
 
-  const onSelectRow = (isChecked, rowIndex) => {
-    let selectedItems = [...selectedRows];
-    const selectedIndexes = [];
-    if (isChecked) {
-      selectedItems.push(rows[rowIndex]);
-    } else {
-      selectedItems = selectedItems.filter(
-        (j) => Number(j.id) !== Number(rows[rowIndex].id)
-      );
-    }
-    const selectedCount = selectedItems.filter((item) => {
-      selectedIndexes.push(Number(item.id));
-      return item;
-    }).length;
-    setSelectedRows(selectedItems);
-    setAllSelected(selectedCount === rows.length);
-    setSelectedRowIndexes([...selectedIndexes]);
-    if (onSelectRowsIndexes) {
-      onSelectRowsIndexes(selectedIndexes);
+  const onSelectRow = async (isChecked, rowIndex) => {
+    const selectedItems = [...selectedRows];
+    const selectedIndexes = [...selectedRowIndexes];
+    const rowId = rows[rowIndex].id;
+    for (let i = 0, n = rows.length; i < n; i++) {    // eslint-disable-line
+      if (rowId === rows[i].id) {
+        const findRowIndex = await selectedItems.findIndex(   // eslint-disable-line
+          (e) => e.id === rows[i].id
+        );
+        if (isChecked && findRowIndex === -1) {
+          selectedItems.push(rows[i]);
+          selectedIndexes.push(String(rows[i].id));
+        } else if (findRowIndex > -1 && !isChecked) {
+          selectedItems.splice(findRowIndex, 1);
+          selectedIndexes.splice(findRowIndex, 1);
+        }
+      }
+      if (i + 1 === n) {
+        let selectedCount = 0;
+        await rows.forEach((row) => {    // eslint-disable-line
+          if (selectedIndexes.includes(String(row.id))) {
+            selectedCount += 1;
+          }
+        });
+        setSelectedRows([...selectedItems]);
+        // setAllSelected(selectedCount === rows.length);
+        setSelectedRowIndexes([...selectedIndexes]);
+        const selectedPages = [...allSelectedPages];
+        const currentPage = paginationProps.currentPage;
+        const isCurrentPageAddedAlready = await allSelectedPages.findIndex(    // eslint-disable-line
+          (e) => e === currentPage
+        );
+        if (selectedCount === rows.length && isCurrentPageAddedAlready === -1) {
+          selectedPages.push(currentPage);
+        } else if (
+          selectedCount !== rows.length &&
+          isCurrentPageAddedAlready !== -1
+        ) {
+          selectedPages.splice(isCurrentPageAddedAlready, 1);
+        }
+        setAllSelectedPages([...selectedPages]);
+        if (onSelectRowsIndexes) {
+          onSelectRowsIndexes(selectedIndexes);
+        }
+      }
     }
   };
 
@@ -137,11 +184,7 @@ export default function SimpleTable(props) {
 
       const displayEmptyRow =
         emptyRender && emptyRender ? emptyRender() : <h4>{emptyMessage}</h4>;
-      return (
-        <>
-          <div className="text-center">{displayEmptyRow}</div>
-        </>
-      );
+      return <div className="float-left mb-3">{displayEmptyRow}</div>;
     } catch (err) {
       return (
         <div className="text-center">
@@ -151,60 +194,94 @@ export default function SimpleTable(props) {
     }
   };
 
+  const isAllSelected = () => {
+    return (
+      allSelectedPages &&
+      allSelectedPages.length > 0 &&
+      allSelectedPages.includes(paginationProps.currentPage)
+    );
+  };
+
   return (
     <>
-      <div className={`table-projects table-responsive ${tableContainerClass}`}>
-        {bulkActions && bulkActions.length > 0 && rows.length > 0 && (
-          <>
-            <div className={`mb-2 bulk-action-apply ${dropdownContainerClass}`}>
-              <select
-                style={{ width: '150px', borderRadius: '5px 0px 0px 5px' }}
-                value={selectedAction}
-                onBlur={() => {}}
-                onChange={(e) => {
-                  setSelectedAction(e.target.value);
-                }}
-              >
-                <option value="">Bulk Actions</option>
-                {bulkActions.map((action, index) => (
-                  <option value={index}>{action.actionTitle}</option>
-                ))}
-              </select>
+      {/* <NotificationContainer /> */}
 
-              <Button
-                className="apply-btn btn btn-primary"
-                onClick={() => {
-                  if (!selectedRowIndexes.length || !selectedAction) {
-                    swal({
-                      title:
-                        selectedRowIndexes.length && !selectedAction
-                          ? 'Please select atleast one action?'
-                          : 'Please select atleast one record?',
-                      icon: 'warning',
-                      dangerMode: true,
-                      buttons: true,
-                      closeOnClickOutside: false,
-                      allowOutsideClick: false,
-                    });
-                  }
-                  if (!selectedRowIndexes.length || !selectedAction) return;
-                  bulkActions[selectedAction].actionCallback(
-                    selectedRowIndexes,
-                    setAllSelected(false),
-                    setSelectedRows([]),
-                    setSelectedRowIndexes([]),
-                    setSelectedAction('')
-                  );
-                }}
-              >
-                {bulkActionsLabel}
-              </Button>
-            </div>
-          </>
-        )}
-        <table className={`table ${tableClass}`}>
-          {columns && columns.length > 0 && rows.length > 0 && (
-            <thead>
+      {bulkActions && bulkActions.length > 0 && rows.length > 0 && (
+        <div
+          className={`bulk-option mb-2 mt-2 bulk-action-apply d-flex ${dropdownContainerClass}`}
+        >
+          <ReactSelect
+            style={{ width: '150px' }}
+            className="table-bulk"
+            placeholder="Bulk Action"
+            onChange={(e) => {
+              if (e) {
+                const type = {};
+                type.label = e.label;
+                type.value = e.value;
+                setSelectedAction(type);
+                const idx =
+                  bulkActions &&
+                  bulkActions.findIndex((i) => i.value === e.value);
+                if (idx !== '') {
+                  setSelectedActionIndex(idx);
+                }
+              }
+            }}
+            value={selectedAction}
+            options={bulkActions}
+          />
+
+          <Button
+            className="ml-2"
+            onClick={() => {
+              if (!selectedRowIndexes.length || !selectedAction) {
+                swal({
+                  title:
+                    selectedRowIndexes.length && !selectedAction
+                      ? 'Please select atleast one action?'
+                      : 'Please select atleast one record?',
+                  icon: 'warning',
+                  dangerMode: true,
+                  buttons: true,
+                  closeOnClickOutside: false,
+                  allowOutsideClick: false,
+                });
+              }
+              if (!selectedRowIndexes.length || selectedActionIndex === '')
+                return;
+              bulkActions[selectedActionIndex].actionCallback(
+                selectedRowIndexes,
+                // setAllSelected(false),
+                setSelectedRows([]),
+                setSelectedRowIndexes([]),
+                setSelectedAction(''),
+                setAllSelectedPages([])
+              );
+            }}
+          >
+            {bulkActionsLabel}
+          </Button>
+          <Button
+            style={{ marginLeft: '5px' }}
+            variant='secondary'
+            onClick={() => {
+              // if (!selectedAction) return;
+              setSelectedAction('');
+              setSelectedActionIndex('')
+              setSelectedRows([]);
+              setSelectedRowIndexes([]);
+              setAllSelectedPages([]);
+            }}
+          >{cancelLabel}</Button>
+        </div>
+      )}
+      <div
+        className={`table-projects custom-table table-responsive ${tableContainerClass}`}
+      >
+        <table className={`table ${tableClass} table-striped`}>
+          {columns && columns.length > 0 && (
+            <thead className="table-header-box">
               <tr>
                 {showCheckbox && (
                   <th>
@@ -213,7 +290,8 @@ export default function SimpleTable(props) {
                         id="chkAll"
                         name="chkAll"
                         type="checkbox"
-                        checked={allSelected}
+                        // className="form-check-input"
+                        checked={isAllSelected()}
                         onChange={(e) => {
                           onSelectHead(e.target.checked);
                         }}
@@ -221,11 +299,12 @@ export default function SimpleTable(props) {
                     </div>
                   </th>
                 )}
-                {rows.length > 0 &&
+                {columns.length > 0 &&
                   columns.map((column, columnIndex) => (
                     <UserRestrictions
                       permittedUsers={column.roleAccess || []}
                       roleId={role || ''}
+                      key={columnIndex}
                     >
                       <DisplayViewComponent
                         display={
@@ -234,7 +313,11 @@ export default function SimpleTable(props) {
                             : true
                         }
                       >
-                        <th scope="col" key={`column-${columnIndex}`}>
+                        <th
+                          scope="col"
+                          key={`column-${columnIndex}`}
+                          className="table-header-row-box text-nowrap"
+                        >
                           <RenderColumn columnData={column} key={columnIndex} />
                         </th>
                       </DisplayViewComponent>
@@ -245,20 +328,17 @@ export default function SimpleTable(props) {
           )}
           <tbody>
             {rows.map((row, rowIndex) => (
-              <tr key={`row-${rowIndex}`} className={`${row.rowClass || ''}`}>
+              <tr key={`row-${rowIndex}`} className={row.rowClass}>
                 {showCheckbox && (
                   <th>
                     <div className="form-check">
                       <Form.Check
+                        // className="form-check-input"
                         id={`chk${row.id}`}
                         name={`chk${row.id}`}
                         value={row.id}
                         type="checkbox"
-                        // checked={selectedRowIndexes.includes(row.id)}
-                        checked={
-                          selectedRowItems.includes(Number(row.id)) ||
-                          selectedRowIndexes.includes(row.id)
-                        }
+                        checked={selectedRowIndexes.includes(String(row.id))}
                         onChange={(e) => {
                           onSelectRow(e.target.checked, rowIndex);
                         }}
@@ -278,7 +358,17 @@ export default function SimpleTable(props) {
                           : true
                       }
                     >
-                      <td>
+                      <td
+                        style={{
+                          backgroundColor: `${(!row.actions && row.color) ||
+                            (row.actions &&
+                              row.color &&
+                              columnIndex < allColumnIds.length - 1)
+                            ? row.color
+                            : ''
+                            }`,
+                        }}
+                      >
                         <RenderColumnData
                           key={rowDataId}
                           columnData={columns[columnIndex]}
@@ -297,10 +387,13 @@ export default function SimpleTable(props) {
         <EmptyRecordRender />
       </div>
       {showPagination &&
+        rows.length > 0 &&
         paginationProps &&
         paginationProps.itemsPerPage < paginationProps.totalItems && (
           <Pagination {...paginationProps} />
         )}
     </>
   );
-}
+};
+
+export default SimpleTable;
