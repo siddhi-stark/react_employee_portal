@@ -15,6 +15,7 @@ import Loader from '../../../components/Loader/index';
 import EmployeeListComponent from '../../Employee/employeeList.component';
 import SupportTicket from '../../SupportTicket/supportTicket.component';
 // import NoticePeriodLastDay from '../../Employees/noticePeriodLastDay.component';
+import NoticePeriodLastDay from '../../Employees/noticePeriodLastDay.component';
 
 function Dashboard() {
   const [signInTime, setSignInTime] = useState('');
@@ -258,9 +259,13 @@ function Dashboard() {
       getAppreciation();
       getUpcomingConfirmationEmployee();
     }
-    document.addEventListener('ProfileUpdate', () => {
-      getProfile();
-    }, []);
+    document.addEventListener(
+      'ProfileUpdate',
+      () => {
+        getProfile();
+      },
+      []
+    );
 
     SharedService.clockOut.subscribe((value) => {
       if (value) {
@@ -356,9 +361,9 @@ function Dashboard() {
       message:
         newData && newData.length && newData[0].greetMessage
           ? newData &&
-          newData.length &&
-          newData[0].greetMessage &&
-          newData[0].greetMessage
+            newData.length &&
+            newData[0].greetMessage &&
+            newData[0].greetMessage
           : newGreetData && newGreetData.length && newGreetData[0].message,
     };
 
@@ -684,6 +689,9 @@ function Dashboard() {
                     ))}
                 </>
               )}
+              <>
+            <NoticePeriodLastDay /> 
+              </>
               {anniversary && anniversary.length > 0 && (
                 <>
                   {anniversary &&
@@ -885,15 +893,15 @@ function Dashboard() {
 
                                       {(appr.comment_allow &&
                                         Number(empdata.id) ===
-                                        Number(UserID)) ||
+                                          Number(UserID)) ||
                                         (appr.comment_allow &&
                                           Number(empdata.id) !==
-                                          Number(UserID) && (
+                                            Number(UserID) && (
                                             <div className="birth-input-field mt-3">
                                               <TextInput
                                                 onInputChange={(e) => {
                                                   setCount(e.target.value);
-                                                  empdata.greetMessage = e.target.value; // eslint-disable-line
+                                                  empdata.greetMessage =e.target.value; // eslint-disable-line
                                                   setNewBirthdayData(
                                                     appreciationData
                                                   );
@@ -1002,7 +1010,10 @@ function Dashboard() {
                             <>
                               <div className="birthday-employees">
                                 <h5 className="card-title">
-                                  <a className="mt-2" href={`/applications/${empInterview.id}`}>
+                                  <a
+                                    className="mt-2"
+                                    href={`/applications/${empInterview.id}`}
+                                  >
                                     {i > 0 ? ', ' : ''} &nbsp;
                                     {empInterview.name}
                                   </a>
@@ -1020,7 +1031,7 @@ function Dashboard() {
                   <Card classNameName="dark-blue-bg mb-4 col-md-12">
                     <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
                       {confirmationEmployee &&
-                        confirmationEmployee.length > 0 ? (
+                      confirmationEmployee.length > 0 ? (
                         <div className="purple-bg card-header">
                           <span>Upcoming Confirmation</span>
                         </div>
@@ -1091,16 +1102,13 @@ function Dashboard() {
                 </div>
               )}
             </UserRestrictions>
-            {userRole === 7 &&
+            {userRole === 7 && (
               <>
                 <section>
-                  <SupportTicket
-                    data={dashboardKey}
-                    limit='5'
-                  />
+                  <SupportTicket data={dashboardKey} limit="5" />
                 </section>
               </>
-            }
+            )}
             {showClockIn && (
               <ToDoList
                 onMorningSendScrum={getDailyActivity}

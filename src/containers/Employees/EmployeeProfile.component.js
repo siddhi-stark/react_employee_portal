@@ -22,9 +22,9 @@ function EmployeeProfile(props) {
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});
-  console.log('employeeDetails', employeeDetails);
+  // console.log('employeeDetails', employeeDetails);
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
-  console.log('showPersonalDetails', showPersonalDetails);
+  // console.log('showPersonalDetails', showPersonalDetails);
   const [companyList, setCompanyList] = useState([]);
   const [title, setTitle] = useState('');
   const [employeeDocument, setEmployeeDocument] = useState([]);
@@ -38,7 +38,7 @@ function EmployeeProfile(props) {
   const [bondData, setBondData] = useState({});
   const [modalShow, setShowModal] = useState(false);
   const [lastworkingDate, setLastWorkingDate] = useState('');
-  console.log('lastworkingDate', lastworkingDate);
+  // console.log('lastworkingDate', lastworkingDate);
   const employeeID = match.params.id;
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
@@ -302,7 +302,7 @@ function EmployeeProfile(props) {
     }
   };
 
-  console.log('employeeDetails',employeeDetails);
+  // console.log('employeeDetails',employeeDetails);
 
   const submitForm = async () => {
     setShowLoader(true);
@@ -337,13 +337,13 @@ function EmployeeProfile(props) {
       return managers.push(item);
     })
 
-    console.log('managers',managers);
+    // console.log('managers',managers);
 
     employeeDetails?.assigned_team_leads.map((item)=>{
       return teamLeds.push(item);
     })
 
-    console.log('teamLeds',teamLeds)
+    // console.log('teamLeds',teamLeds)
 
     const postData = {
       full_name: employeeDetails?.full_name,
@@ -374,13 +374,13 @@ function EmployeeProfile(props) {
       last_working_date: lastworkingDate ? customFunctions.getDate(lastworkingDate) : null,
     };
 
-    console.log('postData', postData);
+    // console.log('postData', postData);
     // return;
     const { data } = await AuthApi.putDataToServer(
       `${Api.employeeUrl}${employeeDetails?.id}/`,
       postData
     );
-    console.log('data',data);
+    // console.log('data',data);
     if (data) {
       setShowLoader(false);
       swal(data && data.message[0]);
@@ -512,7 +512,7 @@ function EmployeeProfile(props) {
                     <Button
                       onClick={() => {
                         setShowModal(true);
-                        console.log('data123test');
+                        // console.log('data123test');
                       }}
                       type="button"
                       className="btn btn-primary col-1"

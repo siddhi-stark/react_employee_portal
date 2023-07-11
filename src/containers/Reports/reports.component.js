@@ -12,7 +12,7 @@ import customFunctions from '../../helper/customFunctions';
 function Reports(props) {
   const { match, location } = props;
   const state = useLocation();
-  console.log('state', state);
+  // console.log('state', state);
   // console.log('props',props);
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
@@ -24,12 +24,12 @@ function Reports(props) {
   const history = useHistory();
   const report = props;
 
-  console.log('report', report.match.params.id);
+  // console.log('report', report.match.params.id);
   const employeeReport = report.location.state
     ? report.location.state.employeeReport
     : '';
   const teamReport = report.location.state ? report.location.state : '';
-  console.log('teamReport', teamReport);
+  // console.log('teamReport', teamReport);
   const reporterName = report.location.state
     ? report.location.state.reporterName
     : '';
@@ -41,7 +41,7 @@ function Reports(props) {
 
  useEffect(()=>{
   setPage(state.state.pagination)
-  console.log("page----------",page);
+  // console.log("page----------",page);
  },)
 
   const clockin = location?.state?.clockin;

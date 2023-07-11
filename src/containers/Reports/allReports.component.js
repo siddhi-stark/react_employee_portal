@@ -36,7 +36,7 @@ function AllReports() {
   // console.log("currentPage]]]]]]]]]]]",state);
   // setSelectedEmployee(state?.state?.reporterName);
 
-console.log("selectedEmployeeselectedEmployee",selectedEmployee);
+// console.log("selectedEmployeeselectedEmployee",selectedEmployee);
 
   const [pagination, setPagination] = useState({
     current_page: 1,

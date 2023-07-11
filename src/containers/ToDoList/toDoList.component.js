@@ -31,7 +31,7 @@ function ToDoList(props) {
   const totalHours = hrsProps.totalHrs;
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
-  console.log('selectedId', selectedId);
+  // console.log('selectedId', selectedId);
   const [showMsg, setShowMsg] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
@@ -475,7 +475,7 @@ function ToDoList(props) {
     const BreakPostData = [];
     setLoader(true);
     breakData.map((dt) => {
-      console.log('dt', dt);
+      // console.log('dt', dt);
       return BreakPostData.push({
         id: dt.id,
         content: `${dt.selectedBreakOption.label}`,

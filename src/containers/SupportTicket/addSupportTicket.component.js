@@ -350,7 +350,7 @@ function AddSupportTicket(props) {
               <hr />
               {view ? (
                 <Row className="mb-5">
-                  {console.log('supportDetails', supportDetails)}
+                  {/* {console.log('supportDetails', supportDetails)} */}
                   <Col>
                     <Col><strong>TicketId: </strong>SST-{view}</Col>
                     <Col className='mt-2'><strong>Ticket type:</strong> {supportDetails?.ticket_type?.label}</Col>
