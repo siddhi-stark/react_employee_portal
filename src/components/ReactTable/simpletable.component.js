@@ -45,7 +45,7 @@ const SimpleTable = (props) => {
     ...props,
   };
 
-  bulkActions && bulkActions.map((action) => {// eslint-disable-line
+  bulkActions &&  bulkActions.map((action) => {// eslint-disable-line
     action.label = action.actionTitle;// eslint-disable-line
     action.value = action.actionTitle;// eslint-disable-line
   });
