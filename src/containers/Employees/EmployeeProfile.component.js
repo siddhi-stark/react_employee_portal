@@ -40,9 +40,10 @@ function EmployeeProfile(props) {
   const [lastworkingDate, setLastWorkingDate] = useState('');
   // console.log('lastworkingDate', lastworkingDate);
   const employeeID = match.params.id;
-
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
+
+  console.log('employeeDetails', employeeDetails.relieving_date);
 
   const getEmployeeDetails = async () => {
     setShowLoader(true);
@@ -331,17 +332,18 @@ function EmployeeProfile(props) {
     //   "last_working_date": "2021-01-01"
     //   }
 
-    const managers = []; const teamLeds = [];
+    const managers = [];
+    const teamLeds = [];
 
-    employeeDetails?.assigned_managers.map((item)=>{
+    employeeDetails?.assigned_managers.map((item) => {
       return managers.push(item);
-    })
+    });
 
     // console.log('managers',managers);
 
-    employeeDetails?.assigned_team_leads.map((item)=>{
+    employeeDetails?.assigned_team_leads.map((item) => {
       return teamLeds.push(item);
-    })
+    });
 
     // console.log('teamLeds',teamLeds)
 
@@ -356,22 +358,34 @@ function EmployeeProfile(props) {
       status: employeeDetails?.status,
       team_leads: teamLeds ? teamLeds : null,
       managers: managers ? managers : null,
-      notice_period_date: employeeDetails?.notice_period_date ? customFunctions.getDate(employeeDetails?.notice_period_date) : null,
+      notice_period_date: employeeDetails?.notice_period_date
+        ? customFunctions.getDate(employeeDetails?.notice_period_date)
+        : null,
       designation: employeeDetails ? employeeDetails.designation_id : null,
-      joining_date: employeeDetails && employeeDetails.date_joined
-        ? customFunctions.getDate(employeeDetails.date_joined)
-        : '',
-      confirmation_date: employeeDetails && employeeDetails.confirmation_date
-        ? customFunctions.getDate(employeeDetails.confirmation_date)
-        : null,
-      confirmed: employeeDetails && employeeDetails.confirmation_date ? true : false, // eslint-disable-line
-      relieving_date: employeeDetails && employeeDetails.relieving_date
-        ? customFunctions.getDate(employeeDetails.relieving_date)
-        : null,
+      joining_date:
+        employeeDetails && employeeDetails.date_joined
+          ? customFunctions.getDate(employeeDetails.date_joined)
+          : '',
+      confirmation_date:
+        employeeDetails && employeeDetails.confirmation_date
+          ? customFunctions.getDate(employeeDetails.confirmation_date)
+          : null,
+      confirmed:
+        employeeDetails && employeeDetails.confirmation_date ? true : false, // eslint-disable-line
+      relieving_date:
+        employeeDetails && employeeDetails.relieving_date
+          ? customFunctions.getDate(employeeDetails.relieving_date)
+          : null,
       relieved: employeeDetails.relieved ? true : false, // eslint-disable-line
-      dob: employeeDetails.dob ? customFunctions.getDate(employeeDetails.dob) : null,
-      last_relieving_date: lastworkingDate ? customFunctions.getDate(lastworkingDate) : null,
-      last_working_date: lastworkingDate ? customFunctions.getDate(lastworkingDate) : null,
+      dob: employeeDetails.dob
+        ? customFunctions.getDate(employeeDetails.dob)
+        : null,
+      last_relieving_date: lastworkingDate
+        ? customFunctions.getDate(lastworkingDate)
+        : null,
+      last_working_date: lastworkingDate
+        ? customFunctions.getDate(lastworkingDate)
+        : null,
     };
 
     // console.log('postData', postData);
@@ -385,8 +399,8 @@ function EmployeeProfile(props) {
       setShowLoader(false);
       swal(data && data.message[0]);
       setShowModal(false);
-    //   // onPersonalDetailChanges();
-    }else{
+      //   // onPersonalDetailChanges();
+    } else {
       swal(data && data.message[0]);
     }
   };
@@ -468,8 +482,8 @@ function EmployeeProfile(props) {
                         Joining Date -{' '}
                         {employeeDetails.date_joined
                           ? customFunctions.getDMYDate(
-                            employeeDetails.date_joined
-                          )
+                              employeeDetails.date_joined
+                            )
                           : ''}
                       </h6>
                     </div>
@@ -491,41 +505,47 @@ function EmployeeProfile(props) {
                           Expected Relieving Date -{' '}
                           {employeeDetails.relieving_date
                             ? customFunctions.getDMYDate(
-                              employeeDetails.relieving_date
-                            )
+                                employeeDetails.relieving_date
+                              )
                             : ''}
                         </h6>
                       ) : (
                         <h6>
                           {employeeDetails.confirmation_date
-                            ? `Confirmation Date -` : `Expected Confirmation Date-`}
+                            ? `Confirmation Date -`
+                            : `Expected Confirmation Date-`}
                           {employeeDetails.confirmation_date
                             ? customFunctions.getDMYDate(
-                              employeeDetails.confirmation_date
-                            )
-                            : employeeDetails.expected_confirmation_date && customFunctions.getDMYDate(
-                              employeeDetails.expected_confirmation_date
-                            )}
+                                employeeDetails.confirmation_date
+                              )
+                            : employeeDetails.expected_confirmation_date &&
+                              customFunctions.getDMYDate(
+                                employeeDetails.expected_confirmation_date
+                              )}
                         </h6>
                       )}
                     </div>
-                    <Button
-                      onClick={() => {
-                        setShowModal(true);
-                        // console.log('data123test');
-                      }}
-                      type="button"
-                      className="btn btn-primary col-1"
-                    >
-                      Relieve Now
-                    </Button>
+                    {employeeDetails.relieving_date === new Date() ? (
+                      <Button
+                        onClick={() => {
+                          setShowModal(true);
+                          // console.log('data123test');
+                        }}
+                        type="button"
+                        className="btn btn-primary col-1"
+                      >
+                        Relieve Now
+                      </Button>
+                    ) : null}
                     <div className="col-md-5">
                       {employeeDetails &&
                         !employeeDetails.confirmation_date &&
                         !employeeDetails.relieving_date && (
                           <button
                             onClick={() => {
-                              history.push('/confirmation', { employeeID: Number(employeeID) });
+                              history.push('/confirmation', {
+                                employeeID: Number(employeeID),
+                              });
                             }}
                             type="button"
                             className="btn btn-primary"
@@ -847,9 +867,9 @@ function EmployeeProfile(props) {
         label={<h5>Last Releaving Date</h5>}
         modalBody={
           <Row>
-            <div className='event-img'>
+            <div className="event-img">
               <Datepicker
-                label='Select last releaving date'
+                label="Select last releaving date"
                 className="form-control"
                 selected={lastworkingDate}
                 onChange={(e) => {
@@ -860,7 +880,7 @@ function EmployeeProfile(props) {
                 name="startDate"
                 dateFormat="dd/MM/yyyy"
                 placeholder="Select Date"
-              // maxDate={new Date()}
+                // maxDate={new Date()}
               />
             </div>
           </Row>
