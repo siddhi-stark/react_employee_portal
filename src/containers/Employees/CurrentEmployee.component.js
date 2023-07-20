@@ -119,8 +119,15 @@ function CurrentEmployee() {
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       setShowLoader(false);
+      let newEmp = [];
+      data && data.data && data.data?.length > 0 && data.data.map((item)=>{
+if(item?.on_notice_period == false){
+  newEmp.push(item);
+}
+      })
+      // setEmployee([...newEmp]);
       setEmployee([...data.data]);
-
+console.log('data.data',data.data);
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));

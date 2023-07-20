@@ -19,7 +19,6 @@ function Employees() {
   useEffect(() => {
     setTitle('Employees');
   }, []);
-
   const handleSelect = (emp) => {
     if (emp === 'currentEmployee') {
       setKey('currentEmployee');

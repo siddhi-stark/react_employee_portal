@@ -66,6 +66,9 @@ const SelectAsyncPaginate = ({
       params.roleId = 2
     }
     
+    if(apiname == "employeeUrl"){
+      params.old_employee = 'True'
+    }
     const url = customFunctions.generateUrl(endpoint, params);
 
     if (!searchQuery && apiTotalCount !== 0 && apiTotalCount == totalLoadLength)
@@ -459,13 +462,13 @@ const SelectAsyncPaginate = ({
         data.data &&
         data.data.length > 0
       ) {
-        setApiTotalCount(data.data.count);
+        setApiTotalCount(data.paginator.total_count);
         setTotalLoadLength(
           Number(totalLoadLength) + Number(data.data.length)
         );
         let adminData = [];
+        console.log("dt+++++++++++++",data);
         data.data.map((dt) => {
-          console.log("dt+++++++++++++",dt);
           if([1,7].includes(dt.role_id)) return
           adminData.push({
             name:dt.full_name,

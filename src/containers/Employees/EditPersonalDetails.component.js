@@ -11,12 +11,16 @@ import FormSections from './editEmployee.json';
 function EditPersonalDetails(props) {
   const { handleModalCLose, onPersonalDetailChanges } = props;
   // Variable declarations
+  // const history = useHistory()
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [isShowLoader, setShowLoader] = useState(false);
+  const [testDate, setDate] = useState(null);
+  console.log('test',testDate);
 
+  console.log('defaultValues',defaultValues);
   useEffect(() => {
     const employeeId = customFunctions.getLocalStorage('id');
     if (employeeId) {
@@ -25,6 +29,7 @@ function EditPersonalDetails(props) {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
           const itemData = item;
+          console.log('itemData',itemData);
           if (item.name === 'full_name') itemData.disabled = true;
           if (item.name === 'joining_date') itemData.disabled = true;
           if (item.name === 'email') itemData.disabled = true;
@@ -47,7 +52,7 @@ function EditPersonalDetails(props) {
       });
       updateJsonSchema([...updatedSchema]);
     }
-  }, []);
+  }, [defaultValues]);
 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -59,6 +64,7 @@ function EditPersonalDetails(props) {
   }, []);
 
   const submitForm = async (formValues) => {
+    
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('id');
 
@@ -79,9 +85,18 @@ function EditPersonalDetails(props) {
       relieving_date: formValues.relieving_date
         ? customFunctions.getDate(formValues.relieving_date)
         : null,
-      relieved: formValues.relieving_date ? true : false, // eslint-disable-line
+      // relieved: false, // eslint-disable-line
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : null,
+      notice_period_date :formValues.notice_period_start_date
+      ? customFunctions.getDate(formValues.notice_period_start_date)
+      : null,
+      last_working_date : formValues.notice_period_end_date
+      ? customFunctions.getDate(formValues.notice_period_end_date)
+      : null,
+      // on_notice_period: formValues.notice_period_start_date && formValues.notice_period_end_date ? true : false
     };
+    console.log('postData',postData);
+    console.log('formValues',formValues);
 
     const { data } = await AuthApi.putDataToServer(
       `${Api.employeeUrl}${id}/`,
@@ -92,6 +107,11 @@ function EditPersonalDetails(props) {
       swal(data && data.message[0]);
       handleModalCLose(false);
       onPersonalDetailChanges();
+      // history.push('/employees',{
+      //   state:{
+      //     key:'noticePeriod'
+      //   }
+      // })
     }
   };
 
@@ -104,6 +124,7 @@ function EditPersonalDetails(props) {
     );
     if (data && data.success) {
       setShowLoader(false);
+      console.log('dataaa',data.data);
       data.data.confirmation_date = data.data.confirmation_date
         ? new Date(customFunctions.getDate(data.data.confirmation_date))
         : '';
@@ -116,18 +137,26 @@ function EditPersonalDetails(props) {
       data.data.joining_date = data.data.date_joined
         ? new Date(customFunctions.getDate(data.data.date_joined))
         : '';
-
+        data.data.notice_period_date = data.data.notice_period_date
+        ? new Date(customFunctions.getDate(data.data.notice_period_date))
+        : '';
+        data.data.last_working_date = data.data.last_working_date
+        ? new Date(customFunctions.getDate(data.data.last_working_date))
+        : '';
       const ds = data.data.designation_id
         ? {
             label: data.data.designation_name,
             value: data.data.designation_id,
           }
         : '';
-
+        setDate(data.data.notice_period_date = data.data.notice_period_date
+          ? (customFunctions.getDate(data.data.notice_period_date))
+          : '')
       const obj = {
         ...data.data,
         designation: ds,
       };
+      console.log('obj',obj);
       updateDefaultValues({ ...obj });
     }
   };

@@ -43,7 +43,7 @@ function EmployeeProfile(props) {
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
 
-  console.log('employeeDetails', employeeDetails.relieving_date);
+  console.log('employeeDetails', employeeDetails);
 
   const getEmployeeDetails = async () => {
     setShowLoader(true);
@@ -373,10 +373,10 @@ function EmployeeProfile(props) {
       confirmed:
         employeeDetails && employeeDetails.confirmation_date ? true : false, // eslint-disable-line
       relieving_date:
-        employeeDetails && employeeDetails.relieving_date
-          ? customFunctions.getDate(employeeDetails.relieving_date)
+      lastworkingDate
+          ? customFunctions.getDate(lastworkingDate)
           : null,
-      relieved: employeeDetails.relieved ? true : false, // eslint-disable-line
+      relieved: lastworkingDate ? true : false, // eslint-disable-line
       dob: employeeDetails.dob
         ? customFunctions.getDate(employeeDetails.dob)
         : null,
@@ -386,6 +386,7 @@ function EmployeeProfile(props) {
       last_working_date: lastworkingDate
         ? customFunctions.getDate(lastworkingDate)
         : null,
+        is_relieved : lastworkingDate ? true : false
     };
 
     // console.log('postData', postData);
@@ -500,12 +501,12 @@ function EmployeeProfile(props) {
                       <h6>Contact No - {employeeDetails.mobile}</h6>
                     </div>
                     <div className="col-md-4">
-                      {employeeDetails.relieving_date ? (
+                      {employeeDetails.on_notice_period ? (
                         <h6>
                           Expected Relieving Date -{' '}
-                          {employeeDetails.relieving_date
+                          {employeeDetails.last_working_date
                             ? customFunctions.getDMYDate(
-                                employeeDetails.relieving_date
+                                employeeDetails.last_working_date
                               )
                             : ''}
                         </h6>
@@ -525,7 +526,7 @@ function EmployeeProfile(props) {
                         </h6>
                       )}
                     </div>
-                    {employeeDetails.relieving_date === new Date() ? (
+                    {employeeDetails?.on_notice_period  ? (
                       <Button
                         onClick={() => {
                           setShowModal(true);
@@ -540,7 +541,7 @@ function EmployeeProfile(props) {
                     <div className="col-md-5">
                       {employeeDetails &&
                         !employeeDetails.confirmation_date &&
-                        !employeeDetails.relieving_date && (
+                        !employeeDetails.relieving_date && !employeeDetails?.on_notice_period && (
                           <button
                             onClick={() => {
                               history.push('/confirmation', {
