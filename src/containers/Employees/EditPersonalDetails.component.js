@@ -158,15 +158,15 @@ function EditPersonalDetails(props) {
       };
       const noticeDate = obj
       updateDefaultValues({
-        notice_period_end_date:new Date(customFunctions.getDate(noticeDate.last_working_date)),
-        notice_period_start_date:new Date(customFunctions.getDate(noticeDate.notice_period_date)),
-        dob:new Date(customFunctions.getDate(noticeDate.dob)),
+        notice_period_end_date: noticeDate.last_working_date ? new Date(customFunctions.getDate(noticeDate.last_working_date)): null,
+        notice_period_start_date: noticeDate.notice_period_date ? new Date(customFunctions.getDate(noticeDate.notice_period_date)) : null,
+        dob: noticeDate.dob ? new Date(customFunctions.getDate(noticeDate.dob)): null,
         // confirmation_date:new Date(customFunctions.getDate(noticeDate?.confirmation_date))
-        email:noticeDate.email,
-        full_name:noticeDate.full_name,
-        joining_date:new Date(customFunctions.getDate(noticeDate.date_joined)),
+        email:noticeDate.email ?  noticeDate.email : null,
+        full_name:noticeDate.full_name ? noticeDate.full_name : null,
+        joining_date: noticeDate.date_joined ? new Date(customFunctions.getDate(noticeDate.date_joined)) : null,
         designation:{
-          label:noticeDate.designation_name
+          label:noticeDate?.designation_name
         }
       })
       console.log("objjjjjjj",noticeDate.last_working_date);
