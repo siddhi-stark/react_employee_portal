@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Button, Image, Row } from 'react-bootstrap';
 import { Link, useHistory, withRouter } from 'react-router-dom';
@@ -18,6 +19,7 @@ import EditPersonalDetails from './EditPersonalDetails.component';
 // import {  } from '../../components/FormInputs/index';
 
 function EmployeeProfile(props) {
+  console.log("employeee profileeee");
   const { match } = props;
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
@@ -43,7 +45,6 @@ function EmployeeProfile(props) {
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
 
-  console.log('employeeDetails', employeeDetails);
 
   const getEmployeeDetails = async () => {
     setShowLoader(true);
