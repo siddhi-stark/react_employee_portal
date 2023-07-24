@@ -156,7 +156,7 @@ function EditPersonalDetails(props) {
         ...data.data,
         designation: ds,
       };
-      console.log('obj',obj);
+      // console.log('obj',obj);
       updateDefaultValues({ ...obj });
     }
   };

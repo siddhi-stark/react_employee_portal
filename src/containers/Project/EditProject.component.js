@@ -197,7 +197,6 @@ function EditProject(props) {
         completion: complt,
         addmore: [...addmoreData],
       };
-
       updateDefaultValues({ ...obj }); // updateDefaultValues(data);
     }
   };
