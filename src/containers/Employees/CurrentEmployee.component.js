@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -22,21 +23,25 @@ function CurrentEmployee() {
   const currentdate = new Date();
   const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
   const [employeeId, setEmployeeId] = useState(null);
-  const validator = useRef(new SimpleReactValidator({
-    validators: {
-      emailValidate: {
-        message: (('The :attribute domain name should be starkdigital.net.') || ('The :attribute domain name should be starkdigital.in.')),
-        rule: (val, params, valid) => {
-          return (
-            (valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) ||
-             valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.in$/i) ||
-              valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.com$/i)) &&
-            params.indexOf(val) === -1
-          );
+  const validator = useRef(
+    new SimpleReactValidator({
+      validators: {
+        emailValidate: {
+          message:
+            'The :attribute domain name should be starkdigital.net.' ||
+            'The :attribute domain name should be starkdigital.in.',
+          rule: (val, params, valid) => {
+            return (
+              (valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.net$/i) ||
+                valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.in$/i) ||
+                valid.helpers.testRegex(val, /^[\w.+-]+@starkdigital.com$/i)) &&
+              params.indexOf(val) === -1
+            );
+          },
         },
-      }
-    }
-  }));
+      },
+    })
+  );
 
   const [employee, setEmployee] = useState([]);
   const [totalCount, setTotalCount] = useState(9);
@@ -85,14 +90,14 @@ function CurrentEmployee() {
   let timmer = null;
   const history = useHistory();
 
-    const getUserRole = async () => {
-      const roleId = await localStorage.getItem('group');
-      updateCurrentUser(Number(roleId));
-    };
-  
-    useEffect(() => {
-      getUserRole();
-    }, []);
+  const getUserRole = async () => {
+    const roleId = await localStorage.getItem('group');
+    updateCurrentUser(Number(roleId));
+  };
+
+  useEffect(() => {
+    getUserRole();
+  }, []);
 
   const getEmployeeData = async (pageNo = 1) => {
     setShowLoader(true);
@@ -108,14 +113,21 @@ function CurrentEmployee() {
         filterData && filterData.position ? filterData.position.value : '',
       user_id:
         filterData && filterData.employee ? filterData.employee.value : '',
-      hide_admin:  1,  
+      hide_admin: 1,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       setShowLoader(false);
+      let newEmp = [];
+      data && data.data && data.data?.length > 0 && data.data.map((item)=>{
+if(item?.on_notice_period == false){
+  newEmp.push(item);
+}
+      })
+      // setEmployee([...newEmp]);
       setEmployee([...data.data]);
-
+console.log('data.data',data.data);
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));
@@ -135,14 +147,17 @@ function CurrentEmployee() {
 
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
+      `${Api.employeeUrl}?type=all`
     );
 
-    const dpOptions =
-      (await data) &&
-      data.data.length > 0 &&
+    // &is_dropdown=1
+    // const dpOptions =
+    //   (await data) &&
+    const dpOptions = [];
+    data.data.length > 0 &&
       data.data.map((op) => {
-        return { label: op.full_name, value: op.id };
+        if([1].includes(op.role_id)) return;
+        dpOptions.push({ label: op.full_name, value: op.id });
       });
     options.employee = dpOptions;
     const allOptions = options;
@@ -253,18 +268,18 @@ function CurrentEmployee() {
       setSelectedDesignationOption(
         data.data.designation_id
           ? {
-            label: data.data.designation_name,
-            id: data.data.designation_id,
-          }
+              label: data.data.designation_name,
+              id: data.data.designation_id,
+            }
           : ''
       );
 
       setSelectedRole(
         data.data.role_id
           ? {
-            label: data.data.role_name,
-            id: data.data.role_id,
-          }
+              label: data.data.role_name,
+              id: data.data.role_id,
+            }
           : ''
       );
 
@@ -682,17 +697,29 @@ function CurrentEmployee() {
   };
 
   const getPasswordValidation = () => {
-    if (employeeId && validator.current.fields && validator.current.fields.password !== undefined) {
+    if (
+      employeeId &&
+      validator.current.fields &&
+      validator.current.fields.password !== undefined
+    ) {
       validator.current.fields.password = true;
     }
-    return !employeeId ? validator.current.message('password', password, 'required|min:6') : '';
+    return !employeeId
+      ? validator.current.message('password', password, 'required|min:6')
+      : '';
   };
 
   const getTwEmployeeValidation = () => {
-    if (employeeId && validator.current.fields && validator.current.fields.TWEmployee !== undefined) {
+    if (
+      employeeId &&
+      validator.current.fields &&
+      validator.current.fields.TWEmployee !== undefined
+    ) {
       validator.current.fields.TWEmployee = true;
     }
-    return !employeeId ? validator.current.message('TWEmployee', selectedEmployee, 'required') : '';
+    return !employeeId
+      ? validator.current.message('TWEmployee', selectedEmployee, 'required')
+      : '';
   };
 
   // validator.purgeFields();
@@ -711,22 +738,22 @@ function CurrentEmployee() {
                   Number(userRole) === 5 ||
                   // Number(userRole) === 7 ||
                   Number(userRole) === 6) && (
-                    <Button
-                      variant="primary"
-                      className="float-end"
-                      title="Add Employee"
-                      onClick={() => {
-                        setModalShow(true);
-                        setAddButton(true);
-                        setEmployeeId('');
-                        setEmail('');
-                        setPassword('');
-                        setSelectedTeamLead('');
-                      }}
-                    >
-                      Add Employee
-                    </Button>
-                  )}
+                  <Button
+                    variant="primary"
+                    className="float-end"
+                    title="Add Employee"
+                    onClick={() => {
+                      setModalShow(true);
+                      setAddButton(true);
+                      setEmployeeId('');
+                      setEmail('');
+                      setPassword('');
+                      setSelectedTeamLead('');
+                    }}
+                  >
+                    Add Employee
+                  </Button>
+                )}
               </div>
               <hr />
               <div className="filter-box-main">
@@ -781,7 +808,7 @@ function CurrentEmployee() {
                         </span>
                       </Col>
                       <Col className="col-md-8">
-                        {(Number(userRole) === 1) && (
+                        {Number(userRole) === 1 && (
                           <a
                             href="#"
                             className="float-end ml-2"
@@ -799,24 +826,24 @@ function CurrentEmployee() {
                           Number(userRole) === 5 ||
                           // Number(userRole) === 7 ||
                           Number(userRole) === 6) && (
-                            <a
-                              href="#"
-                              className="float-end"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setModalShow(true);
-                                setEmployeeId(emp.id);
-                                getEmployeeById(emp.id);
-                                setAddButton(true);
-                                setCntClearFilter(cntClearFilter + 1);
-                                getPasswordValidation();
-                                getTwEmployeeValidation();
-                              }}
-                            >
-                              <Image src="/images/edit-button.svg" />
-                            </a>
-                          )}
+                          <a
+                            href="#"
+                            className="float-end"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setModalShow(true);
+                              setEmployeeId(emp.id);
+                              getEmployeeById(emp.id);
+                              setAddButton(true);
+                              setCntClearFilter(cntClearFilter + 1);
+                              getPasswordValidation();
+                              getTwEmployeeValidation();
+                            }}
+                          >
+                            <Image src="/images/edit-button.svg" />
+                          </a>
+                        )}
                         <Card.Title>{emp.name}</Card.Title>
                         <p className="card-text employee-details">
                           {emp.full_name}
@@ -827,11 +854,31 @@ function CurrentEmployee() {
                     <Row className="mt-3">
                       <Col className="col-md-12">
                         <p className="text-primary confirmation-date">
-                          {emp.date_joined && `Joining Date- ${customFunctions.getDMYDate(emp.date_joined)}`} {emp.date_joined && <br />}
-                          {emp.confirmation_date && `Confirmation Date- ${customFunctions.getDMYDate(emp.confirmation_date)}`} {emp.confirmation_date && <br />}
-                          {(emp.expected_confirmation_date && !emp.confirmation_date) && `Expected Confirmation Date- ${customFunctions.getDMYDate(emp.expected_confirmation_date)}`}
-                          {(emp.expected_confirmation_date && !emp.confirmation_date) && <br />}
-                          {(emp.on_notice_period && emp.notice_period_date) && `Relieving Date- ${customFunctions.getDMYDate(emp.relieving_date)}`}{(emp.on_notice_period && emp.notice_period_date) && <br />}
+                          {emp.date_joined &&
+                            `Joining Date- ${customFunctions.getDMYDate(
+                              emp.date_joined
+                            )}`}{' '}
+                          {emp.date_joined && <br />}
+                          {emp.confirmation_date &&
+                            `Confirmation Date- ${customFunctions.getDMYDate(
+                              emp.confirmation_date
+                            )}`}{' '}
+                          {emp.confirmation_date && <br />}
+                          {emp.expected_confirmation_date &&
+                            !emp.confirmation_date &&
+                            `Expected Confirmation Date- ${customFunctions.getDMYDate(
+                              emp.expected_confirmation_date
+                            )}`}
+                          {emp.expected_confirmation_date &&
+                            !emp.confirmation_date && <br />}
+                          {emp.on_notice_period &&
+                            emp.notice_period_date &&
+                            `Relieving Date- ${customFunctions.getDMYDate(
+                              emp.relieving_date
+                            )}`}
+                          {emp.on_notice_period && emp.notice_period_date && (
+                            <br />
+                          )}
                         </p>
                         <h6>
                           {' '}
@@ -963,22 +1010,23 @@ function CurrentEmployee() {
                   )}
                 />
               </Col>
-              {[1, 2, 7].includes(userRole) ?
+              {[1, 2, 7].includes(userRole) ? (
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
                     label="Password"
                     autocomplete="off"
-                    asterisk={employeeId ? null : '*'} 
+                    asterisk={employeeId ? null : '*'}
                     containerClass="form-group"
                     type="password"
                     // minlength="6"
                     name="passwordTitle"
                     value={password}
                     placeholder="Enter Password"
-                    errorMessage={!userRole === 1|| getPasswordValidation()}
+                    errorMessage={!userRole === 1 || getPasswordValidation()}
                   />
-                </Col> : null}
+                </Col>
+              ) : null}
               <Col sm={6}>
                 <TextInput
                   onInputChange={(e) => {
@@ -1014,11 +1062,14 @@ function CurrentEmployee() {
                   onChange={(e) => {
                     setJoiningDate(e);
                   }}
-                  errorMessage={joiningDate && validator.current.message(
-                    'Joining Date',
-                    joiningDate,
-                    'required'
-                  )}
+                  errorMessage={
+                    joiningDate &&
+                    validator.current.message(
+                      'Joining Date',
+                      joiningDate,
+                      'required'
+                    )
+                  }
                 />
               </Col>
 
@@ -1117,11 +1168,11 @@ function CurrentEmployee() {
                   onChange={(e) => {
                     setDate(e);
                   }}
-                // errorMessage={validator.current.message(
-                //   'DOB',
-                //   date,
-                //    `required | before_or_equal:${maxdate}`
-                // )}
+                  // errorMessage={validator.current.message(
+                  //   'DOB',
+                  //   date,
+                  //    `required | before_or_equal:${maxdate}`
+                  // )}
                 />
               </Col>
 

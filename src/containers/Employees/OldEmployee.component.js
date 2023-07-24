@@ -24,13 +24,11 @@ function OldEmployee() {
   const [filterData, setFilterData] = useState({});
   const [employeeArr, setEmployeeArr] = useState('');
   const [empClear, setEmpClear] = useState();
-  console.log('empClear', empClear);
   const [positionArr, setPositionArr] = useState('');
   const [position, setPosition] = useState('');
   const [count, forceUpdate] = useState(0);
   const [filterErr, setFilterErr] = useState('');
   const history = useHistory();
-  console.log('position', position);
 
   const getEmployee = async (pageNo = 1, filter) => {
     // setShowLoader(true);
@@ -53,8 +51,17 @@ function OldEmployee() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
-      console.log('data--------------', data);
       setShowLoader(false);
+    //   const dpOptions = [];
+    // data.data.length > 0 &&
+    //   data.data.map((op) => {
+    //     console.log('22 opp',op);
+    //     if([1].includes(op.role_id)) return;
+    //     dpOptions.push({ label: op.full_name, value: op.id });
+    //   });
+    // options.employee = dpOptions;
+    // const allOptions = options;
+    // await updateOptions({ ...allOptions });
       setEmployee([...data.data]);
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
@@ -83,7 +90,8 @@ function OldEmployee() {
   useEffect(() => {
     setTitle('Old Employees');
     getEmployee(1);
-    getEmployeeName();
+    console.log('usee effect');
+    // getEmployeeName();
     getPosition();
   }, []);
   // useEffect(() => {
@@ -107,7 +115,9 @@ function OldEmployee() {
       (await data) &&
       data.data.length > 0 &&
       data.data.map((op) => {
-        return { label: op.full_name, value: op.id };
+        if(![1].includes(op.role_id)){
+          return { label: op.full_name, value: op.id };
+        }
       });
     options.employee = dpOptions;
     const allOptions = options;
@@ -133,13 +143,12 @@ function OldEmployee() {
   };
 
   const isClear = () => {
-    console.log('isclearrr');
     setFilterErr('');
     setPosition('');
     setEmployee([]);
     setEmpClear('');
     forceUpdate(count + 1);
-    getEmployeeName();
+    // getEmployeeName();
     getEmployee();
     // onClearemp();
   };
@@ -175,7 +184,7 @@ function OldEmployee() {
                     // label="Select employee"
                     // asterisk="*"
                     apiname={'employeeUrl'}
-                    endpoint={`${Api.employeeUrl}?old_employee=True&page=1&limit=10`}
+                    endpoint={`${Api.employeeUrl}`}
                     placeholder="Select Employee"
                     // options={designationValues}
                     value={empClear}

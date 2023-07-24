@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -9,13 +10,16 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './editEmployee.json';
 
 function EditPersonalDetails(props) {
+  console.log("editttttttt");
   const { handleModalCLose, onPersonalDetailChanges } = props;
   // Variable declarations
+  // const history = useHistory()
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [isShowLoader, setShowLoader] = useState(false);
+  const [testDate, setDate] = useState(null);
 
   useEffect(() => {
     const employeeId = customFunctions.getLocalStorage('id');
@@ -47,7 +51,7 @@ function EditPersonalDetails(props) {
       });
       updateJsonSchema([...updatedSchema]);
     }
-  }, []);
+  }, [defaultValues]);
 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -59,6 +63,7 @@ function EditPersonalDetails(props) {
   }, []);
 
   const submitForm = async (formValues) => {
+    
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('id');
 
@@ -79,9 +84,17 @@ function EditPersonalDetails(props) {
       relieving_date: formValues.relieving_date
         ? customFunctions.getDate(formValues.relieving_date)
         : null,
-      relieved: formValues.relieving_date ? true : false, // eslint-disable-line
+      // relieved: false, // eslint-disable-line
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : null,
+      notice_period_date :formValues.notice_period_start_date
+      ? customFunctions.getDate(formValues.notice_period_start_date)
+      : null,
+      last_working_date : formValues.notice_period_end_date
+      ? customFunctions.getDate(formValues.notice_period_end_date)
+      : null,
+      // on_notice_period: formValues.notice_period_start_date && formValues.notice_period_end_date ? true : false
     };
+  
 
     const { data } = await AuthApi.putDataToServer(
       `${Api.employeeUrl}${id}/`,
@@ -92,6 +105,11 @@ function EditPersonalDetails(props) {
       swal(data && data.message[0]);
       handleModalCLose(false);
       onPersonalDetailChanges();
+      // history.push('/employees',{
+      //   state:{
+      //     key:'noticePeriod'
+      //   }
+      // })
     }
   };
 
@@ -103,6 +121,8 @@ function EditPersonalDetails(props) {
       `${Api.employeeUrl}${id}/`
     );
     if (data && data.success) {
+      console.log("data-----------",data.data)
+      console.log("DOB------->>>>",new Date(customFunctions.getDate(data.data.dob)));
       setShowLoader(false);
       data.data.confirmation_date = data.data.confirmation_date
         ? new Date(customFunctions.getDate(data.data.confirmation_date))
@@ -116,19 +136,43 @@ function EditPersonalDetails(props) {
       data.data.joining_date = data.data.date_joined
         ? new Date(customFunctions.getDate(data.data.date_joined))
         : '';
-
+        // data.data.notice_period_date = data.data.notice_period_date
+        // ? customFunctions.getDMYDate(data.data.notice_period_date)
+        // : '';
+        // data.data.last_working_date = data.data.last_working_date
+        // ? customFunctions.getDMYDate(data.data.last_working_date)
+        // : '';
       const ds = data.data.designation_id
         ? {
             label: data.data.designation_name,
             value: data.data.designation_id,
           }
         : '';
+        setDate(data.data.notice_period_date = data.data.notice_period_date
+          ? (customFunctions.getDate(data.data.notice_period_date))
+          : '')
 
       const obj = {
         ...data.data,
         designation: ds,
       };
+      // console.log('obj',obj);
       updateDefaultValues({ ...obj });
+      const noticeDate = obj
+      updateDefaultValues({
+        notice_period_end_date: noticeDate.last_working_date ? new Date(customFunctions.getDate(noticeDate.last_working_date)): null,
+        notice_period_start_date: noticeDate.notice_period_date ? new Date(customFunctions.getDate(noticeDate.notice_period_date)) : null,
+        dob: noticeDate.dob ? new Date(customFunctions.getDate(noticeDate.dob)): null,
+        // confirmation_date:new Date(customFunctions.getDate(noticeDate?.confirmation_date))
+        email:noticeDate.email ?  noticeDate.email : null,
+        full_name:noticeDate.full_name ? noticeDate.full_name : null,
+        joining_date: noticeDate.date_joined ? new Date(customFunctions.getDate(noticeDate.date_joined)) : null,
+        designation:{
+          label:noticeDate?.designation_name
+        }
+      })
+      console.log("objjjjjjj",noticeDate.last_working_date);
+      // updateDefaultValues({ ...obj });
     }
   };
 
