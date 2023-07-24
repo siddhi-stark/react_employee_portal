@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -9,6 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './editEmployee.json';
 
 function EditPersonalDetails(props) {
+  console.log("editttttttt");
   const { handleModalCLose, onPersonalDetailChanges } = props;
   // Variable declarations
   // const history = useHistory()
@@ -18,9 +20,7 @@ function EditPersonalDetails(props) {
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [isShowLoader, setShowLoader] = useState(false);
   const [testDate, setDate] = useState(null);
-  console.log('test',testDate);
 
-  console.log('defaultValues',defaultValues);
   useEffect(() => {
     const employeeId = customFunctions.getLocalStorage('id');
     if (employeeId) {
@@ -29,7 +29,6 @@ function EditPersonalDetails(props) {
         const s = { ...section };
         s.fields = section.fields.map((item) => {
           const itemData = item;
-          console.log('itemData',itemData);
           if (item.name === 'full_name') itemData.disabled = true;
           if (item.name === 'joining_date') itemData.disabled = true;
           if (item.name === 'email') itemData.disabled = true;
@@ -95,8 +94,7 @@ function EditPersonalDetails(props) {
       : null,
       // on_notice_period: formValues.notice_period_start_date && formValues.notice_period_end_date ? true : false
     };
-    console.log('postData',postData);
-    console.log('formValues',formValues);
+  
 
     const { data } = await AuthApi.putDataToServer(
       `${Api.employeeUrl}${id}/`,
@@ -123,8 +121,9 @@ function EditPersonalDetails(props) {
       `${Api.employeeUrl}${id}/`
     );
     if (data && data.success) {
+      console.log("data-----------",data.data)
+      console.log("DOB------->>>>",new Date(customFunctions.getDate(data.data.dob)));
       setShowLoader(false);
-      console.log('dataaa',data.data);
       data.data.confirmation_date = data.data.confirmation_date
         ? new Date(customFunctions.getDate(data.data.confirmation_date))
         : '';
@@ -137,12 +136,12 @@ function EditPersonalDetails(props) {
       data.data.joining_date = data.data.date_joined
         ? new Date(customFunctions.getDate(data.data.date_joined))
         : '';
-        data.data.notice_period_date = data.data.notice_period_date
-        ? new Date(customFunctions.getDate(data.data.notice_period_date))
-        : '';
-        data.data.last_working_date = data.data.last_working_date
-        ? new Date(customFunctions.getDate(data.data.last_working_date))
-        : '';
+        // data.data.notice_period_date = data.data.notice_period_date
+        // ? customFunctions.getDMYDate(data.data.notice_period_date)
+        // : '';
+        // data.data.last_working_date = data.data.last_working_date
+        // ? customFunctions.getDMYDate(data.data.last_working_date)
+        // : '';
       const ds = data.data.designation_id
         ? {
             label: data.data.designation_name,
@@ -152,12 +151,26 @@ function EditPersonalDetails(props) {
         setDate(data.data.notice_period_date = data.data.notice_period_date
           ? (customFunctions.getDate(data.data.notice_period_date))
           : '')
+
       const obj = {
         ...data.data,
         designation: ds,
       };
-      console.log('obj',obj);
-      updateDefaultValues({ ...obj });
+      const noticeDate = obj
+      updateDefaultValues({
+        notice_period_end_date:new Date(customFunctions.getDate(noticeDate.last_working_date)),
+        notice_period_start_date:new Date(customFunctions.getDate(noticeDate.notice_period_date)),
+        dob:new Date(customFunctions.getDate(noticeDate.dob)),
+        // confirmation_date:new Date(customFunctions.getDate(noticeDate?.confirmation_date))
+        email:noticeDate.email,
+        full_name:noticeDate.full_name,
+        joining_date:new Date(customFunctions.getDate(noticeDate.date_joined)),
+        designation:{
+          label:noticeDate.designation_name
+        }
+      })
+      console.log("objjjjjjj",noticeDate.last_working_date);
+      // updateDefaultValues({ ...obj });
     }
   };
 
