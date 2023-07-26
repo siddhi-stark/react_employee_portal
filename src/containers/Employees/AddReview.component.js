@@ -27,7 +27,7 @@ const AddReview = (props) => {
   const [reviewStatus, setReviewStatus] = useState('');
   const [reviewComments, setReviewComments] = useState('');
 
-  console.log('reviewStatus-----', reviewStatus.value);
+  console.log('reviewStatus-----', reviewStatus);
 
   const status = [
     {
@@ -38,14 +38,14 @@ const AddReview = (props) => {
       label: 'Completed',
       value: 2,
     },
-    {
-      label: 'Reject',
-      value: 3,
-    },
-    {
-      label: '',
-      value: '',
-    },
+    // {
+    //   label: 'Reject',
+    //   value: 3,
+    // },
+    // {
+    //   label: '',
+    //   value: '',
+    // },
   ];
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const AddReview = (props) => {
 
   const getEmployeeList = async () => {
     setShowLoader(true);
-    const { data } = await AuthApi.getDataFromServer(
+    const { data, message } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?type=all&is_dropdown=1`
     );
 
@@ -78,17 +78,20 @@ const AddReview = (props) => {
           });
         });
       setEmployeeList(employeeName);
+    } else {
+      setShowLoader(false);
+      swal(message || "Something went Wrong", "", "error");
     }
   };
 
   const getReview = async () => {
-    // setShowLoader(true);
+    setShowLoader(true);
     const endPoint = `${Api.employeeReviewUrl}${reviewId}/`;
     const params = {
       employee_id: currentUserId,
     };
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data } = await AuthApi.getDataFromServer(url);
+    const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success === true) {
       setShowLoader(false);
       console.log('reviewData', data.data.description);
@@ -101,11 +104,14 @@ const AddReview = (props) => {
       setReviewStatus({
           label:data.data.status_name
       })
+    }else{
+      setShowLoader(false);
+      swal(message || "Someting went Wrong","", "error")
     }
   };
 
   const addReview = async () => {
-    console.log('addd');
+    setShowLoader(true);
     let review_id = reviewId;
     console.log('review_idreview_idreview_id', review_id);
     const postData = {
@@ -226,6 +232,7 @@ const AddReview = (props) => {
           <Button
             onClick={(e) => {
               addReview();
+              handleModalCLose(false);
             }}
           >
             Add Review

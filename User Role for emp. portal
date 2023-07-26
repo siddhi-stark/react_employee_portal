@@ -6,3 +6,4 @@
 6 Hr TeamLead
 7 Support
 
+export NODE_OPTIONS=--openssl-legacy-provider
