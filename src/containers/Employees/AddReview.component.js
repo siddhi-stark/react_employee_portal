@@ -27,7 +27,7 @@ const AddReview = (props) => {
   const [reviewStatus, setReviewStatus] = useState('');
   const [reviewComments, setReviewComments] = useState('');
 
-  console.log('reviewStatus-----', reviewStatus);
+  console.log('reviewStatus-----', reviewStatus.value);
 
   const status = [
     {
@@ -50,8 +50,8 @@ const AddReview = (props) => {
 
   useEffect(() => {
     getEmployeeList();
-    if(pageType ==='edit'){
-        getReview();
+    if (pageType === 'edit') {
+      getReview();
     }
   }, []);
 
@@ -80,7 +80,7 @@ const AddReview = (props) => {
       setEmployeeList(employeeName);
     } else {
       setShowLoader(false);
-      swal(message || "Something went Wrong", "", "error");
+      swal(message || 'Something went Wrong', '', 'error');
     }
   };
 
@@ -102,11 +102,11 @@ const AddReview = (props) => {
       setReviewComments(data.data.comments);
       setFeedback(data.data.description);
       setReviewStatus({
-          label:data.data.status_name
-      })
-    }else{
+        label: data.data.status_name,
+      });
+    } else {
       setShowLoader(false);
-      swal(message || "Someting went Wrong","", "error")
+      swal(message || 'Someting went Wrong', '', 'error');
     }
   };
 
@@ -187,7 +187,7 @@ const AddReview = (props) => {
           </Col>
         </Row>
         <Row>
-          <Col>
+          {/* <Col>
             <TextInput
               label="Review Feedback"
               type="text"
@@ -198,22 +198,24 @@ const AddReview = (props) => {
                 setFeedback(e.target.value);
               }}
             />
-          </Col>
+          </Col> */}
           {pageType === 'edit' && (
             <>
-              <Col>
-                <TextInput
-                  label="Review Comments"
-                  type="text"
-                  as="textarea"
-                  placeholder="Write review comment here"
-                  value={reviewComments}
-                  onInputChange={(e) => {
-                    setReviewComments(e.target.value);
-                  }}
-                />
-              </Col>
-              <Col>
+              {reviewStatus.value === 2 && (
+                <Col>
+                  <TextInput
+                    label="Review Comments"
+                    type="text"
+                    as="textarea"
+                    placeholder="Write review comment here"
+                    value={reviewComments}
+                    onInputChange={(e) => {
+                      setReviewComments(e.target.value);
+                    }}
+                  />
+                </Col>
+              )}
+              <Col sm={6}>
                 <DropdownInput
                   asterisk="*"
                   label=" Review Status"

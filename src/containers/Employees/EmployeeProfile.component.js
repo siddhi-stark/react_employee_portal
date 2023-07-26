@@ -41,27 +41,28 @@ function EmployeeProfile(props) {
   const [editReview, setEditReview] = useState(false);
   const [pagetype, setPageType] = useState('');
   const [reviewData, setReviewData] = useState('');
-  const [reviewId , setReviewId] = useState()
+  const [reviewId, setReviewId] = useState();
   const [currentUserId, setCurrentUserId] = useState();
   const employeeID = match.params.id;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
   // const navigate = useNavigate()
 
-  console.log("reviewData++++++++++",reviewData);
+  console.log('currentUserId++++++++++', currentUserId);
 
   useEffect(() => {
-    getReview();
-  }, []);
+    if (currentUserId) {
+      getReview();
+    }
+  }, [currentUserId]);
   useEffect(() => {
     setCurrentUserId(customFunctions.getLocalStorage('id'));
   }, [currentUserId]);
 
-
   const getEmployeeDetails = async () => {
     setShowLoader(true);
     const employeeId = match.params.id;
-    console.log("employeeIdemployeeId",employeeId);
+    console.log('employeeIdemployeeId', employeeId);
     customFunctions.setLocalStorage('id', employeeId);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${employeeId}/`
@@ -230,7 +231,6 @@ function EmployeeProfile(props) {
   const onEmployeePersonalDetails = () => {
     getEmployeeDetails();
   };
-  
 
   const deleteEmployeeHistory = (id) => {
     if (id) {
@@ -323,23 +323,28 @@ function EmployeeProfile(props) {
 
   const getReview = async () => {
     // setShowLoader(true);
-    const endPoint= `${Api.employeeReviewUrl}`
+    const endPoint = `${Api.employeeReviewUrl}?employee=${currentUserId}`;
     // const params ={
     //     employee_id:currentUserId,
     // }
-    const url=customFunctions.generateUrl(endPoint)
+    const url = customFunctions.generateUrl(endPoint);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data && data.success === true) {
       setShowLoader(false);
       console.log('reviewData', data.data);
-      const review_data = []
-      data.data && data.data.length>0 && data.data.filter((item)=>{
-        console.log("filterdata------",item.employee.id)
-        console.log("customFunctions.getLocalStorage('candidateId')",customFunctions.getLocalStorage('id'))
-        if(item.employee.id == customFunctions.getLocalStorage('id')){
-          review_data.push(item)
-        }
-      })      
+      const review_data = [];
+      data.data &&
+        data.data.length > 0 &&
+        data.data.filter((item) => {
+          console.log('filterdata------', item.employee.id);
+          console.log(
+            "customFunctions.getLocalStorage('candidateId')",
+            customFunctions.getLocalStorage('id')
+          );
+          if (item.employee.id == customFunctions.getLocalStorage('id')) {
+            review_data.push(item);
+          }
+        });
       setReviewData(review_data);
       // setReviewId(data.data)
     }
@@ -629,11 +634,16 @@ function EmployeeProfile(props) {
                         Add Review
                       </button>
                     </div>
-                    <hr/>
+                    <hr />
                     {showReview && (
                       <div className="mt-4 card">
                         <AddReview
-                          handleModalCLose={(e) => {setShowReview(e); getReview();setPageType('');setReviewId('')}}
+                          handleModalCLose={(e) => {
+                            setShowReview(e);
+                            getReview();
+                            setPageType('');
+                            setReviewId('');
+                          }}
                           reviewEdit={editReview}
                           pageType={pagetype}
                           reviewId={reviewId}
@@ -673,7 +683,7 @@ function EmployeeProfile(props) {
                                     setShowReview(true);
                                     setEditReview(true);
                                     setPageType('edit');
-                                    setReviewId(item.id)
+                                    setReviewId(item.id);
                                   }}
                                 />
                               </Col>
