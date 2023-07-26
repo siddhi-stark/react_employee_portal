@@ -698,7 +698,7 @@ function EmployeeProfile(props) {
                                   ) : null}
                                 </Col>
                               </Row>
-                              <Row className="mt-3">
+                              {/* <Row className="mt-3">
                                 <Col>
                                   {item.description != null ? (
                                     <h4>
@@ -707,7 +707,7 @@ function EmployeeProfile(props) {
                                     </h4>
                                   ) : null}
                                 </Col>
-                              </Row>
+                              </Row> */}
                             </div>
                             <hr />
                           </div>
