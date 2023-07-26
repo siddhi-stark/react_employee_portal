@@ -183,6 +183,8 @@ export default class Api extends Component {
 
   static supportTicketUrl = `${Api.baseUrl}support-ticket/`;
 
+  static employeeReviewUrl =`${Api.baseUrl}employee_review/`
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

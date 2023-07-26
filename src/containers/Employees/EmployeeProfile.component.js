@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Button, Image, Row } from 'react-bootstrap';
-import { Link, useHistory, withRouter } from 'react-router-dom';
+import { Button, Image, Row, Col } from 'react-bootstrap';
+import { Link, useHistory, withRouter, useNavigate } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -14,17 +14,14 @@ import customFunctions from '../../helper/customFunctions';
 import AddBondHistory from './AddBondHistory.component';
 import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
-// import UpdateReleavingDate from './updateReleavingDate';
-// import {  } from '../../components/FormInputs/index';
-// import {  } from '../../components/FormInputs/index';
+import AddReview from './AddReview.component';
 
 function EmployeeProfile(props) {
-  console.log("employeee profileeee");
+  console.log('employeee profileeee');
   const { match } = props;
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});
-  // console.log('employeeDetails', employeeDetails);
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
   // console.log('showPersonalDetails', showPersonalDetails);
   const [companyList, setCompanyList] = useState([]);
@@ -40,20 +37,37 @@ function EmployeeProfile(props) {
   const [bondData, setBondData] = useState({});
   const [modalShow, setShowModal] = useState(false);
   const [lastworkingDate, setLastWorkingDate] = useState('');
-  // console.log('lastworkingDate', lastworkingDate);
+  const [showReview, setShowReview] = useState(false);
+  const [editReview, setEditReview] = useState(false);
+  const [pagetype, setPageType] = useState('');
+  const [reviewData, setReviewData] = useState('');
+  const [reviewId , setReviewId] = useState()
+  const [currentUserId, setCurrentUserId] = useState();
   const employeeID = match.params.id;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
+  // const navigate = useNavigate()
+
+  console.log("reviewData++++++++++",reviewData);
+
+  useEffect(() => {
+    getReview();
+  }, []);
+  useEffect(() => {
+    setCurrentUserId(customFunctions.getLocalStorage('id'));
+  }, [currentUserId]);
 
 
   const getEmployeeDetails = async () => {
     setShowLoader(true);
     const employeeId = match.params.id;
+    console.log("employeeIdemployeeId",employeeId);
     customFunctions.setLocalStorage('id', employeeId);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${employeeId}/`
     );
     if (data) {
+      console.log('dataa-------', data);
       setShowLoader(false);
       setEmployeeDetails(data.data);
       getEmployeeDocument(data.data && data.data.full_name);
@@ -216,6 +230,7 @@ function EmployeeProfile(props) {
   const onEmployeePersonalDetails = () => {
     getEmployeeDetails();
   };
+  
 
   const deleteEmployeeHistory = (id) => {
     if (id) {
@@ -306,6 +321,30 @@ function EmployeeProfile(props) {
 
   // console.log('employeeDetails',employeeDetails);
 
+  const getReview = async () => {
+    // setShowLoader(true);
+    const endPoint= `${Api.employeeReviewUrl}`
+    // const params ={
+    //     employee_id:currentUserId,
+    // }
+    const url=customFunctions.generateUrl(endPoint)
+    const { data } = await AuthApi.getDataFromServer(url);
+    if (data && data.success === true) {
+      setShowLoader(false);
+      console.log('reviewData', data.data);
+      const review_data = []
+      data.data && data.data.length>0 && data.data.filter((item)=>{
+        console.log("filterdata------",item.employee.id)
+        console.log("customFunctions.getLocalStorage('candidateId')",customFunctions.getLocalStorage('id'))
+        if(item.employee.id == customFunctions.getLocalStorage('id')){
+          review_data.push(item)
+        }
+      })      
+      setReviewData(review_data);
+      // setReviewId(data.data)
+    }
+  };
+
   const submitForm = async () => {
     setShowLoader(true);
     // const id = customFunctions.getLocalStorage('id');
@@ -373,10 +412,9 @@ function EmployeeProfile(props) {
           : null,
       confirmed:
         employeeDetails && employeeDetails.confirmation_date ? true : false, // eslint-disable-line
-      relieving_date:
-      lastworkingDate
-          ? customFunctions.getDate(lastworkingDate)
-          : null,
+      relieving_date: lastworkingDate
+        ? customFunctions.getDate(lastworkingDate)
+        : null,
       relieved: lastworkingDate ? true : false, // eslint-disable-line
       dob: employeeDetails.dob
         ? customFunctions.getDate(employeeDetails.dob)
@@ -387,7 +425,7 @@ function EmployeeProfile(props) {
       last_working_date: lastworkingDate
         ? customFunctions.getDate(lastworkingDate)
         : null,
-        is_relieved : lastworkingDate ? true : false
+      is_relieved: lastworkingDate ? true : false,
     };
 
     // console.log('postData', postData);
@@ -511,6 +549,13 @@ function EmployeeProfile(props) {
                               )
                             : ''}
                         </h6>
+                      ) : employeeDetails.relieved === true ? (
+                        <h6>
+                          Relieved Date -{' '}
+                          {customFunctions.getDMYDate(
+                            employeeDetails.relieving_date
+                          )}
+                        </h6>
                       ) : (
                         <h6>
                           {employeeDetails.confirmation_date
@@ -527,7 +572,7 @@ function EmployeeProfile(props) {
                         </h6>
                       )}
                     </div>
-                    {employeeDetails?.on_notice_period  ? (
+                    {employeeDetails?.on_notice_period ? (
                       <Button
                         onClick={() => {
                           setShowModal(true);
@@ -542,7 +587,8 @@ function EmployeeProfile(props) {
                     <div className="col-md-5">
                       {employeeDetails &&
                         !employeeDetails.confirmation_date &&
-                        !employeeDetails.relieving_date && !employeeDetails?.on_notice_period && (
+                        !employeeDetails.relieving_date &&
+                        !employeeDetails?.on_notice_period && (
                           <button
                             onClick={() => {
                               history.push('/confirmation', {
@@ -564,6 +610,102 @@ function EmployeeProfile(props) {
           <div className="profile-details">
             <div className="row">
               <div className="col-sm-12">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex align-items-start justify-content-between mb-4">
+                      {showReview && (
+                        <div className="mt-2">
+                          <h5>Add Review</h5>
+                        </div>
+                      )}
+                      <button
+                        onClick={() => {
+                          setShowReview(true);
+                          setPageType('add');
+                        }}
+                        type="button"
+                        className="btn btn-primary"
+                      >
+                        Add Review
+                      </button>
+                    </div>
+                    <hr/>
+                    {showReview && (
+                      <div className="mt-4 card">
+                        <AddReview
+                          handleModalCLose={(e) => {setShowReview(e); getReview();setPageType('');setReviewId('')}}
+                          reviewEdit={editReview}
+                          pageType={pagetype}
+                          reviewId={reviewId}
+                        />
+                      </div>
+                    )}
+                    <div>
+                      {/* <h5 className="ml-3 mt-5">First Review</h5> */}
+                    </div>
+                    {reviewData &&
+                      reviewData.length > 0 &&
+                      reviewData.map((item) => (
+                        <>
+                          <div className="ml-5">
+                            <h3>
+                              Review Date -{' '}
+                              {customFunctions.getDMYDate(item.review_date)}
+                            </h3>
+                          </div>
+                          <div className="ml-5 mt-3 mb-3">
+                            <Row>
+                              <Col>
+                                <h5>{item.reviewer.full_name} </h5>
+                              </Col>
+                              <Col className="d-flex justify-content-end">
+                                <h4>
+                                  Status -{' '}
+                                  {item.status === 1 ? 'Pending' : 'Complete'}
+                                </h4>
+                              </Col>
+                              <Col className="d-flex justify-content-end">
+                                <Image
+                                  style={{ height: '20px', width: '20px' }}
+                                  title="Edit Review"
+                                  src="/images/edit.png"
+                                  onClick={() => {
+                                    setShowReview(true);
+                                    setEditReview(true);
+                                    setPageType('edit');
+                                    setReviewId(item.id)
+                                  }}
+                                />
+                              </Col>
+                            </Row>
+                            <div className="mt-4">
+                              <Row>
+                                <Col>
+                                  {item.comments != null ? (
+                                    <h4>
+                                      Comment - <small>{item.comments}</small>
+                                    </h4>
+                                  ) : null}
+                                </Col>
+                              </Row>
+                              <Row className="mt-3">
+                                <Col>
+                                  {item.description != null ? (
+                                    <h4>
+                                      Description -{' '}
+                                      <small>{item.description}</small>{' '}
+                                    </h4>
+                                  ) : null}
+                                </Col>
+                              </Row>
+                            </div>
+                            <hr />
+                          </div>
+                        </>
+                      ))}
+                  </div>
+                </div>
+
                 <div className="card">
                   <div className="card-body">
                     <div className="d-flex align-items-start justify-content-between mb-4">
@@ -652,6 +794,7 @@ function EmployeeProfile(props) {
                       ))}
                   </div>
                 </div>
+
                 <div className="card">
                   <div className="card-body">
                     <div className="d-flex align-items-start justify-content-between mb-4">
