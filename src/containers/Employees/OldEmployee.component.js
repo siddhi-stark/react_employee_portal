@@ -28,7 +28,10 @@ function OldEmployee() {
   const [position, setPosition] = useState('');
   const [count, forceUpdate] = useState(0);
   const [filterErr, setFilterErr] = useState('');
+  const [employeeList, setEmployeeList] = useState('');
   const history = useHistory();
+
+  console.log('old employeee', empClear);
 
   const getEmployee = async (pageNo = 1, filter) => {
     // setShowLoader(true);
@@ -45,23 +48,24 @@ function OldEmployee() {
       // user_id: empClear ? empClear.id : '',
     };
     if (filter == 'filter') {
-      params.user_id = empClear?.id;
-      params.designation_id = position?.value
+      params.user_id = empClear?.value;
+      params.designation_id = position?.value;
     }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
       setShowLoader(false);
-    //   const dpOptions = [];
-    // data.data.length > 0 &&
-    //   data.data.map((op) => {
-    //     console.log('22 opp',op);
-    //     if([1].includes(op.role_id)) return;
-    //     dpOptions.push({ label: op.full_name, value: op.id });
-    //   });
-    // options.employee = dpOptions;
-    // const allOptions = options;
-    // await updateOptions({ ...allOptions });
+      const dpOptions = [];
+      data.data.length > 0 &&
+        data.data.map((op) => {
+          console.log('22 opp', op);
+          if ([1].includes(op.role_id)) return;
+          dpOptions.push({ label: op.full_name, value: op.id });
+        });
+      setEmployeeList(dpOptions);
+      options.employee = dpOptions;
+      const allOptions = options;
+      await updateOptions({ ...allOptions });
       setEmployee([...data.data]);
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
@@ -91,12 +95,9 @@ function OldEmployee() {
     setTitle('Old Employees');
     getEmployee(1);
     console.log('usee effect');
-    // getEmployeeName();
     getPosition();
   }, []);
-  // useEffect(() => {
-  //   getEmployeeArray();
-  // }, []);
+
 
   // const getEmployeeArray = async () => {
   //   setShowLoader(true);
@@ -106,23 +107,25 @@ function OldEmployee() {
   //   console.log('dataa-------->>>>', data);
   // };
 
-  const getEmployeeName = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
-    );
+  // const getEmployeeName = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(
+  //     `${Api.employeeUrl}?type=all`
+  //   );
 
-    const dpOptions =
-      (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
-        if(![1].includes(op.role_id)){
-          return { label: op.full_name, value: op.id };
-        }
-      });
-    options.employee = dpOptions;
-    const allOptions = options;
-    await updateOptions({ ...allOptions });
-  };
+  //   const dpOptions = []
+  //      data &&
+  //     data.data.length > 0 &&
+  //     data.data.map((op) => {
+  //       if ([1].includes(op.role_id)) return
+  //        dpOptions.push({ label: op.full_name, value: op.id });
+  //       }
+  //     );
+  //     setEmployeeList(dpOptions)
+  //     console.log("dpOptionsdpOptions",dpOptions);
+  //   options.employee = dpOptions;
+  //   const allOptions = options;
+  //  updateOptions({ ...allOptions });
+  // };
 
   const getPosition = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -179,25 +182,15 @@ function OldEmployee() {
             <div>
               <Row className="mt-3">
                 <Col sm={6}>
-                  <SelectAsyncPaginate
+                  <DropdownInput
                     id="degignation"
-                    // label="Select employee"
-                    // asterisk="*"
-                    apiname={'employeeUrl'}
-                    endpoint={`${Api.employeeUrl}`}
                     placeholder="Select Employee"
-                    // options={designationValues}
-                    value={empClear}
-                    // disabled={pageType === 'view'}
-                    onSelectChange={(select) => {
+                    options={employeeList}
+                    defaultValue={empClear}
+                    onSelectHandler={(select) => {
                       setEmpClear(select);
                     }}
                     isClearable={true}
-                    // errorMessage={validator.current.message(
-                    //   'Designation',
-                    //   joiningDetails.designation,
-                    //   'required'
-                    // )}
                   />
                 </Col>
                 <Col sm={6}>
@@ -208,7 +201,6 @@ function OldEmployee() {
                     placeholder="Select Position"
                     options={positionArr}
                     defaultValue={position}
-                    // disabled={pageType === 'view'}
                     onSelectHandler={(select) => {
                       setPosition(select);
                       // setPosition(positionArr)
