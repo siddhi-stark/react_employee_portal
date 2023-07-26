@@ -224,6 +224,43 @@
         "options": []
       },
       {
+        "name": "probation_date",
+        "type": "date",
+        "label": "Probation End Date",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "dateFormat": "dd/MM/yyyy",
+
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
         "name": "confirmation_date",
         "type": "date",
         "label": "Confirmation Date",

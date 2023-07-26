@@ -34,7 +34,7 @@ function OldEmployee() {
   console.log('old employeee', empClear);
 
   const getEmployee = async (pageNo = 1, filter) => {
-    // setShowLoader(true);
+    setShowLoader(true);
     setEmployee([]);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
@@ -42,6 +42,7 @@ function OldEmployee() {
       limit,
       old_employee: 'True',
       page,
+      type:"all",
       // designation_id: position ? position.value : '',
       //  user_id:
       //     filterData && filterData.employee ? filterData.employee.value : '',

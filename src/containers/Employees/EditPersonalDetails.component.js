@@ -10,8 +10,8 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './editEmployee.json';
 
 function EditPersonalDetails(props) {
-  console.log("editttttttt");
   const { handleModalCLose, onPersonalDetailChanges } = props;
+  console.log("editttttttt",props);
   // Variable declarations
   // const history = useHistory()
   const [defaultValues, updateDefaultValues] = useState({});

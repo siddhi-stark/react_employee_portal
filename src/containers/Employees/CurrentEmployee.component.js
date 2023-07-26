@@ -75,6 +75,7 @@ function CurrentEmployee() {
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
+  const [probationDate , setProbationDate] =useState()
   const [disableButton, setDisableButton] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [empCode, setEmpCode] = useState('');
@@ -443,6 +444,7 @@ console.log('data.data',data.data);
     setSelectedDepartment('');
     setSelectedMentor('');
     setDate();
+    setProbationDate('')
     setModalShow(false);
     if (timmer) clearTimeout(timmer);
     timmer = setTimeout(() => {
@@ -489,6 +491,7 @@ console.log('data.data',data.data);
       tw_emp: twId,
       department: selectedDepartment.id,
       mentor: mentorList,
+      // probation_date:probationDate ? customFunctions.getDate(probationDate) : null
     };
     if (selectedDesignationOption) {
       postData.designation = selectedDesignationOption.id;
@@ -536,6 +539,7 @@ console.log('data.data',data.data);
           setSelectedManager();
           setSelectedMentor();
           setDate();
+          setProbationDate()
           setJoiningDate();
           setSelectedTeamLead();
           setSelectedDepartment();
@@ -873,8 +877,8 @@ console.log('data.data',data.data);
                             !emp.confirmation_date && <br />}
                           {emp.on_notice_period &&
                             emp.notice_period_date &&
-                            `Relieving Date- ${customFunctions.getDMYDate(
-                              emp.relieving_date
+                            `Expected Relieving Date- ${customFunctions.getDMYDate(
+                              emp.last_working_date
                             )}`}
                           {emp.on_notice_period && emp.notice_period_date && (
                             <br />
@@ -1215,6 +1219,24 @@ console.log('data.data',data.data);
                   />
                 </Col>
               )}
+              {/* <Col sm={6}>
+                <Datepicker
+                  label="Probation Date"
+                  className="form-control"
+                  selected={probationDate}
+                  placeholder="dd/mm/yyyy"
+                  minDate={new Date()}
+                  dateFormat="dd/MM/yyyy"
+                  onChange={(e) => {
+                    setProbationDate(e);
+                  }}
+                  // errorMessage={validator.current.message(
+                  //   'DOB',
+                  //   date,
+                  //    `required | before_or_equal:${maxdate}`
+                  // )}
+                />
+              </Col> */}
             </Row>
             <div className="float-end">
               <Button variant="primary" type="submit" disabled={disableButton}>

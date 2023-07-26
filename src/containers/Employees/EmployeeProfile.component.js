@@ -48,7 +48,7 @@ function EmployeeProfile(props) {
   const history = useHistory();
   // const navigate = useNavigate()
 
-  console.log('currentUserId++++++++++', currentUserId);
+  console.log('employeeDetails++++++++++', employeeDetails);
 
   useEffect(() => {
     if (currentUserId) {
@@ -561,6 +561,13 @@ function EmployeeProfile(props) {
                             employeeDetails.relieving_date
                           )}
                         </h6>
+                      ) : employeeDetails.probation_date ? (
+                        <h6>
+                          Probation End Date -{' '}
+                          {customFunctions.getDMYDate(
+                            employeeDetails.probation_date
+                          )}
+                        </h6>
                       ) : (
                         <h6>
                           {employeeDetails.confirmation_date
@@ -590,7 +597,7 @@ function EmployeeProfile(props) {
                       </Button>
                     ) : null}
                     <div className="col-md-5">
-                      {employeeDetails &&
+                      {employeeDetails && 
                         !employeeDetails.confirmation_date &&
                         !employeeDetails.relieving_date &&
                         !employeeDetails?.on_notice_period && (
@@ -615,90 +622,91 @@ function EmployeeProfile(props) {
           <div className="profile-details">
             <div className="row">
               <div className="col-sm-12">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex align-items-start justify-content-between mb-4">
+                {!employeeDetails.relieved && (
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="d-flex align-items-start justify-content-between mb-4">
+                        {showReview && (
+                          <div className="mt-2">
+                            <h5>Add Review</h5>
+                          </div>
+                        )}
+                        <button
+                          onClick={() => {
+                            setShowReview(true);
+                            setPageType('add');
+                          }}
+                          type="button"
+                          className="btn btn-primary"
+                        >
+                          Add Review
+                        </button>
+                      </div>
+                      <hr />
                       {showReview && (
-                        <div className="mt-2">
-                          <h5>Add Review</h5>
+                        <div className="mt-4 card">
+                          <AddReview
+                            handleModalCLose={(e) => {
+                              setShowReview(e);
+                              getReview();
+                              setPageType('');
+                              setReviewId('');
+                            }}
+                            reviewEdit={editReview}
+                            pageType={pagetype}
+                            reviewId={reviewId}
+                          />
                         </div>
                       )}
-                      <button
-                        onClick={() => {
-                          setShowReview(true);
-                          setPageType('add');
-                        }}
-                        type="button"
-                        className="btn btn-primary"
-                      >
-                        Add Review
-                      </button>
-                    </div>
-                    <hr />
-                    {showReview && (
-                      <div className="mt-4 card">
-                        <AddReview
-                          handleModalCLose={(e) => {
-                            setShowReview(e);
-                            getReview();
-                            setPageType('');
-                            setReviewId('');
-                          }}
-                          reviewEdit={editReview}
-                          pageType={pagetype}
-                          reviewId={reviewId}
-                        />
+                      <div>
+                        {/* <h5 className="ml-3 mt-5">First Review</h5> */}
                       </div>
-                    )}
-                    <div>
-                      {/* <h5 className="ml-3 mt-5">First Review</h5> */}
-                    </div>
-                    {reviewData &&
-                      reviewData.length > 0 &&
-                      reviewData.map((item) => (
-                        <>
-                          <div className="ml-5">
-                            <h3>
-                              Review Date -{' '}
-                              {customFunctions.getDMYDate(item.review_date)}
-                            </h3>
-                          </div>
-                          <div className="ml-5 mt-3 mb-3">
-                            <Row>
-                              <Col>
-                                <h5>{item.reviewer.full_name} </h5>
-                              </Col>
-                              <Col className="d-flex justify-content-end">
-                                <h4>
-                                  Status -{' '}
-                                  {item.status === 1 ? 'Pending' : 'Complete'}
-                                </h4>
-                              </Col>
-                              <Col className="d-flex justify-content-end">
-                                <Image
-                                  style={{ height: '20px', width: '20px' }}
-                                  title="Edit Review"
-                                  src="/images/edit.png"
-                                  onClick={() => {
-                                    setShowReview(true);
-                                    setEditReview(true);
-                                    setPageType('edit');
-                                    setReviewId(item.id);
-                                  }}
-                                />
-                              </Col>
-                            </Row>
-                            <div className="mt-4">
+                      {reviewData &&
+                        reviewData.length > 0 &&
+                        reviewData.map((item) => (
+                          <>
+                            <div className="ml-5">
+                              <h3>
+                                Review Date -{' '}
+                                {customFunctions.getDMYDate(item.review_date)}
+                              </h3>
+                            </div>
+                            <div className="ml-5 mt-3 mb-3">
                               <Row>
                                 <Col>
-                                  {item.comments != null ? (
-                                    <h4>
-                                      Comment - <small>{item.comments}</small>
-                                    </h4>
-                                  ) : null}
+                                  <h5>{item.reviewer.full_name} </h5>
+                                </Col>
+                                <Col className="d-flex justify-content-end">
+                                  <h4>
+                                    Status -{' '}
+                                    {item.status === 1 ? 'Pending' : 'Complete'}
+                                  </h4>
+                                </Col>
+                                <Col className="d-flex justify-content-end">
+                                  <Image
+                                    style={{ height: '20px', width: '20px' }}
+                                    title="Edit Review"
+                                    src="/images/edit.png"
+                                    onClick={() => {
+                                      setShowReview(true);
+                                      setEditReview(true);
+                                      setPageType('edit');
+                                      setReviewId(item.id);
+                                    }}
+                                  />
                                 </Col>
                               </Row>
-                              {/* <Row className="mt-3">
+                              <div className="mt-4">
+                                <Row>
+                                  <Col>
+                                    {item.comments != null ? (
+                                      <h4>
+                                        Comment - <small>{item.comments}</small>
+                                      </h4>
+                                    ) : null}
+                                  </Col>
+                                </Row>
+                                {/* <Row className="mt-3">
                                 <Col>
                                   {item.description != null ? (
                                     <h4>
@@ -708,112 +716,113 @@ function EmployeeProfile(props) {
                                   ) : null}
                                 </Col>
                               </Row> */}
+                              </div>
+                              <hr />
                             </div>
-                            <hr />
-                          </div>
-                        </>
-                      ))}
-                  </div>
-                </div>
-
-                <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex align-items-start justify-content-between mb-4">
-                      {!companyList.length < 1 && (
-                        <h5 className="card-title">Experience</h5>
-                      )}
-
-                      {!employeeDetails.relieved && (
-                        <button
-                          onClick={() => {
-                            setShowEMployee(true);
-                            customFunctions.removeLocalStorage('hisotryID');
-                          }}
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          Add History
-                        </button>
-                      )}
+                          </>
+                        ))}
                     </div>
-                    {showEmployee && (
-                      <div className="mt-4 card">
-                        <AddHistory
-                          optionsData={dataa}
-                          handleModalCLose={(e) => setShowEMployee(e)}
-                          onChanges={() => {
-                            onChangeInHistory();
-                          }}
-                        />
+                  </div>
+                )}
+                {!employeeDetails.relieved && (
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="d-flex align-items-start justify-content-between mb-4">
+                        {!companyList.length < 1 && (
+                          <h5 className="card-title">Experience</h5>
+                        )}
+
+                        {!employeeDetails.relieved && (
+                          <button
+                            onClick={() => {
+                              setShowEMployee(true);
+                              customFunctions.removeLocalStorage('hisotryID');
+                            }}
+                            type="button"
+                            className="btn btn-primary"
+                          >
+                            Add History
+                          </button>
+                        )}
                       </div>
-                    )}
-                    {companyList &&
-                      companyList.map((comp) => (
-                        <>
-                          <div className="d-flex align-items-start justify-content-between">
-                            <div className="media">
-                              <Image
-                                src={
-                                  comp.company_name === 'Stark Digital'
-                                    ? '/images/stark-logo.png'
-                                    : '/images/sample-logo.png'
-                                }
-                                className="mr-3"
-                                alt="image"
-                              />
-                              <div className="media-body">
-                                <h5 className="mt-0">{comp.designation}</h5>
-                                <p>{comp.company_name}</p>
-                                <p>
-                                  {comp.start_date_formate} -{' '}
-                                  {comp.end_date_formate} {comp.date}|{' '}
-                                  {comp.duration}
-                                </p>
-                                <h6>{comp.location}</h6>
+                      {showEmployee && (
+                        <div className="mt-4 card">
+                          <AddHistory
+                            optionsData={dataa}
+                            handleModalCLose={(e) => setShowEMployee(e)}
+                            onChanges={() => {
+                              onChangeInHistory();
+                            }}
+                          />
+                        </div>
+                      )}
+                      {companyList &&
+                        companyList.map((comp) => (
+                          <>
+                            <div className="d-flex align-items-start justify-content-between">
+                              <div className="media">
+                                <Image
+                                  src={
+                                    comp.company_name === 'Stark Digital'
+                                      ? '/images/stark-logo.png'
+                                      : '/images/sample-logo.png'
+                                  }
+                                  className="mr-3"
+                                  alt="image"
+                                />
+                                <div className="media-body">
+                                  <h5 className="mt-0">{comp.designation}</h5>
+                                  <p>{comp.company_name}</p>
+                                  <p>
+                                    {comp.start_date_formate} -{' '}
+                                    {comp.end_date_formate} {comp.date}|{' '}
+                                    {comp.duration}
+                                  </p>
+                                  <h6>{comp.location}</h6>
+                                </div>
+                              </div>
+                              <div className="address-edit-delete d-flex align-items-center">
+                                <a href="javascript:void()">
+                                  <Image
+                                    src="/images/edit-button.svg"
+                                    title="Edit Profile"
+                                    onClick={() => {
+                                      setData(comp);
+                                      setShowEMployee(true);
+                                      customFunctions.setLocalStorage(
+                                        'hisotryID',
+                                        comp.id
+                                      );
+                                      // history.push(`/profile-history/id=${comp.id}`)
+                                    }}
+                                  />
+                                </a>
+                                <a href="javascript:void()">
+                                  <Image
+                                    src="/images/delete.png"
+                                    title="Edit Profile"
+                                    onClick={() => {
+                                      deleteEmployeeHistory(comp.id);
+                                    }}
+                                  />
+                                </a>
                               </div>
                             </div>
-                            <div className="address-edit-delete d-flex align-items-center">
-                              <a href="javascript:void()">
-                                <Image
-                                  src="/images/edit-button.svg"
-                                  title="Edit Profile"
-                                  onClick={() => {
-                                    setData(comp);
-                                    setShowEMployee(true);
-                                    customFunctions.setLocalStorage(
-                                      'hisotryID',
-                                      comp.id
-                                    );
-                                    // history.push(`/profile-history/id=${comp.id}`)
-                                  }}
-                                />
-                              </a>
-                              <a href="javascript:void()">
-                                <Image
-                                  src="/images/delete.png"
-                                  title="Edit Profile"
-                                  onClick={() => {
-                                    deleteEmployeeHistory(comp.id);
-                                  }}
-                                />
-                              </a>
-                            </div>
-                          </div>
-                          <hr />
-                        </>
-                      ))}
+                            <hr />
+                          </>
+                        ))}
+                    </div>
                   </div>
-                </div>
+                )}
+                {!employeeDetails.on_notice_period &&
+                  !employeeDetails.relieved && (
+                    <div className="card">
+                      <div className="card-body">
+                        <div className="d-flex align-items-start justify-content-between mb-4">
+                          {!bondList.length < 1 && (
+                            <h5 className="card-title">Bond History</h5>
+                          )}
 
-                <div className="card">
-                  <div className="card-body">
-                    <div className="d-flex align-items-start justify-content-between mb-4">
-                      {!bondList.length < 1 && (
-                        <h5 className="card-title">Bond History</h5>
-                      )}
-
-                      {!employeeDetails.on_notice_period &&
-                        !employeeDetails.relieved && (
                           <button
                             onClick={() => {
                               setShowBond(true);
@@ -826,86 +835,86 @@ function EmployeeProfile(props) {
                           >
                             Add Bond
                           </button>
-                        )}
-                    </div>
-                    {showBond && (
-                      <div className="mt-4 card">
-                        <AddBondHistory
-                          optionsData={bondData}
-                          handleModalCLose={(e) => setShowBond(e)}
-                          onChanges={() => {
-                            onChangeInBondHistory();
-                          }}
-                        />
-                      </div>
-                    )}
-                    {bondList &&
-                      bondList.map((bond) => (
-                        <>
-                          <div className="d-flex align-items-start justify-content-between">
-                            <div className="media">
-                              <div className="media-body">
-                                <p>
-                                  Start Date:{' '}
-                                  {bond.start_date &&
-                                    customFunctions.getDMYDate(
-                                      bond.start_date
-                                    )}{' '}
-                                  &nbsp; End Date:{' '}
-                                  {bond.end_date &&
-                                    customFunctions.getDMYDate(
-                                      bond.end_date
-                                    )}{' '}
-                                  <br />
-                                  Document Link:
-                                  <Link
-                                    className="mt-3 ms-2"
-                                    title="Document Link"
-                                    to={{ pathname: `${bond.file_name}` }}
-                                    target="_blank"
-                                  >
-                                    {bond.file_name &&
-                                      decodeURI(
-                                        bond.file_name.split(
-                                          decodeURI(Api.s3url)
-                                        )
-                                      ).substring(55)}
-                                  </Link>
-                                </p>
-                              </div>
-                            </div>
-                            <div className="address-edit-delete d-flex align-items-center">
-                              <a href="javascript:void()">
-                                <Image
-                                  src="/images/edit-button.svg"
-                                  title="Edit Profile"
-                                  onClick={() => {
-                                    setBondData(bond);
-                                    setShowBond(true);
-                                    customFunctions.setLocalStorage(
-                                      'bondHistoryID',
-                                      bond.id
-                                    );
-                                    // history.push(`/profile-history/id=${comp.id}`)
-                                  }}
-                                />
-                              </a>
-                              <a href="javascript:void()">
-                                <Image
-                                  src="/images/delete.png"
-                                  title="Edit Profile"
-                                  onClick={() => {
-                                    deleteBondHistory(bond.id);
-                                  }}
-                                />
-                              </a>
-                            </div>
+                        </div>
+                        {showBond && (
+                          <div className="mt-4 card">
+                            <AddBondHistory
+                              optionsData={bondData}
+                              handleModalCLose={(e) => setShowBond(e)}
+                              onChanges={() => {
+                                onChangeInBondHistory();
+                              }}
+                            />
                           </div>
-                          <hr />
-                        </>
-                      ))}
-                  </div>
-                </div>
+                        )}
+                        {bondList &&
+                          bondList.map((bond) => (
+                            <>
+                              <div className="d-flex align-items-start justify-content-between">
+                                <div className="media">
+                                  <div className="media-body">
+                                    <p>
+                                      Start Date:{' '}
+                                      {bond.start_date &&
+                                        customFunctions.getDMYDate(
+                                          bond.start_date
+                                        )}{' '}
+                                      &nbsp; End Date:{' '}
+                                      {bond.end_date &&
+                                        customFunctions.getDMYDate(
+                                          bond.end_date
+                                        )}{' '}
+                                      <br />
+                                      Document Link:
+                                      <Link
+                                        className="mt-3 ms-2"
+                                        title="Document Link"
+                                        to={{ pathname: `${bond.file_name}` }}
+                                        target="_blank"
+                                      >
+                                        {bond.file_name &&
+                                          decodeURI(
+                                            bond.file_name.split(
+                                              decodeURI(Api.s3url)
+                                            )
+                                          ).substring(55)}
+                                      </Link>
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="address-edit-delete d-flex align-items-center">
+                                  <a href="javascript:void()">
+                                    <Image
+                                      src="/images/edit-button.svg"
+                                      title="Edit Profile"
+                                      onClick={() => {
+                                        setBondData(bond);
+                                        setShowBond(true);
+                                        customFunctions.setLocalStorage(
+                                          'bondHistoryID',
+                                          bond.id
+                                        );
+                                        // history.push(`/profile-history/id=${comp.id}`)
+                                      }}
+                                    />
+                                  </a>
+                                  <a href="javascript:void()">
+                                    <Image
+                                      src="/images/delete.png"
+                                      title="Edit Profile"
+                                      onClick={() => {
+                                        deleteBondHistory(bond.id);
+                                      }}
+                                    />
+                                  </a>
+                                </div>
+                              </div>
+                              <hr />
+                            </>
+                          ))}
+                      </div>
+                    </div>
+                  )}
 
                 {employeeDocument && employeeDocument.length > 0 ? (
                   <>
