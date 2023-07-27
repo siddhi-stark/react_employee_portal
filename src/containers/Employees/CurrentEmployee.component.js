@@ -128,7 +128,7 @@ if(item?.on_notice_period == false){
       })
       // setEmployee([...newEmp]);
       setEmployee([...data.data]);
-console.log('data.data',data.data);
+// console.log('data.data',data.data);
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));
@@ -884,24 +884,22 @@ console.log('data.data',data.data);
                             <br />
                           )}
                         </p>
-                        <h6>
-                          {' '}
+                        <p className="text-primary confirmation-date">
                           {emp.bond_details_list &&
                             emp.bond_details_list[0] &&
                             emp.bond_details_list[0].start_date &&
                             `Bond start date- ${customFunctions.getDMYDate(
                               emp.bond_details_list[0].start_date
                             )}`}
-                        </h6>
-                        <h6>
-                          {' '}
+                        </p>
+                        <p className="text-primary confirmation-date">
                           {emp.bond_details_list &&
                             emp.bond_details_list[0] &&
                             emp.bond_details_list[0].end_date &&
                             `Bond end date- ${customFunctions.getDMYDate(
                               emp.bond_details_list[0].end_date
                             )}`}
-                        </h6>
+                        </p>
                         <br />
                       </Col>
                     </Row>

@@ -17,7 +17,7 @@ import EditPersonalDetails from './EditPersonalDetails.component';
 import AddReview from './AddReview.component';
 
 function EmployeeProfile(props) {
-  console.log('employeee profileeee');
+  // console.log('employeee profileeee');
   const { match } = props;
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
@@ -48,7 +48,7 @@ function EmployeeProfile(props) {
   const history = useHistory();
   // const navigate = useNavigate()
 
-  console.log('employeeDetails++++++++++', employeeDetails);
+  // console.log('employeeDetails++++++++++', employeeDetails);
 
   useEffect(() => {
     if (currentUserId) {
@@ -62,13 +62,13 @@ function EmployeeProfile(props) {
   const getEmployeeDetails = async () => {
     setShowLoader(true);
     const employeeId = match.params.id;
-    console.log('employeeIdemployeeId', employeeId);
+    // console.log('employeeIdemployeeId', employeeId);
     customFunctions.setLocalStorage('id', employeeId);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${employeeId}/`
     );
     if (data) {
-      console.log('dataa-------', data);
+      // console.log('dataa-------', data);
       setShowLoader(false);
       setEmployeeDetails(data.data);
       getEmployeeDocument(data.data && data.data.full_name);
@@ -331,16 +331,16 @@ function EmployeeProfile(props) {
     const { data } = await AuthApi.getDataFromServer(url);
     if (data && data.success === true) {
       setShowLoader(false);
-      console.log('reviewData', data.data);
+      // console.log('reviewData', data.data);
       const review_data = [];
       data.data &&
         data.data.length > 0 &&
         data.data.filter((item) => {
-          console.log('filterdata------', item.employee.id);
-          console.log(
-            "customFunctions.getLocalStorage('candidateId')",
-            customFunctions.getLocalStorage('id')
-          );
+          // console.log('filterdata------', item.employee.id);
+          // console.log(
+          //   "customFunctions.getLocalStorage('candidateId')",
+          //   customFunctions.getLocalStorage('id')
+          // );
           if (item.employee.id == customFunctions.getLocalStorage('id')) {
             review_data.push(item);
           }
@@ -597,7 +597,7 @@ function EmployeeProfile(props) {
                       </Button>
                     ) : null}
                     <div className="col-md-5">
-                      {employeeDetails && 
+                      {employeeDetails &&
                         !employeeDetails.confirmation_date &&
                         !employeeDetails.relieving_date &&
                         !employeeDetails?.on_notice_period && (
@@ -666,10 +666,10 @@ function EmployeeProfile(props) {
                         reviewData.map((item) => (
                           <>
                             <div className="ml-5">
-                              <h3>
+                              <p>
                                 Review Date -{' '}
                                 {customFunctions.getDMYDate(item.review_date)}
-                              </h3>
+                              </p>
                             </div>
                             <div className="ml-5 mt-3 mb-3">
                               <Row>
@@ -677,46 +677,37 @@ function EmployeeProfile(props) {
                                   <h5>{item.reviewer.full_name} </h5>
                                 </Col>
                                 <Col className="d-flex justify-content-end">
-                                  <h4>
+                                  <p>
                                     Status -{' '}
                                     {item.status === 1 ? 'Pending' : 'Complete'}
-                                  </h4>
+                                  </p>
                                 </Col>
                                 <Col className="d-flex justify-content-end">
-                                  <Image
-                                    style={{ height: '20px', width: '20px' }}
-                                    title="Edit Review"
-                                    src="/images/edit.png"
-                                    onClick={() => {
-                                      setShowReview(true);
-                                      setEditReview(true);
-                                      setPageType('edit');
-                                      setReviewId(item.id);
-                                    }}
-                                  />
-                                </Col>
-                              </Row>
-                              <div className="mt-4">
-                                <Row>
-                                  <Col>
-                                    {item.comments != null ? (
-                                      <h4>
-                                        Comment - <small>{item.comments}</small>
-                                      </h4>
-                                    ) : null}
-                                  </Col>
-                                </Row>
-                                {/* <Row className="mt-3">
-                                <Col>
-                                  {item.description != null ? (
-                                    <h4>
-                                      Description -{' '}
-                                      <small>{item.description}</small>{' '}
-                                    </h4>
+                                  {item && item.status_name === 'Pending' ? (
+                                    <Image
+                                      style={{ height: '20px', width: '20px' }}
+                                      title="Edit Review"
+                                      src="/images/edit.png"
+                                      onClick={() => {
+                                        setShowReview(true);
+                                        setEditReview(true);
+                                        setPageType('edit');
+                                        setReviewId(item.id);
+                                      }}
+                                    />
                                   ) : null}
                                 </Col>
-                              </Row> */}
-                              </div>
+                              </Row>
+                              { item.comments &&
+                                <div className="mt-4">
+                                <Row>
+                                  <Col>
+                                      <p>
+                                        Comment - <small>{item.comments}</small>
+                                      </p>
+                                  </Col>
+                                </Row>
+                              </div>}
                               <hr />
                             </div>
                           </>

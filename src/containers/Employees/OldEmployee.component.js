@@ -23,7 +23,7 @@ function OldEmployee() {
   const [isShowLoader, setShowLoader] = useState(false);
   const [filterData, setFilterData] = useState({});
   const [employeeArr, setEmployeeArr] = useState('');
-  const [empClear, setEmpClear] = useState();
+  const [selectedFilterEmployee, setSelectedFilterEmp] = useState();
   const [positionArr, setPositionArr] = useState('');
   const [position, setPosition] = useState('');
   const [count, forceUpdate] = useState(0);
@@ -31,7 +31,7 @@ function OldEmployee() {
   const [employeeList, setEmployeeList] = useState('');
   const history = useHistory();
 
-  console.log('old employeee', empClear);
+  // console.log('old employeee', selectedFilterEmployee);
 
   const getEmployee = async (pageNo = 1, filter) => {
     setShowLoader(true);
@@ -42,14 +42,17 @@ function OldEmployee() {
       limit,
       old_employee: 'True',
       page,
-      type:"all",
+      type: 'dropdownall',
+      sort_direction: 'descending',
+      // sort_by: 'full_name',
+      // dropdown: "all"
       // designation_id: position ? position.value : '',
       //  user_id:
       //     filterData && filterData.employee ? filterData.employee.value : '',
-      // user_id: empClear ? empClear.id : '',
+      // user_id: selectedFilterEmployee ? selectedFilterEmployee.id : '',
     };
     if (filter == 'filter') {
-      params.user_id = empClear?.value;
+      params.user_id = selectedFilterEmployee?.value;
       params.designation_id = position?.value;
     }
     const url = customFunctions.generateUrl(endPoint, params);
@@ -59,11 +62,11 @@ function OldEmployee() {
       const dpOptions = [];
       data.data.length > 0 &&
         data.data.map((op) => {
-          console.log('22 opp', op);
+          // console.log('22 opp', op);
           if ([1].includes(op.role_id)) return;
           dpOptions.push({ label: op.full_name, value: op.id });
         });
-      setEmployeeList(dpOptions);
+      // setEmployeeList(dpOptions);
       options.employee = dpOptions;
       const allOptions = options;
       await updateOptions({ ...allOptions });
@@ -78,7 +81,7 @@ function OldEmployee() {
     let filterSearchErr = '';
     let isValid = true;
     if (
-      customFunctions.checkIfEmpty(empClear) &&
+      customFunctions.checkIfEmpty(selectedFilterEmployee) &&
       customFunctions.checkIfEmpty(position)
       // customFunctions.checkIfEmpty(designationValues)
     ) {
@@ -95,10 +98,9 @@ function OldEmployee() {
   useEffect(() => {
     setTitle('Old Employees');
     getEmployee(1);
-    console.log('usee effect');
+    // console.log('usee effect');
     getPosition();
   }, []);
-
 
   // const getEmployeeArray = async () => {
   //   setShowLoader(true);
@@ -108,25 +110,29 @@ function OldEmployee() {
   //   console.log('dataa-------->>>>', data);
   // };
 
-  // const getEmployeeName = async () => {
-  //   const { data } = await AuthApi.getDataFromServer(
-  //     `${Api.employeeUrl}?type=all`
-  //   );
+  useEffect(()=>{
+    getEmployeeName();
+  },[])
 
-  //   const dpOptions = []
-  //      data &&
-  //     data.data.length > 0 &&
-  //     data.data.map((op) => {
-  //       if ([1].includes(op.role_id)) return
-  //        dpOptions.push({ label: op.full_name, value: op.id });
-  //       }
-  //     );
-  //     setEmployeeList(dpOptions)
-  //     console.log("dpOptionsdpOptions",dpOptions);
-  //   options.employee = dpOptions;
-  //   const allOptions = options;
-  //  updateOptions({ ...allOptions });
-  // };
+  const getEmployeeName = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?old_employee=True&type=all`
+    );
+    // console.log('data.data.data', data);
+    const dpOptions = [];
+    data &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        if ([1].includes(op.role_id)) return;
+        dpOptions.push({ label: op.full_name, value: op.id });
+      });
+      // console.log("dpOptions",dpOptions);
+    setEmployeeList(dpOptions);
+    // console.log('dpOptionsdpOptions', dpOptions);
+    options.employee = dpOptions;
+    const allOptions = options;
+    updateOptions({ ...allOptions });
+  };
 
   const getPosition = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -150,7 +156,7 @@ function OldEmployee() {
     setFilterErr('');
     setPosition('');
     setEmployee([]);
-    setEmpClear('');
+    setSelectedFilterEmp('');
     forceUpdate(count + 1);
     // getEmployeeName();
     getEmployee();
@@ -187,9 +193,9 @@ function OldEmployee() {
                     id="degignation"
                     placeholder="Select Employee"
                     options={employeeList}
-                    defaultValue={empClear}
+                    defaultValue={selectedFilterEmployee}
                     onSelectHandler={(select) => {
-                      setEmpClear(select);
+                      setSelectedFilterEmp(select);
                     }}
                     isClearable={true}
                   />
@@ -289,7 +295,7 @@ function OldEmployee() {
                             )}`}
                           {emp.confirmation_date && <br />}
                           {emp.relieving_date &&
-                            `Relieving Date- ${customFunctions.getDMYDate(
+                            `Relived Date- ${customFunctions.getDMYDate(
                               emp.relieving_date
                             )}`}
                           {emp.relieving_date && <br />}

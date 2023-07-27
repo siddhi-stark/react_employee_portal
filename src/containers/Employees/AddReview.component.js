@@ -27,7 +27,7 @@ const AddReview = (props) => {
   const [reviewStatus, setReviewStatus] = useState('');
   const [reviewComments, setReviewComments] = useState('');
 
-  console.log('reviewStatus-----', reviewStatus.value);
+  // console.log('reviewStatus-----', reviewStatus.value);
 
   const status = [
     {
@@ -94,7 +94,7 @@ const AddReview = (props) => {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success === true) {
       setShowLoader(false);
-      console.log('reviewData', data.data.description);
+      // console.log('reviewData', data.data.description);
       setReviewDate(new Date(data.data.review_date));
       setSelectedEmployee({
         label: data.data.reviewer.full_name,
@@ -113,7 +113,7 @@ const AddReview = (props) => {
   const addReview = async () => {
     setShowLoader(true);
     let review_id = reviewId;
-    console.log('review_idreview_idreview_id', review_id);
+    // console.log('review_idreview_idreview_id', review_id);
     const postData = {
       employee: currentUserId,
       reviewer: selectedEmployee.value,
@@ -177,7 +177,7 @@ const AddReview = (props) => {
           <Col>
             <DropdownInput
               asterisk="*"
-              label="Conducted By"
+              label="Reviewer Name"
               defaultValue={selectedEmployee}
               options={employeeList}
               onSelectHandler={(select) => {
