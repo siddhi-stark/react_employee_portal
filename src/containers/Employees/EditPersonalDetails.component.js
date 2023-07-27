@@ -180,7 +180,7 @@ function EditPersonalDetails(props) {
         dob: noticeDate.dob
           ? new Date(customFunctions.getDate(noticeDate.dob))
           : null,
-        confirmation_date : new Date(customFunctions.getDate(noticeDate?.confirmation_date)),
+        confirmation_date : noticeDate?.confirmation_date ? new Date(customFunctions.getDate(noticeDate?.confirmation_date)) : null,
         email: noticeDate.email ? noticeDate.email : null,
         full_name: noticeDate.full_name ? noticeDate.full_name : null,
         joining_date: noticeDate.date_joined
