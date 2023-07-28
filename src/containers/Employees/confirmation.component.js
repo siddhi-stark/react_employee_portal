@@ -137,10 +137,10 @@ function Confirmation(props) {
   const onSubmitButton = (e) => {
     e.preventDefault();
 
-    if (validator.allValid()) {
+    if (validator.current.allValid()) {
       sendMail();
     } else {
-      validator.showMessages();
+      validator.current.showMessages();
     }
   };
   validator.purgeFields();
@@ -173,12 +173,18 @@ function Confirmation(props) {
                   <Datepicker
                     label="Confirmation Date"
                     className="form-control"
+                    asterisk="*"
                     selected={confirmationDate}
                     placeholder="dd/mm/yyyy"
                     dateFormat="dd/MM/yyyy"
                     onChange={(e) => {
                       setConfirmationDate(e);
                     }}
+                    errorMessage={validator.message(
+                      'position',
+                      confirmationDate,
+                      'required'
+                    )}
                   />
                 </Col>
                 <Col>

@@ -19,6 +19,8 @@ import AddReview from './AddReview.component';
 function EmployeeProfile(props) {
   // console.log('employeee profileeee');
   const { match } = props;
+  const empId = props.match.params.id;
+  console.log('empId', empId);
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});
@@ -40,6 +42,7 @@ function EmployeeProfile(props) {
   const [showReview, setShowReview] = useState(false);
   const [editReview, setEditReview] = useState(false);
   const [pagetype, setPageType] = useState('');
+  const [refreshData, setRefreshData] = useState(false);
   const [reviewData, setReviewData] = useState('');
   const [reviewId, setReviewId] = useState();
   const [currentUserId, setCurrentUserId] = useState();
@@ -58,6 +61,11 @@ function EmployeeProfile(props) {
   useEffect(() => {
     setCurrentUserId(customFunctions.getLocalStorage('id'));
   }, [currentUserId]);
+
+  useEffect(()=>{
+    getEmployeeDetails();
+    getEmployeeHIstory();
+  },[refreshData])
 
   const getEmployeeDetails = async () => {
     setShowLoader(true);
@@ -651,10 +659,14 @@ function EmployeeProfile(props) {
                               getReview();
                               setPageType('');
                               setReviewId('');
+                              setRefreshData(true);
+                              // getEmployeeDetails();
+                              // getEmployeeHIstory();
                             }}
                             reviewEdit={editReview}
                             pageType={pagetype}
                             reviewId={reviewId}
+                            empId={empId}
                           />
                         </div>
                       )}
@@ -698,16 +710,17 @@ function EmployeeProfile(props) {
                                   ) : null}
                                 </Col>
                               </Row>
-                              { item.comments &&
+                              {item.comments && (
                                 <div className="mt-4">
-                                <Row>
-                                  <Col>
+                                  <Row>
+                                    <Col>
                                       <p>
                                         Comment - <small>{item.comments}</small>
                                       </p>
-                                  </Col>
-                                </Row>
-                              </div>}
+                                    </Col>
+                                  </Row>
+                                </div>
+                              )}
                               <hr />
                             </div>
                           </>

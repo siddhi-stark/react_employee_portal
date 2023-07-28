@@ -17,11 +17,13 @@ import {
 } from '../../components/FormInputs';
 
 const AddReview = (props) => {
-  const { handleModalCLose, reviewEdit, pageType, reviewId } = props;
+  const { handleModalCLose, reviewEdit, pageType, reviewId, empId } = props;
+  console.log('empId', empId);
   const [isShowLoader, setShowLoader] = useState(false);
   const [reviewDate, setReviewDate] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [employeeList, setEmployeeList] = useState();
+  console.log('employeeList', employeeList);
   const [feedback, setFeedback] = useState('');
   const [currentUserId, setCurrentUserId] = useState();
   const [reviewStatus, setReviewStatus] = useState('');
@@ -72,6 +74,7 @@ const AddReview = (props) => {
         data.data &&
         data.data.length > 0 &&
         data.data.map((item) => {
+          if(empId == item?.id) return;
           employeeName.push({
             label: item.full_name,
             value: item.id,
