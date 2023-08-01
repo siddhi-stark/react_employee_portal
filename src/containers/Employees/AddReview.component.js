@@ -29,7 +29,7 @@ const AddReview = (props) => {
   const [reviewStatus, setReviewStatus] = useState('');
   const [reviewComments, setReviewComments] = useState('');
 
-  // console.log('reviewStatus-----', reviewStatus.value);
+  console.log('pageType-----',pageType );
 
   const status = [
     {

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable */
+import React, { useState, useEffect,useRef } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Form, Button, Card, Row, Col } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertFromHTML, ContentState } from 'draft-js';
-import SimpleReactValidator from 'simple-react-validator';
+import SimpleReactValidator from "simple-react-validator";
 import swal from 'sweetalert';
 import { Datepicker, Helmet, DropdownInput } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
@@ -21,8 +22,9 @@ function Confirmation(props) {
   const [confirmationDate, setConfirmationDate] = useState('');
   const [emailContent, setEmailContent] = useState(EditorState.createEmpty());
   const [emailBody, setEmailBody] = useState('');
+  const [count, forceUpdate] = useState(0);
 
-  const validator = new SimpleReactValidator({ autoForceUpdate: this });
+  const validator = useRef(new SimpleReactValidator());
   const title = 'Confirmation';
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Confirmation' }];
@@ -136,14 +138,16 @@ function Confirmation(props) {
 
   const onSubmitButton = (e) => {
     e.preventDefault();
-
     if (validator.current.allValid()) {
+      console.log("ifCondition")
       sendMail();
     } else {
+    console.log("elseCondition")
       validator.current.showMessages();
+      forceUpdate(count + 1);
     }
   };
-  validator.purgeFields();
+  // validator.purgeFields();
 
   return (
     <>
@@ -180,8 +184,8 @@ function Confirmation(props) {
                     onChange={(e) => {
                       setConfirmationDate(e);
                     }}
-                    errorMessage={validator.message(
-                      'position',
+                    errorMessage={validator.current.message(
+                      'Confirmation Date ',
                       confirmationDate,
                       'required'
                     )}
@@ -197,8 +201,8 @@ function Confirmation(props) {
                     onSelectHandler={(select) => {
                       setSelectedDesignationOption(select);
                     }}
-                    errorMessage={validator.message(
-                      'position',
+                    errorMessage={validator.current.message(
+                      'Position',
                       selectedDesignationOption,
                       'required'
                     )}

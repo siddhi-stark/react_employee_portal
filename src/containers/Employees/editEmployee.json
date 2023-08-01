@@ -342,13 +342,7 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
-        "validations": [
-          {
-            "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          }
-        ],
+        "validations": [],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",
@@ -379,13 +373,7 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
-        "validations": [
-          {
-            "type": "required",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          }
-        ],
+        "validations": [],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",

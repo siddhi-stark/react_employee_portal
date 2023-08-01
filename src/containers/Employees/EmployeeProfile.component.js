@@ -452,6 +452,7 @@ function EmployeeProfile(props) {
       setShowLoader(false);
       swal(data && data.message[0]);
       setShowModal(false);
+      getEmployeeDetails()
       //   // onPersonalDetailChanges();
     } else {
       swal(data && data.message[0]);
@@ -636,7 +637,7 @@ function EmployeeProfile(props) {
                       <div className="d-flex align-items-start justify-content-between mb-4">
                         {showReview && (
                           <div className="mt-2">
-                            <h5>Add Review</h5>
+                            <h5>{pagetype === "edit" ? "Edit Review" : "Add Review"}</h5>
                           </div>
                         )}
                         <button
