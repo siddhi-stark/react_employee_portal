@@ -51,7 +51,9 @@ function EmployeeProfile(props) {
   const history = useHistory();
   // const navigate = useNavigate()
 
-  // console.log('employeeDetails++++++++++', employeeDetails);
+  console.log('employeeDetails++++++++++', employeeDetails);
+
+ 
 
   useEffect(() => {
     if (currentUserId) {
@@ -62,10 +64,10 @@ function EmployeeProfile(props) {
     setCurrentUserId(customFunctions.getLocalStorage('id'));
   }, [currentUserId]);
 
-  useEffect(()=>{
+  useEffect(() => {
     getEmployeeDetails();
     getEmployeeHIstory();
-  },[refreshData])
+  }, [refreshData]);
 
   const getEmployeeDetails = async () => {
     setShowLoader(true);
@@ -452,7 +454,7 @@ function EmployeeProfile(props) {
       setShowLoader(false);
       swal(data && data.message[0]);
       setShowModal(false);
-      getEmployeeDetails()
+      getEmployeeDetails();
       //   // onPersonalDetailChanges();
     } else {
       swal(data && data.message[0]);
@@ -578,19 +580,21 @@ function EmployeeProfile(props) {
                           )}
                         </h6>
                       ) : (
-                        <h6>
-                          {employeeDetails.confirmation_date
-                            ? `Confirmation Date -`
-                            : `Expected Confirmation Date-`}
-                          {employeeDetails.confirmation_date
-                            ? customFunctions.getDMYDate(
-                                employeeDetails.confirmation_date
-                              )
-                            : employeeDetails.expected_confirmation_date &&
-                              customFunctions.getDMYDate(
-                                employeeDetails.expected_confirmation_date
-                              )}
-                        </h6>
+                        <>
+                          <h6>
+                            {employeeDetails.confirmation_date
+                              ? `Confirmation Date -`
+                              : `Expected Confirmation Date-`}
+                            {employeeDetails.confirmation_date
+                              ? customFunctions.getDMYDate(
+                                  employeeDetails.confirmation_date
+                                )
+                              : employeeDetails.expected_confirmation_date &&
+                                customFunctions.getDMYDate(
+                                  employeeDetails.expected_confirmation_date
+                                )}
+                          </h6>
+                        </>
                       )}
                     </div>
                     {employeeDetails?.on_notice_period ? (
@@ -637,7 +641,11 @@ function EmployeeProfile(props) {
                       <div className="d-flex align-items-start justify-content-between mb-4">
                         {showReview && (
                           <div className="mt-2">
-                            <h5>{pagetype === "edit" ? "Edit Review" : "Add Review"}</h5>
+                            <h5>
+                              {pagetype === 'edit'
+                                ? 'Edit Review'
+                                : 'Add Review'}
+                            </h5>
                           </div>
                         )}
                         <button

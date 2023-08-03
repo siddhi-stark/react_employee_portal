@@ -21,6 +21,22 @@ function EditPersonalDetails(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const [testDate, setDate] = useState(null);
 
+  // useEffect(() => {
+  //   if(addInstituteId){
+  //     const formSchema = [...FormSections];
+  //   const updatedSchema = formSchema.map((section)=>{
+  //     const s = {...section};
+  //     s.fields = section.fields.map((item) => {
+  //       const itemData = item;
+  //        if(item.name === 'location') itemData.disabled = true;
+  //        return itemData;
+  //     })
+  //     return s;
+  //   })
+  // updateJsonSchema([...updatedSchema]);        
+  // } 
+  // }, []);
+
   useEffect(() => {
     const employeeId = customFunctions.getLocalStorage('id');
     if (employeeId) {
