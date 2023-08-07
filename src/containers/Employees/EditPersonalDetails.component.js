@@ -21,6 +21,8 @@ function EditPersonalDetails(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const [testDate, setDate] = useState(null);
 
+  console.log("FormSections",FormSections);
+
   // useEffect(() => {
   //   if(addInstituteId){
   //     const formSchema = [...FormSections];
@@ -61,6 +63,9 @@ function EditPersonalDetails(props) {
             const date = new Date();
             itemData.minDate = date;
           }
+          // if(item.name =="notice_period_start_date" === '' ){
+          //   item.name ==="notice_period_end_date", itemData.displayWhen = 
+          // }
           return itemData;
         });
         return s;

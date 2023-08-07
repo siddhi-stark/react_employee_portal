@@ -295,7 +295,7 @@ function OldEmployee() {
                             )}`}
                           {emp.confirmation_date && <br />}
                           {emp.relieving_date &&
-                            `Relived Date- ${customFunctions.getDMYDate(
+                            `Relieved Date- ${customFunctions.getDMYDate(
                               emp.relieving_date
                             )}`}
                           {emp.relieving_date && <br />}

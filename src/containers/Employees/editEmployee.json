@@ -191,7 +191,7 @@
       {
         "name": "mobile",
         "type": "text",
-        "label": "Number",
+        "label": "Contact Number",
         "id": "",
         "placeholder": "",
         "inputClass": "",
@@ -233,7 +233,7 @@
         "containerClass": "",
         "validations": [
           {
-            "type": "",
+            "type": "required",
             "applyWhen": [],
             "applyWhenRelation": "OR"
           }
