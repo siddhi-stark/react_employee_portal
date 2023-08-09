@@ -11,7 +11,7 @@ import FormSections from './editEmployee.json';
 
 function EditPersonalDetails(props) {
   const { handleModalCLose, onPersonalDetailChanges } = props;
-  console.log('editttttttt', props);
+  // console.log('editttttttt', props);
   // Variable declarations
   // const history = useHistory()
   const [defaultValues, updateDefaultValues] = useState({});
@@ -102,7 +102,7 @@ function EditPersonalDetails(props) {
         ? customFunctions.getDate(formValues.probation_date)
         : null,
     };
-    console.log('postdata', postData);
+    // console.log('postdata', postData);
     // return;
 
     const { data } = await AuthApi.putDataToServer(

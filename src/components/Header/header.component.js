@@ -31,7 +31,7 @@ function Header() {
     if (!userToken) return false;
 
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
-
+    // console.log('data',data);
     if (data && data.data) {
       setDesignation(data.data.designation_name);
       setEmpId(data.data.emp_code);
@@ -40,6 +40,7 @@ function Header() {
       customFunctions.setLocalStorage('greetingId', data.data.greeting);
       customFunctions.setLocalStorage('team_id', data.data.team_id);
       customFunctions.setLocalStorage('birthday', data.data.is_birthday);
+      customFunctions.setLocalStorage('tw_id', data.data.tw_id);
     }
     return true;
   };

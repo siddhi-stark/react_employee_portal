@@ -57,12 +57,19 @@ function ToDoList(props) {
   const [timeMinutes, setTimeMinutes] = useState('');
   const [showSendReport, setShowSendReport] = useState(false);
   const [isShowLoader, setShowLoader] = useState(false);
+  const [pmsId, setPmsId] = useState(null);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
+
+  useEffect(()=>{
+    const tw_id = customFunctions.getLocalStorage('tw_id')
+    // console.log('tw_id',tw_id);
+    setPmsId(tw_id)
+  },[])
 
   const columns = [
     {
@@ -218,7 +225,7 @@ function ToDoList(props) {
   const getTableData = async (pageNo = 0) => {
     setShowLoader(true);
     const page = pageNo || pagination.current_page;
-    const endPoint = `${Api.taskUrl}?sort_by=id&sort_direction=descending&page=${page}&limit=${pagination.itemsPerPage}`;
+    const endPoint = `${Api.taskUrl}?sort_by=id&sort_direction=descending&page=${page}&limit=${pagination.itemsPerPage}&tw_emp_id=${pmsId}`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data && data.data) {
       setShowLoader(false);
@@ -641,7 +648,7 @@ function ToDoList(props) {
     breakData[i].endTime = new Date(endTime.setMinutes(newMins));
     setBreakData([...breakData]);
   };
-
+  // console.log('pmsId',pmsId);
   const OnSaveProgress = async () => {
     setLoader(true);
     const progressArr = [];

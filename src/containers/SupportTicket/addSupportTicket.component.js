@@ -208,7 +208,7 @@ function AddSupportTicket(props) {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.supportTicketUrl}${editId}/`
     );
-    console.log('data', data);
+    // console.log('data', data);
     if (!data) {
       return;
     }
