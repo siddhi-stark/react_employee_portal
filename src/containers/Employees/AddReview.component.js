@@ -18,18 +18,18 @@ import {
 
 const AddReview = (props) => {
   const { handleModalCLose, reviewEdit, pageType, reviewId, empId } = props;
-  console.log('empId', empId);
+  // console.log('empId', empId);
   const [isShowLoader, setShowLoader] = useState(false);
   const [reviewDate, setReviewDate] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [employeeList, setEmployeeList] = useState();
-  console.log('employeeList', employeeList);
+  // console.log('employeeList', employeeList);
   const [feedback, setFeedback] = useState('');
   const [currentUserId, setCurrentUserId] = useState();
   const [reviewStatus, setReviewStatus] = useState('');
   const [reviewComments, setReviewComments] = useState('');
 
-  console.log('pageType-----',pageType );
+  // console.log('pageType-----',pageType );
 
   const status = [
     {

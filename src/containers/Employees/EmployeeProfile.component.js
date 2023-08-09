@@ -76,7 +76,7 @@ function EmployeeProfile(props) {
       `${Api.employeeUrl}${employeeId}/`
     );
     if (data) {
-      console.log('dataa-------', data);
+      // console.log('dataa-------', data);
       setShowLoader(false);
       setEmployeeDetails(data.data);
       getEmployeeDocument(data.data && data.data.full_name);
