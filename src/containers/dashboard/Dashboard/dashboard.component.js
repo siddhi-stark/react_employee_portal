@@ -50,6 +50,7 @@ function Dashboard() {
   const [leavesUpdate, setLeavesUpdate] = useState([]);
   const [interviewsUpdate, setInterviewsUpdate] = useState([]);
   const [, setCount] = useState(''); // eslint-disable-line
+  const [pmsId, setPmsId] = useState(null);
   const [newBirthdayData, setNewBirthdayData] = useState([]);
   const [broadcastDescription, setBroadcastDescription] = useState([]);
   const [confirmationEmployee, setConfirmationEmployee] = useState([]);
@@ -215,6 +216,8 @@ function Dashboard() {
 
     if (data && data.data) {
       setEmployeeName(data.data.full_name);
+      setPmsId(data?.data?.tw_id);
+      console.log('====>',data);
     }
     return true;
   };
@@ -1111,6 +1114,7 @@ function Dashboard() {
             )}
             {showClockIn && (
               <ToDoList
+                pmsId={pmsId}
                 onMorningSendScrum={getDailyActivity}
                 onClockoutReport={getTimeSheetList}
                 totalHrs={totalHrs}

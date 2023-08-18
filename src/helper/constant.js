@@ -1,4 +1,4 @@
 const constants = {
-  link: 'https://sdms.teamwork.com/#tasks/',
+  link: 'https://pms.reviewtestlink.com/',
 };
 export default constants;
