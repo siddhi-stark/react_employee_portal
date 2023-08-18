@@ -393,7 +393,7 @@
         "callback": "",
         "callbackUrl": "",
         "inputToChange": "",
-        "minDateSelector": "",
+        "minDateSelector": "notice_period_start_date",
         "maxDateSelector": "",
         "dateFormat": "dd/MM/yyyy",
 

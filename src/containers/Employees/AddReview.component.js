@@ -167,6 +167,7 @@ const AddReview = (props) => {
               asterisk="*"
               placeholder="dd-mm-yyyy"
               dateFormat="dd-MM-yyyy"
+              minDate={new Date()}
               onChange={(e) => {
                 setReviewDate(e);
               }}
