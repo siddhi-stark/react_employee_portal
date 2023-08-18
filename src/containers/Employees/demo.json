@@ -1,0 +1,81 @@
+[
+  {
+    "sectionName": "demo",
+    "sectionTitle": "Demo",
+    "layout": { "label": "1 Column", "value": "1column" },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": true,
+    "fields": [
+      {
+        "name": "start",
+        "type": "date",
+        "label": "start",
+        "id": "start",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "end",
+        "type": "date",
+        "label": "end date",
+        "id": "end date",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              { "name": "start", "value": "start", "condition": "!empty" }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {
+          "conditions": [
+            { "name": "start", "value": "start", "condition": "!empty" }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "true",
+        "haveDisplayOptions": "true",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "1column"
+  }
+]

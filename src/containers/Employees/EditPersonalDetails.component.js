@@ -8,10 +8,10 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import FormSections from './editEmployee.json';
+// import FormSections from './demo.json'
 
 function EditPersonalDetails(props) {
   const { handleModalCLose, onPersonalDetailChanges } = props;
-  console.log('editttttttt', props);
   // Variable declarations
   // const history = useHistory()
   const [defaultValues, updateDefaultValues] = useState({});
@@ -21,7 +21,6 @@ function EditPersonalDetails(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const [testDate, setDate] = useState(null);
 
-  console.log("FormSections",FormSections);
 
   // useEffect(() => {
   //   if(addInstituteId){
@@ -63,8 +62,8 @@ function EditPersonalDetails(props) {
             const date = new Date();
             itemData.minDate = date;
           }
-          // if(item.name =="notice_period_start_date" === '' ){
-          //   item.name ==="notice_period_end_date", itemData.displayWhen = 
+          // if(item.name =="notice_period_start_date" === true ){
+          //   item.name ==="notice_period_end_date", itemData.displayWhen = true
           // }
           return itemData;
         });
@@ -83,6 +82,8 @@ function EditPersonalDetails(props) {
     getUserRole();
   }, []);
 
+
+  
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('id');
@@ -123,7 +124,6 @@ function EditPersonalDetails(props) {
         ? customFunctions.getDate(formValues.probation_date)
         : null,
     };
-    console.log('postdata', postData);
     // return;
 
     const { data } = await AuthApi.putDataToServer(
@@ -151,8 +151,6 @@ function EditPersonalDetails(props) {
       `${Api.employeeUrl}${id}/`
     );
     if (data && data.success) {
-      // console.log("data-----------",data.data)
-      // console.log("DOB------->>>>",new Date(customFunctions.getDate(data.data.dob)));
       setShowLoader(false);
       data.data.confirmation_date = data.data.confirmation_date
         ? new Date(customFunctions.getDate(data.data.confirmation_date))
@@ -188,7 +186,6 @@ function EditPersonalDetails(props) {
         ...data.data,
         designation: ds,
       };
-      // console.log('obj',obj);
       // updateDefaultValues({ ...obj });
       const noticeDate = obj;
       updateDefaultValues({
@@ -247,7 +244,7 @@ function EditPersonalDetails(props) {
 
   return (
     <>
-      <Loader showLoader={isShowLoader} needFullPage={false} />
+      <Loader showLoader={isShowLoader} needFullPage={false}/>
       <StarkFormBuilder
         containerClass="mb-2 mt-2"
         formHeaderClass=""

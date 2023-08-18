@@ -12,24 +12,24 @@ import customFunctions from '../../helper/customFunctions';
 function Reports(props) {
   const { match, location } = props;
   const state = useLocation();
-  // console.log('state', state);
-  // console.log('props',props);
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
   const [reportDate, setReportDate] = useState('');
   const [title, setTitle] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);
-  const [page ,setPage] = useState()
+  const [page, setPage] = useState();
+  const [clockIn, setClockIn] = useState();
+  const [clockOut, setClockOut] = useState();
+  const [userName, setUserName] = useState();
   const history = useHistory();
   const report = props;
 
-  // console.log('report', report.match.params.id);
+
   const employeeReport = report.location.state
     ? report.location.state.employeeReport
     : '';
   const teamReport = report.location.state ? report.location.state : '';
-  // console.log('teamReport', teamReport);
   const reporterName = report.location.state
     ? report.location.state.reporterName
     : '';
@@ -39,13 +39,9 @@ function Reports(props) {
     totalItems: 10,
   });
 
- useEffect(()=>{
-  setPage(state.state.pagination)
-  // console.log("page----------",page);
- },)
-
-  const clockin = location?.state?.clockin;
-  const clockout = location?.state?.clockout;
+  // useEffect(() => {
+  //   setPage(state.state.pagination);
+  // });
 
   const columns = [
     {
@@ -101,6 +97,9 @@ function Reports(props) {
     const url = customFunctions.generateUrl(endPoint, params);
 
     const { data } = await AuthApi.getDataFromServer(url);
+    // setClockIn(customFunctions.formatAMPM(data.data.morning_data[0].sign_in));
+    // setClockOut( data.data.morning_data[0].sign_out ? customFunctions.formatAMPM(data.data.morning_data[0].sign_out):  "-");
+    setUserName(data.data.morning_data[0].user);
 
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setShowLoader(false);
@@ -149,13 +148,11 @@ function Reports(props) {
               <Card.Title>
                 <div className="d-flex">
                   <h5>
-                    {employeeReport || teamReport
-                      ? `Name: ${reporterName}`
-                      : ''}{' '}
+                    {employeeReport || teamReport ? `Name: ${userName}` : ''}{' '}
                     &nbsp; &nbsp; Date: {reportDate}{' '}
                   </h5>
-                  <h5 className="ml-3">Sign in: {clockin} </h5>
-                  <h5 className="ml-3">Sign out: {clockout} </h5>
+                  <h5 className="ml-3">Sign in:{clockIn}</h5>
+                  <h5 className="ml-3">Sign out:{clockOut} </h5>
                 </div>
               </Card.Title>
               <div className="light-bg buttons align-items-center mt-3">
@@ -187,7 +184,7 @@ function Reports(props) {
                         state: {
                           EmpId: report.match.params.id,
                           reporterName: report.location.state.reporterName,
-                          pageee : page
+                          pageee: page,
                         },
                       });
                     } else {

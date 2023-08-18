@@ -373,9 +373,22 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
-        "displayWhen": {},
-        "haveValidations": "false",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              { "name": "notice_period_start_date", "value": "notice_period_start_date", "condition": "!empty" }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {
+          "conditions": [
+            { "name": "notice_period_start_date", "value": "notice_period_start_date", "condition": "!empty" }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "true",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
