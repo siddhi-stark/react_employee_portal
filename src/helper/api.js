@@ -197,7 +197,8 @@ export default class Api extends Component {
 
       case 'dev':
         // url = 'http://92.204.146.45:1337/api/v1/';
-        url = 'https://developmentapi.starkdigital.in/api/v1/';
+        // url = 'https://developmentapi.starkdigital.in/api/v1/';/
+        url = 'https://api.pms-portal.reviewtestlink.com/api/v1/';
         break;
       // Default: development server
       default:
