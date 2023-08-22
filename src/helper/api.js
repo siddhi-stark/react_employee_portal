@@ -192,15 +192,15 @@ export default class Api extends Component {
     let url = '';
     switch (env) {
       case 'production':
-        // url = 'https://liveapi.starkdigital.in/api/v1/'; // for emp Production
-        url = 'https://api.pms-portal.reviewtestlink.com/api/v1/'; 
+        url = 'https://liveapi.starkdigital.in/api/v1/'; // for emp Production
+        // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/'; 
 
         break;
 
       case 'dev':
-        // url = 'http://92.204.146.45:1337/api/v1/';
+        url = 'http://92.204.146.45:1337/api/v1/';
         // url = 'https://developmentapi.starkdigital.in/api/v1/';/
-        url = 'https://api.pms-portal.reviewtestlink.com/api/v1/';
+        // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/';
         break;
       // Default: development server
       default:
