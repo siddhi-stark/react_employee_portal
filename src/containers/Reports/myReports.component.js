@@ -181,6 +181,7 @@ function AllReports() {
                         selected={fromDate}
                         onChange={(e) => {
                           setFromDate(e);
+                          setToDate('')
                         }}
                         autoComplete="off"
                         name="startDate"
