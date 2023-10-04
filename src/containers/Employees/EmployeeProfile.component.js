@@ -20,7 +20,7 @@ function EmployeeProfile(props) {
   // console.log('employeee profileeee');
   const { match } = props;
   const empId = props.match.params.id;
-  console.log('empId', empId);
+  // console.log('empId', empId);
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});
@@ -51,9 +51,7 @@ function EmployeeProfile(props) {
   const history = useHistory();
   // const navigate = useNavigate()
 
-  console.log('employeeDetails++++++++++', employeeDetails);
-
- 
+  // console.log('employeeDetails++++++++++', employeeDetails);
 
   useEffect(() => {
     if (currentUserId) {
@@ -449,7 +447,7 @@ function EmployeeProfile(props) {
       `${Api.employeeUrl}${employeeDetails?.id}/`,
       postData
     );
-    console.log('data',data);
+    console.log('${Api.employeeUrl}${employeeDetails?.id}/', data);
     if (data) {
       setShowLoader(false);
       swal(data && data.message[0]);
@@ -684,14 +682,20 @@ function EmployeeProfile(props) {
                       </div>
                       {reviewData &&
                         reviewData.length > 0 &&
-                        reviewData.map((item) => (
+                        reviewData.map((item, i) => (
                           <>
-                            <div className="ml-5">
-                              <p>
-                                Review Date -{' '}
-                                {customFunctions.getDMYDate(item.review_date)}
-                              </p>
-                            </div>
+                            <Row key={i}>
+                              {console.log('item', item)}
+                              <Col className="ml-5">
+                                <p>
+                                  Review Date -{' '}
+                                  {customFunctions.getDMYDate(item.review_date)}
+                                </p>
+                              </Col>
+                              <Col className="ml-5">
+                                <p>Review Time - {item.review_time}</p>
+                              </Col>
+                            </Row>
                             <div className="ml-5 mt-3 mb-3">
                               <Row>
                                 <Col>
@@ -770,9 +774,9 @@ function EmployeeProfile(props) {
                         </div>
                       )}
                       {companyList &&
-                        companyList.map((comp) => (
+                        companyList.map((comp, i) => (
                           <>
-                            <div className="d-flex align-items-start justify-content-between">
+                            <div className="d-flex align-items-start justify-content-between" key={i}>
                               <div className="media">
                                 <Image
                                   src={
@@ -861,9 +865,9 @@ function EmployeeProfile(props) {
                           </div>
                         )}
                         {bondList &&
-                          bondList.map((bond) => (
+                          bondList.map((bond, i) => (
                             <>
-                              <div className="d-flex align-items-start justify-content-between">
+                              <div className="d-flex align-items-start justify-content-between" key={i}>
                                 <div className="media">
                                   <div className="media-body">
                                     <p>
@@ -955,10 +959,10 @@ function EmployeeProfile(props) {
                         <hr />
                         <div className="row">
                           {employeeDocument &&
-                            employeeDocument.map((document) => (
+                            employeeDocument.map((document, index) => (
                               <>
                                 {document.title === 'Personal' && (
-                                  <div className="col-md-4">
+                                  <div className="col-md-4" key={index}>
                                     <h5 className="mb-3">Personal</h5>
                                     <CustomTable
                                       tableContainerClass="mt-2"

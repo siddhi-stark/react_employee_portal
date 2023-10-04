@@ -18,18 +18,34 @@ import {
 
 const AddReview = (props) => {
   const { handleModalCLose, reviewEdit, pageType, reviewId, empId } = props;
-  // console.log('empId', empId);
   const [isShowLoader, setShowLoader] = useState(false);
   const [reviewDate, setReviewDate] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [employeeList, setEmployeeList] = useState();
-  // console.log('employeeList', employeeList);
   const [feedback, setFeedback] = useState('');
   const [currentUserId, setCurrentUserId] = useState();
   const [reviewStatus, setReviewStatus] = useState('');
   const [reviewComments, setReviewComments] = useState('');
+  const [reviewTime, setReviewTime] = useState('');
 
-  // console.log('pageType-----',pageType );
+
+  const convertDateTimeValue = (time) => {
+    let f = new Date();
+    const now = new Date();
+    f =
+      now.getMonth() +
+      1 +
+      '/' +
+      now.getDate() +
+      '/' +
+      now.getFullYear() +
+      ' ' +
+      time;
+    return new Date(f);
+  };
+
+
+  // console.log('reviewTime-----', convertDateTimeValue(reviewTime));
 
   const status = [
     {
@@ -74,7 +90,7 @@ const AddReview = (props) => {
         data.data &&
         data.data.length > 0 &&
         data.data.map((item) => {
-          if(empId == item?.id) return;
+          if (empId == item?.id) return;
           employeeName.push({
             label: item.full_name,
             value: item.id,
@@ -89,7 +105,7 @@ const AddReview = (props) => {
 
   const getReview = async () => {
     setShowLoader(true);
-    const endPoint = `${Api.employeeReviewUrl}${reviewId}/`;
+    const endPoint = `${Api.employeeReviewUrl}${reviewId}`;
     const params = {
       employee_id: currentUserId,
     };
@@ -97,11 +113,11 @@ const AddReview = (props) => {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success === true) {
       setShowLoader(false);
-      // console.log('reviewData', data.data.description);
       setReviewDate(new Date(data.data.review_date));
       setSelectedEmployee({
         label: data.data.reviewer.full_name,
       });
+      setReviewTime(convertDateTimeValue(data?.data?.review_time));
       setReviewComments(data.data.comments);
       setFeedback(data.data.description);
       setReviewStatus({
@@ -113,18 +129,20 @@ const AddReview = (props) => {
     }
   };
 
-  const addReview = async () => {
+  const addReviewOfEmp = async () => {
     setShowLoader(true);
     let review_id = reviewId;
-    // console.log('review_idreview_idreview_id', review_id);
     const postData = {
       employee: currentUserId,
-      reviewer: selectedEmployee.value,
+      reviewer: selectedEmployee?.value,
       review_date: customFunctions.getDate(reviewDate),
-      status: reviewStatus.value,
+      status: reviewStatus?.value,
       comments: reviewComments,
       description: feedback,
+      review_time: customFunctions.getTimeAndSec(reviewTime),
     };
+    console.log('postData', postData);
+    // return;
     if (review_id) {
       postData.id = review_id;
     }
@@ -146,6 +164,7 @@ const AddReview = (props) => {
       });
     } else {
       setShowLoader(false);
+      swal('Something went wrong', ' ', 'err');
     }
   };
 
@@ -176,6 +195,27 @@ const AddReview = (props) => {
               //     joiningDetails.joiningDate,
               //     'required'
               //   )}
+            />
+          </Col>
+          <Col>
+            <Datepicker
+              className="form-control"
+              label="Start Time"
+              asterisk="*"
+              dateFormat="h:mm aa"
+              timeIntervals={10}
+              timeCaption="Time"
+              selected={reviewTime ? reviewTime : null }
+              onChange={(e) => {
+                setReviewTime(e);
+              }}
+              showTimeSelect="showTimeSelect"
+              showTimeSelectOnly="showTimeSelectOnly"
+              // errorMessage={validator.current.message(
+              //   `task start time`,
+              //   data.taskStartTime,
+              //   'required'
+              // )}
             />
           </Col>
           <Col>
@@ -237,7 +277,7 @@ const AddReview = (props) => {
         <div className="mb-3 mt-3">
           <Button
             onClick={(e) => {
-              addReview();
+              addReviewOfEmp();
               handleModalCLose(false);
             }}
           >

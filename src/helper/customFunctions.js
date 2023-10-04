@@ -29,14 +29,30 @@ class CustomFunctions extends Component {
     hours = hours ? hours : 12; // the hour '0' should be '12'
     minutes = minutes < 10 ? `0 ${minutes}` : minutes;
     const strTime = `${hours}:${minutes} ${ampm.toUpperCase()}`;
+    console.log('strTime', strTime);
     return strTime;
-    };
+  };
+
+
+  newFormatAMPM = (time) => {
+    console.log('dataaaa---> ', time)
+    
+  };
 
   getTime = (time) => {
     const newDate = new Date(time);
     const h = newDate.getHours();
     const m = newDate.getMinutes();
     const formattedTime = h + ':' + m; //eslint-disable-line
+    return formattedTime;
+  };
+
+
+  getTimeAndSec = (time) => {
+    const newDate = new Date(time);
+    const h = newDate.getHours();
+    const m = newDate.getMinutes();
+    const formattedTime = h + ':' + m + ':' + '00'; //eslint-disable-line
     return formattedTime;
   };
 
@@ -60,18 +76,6 @@ class CustomFunctions extends Component {
     if (!string) return string;
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
-
-  // formatAMPM = (date) => {
-  //   const newdate = new Date(date);
-  //   let hours = newdate.getHours();
-  //   let minutes = newdate.getMinutes();
-  //   const ampm = hours >= 12 ? 'pm' : 'am';
-  //   hours %= hours % 12;
-  //   hours = hours ? hours : 12; // the hour '0' should be '12'
-  //   minutes = minutes < 10 ? '0' + minutes : minutes;
-  //   const strTime = hours + ':' + minutes + ' ' + ampm.toUpperCase();
-  //   return strTime;
-  //   };
 
   headerDate = (date) => {
     const newDate = new Date(date);
@@ -111,17 +115,24 @@ class CustomFunctions extends Component {
     return formattedate;
   };
 
-  getTimeFormatter = (dateTime) => {
-    const newdate = new Date(dateTime);
-    const h = newdate.getHours();
-    const min = newdate.getMinutes();
-    const formatTime = h + ':' + min; //eslint-disable-line
-    const d = newdate.getDate();
-    const m = newdate.getMonth() + 1;
-    const y = newdate.getFullYear();
-    const formattedate = (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y +" "+ formatTime; //eslint-disable-line
-    return formattedate;
-  };
+  // getTimeFormatter = (dateTime) => {
+  //   const newdate = new Date(dateTime);
+  //   const h = newdate.getHours();
+  //   const min = newdate.getMinutes();
+  //   const formatTime = h + ':' + min; //eslint-disable-line
+  //   const d = newdate.getDate();
+  //   const m = newdate.getMonth() + 1;
+  //   const y = newdate.getFullYear();
+  //   const formattedate =
+  //     (d <= 9 ? '0' + d : d) +
+  //     '/' +
+  //     (m <= 9 ? '0' + m : m) +
+  //     '/' +
+  //     y +
+  //     ' ' +
+  //     formatTime; //eslint-disable-line
+  //   return formattedate;
+  // };
 
   getMonthDate = (dateTime) => {
     const newdate = new Date(dateTime);
@@ -226,17 +237,18 @@ class CustomFunctions extends Component {
   };
 
   validateEmail = (email) => {
-    var emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
+    const emailReg =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
     return emailReg.test(email);
   };
 
   validatePhone = (phone) => {
-    var phoneformat = /^\d{10}$/; // eslint-disable-line
+    const phoneformat = /^\d{10}$/; // eslint-disable-line
     return phone.match(phoneformat);
   };
 
   validatePrice = (price) => {
-    var priceformat = /^\d{1,8}(\.\d{0,2})?$/g; // eslint-disable-line
+    const priceformat = /^\d{1,8}(\.\d{0,2})?$/g; // eslint-disable-line
     return price.match(priceformat);
   };
 
@@ -439,13 +451,17 @@ class CustomFunctions extends Component {
   getYear = (dateTime) => {
     const newdate = new Date(dateTime);
     const y = newdate.getFullYear();
-    const formattedate =
-      y ; //eslint-disable-line
+    const formattedate = y; //eslint-disable-line
     return formattedate;
   };
 
   textAbstract = (text, length) => {
-    const output = text.split('', length).reduce((o, c) => o.length === length - 1 ? `${o}${c}...` : `${o}${c}`, '');
+    const output = text
+      .split('', length)
+      .reduce(
+        (o, c) => (o.length === length - 1 ? `${o}${c}...` : `${o}${c}`),
+        ''
+      );
     return output;
   };
 }
