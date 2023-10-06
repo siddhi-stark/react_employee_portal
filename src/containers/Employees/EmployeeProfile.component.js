@@ -353,7 +353,7 @@ function EmployeeProfile(props) {
             review_data.push(item);
           }
         });
-      setReviewData(review_data);
+      setReviewData(review_data.reverse());
       // setReviewId(data.data)
     }
   };
@@ -685,28 +685,30 @@ function EmployeeProfile(props) {
                         reviewData.map((item, i) => (
                           <>
                             <Row key={i}>
-                              {console.log('item', item)}
-                              <Col className="ml-5">
+                              {/* {console.log('item', item)} */}
+                              <Col>
+                                <p>
+                                  Reviewer Name - {item.reviewer.full_name}{' '}
+                                </p>
+                              </Col>
+                              <Col className="">
                                 <p>
                                   Review Date -{' '}
                                   {customFunctions.getDMYDate(item.review_date)}
                                 </p>
                               </Col>
-                              <Col className="ml-5">
+                              <Col className="">
                                 <p>Review Time - {item.review_time}</p>
                               </Col>
+                              <Col className="">
+                                <p>
+                                  Status -{' '}
+                                  {item.status === 1 ? 'Pending' : 'Complete'}
+                                </p>
+                              </Col>
                             </Row>
-                            <div className="ml-5 mt-3 mb-3">
+                            <div className="mb-3">
                               <Row>
-                                <Col>
-                                  <h5>{item.reviewer.full_name} </h5>
-                                </Col>
-                                <Col className="d-flex justify-content-end">
-                                  <p>
-                                    Status -{' '}
-                                    {item.status === 1 ? 'Pending' : 'Complete'}
-                                  </p>
-                                </Col>
                                 <Col className="d-flex justify-content-end">
                                   {item && item.status_name === 'Pending' ? (
                                     <Image
@@ -724,7 +726,7 @@ function EmployeeProfile(props) {
                                 </Col>
                               </Row>
                               {item.comments && (
-                                <div className="mt-4">
+                                <div className="mt-2 mb-4">
                                   <Row>
                                     <Col>
                                       <p>
@@ -776,7 +778,10 @@ function EmployeeProfile(props) {
                       {companyList &&
                         companyList.map((comp, i) => (
                           <>
-                            <div className="d-flex align-items-start justify-content-between" key={i}>
+                            <div
+                              className="d-flex align-items-start justify-content-between"
+                              key={i}
+                            >
                               <div className="media">
                                 <Image
                                   src={
@@ -867,7 +872,10 @@ function EmployeeProfile(props) {
                         {bondList &&
                           bondList.map((bond, i) => (
                             <>
-                              <div className="d-flex align-items-start justify-content-between" key={i}>
+                              <div
+                                className="d-flex align-items-start justify-content-between"
+                                key={i}
+                              >
                                 <div className="media">
                                   <div className="media-body">
                                     <p>

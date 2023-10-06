@@ -450,7 +450,7 @@ function AllReports() {
                     ...pagination,
                     activePage: pagination.current_page,
                     onPageChange: (pageNo) => {
-                      console.log('pageNopageNo', pageNo);
+                      // console.log('pageNopageNo', pageNo);
                       getReports(pageNo);
                     },
                   }}

@@ -31,7 +31,7 @@ function Header() {
     if (!userToken) return false;
 
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
-    console.log('data',data);
+    // console.log('data',data);
     if (data && data.data) {
       setDesignation(data.data.designation_name);
       setEmpId(data.data.emp_code);

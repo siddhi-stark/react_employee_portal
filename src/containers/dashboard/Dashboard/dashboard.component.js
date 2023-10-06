@@ -217,7 +217,7 @@ function Dashboard() {
     if (data && data.data) {
       setEmployeeName(data.data.full_name);
       setPmsId(data?.data?.tw_id);
-      console.log('====>',data);
+      // console.log('====>',data);
     }
     return true;
   };

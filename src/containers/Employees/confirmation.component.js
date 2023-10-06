@@ -139,10 +139,10 @@ function Confirmation(props) {
   const onSubmitButton = (e) => {
     e.preventDefault();
     if (validator.current.allValid()) {
-      console.log("ifCondition")
+      // console.log("ifCondition")
       sendMail();
     } else {
-    console.log("elseCondition")
+    // console.log("elseCondition")
       validator.current.showMessages();
       forceUpdate(count + 1);
     }

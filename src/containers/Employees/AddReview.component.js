@@ -141,7 +141,7 @@ const AddReview = (props) => {
       description: feedback,
       review_time: customFunctions.getTimeAndSec(reviewTime),
     };
-    console.log('postData', postData);
+    // console.log('postData', postData);
     // return;
     if (review_id) {
       postData.id = review_id;
@@ -171,7 +171,6 @@ const AddReview = (props) => {
   return (
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
-
       <div className="mt-4 ml-3 mr-3">
         <Row>
           <Col>

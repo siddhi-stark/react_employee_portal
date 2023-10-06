@@ -29,14 +29,8 @@ class CustomFunctions extends Component {
     hours = hours ? hours : 12; // the hour '0' should be '12'
     minutes = minutes < 10 ? `0 ${minutes}` : minutes;
     const strTime = `${hours}:${minutes} ${ampm.toUpperCase()}`;
-    console.log('strTime', strTime);
+    // console.log('strTime', strTime);
     return strTime;
-  };
-
-
-  newFormatAMPM = (time) => {
-    console.log('dataaaa---> ', time)
-    
   };
 
   getTime = (time) => {
@@ -46,7 +40,6 @@ class CustomFunctions extends Component {
     const formattedTime = h + ':' + m; //eslint-disable-line
     return formattedTime;
   };
-
 
   getTimeAndSec = (time) => {
     const newDate = new Date(time);

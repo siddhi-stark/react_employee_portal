@@ -89,7 +89,7 @@ function NoticePeriodComponent() {
         <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
           {employee &&
             employee.map((emp) => (
-            console.log("emo-------------->",emp),
+            // console.log("emo-------------->",emp),
               <Col>
                 <Card className="h-100">
                   <Card.Body>
