@@ -16,7 +16,6 @@ import Loader from '../../components/Loader/index';
 import Addtask from './noteModel';
 
 function SupportTicket(props) {
-  // console.log('props',props);
   const history = useHistory();
   const [pageTitle, setTitle] = useState('');
   const items = props.data
@@ -44,9 +43,7 @@ function SupportTicket(props) {
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [filterData, setFilterData] = useState({});
-  // console.log('filterData', filterData);
   const [user, updateUser] = useState(0);
-  // console.log('user',user);
   const [createTask, setCreateTask] = useState();
 
   const statusArray = [
@@ -77,70 +74,8 @@ function SupportTicket(props) {
     }
   ];
 
-  // const handleActionCallback = ({ id, status_id }) => { // eslint-disable-line
-  //   // eslint-disable-line
-  //   return (
-  //     <span className="d-flex">
-  //       {[1, 2].includes(Number(userRole)) ? (
-  //         <div>
-  //           <a
-  //             href="javascript:void(0)"
-  //             className=""
-  //             onClick={(e) => {
-  //               e.preventDefault();
-  //               e.stopPropagation();
-  //               history.push(`/view-support-ticket/${id}`, { state: true });
-  //             }}
-  //           >
-  //             <Image
-  //               src="/images/eye.svg"
-  //               className="delete-edit-view"
-  //               alt="Edit SupportTicket"
-  //             />
-  //           </a>
-  //         </div>
-  //       ) : null}
-  //       {status_id !== 2 ? (
-  //         <a
-  //           href="javascript:void(0)"
-  //           className="ml-2"
-  //           onClick={(e) => {
-  //             e.preventDefault();
-  //             e.stopPropagation();
-  //             history.push(`/edit-support-ticket/${id}`);
-  //           }}
-  //         >
-  //           <Image
-  //             src="/images/edit-button.svg"
-  //             className="delete-edit-view"
-  //             alt="Edit SupportTicket"
-  //           />
-  //         </a>
-  //       ) : null}
-
-  //       {[9].includes(Number(userRole)) && (
-  //         <a
-  //           href="javascript:void(0)"
-  //           className="ml-2"
-  //           onClick={() => {
-  //             //   e.preventDefault();
-  //             //   e.stopPropagation();
-  //             deleteTicket(id);
-  //           }}
-  //         >
-  //           <Image
-  //             src="/images/delete.png"
-  //             className=""
-  //             alt="Delete Support Ticket"
-  //           />
-  //         </a>
-  //       )}
-  //     </span>
-  //   );
-  // };
 
   const submitCloseTicket = (onChangeData = '') => {
-    // console.log('onChangeData', onChangeData);
     if (onChangeData) {
       swal({
         title: 'Are you sure?',
@@ -194,7 +129,6 @@ function SupportTicket(props) {
       label: 'Ticket Id',
       render: (row) => {
         const rowData = row;
-        // console.log('rowData', rowData);
         return (
           <div>
             <a
@@ -219,7 +153,6 @@ function SupportTicket(props) {
       id: [1, 2, 7].includes(Number(userRole)) && 'user_full_name',
       label: [1, 2, 7].includes(Number(userRole)) && 'Name',
       render: [1, 2, 7].includes(Number(userRole)) ? (row) => {
-        // console.log('row', row);
         return (
           <>{row?.user_name}</>
         )
@@ -297,7 +230,6 @@ function SupportTicket(props) {
       label: 'Status',
       id: 'status',
       render: (row) => {
-        // console.log('row',row);
         return (
           <div>
             {
@@ -345,7 +277,6 @@ function SupportTicket(props) {
                         row.status = select.label;
                         row.status_id = select.id;
                         if (select.label === 'Resolved') {
-                          // console.log('Resolved', select);
                           setUpdateShow(true);
                           setCreateTask(row);
                         }
@@ -361,47 +292,8 @@ function SupportTicket(props) {
         );
       },
     },
-    // {
-    //   id: 'action',
-    //   label: 'Action',
-    // },
   ];
 
-  // const deleteTicket = (id) => {
-  //   if (id) {
-  //     swal({
-  //       title: 'Are you sure?',
-  //       text: 'Are you sure that you want to delete this record?',
-  //       icon: 'warning',
-  //       dangerMode: true,
-  //       buttons: true,
-  //       closeOnClickOutside: false,
-  //       allowOutsideClick: false,
-  //     }).then(async (result) => {
-  //       if (result) {
-  //         const { data, message } = await AuthApi.deleteDataFromServer(
-  //           `${Api.supportTicketUrl}${id}/`
-  //         );
-  //         if (data) {
-  //           swal(data && data.message[0], '', 'success', {
-  //             closeOnClickOutside: false,
-  //             allowOutsideClick: false,
-  //             buttons: false,
-  //             timer: 2000,
-  //           }).then(() => {
-  //             swal.close();
-  //             getRowData(1);
-  //           });
-  //         } else {
-  //           swal(message, '', 'error', {
-  //             closeOnClickOutside: false,
-  //             allowOutsideClick: false,
-  //           });
-  //         }
-  //       }
-  //     });
-  //   }
-  // };
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
@@ -418,7 +310,6 @@ function SupportTicket(props) {
       sort_direction: 'descending',
       ...filterList,
     };
-    // console.log('params', params);
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -430,25 +321,19 @@ function SupportTicket(props) {
 
       const newData = [...data.data];
       newData.map((item, i) => {
-        // console.log('item------------->', item);
         const newItem = item;
         newItem.index = (page - 1) * itemsPerPage + (i + 1);
         const sDate = item.created_at;
         const eDate = new Date();
         const dateFirst = new Date(sDate);
         const dateSecond = new Date(eDate);
-        // const diffInsec = dateSecond.getTime() - dateFirst.getTime();
 
         var hours = Math.abs(dateFirst - dateSecond) / 36e5;
-        // console.log('hours',hours);
-        // const hoursDifference = diffInsec / (1000 * 36000);
+    
         if (hours > 4 && item.status === 'open') {
           newItem.rowClass = 'alert-danger'
         }
-        // rowClass =
-        // date > 4 && item.status === 'open'
-        //   ? 'alert-danger'
-        //   : '';
+     
         return newItem;
       });
       const dateAndTime =
@@ -465,20 +350,6 @@ function SupportTicket(props) {
       swal(message, '', 'error');
     }
   };
-
-
-  // const getDateAndTimeDifference = (milestone) => {
-  //   const ndate = new Date(milestone);
-  //   let today = new Date().toISOString().slice(0, 10);
-
-  //   const startDate = ndate;
-  //   const endDate = today;
-
-  //   const diffInMs = new Date(startDate) - new Date(endDate);
-  //   const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
-
-  //   return parseInt(diffInDays);
-  // };
 
   useEffect(() => {
     getRowData(1);

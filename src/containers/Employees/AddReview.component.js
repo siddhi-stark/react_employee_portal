@@ -45,7 +45,6 @@ const AddReview = (props) => {
   };
 
 
-  // console.log('reviewTime-----', convertDateTimeValue(reviewTime));
 
   const status = [
     {
@@ -141,8 +140,7 @@ const AddReview = (props) => {
       description: feedback,
       review_time: customFunctions.getTimeAndSec(reviewTime),
     };
-    // console.log('postData', postData);
-    // return;
+
     if (review_id) {
       postData.id = review_id;
     }

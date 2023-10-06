@@ -31,7 +31,6 @@ function OldEmployee() {
   const [employeeList, setEmployeeList] = useState('');
   const history = useHistory();
 
-  // console.log('old employeee', selectedFilterEmployee);
 
   const getEmployee = async (pageNo = 1, filter) => {
     setShowLoader(true);
@@ -62,7 +61,6 @@ function OldEmployee() {
       const dpOptions = [];
       data.data.length > 0 &&
         data.data.map((op) => {
-          // console.log('22 opp', op);
           if ([1].includes(op.role_id)) return;
           dpOptions.push({ label: op.full_name, value: op.id });
         });
@@ -98,7 +96,6 @@ function OldEmployee() {
   useEffect(() => {
     setTitle('Old Employees');
     getEmployee(1);
-    // console.log('usee effect');
     getPosition();
   }, []);
 
@@ -107,7 +104,6 @@ function OldEmployee() {
   //   const { data, message } = await AuthApi.getDataFromServer(
   //     `${Api.employeeUrl}`
   //   );
-  //   console.log('dataa-------->>>>', data);
   // };
 
   useEffect(()=>{
@@ -118,7 +114,6 @@ function OldEmployee() {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?old_employee=True&type=all`
     );
-    // console.log('data.data.data', data);
     const dpOptions = [];
     data &&
       data.data.length > 0 &&
@@ -126,9 +121,7 @@ function OldEmployee() {
         if ([1].includes(op.role_id)) return;
         dpOptions.push({ label: op.full_name, value: op.id });
       });
-      // console.log("dpOptions",dpOptions);
     setEmployeeList(dpOptions);
-    // console.log('dpOptionsdpOptions', dpOptions);
     options.employee = dpOptions;
     const allOptions = options;
     updateOptions({ ...allOptions });

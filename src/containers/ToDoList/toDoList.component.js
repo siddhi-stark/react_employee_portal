@@ -24,14 +24,12 @@ import Task from './Task.component';
 const validator = new SimpleReactValidator();
 
 function ToDoList(props) {
-  // console.log('props',props);
   const { onMorningSendScrum, onClockoutReport, callback, pmsId } = props;
 
   const hrsProps = props;
   const totalHours = hrsProps.totalHrs;
   const [rows, setRows] = useState([]);
   const [selectedId, setSelectedId] = useState([]);
-  // console.log('selectedId', selectedId);
   const [showMsg, setShowMsg] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [showBreak, setShowBreak] = useState(false);
@@ -64,12 +62,6 @@ function ToDoList(props) {
     itemsPerPage: 10,
     totalItems: 10,
   });
-
-  // useEffect(()=>{
-  //   const tw_id = customFunctions.getLocalStorage('tw_id')
-  //   // console.log('tw_id',tw_id);
-  //   setPmsId(tw_id)
-  // },[])
 
   const columns = [
     {
@@ -279,7 +271,6 @@ function ToDoList(props) {
   const getBreakList = async () => {
     const endPoint = `${Api.taskUrl}?show_only_breaks=true&page=1&limit=100`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
-    // console.log('data',data);
     if (data && data.data && data.data.length) {
       const selectedBreak = [];
       setShowSendReport(true);
@@ -486,7 +477,6 @@ function ToDoList(props) {
     const BreakPostData = [];
     setLoader(true);
     breakData.map((dt) => {
-      // console.log('dt', dt);
       return BreakPostData.push({
         id: dt.id,
         content: `${dt.selectedBreakOption.label}`,
@@ -652,7 +642,6 @@ function ToDoList(props) {
     breakData[i].endTime = new Date(endTime.setMinutes(newMins));
     setBreakData([...breakData]);
   };
-  // console.log('pmsId',pmsId);
   const OnSaveProgress = async () => {
     setLoader(true);
     const progressArr = [];

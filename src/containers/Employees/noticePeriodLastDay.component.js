@@ -9,13 +9,9 @@ const NoticePeriodLastDay = () => {
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
   const [joiningDate, setJoiningDate] = useState();
-  // console.log('joiningDate',joiningDate);
   const [relievingDate, setRelievingDate] = useState();
-  // console.log('relievingDate',relievingDate);
   const [experienceCount, setExperienceCount] = useState();
   const [count, forceUpdate] = useState(0);
-  // console.log('experienceCount', experienceCount);
-  // console.log('relievingDate', relievingDate);
 
   useEffect(() => {
     getEmployeeDetails();
@@ -24,7 +20,6 @@ const NoticePeriodLastDay = () => {
   const getEmployeeDetails = async () => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
-    // console.log('data--------', data);
     if (data) {
       setShowLoader(false);
       setEmployeeDetails(data.data);
@@ -41,32 +36,16 @@ const NoticePeriodLastDay = () => {
   const calculateDifference = (joiningDate, relievingDate) => {
 
     const diffTime = Math.abs(relievingDate - joiningDate);
-    // console.log('diffTime', diffTime);
     const diffYears = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 365));
-    // console.log('diffYears',  diffYears);
     return diffYears;
   };
 
   const handleCalculate = () => {
     const startDate = new Date(joiningDate);
-    // console.log('startDate',startDate);
     const endDate = new Date(relievingDate);
-    // console.log('endDate',endDate);
     const difference = calculateDifference(startDate, endDate);
-    // console.log('differencedifference', difference); // Output: 2
     setExperienceCount(difference);
   };
-
-  // function calculatePeriod(startDate, endDate) {
-  //   const start = new Date();
-  //   const end = new Date();
-
-  //   const difference = Math.abs(end - start);
-
-  //   const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
-
-  //   return days;
-  // }
 
   return (
     <>

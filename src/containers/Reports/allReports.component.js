@@ -33,17 +33,14 @@ function AllReports() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const { state } = useLocation();
   const [currentPage, setCurrentPage] = useState();
-  // console.log("currentPage]]]]]]]]]]]",state);
   // setSelectedEmployee(state?.state?.reporterName);
 
-// console.log("selectedEmployeeselectedEmployee",selectedEmployee);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
-  // console.log('pagination.current_page', pagination.current_page);
 
   useEffect(() => {
     if (!state) return;
@@ -58,7 +55,6 @@ function AllReports() {
 
   // useEffect(()=>{
   //   const currentpage = customFunctions.getLocalStorage('currentpage');
-  //   console.log("currentpage",currentpage);
   //   // setCurrentPage(currentpage);
   //   // getReports(currentpage);
   //   setPagination({
@@ -166,7 +162,6 @@ function AllReports() {
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       end_date: toDate ? customFunctions.getDate(toDate) : '',
     };
-    // console.log("params------------",params);
     const url = customFunctions.generateUrl(endPoint, params);
 
     let postData = {};
@@ -217,11 +212,9 @@ function AllReports() {
   // }, [state]);
 
   // const getEmployeReportById = async (pageNo = 0) => {
-  //   console.log('getEmployeReportById');
   //   setShowLoader(true);
   //   const page = pageNo || pagination.current_page;
   //   const endPoint = `${Api.reportListingUrl}/${state.state.EmpId}/`;
-  //   console.log('endPointendPoint', endPoint);
   //   const params = {
   //     page,
   //     limit: pagination.itemsPerPage,
@@ -231,7 +224,6 @@ function AllReports() {
   //   };
   //   const url = customFunctions.generateUrl(endPoint, params);
   //   const { data } = await AuthApi.getDataFromServer(url, endPoint);
-  //   console.log('data_______________', data);
   // };
 
   // const getEmployeeById = async () => {
@@ -239,7 +231,6 @@ function AllReports() {
   //     `${Api.reportListingUrl}user_id=${state?.state?.EmpId}`
   //   );
   //   // setEmployeeList(data.data);
-  //   console.log('getEmployeeById+++++++++', data);
   // };
 
   const getEmployee = async () => {
@@ -450,7 +441,6 @@ function AllReports() {
                     ...pagination,
                     activePage: pagination.current_page,
                     onPageChange: (pageNo) => {
-                      // console.log('pageNopageNo', pageNo);
                       getReports(pageNo);
                     },
                   }}

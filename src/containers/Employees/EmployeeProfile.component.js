@@ -17,15 +17,12 @@ import EditPersonalDetails from './EditPersonalDetails.component';
 import AddReview from './AddReview.component';
 
 function EmployeeProfile(props) {
-  // console.log('employeee profileeee');
   const { match } = props;
   const empId = props.match.params.id;
-  // console.log('empId', empId);
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
-  // console.log('showPersonalDetails', showPersonalDetails);
   const [companyList, setCompanyList] = useState([]);
   const [title, setTitle] = useState('');
   const [employeeDocument, setEmployeeDocument] = useState([]);
@@ -51,7 +48,6 @@ function EmployeeProfile(props) {
   const history = useHistory();
   // const navigate = useNavigate()
 
-  // console.log('employeeDetails++++++++++', employeeDetails);
 
   useEffect(() => {
     if (currentUserId) {
@@ -70,13 +66,11 @@ function EmployeeProfile(props) {
   const getEmployeeDetails = async () => {
     setShowLoader(true);
     const employeeId = match.params.id;
-    // console.log('employeeIdemployeeId', employeeId);
     customFunctions.setLocalStorage('id', employeeId);
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${employeeId}/`
     );
     if (data) {
-      // console.log('dataa-------', data);
       setShowLoader(false);
       setEmployeeDetails(data.data);
       getEmployeeDocument(data.data && data.data.full_name);
@@ -327,7 +321,6 @@ function EmployeeProfile(props) {
     }
   };
 
-  // console.log('employeeDetails',employeeDetails);
 
   const getReview = async () => {
     // setShowLoader(true);
@@ -339,16 +332,10 @@ function EmployeeProfile(props) {
     const { data } = await AuthApi.getDataFromServer(url);
     if (data && data.success === true) {
       setShowLoader(false);
-      // console.log('reviewData', data.data);
       const review_data = [];
       data.data &&
         data.data.length > 0 &&
         data.data.filter((item) => {
-          // console.log('filterdata------', item.employee.id);
-          // console.log(
-          //   "customFunctions.getLocalStorage('candidateId')",
-          //   customFunctions.getLocalStorage('id')
-          // );
           if (item.employee.id == customFunctions.getLocalStorage('id')) {
             review_data.push(item);
           }
@@ -360,30 +347,6 @@ function EmployeeProfile(props) {
 
   const submitForm = async () => {
     setShowLoader(true);
-    // const id = customFunctions.getLocalStorage('id');
-
-    // {
-    //   "full_name": "omkar",
-    //   "email": "tests10@starkdigital.net",
-    //   "mobile": "9877533210",
-    //   "emp_code": 127,
-    //   "tw_emp": 28,
-    //   "role": 4,
-    //   "designation": 6,
-    //   "department": 6,
-    //   "status": "active",
-    //   "dob": "1994-07-24",
-    //   "team_leads": [
-    //   109
-    //   ],
-    //   "managers": [
-    //   147
-    //   ],
-    //   "notice_period_date": "2021-01-01",
-    //   "confirmation_date": "2021-01-01",
-    //   "relieving_date": "2021-01-01",
-    //   "last_working_date": "2021-01-01"
-    //   }
 
     const managers = [];
     const teamLeds = [];
@@ -392,13 +355,10 @@ function EmployeeProfile(props) {
       return managers.push(item);
     });
 
-    // console.log('managers',managers);
 
     employeeDetails?.assigned_team_leads.map((item) => {
       return teamLeds.push(item);
     });
-
-    // console.log('teamLeds',teamLeds)
 
     const postData = {
       full_name: employeeDetails?.full_name,
@@ -441,13 +401,10 @@ function EmployeeProfile(props) {
       is_relieved: lastworkingDate ? true : false,
     };
 
-    // console.log('postData', postData);
-    // return;
     const { data } = await AuthApi.putDataToServer(
       `${Api.employeeUrl}${employeeDetails?.id}/`,
       postData
     );
-    console.log('${Api.employeeUrl}${employeeDetails?.id}/', data);
     if (data) {
       setShowLoader(false);
       swal(data && data.message[0]);
@@ -599,7 +556,6 @@ function EmployeeProfile(props) {
                       <Button
                         onClick={() => {
                           setShowModal(true);
-                          // console.log('data123test');
                         }}
                         type="button"
                         className="btn btn-primary col-1"
@@ -685,7 +641,6 @@ function EmployeeProfile(props) {
                         reviewData.map((item, i) => (
                           <>
                             <Row key={i}>
-                              {/* {console.log('item', item)} */}
                               <Col>
                                 <p>
                                   Reviewer Name - {item.reviewer.full_name}{' '}

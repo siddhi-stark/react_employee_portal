@@ -217,7 +217,6 @@ function Dashboard() {
     if (data && data.data) {
       setEmployeeName(data.data.full_name);
       setPmsId(data?.data?.tw_id);
-      // console.log('====>',data);
     }
     return true;
   };
@@ -254,7 +253,6 @@ function Dashboard() {
   useEffect(() => {
     const LoginToken = customFunctions.getLocalStorage('access_token');
     if (LoginToken) {
-      // console.log('login');
       getUpcomingHoliday();
       getAppliedLeaves();
       getInstagramPost();

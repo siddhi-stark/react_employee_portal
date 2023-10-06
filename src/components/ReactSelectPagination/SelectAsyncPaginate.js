@@ -467,7 +467,6 @@ const SelectAsyncPaginate = ({
           Number(totalLoadLength) + Number(data.data.length)
         );
         let adminData = [];
-        // console.log("dt+++++++++++++",data);
         data.data.map((dt) => {
           if([1,7].includes(dt.role_id)) return
           adminData.push({

@@ -128,7 +128,6 @@ if(item?.on_notice_period == false){
       })
       // setEmployee([...newEmp]);
       setEmployee([...data.data]);
-// console.log('data.data',data.data);
       setTotalCount(Number(data.paginator.total_count));
       setLimit(Number(data.paginator.limit));
       setCurrentPage(Number(data.paginator.current_page));

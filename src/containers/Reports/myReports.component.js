@@ -83,7 +83,6 @@ function AllReports() {
     const url = customFunctions.generateUrl(endPoint, params);
 
     const { data } = await AuthApi.postDataToServer(url);
-    // console.log('timesheet',data);
     if (!customFunctions.checkIfEmpty(data, 'O')) {
       setShowLoader(false);
       setPagination({

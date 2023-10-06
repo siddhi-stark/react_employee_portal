@@ -12,7 +12,6 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 
 function AddSupportTicket(props) {
-  // console.log('props', props);
   const validator = useRef(
     new SimpleReactValidator({
       messages: {
@@ -22,13 +21,10 @@ function AddSupportTicket(props) {
   );
   const { match, location } = props;
   const { state } = useLocation()
-  // console.log("stateeeeeeeee", state);
   const history = useHistory();
   const id = match.params.supportId;
   const view = location?.state?.state;
-  // console.log('view', view);
   const [title, setTitle] = useState('');
-  // console.log('title', title);
 
   const items = [
     { to: '/', label: 'Home' },
@@ -48,7 +44,6 @@ function AddSupportTicket(props) {
     created_at: '',
     updated_at: ''
   });
-  // console.log('supportDetails', supportDetails);
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
@@ -117,7 +112,6 @@ function AddSupportTicket(props) {
         ? Number(supportDetails.status)
         : Number(supportDetails.admin_status),
     };
-    // console.log('postData', postData);
     if (supportId) postData.id = supportId;
     setShowLoader(false);
 
@@ -208,7 +202,6 @@ function AddSupportTicket(props) {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.supportTicketUrl}${editId}/`
     );
-    // console.log('data', data);
     if (!data) {
       return;
     }
@@ -237,7 +230,6 @@ function AddSupportTicket(props) {
     } else {
       statusCondition = 1;
     }
-    // console.log('data',data);
     setSupportDetails({
       ...supportDetails,
       title: data.data.title,
@@ -350,7 +342,6 @@ function AddSupportTicket(props) {
               <hr />
               {view ? (
                 <Row className="mb-5">
-                  {/* {console.log('supportDetails', supportDetails)} */}
                   <Col>
                     <Col><strong>TicketId: </strong>SST-{view}</Col>
                     <Col className='mt-2'><strong>Ticket type:</strong> {supportDetails?.ticket_type?.label}</Col>
@@ -458,7 +449,6 @@ function AddSupportTicket(props) {
                       Ticket Status <span className="text-danger">*</span>
                     </p>
                     {status.map((st) => {
-                      console.log('st', st);
                       return (
                         <>
                           <input

@@ -12,11 +12,9 @@ function NewInterviewRounds7(props) {
     const notes = customFunctions.getLocalStorage('notes');
     let defaultFilterOptions = {};
     const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
-    // console.log('defaultValues', defaultValues);
     const [options, updateOptions] = useState({});
     const [currentUser, updateCurrentUser] = useState(0);
     const [jsonSchema, updateJsonSchema] = useState(FormSections);
-    // console.log('jsonSchema', jsonSchema);
     const [isShowLoader, setShowLoader] = useState(false);
     const [count, forceUpdate] = useState(0);
     const { isProfessionalInfoId } = props;
@@ -38,7 +36,6 @@ function NewInterviewRounds7(props) {
             });
             return s;
         });
-        // console.log('updatedSchema', updatedSchema);
         updateJsonSchema([...updatedSchema]);
     }, []);
 
@@ -52,7 +49,6 @@ function NewInterviewRounds7(props) {
     }, []);
 
     const submitForm = async (formValues) => {
-        // console.log('formValues',formValues);
         setShowLoader(true);
         const id = customFunctions.getLocalStorage('applicantId');
         const postData = [];
@@ -113,14 +109,11 @@ function NewInterviewRounds7(props) {
         const { data } = await AuthApi.getDataFromServer(
             `${Api.roundsUrl}?applicant_id=${interviewerId}`
         );
-        // console.log('data', data);
         if (data) {
             setShowLoader(false);
             let newTime = '';
             let newDate = '';
             // const interviewData = [];
-
-            // console.log('dt',dt);
             if (!customFunctions.checkIfEmpty(data.data[0].int_date)) {
                 newDate = new Date(data.data[0].int_date);
             }
@@ -134,8 +127,6 @@ function NewInterviewRounds7(props) {
                     )}T${customFunctions.convertTime12to24(data.data[0].int_time)}`
                 );
             }
-            // console.log('newTime', newTime);
-            // console.log('newDate', newDate);
 
             const interviewData = {
                 interviewer: { label: data.data[0].interviewer_name, value: data.data[0].interviewer_id },
