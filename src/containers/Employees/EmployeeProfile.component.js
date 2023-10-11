@@ -1,8 +1,8 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Button, Image, Row, Col } from 'react-bootstrap';
+import { Button, Image, Row, Col, Card } from 'react-bootstrap';
 import { Link, useHistory, withRouter, useNavigate } from 'react-router-dom';
-import CustomTable from 'stark-custom-datatable';
+// import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 // import { Col, Card, Button, Image } from 'react-bootstrap';
@@ -15,12 +15,17 @@ import AddBondHistory from './AddBondHistory.component';
 import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
 import AddReview from './AddReview.component';
+import CustomTable from 'stark-custom-datatable';
 
 function EmployeeProfile(props) {
   const { match } = props;
   const empId = props.match.params.id;
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
+  const [totalCount, setTotalCount] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
   const [companyList, setCompanyList] = useState([]);
@@ -37,21 +42,23 @@ function EmployeeProfile(props) {
   const [modalShow, setShowModal] = useState(false);
   const [lastworkingDate, setLastWorkingDate] = useState('');
   const [showReview, setShowReview] = useState(false);
+  // console.log('showReview', showReview);
   const [editReview, setEditReview] = useState(false);
   const [pagetype, setPageType] = useState('');
   const [refreshData, setRefreshData] = useState(false);
   const [reviewData, setReviewData] = useState('');
   const [reviewId, setReviewId] = useState();
   const [currentUserId, setCurrentUserId] = useState();
+  const [rowData, setRowData] = useState([]);
+  // console.log('rowData', rowData);
   const employeeID = match.params.id;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
   // const navigate = useNavigate()
 
-
   useEffect(() => {
     if (currentUserId) {
-      getReview();
+      getRowData();
     }
   }, [currentUserId]);
   useEffect(() => {
@@ -62,6 +69,73 @@ function EmployeeProfile(props) {
     getEmployeeDetails();
     getEmployeeHIstory();
   }, [refreshData]);
+
+  const handleActionCallback = (row) => {
+    // console.log('row', row);
+    return (
+      <>
+        <a
+          href="/"
+          className="pl-2 ms-1"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setShowReview(true);
+            setEditReview(true);
+            setPageType('edit');
+            setReviewId(row.id);
+          }}
+        >
+          <Image src="/images/edit-button.svg" />
+        </a>
+      </>
+    );
+  };
+
+  const tableColumn = [
+    {
+      id: 'id',
+      label: 'Id',
+    },
+    {
+      id: 'full_name',
+      label: 'Reviewer Name',
+      render: (rowData) => {
+        // console.log('rowData123', rowData);
+        return (<>{rowData?.reviewer?.full_name}</>);
+      },
+    },
+    {
+      id: 'review_date',
+      label: 'Review Date',
+    },
+    {
+      id: 'review_time',
+      label: 'Review Time',
+    },
+    {
+      id: 'status_name',
+      label: 'Status',
+    },
+    {
+      id: 'comments',
+      label: 'Comments',
+      render: (rowData) => {
+        return (
+          <div title={rowData?.comments}>
+            {rowData?.comments.length > 30
+              ? `${rowData?.comments.slice(0, 25)}...`
+              : rowData?.comments}
+          </div>
+        );
+      },
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: handleActionCallback,
+    },
+  ];
 
   const getEmployeeDetails = async () => {
     setShowLoader(true);
@@ -321,15 +395,26 @@ function EmployeeProfile(props) {
     }
   };
 
+  const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
+    const page = pageNo || currentPage;
 
-  const getReview = async () => {
-    // setShowLoader(true);
-    const endPoint = `${Api.employeeReviewUrl}?employee=${currentUserId}`;
-    // const params ={
-    //     employee_id:currentUserId,
-    // }
-    const url = customFunctions.generateUrl(endPoint);
+    const endPoint = `${Api.employeeReviewUrl}`;
+    const params = {
+      page: page,
+      limit: 10,
+      employee: currentUserId,
+      sort_direction: 'descending',
+    };
+        
+    const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
+    if (data) {
+      console.log('data', data);
+      setTotalCount(data.paginator.total_count);
+      setLimit(data.paginator.limit);
+      setCurrentPage(Number(data.paginator.current_page));
+    }
     if (data && data.success === true) {
       setShowLoader(false);
       const review_data = [];
@@ -340,7 +425,7 @@ function EmployeeProfile(props) {
             review_data.push(item);
           }
         });
-      setReviewData(review_data.reverse());
+      setRowData(review_data || []);
       // setReviewId(data.data)
     }
   };
@@ -354,7 +439,6 @@ function EmployeeProfile(props) {
     employeeDetails?.assigned_managers.map((item) => {
       return managers.push(item);
     });
-
 
     employeeDetails?.assigned_team_leads.map((item) => {
       return teamLeds.push(item);
@@ -619,7 +703,7 @@ function EmployeeProfile(props) {
                           <AddReview
                             handleModalCLose={(e) => {
                               setShowReview(e);
-                              getReview();
+                              getRowData();
                               setPageType('');
                               setReviewId('');
                               setRefreshData(true);
@@ -636,7 +720,7 @@ function EmployeeProfile(props) {
                       <div>
                         {/* <h5 className="ml-3 mt-5">First Review</h5> */}
                       </div>
-                      {reviewData &&
+                      {/* {reviewData &&
                         reviewData.length > 0 &&
                         reviewData.map((item, i) => (
                           <>
@@ -694,7 +778,29 @@ function EmployeeProfile(props) {
                               <hr />
                             </div>
                           </>
-                        ))}
+                        ))} */}
+                      <Card>
+                        <Card.Body>
+                          <CustomTable
+                            columns={tableColumn}
+                            rows={rowData}
+                            // role={1}
+                            showPagination={true}
+                            tableClass="table-striped"
+                            paginationProps={{
+                              totalItems: totalCount,
+                              itemsPerPage: limit,
+                              activePage: currentPage,
+                              onPageChange: (pageNo) => {
+                                getRowData(pageNo);
+                              },
+                            }}
+                            emptyRender={() => {
+                              return 'No record found.';
+                            }}
+                          />
+                        </Card.Body>
+                      </Card>
                     </div>
                   </div>
                 )}

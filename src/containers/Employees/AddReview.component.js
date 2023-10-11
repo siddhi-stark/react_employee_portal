@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
@@ -15,19 +15,25 @@ import {
   TextInput,
   DropdownInput,
 } from '../../components/FormInputs';
+import SimpleReactValidator from 'simple-react-validator';
 
 const AddReview = (props) => {
   const { handleModalCLose, reviewEdit, pageType, reviewId, empId } = props;
   const [isShowLoader, setShowLoader] = useState(false);
   const [reviewDate, setReviewDate] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
-  const [employeeList, setEmployeeList] = useState();
+  const [employeeList, setEmployeeList] = useState('');
   const [feedback, setFeedback] = useState('');
-  const [currentUserId, setCurrentUserId] = useState();
+  const [currentUserId, setCurrentUserId] = useState('');
   const [reviewStatus, setReviewStatus] = useState('');
-  const [reviewComments, setReviewComments] = useState('');
+  const [reviewComments, setReviewComments] = useState(null);
   const [reviewTime, setReviewTime] = useState('');
+  const [disableButton, setDisableButton] = useState(false);
+  const [count, forceUpdate] = useState(0);
 
+  const validator = useRef(
+    new SimpleReactValidator()
+  );
 
   const convertDateTimeValue = (time) => {
     let f = new Date();
@@ -43,8 +49,6 @@ const AddReview = (props) => {
       time;
     return new Date(f);
   };
-
-
 
   const status = [
     {
@@ -124,6 +128,7 @@ const AddReview = (props) => {
       });
     } else {
       setShowLoader(false);
+      setReviewComments('');
       swal(message || 'Someting went Wrong', '', 'error');
     }
   };
@@ -166,6 +171,24 @@ const AddReview = (props) => {
     }
   };
 
+  const validateForm = (e) => {
+    // return;
+    e.preventDefault();
+    if (disableButton) return;
+    console.log('validator', validator);
+    setDisableButton(true);
+    if (validator.current.allValid()) {
+      addReviewOfEmp();
+    } else {
+      console.log('validator1', validator);
+      validator.current.showMessages();
+      forceUpdate(count + 1);
+      setDisableButton(false);
+    }
+  };
+
+  // validator.purgeFields();
+
   return (
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -187,11 +210,11 @@ const AddReview = (props) => {
               onChange={(e) => {
                 setReviewDate(e);
               }}
-              //   errorMessage={validator.current.message(
-              //     'Joining Date',
-              //     joiningDetails.joiningDate,
-              //     'required'
-              //   )}
+              errorMessage={validator.current.message(
+                'Review Date',
+                reviewDate,
+                'required'
+              )}
             />
           </Col>
           <Col>
@@ -202,17 +225,17 @@ const AddReview = (props) => {
               dateFormat="h:mm aa"
               timeIntervals={10}
               timeCaption="Time"
-              selected={reviewTime ? reviewTime : null }
+              selected={reviewTime ? reviewTime : null}
               onChange={(e) => {
                 setReviewTime(e);
               }}
               showTimeSelect="showTimeSelect"
               showTimeSelectOnly="showTimeSelectOnly"
-              // errorMessage={validator.current.message(
-              //   `task start time`,
-              //   data.taskStartTime,
-              //   'required'
-              // )}
+              errorMessage={validator.current.message(
+                `Start Timee`,
+                reviewTime,
+                'required'
+              )}
             />
           </Col>
           <Col>
@@ -228,18 +251,6 @@ const AddReview = (props) => {
           </Col>
         </Row>
         <Row>
-          {/* <Col>
-            <TextInput
-              label="Review Feedback"
-              type="text"
-              as="textarea"
-              placeholder="Write review feedback here"
-              value={feedback}
-              onInputChange={(e) => {
-                setFeedback(e.target.value);
-              }}
-            />
-          </Col> */}
           {pageType === 'edit' && (
             <>
               {reviewStatus.value === 2 && (
@@ -248,11 +259,17 @@ const AddReview = (props) => {
                     label="Review Comments"
                     type="text"
                     as="textarea"
+                    asterisk="*"
                     placeholder="Write review comment here"
                     value={reviewComments}
                     onInputChange={(e) => {
                       setReviewComments(e.target.value);
                     }}
+                    errorMessage={validator.current.message(
+                      `Review comments`,
+                      reviewComments,
+                      'required'
+                    )}
                   />
                 </Col>
               )}
@@ -274,8 +291,8 @@ const AddReview = (props) => {
         <div className="mb-3 mt-3">
           <Button
             onClick={(e) => {
-              addReviewOfEmp();
-              handleModalCLose(false);
+              validateForm(e);
+              // handleModalCLose(false);
             }}
           >
             Add Review
