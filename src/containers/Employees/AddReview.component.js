@@ -31,9 +31,7 @@ const AddReview = (props) => {
   const [disableButton, setDisableButton] = useState(false);
   const [count, forceUpdate] = useState(0);
 
-  const validator = useRef(
-    new SimpleReactValidator()
-  );
+  const validator = useRef(new SimpleReactValidator());
 
   const convertDateTimeValue = (time) => {
     let f = new Date();
@@ -247,6 +245,11 @@ const AddReview = (props) => {
               onSelectHandler={(select) => {
                 setSelectedEmployee(select);
               }}
+              errorMessage={validator.current.message(
+                `Reviewer Name`,
+                selectedEmployee,
+                'required'
+              )}
             />
           </Col>
         </Row>
@@ -282,6 +285,11 @@ const AddReview = (props) => {
                   onSelectHandler={(select) => {
                     setReviewStatus(select);
                   }}
+                  errorMessage={validator.current.message(
+                    `Review Status`,
+                    reviewStatus,
+                    'required'
+                  )}
                 />
               </Col>
             </>
