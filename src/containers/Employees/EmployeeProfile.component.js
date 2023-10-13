@@ -73,7 +73,8 @@ function EmployeeProfile(props) {
     // console.log('row', row);
     return (
       <>
-        <a
+        { row.status_name != "Completed" &&
+          <a
           href="/"
           className="pl-2 ms-1"
           onClick={(e) => {
@@ -86,7 +87,7 @@ function EmployeeProfile(props) {
           }}
         >
           <Image src="/images/edit-button.svg" />
-        </a>
+        </a>}
       </>
     );
   };
@@ -685,7 +686,8 @@ function EmployeeProfile(props) {
                             </h5>
                           </div>
                         )}
-                        <button
+                        {!showReview &&
+                          <button
                           onClick={() => {
                             setShowReview(true);
                             setPageType('add');
@@ -694,7 +696,7 @@ function EmployeeProfile(props) {
                           className="btn btn-primary"
                         >
                           Add Review
-                        </button>
+                        </button>}
                       </div>
                       <hr />
                       {showReview && (
@@ -713,6 +715,7 @@ function EmployeeProfile(props) {
                             pageType={pagetype}
                             reviewId={reviewId}
                             empId={empId}
+                            callbackBtn={(e)=>{console.log('e',e)}}
                           />
                         </div>
                       )}

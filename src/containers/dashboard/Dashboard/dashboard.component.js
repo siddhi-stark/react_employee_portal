@@ -49,7 +49,7 @@ function Dashboard() {
   const UserID = customFunctions.getLocalStorage('userId');
   const [leavesUpdate, setLeavesUpdate] = useState([]);
   const [interviewsUpdate, setInterviewsUpdate] = useState([]);
-  const [, setCount] = useState(''); // eslint-disable-line
+  const [count, setCount] = useState(''); // eslint-disable-line
   const [pmsId, setPmsId] = useState(null);
   const [newBirthdayData, setNewBirthdayData] = useState([]);
   const [broadcastDescription, setBroadcastDescription] = useState([]);

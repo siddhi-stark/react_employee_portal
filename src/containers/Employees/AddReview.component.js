@@ -18,7 +18,7 @@ import {
 import SimpleReactValidator from 'simple-react-validator';
 
 const AddReview = (props) => {
-  const { handleModalCLose, reviewEdit, pageType, reviewId, empId } = props;
+  const { handleModalCLose, reviewEdit, pageType, reviewId, empId, callbackBtn } = props;
   const [isShowLoader, setShowLoader] = useState(false);
   const [reviewDate, setReviewDate] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
@@ -162,6 +162,7 @@ const AddReview = (props) => {
         'success'
       ).then(() => {
         handleModalCLose(false);
+        props?.callbackBtn(false)
       });
     } else {
       setShowLoader(false);
@@ -311,7 +312,7 @@ const AddReview = (props) => {
             variant="secondary"
             onClick={() => {
               handleModalCLose(false);
-              //   reviewEdit(false)
+              // reviewEdit(false);
             }}
           >
             Cancel
