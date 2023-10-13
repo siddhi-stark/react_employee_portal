@@ -87,7 +87,7 @@ function EmployeeProfile(props) {
           }}
         >
           <Image src="/images/edit-button.svg" />
-        </a> : '-' }
+        </a> : <span title='Review is completed'> - </span> }
       </>
     );
   };
