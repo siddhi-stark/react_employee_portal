@@ -73,7 +73,7 @@ function EmployeeProfile(props) {
     // console.log('row', row);
     return (
       <>
-        { row.status_name != "Completed" &&
+        { row.status_name != "Completed" ?
           <a
           href="/"
           className="pl-2 ms-1"
@@ -87,7 +87,7 @@ function EmployeeProfile(props) {
           }}
         >
           <Image src="/images/edit-button.svg" />
-        </a>}
+        </a> : '-' }
       </>
     );
   };
