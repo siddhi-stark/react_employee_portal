@@ -78,6 +78,7 @@ function EmployeeProfile(props) {
           href="/"
           className="pl-2"
           onClick={(e) => {
+            console.log('testonClick');
             e.preventDefault();
             e.stopPropagation();
             setShowReview(true);
@@ -86,7 +87,7 @@ function EmployeeProfile(props) {
             setReviewId(row.id);
           }}
         >
-          <Image alt="view" src="/images/eye.svg" />
+          <Image alt="view" src="/images/eye.svg" title='View Review'/>
         </a>}
         {row.status_name != 'Completed' ? (
           <a
@@ -101,10 +102,10 @@ function EmployeeProfile(props) {
               setReviewId(row.id);
             }}
           >
-            <Image src="/images/edit-button.svg" />
+            <Image src="/images/edit-button.svg" title='Edit Review'/>
           </a>
         ) : (
-          <span title="Review is completed"> - </span>
+          null
         )}
       </>
     );
@@ -727,8 +728,6 @@ function EmployeeProfile(props) {
                               setPageType('');
                               setReviewId('');
                               setRefreshData(true);
-                              // getEmployeeDetails();
-                              // getEmployeeHIstory();
                             }}
                             reviewEdit={editReview}
                             pageType={pagetype}
@@ -740,68 +739,6 @@ function EmployeeProfile(props) {
                           />
                         </div>
                       )}
-                      <div>
-                        {/* <h5 className="ml-3 mt-5">First Review</h5> */}
-                      </div>
-                      {/* {reviewData &&
-                        reviewData.length > 0 &&
-                        reviewData.map((item, i) => (
-                          <>
-                            <Row key={i}>
-                              <Col>
-                                <p>
-                                  Reviewer Name - {item.reviewer.full_name}{' '}
-                                </p>
-                              </Col>
-                              <Col className="">
-                                <p>
-                                  Review Date -{' '}
-                                  {customFunctions.getDMYDate(item.review_date)}
-                                </p>
-                              </Col>
-                              <Col className="">
-                                <p>Review Time - {item.review_time}</p>
-                              </Col>
-                              <Col className="">
-                                <p>
-                                  Status -{' '}
-                                  {item.status === 1 ? 'Pending' : 'Complete'}
-                                </p>
-                              </Col>
-                            </Row>
-                            <div className="mb-3">
-                              <Row>
-                                <Col className="d-flex justify-content-end">
-                                  {item && item.status_name === 'Pending' ? (
-                                    <Image
-                                      style={{ height: '20px', width: '20px' }}
-                                      title="Edit Review"
-                                      src="/images/edit.png"
-                                      onClick={() => {
-                                        setShowReview(true);
-                                        setEditReview(true);
-                                        setPageType('edit');
-                                        setReviewId(item.id);
-                                      }}
-                                    />
-                                  ) : null}
-                                </Col>
-                              </Row>
-                              {item.comments && (
-                                <div className="mt-2 mb-4">
-                                  <Row>
-                                    <Col>
-                                      <p>
-                                        Comment - <small>{item.comments}</small>
-                                      </p>
-                                    </Col>
-                                  </Row>
-                                </div>
-                              )}
-                              <hr />
-                            </div>
-                          </>
-                        ))} */}
                       <Card>
                         <Card.Body>
                           <CustomTable
