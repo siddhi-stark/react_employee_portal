@@ -26,7 +26,6 @@ const AddReview = (props) => {
     empId,
     callbackBtn,
   } = props;
-  console.log('pageType', pageType);
   const [isShowLoader, setShowLoader] = useState(false);
   const [reviewDate, setReviewDate] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
@@ -179,22 +178,18 @@ const AddReview = (props) => {
   };
 
   const validateForm = (e) => {
-    // return;
     e.preventDefault();
     if (disableButton) return;
-    console.log('validator', validator);
     setDisableButton(true);
     if (validator.current.allValid()) {
       addReviewOfEmp();
     } else {
-      console.log('validator1', validator);
       validator.current.showMessages();
       forceUpdate(count + 1);
       setDisableButton(false);
     }
   };
 
-  // validator.purgeFields();
 
   return (
     <>
@@ -270,7 +265,6 @@ const AddReview = (props) => {
             <>
               {reviewStatus?.label == 'Completed' && (
                 <Col>
-                  {console.log('pageType123', pageType)}
                   <TextInput
                     label="Review Comments"
                     type="text"
