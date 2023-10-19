@@ -61,9 +61,11 @@ const SimpleTable = (props) => {
     ...selectedRowItems,
   ]);
   const [allSelectedPages, setAllSelectedPages] = useState([]);
+  // console.log('allSelectedPages', allSelectedPages);
   const allColumnIds = columns.map((column) => column.id);
 
   const onSelectHead = async (isChecked) => {
+    // console.log('isChecked', isChecked);
     const selectedIndexes = [...selectedRowIndexes];
     setSelectedRowIndexes([]);
     const selectedItems = [...selectedRows];

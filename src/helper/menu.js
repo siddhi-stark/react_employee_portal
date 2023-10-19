@@ -63,7 +63,6 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 5, 6],
   },
-
   // {
   //   title: 'Employees',
   //   path: '/employee',
