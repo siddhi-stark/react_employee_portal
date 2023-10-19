@@ -311,7 +311,6 @@ const AddReview = (props) => {
             <Button
               onClick={(e) => {
                 validateForm(e);
-                // handleModalCLose(false);
               }}
             >
               Add Review
@@ -322,39 +321,12 @@ const AddReview = (props) => {
               variant="secondary"
               onClick={() => {
                 handleModalCLose(false);
-                // reviewEdit(false);
               }}
             >
               Cancel
             </Button>
           </div>
         )}
-        <hr />
-        {/* <div>
-          <h5 className="ml-3 mt-5">First Review</h5>
-        </div>
-        <div className="ml-5">
-          <h3>Review Date - {customFunctions.getDMYDate(new Date())}</h3>
-        </div>
-        <div className="ml-5 mt-3 mb-3">
-          <Row>
-            <Col>
-              <h5>Reviewer name</h5>
-            </Col>
-            <Col className='d-flex justify-content-end'>
-                <h4>Status - Pending</h4>
-            </Col>
-            <Col className='d-flex justify-content-end'>
-                <Image style={{height:'20px',width:'20px'}}
-                title='Edit Review'
-                    src='/images/edit.png'
-                    onClick={()=>{
-
-                    }}
-                />
-            </Col>
-          </Row>
-        </div> */}
       </div>
     </>
   );

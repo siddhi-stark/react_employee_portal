@@ -718,7 +718,6 @@ function EmployeeProfile(props) {
                           </button>
                         )}
                       </div>
-                      <hr />
                       {showReview && (
                         <div className="mt-4 card">
                           <AddReview
