@@ -73,21 +73,39 @@ function EmployeeProfile(props) {
     // console.log('row', row);
     return (
       <>
-        { row.status_name != "Completed" ?
+        { row?.status_name == 'Completed' &&
           <a
           href="/"
-          className="pl-2 ms-1"
+          className="pl-2"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             setShowReview(true);
             setEditReview(true);
-            setPageType('edit');
+            setPageType('view');
             setReviewId(row.id);
           }}
         >
-          <Image src="/images/edit-button.svg" />
-        </a> : <span title='Review is completed'> - </span> }
+          <Image alt="view" src="/images/eye.svg" />
+        </a>}
+        {row.status_name != 'Completed' ? (
+          <a
+            href="/"
+            className="pl-2 ms-1"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowReview(true);
+              setEditReview(true);
+              setPageType('edit');
+              setReviewId(row.id);
+            }}
+          >
+            <Image src="/images/edit-button.svg" />
+          </a>
+        ) : (
+          <span title="Review is completed"> - </span>
+        )}
       </>
     );
   };
@@ -102,7 +120,7 @@ function EmployeeProfile(props) {
       label: 'Reviewer Name',
       render: (rowData) => {
         // console.log('rowData123', rowData);
-        return (<>{rowData?.reviewer?.full_name}</>);
+        return <>{rowData?.reviewer?.full_name}</>;
       },
     },
     {
@@ -406,7 +424,7 @@ function EmployeeProfile(props) {
       employee: currentUserId,
       sort_direction: 'descending',
     };
-        
+
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
@@ -686,17 +704,18 @@ function EmployeeProfile(props) {
                             </h5>
                           </div>
                         )}
-                        {!showReview &&
+                        {!showReview && (
                           <button
-                          onClick={() => {
-                            setShowReview(true);
-                            setPageType('add');
-                          }}
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          Add Review
-                        </button>}
+                            onClick={() => {
+                              setShowReview(true);
+                              setPageType('add');
+                            }}
+                            type="button"
+                            className="btn btn-primary"
+                          >
+                            Add Review
+                          </button>
+                        )}
                       </div>
                       <hr />
                       {showReview && (
@@ -715,7 +734,9 @@ function EmployeeProfile(props) {
                             pageType={pagetype}
                             reviewId={reviewId}
                             empId={empId}
-                            callbackBtn={(e)=>{console.log('e',e)}}
+                            callbackBtn={(e) => {
+                              console.log('e', e);
+                            }}
                           />
                         </div>
                       )}

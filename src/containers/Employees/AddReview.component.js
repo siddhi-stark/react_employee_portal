@@ -18,7 +18,15 @@ import {
 import SimpleReactValidator from 'simple-react-validator';
 
 const AddReview = (props) => {
-  const { handleModalCLose, reviewEdit, pageType, reviewId, empId, callbackBtn } = props;
+  const {
+    handleModalCLose,
+    reviewEdit,
+    pageType,
+    reviewId,
+    empId,
+    callbackBtn,
+  } = props;
+  console.log('pageType', pageType);
   const [isShowLoader, setShowLoader] = useState(false);
   const [reviewDate, setReviewDate] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
@@ -69,7 +77,7 @@ const AddReview = (props) => {
 
   useEffect(() => {
     getEmployeeList();
-    if (pageType === 'edit') {
+    if (pageType === 'edit' || pageType == 'view') {
       getReview();
     }
   }, []);
@@ -162,7 +170,7 @@ const AddReview = (props) => {
         'success'
       ).then(() => {
         handleModalCLose(false);
-        props?.callbackBtn(false)
+        props?.callbackBtn(false);
       });
     } else {
       setShowLoader(false);
@@ -203,6 +211,7 @@ const AddReview = (props) => {
               className="form-control"
               selected={reviewDate}
               asterisk="*"
+              disabled={pageType == 'view'}
               placeholder="dd-mm-yyyy"
               dateFormat="dd-MM-yyyy"
               minDate={new Date()}
@@ -224,6 +233,7 @@ const AddReview = (props) => {
               dateFormat="h:mm aa"
               timeIntervals={10}
               timeCaption="Time"
+              disabled={pageType == 'view'}
               selected={reviewTime ? reviewTime : null}
               onChange={(e) => {
                 setReviewTime(e);
@@ -243,6 +253,7 @@ const AddReview = (props) => {
               label="Reviewer Name"
               defaultValue={selectedEmployee}
               options={employeeList}
+              disabled={pageType == 'view'}
               onSelectHandler={(select) => {
                 setSelectedEmployee(select);
               }}
@@ -255,15 +266,17 @@ const AddReview = (props) => {
           </Col>
         </Row>
         <Row>
-          {pageType === 'edit' && (
+          {pageType === 'edit' || pageType == 'view' ? (
             <>
-              {reviewStatus.value === 2 && (
+              {reviewStatus?.label == 'Completed' && (
                 <Col>
+                  {console.log('pageType123', pageType)}
                   <TextInput
                     label="Review Comments"
                     type="text"
                     as="textarea"
                     asterisk="*"
+                    disabled={pageType == 'view'}
                     placeholder="Write review comment here"
                     value={reviewComments}
                     onInputChange={(e) => {
@@ -283,6 +296,7 @@ const AddReview = (props) => {
                   label=" Review Status"
                   defaultValue={reviewStatus}
                   options={status}
+                  disabled={pageType == 'view'}
                   onSelectHandler={(select) => {
                     setReviewStatus(select);
                   }}
@@ -294,30 +308,32 @@ const AddReview = (props) => {
                 />
               </Col>
             </>
-          )}
+          ) : null }
         </Row>
 
-        <div className="mb-3 mt-3">
-          <Button
-            onClick={(e) => {
-              validateForm(e);
-              // handleModalCLose(false);
-            }}
-          >
-            Add Review
-          </Button>{' '}
-          &nbsp;
-          <Button
-            className="ml-10"
-            variant="secondary"
-            onClick={() => {
-              handleModalCLose(false);
-              // reviewEdit(false);
-            }}
-          >
-            Cancel
-          </Button>
-        </div>
+        {pageType != 'view' && (
+          <div className="mb-3 mt-3">
+            <Button
+              onClick={(e) => {
+                validateForm(e);
+                // handleModalCLose(false);
+              }}
+            >
+              Add Review
+            </Button>{' '}
+            &nbsp;
+            <Button
+              className="ml-10"
+              variant="secondary"
+              onClick={() => {
+                handleModalCLose(false);
+                // reviewEdit(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        )}
         <hr />
         {/* <div>
           <h5 className="ml-3 mt-5">First Review</h5>
