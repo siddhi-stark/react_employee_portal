@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import { Pie } from 'react-chartjs-2';
-import {
-  Datepicker,
-  Helmet,
-  DropdownInput,
-  TextInput,
-} from '../../components/FormInputs';
+import { Datepicker, Helmet, DropdownInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import customFunctions from '../../helper/customFunctions';
@@ -19,12 +14,13 @@ const items = [
 const options = [
   {
     label: 'Riyaz',
-    value: '0' 
+    value: '0',
   },
   {
     label: 'Amrut',
-    value: '1' 
-  }];
+    value: '1',
+  },
+];
 
 const PerformanceReport = () => {
   const [isShowLoader, setShowLoader] = useState(false);
@@ -34,15 +30,14 @@ const PerformanceReport = () => {
   const [filterErr, setFilterErr] = useState('');
   const [userRole, setUserRole] = useState('');
   const [title, setTitle] = useState('');
-  const [searchKeyword, setSearchKeyword] = useState('');
+  // const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [graphData, setGraphData] = useState({
-    labels: ['Completed', 'Pending'],
     datasets: [
       {
-        data: [10, 100],
-        backgroundColor: ['#8cc540', '#e3e3e3'],
+        data: [90, 5, 5],
+        backgroundColor: ['#8cc540', '#e3e3e3', '#FF0000'],
       },
     ],
   });
@@ -55,7 +50,7 @@ const PerformanceReport = () => {
     let filterSearchErr = '';
     let isValid = true;
     if (
-      customFunctions.checkIfEmpty(searchKeyword) &&
+      // customFunctions.checkIfEmpty(searchKeyword) &&
       customFunctions.checkIfEmpty(selectedEmployee) &&
       customFunctions.checkIfEmpty(fromDate) &&
       customFunctions.checkIfEmpty(toDate)
@@ -92,7 +87,7 @@ const PerformanceReport = () => {
     // setFilterErr('');
     setFromDate('');
     setToDate('');
-    setSearchKeyword('');
+    // setSearchKeyword('');
     setSelectedEmployee([]);
     setCntClearFilter(cntClearFilter + 1);
   };
@@ -109,23 +104,25 @@ const PerformanceReport = () => {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-          <Card>
-            <Card.Body>
-              <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Filters</h5>
-              </div>
-              <hr />
-              <Card.Title>
-                <Form onSubmit={(e) => filterSearch(e)}>
-                  {filterErr && (
-                    <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
-                      <div className="img-text">
-                        <img src="/images/fail.svg" alt="Success" /> {filterErr}
+          <Row>
+            <Card>
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+                </div>
+                <hr />
+                <Card.Title>
+                  <Form onSubmit={(e) => filterSearch(e)}>
+                    {filterErr && (
+                      <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                        <div className="img-text">
+                          <img src="/images/fail.svg" alt="Success" />{' '}
+                          {filterErr}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  <Row className="mt-3">
-                    <Col sm={3}>
+                    )}
+                    <Row className="mt-3">
+                      {/* <Col sm={3}>
                       <TextInput
                         value={searchKeyword}
                         placeholder="Search employee name"
@@ -133,112 +130,216 @@ const PerformanceReport = () => {
                           setSearchKeyword(e.target.value);
                         }}
                       />
-                    </Col>
-                    <Col sm={3}>
-                      <div className="search-bar-input">
-                        <DropdownInput
-                          options={options}
-                          placeholder="Select employee"
-                          defaultValue={selectedEmployee}
-                          onSelectHandler={(select) => {
-                            setFilterErr('');
-                            setSelectedEmployee(select);
+                    </Col> */}
+                      <Col sm={3}>
+                        <div className="search-bar-input">
+                          <DropdownInput
+                            options={options}
+                            placeholder="Select employee"
+                            defaultValue={selectedEmployee}
+                            onSelectHandler={(select) => {
+                              setFilterErr('');
+                              setSelectedEmployee(select);
+                            }}
+                            isMulti
+                          />
+                        </div>
+                      </Col>
+                      <Col sm={3}>
+                        <Datepicker
+                          className="form-control"
+                          selected={fromDate}
+                          onChange={(e) => {
+                            setFromDate(e);
+                            setToDate('');
                           }}
-                          isMulti
+                          autoComplete="off"
+                          name="startDate"
+                          dateFormat="dd/MM/yyyy"
+                          maxDate={new Date()}
+                          placeholder="From Date"
                         />
-                      </div>
-                    </Col>
-                    <Col sm={3}>
-                      <Datepicker
-                        className="form-control"
-                        selected={fromDate}
-                        onChange={(e) => {
-                          setFromDate(e);
-                          setToDate('');
-                        }}
-                        autoComplete="off"
-                        name="startDate"
-                        dateFormat="dd/MM/yyyy"
-                        maxDate={new Date()}
-                        placeholder="From Date"
-                      />
-                    </Col>
+                      </Col>
 
-                    <Col sm={3}>
-                      <Datepicker
-                        className="form-control"
-                        selected={toDate}
-                        onChange={(e) => {
-                          setToDate(e);
-                        }}
-                        autoComplete="off"
-                        minDate={fromDate}
-                        maxDate={new Date()}
-                        name="startDate"
-                        dateFormat="dd/MM/yyyy"
-                        placeholder="To Date"
-                      />
+                      <Col sm={3}>
+                        <Datepicker
+                          className="form-control"
+                          selected={toDate}
+                          onChange={(e) => {
+                            setToDate(e);
+                          }}
+                          autoComplete="off"
+                          minDate={fromDate}
+                          maxDate={new Date()}
+                          name="startDate"
+                          dateFormat="dd/MM/yyyy"
+                          placeholder="To Date"
+                        />
+                      </Col>
+                      <Col sm={3}>
+                        <div className="filter-btn">
+                          <Button
+                            variant="primary"
+                            type="submit"
+                            className="ms-4"
+                          >
+                            Apply
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            type="button"
+                            className="ms-4"
+                            onClick={() => onClear()}
+                          >
+                            Clear
+                          </Button>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Form>
+                </Card.Title>
+              </Card.Body>
+            </Card>
+          </Row>
+          <Row>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">
+                Employee Performance Report Quality
+              </h5>
+            </div>
+          </Row>
+          <hr />
+          <div className="row align-items-center">
+            <div className="col-xl-5 col-lg-6">
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="card widget-flat bg-primary text-white">
+                    <div className="card-body">
+                      <div className="float-end">
+                        <i className="mdi mdi-cart-plus widget-icon" />
+                      </div>
+                      <h5
+                        className="text-white fw-normal mt-0"
+                        title="Number of Orders"
+                      >
+                        Quality
+                      </h5>
+                      <h3 className="mt-3 mb-3">60%</h3>
+                      <p className="mb-0 text-muted">
+                        <span className="text-danger me-2">
+                          <i className="mdi mdi-arrow-down-bold" /> Need
+                          improvment
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="card widget-flat bg-success text-white">
+                    <div className="card-body">
+                      <div className="float-end">
+                        <i className="mdi mdi-currency-usd widget-icon" />
+                      </div>
+                      <h5
+                        className="text-white fw-normal mt-0"
+                        title="Average Revenue"
+                      >
+                        Time Effeciency
+                      </h5>
+                      <h3 className="mt-3 mb-3">85%</h3>
+                      <p className="mb-0">
+                        <span className="text-success me-2">
+                          <i className="mdi mdi-arrow-down-bold" /> Keep it up
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="card widget-flat bg-info text-white">
+                    <div className="card-body">
+                      <div className="float-end">
+                        <i className="mdi mdi-account-multiple widget-icon" />
+                      </div>
+                      <h5
+                        className="text-white fw-normal mt-0"
+                        title="Number of Customers"
+                      >
+                        Total Tasks Allocated
+                      </h5>
+                      <h3 className="mt-3 mb-3">50</h3>
+                      <p className="mb-0 text-white">
+                        <span className="text-white me-2">
+                          <i className="mdi mdi-arrow-up-bold" /> 90%
+                        </span>
+                        <span className="text-nowrap">Completed</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="card widget-flat bg-warning text-white">
+                    <div className="card-body">
+                      <div className="float-end">
+                        <i className="mdi mdi-pulse widget-icon" />
+                      </div>
+                      <h5 className="text-white fw-normal mt-0" title="Growth">
+                        Reported Bug count
+                      </h5>
+                      <h3 className="mt-3 mb-3">20</h3>
+                      <p className="mb-0">
+                        <span className="text-success me-2">
+                          <i className="mdi mdi-arrow-up-bold" /> 20
+                        </span>
+                        <span className="text-nowrap">Since last month</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-xl-7 col-lg-6">
+              <div className="card card-h-100">
+                {/* <div className="d-flex card-header justify-content-between align-items-center bg-transparent border-bottom-0">
+                      <h4 className="header-title">Projections Vs Actuals</h4>
+                    </div> */}
+                <div className="card-body">
+                  <Row>
+                    <Col sm={5}>
+                      <h5 className="text-center">Card title</h5>
+                      {Object.keys(graphData).length && (
+                        <Pie data={graphData} />
+                      )}
                     </Col>
-                    <Col sm={4}>
-                      <div className="filter-btn">
-                        <Button
-                          variant="primary"
-                          type="submit"
-                          className="ms-4"
-                        >
-                          Apply
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          type="button"
-                          className="ms-4"
-                          onClick={() => onClear()}
-                        >
-                          Clear
-                        </Button>
+                    <Col
+                      sm={5}
+                      className="d-flex flex-column align-items-center justify-content-center"
+                    >
+                      <div className='d-flex flex-row'>
+                      <p className="badge rounded-pill bg-info p-2">&nbsp;</p>{' '}
+                      Completed tasks 
+                      </div>
+                      <div className='d-flex flex-row'>
+                      <p className="badge rounded-pill bg-danger">
+                        &nbsp;
+                      </p>
+                      Overdue task 5 
+                      </div>
+                      <div className='d-flex flex-row'>
+                      <p className="badge rounded-pill bg-warning">
+                        &nbsp;
+                      </p>{' '}
+                      Incompleted tasks
                       </div>
                     </Col>
                   </Row>
-                </Form>
-              </Card.Title>
-            </Card.Body>
-          </Card>
-          <Card>
-            <Card.Body>
-              <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">
-                  Employee Performance Report Quality
-                </h5>
+                </div>
               </div>
-              <hr />
-              <Row>
-                <Col sm={6}>
-                  <Card className="h-100 pie-chart-graph">
-                    <Card.Header className="purple-bg">
-                      <strong>Task Time</strong>
-                    </Card.Header>
-                    <Card.Body>
-                      {Object.keys(graphData).length && (
-                        <Pie data={graphData} />
-                      )}
-                    </Card.Body>
-                  </Card>
-                </Col>
-                <Col sm={6}>
-                  <Card className="h-100 pie-chart-graph">
-                    <Card.Header className="purple-bg">
-                      <strong>Task Quality</strong>
-                    </Card.Header>
-                    <Card.Body>
-                      {Object.keys(graphData).length && (
-                        <Pie data={graphData} />
-                      )}
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
+            </div>
+          </div>
         </div>
       </section>
     </>
