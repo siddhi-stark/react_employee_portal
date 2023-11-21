@@ -442,7 +442,7 @@ function Dashboard() {
           {broadcastDescription.length > 0 && (
             <div className="regular-text-slider mt-4">
               <div>
-                <p>{broadcastDescription}</p>
+                <span>{broadcastDescription}</span>
               </div>
             </div>
           )}

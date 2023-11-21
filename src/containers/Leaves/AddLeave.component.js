@@ -554,12 +554,8 @@ function AddLeave(props) {
                     Leaves are unpaid as you are under probation period.{' '}
                   </span>
                 )}
-
-
               </div>
             </div>
-
-
 
             <StarkFormBuilder
               containerClass="add-lv"

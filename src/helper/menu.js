@@ -221,13 +221,19 @@ const menu = [
     ],
     roleaccess: [2, 3, 6, 5],
   },
-
   {
     title: 'Employee Timesheet',
     path: '/reports',
     icon: 'timesheet.svg',
     submenu: [],
     roleaccess: [1],
+  },
+  {
+    title: 'Performance Report',
+    path: '/performance-report',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [1, 3, 4],
   },
   {
     title: 'Policy',

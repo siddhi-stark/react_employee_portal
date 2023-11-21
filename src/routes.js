@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-
+import PerformanceReport from './containers/performance Report/performanceReport';
 import Dashboard from './containers/dashboard/Dashboard/dashboard.component';
 import Login from './containers/authentication/Login/login.component';
 import ForgetPassword from './containers/authentication/Forget/forgetPassword.component';
@@ -214,7 +214,7 @@ function Routes() {
       <Route path="/support-ticket" exact component={SupportTicketComponent} />
       <Route path="/add-support-ticket" exact component={AddSupportTicket} />
       <Route path="/edit-support-ticket/:supportId" exact component={AddSupportTicket} />
-      <Route path="/view-support-ticket/:supportId" exact component={AddSupportTicket} />
+      <Route path="/performance-report" exact component={PerformanceReport} />
       <Route component={NotFound} />
     </Switch>
   );

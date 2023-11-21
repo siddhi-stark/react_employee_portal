@@ -216,7 +216,7 @@ function ToDoList(props) {
 
   useEffect(()=>{
     getTableData();
-  },[pmsId])
+  },[pmsId]);
 
   const getTableData = async (pageNo = 0) => {
     setShowLoader(true);

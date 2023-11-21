@@ -226,7 +226,6 @@ function Team(props) {
                 },
               ],
             };
-
             setGraphData(graph);
             setGraphDetails({
               totalHrsSpend: emp.spends,
@@ -336,9 +335,7 @@ function Team(props) {
                     <strong>Task Status</strong>
                   </Card.Header>
                   <Card.Body>
-                  {Object.keys(graphData).length && (
-                    <Pie data={graphData} />
-                  )}
+                    {Object.keys(graphData).length && <Pie data={graphData} />}
                   </Card.Body>
                 </Card>
               </Col>
@@ -348,22 +345,22 @@ function Team(props) {
                     <strong>Hours Analysis</strong>
                   </Card.Header>
                   <Card.Body>
-                  {Object.keys(barGraphData).length && (
-                    <Bar
-                      data={barGraphData}
-                      options={{
-                        title: {
-                          display: true,
-                          text: 'Team Bar Graph',
-                          fontSize: 20,
-                        },
-                        legend: {
-                          display: true,
-                          position: 'right',
-                        },
-                      }}
-                    />
-                  )}
+                    {Object.keys(barGraphData).length && (
+                      <Bar
+                        data={barGraphData}
+                        options={{
+                          title: {
+                            display: true,
+                            text: 'Team Bar Graph',
+                            fontSize: 20,
+                          },
+                          legend: {
+                            display: true,
+                            position: 'right',
+                          },
+                        }}
+                      />
+                    )}
                   </Card.Body>
                 </Card>
               </Col>
@@ -373,22 +370,22 @@ function Team(props) {
                     <strong>Team's Performance</strong>
                   </Card.Header>
                   <Card.Body>
-                  {Object.keys(employeeGraphData).length && (
-                    <Bar
-                      data={employeeGraphData}
-                      options={{
-                        title: {
-                          display: true,
-                          text: 'Team Bar Graph',
-                          fontSize: 20,
-                        },
-                        legend: {
-                          display: true,
-                          position: 'right',
-                        },
-                      }}
-                    />
-                  )}
+                    {Object.keys(employeeGraphData).length && (
+                      <Bar
+                        data={employeeGraphData}
+                        options={{
+                          title: {
+                            display: true,
+                            text: 'Team Bar Graph',
+                            fontSize: 20,
+                          },
+                          legend: {
+                            display: true,
+                            position: 'right',
+                          },
+                        }}
+                      />
+                    )}
                   </Card.Body>
                 </Card>
               </Col>

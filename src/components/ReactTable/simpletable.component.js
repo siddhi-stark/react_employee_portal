@@ -22,7 +22,6 @@ const defaults = {
   cancelLabel: 'Clear',
 };
 
-
 const SimpleTable = (props) => {
   const {
     columns,
@@ -61,11 +60,9 @@ const SimpleTable = (props) => {
     ...selectedRowItems,
   ]);
   const [allSelectedPages, setAllSelectedPages] = useState([]);
-  // console.log('allSelectedPages', allSelectedPages);
   const allColumnIds = columns.map((column) => column.id);
 
   const onSelectHead = async (isChecked) => {
-    // console.log('isChecked', isChecked);
     const selectedIndexes = [...selectedRowIndexes];
     setSelectedRowIndexes([]);
     const selectedItems = [...selectedRows];
@@ -270,7 +267,7 @@ const SimpleTable = (props) => {
             onClick={() => {
               // if (!selectedAction) return;
               setSelectedAction('');
-              setSelectedActionIndex('')
+              setSelectedActionIndex('');
               setSelectedRows([]);
               setSelectedRowIndexes([]);
               setAllSelectedPages([]);

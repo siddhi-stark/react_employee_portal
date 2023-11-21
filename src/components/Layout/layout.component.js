@@ -33,7 +33,7 @@ function Layout(props) {
         <div className="admin-portal-leftright-sidebar">
           <Sidebar />
           <div className="main-content side-content pt-0">
-            <Header callback={(e)=>{console.log('e',e)}}/>
+            <Header />
             <div className="container-fluid">
               <section className="content-area">
                 <div className="row">
