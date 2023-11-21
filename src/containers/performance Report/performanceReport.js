@@ -16,6 +16,16 @@ const items = [
   { label: 'Employee Performance Report' },
 ];
 
+const options = [
+  {
+    label: 'Riyaz',
+    value: '0' 
+  },
+  {
+    label: 'Amrut',
+    value: '1' 
+  }];
+
 const PerformanceReport = () => {
   const [isShowLoader, setShowLoader] = useState(false);
   //   const [rows, setRows] = useState([]);
@@ -28,23 +38,14 @@ const PerformanceReport = () => {
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [graphData, setGraphData] = useState({
-    'labels': [
-        'Completed',
-        'Pending'
+    labels: ['Completed', 'Pending'],
+    datasets: [
+      {
+        data: [10, 100],
+        backgroundColor: ['#8cc540', '#e3e3e3'],
+      },
     ],
-    'datasets': [
-        {
-            'data': [
-                10,
-                100
-            ],
-            'backgroundColor': [
-                '#8cc540',
-                '#e3e3e3'
-            ]
-        }
-    ]
-});
+  });
 
   console.log('userRole', userRole);
   // console.log('graphData', graphData);
@@ -136,7 +137,7 @@ const PerformanceReport = () => {
                     <Col sm={3}>
                       <div className="search-bar-input">
                         <DropdownInput
-                          // options={getEmployeeList()}
+                          options={options}
                           placeholder="Select employee"
                           defaultValue={selectedEmployee}
                           onSelectHandler={(select) => {
