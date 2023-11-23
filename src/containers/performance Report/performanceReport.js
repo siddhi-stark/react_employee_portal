@@ -1,49 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
+import swal from 'sweetalert';
 import { Pie } from 'react-chartjs-2';
 import { Datepicker, Helmet, DropdownInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import customFunctions from '../../helper/customFunctions';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
 
 const items = [
   { to: '/', label: 'Home' },
   { label: 'Employee Performance Report' },
 ];
 
-const options = [
-  {
-    label: 'Riyaz',
-    value: '0',
-  },
-  {
-    label: 'Amrut',
-    value: '1',
-  },
-];
-
 const PerformanceReport = () => {
   const [isShowLoader, setShowLoader] = useState(false);
-  //   const [rows, setRows] = useState([]);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
-  const [userRole, setUserRole] = useState('');
   const [title, setTitle] = useState('');
-  // const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
+  const [selectedEmployeeData, setSelectedEmployeeData] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
-  const [graphData, setGraphData] = useState({
-    datasets: [
-      {
-        data: [90, 5, 5],
-        backgroundColor: ['#8cc540', '#e3e3e3', '#FF0000'],
-      },
-    ],
-  });
-
-  console.log('userRole', userRole);
-  // console.log('graphData', graphData);
+  const [allEmployes, setAllEmployes] = useState([]);
+  const [graphData, setGraphData] = useState([]);
+  const [totalCompletedPercentage, setTotalCompletedPercentage] =
+    useState(null);
 
   const filterSearch = (e) => {
     e.preventDefault();
@@ -74,14 +58,82 @@ const PerformanceReport = () => {
     if (isValid) {
       setFilterErr('');
       setShowLoader('');
-      setGraphData();
+      getEmployeeById();
     }
   };
 
   useEffect(() => {
-    setUserRole('null');
     setTitle('Employee Performance Report');
   }, []);
+
+  useEffect(() => {
+    getEmployeeName();
+  }, []);
+
+  const getEmployeeName = async () => {
+    const { data, error } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?is_employees=true&type=all`
+    );
+    if (data && data?.success) {
+      const allemp = [];
+      data?.data?.map((item) => {
+        return allemp.push({ label: item?.full_name, value: item?.id });
+      });
+      setAllEmployes(allemp || '');
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
+    }
+  };
+
+  // useEffect(()=>{
+  //   if(!selectedEmployee) return;
+  // },[selectedEmployee])
+
+  const getEmployeeById = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.employeeReportUrl}`;
+    const params = {
+      start_date: fromDate ? customFunctions.getDate(fromDate) : '',
+      user_id: selectedEmployeeId ? selectedEmployeeId : null,
+      end_date: toDate ? customFunctions.getDate(toDate) : '',
+    };
+    // const params = {
+    //   start_date:'2023-7-23',
+    //   user_id: 15,
+    //   end_date: '2023-11-23',
+    // };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+    if (data && data?.success) {
+      setShowLoader(false);
+      setSelectedEmployeeData(data?.data);
+
+      const incompletedtask =
+        data?.data?.total_task_count - data?.data?.total_completed_tasks;
+
+      setGraphData({
+        datasets: [
+          {
+            data: [
+              data?.data?.total_completed_tasks,
+              data?.data?.total_overdue,
+              incompletedtask,
+            ],
+            backgroundColor: ['#8cc540', '#FFC107', '#FF0000'],
+          },
+        ],
+      });
+
+      const completedPercentage =
+        (100 * data?.data?.total_completed_tasks) /
+        data?.data?.total_task_count;
+      setTotalCompletedPercentage(completedPercentage || '0');
+    } else {
+      setShowLoader(false);
+      setSelectedEmployeeData('');
+      swal(message || 'Something went wrong', '', 'error');
+    }
+  };
 
   const onClear = () => {
     // setFilterErr('');
@@ -134,14 +186,15 @@ const PerformanceReport = () => {
                       <Col sm={3}>
                         <div className="search-bar-input">
                           <DropdownInput
-                            options={options}
+                            options={allEmployes}
                             placeholder="Select employee"
                             defaultValue={selectedEmployee}
                             onSelectHandler={(select) => {
                               setFilterErr('');
                               setSelectedEmployee(select);
+                              setSelectedEmployeeId(select?.value);
                             }}
-                            isMulti
+                            // isMulti
                           />
                         </div>
                       </Col>
@@ -209,137 +262,184 @@ const PerformanceReport = () => {
             </div>
           </Row>
           <hr />
-          <div className="row align-items-center">
-            <div className="col-xl-5 col-lg-6">
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="card widget-flat bg-primary text-white">
-                    <div className="card-body">
-                      <div className="float-end">
-                        <i className="mdi mdi-cart-plus widget-icon" />
+          {selectedEmployeeData ? (
+            <div className="row align-items-center">
+              <div className="col-xl-5 col-lg-6">
+                <div className="row">
+                  <div className="col-sm-6">
+                    <div className="card widget-flat bg-primary text-white">
+                      <div className="card-body">
+                        <div className="float-end">
+                          <i className="mdi mdi-cart-plus widget-icon" />
+                        </div>
+                        <h5
+                          className="text-white fw-normal mt-0"
+                          title="Number of Orders"
+                        >
+                          Quality
+                        </h5>
+                        <h3 className="mt-3 mb-3">
+                          {Math.round(selectedEmployeeData?.quality)}%
+                        </h3>
+                        <p className="mb-0 text-muted">
+                          <span
+                            className={
+                              Math.round(selectedEmployeeData?.quality) > 80
+                                ? 'text-success me-2'
+                                : 'text-danger me-2'
+                            }
+                          >
+                            <i className="mdi mdi-arrow-down-bold" />{' '}
+                            {Math.round(selectedEmployeeData?.quality) > 80
+                              ? 'Good Keep It Up'
+                              : 'Need Improvment'}
+                          </span>
+                        </p>
                       </div>
-                      <h5
-                        className="text-white fw-normal mt-0"
-                        title="Number of Orders"
-                      >
-                        Quality
-                      </h5>
-                      <h3 className="mt-3 mb-3">60%</h3>
-                      <p className="mb-0 text-muted">
-                        <span className="text-danger me-2">
-                          <i className="mdi mdi-arrow-down-bold" /> Need
-                          improvment
-                        </span>
-                      </p>
                     </div>
                   </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="card widget-flat bg-success text-white">
-                    <div className="card-body">
-                      <div className="float-end">
-                        <i className="mdi mdi-currency-usd widget-icon" />
-                      </div>
-                      <h5
-                        className="text-white fw-normal mt-0"
-                        title="Average Revenue"
-                      >
-                        Time Effeciency
-                      </h5>
-                      <h3 className="mt-3 mb-3">85%</h3>
-                      <p className="mb-0">
-                        <span className="text-success me-2">
-                          <i className="mdi mdi-arrow-down-bold" /> Keep it up
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="card widget-flat bg-info text-white">
-                    <div className="card-body">
-                      <div className="float-end">
-                        <i className="mdi mdi-account-multiple widget-icon" />
-                      </div>
-                      <h5
-                        className="text-white fw-normal mt-0"
-                        title="Number of Customers"
-                      >
-                        Total Tasks Allocated
-                      </h5>
-                      <h3 className="mt-3 mb-3">50</h3>
-                      <p className="mb-0 text-white">
-                        <span className="text-white me-2">
-                          <i className="mdi mdi-arrow-up-bold" /> 90%
-                        </span>
-                        <span className="text-nowrap">Completed</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="card widget-flat bg-warning text-white">
-                    <div className="card-body">
-                      <div className="float-end">
-                        <i className="mdi mdi-pulse widget-icon" />
-                      </div>
-                      <h5 className="text-white fw-normal mt-0" title="Growth">
-                        Reported Bug count
-                      </h5>
-                      <h3 className="mt-3 mb-3">20</h3>
-                      <p className="mb-0">
-                        <span className="text-success me-2">
-                          <i className="mdi mdi-arrow-up-bold" /> 20
-                        </span>
-                        <span className="text-nowrap">Since last month</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  <div className="col-sm-6">
+                    <div className="card widget-flat bg-success text-white">
+                      <div className="card-body">
+                        <div className="float-end">
+                          <i className="mdi mdi-currency-usd widget-icon" />
+                        </div>
+                        <h5
+                          className="text-white fw-normal mt-0"
+                          title="Average Revenue"
+                        >
+                          Time Effeciency
+                        </h5>
 
-            <div className="col-xl-7 col-lg-6">
-              <div className="card card-h-100">
-                {/* <div className="d-flex card-header justify-content-between align-items-center bg-transparent border-bottom-0">
+                        <h3 className="mt-3 mb-3">
+                          {selectedEmployeeData?.time_efficiency}%
+                        </h3>
+                        <p className="mb-0">
+                          <span
+                            className={
+                              selectedEmployeeData?.time_efficiency > 80
+                                ? 'text-dark me-2'
+                                : 'text-warning me-2'
+                            }
+                          >
+                            <i className="mdi mdi-arrow-down-bold" />{' '}
+                            {selectedEmployeeData?.time_efficiency > 80
+                              ? 'Keep it up'
+                              : 'Need to improve'}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <div className="card widget-flat bg-info text-white">
+                      <div className="card-body">
+                        <div className="float-end">
+                          <i className="mdi mdi-account-multiple widget-icon" />
+                        </div>
+                        <h5
+                          className="text-white fw-normal mt-0"
+                          title="Number of Customers"
+                        >
+                          Total Tasks Allocated
+                        </h5>
+                        <h3 className="mt-3 mb-3">
+                          {selectedEmployeeData?.total_task_count}
+                        </h3>
+                        <p className="mb-0 text-white">
+                          <span className="text-white me-2">
+                            <i className="mdi mdi-arrow-up-bold" />{' '}
+                            {Math.round(totalCompletedPercentage)}%
+                          </span>
+                          <span className="text-nowrap">Completed</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="card widget-flat bg-warning text-white">
+                      <div className="card-body">
+                        <div className="float-end">
+                          <i className="mdi mdi-pulse widget-icon" />
+                        </div>
+                        <h5
+                          className="text-white fw-normal mt-0"
+                          title="Growth"
+                        >
+                          Reported Bug count
+                        </h5>
+                        <h3 className="mt-3 mb-3">
+                          {selectedEmployeeData?.total_bug_count}
+                        </h3>
+                        <p className="mb-0">
+                          <span className="text-success me-2">
+                            <i className="mdi mdi-arrow-up-bold" />
+                          </span>
+                          <span className="text-nowrap" />
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-xl-7 col-lg-6">
+                <div className="card card-h-100">
+                  {/* <div className="d-flex card-header justify-content-between align-items-center bg-transparent border-bottom-0">
                       <h4 className="header-title">Projections Vs Actuals</h4>
                     </div> */}
-                <div className="card-body">
-                  <Row>
-                    <Col sm={5}>
-                      <h5 className="text-center">Card title</h5>
-                      {Object.keys(graphData).length && (
-                        <Pie data={graphData} />
-                      )}
-                    </Col>
-                    <Col
-                      sm={5}
-                      className="d-flex flex-column align-items-center justify-content-center"
-                    >
-                      <div className='d-flex flex-row'>
-                      <p className="badge rounded-pill bg-info p-2">&nbsp;</p>{' '}
-                      Completed tasks 
-                      </div>
-                      <div className='d-flex flex-row'>
-                      <p className="badge rounded-pill bg-danger">
-                        &nbsp;
-                      </p>
-                      Overdue task 5 
-                      </div>
-                      <div className='d-flex flex-row'>
-                      <p className="badge rounded-pill bg-warning">
-                        &nbsp;
-                      </p>{' '}
-                      Incompleted tasks
-                      </div>
-                    </Col>
-                  </Row>
+                  <div className="card-body">
+                    <Row>
+                      <Col sm={5}>
+                        <h5 className="text-center">Performance Effeciency</h5>
+                        {Object.keys(graphData).length && (
+                          <Pie data={graphData} />
+                        )}
+                      </Col>
+                      <Col
+                        sm={5}
+                        className="d-flex flex-column align-items-center justify-content-center"
+                      >
+                        <div className="d-flex flex-row">
+                          <p
+                            className="badge rounded-pill"
+                            style={{ backgroundColor: '#8cc540' }}
+                          >
+                            &nbsp;
+                          </p>
+                          &nbsp; Completed tasks{' '}
+                          {selectedEmployeeData?.total_completed_tasks}
+                        </div>
+                        <div className="d-flex flex-row">
+                          <p
+                            className="badge rounded-pill"
+                            style={{ backgroundColor: '#FFC107' }}
+                          >
+                            &nbsp;
+                          </p>
+                          &nbsp; Overdue task{' '}
+                          {selectedEmployeeData?.total_overdue}
+                        </div>
+                        <div className="d-flex flex-row">
+                          <p
+                            className="badge rounded-pill"
+                            style={{ backgroundColor: '#FF0000' }}
+                          >
+                            &nbsp;
+                          </p>
+                          &nbsp; Incompleted tasks{' '}
+                          {selectedEmployeeData?.total_task_count -
+                            selectedEmployeeData?.total_completed_tasks}
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : null}
         </div>
       </section>
     </>
