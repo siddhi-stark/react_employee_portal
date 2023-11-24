@@ -233,7 +233,7 @@ const menu = [
     path: '/performance-report',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1, 3, 4],
+    roleaccess: [1, 3],
   },
   {
     title: 'Policy',
