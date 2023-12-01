@@ -21,13 +21,16 @@ const PerformanceReport = () => {
   const [filterErr, setFilterErr] = useState('');
   const [title, setTitle] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
+  console.log('selectedEmployee', selectedEmployee);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
   const [selectedEmployeeData, setSelectedEmployeeData] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [allEmployes, setAllEmployes] = useState([]);
+  const [joiningDate, setJoingDate] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [totalCompletedPercentage, setTotalCompletedPercentage] =
     useState(null);
+  console.log('joiningDate', joiningDate);
 
   const filterSearch = (e) => {
     e.preventDefault();
@@ -77,7 +80,7 @@ const PerformanceReport = () => {
     if (data && data?.success) {
       const allemp = [];
       data?.data?.map((item) => {
-        return allemp.push({ label: item?.full_name, value: item?.id });
+        return allemp.push({ label: item?.full_name, value: item?.id, joiningDate: item?.date_joined });
       });
       setAllEmployes(allemp || '');
     } else {
@@ -96,6 +99,7 @@ const PerformanceReport = () => {
       start_date: fromDate ? customFunctions.getDate(fromDate) : '',
       user_id: selectedEmployeeId ? selectedEmployeeId : null,
       end_date: toDate ? customFunctions.getDate(toDate) : '',
+      // date_joined: joiningDate ? customFunctions.getDate(joiningDate) : ''
     };
     // const params = {
     //   start_date:'2023-7-23',
@@ -125,8 +129,8 @@ const PerformanceReport = () => {
       });
 
       const completedPercentage =
-        (100 * data?.data?.total_completed_tasks) /
-        data?.data?.total_task_count;
+         ( 100 * data?.data?.total_completed_tasks) /
+        data?.data?.total_allocated_tasks;
       setTotalCompletedPercentage(completedPercentage || '0');
     } else {
       setShowLoader(false);
@@ -141,6 +145,7 @@ const PerformanceReport = () => {
     setToDate('');
     // setSearchKeyword('');
     setSelectedEmployee([]);
+    setSelectedEmployeeData('');
     setCntClearFilter(cntClearFilter + 1);
   };
 
@@ -193,8 +198,9 @@ const PerformanceReport = () => {
                               setFilterErr('');
                               setSelectedEmployee(select);
                               setSelectedEmployeeId(select?.value);
+                              setJoingDate(select?.joiningDate)
                             }}
-                            // isMulti
+                          // isMulti
                           />
                         </div>
                       </Col>
@@ -209,6 +215,7 @@ const PerformanceReport = () => {
                           autoComplete="off"
                           name="startDate"
                           dateFormat="dd/MM/yyyy"
+                          minDate={new Date(joiningDate)}
                           maxDate={new Date()}
                           placeholder="From Date"
                         />
@@ -257,7 +264,7 @@ const PerformanceReport = () => {
           <Row>
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 ">
-                Employee Performance Report Quality
+                Employee Performance Report Quality : {selectedEmployee ? selectedEmployee?.label : null}
               </h5>
             </div>
           </Row>
@@ -279,7 +286,7 @@ const PerformanceReport = () => {
                           Quality
                         </h5>
                         <h3 className="mt-3 mb-3">
-                          {Math.round(selectedEmployeeData?.quality)}%
+                          {Math.round(selectedEmployeeData?.quality) ? Math.round(selectedEmployeeData?.quality) : 0}%
                         </h3>
                         <p className="mb-0 text-muted">
                           <span
@@ -312,7 +319,7 @@ const PerformanceReport = () => {
                         </h5>
 
                         <h3 className="mt-3 mb-3">
-                          {selectedEmployeeData?.time_efficiency}%
+                          {selectedEmployeeData?.time_efficiency > 0 ? selectedEmployeeData?.time_efficiency : 0}%
                         </h3>
                         <p className="mb-0">
                           <span
@@ -346,12 +353,12 @@ const PerformanceReport = () => {
                           Total Tasks Allocated
                         </h5>
                         <h3 className="mt-3 mb-3">
-                          {selectedEmployeeData?.total_task_count}
+                          {selectedEmployeeData?.total_allocated_tasks ? selectedEmployeeData?.total_allocated_tasks : 0}
                         </h3>
                         <p className="mb-0 text-white">
                           <span className="text-white me-2">
                             <i className="mdi mdi-arrow-up-bold" />{' '}
-                            {Math.round(totalCompletedPercentage)}%
+                            {Math.round(totalCompletedPercentage) > 0 ? Math.round(totalCompletedPercentage) : 0}%
                           </span>
                           <span className="text-nowrap">Completed</span>
                         </p>
@@ -371,11 +378,12 @@ const PerformanceReport = () => {
                           Reported Bug count
                         </h5>
                         <h3 className="mt-3 mb-3">
-                          {selectedEmployeeData?.total_bug_count}
+                          {selectedEmployeeData?.total_bug_count > 0 ? selectedEmployeeData?.total_bug_count : 0}
                         </h3>
                         <p className="mb-0">
                           <span className="text-success me-2">
                             <i className="mdi mdi-arrow-up-bold" />
+                            {/* {selectedEmployeeData?.total_bug_count > 0 ? selectedEmployeeData?.total_bug_count : 0} */}
                           </span>
                           <span className="text-nowrap" />
                         </p>
@@ -391,50 +399,53 @@ const PerformanceReport = () => {
                       <h4 className="header-title">Projections Vs Actuals</h4>
                     </div> */}
                   <div className="card-body">
-                    <Row>
-                      <Col sm={5}>
+                    {selectedEmployeeData?.total_task_count > 0 ?
+                      <Row>
                         <h5 className="text-center">Performance Effeciency</h5>
-                        {Object.keys(graphData).length && (
-                          <Pie data={graphData} />
-                        )}
-                      </Col>
-                      <Col
-                        sm={5}
-                        className="d-flex flex-column align-items-center justify-content-center"
-                      >
-                        <div className="d-flex flex-row">
-                          <p
-                            className="badge rounded-pill"
-                            style={{ backgroundColor: '#8cc540' }}
-                          >
-                            &nbsp;
-                          </p>
-                          &nbsp; Completed tasks{' '}
-                          {selectedEmployeeData?.total_completed_tasks}
-                        </div>
-                        <div className="d-flex flex-row">
-                          <p
-                            className="badge rounded-pill"
-                            style={{ backgroundColor: '#FFC107' }}
-                          >
-                            &nbsp;
-                          </p>
-                          &nbsp; Overdue task{' '}
-                          {selectedEmployeeData?.total_overdue}
-                        </div>
-                        <div className="d-flex flex-row">
-                          <p
-                            className="badge rounded-pill"
-                            style={{ backgroundColor: '#FF0000' }}
-                          >
-                            &nbsp;
-                          </p>
-                          &nbsp; Incompleted tasks{' '}
-                          {selectedEmployeeData?.total_task_count -
-                            selectedEmployeeData?.total_completed_tasks}
-                        </div>
-                      </Col>
-                    </Row>
+                        <Col sm={5}>
+                          {Object.keys(graphData).length && (
+                            <Pie data={graphData} />
+                          )}
+                        </Col>
+                        <Col
+                          sm={5}
+                          className="d-flex flex-column align-items-center justify-content-center"
+                        >
+                          <div className="d-flex flex-row">
+                            <p
+                              className="badge rounded-pill"
+                              style={{ backgroundColor: '#8cc540' }}
+                            >
+                              &nbsp;
+                            </p>
+                            &nbsp; Completed tasks{' '}
+                            {selectedEmployeeData?.total_completed_tasks ? selectedEmployeeData?.total_completed_tasks : 0}
+                          </div>
+                          <div className="d-flex flex-row">
+                            <p
+                              className="badge rounded-pill"
+                              style={{ backgroundColor: '#FFC107' }}
+                            >
+                              &nbsp;
+                            </p>
+                            &nbsp; Overdue task{' '}
+                            {selectedEmployeeData?.total_overdue > 0 ? selectedEmployeeData?.total_overdue : 0}
+                          </div>
+                          <div className="d-flex flex-row">
+                            <p
+                              className="badge rounded-pill"
+                              style={{ backgroundColor: '#FF0000' }}
+                            >
+                              &nbsp;
+                            </p>
+                            &nbsp; Incompleted tasks{' '}
+                            {selectedEmployeeData?.total_allocated_tasks -
+                              selectedEmployeeData?.total_completed_tasks > 0 ? selectedEmployeeData?.total_allocated_tasks -
+                            selectedEmployeeData?.total_completed_tasks : 0}
+                          </div>
+                        </Col>
+                      </Row>
+                      : 'No task performed during this time'}
                   </div>
                 </div>
               </div>
