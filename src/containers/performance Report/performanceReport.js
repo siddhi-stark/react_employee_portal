@@ -113,7 +113,7 @@ const PerformanceReport = () => {
       setSelectedEmployeeData(data?.data);
 
       const incompletedtask =
-        data?.data?.total_task_count - data?.data?.total_completed_tasks;
+        data?.data?.total_allocated_tasks - data?.data?.total_completed_tasks;
 
       setGraphData({
         datasets: [
@@ -129,7 +129,7 @@ const PerformanceReport = () => {
       });
 
       const completedPercentage =
-         ( 100 * data?.data?.total_completed_tasks) /
+        (100 * data?.data?.total_completed_tasks) /
         data?.data?.total_allocated_tasks;
       setTotalCompletedPercentage(completedPercentage || '0');
     } else {
@@ -261,14 +261,15 @@ const PerformanceReport = () => {
               </Card.Body>
             </Card>
           </Row>
-          <Row>
-            <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">
-                Employee Performance Report Quality : {selectedEmployee ? selectedEmployee?.label : null}
-              </h5>
-            </div>
-          </Row>
-          <hr />
+          {selectedEmployeeData &&
+            <Row>
+              <div className="d-flex align-items-center justify-content-between">
+                <h5 className="card-title mb-0 mt-2 ">
+                  Employee Performance Report of {selectedEmployee ? customFunctions.capitalizeFirstLetter(selectedEmployee?.label) : null}
+                </h5>
+              </div>
+              <hr />
+            </Row>}
           {selectedEmployeeData ? (
             <div className="row align-items-center">
               <div className="col-xl-5 col-lg-6">
