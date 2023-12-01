@@ -36,8 +36,8 @@ const PerformanceReport = () => {
     e.preventDefault();
     let filterSearchErr = '';
     let isValid = true;
+    console.log('customFunctions.checkIfEmpty(selectedEmployee)', customFunctions.checkIfEmpty(selectedEmployee));
     if (
-      // customFunctions.checkIfEmpty(searchKeyword) &&
       customFunctions.checkIfEmpty(selectedEmployee) &&
       customFunctions.checkIfEmpty(fromDate) &&
       customFunctions.checkIfEmpty(toDate)
@@ -144,7 +144,7 @@ const PerformanceReport = () => {
     setFromDate('');
     setToDate('');
     // setSearchKeyword('');
-    setSelectedEmployee([]);
+    setSelectedEmployee('');
     setSelectedEmployeeData('');
     setCntClearFilter(cntClearFilter + 1);
   };
