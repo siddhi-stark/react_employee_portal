@@ -803,16 +803,16 @@ function Profile() {
                   }}
                   label="Teamwork Authentication Token"
                   containerClass="form-group"
-                  asterisk="*"
+                  // asterisk="*"
                   type="text"
                   name="auth"
                   value={auth}
                   placeholder="Token"
-                  errorMessage={validator.message(
-                    'Teamwork Authentication Token',
-                    auth,
-                    'required'
-                  )}
+                  // errorMessage={validator.message(
+                  //   'Teamwork Authentication Token',
+                  //   auth,
+                  //   'required'
+                  // )}
                 />
               </Col>
             </Row>
