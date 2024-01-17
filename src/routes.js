@@ -76,6 +76,9 @@ import AddCategory from './containers/Policy/addCategory.component';
 import EmployeeDetails from './containers/Leaves/EmployeeDetails.component';
 import SupportTicketComponent from './containers/SupportTicket/supportTicket.component';
 import AddSupportTicket from './containers/SupportTicket/addSupportTicket.component';
+import EmployeeExitForm from './containers/Exit process/EmployeeExitForm';
+import EmployeeResignationList from './containers/Exit process/employeeResignationList'
+import ResignationDetails from './containers/Exit process/resignationDetails'
 
 function Routes() {
   return (
@@ -215,6 +218,9 @@ function Routes() {
       <Route path="/add-support-ticket" exact component={AddSupportTicket} />
       <Route path="/edit-support-ticket/:supportId" exact component={AddSupportTicket} />
       <Route path="/performance-report" exact component={PerformanceReport} />
+      <Route path="/resignation-application" exact component={EmployeeExitForm}/>
+      <Route path = "/resignation-listing" exact component={EmployeeResignationList}/>
+      <Route path= "/resignation-details" exact component={ResignationDetails}/>
       <Route component={NotFound} />
     </Switch>
   );

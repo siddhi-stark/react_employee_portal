@@ -280,6 +280,20 @@ const menu = [
   //   roleaccess: [1,3,5,6],
   // },
   {
+    title: 'Resignation',
+      path: '/resignation-application',
+      icon: 'report.svg',
+      submenu: [],
+      roleaccess: [1,2,3,4,5,6,7],
+  },
+  {
+    title: 'Resignation From Employees',
+      path: '/resignation-listing',
+      icon: 'report.svg',
+      submenu: [],
+      roleaccess: [1,2,3,4,5,6,7],
+  },
+  {
     title: 'Support Ticket',
     path: '/support-ticket',
     icon: 'ticket.svg',

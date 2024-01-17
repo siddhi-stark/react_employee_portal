@@ -1,0 +1,144 @@
+[
+    {
+      "sectionName": "employeefilter",
+      "sectionTitle": "Employee Filter",
+      "layout": {
+        "label": "3 Column",
+        "value": "3column"
+      },
+      "containerClass": "",
+      "displaySection": true,
+      "displaySectionTitle": false,
+      "fields": [
+        {
+          "name": "employee",
+          "type": "select",
+          "label": "",
+          "id": "",
+          "placeholder": "Select employee name",
+          "inputClass": "",
+          "containerClass": "",
+          "validations": [],
+          "displayWhen": {},
+          "haveValidations": "false",
+          "haveDisplayOptions": "false",
+          "callback": "",
+          "callbackUrl": "",
+          "inputToChange": "",
+          "minDateSelector": "",
+          "maxDateSelector": "",
+          "disabled": false,
+          "isMulti": false,
+          "allowedUsers": [
+            1,
+            2
+          ],
+          "fieldsToReset": [],
+          "fieldLayout": {
+            "label": "1 Column",
+            "value": "1column"
+          },
+          "fields": [],
+          "optionCallback": "getEmployee",
+          "optionsCallbackUrl": "employeeUrl",
+          "options": []
+        },
+        {
+          "name": "ticket_type",
+          "type": "select",
+          "label": "",
+          "id": "",
+          "placeholder": "Select ticket type",
+          "inputClass": "",
+          "containerClass": "",
+          "validations": [],
+          "displayWhen": {},
+          "haveValidations": "false",
+          "haveDisplayOptions": "false",
+          "callback": "",
+          "callbackUrl": "",
+          "inputToChange": "",
+          "minDateSelector": "",
+          "maxDateSelector": "",
+          "disabled": false,
+          "isMulti": false,
+          "allowedUsers": [],
+          "fieldsToReset": [],
+          "fieldLayout": {
+            "label": "1 Column",
+            "value": "1column"
+          },
+          "fields": [],
+          "optionCallback": "",
+          "optionsCallbackUrl": "",
+          "options": [
+            {
+              "label": "Infrastructure",
+              "value": "1"
+            },
+            {
+              "label": "Laptop/Dekstop",
+              "value": "2"
+            },
+            {
+              "label": "Accessories",
+              "value": "3"
+            },
+            {
+              "label": "System OS",
+              "value": "4"
+            },
+            {
+              "label": "Other",
+              "value": "5"
+            }
+          ]
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "label": "",
+          "id": "",
+          "placeholder": "Select status",
+          "inputClass": "",
+          "containerClass": "",
+          "validations": [],
+          "displayWhen": {},
+          "haveValidations": "false",
+          "haveDisplayOptions": "false",
+          "callback": "",
+          "callbackUrl": "",
+          "inputToChange": "",
+          "minDateSelector": "",
+          "maxDateSelector": "",
+          "disabled": false,
+          "isMulti": false,
+          "allowedUsers": [],
+          "fieldsToReset": [],
+          "fieldLayout": {
+            "label": "1 Column",
+            "value": "1column"
+          },
+          "fields": [],
+          "optionCallback": "",
+          "optionsCallbackUrl": "",
+          "options": [
+            {
+              "label": "Open",
+              "value": "1"
+            },
+            {
+              "label": "Closed",
+              "value": "2"
+            },
+            {
+              "label": "Resolved",
+              "value": "3"
+            }
+          ]
+        }
+      ],
+      "allowedUsers": [],
+      "sectionLayout": "3column"
+    }
+  ]
