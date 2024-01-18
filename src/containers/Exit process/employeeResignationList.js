@@ -9,17 +9,29 @@ import Table from '../../components/ReactTable/simpletable.component';
 import SimpleReactValidator from 'simple-react-validator';
 import customFunctions from '../../helper/customFunctions';
 import { withRouter, useHistory, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
 
 const EmployeeResignationList = (props) => {
   const [pageTitle, setPageTitle] = useState('Resignation');
   const history = useHistory();
+  const [isShowLoader, setShowLoader] = useState(false);
+  const [rowData, setRowData] = useState([]);
+
   const items = props.data
     ? null
     : [{ to: '/', label: 'Home' }, { label: 'Resignation Listing' }];
 
+  useEffect(() => {
+    employeeResignationList();
+  }, []);
+
   const handleActionCallback = ({ id, createdDate, name }) => {
     const newDate = customFunctions.getDate(createdDate);
     const dt = new Date(newDate).getTime();
+
+    console.log('id',id);
     return (
       <span className="d-flex">
         <>
@@ -28,11 +40,11 @@ const EmployeeResignationList = (props) => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-            //   history.push(`/daily-report/${dt}/${id}`, {
-            //     employeeReport: true,
-            //     reporterName: name,
-            //     pagination: pagination.current_page,
-            //   });
+                history.push(`/resignation-details`, {
+                //   employeeReport: true,
+                //   reporterName: name,
+                //   pagination: pagination.current_page,
+                });
             }}
           >
             <span className="text-info">View Report</span>
@@ -43,26 +55,32 @@ const EmployeeResignationList = (props) => {
   };
 
   const columns = [
-    // {
-    //   id: 'no',
-    //   label: 'Sr. No',
-    //   roleAccess: [1, 2, 3, 4, 5, 6, 7],
-    // },
     {
       id: 'employeeId',
       label: 'Employee Id',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
-      isDisplay: false,
+      render: (row) => {
+        const rowdata = row;
+        return `SDMS - ${rowdata.user.emp_code}`;
+      },
     },
     {
-      id: 'name',
+      id: 'full_name',
       label: 'Name',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        return `${rowdata.user.full_name}`;
+      },
     },
     {
       id: 'designation',
       label: 'Designation',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        return `${rowdata.user.designation_name}`;
+      },
     },
     {
       id: 'department',
@@ -73,26 +91,50 @@ const EmployeeResignationList = (props) => {
       id: 'joiningDate',
       label: 'Joining Date',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        return `${rowdata.user.date_joined}`;
+      },
     },
     {
       id: 'resignationReason',
       label: 'Resignation Reason',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        return `${rowdata.resignation_reason}`;
+      },
     },
     {
       id: 'status',
       label: 'Status',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        return rowdata.resignation_status == '3'
+          ? 'Pending'
+          : rowdata.resignation_status == '2'
+          ? 'Decline'
+          : 'Approve';
+      },
     },
     {
       id: 'remarks',
       label: 'Remarks',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        return rowdata.resign_remark ? rowdata.resign_remark : "-";
+      },
     },
     {
       id: 'relivingDate',
       label: 'Reliving Date',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        return rowdata.user.relieving_date ? rowdata.user.relieving_date : "-";
+      },
     },
     {
       id: 'action',
@@ -101,6 +143,25 @@ const EmployeeResignationList = (props) => {
       render: handleActionCallback,
     },
   ];
+
+  const employeeResignationList = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.getResignationListUrl}`;
+
+    const url = customFunctions.generateUrl(endPoint);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (data && data.success) {
+      setRowData(data.data);
+      setShowLoader(false);
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
 
   return (
     <>
@@ -125,7 +186,7 @@ const EmployeeResignationList = (props) => {
           <Row>
             <Table
               columns={columns}
-              // rows={rows}
+              rows={rowData}
               showPagination
               // paginationProps={{
               //   ...pagination,

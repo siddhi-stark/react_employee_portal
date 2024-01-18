@@ -187,6 +187,10 @@ export default class Api extends Component {
 
   static employeeReportUrl =`${Api.baseUrl}dashboard-report/`
 
+  static employeeResignationUrl = `${Api.baseUrl}employee-resignation/`
+
+  static getResignationListUrl = `${Api.baseUrl}employee-resignation/`
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
@@ -195,14 +199,14 @@ export default class Api extends Component {
     switch (env) {
       case 'production':
         // url = 'https://liveapi.starkdigital.in/api/v1/'; // for emp Production
-        url = 'https://api.pms-portal.reviewtestlink.com/api/v1/'; 
+        // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/'; 
 
         break;
 
       case 'dev':
         // url = 'http://92.204.146.45:1337/api/v1/';
-        // url = 'https://developmentapi.starkdigital.in/api/v1/';
-        url = 'https://api.pms-portal.reviewtestlink.com/api/v1/';
+        url = 'https://developmentapi.starkdigital.in/api/v1/';
+        // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/';
         break;
       // Default: development server
       default:

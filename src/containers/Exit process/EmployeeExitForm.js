@@ -1,56 +1,129 @@
 /* eslint-disable */
 import React, { useState, useRef } from 'react';
-import { Helmet, DropdownInput, TextInput } from '../../components/FormInputs';
+import {
+  Helmet,
+  DropdownInput,
+  TextInput,
+  ModalInput,
+} from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import swal from 'sweetalert';
 import { Card, Row, Col, Button } from 'react-bootstrap';
 import Table from '../../components/ReactTable/simpletable.component';
 import SimpleReactValidator from 'simple-react-validator';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+import { useEffect } from 'react';
+import customFunctions from '../../helper/customFunctions';
 
 const EmployeeExitForm = (props) => {
   const [pageTitle, setPageTitle] = useState('Resignation');
   const [isShowLoader, setShowLoader] = useState(false);
   const [resignationReason, setResignationReason] = useState('');
+  const [personalEmail, setPersonalEmail] = useState('');
+  const [userId, setUserId] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [retainNote, setRetainNote] = useState('');
+  const [rowData, setRowData] = useState([]);
+  
+
   const items = props.data
     ? null
     : [{ to: '/', label: 'Home' }, { label: 'Resignation' }];
   const validator = useRef(new SimpleReactValidator({}));
   const [count, forceUpdate] = useState(0);
 
+  useEffect(() => {
+    setUserId(customFunctions.getLocalStorage('userId'));
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      getResignationList();
+    }
+  }, [userId]);
+
   const columns = [
+    // {
+    //   id: 'no',
+    //   label: 'Sr. No',
+    //   roleAccess: [1, 2, 3, 4, 5, 6, 7],
+    // },
     {
-      id: 'no',
-      label: 'Sr. No',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
-    },
-    {
-      id: 'eoployeeId',
+      id: 'emp_code',
       label: 'Employee Id',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
-      isDisplay: false,
+      // isDisplay: false,
+      render: (row) => {
+        const rowdata = row;
+        return `SDMS-${rowdata.user.emp_code}`;
+      },
     },
     {
-      id: 'resignationStatus',
+      id: 'resignation_status',
       label: 'Resignation Status',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     {
-      id: 'joiningDate',
+      id: 'date_joined',
       label: 'Joining Date',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        console.log('rowdata', rowdata);
+        return `${rowdata.user.date_joined}`;
+      },
     },
     {
-      id: 'resignationReason',
+      id: 'resignation_reason',
       label: 'Resignation Reason',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
     },
     ,
   ];
 
+  const addEmployeeResignation = async () => {
+    setShowLoader(true);
+    const postData = {
+      resignation_reason: resignationReason,
+      personal_email: personalEmail,
+    };
+    const callback = AuthApi.postDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}`;
+
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+      swal(data && data.message[0], '', 'success');
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const getResignationList = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.getResignationListUrl}`;
+
+    const url = customFunctions.generateUrl(endPoint);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (data && data.success) {
+      setRowData(data.data);
+      setShowLoader(false);
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
   const onSubmit = () => {
     if (validator.current.allValid()) {
-      submitForm();
+      addEmployeeResignation();
     } else {
       validator.current.showMessages();
       forceUpdate(count + 1);
@@ -68,7 +141,13 @@ const EmployeeExitForm = (props) => {
           </h2>
           <Breadcrumb items={items} />
           <div className="d-flex justify-content-end mb-3">
-            <Button>Retain Me</Button>
+            <Button
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              Retain Me
+            </Button>
           </div>
         </div>
       </div>
@@ -79,11 +158,14 @@ const EmployeeExitForm = (props) => {
             <Card.Body>
               <Row>
                 <Col sm={5}>
-                  <h6>Resignation Intimation</h6>
+                  <h6>
+                    {' '}
+                    <b> Resignation Intimation </b>{' '}
+                  </h6>
                   <Row>
                     <Col>
                       <h6>
-                        Why you want to Resign from Stark Digital Media Services
+                        Why you want to resign from Stark Digital Media Services
                         Pvt Ltd?
                       </h6>
                     </Col>
@@ -91,7 +173,25 @@ const EmployeeExitForm = (props) => {
                 </Col>
                 <Col sm={7}>
                   <TextInput
+                    label="Personal Email"
+                    asterisk="*"
+                    placeholder="Enter your email"
+                    type="text"
+                    maxlength={50}
+                    value={personalEmail}
+                    onInputChange={(e) => {
+                      setPersonalEmail(e.target.value);
+                    }}
+                    errorMessage={validator.current.message(
+                      'email',
+                      personalEmail,
+                      'required|email'
+                    )}
+                  />
+                  <TextInput
                     placeholder="Reason why you want to resign from stark digital..."
+                    label="Reason for resignation"
+                    asterisk="*"
                     type="text"
                     as="textarea"
                     rows="5"
@@ -137,7 +237,7 @@ const EmployeeExitForm = (props) => {
               <Row>
                 <Table
                   columns={columns}
-                  // rows={rows}
+                  rows={rowData}
                   showPagination
                   // paginationProps={{
                   //   ...pagination,
@@ -155,6 +255,41 @@ const EmployeeExitForm = (props) => {
               </Row>
             </Card.Body>
           </Card>
+          <ModalInput
+            size="md"
+            centered
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            className="event-image-popup"
+            id="contained-modal-title-center"
+            modalHeaderClass="reson-text-title d-flex align-items-center"
+            // label={eventDetails.eventTitle}
+            modalBody={
+              <div className="">
+                <TextInput
+                  label="Why you want to retain"
+                  type="text"
+                  as="textarea"
+                  asterisk="*"
+                  rows="5"
+                  value={retainNote}
+                  onInputChange={(e) => {
+                    setRetainNote(e.target.value);
+                  }}
+                />
+                <Button className="" disabled={!retainNote}>
+                  Submit
+                </Button>
+              </div>
+            }
+            // modalFooter={
+            //   eventDetails.eventDescription && (
+            //     <span className="modal-description">
+            //       Description: {eventDetails.eventDescription}
+            //     </span>
+            //   )
+            // }
+          />
         </div>
       </section>
     </>
