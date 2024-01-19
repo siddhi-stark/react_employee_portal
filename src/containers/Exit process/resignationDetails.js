@@ -157,23 +157,25 @@ const ResignationDetails = (props) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     // setShowLoader(true);
-    // if (document) {
-    const formData = new FormData();
-    formData.append('file', document);
-    // }
+    if (document) {
+      const formData = new FormData();
+      formData.append('file', document);
+    }
 
     const postData = {
       image: formData,
       document_type: selectedDocument,
       user_id: '',
     };
+    formData.append('postData', JSON.stringify(postData));
+
     const callback = AuthApi.postDataToServer;
     const endPoint = `${Api.uploadDocumentsUrl}`;
-    const { data, message } = await callback(endPoint, postData);
+    const { data, message } = await callback(endPoint, formData);
     if (data && data.success == true) {
-      swal("document uploaded successfully","","success")
+      swal('document uploaded successfully', '', 'success');
     }
   };
 
@@ -450,7 +452,7 @@ const ResignationDetails = (props) => {
                     <input
                       className="mb-3"
                       type="file"
-                      onChange={(e)=>setDocument(e.target.files[0])}
+                      onChange={(e) => setDocument(e.target.files[0])}
                     />
                     <Button type="submit">Upload</Button>
                   </form>
