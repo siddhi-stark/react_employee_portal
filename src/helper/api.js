@@ -191,6 +191,8 @@ export default class Api extends Component {
 
   static getResignationListUrl = `${Api.baseUrl}employee-resignation/`
 
+  static uploadDocumentsUrl = `${Api.baseUrl}upload-document/`
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

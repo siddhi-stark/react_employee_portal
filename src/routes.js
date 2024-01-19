@@ -77,8 +77,8 @@ import EmployeeDetails from './containers/Leaves/EmployeeDetails.component';
 import SupportTicketComponent from './containers/SupportTicket/supportTicket.component';
 import AddSupportTicket from './containers/SupportTicket/addSupportTicket.component';
 import EmployeeExitForm from './containers/Exit process/EmployeeExitForm';
-import EmployeeResignationList from './containers/Exit process/employeeResignationList'
-import ResignationDetails from './containers/Exit process/resignationDetails'
+import EmployeeResignationList from './containers/Exit process/employeeResignationList';
+import ResignationDetails from './containers/Exit process/resignationDetails';
 
 function Routes() {
   return (

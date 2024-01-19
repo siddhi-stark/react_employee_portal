@@ -16,6 +16,7 @@ import Api from '../../helper/api';
 const EmployeeResignationList = (props) => {
   const [pageTitle, setPageTitle] = useState('Resignation');
   const history = useHistory();
+  const navigate = useLocation()
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
 
@@ -41,7 +42,9 @@ const EmployeeResignationList = (props) => {
               e.preventDefault();
               e.stopPropagation();
                 history.push(`/resignation-details`, {
-                //   employeeReport: true,
+                  state:{
+                    resignationId:id
+                  }
                 //   reporterName: name,
                 //   pagination: pagination.current_page,
                 });
@@ -175,6 +178,8 @@ const EmployeeResignationList = (props) => {
           <div className="d-flex justify-content-end mb-3"></div>
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+
       <Card>
         <Card.Body>
           <div className="d-flex align-items-center justify-content-between">
