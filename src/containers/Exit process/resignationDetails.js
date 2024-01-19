@@ -156,13 +156,12 @@ const ResignationDetails = (props) => {
     }
   };
 
-  const uploadDocuments = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     // setShowLoader(true);
     // if (document) {
-    console.log('document', document);
-    var formData = new FormData();
+    const formData = new FormData();
     formData.append('file', document);
-    console.log('formData-----', formData);
     // }
 
     const postData = {
@@ -174,7 +173,7 @@ const ResignationDetails = (props) => {
     const endPoint = `${Api.uploadDocumentsUrl}`;
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
-      console.log('data------', data);
+      swal("document uploaded successfully","","success")
     }
   };
 
@@ -447,20 +446,14 @@ const ResignationDetails = (props) => {
                         ))}
                     </Card.Body>
                   </Card>
-                  <input
-                    className="mb-3"
-                    type="file"
-                    onChange={(e) => {
-                      setDocument(e.target.files[0]);
-                    }}
-                  />
-                  <Button
-                    onClick={() => {
-                      uploadDocuments();
-                    }}
-                  >
-                    Upload
-                  </Button>
+                  <form onSubmit={handleSubmit}>
+                    <input
+                      className="mb-3"
+                      type="file"
+                      onChange={(e)=>setDocument(e.target.files[0])}
+                    />
+                    <Button type="submit">Upload</Button>
+                  </form>
                 </Col>
                 <Col sm={6}>
                   <h5>Enter Relieving Date</h5>
