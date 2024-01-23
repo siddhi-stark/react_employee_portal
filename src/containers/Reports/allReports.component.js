@@ -20,6 +20,7 @@ const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
 
 function AllReports() {
   const [rows, setRows] = useState([]);
+  console.log("🚀 ~ AllReports ~ rows:", rows)
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');
@@ -45,11 +46,11 @@ function AllReports() {
   useEffect(() => {
     if (!state) return;
     if (state) {
-      setSelectedEmployee([{
-        label: state?.state?.reporterName,
-        id: state?.state?.EmpId,
-        value: state?.state?.EmpId,
-      }]);
+      // setSelectedEmployee([{
+      //   label: state?.state?.reporterName,
+      //   id: state?.state?.EmpId,
+      //   value: state?.state?.EmpId,
+      // }]);
     }
   }, [state]);
 
@@ -64,7 +65,7 @@ function AllReports() {
   //   })
   // },[state])
 
-  const handleActionCallback = ({ id, createdDate, name }) => {
+  const handleActionCallback = ({ id, createdDate, name,clockin,clockout }) => {
     const newDate = customFunctions.getDate(createdDate);
     const dt = new Date(newDate).getTime();
     return (
@@ -79,6 +80,10 @@ function AllReports() {
                 employeeReport: true,
                 reporterName: name,
                 pagination: pagination.current_page,
+                state:{
+                  clockIn:clockin,
+                  clockout:clockout
+                }
               });
             }}
           >
@@ -93,7 +98,7 @@ function AllReports() {
     {
       id: 'id',
       label: 'userId',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 7, 6],
       isDisplay: false,
     },
     {
@@ -105,43 +110,43 @@ function AllReports() {
     {
       id: 'no',
       label: 'Sr. No',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5,7, 6],
     },
     {
       id: 'name',
       label: 'Name',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5,7, 6],
     },
 
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5,7, 6],
     },
     {
       id: 'clockin',
       label: 'In',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 7,6],
     },
     {
       id: 'clockout',
       label: 'Out',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6,7],
     },
     {
       id: 'total_eta',
       label: 'Todays Estimation',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6,7],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6,7],
     },
     {
       id: 'report',
       label: 'View Report',
-      roleAccess: [1, 2, 3, 4, 5, 6],
+      roleAccess: [1, 2, 3, 4, 5, 6,7],
       render: handleActionCallback,
     },
   ];

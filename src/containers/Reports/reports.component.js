@@ -12,6 +12,7 @@ import customFunctions from '../../helper/customFunctions';
 function Reports(props) {
   const { match, location } = props;
   const state = useLocation();
+  console.log("🚀 ~ Reports ~ state:", state)
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
   const [reportDate, setReportDate] = useState('');
@@ -24,6 +25,13 @@ function Reports(props) {
   const [userName, setUserName] = useState();
   const history = useHistory();
   const report = props;
+
+  
+useEffect(()=>{
+  setClockIn(state?.state?.state?.clockIn)
+  setClockOut(state?.state?.state?.clockout)
+},[state])
+  console.log("🚀 ~ useEffect ~ state?.state?.clockIn:", state?.state?.clockIn)
 
 
   const employeeReport = report.location.state

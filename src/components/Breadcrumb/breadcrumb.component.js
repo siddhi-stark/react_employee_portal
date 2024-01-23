@@ -6,8 +6,8 @@ function Breadcrumb(props) {
     <>
       <ol className="breadcrumb">
         {items &&
-          items.map(({ to, label }) => (
-            <li key={to} className="breadcrumb-item active">
+          items.map(({ to, label },i) => (
+            <li key={i} className="breadcrumb-item active">
               <a href={to}>{label}</a>
             </li>
           ))}

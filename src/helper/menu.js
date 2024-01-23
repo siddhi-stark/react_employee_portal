@@ -226,7 +226,7 @@ const menu = [
     path: '/reports',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1],
+    roleaccess: [1,7],
   },
   {
     title: 'Performance Report',
@@ -284,14 +284,14 @@ const menu = [
       path: '/resignation-application',
       icon: 'report.svg',
       submenu: [],
-      roleaccess: [1,2,3,4,5,6,7],
+      roleaccess: [4],
   },
   {
-    title: 'Resignation From Employees',
+    title: 'Resignation Applications',
       path: '/resignation-listing',
       icon: 'report.svg',
       submenu: [],
-      roleaccess: [1,2,3,4,5,6,7],
+      roleaccess: [1,2,3,5,6],
   },
   {
     title: 'Support Ticket',
