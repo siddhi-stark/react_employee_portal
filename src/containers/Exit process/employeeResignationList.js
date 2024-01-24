@@ -85,11 +85,11 @@ const EmployeeResignationList = (props) => {
         return `${rowdata.user.designation_name}`;
       },
     },
-    {
-      id: 'department',
-      label: 'Department',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
-    },
+    // {
+    //   id: 'department',
+    //   label: 'Department',
+    //   roleAccess: [1, 2, 3, 4, 5, 6, 7],
+    // },
     {
       id: 'joiningDate',
       label: 'Joining Date',
@@ -150,8 +150,10 @@ const EmployeeResignationList = (props) => {
   const employeeResignationList = async () => {
     setShowLoader(true);
     const endPoint = `${Api.getResignationListUrl}`;
-
-    const url = customFunctions.generateUrl(endPoint);
+    const params = {
+      sort_direction: 'descending',
+    };
+    const url = customFunctions.generateUrl(endPoint,params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (data && data.success) {

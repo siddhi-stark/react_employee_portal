@@ -132,6 +132,8 @@ const ResignationDetails = (props) => {
 
   const approveResignation = async (status) => {
     setShowLoader(true);
+    setShowError(false);
+
     const postData = {
       resignation_status: status,
     };
@@ -141,7 +143,7 @@ const ResignationDetails = (props) => {
     } else {
       postData.resignation_decline_note = approveReason;
     }
-
+    console.log('postDataaa');
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
     const { data, message } = await callback(endPoint, postData);
@@ -154,26 +156,6 @@ const ResignationDetails = (props) => {
         '',
         'success'
       ).then(() => {
-        window.locatiom.reload();
-      });
-    } else {
-      setShowLoader(false);
-      swal(message, '', 'error');
-    }
-  };
-
-  const declineResignation = async () => {
-    setShowLoader(false);
-    const postData = {
-      resignation_decline_note: managerDeclineReason,
-      resignation_status: 2,
-    };
-    const callback = AuthApi.putDataToServer;
-    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
-    const { data, message } = await callback(endPoint, postData);
-    if (data && data.success == true) {
-      setShowLoader(false);
-      swal('Resignation decline successfully', '', 'success').then(() => {
         window.location.reload();
       });
     } else {
@@ -255,7 +237,8 @@ const ResignationDetails = (props) => {
   };
 
   const retainRequest = async (status) => {
-    setShowLoader(false);
+    setShowLoader(true);
+    setShowError(false);
     const postData = {
       retain_status: status,
     };
@@ -264,6 +247,7 @@ const ResignationDetails = (props) => {
     } else {
       postData.retention_decline_reason = retainReason;
     }
+
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
     const { data, message } = await callback(endPoint, postData);
@@ -286,6 +270,7 @@ const ResignationDetails = (props) => {
 
   const buyBackRequest = async (status) => {
     setShowLoader(true);
+    setShowError(false);
     const postData = {
       buy_back_status: status,
     };
@@ -318,6 +303,7 @@ const ResignationDetails = (props) => {
 
   const resignationRequestHr = async (status) => {
     setShowLoader(true);
+    setShowError(false);
     const postData = {
       resignation_status: status,
     };
@@ -326,11 +312,13 @@ const ResignationDetails = (props) => {
     } else {
       postData.resignation_decline_note = approveReason;
     }
+
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
       setShowLoader(false);
+
       swal(
         status == 1
           ? 'Resignation approve successfully'
@@ -346,34 +334,48 @@ const ResignationDetails = (props) => {
     }
   };
 
-  const isValid = (status) => {
-    if (approveReason) {
-      if (status == 'approve_resign') {
+  const isValid = (type, status) => {
+    if (type == 'admin') {
+      if (status == 'approve_resign' && approveReason) {
         approveResignation(1);
-      } else if (status == 'decline_resign') {
+      } else if (status == 'decline_resign' && approveReason) {
         approveResignation(2);
+      } else {
+        setShowError(true);
       }
-    } else {
-      setShowError(true);
     }
-    if (retainReason) {
-      if (status == 'accept_retain') {
-        retainRequest(1);
-      } else if (status == 'decline_retain') retainRequest(2);
-    } else {
-      setShowError(true);
+    if (type == 'hr') {
+      if (status == 'approve_resign' && approveReason) {
+        resignationRequestHr(1);
+      } else if (status == 'decline_resign' && approveReason) {
+        resignationRequestHr(2);
+      } else {
+        setShowError(true);
+      }
     }
-  };
 
-  const isSubmit = (status) => {
-    if (buyBackReason) {
-      if (status == 'accept') {
-        buyBackRequest(1);
-      } else if (status == 'decline') {
-        buyBackRequest(2);
+    if (type == 'admin_retain') {
+      console.log('adminnn');
+      if (status == 'accept_retain' && retainReason) {
+        console.log('retain');
+
+        retainRequest(1);
+      } else if (status == 'decline_retain' && retainReason) {
+        console.log('elsee ifff');
+        retainRequest(2);
+      } else {
+        setShowError(true);
       }
-    } else {
-      setShowError(true);
+    }
+
+    if (type == 'buy_back') {
+      if (status == 'accept' && buyBackReason) {
+        buyBackRequest(1);
+      } else if (status == 'decline' && buyBackReason) {
+        buyBackRequest(2);
+      } else {
+        setShowError(true);
+      }
     }
   };
 
@@ -486,31 +488,33 @@ const ResignationDetails = (props) => {
                       <h6>{rowData?.retention_reason}</h6>
                     </Alert.Heading>
                   </Alert>
-                  <TextInput
-                    label="Enter Retain reason"
-                    placeholder="Type remark here.."
-                    type="text"
-                    asterisk="*"
-                    as="textarea"
-                    rows="5"
-                    value={retainReason}
-                    maxlength={100}
-                    onInputChange={(e) => {
-                      setRetainReason(e.target.value);
-                      setShowError(false);
-                    }}
-                  />
-                  {shoeError && (
-                    <span style={{ color: 'red' }}>
-                      Reason field is required
-                    </span>
-                  )}
+                  <>
+                    <TextInput
+                      label="Enter Retain reason"
+                      placeholder="Type Retain reason here.."
+                      type="text"
+                      asterisk="*"
+                      as="textarea"
+                      rows="5"
+                      value={retainReason}
+                      maxlength={100}
+                      onInputChange={(e) => {
+                        setRetainReason(e.target.value);
+                        setShowError(false);
+                      }}
+                    />
+                    {shoeError && (
+                      <span style={{ color: 'red' }}>
+                        Reason field is required
+                      </span>
+                    )}
+                  </>
                   <Row className="mt-3 mb-3">
                     <Col>
                       <Button
                         onClick={() => {
                           // retainRequest(1);
-                          isValid('accept_retain');
+                          isValid('admin_retain', 'accept_retain');
                         }}
                       >
                         Accept Retention
@@ -521,13 +525,25 @@ const ResignationDetails = (props) => {
                         variant="secondary"
                         onClick={() => {
                           // retainRequest(2);
-                          isValid('decline_retain');
+                          isValid('admin_retain', 'decline_retain');
                         }}
                       >
                         Decline
                       </Button>
                     </Col>
                   </Row>
+                </>
+              )}
+              {rowData?.retain_status == 1 && (
+                <>
+                  <h6 className="d-flex justify-content-start">
+                    <b> Retention Approved</b>
+                  </h6>
+                  <Alert className="" variant="secondary">
+                    <Alert.Heading>
+                      <h6>{rowData?.retention_reason}</h6>
+                    </Alert.Heading>
+                  </Alert>
                 </>
               )}
               {rowData?.buy_back_status == '3' && (
@@ -562,7 +578,7 @@ const ResignationDetails = (props) => {
                       <Button
                         onClick={() => {
                           // buyBackRequest(1);
-                          isSubmit('accept');
+                          isValid('buy_back', 'accept');
                         }}
                       >
                         Accept
@@ -573,7 +589,7 @@ const ResignationDetails = (props) => {
                         variant="secondary"
                         onClick={() => {
                           // buyBackRequest(2);
-                          isSubmit('decline');
+                          isValid('buy_back', 'decline');
                         }}
                       >
                         Decline
@@ -617,7 +633,7 @@ const ResignationDetails = (props) => {
                         onClick={(e) => {
                           e.preventDefault();
                           // approveResignation();
-                          isValid('approve_resign');
+                          isValid('admin', 'approve_resign');
                         }}
                       >
                         Approve
@@ -628,7 +644,7 @@ const ResignationDetails = (props) => {
                         variant="secondary"
                         onClick={() => {
                           // setManagerDeclineToggle(true);
-                          isValid('decline_resign');
+                          isValid('admin', 'decline_resign');
                         }}
                       >
                         Decline
@@ -638,7 +654,7 @@ const ResignationDetails = (props) => {
                 )}
             </Col>
           </Row>
-          {roleId == '1' && rowData?.resignation_status != '3' && (
+          {rowData?.resignation_status != '3' && (
             <Alert className="d-flex justify-content-center" variant="info">
               <Alert.Heading>
                 <h4>
@@ -697,119 +713,131 @@ const ResignationDetails = (props) => {
 
             {/* Hr Resignation form  */}
 
-            {roleId == '5' && rowData?.resignation_status != '2' && (
-              <Row>
-                <Col sm={6}>
-                  <h5>Upload Exit Documents</h5>
-                  <Card>
-                    <Card.Body>
-                      {documentsList &&
-                        documentsList.map((item, index) => (
-                          <Row>
-                            <Col sm={10}>
-                              <ul>
-                                <input
-                                  className=""
-                                  type={'checkbox'}
-                                  value={item?.isCheck}
-                                  checked={item?.isCheck}
-                                  id="flexCheckDefaultBeneficiary"
-                                  onChange={(e) => {
-                                    setDocumentSelected(true);
-                                    let temData = [];
-                                    documentsList &&
-                                      documentsList.map((dt, ind) => {
-                                        if (dt?.isDiseable == true) {
-                                          temData.push({
-                                            ...dt,
-                                          });
-                                        } else {
-                                          if (index == ind) {
+            {roleId == '5' &&
+              rowData?.resignation_status != 2 &&
+              rowData?.retain_status != 1 && (
+                <Row>
+                  <Col sm={6}>
+                    <h5>Upload Exit Documents</h5>
+                    <Card>
+                      <Card.Body>
+                        {documentsList &&
+                          documentsList.map((item, index) => (
+                            <Row>
+                              <Col sm={10}>
+                                <ul>
+                                  <input
+                                    className=""
+                                    type={'checkbox'}
+                                    value={item?.isCheck}
+                                    checked={item?.isCheck}
+                                    id="flexCheckDefaultBeneficiary"
+                                    onChange={(e) => {
+                                      setDocumentSelected(true);
+                                      let temData = [];
+                                      documentsList &&
+                                        documentsList.map((dt, ind) => {
+                                          if (dt?.isDiseable == true) {
                                             temData.push({
-                                              name: dt.name,
-                                              id: dt?.id,
-                                              isCheck: true,
+                                              ...dt,
                                             });
-                                            setSelectedDocument(dt?.id);
                                           } else {
-                                            temData.push({
-                                              name: dt.name,
-                                              id: dt?.id,
-                                              isCheck: false,
-                                            });
+                                            if (index == ind) {
+                                              temData.push({
+                                                name: dt.name,
+                                                id: dt?.id,
+                                                isCheck: true,
+                                              });
+                                              setSelectedDocument(dt?.id);
+                                            } else {
+                                              temData.push({
+                                                name: dt.name,
+                                                id: dt?.id,
+                                                isCheck: false,
+                                              });
+                                            }
                                           }
-                                        }
-                                      });
-                                    setDocumentList(temData);
-                                    forceUpdate(count + 1);
-                                  }}
-                                  disabled={item?.isDiseable == true}
-                                />{' '}
-                                &nbsp;
-                                {item?.name}
-                              </ul>
-                            </Col>
-                            <Col sm={2}>
-                              {item.isDiseable == true && (
-                                <a href={item?.url} target="_blank">
-                                  <img
-                                    title="Download Image"
-                                    style={{ cursor: 'pointer' }}
-                                    src="images/download-file.svg"
-                                    alt="download-icon"
-                                  />
-                                </a>
-                              )}
-                            </Col>
-                          </Row>
-                        ))}
-                    </Card.Body>
-                  </Card>
+                                        });
+                                      setDocumentList(temData);
+                                      forceUpdate(count + 1);
+                                    }}
+                                    disabled={item?.isDiseable == true}
+                                  />{' '}
+                                  &nbsp;
+                                  {item?.name}
+                                </ul>
+                              </Col>
+                              <Col sm={2}>
+                                {item.isDiseable == true && (
+                                  <a href={item?.url} target="_blank">
+                                    <img
+                                      title="Download Image"
+                                      style={{ cursor: 'pointer' }}
+                                      src="images/download-file.svg"
+                                      alt="download-icon"
+                                    />
+                                  </a>
+                                )}
+                              </Col>
+                            </Row>
+                          ))}
+                      </Card.Body>
+                    </Card>
 
-                  <input
-                    className="mb-3"
-                    type="file"
-                    onChange={(e) => {
-                      setDocument(e.target.files[0]);
-                    }}
-                  />
-
-                  <Button
-                    onClick={(e) => {
-                      handleSubmit();
-                    }}
-                    disabled={!isDocumentSelected || document == null}
-                  >
-                    Upload
-                  </Button>
-                </Col>
-                <Col sm={6}>
-                  <h5>Relieving Date</h5>
-                  <Datepicker
-                    className="form-control"
-                    selected={relievingDate}
-                    onChange={(e) => {
-                      setRelievingDate(e);
-                    }}
-                    autoComplete="off"
-                    name="startDate"
-                    dateFormat="dd/MM/yyyy"
-                    placeholder="Select relieving date"
-                    // maxDate={new Date()}
-                  />
-                  {rowData?.resignation_status == '3' && (
-                    <TextInput
-                      placeholder="Enter reason"
-                      type="text"
-                      as="textarea"
-                      rows="5"
-                      value={approveReason}
-                      onInputChange={(e) => {
-                        setApproveReason(e.target.value);
+                    <input
+                      className="mb-3"
+                      type="file"
+                      onChange={(e) => {
+                        setDocument(e.target.files[0]);
                       }}
                     />
-                  )}
-                  {/* {rowData?.buy_back_status == '3' && (
+
+                    <Button
+                      onClick={(e) => {
+                        handleSubmit();
+                      }}
+                      disabled={!isDocumentSelected || document == null}
+                    >
+                      Upload
+                    </Button>
+                  </Col>
+                  <Col sm={6}>
+                    <h5>Relieving Date</h5>
+                    <Datepicker
+                      className="form-control"
+                      selected={relievingDate}
+                      onChange={(e) => {
+                        setRelievingDate(e);
+                      }}
+                      autoComplete="off"
+                      name="startDate"
+                      dateFormat="dd/MM/yyyy"
+                      placeholder="Select relieving date"
+                      // maxDate={new Date()}
+                    />
+                    {rowData?.resignation_status == '3' && (
+                      <>
+                        <Row>
+                          <TextInput
+                            placeholder="Enter reason"
+                            type="text"
+                            as="textarea"
+                            rows="5"
+                            value={approveReason}
+                            onInputChange={(e) => {
+                              setApproveReason(e.target.value);
+                              setShowError(false);
+                            }}
+                          />
+                          {shoeError && (
+                            <span style={{ color: 'red' }}>
+                              Reason field is required
+                            </span>
+                          )}
+                        </Row>
+                      </>
+                    )}
+                    {/* {rowData?.buy_back_status == '3' && (
                     <TextInput
                       className="mt-5"
                       placeholder="Enter reason for relieving date"
@@ -823,32 +851,34 @@ const ResignationDetails = (props) => {
                     />
                   )} */}
 
-                  <>
-                    {rowData?.resignation_status == '3' && (
-                      <>
-                        <Button
-                          className="mr-5 mb-3"
-                          onClick={() => {
-                            resignationRequestHr(1);
-                          }}
-                        >
-                          Approve
-                        </Button>
-                        <Button
-                          className="ml-5 mb-3"
-                          variant="secondary"
-                          onClick={() => {
-                            resignationRequestHr(2);
-                          }}
-                        >
-                          Decline
-                        </Button>
-                      </>
-                    )}
-                  </>
-                </Col>
-              </Row>
-            )}
+                    <>
+                      {rowData?.resignation_status == '3' && (
+                        <>
+                          <Button
+                            className="mr-5 mb-3"
+                            onClick={() => {
+                              // resignationRequestHr(1);
+                              isValid('hr', 'approve_resign');
+                            }}
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            className="ml-5 mb-3"
+                            variant="secondary"
+                            onClick={() => {
+                              // resignationRequestHr(2);
+                              isValid('hr', 'decline_resign');
+                            }}
+                          >
+                            Decline
+                          </Button>
+                        </>
+                      )}
+                    </>
+                  </Col>
+                </Row>
+              )}
           </Row>
         </Card.Body>
       </Card>
