@@ -4,7 +4,7 @@ const menu = [
     path: '/',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7,8],
   },
   {
     title: 'Project',
@@ -27,6 +27,15 @@ const menu = [
     ],
     roleaccess: [1, 2, 3, 4],
   },
+
+  {
+    title: 'Leave',
+    path: '/accountant-leaves',
+    icon: 'leaves.svg',
+    submenu: [],
+    roleaccess: [8],
+  },
+
   // {
   //   title: 'Project',
   //   path: '/project',

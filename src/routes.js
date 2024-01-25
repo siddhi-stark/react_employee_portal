@@ -79,6 +79,8 @@ import AddSupportTicket from './containers/SupportTicket/addSupportTicket.compon
 import EmployeeExitForm from './containers/Exit process/EmployeeExitForm';
 import EmployeeResignationList from './containers/Exit process/employeeResignationList';
 import ResignationDetails from './containers/Exit process/resignationDetails';
+import LeaveListingForAccountant from './containers/Leaves/LeaveListingForAccountant';
+import AccountAddleaveComponent from './containers/Leaves/AccountAddleave.component'
 
 function Routes() {
   return (
@@ -221,6 +223,9 @@ function Routes() {
       <Route path="/resignation-application" exact component={EmployeeExitForm}/>
       <Route path = "/resignation-listing" exact component={EmployeeResignationList}/>
       <Route path= "/resignation-details" exact component={ResignationDetails}/>
+      <Route path="/accountant-leaves" exact component={LeaveListingForAccountant}/>
+      <Route path ="/accountant-add-leaves" exact component={AccountAddleaveComponent} />
+
       <Route component={NotFound} />
     </Switch>
   );

@@ -74,7 +74,7 @@ useEffect(()=>{
     },
     {
       id: 'actual_estimation',
-      label: 'Remaning ETA',
+      label: 'Remaining ETA',
       roleAccess: [1, 2, 3, 4, 5, 7],
     },
     {
