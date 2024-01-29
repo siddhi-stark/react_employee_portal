@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Image, Card, Row, Col, Button } from 'react-bootstrap';
@@ -87,7 +87,7 @@ const AccountAddleaveComponent = () => {
       leave_to_type: leaveType.value,
       leave_to_date: customFunctions.getDate(toDate),
     };
-    console.log('🚀 ~ ApplyLeave ~ postData:', postData);
+    // console.log('🚀 ~ ApplyLeave ~ postData:', postData);
 
     const callback = AuthApi.postDataToServer;
     const endPoint = Api.leavesUrl;
@@ -103,16 +103,16 @@ const AccountAddleaveComponent = () => {
     }
   };
 
-const isValid = () =>{
-  if (validator.current.allValid()) {
-    ApplyLeave();
-    validator.current.hideMessages()
-  } else {
-    validator.current.showMessages();
-    forceUpdate(count + 1);
-    // setDisableButton(false);
+  const isValid = () => {
+    if (validator.current.allValid()) {
+      ApplyLeave();
+      validator.current.hideMessages()
+    } else {
+      validator.current.showMessages();
+      forceUpdate(count + 1);
+      // setDisableButton(false);
+    }
   }
-}
 
   return (
     <>
@@ -139,7 +139,7 @@ const isValid = () =>{
                 errorMessage={validator.current.message(
                   'employee',
                   selectedEmployee,
-                  'required|email'
+                  'required'
                 )}
               />
             </Col>
@@ -156,7 +156,7 @@ const isValid = () =>{
                 errorMessage={validator.current.message(
                   'leave type',
                   leaveType,
-                  'required|email'
+                  'required'
                 )}
               />
             </Col>
@@ -175,7 +175,7 @@ const isValid = () =>{
                 errorMessage={validator.current.message(
                   'reason',
                   leaveReason,
-                  'required|email'
+                  'required'
                 )}
               />
             </Col>
@@ -193,7 +193,7 @@ const isValid = () =>{
                 errorMessage={validator.current.message(
                   'duration type',
                   deurationType,
-                  'required|email'
+                  'required'
                 )}
               />
             </Col>
@@ -213,7 +213,7 @@ const isValid = () =>{
                 errorMessage={validator.current.message(
                   'from date',
                   formDate,
-                  'required|email'
+                  'required'
                 )}
               />
             </Col>
@@ -233,7 +233,7 @@ const isValid = () =>{
                 errorMessage={validator.current.message(
                   'to date',
                   toDate,
-                  'required|email'
+                  'required'
                 )}
               />
             </Col>

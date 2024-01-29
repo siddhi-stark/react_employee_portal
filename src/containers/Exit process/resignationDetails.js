@@ -27,7 +27,7 @@ const ResignationDetails = (props) => {
   const [managerDeclineToggle, setManagerDeclineToggle] = useState(false);
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
-  console.log('🚀 ~ ResignationDetails ~ rowData:', rowData);
+  // console.log('🚀 ~ ResignationDetails ~ rowData:', rowData);
   const [retainReason, setRetainReason] = useState('');
   const [roleId, setRoleId] = useState();
   const [managerDeclineReason, setManagerDeclineReason] = useState('');
@@ -143,7 +143,6 @@ const ResignationDetails = (props) => {
     } else {
       postData.resignation_decline_note = approveReason;
     }
-    console.log('postDataaa');
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
     const { data, message } = await callback(endPoint, postData);
@@ -355,13 +354,13 @@ const ResignationDetails = (props) => {
     }
 
     if (type == 'admin_retain') {
-      console.log('adminnn');
+      // console.log('adminnn');
       if (status == 'accept_retain' && retainReason) {
-        console.log('retain');
+        // console.log('retain');
 
         retainRequest(1);
       } else if (status == 'decline_retain' && retainReason) {
-        console.log('elsee ifff');
+        // console.log('elsee ifff');
         retainRequest(2);
       } else {
         setShowError(true);

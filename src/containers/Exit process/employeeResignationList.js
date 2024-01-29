@@ -37,7 +37,7 @@ const EmployeeResignationList = (props) => {
     const newDate = customFunctions.getDate(createdDate);
     const dt = new Date(newDate).getTime();
 
-    console.log('id', id);
+    // console.log('id', id);
     return (
       <span className="d-flex">
         <>
@@ -166,7 +166,7 @@ const EmployeeResignationList = (props) => {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (data && data.success) {
-      console.log('data', data);
+      // console.log('data', data);
       setPagination({
         current_page: Number(data.paginator.current_page),
         activePage: Number(data.paginator.current_page),

@@ -21,7 +21,7 @@ const PerformanceReport = () => {
   const [filterErr, setFilterErr] = useState('');
   const [title, setTitle] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
-  console.log('selectedEmployee', selectedEmployee);
+  // console.log('selectedEmployee', selectedEmployee);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
   const [selectedEmployeeData, setSelectedEmployeeData] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
@@ -30,13 +30,13 @@ const PerformanceReport = () => {
   const [graphData, setGraphData] = useState([]);
   const [totalCompletedPercentage, setTotalCompletedPercentage] =
     useState(null);
-  console.log('joiningDate', joiningDate);
+  // console.log('joiningDate', joiningDate);
 
   const filterSearch = (e) => {
     e.preventDefault();
     let filterSearchErr = '';
     let isValid = true;
-    console.log('customFunctions.checkIfEmpty(selectedEmployee)', customFunctions.checkIfEmpty(selectedEmployee));
+    // console.log('customFunctions.checkIfEmpty(selectedEmployee)', customFunctions.checkIfEmpty(selectedEmployee));
     if (
       customFunctions.checkIfEmpty(selectedEmployee) &&
       customFunctions.checkIfEmpty(fromDate) &&
@@ -198,7 +198,7 @@ const PerformanceReport = () => {
                               setFilterErr('');
                               setSelectedEmployee(select);
                               setSelectedEmployeeId(select?.value);
-                              setJoingDate(select?.joiningDate)
+                              setJoingDate(select?.joiningDate);
                             }}
                           // isMulti
                           />

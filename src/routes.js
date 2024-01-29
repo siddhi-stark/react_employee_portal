@@ -80,7 +80,7 @@ import EmployeeExitForm from './containers/Exit process/EmployeeExitForm';
 import EmployeeResignationList from './containers/Exit process/employeeResignationList';
 import ResignationDetails from './containers/Exit process/resignationDetails';
 import LeaveListingForAccountant from './containers/Leaves/LeaveListingForAccountant';
-import AccountAddleaveComponent from './containers/Leaves/AccountAddleave.component'
+import AccountAddleaveComponent from './containers/Leaves/AccountAddleave.component';
 
 function Routes() {
   return (

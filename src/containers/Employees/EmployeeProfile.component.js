@@ -78,7 +78,7 @@ function EmployeeProfile(props) {
           href="/"
           className="pl-2"
           onClick={(e) => {
-            console.log('testonClick');
+            // console.log('testonClick');
             e.preventDefault();
             e.stopPropagation();
             setShowReview(true);
@@ -429,7 +429,7 @@ function EmployeeProfile(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
-      console.log('data', data);
+      // console.log('data', data);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));

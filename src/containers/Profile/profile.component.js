@@ -41,7 +41,7 @@ function Profile() {
   const [imageUrl, setImageUrl] = useState('');
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
-  console.log('imageProfile', imageProfile);
+  // console.log('imageProfile', imageProfile);
   const [profileId, setProfileId] = useState('');
   const [companyList, setCompanyList] = useState([]);
   const [isShowLoader, setShowLoader] = useState(false);
