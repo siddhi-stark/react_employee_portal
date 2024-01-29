@@ -384,6 +384,16 @@ const ResignationDetails = (props) => {
       <Helmet title={pageTitle} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
+          <Button
+            className="float-end mb-4 mr-6"
+            style={{ minWidth: '80px' }}
+            variant="btn btn-sm btn-primary"
+            onClick={() => {
+              history.push('/resignation-listing');
+            }}
+          >
+            Back
+          </Button>
           <h2 className="main-content-title tx-24 mg-b-5">
             Resignation From Employees
           </h2>
@@ -655,7 +665,7 @@ const ResignationDetails = (props) => {
             </Col>
           </Row>
           {rowData?.resignation_status != '3' && (
-            <Alert className="d-flex justify-content-center" variant="info">
+            <Alert className="text-center p-4" variant="info">
               <Alert.Heading>
                 <h4>
                   {' '}
