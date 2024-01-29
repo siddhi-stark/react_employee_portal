@@ -276,101 +276,99 @@ const EmployeeExitForm = (props) => {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div>
-          {rowData &&
-            rowData?.[0]?.resignation_status != 1 &&
-            rowData?.[0]?.resignation_status != 3 &&(
-                <Card>
-                  <Card.Body>
+          {rowData && rowData?.[0]?.resignation_status == 2  &&  (
+            <Card>
+              <Card.Body>
+                <Row>
+                  <Col sm={5}>
+                    <h6>
+                      {' '}
+                      <b> Resignation Intimation </b>{' '}
+                    </h6>
                     <Row>
-                      <Col sm={5}>
+                      <Col>
                         <h6>
-                          {' '}
-                          <b> Resignation Intimation </b>{' '}
+                          Why you want to resign from Stark Digital Media
+                          Services Pvt Ltd?
                         </h6>
-                        <Row>
-                          <Col>
-                            <h6>
-                              Why you want to resign from Stark Digital Media
-                              Services Pvt Ltd?
-                            </h6>
-                          </Col>
-                        </Row>
-                      </Col>
-
-                      <Col sm={7}>
-                        <TextInput
-                          label="Personal Email"
-                          asterisk="*"
-                          placeholder="Enter your email"
-                          type="text"
-                          maxlength={50}
-                          value={personalEmail}
-                          onInputChange={(e) => {
-                            setPersonalEmail(e.target.value);
-                          }}
-                          errorMessage={validator.current.message(
-                            'email',
-                            personalEmail,
-                            'required|email'
-                          )}
-                        />
-                        <TextInput
-                          placeholder="Reason why you want to resign from stark digital..."
-                          label="Reason for resignation"
-                          asterisk="*"
-                          type="text"
-                          as="textarea"
-                          rows="5"
-                          value={resignationReason}
-                          maxlength={100}
-                          onInputChange={(e) => {
-                            setResignationReason(e.target.value);
-                          }}
-                          errorMessage={validator.current.message(
-                            'reason',
-                            resignationReason,
-                            'required'
-                          )}
-                        />
-                        <h6 className="content-title text-count-box float-end">
-                          {`${resignationReason?.length}/100`}
-                        </h6>
-                        <Row>
-                          <Col>
-                            <Button
-                              onClick={() => {
-                                swal({
-                                  title: 'Are you sure?',
-                                  text: 'You want to resign',
-                                  icon: 'warning',
-                                  buttons: true,
-                                  dangerMode: true,
-                                }).then((willDelete) => {
-                                  if (willDelete) {
-                                    onSubmit();
-                                  }
-                                });
-                              }}
-                            >
-                              Submit
-                            </Button>
-                          </Col>
-                          <Col>
-                            <Button
-                              variant="secondary"
-                              onClick={() => {
-                                history.goBack('');
-                              }}
-                            >
-                              Cancel
-                            </Button>
-                          </Col>
-                        </Row>
                       </Col>
                     </Row>
-                  </Card.Body>
-                </Card>
-              )}
+                  </Col>
+
+                  <Col sm={7}>
+                    <TextInput
+                      label="Personal Email"
+                      asterisk="*"
+                      placeholder="Enter your email"
+                      type="text"
+                      maxlength={50}
+                      value={personalEmail}
+                      onInputChange={(e) => {
+                        setPersonalEmail(e.target.value);
+                      }}
+                      errorMessage={validator.current.message(
+                        'email',
+                        personalEmail,
+                        'required|email'
+                      )}
+                    />
+                    <TextInput
+                      placeholder="Reason why you want to resign from stark digital..."
+                      label="Reason for resignation"
+                      asterisk="*"
+                      type="text"
+                      as="textarea"
+                      rows="5"
+                      value={resignationReason}
+                      maxlength={100}
+                      onInputChange={(e) => {
+                        setResignationReason(e.target.value);
+                      }}
+                      errorMessage={validator.current.message(
+                        'reason',
+                        resignationReason,
+                        'required'
+                      )}
+                    />
+                    <h6 className="content-title text-count-box float-end">
+                      {`${resignationReason?.length}/100`}
+                    </h6>
+                    <Row>
+                      <Col>
+                        <Button
+                          onClick={() => {
+                            swal({
+                              title: 'Are you sure?',
+                              text: 'You want to resign',
+                              icon: 'warning',
+                              buttons: true,
+                              dangerMode: true,
+                            }).then((willDelete) => {
+                              if (willDelete) {
+                                onSubmit();
+                              }
+                            });
+                          }}
+                        >
+                          Submit
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button
+                          variant="secondary"
+                          onClick={() => {
+                            history.goBack('');
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          )}
           <hr />
           <Card>
             <Card.Body>

@@ -665,7 +665,7 @@ const ResignationDetails = (props) => {
             </Col>
           </Row>
           {rowData?.resignation_status != '3' && (
-            <Alert className="d-flex justify-content-center" variant="info">
+            <Alert className="text-center p-4" variant="info">
               <Alert.Heading>
                 <h4>
                   {' '}
