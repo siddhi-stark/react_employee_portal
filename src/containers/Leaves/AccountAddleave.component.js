@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Image, Card, Row, Col, Button } from 'react-bootstrap';
@@ -15,6 +15,7 @@ import {
 } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
+import SimpleReactValidator from 'simple-react-validator';
 
 const AccountAddleaveComponent = () => {
   const [title, setTitle] = useState('');
@@ -27,6 +28,8 @@ const AccountAddleaveComponent = () => {
   const [deurationType, setDurationType] = useState('');
   const [formDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const validator = useRef(new SimpleReactValidator({}));
+  const [count, forceUpdate] = useState(0);
 
   const limit = 10;
   const history = useHistory();
@@ -100,6 +103,17 @@ const AccountAddleaveComponent = () => {
     }
   };
 
+const isValid = () =>{
+  if (validator.current.allValid()) {
+    ApplyLeave();
+    validator.current.hideMessages()
+  } else {
+    validator.current.showMessages();
+    forceUpdate(count + 1);
+    // setDisableButton(false);
+  }
+}
+
   return (
     <>
       <Helmet title={title} />
@@ -122,6 +136,11 @@ const AccountAddleaveComponent = () => {
                 onSelectHandler={(select) => {
                   setSelectedEmployee(select);
                 }}
+                errorMessage={validator.current.message(
+                  'employee',
+                  selectedEmployee,
+                  'required|email'
+                )}
               />
             </Col>
             <Col>
@@ -133,6 +152,11 @@ const AccountAddleaveComponent = () => {
                 onSelectHandler={(select) => {
                   setLeaveType(select);
                 }}
+                errorMessage={validator.current.message(
+                  'leave type',
+                  leaveType,
+                  'required|email'
+                )}
               />
             </Col>
             <Col>
@@ -147,6 +171,11 @@ const AccountAddleaveComponent = () => {
                 onInputChange={(e) => {
                   setLeaveReason(e.target.value);
                 }}
+                errorMessage={validator.current.message(
+                  'reason',
+                  leaveReason,
+                  'required|email'
+                )}
               />
             </Col>
           </Row>
@@ -160,6 +189,11 @@ const AccountAddleaveComponent = () => {
                 onSelectHandler={(select) => {
                   setDurationType(select);
                 }}
+                errorMessage={validator.current.message(
+                  'duration type',
+                  deurationType,
+                  'required|email'
+                )}
               />
             </Col>
             <Col>
@@ -175,6 +209,11 @@ const AccountAddleaveComponent = () => {
                 onChange={(e) => {
                   setFromDate(e);
                 }}
+                errorMessage={validator.current.message(
+                  'from date',
+                  formDate,
+                  'required|email'
+                )}
               />
             </Col>
             <Col>
@@ -190,13 +229,18 @@ const AccountAddleaveComponent = () => {
                 onChange={(e) => {
                   setToDate(e);
                 }}
+                errorMessage={validator.current.message(
+                  'to date',
+                  toDate,
+                  'required|email'
+                )}
               />
             </Col>
           </Row>
 
           <Button
             onClick={() => {
-              ApplyLeave();
+              isValid();
             }}
           >
             Apply
