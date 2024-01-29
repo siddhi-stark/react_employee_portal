@@ -253,7 +253,7 @@ const isValid = () =>{
               history.push('/accountant-leaves');
             }}
           >
-            Cancle
+            Cancel
           </Button>
         </Card.Body>
       </Card>
