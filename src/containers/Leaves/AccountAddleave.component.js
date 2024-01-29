@@ -20,19 +20,12 @@ const AccountAddleaveComponent = () => {
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
-  const [userRole, setUserRole] = useState('');
-  const [rowData, setRowData] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState('');
-  console.log(
-    '🚀 ~ AccountAddleaveComponent ~ selectedEmployee:',
-    selectedEmployee
-  );
   const [leaveType, setLeaveType] = useState('');
   const [leaveReason, setLeaveReason] = useState('');
   const [employeeList, setEmployeeList] = useState();
   const [deurationType, setDurationType] = useState('');
   const [formDate, setFromDate] = useState('');
-  console.log('🚀 ~ AccountAddleaveComponent ~ formDate:', formDate);
   const [toDate, setToDate] = useState('');
 
   const limit = 10;

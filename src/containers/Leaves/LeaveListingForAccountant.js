@@ -17,7 +17,6 @@ const LeaveListingForAccountant = () => {
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [userRole, setUserRole] = useState('');
   const [rowData, setRowData] = useState([]);
-  console.log('🚀 ~ LeaveListingForAccountant ~ rowData:', rowData);
   const [totalCount, setTotalCount] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -118,7 +117,7 @@ const LeaveListingForAccountant = () => {
     const params = {
       page,
       limit,
-      sort_by: 'leave_from_date',
+      // sort_by: 'leave_from_date',
       sort_direction: 'descending',
     };
     const url = customFunctions.generateUrl(endPoint, params);

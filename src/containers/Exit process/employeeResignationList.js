@@ -16,9 +16,14 @@ import Api from '../../helper/api';
 const EmployeeResignationList = (props) => {
   const [pageTitle, setPageTitle] = useState('Resignation');
   const history = useHistory();
-  const navigate = useLocation()
+  const navigate = useLocation();
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    itemsPerPage: 10,
+    totalItems: 10,
+  });
 
   const items = props.data
     ? null
@@ -32,7 +37,7 @@ const EmployeeResignationList = (props) => {
     const newDate = customFunctions.getDate(createdDate);
     const dt = new Date(newDate).getTime();
 
-    console.log('id',id);
+    console.log('id', id);
     return (
       <span className="d-flex">
         <>
@@ -41,13 +46,13 @@ const EmployeeResignationList = (props) => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-                history.push(`/resignation-details`, {
-                  state:{
-                    resignationId:id
-                  }
+              history.push(`/resignation-details`, {
+                state: {
+                  resignationId: id,
+                },
                 //   reporterName: name,
                 //   pagination: pagination.current_page,
-                });
+              });
             }}
           >
             <span className="text-info">View Report</span>
@@ -127,7 +132,11 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return rowdata.resign_remark ? rowdata.resign_remark : "-";
+        return rowdata.resign_remark
+          ? rowdata.resign_remark
+          : rowdata.retention_decline_reason
+          ? rowdata.retention_decline_reason
+          : '-';
       },
     },
     {
@@ -136,7 +145,7 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return rowdata.user.relieving_date ? rowdata.user.relieving_date : "-";
+        return rowdata.user.relieving_date ? rowdata.user.relieving_date : '-';
       },
     },
     {
@@ -147,16 +156,23 @@ const EmployeeResignationList = (props) => {
     },
   ];
 
-  const employeeResignationList = async () => {
+  const employeeResignationList = async (pageNo) => {
     setShowLoader(true);
     const endPoint = `${Api.getResignationListUrl}`;
     const params = {
       sort_direction: 'descending',
     };
-    const url = customFunctions.generateUrl(endPoint,params);
+    const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (data && data.success) {
+      console.log('data', data);
+      setPagination({
+        current_page: Number(data.paginator.current_page),
+        activePage: Number(data.paginator.current_page),
+        itemsPerPage: Number(data.paginator.limit),
+        totalItems: data.paginator.total_count,
+      });
       setRowData(data.data);
       setShowLoader(false);
     } else {
@@ -195,13 +211,13 @@ const EmployeeResignationList = (props) => {
               columns={columns}
               rows={rowData}
               showPagination
-              // paginationProps={{
-              //   ...pagination,
-              //   activePage: pagination.current_page,
-              //   onPageChange: (pageNo) => {
-              //     getReports(pageNo);
-              //   },
-              // }}
+              paginationProps={{
+                ...pagination,
+                activePage: pagination.current_page,
+                onPageChange: (pageNo) => {
+                  employeeResignationList(pageNo);
+                },
+              }}
               tableClass="table-striped"
               dropdownContainerClass="mb-3"
               emptyRender={() => (

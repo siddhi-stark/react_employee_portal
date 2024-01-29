@@ -31,7 +31,7 @@ useEffect(()=>{
   setClockIn(state?.state?.state?.clockIn)
   setClockOut(state?.state?.state?.clockout)
 },[state])
-  console.log("🚀 ~ useEffect ~ state?.state?.clockIn:", state?.state?.clockIn)
+ 
 
 
   const employeeReport = report.location.state

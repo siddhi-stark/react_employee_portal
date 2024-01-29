@@ -813,6 +813,7 @@ const ResignationDetails = (props) => {
                       name="startDate"
                       dateFormat="dd/MM/yyyy"
                       placeholder="Select relieving date"
+                      disabled
                       // maxDate={new Date()}
                     />
                     {rowData?.resignation_status == '3' && (
