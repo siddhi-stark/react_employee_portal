@@ -7,7 +7,7 @@ export default class Api extends Component {
 
   static s3Url = 'https://empportal-serverless.s3.amazonaws.com/media/';
 
-  static loginUrl = `${Api.baseUrl}login/`;
+  static loginUrl = `${Api.baseUrl}login`;
 
   static clockInUrl = `${Api.baseUrl}clock-in/`;
 
@@ -195,7 +195,7 @@ export default class Api extends Component {
 
   // Get base URL of APIs
   static getBaseUrl() {
-    const env = 'production';
+    const env = 'stage';
 
     let url = '';
     switch (env) {
