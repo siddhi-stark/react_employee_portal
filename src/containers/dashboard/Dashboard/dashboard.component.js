@@ -580,7 +580,7 @@ function Dashboard() {
                             <div className="media birthday-wish-section align-items-center">
                               <img
                                 className="mr-3 birth-wish-profile"
-                                src={emp.profile_image_url}
+                                src='/images/user.svg'
                                 alt="img"
                               />
                               <div className="media-body">
@@ -643,7 +643,7 @@ function Dashboard() {
                                   >
                                     <h4>
                                       Happy Birthday <br />
-                                      {emp.name}
+                                      {emp?.name}
                                     </h4>
                                   </a>
                                 </div>
@@ -660,7 +660,7 @@ function Dashboard() {
                                           }}
                                           containerClass="mb-0"
                                           type="text"
-                                          value={emp.message}
+                                          value={emp?.message}
                                           name="firstNameTitle"
                                           placeholder="Type Here to wish"
                                         />

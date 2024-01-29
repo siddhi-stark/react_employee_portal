@@ -13,7 +13,8 @@ function Header() {
   const [designation, setDesignation] = useState('');
   const [empId, setEmpId] = useState('');
   const [employeeName, setEmployeeName] = useState('');
-  const [imageProfile, setImageProfile] = useState('');
+  // const [imageProfile, setImageProfile] = useState('');
+  // console.log('imageProfile',imageProfile);
   const [time, setTime] = useState('');
   const [clockedInTime, setClockInTime] = useState('');
   const [userRole, setUserRole] = useState('');
@@ -35,7 +36,7 @@ function Header() {
       setDesignation(data.data.designation_name);
       setEmpId(data.data.emp_code);
       setEmployeeName(data.data.full_name);
-      setImageProfile(data.data.profile_image_url);
+      // setImageProfile(data.data.profile_image_url || '');
       customFunctions.setLocalStorage('greetingId', data.data.greeting);
       customFunctions.setLocalStorage('team_id', data.data.team_id);
       customFunctions.setLocalStorage('birthday', data.data.is_birthday);
@@ -169,11 +170,11 @@ function Header() {
               <h6>{employeeName}</h6>
               <div className="profile-img">
                 <a href="#">
-                  {imageProfile ? (
+                  {/* {imageProfile ? (
                     <img src={imageProfile} alt="Profile" />
-                  ) : (
+                  ) : ( */}
                     <img src="/images/user.svg" alt="Edit Profile" />
-                  )}
+                  {/* )} */}
                 </a>
               </div>
             </div>

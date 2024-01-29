@@ -41,6 +41,7 @@ function Profile() {
   const [imageUrl, setImageUrl] = useState('');
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
+  console.log('imageProfile', imageProfile);
   const [profileId, setProfileId] = useState('');
   const [companyList, setCompanyList] = useState([]);
   const [isShowLoader, setShowLoader] = useState(false);
@@ -184,7 +185,7 @@ function Profile() {
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
       setProfileId(data.data.profile_id);
-      setReliveDate(data.data.relieving_date ? customFunctions.getDMYDate(data.data.relieving_date) : '');  
+      setReliveDate(data.data.relieving_date ? customFunctions.getDMYDate(data.data.relieving_date) : '');
       setConfirmationDate(data.data.confirmation_date ? customFunctions.getDMYDate(data.data.confirmation_date) : '');
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
@@ -300,7 +301,7 @@ function Profile() {
       });
     } else {
       setShowLoader(false);
-      swal(data && data.message[0], '', 'error');
+      swal(data && data?.message[0], '', 'error');
     }
   };
 
@@ -412,20 +413,20 @@ function Profile() {
                   className="edit-profile-image mb-4"
                   style={{ height: '70px' }}
                 >
-                  {imageProfile ? (
+                  {/* {imageProfile ? (
                     <img
                       src={`${imageProfile}` ? `${imageProfile}` : `${Api.s3UrlnoProfile}`}
                       // src={imageProfile}
                       alt="Edit Profile"
                       style={{ height: '100%' }}
                     />
-                  ) : (
-                    <img
-                      src={Api.s3UrlnoProfile}
-                      alt="Edit Profile"
-                      style={{ height: '100%' }}
-                    />
-                  )}
+                  ) : ( */}
+                  <img
+                    src='/images/user.svg'
+                    alt="Edit Profile"
+                    style={{ height: '100%' }}
+                  />
+                  {/* )} */}
                 </div>
               </Col>
               <Col sm={9}>
@@ -808,11 +809,11 @@ function Profile() {
                   name="auth"
                   value={auth}
                   placeholder="Token"
-                  // errorMessage={validator.message(
-                  //   'Teamwork Authentication Token',
-                  //   auth,
-                  //   'required'
-                  // )}
+                // errorMessage={validator.message(
+                //   'Teamwork Authentication Token',
+                //   auth,
+                //   'required'
+                // )}
                 />
               </Col>
             </Row>

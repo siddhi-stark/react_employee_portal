@@ -402,7 +402,7 @@ const ResignationDetails = (props) => {
                 <table className="table">
                   <tbody>
                     <tr>
-                      <th scope="row">Employee Id</th>
+                      <th scope="row">Employee Name</th>
                       <td>
                         {rowData?.user?.full_name
                           ? rowData?.user?.full_name
@@ -410,7 +410,7 @@ const ResignationDetails = (props) => {
                       </td>
                     </tr>
                     <tr>
-                      <th scope="row">Employee Name</th>
+                      <th scope="row">Employee Id</th>
                       <td>
                         {rowData?.user?.emp_code
                           ? rowData?.user?.emp_code
