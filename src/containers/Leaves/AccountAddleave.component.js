@@ -147,6 +147,7 @@ const isValid = () =>{
               <DropdownInput
                 label="Leave Type"
                 placeholder="Select type"
+                asterisk="*"
                 options={leavetype}
                 defaultValue={leaveType}
                 onSelectHandler={(select) => {
