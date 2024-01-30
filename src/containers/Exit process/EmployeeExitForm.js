@@ -33,7 +33,8 @@ const EmployeeExitForm = (props) => {
   const [buyBackDate, setBuyBackDate] = useState('');
   const [buyBackReason, setBuyBackReason] = useState('');
   const [shoeError, setShowError] = useState(false);
-
+  const [resignation, setResignation] = useState(false);
+console.log('resignation', resignation);
   const history = useHistory();
 
   const items = props.data
@@ -77,8 +78,8 @@ const EmployeeExitForm = (props) => {
         return rowdata.resignation_status == '3'
           ? 'Pending'
           : rowdata.resignation_status == '2'
-          ? 'Decline'
-          : 'Approve';
+            ? 'Decline'
+            : 'Approve';
       },
     },
     {
@@ -235,15 +236,17 @@ const EmployeeExitForm = (props) => {
       <Helmet title={pageTitle} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">
-            Resignation Application
-          </h2>
+          <div className='d-flex'>
+            <h2 className="main-content-title tx-24 mg-b-5">
+              Resignation Application
+            </h2>
+          </div>
           <Breadcrumb items={items} />
           {rowData && rowData?.length > 0 && (
             <div className="d-flex justify-content-end mb-3">
               {rowData?.[0]?.retain_status == null &&
-              rowData?.[0]?.buy_back_status == null &&
-              rowData?.[0]?.resignation_status == 1 ? (
+                rowData?.[0]?.buy_back_status == null &&
+                rowData?.[0]?.resignation_status == 1 ? (
                 <Button
                   onClick={() => {
                     setModalType('Retain me');
@@ -276,7 +279,7 @@ const EmployeeExitForm = (props) => {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div>
-          {rowData && rowData?.[0]?.resignation_status == 2 || (!rowData?.length) &&  (
+          {rowData && rowData?.[0]?.resignation_status == 2 || resignation == true && (
             <Card>
               <Card.Body>
                 <Row>
@@ -374,6 +377,16 @@ const EmployeeExitForm = (props) => {
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">My Resignation </h5>
+                {!rowData?.length &&
+                  <a
+                  href="#"
+                  className='d-flex justify-content-end btn-link'
+                  onClick={() => {
+                    setResignation(true);
+                  }}
+                >
+                  Add Resignation
+                </a>}
               </div>
               <Row>
                 {rowData?.[0]?.retain_status != null && (
@@ -545,13 +558,13 @@ const EmployeeExitForm = (props) => {
                 </Row>
               </div>
             }
-            // modalFooter={
-            //   eventDetails.eventDescription && (
-            //     <span className="modal-description">
-            //       Description: {eventDetails.eventDescription}
-            //     </span>
-            //   )
-            // }
+          // modalFooter={
+          //   eventDetails.eventDescription && (
+          //     <span className="modal-description">
+          //       Description: {eventDetails.eventDescription}
+          //     </span>
+          //   )
+          // }
           />
         </div>
       </section>

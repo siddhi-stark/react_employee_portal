@@ -669,8 +669,8 @@ const ResignationDetails = (props) => {
                 <h4>
                   {' '}
                   {rowData?.resignation_status == '1'
-                    ? 'Resignation Approve'
-                    : 'Resignation Decline'}{' '}
+                    ? 'Resignation Approved'
+                    : 'Resignation Declined'}{' '}
                 </h4>
               </Alert.Heading>
             </Alert>
