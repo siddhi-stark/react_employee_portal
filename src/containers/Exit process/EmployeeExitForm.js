@@ -34,7 +34,7 @@ const EmployeeExitForm = (props) => {
   const [buyBackReason, setBuyBackReason] = useState('');
   const [shoeError, setShowError] = useState(false);
   const [resignation, setResignation] = useState(false);
-  console.log('resignation', resignation);
+  // console.log('resignation', resignation);
   const history = useHistory();
 
   const items = props.data

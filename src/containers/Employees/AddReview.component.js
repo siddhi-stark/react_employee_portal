@@ -33,7 +33,7 @@ const AddReview = (props) => {
   const [feedback, setFeedback] = useState('');
   const [currentUserId, setCurrentUserId] = useState('');
   const [reviewStatus, setReviewStatus] = useState('');
-  console.log('reviewStatus', reviewStatus);
+  // console.log('reviewStatus', reviewStatus);
   const [reviewComments, setReviewComments] = useState(null);
   const [reviewTime, setReviewTime] = useState('');
   const [disableButton, setDisableButton] = useState(false);
