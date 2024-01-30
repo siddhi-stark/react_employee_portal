@@ -183,9 +183,9 @@ export default class Api extends Component {
 
   static supportTicketUrl = `${Api.baseUrl}support-ticket/`;
 
-  static employeeReviewUrl =`${Api.baseUrl}employee_review/`
+  static employeeReviewUrl = `${Api.baseUrl}employee_review/`
 
-  static employeeReportUrl =`${Api.baseUrl}dashboard-report/`
+  static employeeReportUrl = `${Api.baseUrl}dashboard-report/`
 
   static employeeResignationUrl = `${Api.baseUrl}employee-resignation/`
 
@@ -195,7 +195,7 @@ export default class Api extends Component {
 
   // Get base URL of APIs
   static getBaseUrl() {
-    const env = 'production';
+    const env = 'dev';
 
     let url = '';
     switch (env) {
@@ -207,6 +207,11 @@ export default class Api extends Component {
         break;
       case 'stage':
         url = 'https://stage-portalsapi.starkdigital.in/api/v1/';
+        // url = 'https://developmentapi.starkdigital.in/api/v1/';
+        // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/';
+        break;
+      case 'dev':
+        url = 'https://developmentapi.starkdigital.in/api/v1/';
         // url = 'https://developmentapi.starkdigital.in/api/v1/';
         // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/';
         break;
