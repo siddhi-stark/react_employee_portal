@@ -215,7 +215,6 @@ export default class Api extends Component {
         // url = 'https://developmentapi.starkdigital.in/api/v1/';
         // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/';
         break;
-      // Default: development server
       default:
         // url = 'http://92.204.146.45:1337/api/v1/';
         url = 'https://developmentapi.starkdigital.in/api/v1/';

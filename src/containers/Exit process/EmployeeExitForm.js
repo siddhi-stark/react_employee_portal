@@ -276,7 +276,7 @@ const EmployeeExitForm = (props) => {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div>
-          {rowData && rowData?.[0]?.resignation_status == 2  &&  (
+          {rowData && rowData?.[0]?.resignation_status == 2 || (!rowData?.length) &&  (
             <Card>
               <Card.Body>
                 <Row>
