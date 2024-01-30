@@ -34,7 +34,7 @@ const EmployeeExitForm = (props) => {
   const [buyBackReason, setBuyBackReason] = useState('');
   const [shoeError, setShowError] = useState(false);
   const [resignation, setResignation] = useState(false);
-console.log('resignation', resignation);
+  console.log('resignation', resignation);
   const history = useHistory();
 
   const items = props.data
@@ -360,7 +360,7 @@ console.log('resignation', resignation);
                         <Button
                           variant="secondary"
                           onClick={() => {
-                            history.goBack('');
+                            setResignation(false);
                           }}
                         >
                           Cancel
@@ -370,23 +370,23 @@ console.log('resignation', resignation);
                   </Col>
                 </Row>
               </Card.Body>
+              {/* <hr /> */}
             </Card>
           )}
-          <hr />
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">My Resignation </h5>
                 {!rowData?.length &&
                   <a
-                  href="#"
-                  className='d-flex justify-content-end btn-link'
-                  onClick={() => {
-                    setResignation(true);
-                  }}
-                >
-                  Add Resignation
-                </a>}
+                    href="#"
+                    className='d-flex justify-content-end btn-link'
+                    onClick={() => {
+                      setResignation(true);
+                    }}
+                  >
+                    Add Resignation
+                  </a>}
               </div>
               <Row>
                 {rowData?.[0]?.retain_status != null && (
