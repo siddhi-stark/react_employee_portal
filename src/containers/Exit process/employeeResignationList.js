@@ -110,7 +110,9 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return `${rowdata.resignation_reason}`;
+        return rowdata.resignation_reason.length > 15
+          ? rowdata.resignation_reason.slice(0, 15) + '' + '...'
+          : rowdata.resignation_reason;
       },
     },
     {
@@ -132,10 +134,10 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return rowdata.resign_remark
-          ? rowdata.resign_remark
-          : rowdata.retention_decline_reason
-          ? rowdata.retention_decline_reason
+        return rowdata?.resign_remark
+          ? rowdata?.resign_remark.slice(0, 15) + '' + '..'
+          : rowdata?.retention_decline_reason
+          ? rowdata?.retention_decline_reason.slice(0, 15) + '' + '...'
           : '-';
       },
     },
@@ -161,7 +163,7 @@ const EmployeeResignationList = (props) => {
     const endPoint = `${Api.getResignationListUrl}`;
     const params = {
       sort_direction: 'descending',
-      page:pageNo
+      page: pageNo,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
