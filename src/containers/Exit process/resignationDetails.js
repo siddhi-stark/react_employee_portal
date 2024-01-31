@@ -27,7 +27,7 @@ const ResignationDetails = (props) => {
   const [managerDeclineToggle, setManagerDeclineToggle] = useState(false);
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
-  // console.log('🚀 ~ ResignationDetails ~ rowData:', rowData);
+  console.log('🚀 ~ ResignationDetails ~ rowData:', rowData);
   const [retainReason, setRetainReason] = useState('');
   const [roleId, setRoleId] = useState();
   const [managerDeclineReason, setManagerDeclineReason] = useState('');
@@ -100,10 +100,14 @@ const ResignationDetails = (props) => {
   }, [state?.state?.resignationId]);
 
   useEffect(() => {
-    if (userId) {
+    if (
+      userId &&
+      roleId == '5' &&
+      rowData?.user?.relieving_date == new Date()
+    ) {
       getUploadedDocuments();
     }
-  }, [userId]);
+  }, [userId, roleId]);
 
   const getResignationDetails = async () => {
     setShowLoader(true);
@@ -150,8 +154,8 @@ const ResignationDetails = (props) => {
       setShowLoader(false);
       swal(
         status == 1
-          ? 'Resignation approve successfully'
-          : 'Resignation decline successfully',
+          ? 'Resignation approved successfully'
+          : 'Resignation declined successfully',
         '',
         'success'
       ).then(() => {
@@ -254,8 +258,8 @@ const ResignationDetails = (props) => {
       setShowLoader(false);
       swal(
         status == 1
-          ? 'Retention approve successfully'
-          : 'Retention decline successfully',
+          ? 'Retention approved successfully'
+          : 'Retention declined successfully',
         '',
         'success'
       ).then(() => {
@@ -287,8 +291,8 @@ const ResignationDetails = (props) => {
       setShowLoader(false);
       swal(
         status == 1
-          ? 'Buy back request approve successfully'
-          : 'Buy back request decline successfully',
+          ? 'Buy back request approved successfully'
+          : 'Buy back request declined successfully',
         '',
         'success'
       ).then(() => {
@@ -320,8 +324,8 @@ const ResignationDetails = (props) => {
 
       swal(
         status == 1
-          ? 'Resignation approve successfully'
-          : 'Resignation decline successfully',
+          ? 'Resignation approved successfully'
+          : 'Resignation declined successfully',
         '',
         'success'
       ).then(() => {
@@ -375,6 +379,27 @@ const ResignationDetails = (props) => {
       } else {
         setShowError(true);
       }
+    }
+  };
+
+  const changeRelievingData = async (date) => {
+    console.log('date',date);
+    setShowLoader(true);
+    const postData = {
+      relieving_date: customFunctions.getDate(date),
+    };
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+
+      swal('Relieving date changed successfully', '', 'success').then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
     }
   };
 
@@ -437,8 +462,8 @@ const ResignationDetails = (props) => {
                     <tr>
                       <th scope="row">Joining Date</th>
                       <td>
-                        {rowData?.user?.designation_name
-                          ? rowData?.user?.designation_name
+                        {rowData?.user?.date_joined
+                          ? rowData?.user?.date_joined
                           : '-'}
                       </td>
                     </tr>
@@ -447,6 +472,14 @@ const ResignationDetails = (props) => {
                       <td>
                         {rowData?.user?.department_name
                           ? rowData?.user?.department_name
+                          : '-'}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Reporting Person</th>
+                      <td>
+                        {rowData?.reporting_manager?.manager_name
+                          ? rowData?.reporting_manager?.manager_name
                           : '-'}
                       </td>
                     </tr>
@@ -469,10 +502,11 @@ const ResignationDetails = (props) => {
                   <h6>{rowData?.resignation_reason}</h6>
                 </Alert.Heading>
               </Alert>
-              {roleId == '5' && (
+              {(rowData?.resign_remark ||
+                rowData?.resignation_decline_note) && (
                 <div>
                   <h6>
-                    <b>Remarks form the management</b>
+                    <b>Remarks</b>
                   </h6>
                   <Alert className="" variant="secondary">
                     <Alert.Heading>
@@ -499,7 +533,7 @@ const ResignationDetails = (props) => {
                   </Alert>
                   <>
                     <TextInput
-                      label="Enter Retain reason"
+                      label="Enter Remarks"
                       placeholder="Type Retain reason here.."
                       type="text"
                       asterisk="*"
@@ -546,11 +580,29 @@ const ResignationDetails = (props) => {
               {rowData?.retain_status == 1 && (
                 <>
                   <h6 className="d-flex justify-content-start">
-                    <b> Retention Approved</b>
+                    <b> Retention Reason</b>
                   </h6>
                   <Alert className="" variant="secondary">
                     <Alert.Heading>
                       <h6>{rowData?.retention_reason}</h6>
+                    </Alert.Heading>
+                  </Alert>
+                </>
+              )}
+              {[1, 2].includes(rowData?.retain_status) && (
+                <>
+                  <h6 className="d-flex justify-content-start">
+                    <b> Retention Remark</b>
+                  </h6>
+                  <Alert className="" variant="secondary">
+                    <Alert.Heading>
+                      <h6>
+                        {rowData?.retention_acceptance_reason
+                          ? rowData?.retention_acceptance_reason
+                          : rowData?.retention_decline_reason
+                          ? rowData?.retention_decline_reason
+                          : ''}
+                      </h6>
                     </Alert.Heading>
                   </Alert>
                 </>
@@ -566,7 +618,7 @@ const ResignationDetails = (props) => {
                     </Alert.Heading>
                   </Alert>
                   <TextInput
-                    label="Enter Reason"
+                    label="Enter Remark"
                     asterisk="*"
                     type="text"
                     as="textarea"
@@ -605,6 +657,36 @@ const ResignationDetails = (props) => {
                       </Button>
                     </Col>
                   </Row>
+                </>
+              )}
+              {rowData?.buy_back_apply_reason && (
+                <>
+                  <h6 className="d-flex justify-content-start">
+                    <b>Buy Back Reason</b>
+                  </h6>
+                  <Alert className="" variant="secondary">
+                    <Alert.Heading>
+                      <h6>{rowData?.buy_back_apply_reason}</h6>
+                    </Alert.Heading>
+                  </Alert>
+                </>
+              )}
+              {[1, 2].includes(rowData?.buy_back_status) && (
+                <>
+                  <h6 className="d-flex justify-content-start">
+                    <b> Buy Back Remark</b>
+                  </h6>
+                  <Alert className="" variant="secondary">
+                    <Alert.Heading>
+                      <h6>
+                        {rowData?.buy_back_acceptance_reason
+                          ? rowData?.buy_back_acceptance_reason
+                          : rowData?.buy_back_decline_reason
+                          ? rowData?.buy_back_decline_reason
+                          : ''}
+                      </h6>
+                    </Alert.Heading>
+                  </Alert>
                 </>
               )}
               {!managerDeclineToggle &&
@@ -727,88 +809,92 @@ const ResignationDetails = (props) => {
               rowData?.retain_status != 1 && (
                 <Row>
                   <Col sm={6}>
-                    <h5>Upload Exit Documents</h5>
-                    <Card>
-                      <Card.Body>
-                        {documentsList &&
-                          documentsList.map((item, index) => (
-                            <Row>
-                              <Col sm={10}>
-                                <ul>
-                                  <input
-                                    className=""
-                                    type={'checkbox'}
-                                    value={item?.isCheck}
-                                    checked={item?.isCheck}
-                                    id="flexCheckDefaultBeneficiary"
-                                    onChange={(e) => {
-                                      setDocumentSelected(true);
-                                      let temData = [];
-                                      documentsList &&
-                                        documentsList.map((dt, ind) => {
-                                          if (dt?.isDiseable == true) {
-                                            temData.push({
-                                              ...dt,
-                                            });
-                                          } else {
-                                            if (index == ind) {
-                                              temData.push({
-                                                name: dt.name,
-                                                id: dt?.id,
-                                                isCheck: true,
+                    {rowData?.user?.relieving_date == new Date() && (
+                      <>
+                        <>
+                          <h5>Upload Exit Documents</h5>
+                          <Card>
+                            <Card.Body>
+                              {documentsList &&
+                                documentsList.map((item, index) => (
+                                  <Row>
+                                    <Col sm={10}>
+                                      <ul>
+                                        <input
+                                          className=""
+                                          type={'checkbox'}
+                                          value={item?.isCheck}
+                                          checked={item?.isCheck}
+                                          id="flexCheckDefaultBeneficiary"
+                                          onChange={(e) => {
+                                            setDocumentSelected(true);
+                                            let temData = [];
+                                            documentsList &&
+                                              documentsList.map((dt, ind) => {
+                                                if (dt?.isDiseable == true) {
+                                                  temData.push({
+                                                    ...dt,
+                                                  });
+                                                } else {
+                                                  if (index == ind) {
+                                                    temData.push({
+                                                      name: dt.name,
+                                                      id: dt?.id,
+                                                      isCheck: true,
+                                                    });
+                                                    setSelectedDocument(dt?.id);
+                                                  } else {
+                                                    temData.push({
+                                                      name: dt.name,
+                                                      id: dt?.id,
+                                                      isCheck: false,
+                                                    });
+                                                  }
+                                                }
                                               });
-                                              setSelectedDocument(dt?.id);
-                                            } else {
-                                              temData.push({
-                                                name: dt.name,
-                                                id: dt?.id,
-                                                isCheck: false,
-                                              });
-                                            }
-                                          }
-                                        });
-                                      setDocumentList(temData);
-                                      forceUpdate(count + 1);
-                                    }}
-                                    disabled={item?.isDiseable == true}
-                                  />{' '}
-                                  &nbsp;
-                                  {item?.name}
-                                </ul>
-                              </Col>
-                              <Col sm={2}>
-                                {item.isDiseable == true && (
-                                  <a href={item?.url} target="_blank">
-                                    <img
-                                      title="Download Image"
-                                      style={{ cursor: 'pointer' }}
-                                      src="images/download-file.svg"
-                                      alt="download-icon"
-                                    />
-                                  </a>
-                                )}
-                              </Col>
-                            </Row>
-                          ))}
-                      </Card.Body>
-                    </Card>
-
-                    <input
-                      className="mb-3"
-                      type="file"
-                      onChange={(e) => {
-                        setDocument(e.target.files[0]);
-                      }}
-                    />
-
-                    <Button
-                      onClick={(e) => {
-                        handleSubmit();
-                      }}
-                      disabled={!isDocumentSelected || document == null}
-                    >
-                      Upload
-                    </Button>
+                                            setDocumentList(temData);
+                                            forceUpdate(count + 1);
+                                          }}
+                                          disabled={item?.isDiseable == true}
+                                        />{' '}
+                                        &nbsp;
+                                        {item?.name}
+                                      </ul>
+                                    </Col>
+                                    <Col sm={2}>
+                                      {item.isDiseable == true && (
+                                        <a href={item?.url} target="_blank">
+                                          <img
+                                            title="Download Image"
+                                            style={{ cursor: 'pointer' }}
+                                            src="images/download-file.svg"
+                                            alt="download-icon"
+                                          />
+                                        </a>
+                                      )}
+                                    </Col>
+                                  </Row>
+                                ))}
+                            </Card.Body>
+                          </Card>
+                        </>
+                        <input
+                          className="mb-3"
+                          type="file"
+                          onChange={(e) => {
+                            setDocument(e.target.files[0]);
+                          }}
+                        />
+                        <Button
+                          onClick={(e) => {
+                            handleSubmit();
+                          }}
+                          disabled={!isDocumentSelected || document == null}
+                        >
+                          Upload
+                        </Button>
+                      </>
+                    )}
                   </Col>
                   <Col sm={6}>
                     <h5>Relieving Date</h5>
@@ -816,13 +902,23 @@ const ResignationDetails = (props) => {
                       className="form-control"
                       selected={relievingDate}
                       onChange={(e) => {
-                        setRelievingDate(e);
+                        swal({
+                          title: 'Are you sure?',
+                          text: 'You want to change relieving date',
+                          icon: 'warning',
+                          buttons: true,
+                          dangerMode: true,
+                        }).then((willDelete) => {
+                          if (willDelete) {
+                            setRelievingDate(e);
+                            changeRelievingData(e);
+                          }
+                        });
                       }}
                       autoComplete="off"
                       name="startDate"
                       dateFormat="dd/MM/yyyy"
                       placeholder="Select relieving date"
-                      disabled
                       // maxDate={new Date()}
                     />
                     {rowData?.resignation_status == '3' && (

@@ -4,7 +4,7 @@ const menu = [
     path: '/',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7,8],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 8],
   },
   {
     title: 'Project',
@@ -67,10 +67,26 @@ const menu = [
   },
   {
     title: 'Employees',
-    path: '/employees',
+    path: '#',
     icon: 'Employee.svg',
-    submenu: [],
-    roleaccess: [1, 2, 5, 6],
+    submenu: [
+      {
+        title: 'Employees',
+        path: '/employees',
+        icon: 'Employee.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 5, 6],
+      },
+
+      {
+        title: 'Resignation Applications',
+        path: '/resignation-listing',
+        icon: 'report.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 5, 6],
+      },
+    ],
+    roleaccess: [1, 2,3,5, 6],
   },
   // {
   //   title: 'Employees',
@@ -235,7 +251,7 @@ const menu = [
     path: '/reports',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1,7],
+    roleaccess: [1, 7],
   },
   {
     title: 'Performance Report',
@@ -290,18 +306,12 @@ const menu = [
   // },
   {
     title: 'Resignation',
-      path: '/resignation-application',
-      icon: 'report.svg',
-      submenu: [],
-      roleaccess: [4],
+    path: '/resignation-application',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [4],
   },
-  {
-    title: 'Resignation Applications',
-      path: '/resignation-listing',
-      icon: 'report.svg',
-      submenu: [],
-      roleaccess: [1,2,3,5,6],
-  },
+
   {
     title: 'Support Ticket',
     path: '/support-ticket',

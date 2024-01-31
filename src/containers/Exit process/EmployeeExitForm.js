@@ -28,7 +28,7 @@ const EmployeeExitForm = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [retainNote, setRetainNote] = useState('');
   const [rowData, setRowData] = useState([]);
-  // console.log('🚀 ~ EmployeeExitForm ~ rowData:', rowData);
+  console.log('🚀 ~ EmployeeExitForm ~ rowData:', rowData);
   const [modalType, setModalType] = useState('');
   const [buyBackDate, setBuyBackDate] = useState('');
   const [buyBackReason, setBuyBackReason] = useState('');
@@ -78,8 +78,10 @@ const EmployeeExitForm = (props) => {
         return rowdata.resignation_status == '3'
           ? 'Pending'
           : rowdata.resignation_status == '2'
-            ? 'Decline'
-            : 'Approve';
+          ? 'Declined'
+          : rowdata.resignation_status == '4'
+          ? 'Cancelled'
+          : 'Approved';
       },
     },
     {
@@ -88,7 +90,7 @@ const EmployeeExitForm = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return `${rowdata.user.date_joined}`;
+        return customFunctions.getDMYDate(rowdata.user.date_joined);
       },
     },
     {
@@ -236,7 +238,7 @@ const EmployeeExitForm = (props) => {
       <Helmet title={pageTitle} />
       <div className="page-header">
         <div className="title-breadcrumb-section">
-          <div className='d-flex'>
+          <div className="d-flex">
             <h2 className="main-content-title tx-24 mg-b-5">
               Resignation Application
             </h2>
@@ -245,8 +247,8 @@ const EmployeeExitForm = (props) => {
           {rowData && rowData?.length > 0 && (
             <div className="d-flex justify-content-end mb-3">
               {rowData?.[0]?.retain_status == null &&
-                rowData?.[0]?.buy_back_status == null &&
-                rowData?.[0]?.resignation_status == 1 ? (
+              rowData?.[0]?.buy_back_status == null &&
+              rowData?.[0]?.resignation_status == 1 ? (
                 <Button
                   onClick={() => {
                     setModalType('Retain me');
@@ -279,7 +281,7 @@ const EmployeeExitForm = (props) => {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div>
-          {rowData && rowData?.[0]?.resignation_status == 2 || resignation == true && (
+          {resignation == true && (
             <Card>
               <Card.Body>
                 <Row>
@@ -375,19 +377,24 @@ const EmployeeExitForm = (props) => {
           )}
           <Card>
             <Card.Body>
-              <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">My Resignation </h5>
-                {!rowData?.length &&
-                  <a
-                    href="#"
-                    className='d-flex justify-content-end btn-link'
-                    onClick={() => {
-                      setResignation(true);
-                    }}
-                  >
-                    Add Resignation
-                  </a>}
-              </div>
+              {!resignation && (
+                <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-3 mt-2 ">My Resignation </h5>
+                  {[3, 1].includes(rowData[0]?.resignation_status) ? (
+                    ''
+                  ) : (
+                    <a
+                      href="#"
+                      className="d-flex justify-content-end btn-link"
+                      onClick={() => {
+                        setResignation(true);
+                      }}
+                    >
+                      Apply For Resignation
+                    </a>
+                  )}
+                </div>
+              )}
               <Row>
                 {rowData?.[0]?.retain_status != null && (
                   <Col className="d-flex justify-content-end">
@@ -464,7 +471,7 @@ const EmployeeExitForm = (props) => {
                 {modalType == 'Retain me' && (
                   <>
                     <TextInput
-                      label="Why you want to retain"
+                      label="Why do you want to retain?"
                       type="text"
                       as="textarea"
                       asterisk="*"
@@ -558,13 +565,13 @@ const EmployeeExitForm = (props) => {
                 </Row>
               </div>
             }
-          // modalFooter={
-          //   eventDetails.eventDescription && (
-          //     <span className="modal-description">
-          //       Description: {eventDetails.eventDescription}
-          //     </span>
-          //   )
-          // }
+            // modalFooter={
+            //   eventDetails.eventDescription && (
+            //     <span className="modal-description">
+            //       Description: {eventDetails.eventDescription}
+            //     </span>
+            //   )
+            // }
           />
         </div>
       </section>

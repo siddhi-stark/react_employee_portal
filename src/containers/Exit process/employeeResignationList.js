@@ -55,7 +55,7 @@ const EmployeeResignationList = (props) => {
               });
             }}
           >
-            <span className="text-info">View Report</span>
+            <span className="text-info">View Details</span>
           </a>
         </>
       </span>
@@ -161,6 +161,7 @@ const EmployeeResignationList = (props) => {
     const endPoint = `${Api.getResignationListUrl}`;
     const params = {
       sort_direction: 'descending',
+      page:pageNo
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);

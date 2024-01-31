@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -84,9 +85,9 @@ function Header() {
     getProfile();
     getCLocTIme();
     getClockOutTime();
-    setInterval(() => {
-      getNotificationCount();
-    }, 500000);
+    // setInterval(() => {
+    //   getNotificationCount();
+    // }, 500000);
 
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
@@ -106,6 +107,10 @@ function Header() {
     } else {
       dispatch({ type: 'LOGIN', value: true });
     }
+  }, []);
+
+  useEffect(() => {
+    getNotificationCount();
   }, []);
 
   const onMenuChange = () => {
@@ -173,7 +178,7 @@ function Header() {
                   {/* {imageProfile ? (
                     <img src={imageProfile} alt="Profile" />
                   ) : ( */}
-                    <img src="/images/user.svg" alt="Edit Profile" />
+                  <img src="/images/user.svg" alt="Edit Profile" />
                   {/* )} */}
                 </a>
               </div>
@@ -185,7 +190,13 @@ function Header() {
                 href="javascript:void(0)"
                 onClick={() => onNotification(0)}
               >
-                <img src="/images/notification.png" alt="notification" />
+                <img
+                  onClick={() => {
+                    getNotificationCount();
+                  }}
+                  src="/images/notification.png"
+                  alt="notification"
+                />
                 <span className="badge badge-danger nav-link-badge">
                   {notificationCount === 0 ? '' : notificationCount}
                 </span>
@@ -194,7 +205,10 @@ function Header() {
                 <div className="header-navheading">
                   <p className="main-notification-text">
                     You have {notificationCount} unread notification
-                    <span className="badge badge-pill badge-primary ml-3" onClick={() => {onNotification(1); // eslint-disable-line
+                    <span
+                      className="badge badge-pill badge-primary ml-3"
+                      onClick={() => {
+                        onNotification(1); // eslint-disable-line
                       }}
                     >
                       View all
@@ -210,7 +224,14 @@ function Header() {
                       <>
                         <div className="media new">
                           <div className="media-body">
-                            <p onClick={() => { onMessageClick(note.id); onNotification(1); }} className={note.is_read === false ? 'active-media' : ''} // eslint-disable-line
+                            <p
+                              onClick={() => {
+                                onMessageClick(note.id);
+                                onNotification(1);
+                              }}
+                              className={
+                                note.is_read === false ? 'active-media' : ''
+                              } // eslint-disable-line
                             >
                               {note.message}
                             </p>
@@ -243,7 +264,7 @@ function Header() {
                     {designation && (
                       <p
                         className="main-notification-text"
-                        style={{ fontSize : '13px' }}
+                        style={{ fontSize: '13px' }}
                       >
                         ({designation})
                       </p>

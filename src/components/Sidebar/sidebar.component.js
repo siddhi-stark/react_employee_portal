@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
@@ -61,7 +62,9 @@ function Sidebar() {
       const bdayData = data.data;
       setBirthdayData(data.data);
       if (bdayData.length > 0) {
-        setIsBirthDayPresent(bdayData.filter((e) => Number(e.dob) >= day).length > 0 ? true : false); // eslint-disable-line
+        setIsBirthDayPresent(
+          bdayData.filter((e) => Number(e.dob) >= day).length > 0 ? true : false
+        ); // eslint-disable-line
       }
       customFunctions.setLocalStorage('Employee', JSON.stringify(data.data));
     }
@@ -183,12 +186,16 @@ function Sidebar() {
 
                     {hasSubMenu && (
                       <ul className="nav-sub list-unstyled">
-                        {menuItem.submenu.map((submenuItem,i) => {
+                        {menuItem.submenu.map((submenuItem, i) => {
                           return (
                             <UserRestrictions
                               permittedUsers={submenuItem.roleaccess}
                             >
-                              <li key={i} onClick={() => { onSubActiveClass(); }} // eslint-disable-line
+                              <li
+                                key={i}
+                                onClick={() => {
+                                  onSubActiveClass();
+                                }} // eslint-disable-line
                                 className={`nav-sub-item ${
                                   submenuItem.path === window.location.pathname
                                     ? 'show active'
@@ -236,9 +243,12 @@ function Sidebar() {
                     </div>
 
                     {events &&
-                      events.map((ev,i) => (
+                      events.map((ev, i) => (
                         <>
-                          <div key={i} className="event-title date d-flex align-items-center">
+                          <div
+                            key={i}
+                            className="event-title date d-flex align-items-center"
+                          >
                             <p className="bday-date">
                               <img
                                 src="/images/calendar-img.png"
@@ -288,7 +298,7 @@ function Sidebar() {
 
                       <ul className="p-0 m-0 list-unstyled">
                         {birthdays &&
-                          birthdays.map((bday,i) => (
+                          birthdays.map((bday, i) => (
                             <>
                               <li key={i} className="text-red">
                                 <a href="#">
@@ -307,7 +317,9 @@ function Sidebar() {
                                           </span>
                                         </p>
 
-                                        <p onClick={() => { // eslint-disable-line
+                                        <p
+                                          onClick={() => {
+                                            // eslint-disable-line
                                             if (bday.greeting) {
                                               if (Number(bday.dob) > day)
                                                 return false;
