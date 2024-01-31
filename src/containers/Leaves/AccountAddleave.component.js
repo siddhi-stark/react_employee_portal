@@ -106,13 +106,13 @@ const AccountAddleaveComponent = () => {
   const isValid = () => {
     if (validator.current.allValid()) {
       ApplyLeave();
-      validator.current.hideMessages()
+      validator.current.hideMessages();
     } else {
       validator.current.showMessages();
       forceUpdate(count + 1);
       // setDisableButton(false);
     }
-  }
+  };
 
   return (
     <>
@@ -207,6 +207,7 @@ const AccountAddleaveComponent = () => {
                 dateFormat="dd/MM/yyyy"
                 placeholder="Select from date"
                 selected={formDate}
+                maxDate={new Date()}
                 onChange={(e) => {
                   setFromDate(e);
                 }}
@@ -227,6 +228,7 @@ const AccountAddleaveComponent = () => {
                 dateFormat="dd/MM/yyyy"
                 placeholder="Select from date"
                 selected={toDate}
+                maxDate={new Date()}
                 onChange={(e) => {
                   setToDate(e);
                 }}
