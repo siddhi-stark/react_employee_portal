@@ -28,13 +28,11 @@ const EmployeeExitForm = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [retainNote, setRetainNote] = useState('');
   const [rowData, setRowData] = useState([]);
-  console.log('🚀 ~ EmployeeExitForm ~ rowData:', rowData);
   const [modalType, setModalType] = useState('');
   const [buyBackDate, setBuyBackDate] = useState('');
   const [buyBackReason, setBuyBackReason] = useState('');
   const [shoeError, setShowError] = useState(false);
   const [resignation, setResignation] = useState(false);
-  // console.log('resignation', resignation);
   const history = useHistory();
 
   const items = props.data
@@ -183,7 +181,6 @@ const EmployeeExitForm = (props) => {
       buy_back_date: customFunctions.getDate(buyBackDate),
       buy_back_apply_reason: buyBackReason,
     };
-    // console.log('🚀 ~ buyBackMe ~ postData:', postData);
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.employeeResignationUrl}${rowData?.[0]?.id}/`;
     const { data, message } = await callback(endPoint, postData);

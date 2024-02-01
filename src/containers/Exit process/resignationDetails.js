@@ -27,7 +27,6 @@ const ResignationDetails = (props) => {
   const [managerDeclineToggle, setManagerDeclineToggle] = useState(false);
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
-  console.log('🚀 ~ ResignationDetails ~ rowData:', rowData);
   const [retainReason, setRetainReason] = useState('');
   const [roleId, setRoleId] = useState();
   const [managerDeclineReason, setManagerDeclineReason] = useState('');
@@ -358,13 +357,10 @@ const ResignationDetails = (props) => {
     }
 
     if (type == 'admin_retain') {
-      // console.log('adminnn');
       if (status == 'accept_retain' && retainReason) {
-        // console.log('retain');
 
         retainRequest(1);
       } else if (status == 'decline_retain' && retainReason) {
-        // console.log('elsee ifff');
         retainRequest(2);
       } else {
         setShowError(true);
@@ -383,7 +379,6 @@ const ResignationDetails = (props) => {
   };
 
   const changeRelievingData = async (date) => {
-    console.log('date',date);
     setShowLoader(true);
     const postData = {
       relieving_date: customFunctions.getDate(date),
@@ -483,6 +478,18 @@ const ResignationDetails = (props) => {
                           : '-'}
                       </td>
                     </tr>
+                    {rowData?.user?.relieving_date && (
+                      <tr>
+                        <th scope="row">Relieving Date</th>
+                        <td>
+                          {rowData?.user?.relieving_date
+                            ? customFunctions.getDMYDate(
+                                rowData?.user?.relieving_date
+                              )
+                            : '-'}
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -659,7 +666,7 @@ const ResignationDetails = (props) => {
                   </Row>
                 </>
               )}
-              {rowData?.buy_back_apply_reason && (
+              {/* {rowData?.buy_back_apply_reason && (
                 <>
                   <h6 className="d-flex justify-content-start">
                     <b>Buy Back Reason</b>
@@ -670,7 +677,7 @@ const ResignationDetails = (props) => {
                     </Alert.Heading>
                   </Alert>
                 </>
-              )}
+              )} */}
               {[1, 2].includes(rowData?.buy_back_status) && (
                 <>
                   <h6 className="d-flex justify-content-start">
@@ -809,7 +816,8 @@ const ResignationDetails = (props) => {
               rowData?.retain_status != 1 && (
                 <Row>
                   <Col sm={6}>
-                    {rowData?.user?.relieving_date == new Date() && (
+                    {rowData?.user?.relieving_date ==
+                      customFunctions.getDate(new Date()) && (
                       <>
                         <>
                           <h5>Upload Exit Documents</h5>
