@@ -19,6 +19,8 @@ import Api from '../../helper/api';
 import axios from 'axios';
 
 const ResignationDetails = (props) => {
+  const {match} = props
+  console.log("🚀 ~ ResignationDetails ~ props:", match?.params?.id)
   const [pageTitle, setPageTitle] = useState('Resignation');
   const location = useLocation();
   const { state } = location;
@@ -93,10 +95,10 @@ const ResignationDetails = (props) => {
   }, [roleId]);
 
   useEffect(() => {
-    if (state?.state?.resignationId) {
+    if (match?.params?.id) {
       getResignationDetails();
     }
-  }, [state?.state?.resignationId]);
+  }, [match?.params?.id]);
 
   useEffect(() => {
     if (
@@ -109,8 +111,9 @@ const ResignationDetails = (props) => {
   }, [userId, roleId]);
 
   const getResignationDetails = async () => {
+    console.log("insideFunction");
     setShowLoader(true);
-    const endPoint = `${Api.getResignationListUrl}${state?.state?.resignationId}`;
+    const endPoint = `${Api.getResignationListUrl}${match?.params?.id}`;
 
     const url = customFunctions.generateUrl(endPoint);
     const { data, message } = await AuthApi.getDataFromServer(url);

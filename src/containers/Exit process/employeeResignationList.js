@@ -45,7 +45,7 @@ const EmployeeResignationList = (props) => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              history.push(`/resignation-details`, {
+              history.push(`/resignation-details/${id}`, {
                 state: {
                   resignationId: id,
                 },

@@ -222,7 +222,7 @@ function Routes() {
       <Route path="/performance-report" exact component={PerformanceReport} />
       <Route path="/resignation-application" exact component={EmployeeExitForm}/>
       <Route path = "/resignation-listing" exact component={EmployeeResignationList}/>
-      <Route path= "/resignation-details" exact component={ResignationDetails}/>
+      <Route path= "/resignation-details/:id" exact component={ResignationDetails}/>
       <Route path="/accountant-leaves" exact component={LeaveListingForAccountant}/>
       <Route path ="/accountant-add-leaves" exact component={AccountAddleaveComponent} />
 
