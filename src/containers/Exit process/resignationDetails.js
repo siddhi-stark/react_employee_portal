@@ -877,7 +877,7 @@ const ResignationDetails = (props) => {
                                             <img
                                               title="Download Image"
                                               style={{ cursor: 'pointer' }}
-                                              src="images/download-file.svg"
+                                              src="/images/download-file.svg"
                                               alt="download-icon"
                                             />
                                           </a>
