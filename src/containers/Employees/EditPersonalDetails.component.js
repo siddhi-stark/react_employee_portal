@@ -107,14 +107,14 @@ function EditPersonalDetails(props) {
         : null,
       // relieved: false, // eslint-disable-line
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : null,
-      notice_period_date:
-        formValues.notice_period_start_date && formValues.notice_period_end_date
-          ? customFunctions.getDate(formValues.notice_period_start_date)
-          : null,
-      last_working_date:
-        formValues.notice_period_end_date && formValues.notice_period_start_date
-          ? customFunctions.getDate(formValues.notice_period_end_date)
-          : null,
+      // notice_period_date:
+      //   formValues.notice_period_start_date && formValues.notice_period_end_date
+      //     ? customFunctions.getDate(formValues.notice_period_start_date)
+      //     : null,
+      // last_working_date:
+      //   formValues.notice_period_end_date && formValues.notice_period_start_date
+      //     ? customFunctions.getDate(formValues.notice_period_end_date)
+      //     : null,
       // on_notice_period:
       //   formValues.notice_period_end_date && formValues.notice_period_start_date
       //     ? true
@@ -200,6 +200,7 @@ function EditPersonalDetails(props) {
           : null,
         confirmation_date : noticeDate?.confirmation_date ? new Date(customFunctions.getDate(noticeDate?.confirmation_date)) : null,
         email: noticeDate.email ? noticeDate.email : null,
+        personal_email:noticeDate?.personal_email ? noticeDate?.personal_email : null, 
         full_name: noticeDate.full_name ? noticeDate.full_name : null,
         joining_date: noticeDate.date_joined
           ? new Date(customFunctions.getDate(noticeDate.date_joined))

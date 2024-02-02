@@ -17,6 +17,7 @@ import { withRouter, useHistory, useLocation } from 'react-router-dom';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import axios from 'axios';
+// import download1 from '../../../public/images/download1';
 
 const ResignationDetails = (props) => {
   const {match} = props
@@ -48,8 +49,8 @@ const ResignationDetails = (props) => {
     ? null
     : [
       { to: '/', label: 'Home' },
-      { to: '/resignation-listing', label: 'Resignation Listing' },
-      { label: 'Resignation-details' },
+      { to: '/resignation-applications', label: 'Resignation applications' },
+      { label: 'Applications details' },
     ];
 
   const [documentsList, setDocumentList] = useState([
@@ -410,7 +411,7 @@ const ResignationDetails = (props) => {
             style={{ minWidth: '80px' }}
             variant="btn btn-sm btn-primary"
             onClick={() => {
-              history.push('/resignation-listing');
+              history.push('/resignation-applications');
             }}
           >
             Back
@@ -877,7 +878,7 @@ const ResignationDetails = (props) => {
                                             <img
                                               title="Download Image"
                                               style={{ cursor: 'pointer' }}
-                                              src="/images/download-file.svg"
+                                              src="/images/download1.svg"
                                               alt="download-icon"
                                             />
                                           </a>

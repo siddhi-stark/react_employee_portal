@@ -37,7 +37,7 @@ const EmployeeExitForm = (props) => {
 
   const items = props.data
     ? null
-    : [{ to: '/', label: 'Home' }, { label: 'Resignation' }];
+    : [{ to: '/', label: 'Home' }, { label: 'Resignation application' }];
   const validator = useRef(new SimpleReactValidator({}));
   const [count, forceUpdate] = useState(0);
 
@@ -102,7 +102,9 @@ const EmployeeExitForm = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return rowdata?.user?.relieving_date
+        return [2, 4].includes(rowdata?.resignation_status)
+          ? '-'
+          : rowdata?.user?.relieving_date
           ? customFunctions.getDMYDate(rowdata?.user?.relieving_date)
           : '-';
       },
@@ -244,7 +246,6 @@ const EmployeeExitForm = (props) => {
           {rowData && rowData?.length > 0 && (
             <div className="d-flex justify-content-end mb-3">
               {rowData?.[0]?.retain_status == null &&
-              rowData?.[0]?.buy_back_status == null &&
               rowData?.[0]?.resignation_status == 1 ? (
                 <Button
                   onClick={() => {
@@ -290,7 +291,7 @@ const EmployeeExitForm = (props) => {
                     <Row>
                       <Col>
                         <h6>
-                          Why you want to resign from Stark Digital Media
+                          Why do you want to resign from Stark Digital Media
                           Services Pvt Ltd?
                         </h6>
                       </Col>
@@ -315,7 +316,7 @@ const EmployeeExitForm = (props) => {
                       )}
                     />
                     <TextInput
-                      placeholder="Reason why you want to resign from stark digital..."
+                      placeholder="I want to resign because..."
                       label="Reason for resignation"
                       asterisk="*"
                       type="text"
@@ -341,7 +342,7 @@ const EmployeeExitForm = (props) => {
                           onClick={() => {
                             swal({
                               title: 'Are you sure?',
-                              text: 'You want to resign',
+                              text: 'You want to resign?',
                               icon: 'warning',
                               buttons: true,
                               dangerMode: true,
@@ -414,6 +415,8 @@ const EmployeeExitForm = (props) => {
                     )}
                   </Col>
                 )}
+              </Row>
+              <Row>
                 {rowData?.[0]?.buy_back_status != null && (
                   <Col className="d-flex justify-content-end">
                     <h6>Buy Back Status: </h6> &nbsp;

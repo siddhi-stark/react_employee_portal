@@ -333,82 +333,8 @@
         "fields": [],
         "optionCallback": "",
         "options": []
-      },
-      {
-        "name": "notice_period_start_date",
-        "type": "date",
-        "label": "Notice Period Start Date",
-        "id": "",
-        "placeholder": "",
-        "inputClass": "",
-        "containerClass": "",
-        "validations": [],
-        "displayWhen": {},
-        "haveValidations": "false",
-        "haveDisplayOptions": "false",
-        "callback": "",
-        "callbackUrl": "",
-        "inputToChange": "",
-        "minDateSelector": "",
-        "maxDateSelector": "",
-        "dateFormat": "dd/MM/yyyy",
-
-        "disabled": false,
-        "isMulti": false,
-        "allowedUsers": [],
-        "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
-        "fields": [],
-        "optionCallback": "",
-        "options": []
-      },
-      {
-        "name": "notice_period_end_date",
-        "type": "date",
-        "label": "Notice Period End Date",
-        "id": "",
-        "placeholder": "",
-        "inputClass": "",
-        "containerClass": "",
-        "validations": [
-          {
-            "type": "required",
-            "applyWhen": [
-              { "name": "notice_period_start_date", "value": "notice_period_start_date", "condition": "!empty" }
-            ],
-            "applyWhenRelation": "OR"
-          }
-        ],
-        "displayWhen": {
-          "conditions": [
-            { "name": "notice_period_start_date", "value": "notice_period_start_date", "condition": "!empty" }
-          ],
-          "displayWhenRelation": "OR"
-        },
-        "haveValidations": "true",
-        "haveDisplayOptions": "false",
-        "callback": "",
-        "callbackUrl": "",
-        "inputToChange": "",
-        "minDateSelector": "notice_period_start_date",
-        "maxDateSelector": "",
-        "dateFormat": "dd/MM/yyyy",
-
-        "disabled": false,
-        "isMulti": false,
-        "allowedUsers": [],
-        "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
-        "fields": [],
-        "optionCallback": "",
-        "options": []
       }
+    
     ],
     "allowedUsers": [],
     "sectionLayout": "3column"

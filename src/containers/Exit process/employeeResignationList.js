@@ -27,7 +27,7 @@ const EmployeeResignationList = (props) => {
 
   const items = props.data
     ? null
-    : [{ to: '/', label: 'Home' }, { label: 'Resignation Listing' }];
+    : [{ to: '/', label: 'Home' }, { label: 'Resignation applications' }];
 
   useEffect(() => {
     employeeResignationList();

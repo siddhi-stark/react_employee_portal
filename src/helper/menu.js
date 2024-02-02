@@ -80,7 +80,7 @@ const menu = [
 
       {
         title: 'Resignation Applications',
-        path: '/resignation-listing',
+        path: '/resignation-applications',
         icon: 'report.svg',
         submenu: [],
         roleaccess: [1, 2, 3, 5, 6],
