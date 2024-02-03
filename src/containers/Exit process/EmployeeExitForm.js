@@ -95,6 +95,20 @@ const EmployeeExitForm = (props) => {
       id: 'resignation_reason',
       label: 'Resignation Reason',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        console.log('🚀 ~ EmployeeExitForm ~ rowdata:', rowdata);
+        return rowdata?.resignation_reason.length > 15 ? (
+          <span title={rowdata?.resignation_reason}>
+            {' '}
+            {rowdata?.resignation_reason.slice(0, 15) + '' + '...'}
+          </span>
+        ) : (
+          <span title={rowdata?.resignation_reason}>
+            {rowdata?.resignation_reason}
+          </span>
+        );
+      },
     },
     {
       id: 'relieving_date',
@@ -224,6 +238,9 @@ const EmployeeExitForm = (props) => {
       }
     }
   };
+
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
 
   const isClear = () => {
     setShowError(false);
@@ -509,7 +526,7 @@ const EmployeeExitForm = (props) => {
                         name="startDate"
                         dateFormat="dd/MM/yyyy"
                         placeholder="Select buy back date"
-                        minDate={new Date()}
+                        minDate={currentDate}
                       />
                       {shoeError && !buyBackDate && (
                         <span style={{ color: 'red' }}>

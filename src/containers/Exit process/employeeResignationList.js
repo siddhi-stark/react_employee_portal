@@ -19,11 +19,18 @@ const EmployeeResignationList = (props) => {
   const navigate = useLocation();
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
+  console.log('🚀 ~ EmployeeResignationList ~ rowData:', rowData);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
     totalItems: 10,
   });
+
+  const [roleId, setRoleId] = useState();
+
+  useEffect(() => {
+    setRoleId(localStorage.getItem('group'));
+  }, []);
 
   const items = props.data
     ? null
@@ -31,7 +38,7 @@ const EmployeeResignationList = (props) => {
 
   useEffect(() => {
     employeeResignationList();
-  }, []);
+  }, [roleId]);
 
   const handleActionCallback = ({ id, createdDate, name }) => {
     const newDate = customFunctions.getDate(createdDate);
@@ -100,7 +107,16 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return `${rowdata.user.date_joined}`;
+        return customFunctions.getDMYDate(rowdata?.user?.date_joined);
+      },
+    },
+    {
+      id: 'created_at',
+      label: 'Resignation Date',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      render: (row) => {
+        const rowdata = row;
+        return customFunctions.getDMYDate(rowdata?.created_at);
       },
     },
     {
@@ -121,10 +137,12 @@ const EmployeeResignationList = (props) => {
       render: (row) => {
         const rowdata = row;
         return rowdata.resignation_status == '3'
-          ? 'Pending'
-          : rowdata.resignation_status == '2'
-          ? 'Decline'
-          : 'Approve';
+        ? 'Pending'
+        : rowdata.resignation_status == '2'
+        ? 'Declined'
+        : rowdata.resignation_status == '4'
+        ? 'Cancelled'
+        : 'Approved';
       },
     },
     {
@@ -146,7 +164,11 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return rowdata.user.relieving_date ? rowdata.user.relieving_date : '-';
+        return [2, 4].includes(rowdata?.resignation_status)
+          ? '-'
+          : rowdata?.user?.relieving_date
+          ? customFunctions.getDMYDate(rowdata?.user?.relieving_date)
+          : '-';
       },
     },
     {
@@ -164,6 +186,9 @@ const EmployeeResignationList = (props) => {
       sort_direction: 'descending',
       page: pageNo,
     };
+    if (roleId == '5') {
+      params.show_all = true;
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
