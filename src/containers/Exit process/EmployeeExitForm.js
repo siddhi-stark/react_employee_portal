@@ -97,7 +97,6 @@ const EmployeeExitForm = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        console.log('🚀 ~ EmployeeExitForm ~ rowdata:', rowdata);
         return rowdata?.resignation_reason.length > 15 ? (
           <span title={rowdata?.resignation_reason}>
             {' '}

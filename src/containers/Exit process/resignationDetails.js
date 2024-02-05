@@ -4,6 +4,7 @@ import {
   Helmet,
   DropdownInput,
   TextInput,
+  ModalInput,
   Datepicker,
 } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -17,11 +18,11 @@ import { withRouter, useHistory, useLocation } from 'react-router-dom';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import axios from 'axios';
-// import download1 from '../../../public/images/download1';
+import Form from 'react-bootstrap/Form';
 
 const ResignationDetails = (props) => {
-  const {match} = props
-  console.log("🚀 ~ ResignationDetails ~ props:", match?.params?.id)
+  const { match } = props;
+  console.log('🚀 ~ ResignationDetails ~ props:', match?.params?.id);
   const [pageTitle, setPageTitle] = useState('Resignation');
   const location = useLocation();
   const { state } = location;
@@ -32,7 +33,6 @@ const ResignationDetails = (props) => {
   const [rowData, setRowData] = useState([]);
   const [retainReason, setRetainReason] = useState('');
   const [roleId, setRoleId] = useState();
-  const [managerDeclineReason, setManagerDeclineReason] = useState('');
   const [approveReason, setApproveReason] = useState('');
   const [hrResignationReason, setHrResignationReason] = useState('');
   const [document, setDocument] = useState(null);
@@ -43,15 +43,16 @@ const ResignationDetails = (props) => {
   const [userId, setUserId] = useState();
   const [buyBackReason, setBuyBackReason] = useState('');
   const [shoeError, setShowError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const history = useHistory();
   const items = props.data
     ? null
     : [
-      { to: '/', label: 'Home' },
-      { to: '/resignation-applications', label: 'Resignation applications' },
-      { label: 'Applications details' },
-    ];
+        { to: '/', label: 'Home' },
+        { to: '/resignation-applications', label: 'Resignation applications' },
+        { label: 'Applications details' },
+      ];
 
   const [documentsList, setDocumentList] = useState([
     {
@@ -102,16 +103,13 @@ const ResignationDetails = (props) => {
   }, [match?.params?.id]);
 
   useEffect(() => {
-    if (
-      userId &&
-      roleId == '5'
-    ) {
+    if (userId && roleId == '5') {
       getUploadedDocuments();
     }
   }, [userId, roleId]);
 
   const getResignationDetails = async () => {
-    console.log("insideFunction");
+    console.log('insideFunction');
     setShowLoader(true);
     const endPoint = `${Api.getResignationListUrl}${match?.params?.id}`;
 
@@ -361,7 +359,6 @@ const ResignationDetails = (props) => {
 
     if (type == 'admin_retain') {
       if (status == 'accept_retain' && retainReason) {
-
         retainRequest(1);
       } else if (status == 'decline_retain' && retainReason) {
         retainRequest(2);
@@ -381,10 +378,11 @@ const ResignationDetails = (props) => {
     }
   };
 
-  const changeRelievingData = async (date) => {
+  const changeRelievingData = async () => {
     setShowLoader(true);
     const postData = {
-      relieving_date: customFunctions.getDate(date),
+      relieving_date: customFunctions.getDate(relievingDate),
+      relieving_date_update_reason: relievingDateReason,
     };
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
@@ -393,6 +391,26 @@ const ResignationDetails = (props) => {
       setShowLoader(false);
 
       swal('Relieving date changed successfully', '', 'success').then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const isRelived = async () => {
+    setShowLoader(true);
+    const postData = {
+      is_relived: true,
+    };
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+
+      swal('Employee release successfully', '', 'success').then(() => {
         window.location.reload();
       });
     } else {
@@ -487,8 +505,8 @@ const ResignationDetails = (props) => {
                         <td>
                           {rowData?.user?.relieving_date
                             ? customFunctions.getDMYDate(
-                              rowData?.user?.relieving_date
-                            )
+                                rowData?.user?.relieving_date
+                              )
                             : '-'}
                         </td>
                       </tr>
@@ -514,23 +532,23 @@ const ResignationDetails = (props) => {
               </Alert>
               {(rowData?.resign_remark ||
                 rowData?.resignation_decline_note) && (
-                  <div>
-                    <h6>
-                      <b>Remarks</b>
-                    </h6>
-                    <Alert className="" variant="secondary">
-                      <Alert.Heading>
-                        <h6>
-                          {rowData?.resign_remark
-                            ? rowData?.resign_remark
-                            : rowData?.resignation_decline_note
-                              ? rowData?.resignation_decline_note
-                              : ''}
-                        </h6>
-                      </Alert.Heading>
-                    </Alert>
-                  </div>
-                )}
+                <div>
+                  <h6>
+                    <b>Remarks</b>
+                  </h6>
+                  <Alert className="" variant="secondary">
+                    <Alert.Heading>
+                      <h6>
+                        {rowData?.resign_remark
+                          ? rowData?.resign_remark
+                          : rowData?.resignation_decline_note
+                          ? rowData?.resignation_decline_note
+                          : ''}
+                      </h6>
+                    </Alert.Heading>
+                  </Alert>
+                </div>
+              )}
               {rowData?.retain_status == '3' && (
                 <>
                   <h5 className="d-flex justify-content-start">
@@ -610,8 +628,8 @@ const ResignationDetails = (props) => {
                         {rowData?.retention_acceptance_reason
                           ? rowData?.retention_acceptance_reason
                           : rowData?.retention_decline_reason
-                            ? rowData?.retention_decline_reason
-                            : ''}
+                          ? rowData?.retention_decline_reason
+                          : ''}
                       </h6>
                     </Alert.Heading>
                   </Alert>
@@ -692,8 +710,8 @@ const ResignationDetails = (props) => {
                         {rowData?.buy_back_acceptance_reason
                           ? rowData?.buy_back_acceptance_reason
                           : rowData?.buy_back_decline_reason
-                            ? rowData?.buy_back_decline_reason
-                            : ''}
+                          ? rowData?.buy_back_decline_reason
+                          : ''}
                       </h6>
                     </Alert.Heading>
                   </Alert>
@@ -814,147 +832,186 @@ const ResignationDetails = (props) => {
 
             {/* Hr Resignation form  */}
 
-            {roleId == '5' &&
-              rowData?.resignation_status != 2 &&
-              rowData?.retain_status != 1 && (
-                <Row>
-                  <Col sm={6}>
-                    {rowData?.user?.relieving_date ==
-                      customFunctions.getDate(new Date()) && (
-                        <>
-                          <>
-                            <h5>Upload Exit Documents</h5>
-                            <Card>
-                              <Card.Body>
-                                {documentsList &&
-                                  documentsList.map((item, index) => (
-                                    <Row>
-                                      <Col sm={10}>
-                                        <ul>
-                                          <input
-                                            className=""
-                                            type={'checkbox'}
-                                            value={item?.isCheck}
-                                            checked={item?.isCheck}
-                                            id="flexCheckDefaultBeneficiary"
-                                            onChange={(e) => {
-                                              setDocumentSelected(true);
-                                              let temData = [];
-                                              documentsList &&
-                                                documentsList.map((dt, ind) => {
-                                                  if (dt?.isDiseable == true) {
-                                                    temData.push({
-                                                      ...dt,
-                                                    });
-                                                  } else {
-                                                    if (index == ind) {
-                                                      temData.push({
-                                                        name: dt.name,
-                                                        id: dt?.id,
-                                                        isCheck: true,
-                                                      });
-                                                      setSelectedDocument(dt?.id);
-                                                    } else {
-                                                      temData.push({
-                                                        name: dt.name,
-                                                        id: dt?.id,
-                                                        isCheck: false,
-                                                      });
-                                                    }
-                                                  }
-                                                });
-                                              setDocumentList(temData);
-                                              forceUpdate(count + 1);
-                                            }}
-                                            disabled={item?.isDiseable == true}
-                                          />{' '}
-                                          &nbsp;
-                                          {item?.name}
-                                        </ul>
-                                      </Col>
-                                      <Col sm={2}>
-                                        {item.isDiseable == true && (
-                                          <a href={item?.url} target="_blank">
-                                            <img
-                                              title="Download Image"
-                                              style={{ cursor: 'pointer' }}
-                                              src="/images/download1.svg"
-                                              alt="download-icon"
-                                            />
-                                          </a>
-                                        )}
-                                      </Col>
-                                    </Row>
-                                  ))}
-                              </Card.Body>
-                            </Card>
-                          </>
-                          <input
-                            className="mb-3"
-                            type="file"
-                            onChange={(e) => {
-                              setDocument(e.target.files[0]);
-                            }}
-                          />
-                          <Button
-                            onClick={(e) => {
-                              handleSubmit();
-                            }}
-                            disabled={!isDocumentSelected || document == null}
-                          >
-                            Upload
-                          </Button>
-                        </>
-                      )}
-                  </Col>
-                  <Col sm={6}>
-                    <h5>Relieving Date</h5>
-                    <Datepicker
-                      className="form-control"
-                      selected={relievingDate}
-                      onChange={(e) => {
-                        swal({
-                          title: 'Are you sure?',
-                          text: 'You want to change relieving date',
-                          icon: 'warning',
-                          buttons: true,
-                          dangerMode: true,
-                        }).then((willDelete) => {
-                          if (willDelete) {
-                            setRelievingDate(e);
-                            changeRelievingData(e);
-                          }
-                        });
-                      }}
-                      autoComplete="off"
-                      name="startDate"
-                      dateFormat="dd/MM/yyyy"
-                      placeholder="Select relieving date"
-                    // maxDate={new Date()}
-                    />
-                    {rowData?.resignation_status == '3' && (
+            {rowData?.resignation_status != 2 && rowData?.retain_status != 1 && (
+              <Row>
+                <Col sm={6}>
+                  {rowData?.user?.relieving_date ==
+                    customFunctions.getDate(new Date()) && (
+                    <>
                       <>
-                        <Row>
-                          <TextInput
-                            placeholder="Enter reason"
-                            type="text"
-                            as="textarea"
-                            rows="5"
-                            value={approveReason}
-                            onInputChange={(e) => {
-                              setApproveReason(e.target.value);
-                              setShowError(false);
-                            }}
-                          />
-                          {shoeError && (
-                            <span style={{ color: 'red' }}>
-                              Reason field is required
-                            </span>
-                          )}
-                        </Row>
+                        <h5>Upload Exit Documents</h5>
+                        <Card>
+                          <Card.Body>
+                            {documentsList &&
+                              documentsList.map((item, index) => (
+                                <Row>
+                                  <Col sm={10}>
+                                    <ul>
+                                      <input
+                                        className=""
+                                        type={'checkbox'}
+                                        value={item?.isCheck}
+                                        checked={item?.isCheck}
+                                        id="flexCheckDefaultBeneficiary"
+                                        onChange={(e) => {
+                                          setDocumentSelected(true);
+                                          let temData = [];
+                                          documentsList &&
+                                            documentsList.map((dt, ind) => {
+                                              if (dt?.isDiseable == true) {
+                                                temData.push({
+                                                  ...dt,
+                                                });
+                                              } else {
+                                                if (index == ind) {
+                                                  temData.push({
+                                                    name: dt.name,
+                                                    id: dt?.id,
+                                                    isCheck: true,
+                                                  });
+                                                  setSelectedDocument(dt?.id);
+                                                } else {
+                                                  temData.push({
+                                                    name: dt.name,
+                                                    id: dt?.id,
+                                                    isCheck: false,
+                                                  });
+                                                }
+                                              }
+                                            });
+                                          setDocumentList(temData);
+                                          forceUpdate(count + 1);
+                                        }}
+                                        disabled={item?.isDiseable == true}
+                                      />{' '}
+                                      &nbsp;
+                                      {item?.name}
+                                    </ul>
+                                  </Col>
+                                  <Col sm={2}>
+                                    {item.isDiseable == true && (
+                                      <a href={item?.url} target="_blank">
+                                        <img
+                                          title="Download Image"
+                                          style={{ cursor: 'pointer' }}
+                                          src="/images/download1.svg"
+                                          alt="download-icon"
+                                        />
+                                      </a>
+                                    )}
+                                  </Col>
+                                </Row>
+                              ))}
+                          </Card.Body>
+                        </Card>
                       </>
-                    )}
-                    {/* {rowData?.buy_back_status == '3' && (
+                      <input
+                        className="mb-3"
+                        type="file"
+                        onChange={(e) => {
+                          setDocument(e.target.files[0]);
+                        }}
+                      />
+                      <Button
+                        onClick={(e) => {
+                          handleSubmit();
+                        }}
+                        disabled={!isDocumentSelected || document == null}
+                      >
+                        Upload
+                      </Button>
+                    </>
+                  )}
+                </Col>
+                <Col sm={6}>
+                  {rowData?.resignation_status == 1 && (
+                    <>
+                      <h5>Relieving Date</h5>
+                      <TextInput
+                        label="Reason for relieving date"
+                        placeholder="Enter reason for changing relieving date..."
+                        asterisk="*"
+                        type="text"
+                        as="textarea"
+                        rows="3"
+                        value={relievingDateReason}
+                        onInputChange={(e) => {
+                          setRelievingDateReason(e.target.value);
+                        }}
+                      />
+                      <Datepicker
+                        className="form-control"
+                        label="Date"
+                        selected={relievingDate}
+                        onChange={(e) => {
+                          setRelievingDate(e);
+                        }}
+                        autoComplete="off"
+                        name="startDate"
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="Select relieving date"
+                        // maxDate={new Date()}
+                      />
+                      <Row>
+                        <Col>
+                          <Button
+                            className="mr-5 mb-3"
+                            disabled={!relievingDateReason}
+                            onClick={() => {
+                              swal({
+                                title: 'Are you sure?',
+                                text: 'You want to change relieving date',
+                                icon: 'warning',
+                                buttons: true,
+                                dangerMode: true,
+                              }).then((willDelete) => {
+                                if (willDelete) {
+                                  changeRelievingData();
+                                }
+                              });
+                            }}
+                          >
+                            Update
+                          </Button>
+                        </Col>
+                        <Col>
+                          {/* <Button variant="secondary">Cancel</Button> */}
+                        </Col>
+                      </Row>
+                    </>
+                  )}
+                  {rowData?.relieving_date_update_reason && (
+                    <Alert className="" variant="secondary">
+                      <Alert.Heading>
+                        <h6>{rowData?.relieving_date_update_reason}</h6>
+                      </Alert.Heading>
+                    </Alert>
+                  )}
+                  {rowData?.resignation_status == '3' && roleId == '5' && (
+                    <>
+                      <Row>
+                        <TextInput
+                          label="Resignation remark"
+                          placeholder="Enter reason"
+                          type="text"
+                          as="textarea"
+                          asterisk="*"
+                          rows="5"
+                          value={approveReason}
+                          onInputChange={(e) => {
+                            setApproveReason(e.target.value);
+                            setShowError(false);
+                          }}
+                        />
+                        {shoeError && (
+                          <span style={{ color: 'red' }}>
+                            Reason field is required
+                          </span>
+                        )}
+                      </Row>
+                    </>
+                  )}
+                  {/* {rowData?.buy_back_status == '3' && (
                     <TextInput
                       className="mt-5"
                       placeholder="Enter reason for relieving date"
@@ -968,37 +1025,94 @@ const ResignationDetails = (props) => {
                     />
                   )} */}
 
-                    <>
-                      {rowData?.resignation_status == '3' && (
-                        <>
-                          <Button
-                            className="mr-5 mb-3"
-                            onClick={() => {
-                              // resignationRequestHr(1);
-                              isValid('hr', 'approve_resign');
-                            }}
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            className="ml-5 mb-3"
-                            variant="secondary"
-                            onClick={() => {
-                              // resignationRequestHr(2);
-                              isValid('hr', 'decline_resign');
-                            }}
-                          >
-                            Decline
-                          </Button>
-                        </>
-                      )}
-                    </>
-                  </Col>
-                </Row>
-              )}
+                  <>
+                    {rowData?.resignation_status == '3' && roleId == '5' && (
+                      <>
+                        <Button
+                          className="mr-5 mb-3"
+                          onClick={() => {
+                            // resignationRequestHr(1);
+                            isValid('hr', 'approve_resign');
+                          }}
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          className="ml-5 mb-3"
+                          variant="secondary"
+                          onClick={() => {
+                            // resignationRequestHr(2);
+                            isValid('hr', 'decline_resign');
+                          }}
+                        >
+                          Decline
+                        </Button>
+                      </>
+                    )}
+                  </>
+                </Col>
+              </Row>
+            )}
           </Row>
+          {rowData?.user?.relieving_date ==
+            customFunctions.getDate(new Date()) && (
+            <Form>
+              {['checkbox'].map((type) => (
+                <div key={`default-${type}`} className="mb-3 mt-3 float-end">
+                  <Form.Check // prettier-ignore
+                    type={type}
+                    id={`default-${type}`}
+                    label={
+                      rowData?.user?.relieved == true
+                        ? 'Employee Relived'
+                        : `Click here to relived employee`
+                    }
+                    // value={item?.isCheck}
+                    disabled={rowData?.user?.relieved == true}
+                    checked={rowData?.user?.relieved == true}
+                    onChange={(e) => {
+                      swal({
+                        title: 'Are you sure?',
+                        text: 'You want to relive this employee',
+                        icon: 'warning',
+                        buttons: true,
+                        dangerMode: true,
+                      }).then((willDelete) => {
+                        if (willDelete) {
+                          isRelived();
+                        }
+                      });
+                    }}
+                  />
+                </div>
+              ))}
+            </Form>
+          )}
+
+          {/* {rowData?.user?.relieved == true &&
+          <div
+          className='float-end'
+          >
+          <h5>Employee Relived</h5>
+          </div>
+          } */}
         </Card.Body>
       </Card>
+
+      <ModalInput
+        size="md"
+        centered
+        show={showModal}
+        onHide={() => {
+          setShowModal(false), setShowError(false);
+          isClear();
+        }}
+        className="event-image-popup"
+        id="contained-modal-title-center"
+        modalHeaderClass="reson-text-title d-flex align-items-center"
+        // label={eventDetails.eventTitle}
+        modalBody={<div className=""></div>}
+      />
     </>
   );
 };

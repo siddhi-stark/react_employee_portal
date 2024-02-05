@@ -185,6 +185,8 @@ const EmployeeResignationList = (props) => {
     const params = {
       sort_direction: 'descending',
       page: pageNo,
+      show_all:true
+
     };
     if (roleId == '5') {
       params.show_all = true;
