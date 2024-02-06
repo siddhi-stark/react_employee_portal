@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Row, Col, Card, Button, Image } from 'react-bootstrap';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, DropdownInput } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
@@ -19,8 +19,14 @@ function NoticePeriodComponent() {
   const [isShowLoader, setShowLoader] = useState(false);
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const history = useHistory();
+  const [filterErr, setFilterErr] = useState('');
+  const [employeeList, setEmployeeList] = useState('');
+  const [selectedFilterEmployee, setSelectedFilterEmp] = useState();
+  const [positionArr, setPositionArr] = useState('');
+  const [position, setPosition] = useState('');
+  const [count, forceUpdate] = useState(0);
 
-  const getEmployee = async (pageNo = 1) => {
+  const getEmployee = async (pageNo = 1,filter) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
     const endPoint = `${Api.employeeUrl}`;
@@ -29,6 +35,10 @@ function NoticePeriodComponent() {
       notice_period: 'True',
       page,
     };
+    if (filter == 'filter') {
+      params.user_id = selectedFilterEmployee?.value;
+      params.designation_id = position?.value;
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
@@ -49,22 +59,26 @@ function NoticePeriodComponent() {
 
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
+      `${Api.employeeUrl}?notice_period=True&type=all`
     );
-
-    const dpOptions =
-      (await data) &&
+    const dpOptions = [];
+    data &&
       data.data.length > 0 &&
       data.data.map((op) => {
-        return { label: op.full_name, value: op.id };
+        console.log('🚀 ~ data.data.map ~ op:', op);
+        if ([1].includes(op.role_id)) return;
+        dpOptions.push({ label: op.full_name, value: op.id });
       });
+    setEmployeeList(dpOptions);
     options.employee = dpOptions;
     const allOptions = options;
-    await updateOptions({ ...allOptions });
+    updateOptions({ ...allOptions });
   };
 
   const getPosition = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.designationUrl}?type=all`
+    );
     if (!data) {
       return;
     }
@@ -75,16 +89,126 @@ function NoticePeriodComponent() {
       data.data.map((op) => {
         return { label: op.name, value: op.id };
       });
+    setPositionArr(dpOptions);
+    // await updateOptions({ ...allOptions });
+  };
 
-    options.position = dpOptions;
-    const allOptions = options;
-    await updateOptions({ ...allOptions });
+  const filterSearch = (e) => {
+    let filterSearchErr = '';
+    let isValid = true;
+    if (
+      customFunctions.checkIfEmpty(selectedFilterEmployee) &&
+      customFunctions.checkIfEmpty(position)
+      // customFunctions.checkIfEmpty(designationValues)
+    ) {
+      filterSearchErr = 'Please select name or select position';
+      setFilterErr(filterSearchErr);
+      isValid = false;
+    }
+    if (isValid) {
+      setFilterErr('');
+      getEmployee(1, 'filter');
+    }
+  };
+
+  const isClear = () => {
+    setFilterErr('');
+    setPosition('');
+    setEmployee([]);
+    setSelectedFilterEmp('');
+    forceUpdate(count + 1);
+    // getEmployeeName();
+    getEmployee();
+    // onClearemp();
   };
 
   return (
     <>
       <Helmet title={title} />
       <Loader showLoader={isShowLoader} needFullPage={false} />
+
+      <section>
+        <Card className="mt-3">
+          <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+            </div>
+            {filterErr && (
+              <div className="p-3  bg-danger text-white bg-danger-main table-red-bg mb-3">
+                <div className="img-text">
+                  <img
+                    style={{ cursor: 'pointer' }}
+                    onClick={(e) => isClear(e)}
+                    src="/images/fail.svg"
+                    alt="Success"
+                  />{' '}
+                  {filterErr}
+                </div>
+              </div>
+            )}
+            <div>
+              <Row className="mt-3">
+                <Col sm={6}>
+                  <DropdownInput
+                    id="degignation"
+                    placeholder="Select Employee"
+                    options={employeeList}
+                    defaultValue={selectedFilterEmployee}
+                    onSelectHandler={(select) => {
+                      setSelectedFilterEmp(select);
+                    }}
+                    isClearable={true}
+                  />
+                </Col>
+                <Col sm={6}>
+                  <DropdownInput
+                    id="degignation"
+                    // label="Select employee"
+                    // asterisk="*"
+                    placeholder="Select Position"
+                    options={positionArr}
+                    defaultValue={position}
+                    onSelectHandler={(select) => {
+                      setPosition(select);
+                      // setPosition(positionArr)
+                    }}
+                    isClearable={true}
+                    // errorMessage={validator.current.message(
+                    //   'Designation',
+                    //   joiningDetails.designation,
+                    //   'required'
+                    // )}
+                  />
+                </Col>
+                <Row>
+                  <Col>
+                    <Button
+                      variant="primary"
+                      className="ms-4"
+                      onClick={() => {
+                        filterSearch();
+                      }}
+                    >
+                      Apply
+                    </Button>
+
+                    <Button
+                      variant="secondary"
+                      className="ms-4"
+                      onClick={() => {
+                        isClear();
+                      }}
+                    >
+                      Clear
+                    </Button>
+                  </Col>
+                </Row>
+              </Row>
+            </div>
+          </Card.Body>
+        </Card>
+      </section>
+
       <section className="content-area">
         <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
           {employee &&
@@ -130,10 +254,13 @@ function NoticePeriodComponent() {
                               emp.confirmation_date
                             )}`}
                           {emp.confirmation_date && <br />}
-                          {emp.relieved === false ?
-                            `Expected Relieving Date- ${customFunctions.getDMYDate(
-                              emp.last_working_date
-                            )}` : `Relieving Date-${customFunctions.getDMYDate(emp.relieving_date)}`}
+                          {emp.relieved === false
+                            ? `Relieving Date- ${customFunctions.getDMYDate(
+                                emp.relieving_date
+                              )}`
+                            : `Relieving Date-${customFunctions.getDMYDate(
+                                emp.relieving_date
+                              )}`}
                           {emp.relieving_date && <br />}
                         </p>{' '}
                         <br />

@@ -261,7 +261,7 @@ function OldEmployee() {
                             }
                             alt="Card image cap"
                           />
-                          {emp.on_notice_period === true && (
+                          {emp.on_notice_period === true && emp?.relieved == false &&  (
                             <span className="np-sup">NP</span>
                           )}
                         </span>

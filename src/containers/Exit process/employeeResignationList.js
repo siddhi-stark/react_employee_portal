@@ -19,7 +19,6 @@ const EmployeeResignationList = (props) => {
   const navigate = useLocation();
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
-  console.log('🚀 ~ EmployeeResignationList ~ rowData:', rowData);
   const [pagination, setPagination] = useState({
     current_page: 1,
     itemsPerPage: 10,
@@ -172,8 +171,8 @@ const EmployeeResignationList = (props) => {
       },
     },
     {
-      id: 'relivingDate',
-      label: 'Reliving Date',
+      id: 'relievingDate',
+      label: 'Relieving Date',
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
