@@ -158,11 +158,17 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return rowdata?.resign_remark
-          ? rowdata?.resign_remark.slice(0, 15) + '' + '..'
-          : rowdata?.retention_decline_reason
-          ? rowdata?.retention_decline_reason.slice(0, 15) + '' + '...'
-          : '-';
+        return rowdata?.resign_remark ? (
+          <span title={rowdata?.resign_remark}>
+            {rowdata?.resign_remark.slice(0, 15) + '' + '..'}
+          </span>
+        ) : rowdata?.retention_decline_reason ? (
+          <span title={rowdata?.retention_decline_reason}>
+            {rowdata?.retention_decline_reason.slice(0, 15) + '' + '...'}
+          </span>
+        ) : (
+          '-'
+        );
       },
     },
     {
@@ -235,9 +241,7 @@ const EmployeeResignationList = (props) => {
       <Card>
         <Card.Body>
           <div className="d-flex align-items-center justify-content-between">
-            <h5 className="card-title mb-0 mt-2 ">
-              Applications List{' '}
-            </h5>
+            <h5 className="card-title mb-0 mt-2 ">Applications List </h5>
           </div>
           <hr />
           <Row>

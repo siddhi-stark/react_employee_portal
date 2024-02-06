@@ -81,8 +81,16 @@ function Sidebar() {
   useEffect(() => {
     const LoginToken = customFunctions.getLocalStorage('access_token');
     if (LoginToken) {
-      getBirthday();
-      getEvents();
+      // if (
+      //   ![
+      //     '/resignation-applications',
+      //     '/resignation-details/:id',
+      //     '/accountant-add-leaves',
+      //   ].includes(history?.location?.pathname)
+      // ) {
+        getBirthday();
+        getEvents();
+      // }
     }
 
     document.addEventListener('MenuChange', () => {

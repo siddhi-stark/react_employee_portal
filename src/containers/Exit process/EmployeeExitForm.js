@@ -60,7 +60,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'emp_code',
       label: 'Employee Id',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
       // isDisplay: false,
       render: (row) => {
         const rowdata = row;
@@ -70,7 +70,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'resignation_status',
       label: 'Resignation Status',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
       render: (row) => {
         const rowdata = row;
         return rowdata.resignation_status == '3'
@@ -85,7 +85,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'date_joined',
       label: 'Joining Date',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
       render: (row) => {
         const rowdata = row;
         return customFunctions.getDMYDate(rowdata.user.date_joined);
@@ -94,7 +94,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'resignation_reason',
       label: 'Resignation Reason',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
       render: (row) => {
         const rowdata = row;
         return rowdata?.resignation_reason.length > 15 ? (
@@ -112,7 +112,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'relieving_date',
       label: 'Relieving Date',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
       render: (row) => {
         const rowdata = row;
         return [2, 4].includes(rowdata?.resignation_status)
