@@ -928,7 +928,7 @@ const ResignationDetails = (props) => {
                     <>
                       <h5>Relieving Date</h5>
                       <TextInput
-                        label="Reason for relieving date"
+                        label=" Reason to update relieving date"
                         placeholder="Enter reason for changing relieving date..."
                         asterisk="*"
                         type="text"
@@ -1064,8 +1064,8 @@ const ResignationDetails = (props) => {
                     id={`default-${type}`}
                     label={
                       rowData?.user?.relieved == true
-                        ? 'Employee Relived'
-                        : `Click here to relived employee`
+                        ? 'Employee Relieved'
+                        : `Click here to relieved employee`
                     }
                     // value={item?.isCheck}
                     disabled={rowData?.user?.relieved == true}

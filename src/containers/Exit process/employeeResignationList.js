@@ -125,9 +125,16 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return rowdata.resignation_reason.length > 15
-          ? rowdata.resignation_reason.slice(0, 15) + '' + '...'
-          : rowdata.resignation_reason;
+        return rowdata?.resignation_reason.length > 15 ? (
+          <span title={rowdata?.resignation_reason}>
+            {' '}
+            {rowdata?.resignation_reason.slice(0, 15) + '' + '...'}
+          </span>
+        ) : (
+          <span title={rowdata?.resignation_reason}>
+            {rowdata?.resignation_reason}
+          </span>
+        );
       },
     },
     {
@@ -137,12 +144,12 @@ const EmployeeResignationList = (props) => {
       render: (row) => {
         const rowdata = row;
         return rowdata.resignation_status == '3'
-        ? 'Pending'
-        : rowdata.resignation_status == '2'
-        ? 'Declined'
-        : rowdata.resignation_status == '4'
-        ? 'Cancelled'
-        : 'Approved';
+          ? 'Pending'
+          : rowdata.resignation_status == '2'
+          ? 'Declined'
+          : rowdata.resignation_status == '4'
+          ? 'Cancelled'
+          : 'Approved';
       },
     },
     {
@@ -185,8 +192,7 @@ const EmployeeResignationList = (props) => {
     const params = {
       sort_direction: 'descending',
       page: pageNo,
-      show_all:true
-
+      show_all: true,
     };
     if (roleId == '5') {
       params.show_all = true;
@@ -230,7 +236,7 @@ const EmployeeResignationList = (props) => {
         <Card.Body>
           <div className="d-flex align-items-center justify-content-between">
             <h5 className="card-title mb-0 mt-2 ">
-              List Of Resigned Employees{' '}
+              Applications List{' '}
             </h5>
           </div>
           <hr />
