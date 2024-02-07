@@ -23,3 +23,16 @@ display: none;
   background-color: #2D2E61;
   color: #ffffff;
 }
+.bracket-round {
+  border: 2px solid #212529;
+  border-top: 0;
+  border-bottom: 0;
+  padding: 0 20px;
+  margin: 0 10px;
+}
+.bracket-round p {
+  margin-bottom: 0;
+}
+.bracket-round .minus-value {
+  margin-right: 10px;
+}

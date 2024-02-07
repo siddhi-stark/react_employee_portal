@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
@@ -80,7 +81,11 @@ const PerformanceReport = () => {
     if (data && data?.success) {
       const allemp = [];
       data?.data?.map((item) => {
-        return allemp.push({ label: item?.full_name, value: item?.id, joiningDate: item?.date_joined });
+        return allemp.push({
+          label: item?.full_name,
+          value: item?.id,
+          joiningDate: item?.date_joined,
+        });
       });
       setAllEmployes(allemp || '');
     } else {
@@ -112,15 +117,16 @@ const PerformanceReport = () => {
       setShowLoader(false);
       setSelectedEmployeeData(data?.data);
 
-      const incompletedtask =
-        data?.data?.total_allocated_tasks - data?.data?.total_completed_tasks;
+      const incompletedtask = data?.data?.total_reopen_count;
+      // - data?.data?.total_task_completed_count;
 
       setGraphData({
+        labels: ['Completed Tasks', ' Completed bugs', 'Total reopen '],
         datasets: [
           {
             data: [
-              data?.data?.total_completed_tasks,
-              data?.data?.total_overdue,
+              data?.data?.total_task_completed_count,
+              data?.data?.total_bug_completed_count,
               incompletedtask,
             ],
             backgroundColor: ['#8cc540', '#FFC107', '#FF0000'],
@@ -200,7 +206,7 @@ const PerformanceReport = () => {
                               setSelectedEmployeeId(select?.value);
                               setJoingDate(select?.joiningDate);
                             }}
-                          // isMulti
+                            // isMulti
                           />
                         </div>
                       </Col>
@@ -261,15 +267,21 @@ const PerformanceReport = () => {
               </Card.Body>
             </Card>
           </Row>
-          {selectedEmployeeData &&
+          {selectedEmployeeData && (
             <Row>
               <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">
-                  Employee Performance Report of {selectedEmployee ? customFunctions.capitalizeFirstLetter(selectedEmployee?.label) : null}
+                  Employee Performance Report of{' '}
+                  {selectedEmployee
+                    ? customFunctions.capitalizeFirstLetter(
+                        selectedEmployee?.label
+                      )
+                    : null}
                 </h5>
               </div>
               <hr />
-            </Row>}
+            </Row>
+          )}
           {selectedEmployeeData ? (
             <div className="row align-items-center">
               <div className="col-xl-5 col-lg-6">
@@ -287,18 +299,25 @@ const PerformanceReport = () => {
                           Quality
                         </h5>
                         <h3 className="mt-3 mb-3">
-                          {Math.round(selectedEmployeeData?.quality) ? Math.round(selectedEmployeeData?.quality) : 0}%
+                          {selectedEmployeeData?.new_quality_formula
+                            ? selectedEmployeeData?.new_quality_formula
+                            : 0}
+                          %
                         </h3>
                         <p className="mb-0 text-muted">
                           <span
                             className={
-                              Math.round(selectedEmployeeData?.quality) > 80
+                              Math.round(
+                                selectedEmployeeData?.new_quality_formula
+                              ) > 80
                                 ? 'text-success me-2'
                                 : 'text-danger me-2'
                             }
                           >
                             <i className="mdi mdi-arrow-down-bold" />{' '}
-                            {Math.round(selectedEmployeeData?.quality) > 80
+                            {Math.round(
+                              selectedEmployeeData?.new_quality_formula
+                            ) > 80
                               ? 'Good Keep It Up'
                               : 'Need Improvment'}
                           </span>
@@ -320,18 +339,23 @@ const PerformanceReport = () => {
                         </h5>
 
                         <h3 className="mt-3 mb-3">
-                          {selectedEmployeeData?.time_efficiency > 0 ? selectedEmployeeData?.time_efficiency : 0}%
+                          {selectedEmployeeData?.total_time_efficiency_based_on_minutes_in_per
+                            ? selectedEmployeeData?.total_time_efficiency_based_on_minutes_in_per
+                            : 0}
+                          %
                         </h3>
                         <p className="mb-0">
                           <span
                             className={
-                              selectedEmployeeData?.time_efficiency > 80
+                              selectedEmployeeData?.total_time_efficiency_based_on_minutes_in_per >
+                              80
                                 ? 'text-dark me-2'
                                 : 'text-warning me-2'
                             }
                           >
                             <i className="mdi mdi-arrow-down-bold" />{' '}
-                            {selectedEmployeeData?.time_efficiency > 80
+                            {selectedEmployeeData?.total_time_efficiency_based_on_minutes_in_per >
+                            80
                               ? 'Keep it up'
                               : 'Need to improve'}
                           </span>
@@ -351,15 +375,20 @@ const PerformanceReport = () => {
                           className="text-white fw-normal mt-0"
                           title="Number of Customers"
                         >
-                          Total Tasks Allocated
+                          Total Tasks and Bugs
                         </h5>
                         <h3 className="mt-3 mb-3">
-                          {selectedEmployeeData?.total_allocated_tasks ? selectedEmployeeData?.total_allocated_tasks : 0}
+                          {selectedEmployeeData?.total_allocated_tasks
+                            ? selectedEmployeeData?.total_allocated_tasks
+                            : 0}
                         </h3>
                         <p className="mb-0 text-white">
                           <span className="text-white me-2">
                             <i className="mdi mdi-arrow-up-bold" />{' '}
-                            {Math.round(totalCompletedPercentage) > 0 ? Math.round(totalCompletedPercentage) : 0}%
+                            {Math.round(totalCompletedPercentage) > 0
+                              ? Math.round(totalCompletedPercentage)
+                              : 0}
+                            %
                           </span>
                           <span className="text-nowrap">Completed</span>
                         </p>
@@ -376,17 +405,31 @@ const PerformanceReport = () => {
                           className="text-white fw-normal mt-0"
                           title="Growth"
                         >
-                          Reported Bug count
+                          Productivity
                         </h5>
                         <h3 className="mt-3 mb-3">
-                          {selectedEmployeeData?.total_bug_count > 0 ? selectedEmployeeData?.total_bug_count : 0}
+                          {selectedEmployeeData?.productivity
+                            ? selectedEmployeeData?.productivity
+                            : 0}
+                          %
                         </h3>
-                        <p className="mb-0">
-                          <span className="text-success me-2">
-                            <i className="mdi mdi-arrow-up-bold" />
-                            {/* {selectedEmployeeData?.total_bug_count > 0 ? selectedEmployeeData?.total_bug_count : 0} */}
+                        <p className="mb-0 text-muted">
+                          <span
+                            className={
+                              Math.round(
+                                selectedEmployeeData?.productivity
+                              ) > 80
+                                ? 'text-success me-2'
+                                : 'text-danger me-2'
+                            }
+                          >
+                            <i className="mdi mdi-arrow-down-bold" />{' '}
+                            {Math.round(
+                              selectedEmployeeData?.productivity
+                            ) > 80
+                              ? 'Good Keep It Up'
+                              : 'Need Improvment'}
                           </span>
-                          <span className="text-nowrap" />
                         </p>
                       </div>
                     </div>
@@ -400,7 +443,7 @@ const PerformanceReport = () => {
                       <h4 className="header-title">Projections Vs Actuals</h4>
                     </div> */}
                   <div className="card-body">
-                    {selectedEmployeeData?.total_task_count > 0 ?
+                    {selectedEmployeeData?.total_task_count > 0 ? (
                       <Row>
                         <h5 className="text-center">Performance Effeciency</h5>
                         <Col sm={5}>
@@ -409,46 +452,155 @@ const PerformanceReport = () => {
                           )}
                         </Col>
                         <Col
-                          sm={5}
-                          className="d-flex flex-column align-items-center justify-content-center"
+                          sm={7}
+                          className="d-flex flex-column justify-content-center"
                         >
-                          <div className="d-flex flex-row">
+                          <div className="d-flex justify-content-start align-items-start">
                             <p
                               className="badge rounded-pill"
                               style={{ backgroundColor: '#8cc540' }}
                             >
                               &nbsp;
                             </p>
-                            &nbsp; Completed tasks{' '}
-                            {selectedEmployeeData?.total_completed_tasks ? selectedEmployeeData?.total_completed_tasks : 0}
+                            &nbsp; Total tasks count:{' '}
+                            {selectedEmployeeData?.total_task_count
+                              ? selectedEmployeeData?.total_task_count
+                              : 0}
                           </div>
-                          <div className="d-flex flex-row">
+                          <ul>
+                            <li>
+                              Completed Task:{' '}
+                              {selectedEmployeeData?.total_task_completed_count}
+                            </li>
+                            <li>
+                              Incompleted Task:{' '}
+                              {
+                                selectedEmployeeData?.total_task_incomplete_count
+                              }
+                            </li>
+                          </ul>
+
+                          <div className="d-flex justify-content-start align-items-start">
                             <p
                               className="badge rounded-pill"
                               style={{ backgroundColor: '#FFC107' }}
                             >
                               &nbsp;
                             </p>
-                            &nbsp; Overdue task{' '}
-                            {selectedEmployeeData?.total_overdue > 0 ? selectedEmployeeData?.total_overdue : 0}
+                            &nbsp; Total bug count:{' '}
+                            {selectedEmployeeData?.total_bug_count > 0
+                              ? selectedEmployeeData?.total_bug_count
+                              : 0}
                           </div>
-                          <div className="d-flex flex-row">
+                          <ul>
+                            <li>
+                              Completed Bugs:{' '}
+                              {selectedEmployeeData?.total_bug_completed_count}
+                            </li>
+                            <li>
+                              Incompleted Bugs:{' '}
+                              {selectedEmployeeData?.total_bug_incomplete_count}
+                            </li>
+                          </ul>
+
+                          <div className="d-flex justify-content-start align-items-start">
                             <p
                               className="badge rounded-pill"
                               style={{ backgroundColor: '#FF0000' }}
                             >
                               &nbsp;
                             </p>
-                            &nbsp; Incompleted tasks{' '}
-                            {selectedEmployeeData?.total_allocated_tasks -
-                              selectedEmployeeData?.total_completed_tasks > 0 ? selectedEmployeeData?.total_allocated_tasks -
-                            selectedEmployeeData?.total_completed_tasks : 0}
+                            &nbsp; Total reopen count:{' '}
+                            {selectedEmployeeData?.total_reopen_count
+                              ? selectedEmployeeData?.total_reopen_count
+                              : 0}
                           </div>
+                          <ul>
+                            <li>
+                              Completed:{' '}
+                              {
+                                selectedEmployeeData?.total_reopen_completed_count
+                              }
+                            </li>
+                            <li>
+                              Incompleted:{' '}
+                              {
+                                selectedEmployeeData?.total_reopen_incomplete_count
+                              }
+                            </li>
+                          </ul>
                         </Col>
                       </Row>
-                      : 'No task performed during this time'}
+                    ) : (
+                      'No task performed during this time'
+                    )}
                   </div>
                 </div>
+              </div>
+              <hr />
+              <div className="col-lg-12">
+                <Row className="justify-content-center">
+                  <Col md="6">
+                    <Card className="shadow">
+                      <Card.Body className="p-4 text-center">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <h4 className="mb-0">Time Efficiency =</h4>
+                          <p className="mb-0 mx-2">
+                            <span className="d-block border-bottom border-1 border-dark">
+                              Total Completed Task Time
+                            </span>
+                            <span className="d-block">
+                              Total Given Task Time
+                            </span>
+                          </p>
+                          <h4 className="mb-0">X 100</h4>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col md="6">
+                    <Card className="shadow">
+                      <Card.Body className="p-4 text-center">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <span className="mb-0">Quality = </span>
+                          <div className="rounded-pill bracket-round d-flex align-items-center">
+                            <span className="minus-value">1 -</span>
+                            <p>
+                              <span className="d-block border-bottom border-1 border-dark">
+                                (Number Of Bugs + Number Of Reopen )
+                              </span>
+                              <span className="d-block">
+                                Number Of Completed Task
+                              </span>
+                            </p>
+                          </div>
+                          <h4 className="mb-0">X 100</h4>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col md="9">
+                    <Card className="shadow">
+                      <Card.Body className="p-4 text-center">
+                        <div className="d-flex align-items-center justify-content-center">
+                          <span className="mb-0">Productivity = </span>
+                          <div className="rounded-pill bracket-round d-flex align-items-center">
+                            {/* <span className="minus-value">1 -</span> */}
+                            <p>
+                              <span className="d-block border-bottom border-1 border-dark">
+                                Number of Completed Tasks - (Number Of Bugs + Number Of Reopen )
+                              </span>
+                              <span className="d-block">
+                                Number Of Assigned Task
+                              </span>
+                            </p>
+                          </div>
+                          <h4 className="mb-0">X 100</h4>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
               </div>
             </div>
           ) : null}
