@@ -22,7 +22,6 @@ const PerformanceReport = () => {
   const [filterErr, setFilterErr] = useState('');
   const [title, setTitle] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
-  // console.log('selectedEmployee', selectedEmployee);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
   const [selectedEmployeeData, setSelectedEmployeeData] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
@@ -31,13 +30,11 @@ const PerformanceReport = () => {
   const [graphData, setGraphData] = useState([]);
   const [totalCompletedPercentage, setTotalCompletedPercentage] =
     useState(null);
-  // console.log('joiningDate', joiningDate);
 
   const filterSearch = (e) => {
     e.preventDefault();
     let filterSearchErr = '';
     let isValid = true;
-    // console.log('customFunctions.checkIfEmpty(selectedEmployee)', customFunctions.checkIfEmpty(selectedEmployee));
     if (
       customFunctions.checkIfEmpty(selectedEmployee) &&
       customFunctions.checkIfEmpty(fromDate) &&
@@ -416,17 +413,14 @@ const PerformanceReport = () => {
                         <p className="mb-0 text-muted">
                           <span
                             className={
-                              Math.round(
-                                selectedEmployeeData?.productivity
-                              ) > 80
+                              Math.round(selectedEmployeeData?.productivity) >
+                              80
                                 ? 'text-success me-2'
                                 : 'text-danger me-2'
                             }
                           >
                             <i className="mdi mdi-arrow-down-bold" />{' '}
-                            {Math.round(
-                              selectedEmployeeData?.productivity
-                            ) > 80
+                            {Math.round(selectedEmployeeData?.productivity) > 80
                               ? 'Good Keep It Up'
                               : 'Need Improvment'}
                           </span>
@@ -455,80 +449,98 @@ const PerformanceReport = () => {
                           sm={7}
                           className="d-flex flex-column justify-content-center"
                         >
-                          <div className="d-flex justify-content-start align-items-start">
-                            <p
-                              className="badge rounded-pill"
-                              style={{ backgroundColor: '#8cc540' }}
-                            >
-                              &nbsp;
-                            </p>
-                            &nbsp; Total tasks count:{' '}
-                            {selectedEmployeeData?.total_task_count
-                              ? selectedEmployeeData?.total_task_count
-                              : 0}
-                          </div>
-                          <ul>
-                            <li>
-                              Completed Task:{' '}
-                              {selectedEmployeeData?.total_task_completed_count}
-                            </li>
-                            <li>
-                              Incompleted Task:{' '}
-                              {
-                                selectedEmployeeData?.total_task_incomplete_count
-                              }
-                            </li>
-                          </ul>
+                          {selectedEmployeeData?.total_task_count && (
+                            <>
+                              <div className="d-flex justify-content-start align-items-start">
+                                <p
+                                  className="badge rounded-pill"
+                                  style={{ backgroundColor: '#8cc540' }}
+                                >
+                                  &nbsp;
+                                </p>
+                                &nbsp; Total tasks count:{' '}
+                                {selectedEmployeeData?.total_task_count
+                                  ? selectedEmployeeData?.total_task_count
+                                  : 0}
+                              </div>
+                              <ul>
+                                <li>
+                                  Completed Task:{' '}
+                                  {
+                                    selectedEmployeeData?.total_task_completed_count
+                                  }
+                                </li>
+                                <li>
+                                  Incompleted Task:{' '}
+                                  {
+                                    selectedEmployeeData?.total_task_incomplete_count
+                                  }
+                                </li>
+                              </ul>
+                            </>
+                          )}
 
-                          <div className="d-flex justify-content-start align-items-start">
-                            <p
-                              className="badge rounded-pill"
-                              style={{ backgroundColor: '#FFC107' }}
-                            >
-                              &nbsp;
-                            </p>
-                            &nbsp; Total bug count:{' '}
-                            {selectedEmployeeData?.total_bug_count > 0
-                              ? selectedEmployeeData?.total_bug_count
-                              : 0}
-                          </div>
-                          <ul>
-                            <li>
-                              Completed Bugs:{' '}
-                              {selectedEmployeeData?.total_bug_completed_count}
-                            </li>
-                            <li>
-                              Incompleted Bugs:{' '}
-                              {selectedEmployeeData?.total_bug_incomplete_count}
-                            </li>
-                          </ul>
+                          {selectedEmployeeData?.total_bug_count > 0 && (
+                            <>
+                              <div className="d-flex justify-content-start align-items-start">
+                                <p
+                                  className="badge rounded-pill"
+                                  style={{ backgroundColor: '#FFC107' }}
+                                >
+                                  &nbsp;
+                                </p>
+                                &nbsp; Total bug count:{' '}
+                                {selectedEmployeeData?.total_bug_count > 0
+                                  ? selectedEmployeeData?.total_bug_count
+                                  : 0}
+                              </div>
+                              <ul>
+                                <li>
+                                  Completed Bugs:{' '}
+                                  {
+                                    selectedEmployeeData?.total_bug_completed_count
+                                  }
+                                </li>
+                                <li>
+                                  Incompleted Bugs:{' '}
+                                  {
+                                    selectedEmployeeData?.total_bug_incomplete_count
+                                  }
+                                </li>
+                              </ul>
+                            </>
+                          )}
 
-                          <div className="d-flex justify-content-start align-items-start">
-                            <p
-                              className="badge rounded-pill"
-                              style={{ backgroundColor: '#FF0000' }}
-                            >
-                              &nbsp;
-                            </p>
-                            &nbsp; Total reopen count:{' '}
-                            {selectedEmployeeData?.total_reopen_count
-                              ? selectedEmployeeData?.total_reopen_count
-                              : 0}
-                          </div>
-                          <ul>
-                            <li>
-                              Completed:{' '}
-                              {
-                                selectedEmployeeData?.total_reopen_completed_count
-                              }
-                            </li>
-                            <li>
-                              Incompleted:{' '}
-                              {
-                                selectedEmployeeData?.total_reopen_incomplete_count
-                              }
-                            </li>
-                          </ul>
+                          {selectedEmployeeData?.total_reopen_count > 0 && (
+                            <>
+                              <div className="d-flex justify-content-start align-items-start">
+                                <p
+                                  className="badge rounded-pill"
+                                  style={{ backgroundColor: '#FF0000' }}
+                                >
+                                  &nbsp;
+                                </p>
+                                &nbsp; Total reopen count:{' '}
+                                {selectedEmployeeData?.total_reopen_count
+                                  ? selectedEmployeeData?.total_reopen_count
+                                  : 0}
+                              </div>
+                              <ul>
+                                <li>
+                                  Completed:{' '}
+                                  {
+                                    selectedEmployeeData?.total_reopen_completed_count
+                                  }
+                                </li>
+                                <li>
+                                  Incompleted:{' '}
+                                  {
+                                    selectedEmployeeData?.total_reopen_incomplete_count
+                                  }
+                                </li>
+                              </ul>
+                            </>
+                          )}
                         </Col>
                       </Row>
                     ) : (
@@ -588,7 +600,8 @@ const PerformanceReport = () => {
                             {/* <span className="minus-value">1 -</span> */}
                             <p>
                               <span className="d-block border-bottom border-1 border-dark">
-                                Number of Completed Tasks - (Number Of Bugs + Number Of Reopen )
+                                Number of Completed Tasks - (Number Of Bugs +
+                                Number Of Reopen )
                               </span>
                               <span className="d-block">
                                 Number Of Assigned Task
