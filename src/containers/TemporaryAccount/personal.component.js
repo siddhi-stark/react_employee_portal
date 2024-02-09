@@ -322,10 +322,14 @@ function Personal(props) {
         },
       ],
     };
-    const callback = AuthApi.postDataToServer;
-    const endPoint = `${Api.postDocumentData}`;
-
-    const { data, message } = await callback(endPoint, postData);
+    // const callback = AuthApi.postDataToServer;
+    const url = `${Api.postDocumentData}`;
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+    const { data, message } = await axios.post(url, postData, {
+      headers: headers,
+    });
     if (data && data.success == true) {
       setShowLoader(false);
       swal(data && data.message[0], '', 'success').then(() => {});
