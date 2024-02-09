@@ -449,7 +449,7 @@ const PerformanceReport = () => {
                           sm={7}
                           className="d-flex flex-column justify-content-center"
                         >
-                          {selectedEmployeeData?.total_task_count && (
+                          {/* {selectedEmployeeData?.total_task_count && ( */}
                             <>
                               <div className="d-flex justify-content-start align-items-start">
                                 <p
@@ -463,7 +463,7 @@ const PerformanceReport = () => {
                                   ? selectedEmployeeData?.total_task_count
                                   : 0}
                               </div>
-                              <ul>
+                              {/* <ul>
                                 <li>
                                   Completed Task:{' '}
                                   {
@@ -476,11 +476,11 @@ const PerformanceReport = () => {
                                     selectedEmployeeData?.total_task_incomplete_count
                                   }
                                 </li>
-                              </ul>
+                              </ul> */}
                             </>
-                          )}
+                          {/* )} */}
 
-                          {selectedEmployeeData?.total_bug_count > 0 && (
+                          {/* {selectedEmployeeData?.total_bug_count > 0 && ( */}
                             <>
                               <div className="d-flex justify-content-start align-items-start">
                                 <p
@@ -494,7 +494,7 @@ const PerformanceReport = () => {
                                   ? selectedEmployeeData?.total_bug_count
                                   : 0}
                               </div>
-                              <ul>
+                              {/* <ul>
                                 <li>
                                   Completed Bugs:{' '}
                                   {
@@ -507,11 +507,11 @@ const PerformanceReport = () => {
                                     selectedEmployeeData?.total_bug_incomplete_count
                                   }
                                 </li>
-                              </ul>
+                              </ul> */}
                             </>
-                          )}
+                          {/* )} */}
 
-                          {selectedEmployeeData?.total_reopen_count > 0 && (
+                          {/* {selectedEmployeeData?.total_reopen_count > 0 && ( */}
                             <>
                               <div className="d-flex justify-content-start align-items-start">
                                 <p
@@ -525,7 +525,7 @@ const PerformanceReport = () => {
                                   ? selectedEmployeeData?.total_reopen_count
                                   : 0}
                               </div>
-                              <ul>
+                              {/* <ul>
                                 <li>
                                   Completed:{' '}
                                   {
@@ -538,9 +538,9 @@ const PerformanceReport = () => {
                                     selectedEmployeeData?.total_reopen_incomplete_count
                                   }
                                 </li>
-                              </ul>
+                              </ul> */}
                             </>
-                          )}
+                          {/* )} */}
                         </Col>
                       </Row>
                     ) : (
@@ -550,7 +550,7 @@ const PerformanceReport = () => {
                 </div>
               </div>
               <hr />
-              <div className="col-lg-12">
+              {/* <div className="col-lg-12">
                 <Row className="justify-content-center">
                   <Col md="6">
                     <Card className="shadow">
@@ -597,7 +597,6 @@ const PerformanceReport = () => {
                         <div className="d-flex align-items-center justify-content-center">
                           <span className="mb-0">Productivity = </span>
                           <div className="rounded-pill bracket-round d-flex align-items-center">
-                            {/* <span className="minus-value">1 -</span> */}
                             <p>
                               <span className="d-block border-bottom border-1 border-dark">
                                 Number of Completed Tasks - (Number Of Bugs +
@@ -614,7 +613,7 @@ const PerformanceReport = () => {
                     </Card>
                   </Col>
                 </Row>
-              </div>
+              </div> */}
             </div>
           ) : null}
         </div>

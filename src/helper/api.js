@@ -193,6 +193,10 @@ export default class Api extends Component {
 
   static uploadDocumentsUrl = `${Api.baseUrl}upload-document/`
 
+  static onBoardingDocUpload = `${Api.baseUrl}document-upload/`
+
+  static postDocumentData = `${Api.baseUrl}file-upload/`
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';
