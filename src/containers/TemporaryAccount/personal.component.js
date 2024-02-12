@@ -268,7 +268,6 @@ function Personal(props) {
     const endPoint = `${Api.onBoardingDocUpload}`;
     const { data, message } = await axios.post(endPoint, formData, {});
     if (data && data.success == true) {
-      console.log('🚀 ~ handelChange ~ data:', data);
 
       if (type == 'pancard') {
         setPanCardData({
@@ -325,7 +324,7 @@ function Personal(props) {
     // const callback = AuthApi.postDataToServer;
     const url = `${Api.postDocumentData}`;
     const headers = {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     };
     const { data, message } = await axios.post(url, postData, {
       headers: headers,

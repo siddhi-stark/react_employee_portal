@@ -22,7 +22,6 @@ import Form from 'react-bootstrap/Form';
 
 const ResignationDetails = (props) => {
   const { match } = props;
-  console.log('🚀 ~ ResignationDetails ~ props:', match?.params?.id);
   const [pageTitle, setPageTitle] = useState('Resignation');
   const location = useLocation();
   const { state } = location;
@@ -103,13 +102,12 @@ const ResignationDetails = (props) => {
   }, [match?.params?.id]);
 
   useEffect(() => {
-    if (userId && roleId == '5') {
+    if (userId) {
       getUploadedDocuments();
     }
   }, [userId, roleId]);
 
   const getResignationDetails = async () => {
-    console.log('insideFunction');
     setShowLoader(true);
     const endPoint = `${Api.getResignationListUrl}${match?.params?.id}`;
 
@@ -409,7 +407,6 @@ const ResignationDetails = (props) => {
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
       setShowLoader(false);
-
       swal('Employee release successfully', '', 'success').then(() => {
         window.location.reload();
       });
@@ -418,6 +415,9 @@ const ResignationDetails = (props) => {
       swal(message, '', 'error');
     }
   };
+
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
 
   return (
     <>
@@ -506,6 +506,18 @@ const ResignationDetails = (props) => {
                           {rowData?.user?.relieving_date
                             ? customFunctions.getDMYDate(
                                 rowData?.user?.relieving_date
+                              )
+                            : '-'}
+                        </td>
+                      </tr>
+                    )}
+                    {rowData?.buy_back_apply_date && (
+                      <tr>
+                        <th scope="row">Buy Back Date</th>
+                        <td>
+                          {rowData?.buy_back_apply_date
+                            ? customFunctions.getDMYDate(
+                                rowData?.buy_back_apply_date
                               )
                             : '-'}
                         </td>
@@ -950,7 +962,7 @@ const ResignationDetails = (props) => {
                         name="startDate"
                         dateFormat="dd/MM/yyyy"
                         placeholder="Select relieving date"
-                        // maxDate={new Date()}
+                        minDate={new Date ()}
                       />
                       <Row>
                         <Col>

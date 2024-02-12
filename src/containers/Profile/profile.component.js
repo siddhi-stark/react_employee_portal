@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
@@ -16,13 +17,11 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
+import axios from 'axios';
 
 const validator = new SimpleReactValidator();
 
-const items = [
-  { to: '/', label: 'Home' },
-  { label: 'My Profile' },
-];
+const items = [{ to: '/', label: 'Home' }, { label: 'My Profile' }];
 
 function Profile() {
   const [date, setDate] = useState('');
@@ -34,14 +33,14 @@ function Profile() {
   const [modalShow, setModalShow] = useState('');
   const [count, forceUpdate] = useState(0);
   const [title, setTitle] = useState('');
-  const [selectedDesignationOption, setSelectedDesignationOption] = useState(null);
+  const [selectedDesignationOption, setSelectedDesignationOption] =
+    useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedManager, setSelectedManager] = useState([]);
   const [selectedMentor, setSelectedMentor] = useState([]);
   const [imageUrl, setImageUrl] = useState('');
   const [birthDate, setBirthdate] = useState('');
   const [imageProfile, setImageProfile] = useState('');
-  // console.log('imageProfile', imageProfile);
   const [profileId, setProfileId] = useState('');
   const [companyList, setCompanyList] = useState([]);
   const [isShowLoader, setShowLoader] = useState(false);
@@ -63,10 +62,13 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -84,10 +86,13 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -105,10 +110,13 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -126,10 +134,13 @@ function Profile() {
     {
       id: 'action',
       label: 'Action',
-      render: ({ document_url }) => { // eslint-disable-line
+      render: ({ document_url }) => {
+        // eslint-disable-line
         return (
           <>
-            <a href={document_url} target="_blank" // eslint-disable-line
+            <a
+              href={document_url}
+              target="_blank" // eslint-disable-line
             >
               <Image src="/images/download-file.svg" />
             </a>
@@ -172,7 +183,7 @@ function Profile() {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.profileUrl}`);
     if (!customFunctions.checkIfEmpty(data.data, 'O')) {
-      getEmployeeDocument(data.data.full_name);
+      // getEmployeeDocument(data.data.full_name);
       setShowLoader(false);
       setEmail(data.data.email);
       setName(data.data.full_name);
@@ -184,9 +195,17 @@ function Profile() {
       setImageProfile(data.data.profile_image_url);
       setSelectedDesignationOption(data.data.designation_name);
       setSelectedDepartment(data.data.deparment_name);
-      setProfileId(data.data.profile_id);
-      setReliveDate(data.data.relieving_date ? customFunctions.getDMYDate(data.data.relieving_date) : '');
-      setConfirmationDate(data.data.confirmation_date ? customFunctions.getDMYDate(data.data.confirmation_date) : '');
+      setProfileId(data.data.profile_id ? data.data.profile_id : '');
+      setReliveDate(
+        data.data.relieving_date
+          ? customFunctions.getDMYDate(data.data.relieving_date)
+          : ''
+      );
+      setConfirmationDate(
+        data.data.confirmation_date
+          ? customFunctions.getDMYDate(data.data.confirmation_date)
+          : ''
+      );
       const managerList = data.data.assigned_managers.map((assgnmgmr) => {
         return assgnmgmr.report_head__full_name;
       });
@@ -245,19 +264,17 @@ function Profile() {
     }
   };
 
-  const uploadFile = async () => {
+  const uploadFile = async (e) => {
     let imgId = '';
 
     const formData = new FormData();
-    formData.append('file_name', imageUrl);
-
-    const { data } = await AuthApi.postDataToServer(
-      `${Api.fileUploadUrl}`,
-      formData
-    );
+    formData.append('file_name', e.target.files[0]);
+    const endPoint = `${Api.onBoardingDocUpload}`;
+    const { data } = await axios.post(endPoint, formData);
     if (data) {
       imgId = data.data.id;
     }
+    setProfileId(imgId)
     return imgId;
   };
 
@@ -273,7 +290,7 @@ function Profile() {
     };
 
     if (imageUrl) {
-      payload.profile = await uploadFile();
+      // payload.profile = await uploadFile();
     }
 
     const postData = customFunctions.cleanObject(payload);
@@ -415,14 +432,14 @@ function Profile() {
                 >
                   {/* {imageProfile ? (
                     <img
-                      src={`${imageProfile}` ? `${imageProfile}` : `${Api.s3UrlnoProfile}`}
+                      src={`${imageProfile}`}
                       // src={imageProfile}
                       alt="Edit Profile"
                       style={{ height: '100%' }}
                     />
                   ) : ( */}
                   <img
-                    src='/images/user.svg'
+                    src={ imageProfile ? imageProfile : "/images/user.svg"}
                     alt="Edit Profile"
                     style={{ height: '100%' }}
                   />
@@ -461,7 +478,10 @@ function Profile() {
                   </Form.Label>
                 </div>
 
-                <UserRestrictions permittedUsers={[2, 3, 4, 5, 7]} roleId={role}>
+                <UserRestrictions
+                  permittedUsers={[2, 3, 4, 5, 7]}
+                  roleId={role}
+                >
                   <h5 className="mt-5">Job Information</h5>
                   <Row>
                     <Col sm={3}>
@@ -772,7 +792,8 @@ function Profile() {
               <Col sm={12}>
                 <TextInput
                   onInputChange={(e) => {
-                    handleImageFileUpload(e);
+                    setImageUrl(e.target.files[0])
+                    uploadFile(e);
                   }}
                   label="Profile Picture(Allowed file : JPG, PNG)"
                   asterisk="*"
@@ -786,7 +807,7 @@ function Profile() {
                   <Col>
                     <span className="span-container">
                       <img
-                        src={imageProfile || Api.s3UrlnoProfile}
+                        src={imageProfile || Api.postDocumentData}
                         alt="Profile"
                         style={{ height: '40px' }}
                       />
@@ -809,11 +830,11 @@ function Profile() {
                   name="auth"
                   value={auth}
                   placeholder="Token"
-                // errorMessage={validator.message(
-                //   'Teamwork Authentication Token',
-                //   auth,
-                //   'required'
-                // )}
+                  // errorMessage={validator.message(
+                  //   'Teamwork Authentication Token',
+                  //   auth,
+                  //   'required'
+                  // )}
                 />
               </Col>
             </Row>
