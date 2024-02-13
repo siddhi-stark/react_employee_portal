@@ -197,6 +197,8 @@ export default class Api extends Component {
 
   static postDocumentData = `${Api.baseUrl}file-upload/`
 
+  static allEmployeePerformanceUrl = `${Api.baseUrl}performance-report/`
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'dev';

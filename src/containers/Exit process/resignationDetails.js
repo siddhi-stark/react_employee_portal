@@ -511,14 +511,12 @@ const ResignationDetails = (props) => {
                         </td>
                       </tr>
                     )}
-                    {rowData?.buy_back_apply_date && (
+                    {rowData?.buy_back_date && (
                       <tr>
                         <th scope="row">Buy Back Date</th>
                         <td>
-                          {rowData?.buy_back_apply_date
-                            ? customFunctions.getDMYDate(
-                                rowData?.buy_back_apply_date
-                              )
+                          {rowData?.buy_back_date
+                            ? customFunctions.getDMYDate(rowData?.buy_back_date)
                             : '-'}
                         </td>
                       </tr>
@@ -792,6 +790,8 @@ const ResignationDetails = (props) => {
                   {' '}
                   {rowData?.resignation_status == '1'
                     ? 'Resignation Approved'
+                    : rowData?.resignation_status == '4'
+                    ? 'Resignation Cancelled'
                     : 'Resignation Declined'}{' '}
                 </h4>
               </Alert.Heading>
@@ -936,68 +936,72 @@ const ResignationDetails = (props) => {
                   )}
                 </Col>
                 <Col sm={6}>
-                  {rowData?.resignation_status == 1 && (
-                    <>
-                      <h5>Relieving Date</h5>
-                      <TextInput
-                        label=" Reason to update relieving date"
-                        placeholder="Enter reason for changing relieving date..."
-                        asterisk="*"
-                        type="text"
-                        as="textarea"
-                        rows="3"
-                        value={relievingDateReason}
-                        onInputChange={(e) => {
-                          setRelievingDateReason(e.target.value);
-                        }}
-                      />
-                      <Datepicker
-                        className="form-control"
-                        label="Date"
-                        selected={relievingDate}
-                        onChange={(e) => {
-                          setRelievingDate(e);
-                        }}
-                        autoComplete="off"
-                        name="startDate"
-                        dateFormat="dd/MM/yyyy"
-                        placeholder="Select relieving date"
-                        minDate={new Date ()}
-                      />
-                      <Row>
-                        <Col>
-                          <Button
-                            className="mr-5 mb-3"
-                            disabled={!relievingDateReason}
-                            onClick={() => {
-                              swal({
-                                title: 'Are you sure?',
-                                text: 'You want to change relieving date',
-                                icon: 'warning',
-                                buttons: true,
-                                dangerMode: true,
-                              }).then((willDelete) => {
-                                if (willDelete) {
-                                  changeRelievingData();
-                                }
-                              });
-                            }}
-                          >
-                            Update
-                          </Button>
-                        </Col>
-                        <Col>
-                          {/* <Button variant="secondary">Cancel</Button> */}
-                        </Col>
-                      </Row>
-                    </>
-                  )}
+                  {rowData?.user?.relieved != true &&
+                    rowData?.resignation_status == 1 && (
+                      <>
+                        <h5>Relieving Date</h5>
+                        <TextInput
+                          label=" Reason to update relieving date"
+                          placeholder="Enter reason for changing relieving date..."
+                          asterisk="*"
+                          type="text"
+                          as="textarea"
+                          rows="3"
+                          value={relievingDateReason}
+                          onInputChange={(e) => {
+                            setRelievingDateReason(e.target.value);
+                          }}
+                        />
+                        <Datepicker
+                          className="form-control"
+                          label="Date"
+                          selected={relievingDate}
+                          onChange={(e) => {
+                            setRelievingDate(e);
+                          }}
+                          autoComplete="off"
+                          name="startDate"
+                          dateFormat="dd/MM/yyyy"
+                          placeholder="Select relieving date"
+                          minDate={new Date()}
+                        />
+                        <Row>
+                          <Col>
+                            <Button
+                              className="mr-5 mb-3"
+                              disabled={!relievingDateReason}
+                              onClick={() => {
+                                swal({
+                                  title: 'Are you sure?',
+                                  text: 'You want to change relieving date',
+                                  icon: 'warning',
+                                  buttons: true,
+                                  dangerMode: true,
+                                }).then((willDelete) => {
+                                  if (willDelete) {
+                                    changeRelievingData();
+                                  }
+                                });
+                              }}
+                            >
+                              Update
+                            </Button>
+                          </Col>
+                          <Col>
+                            {/* <Button variant="secondary">Cancel</Button> */}
+                          </Col>
+                        </Row>
+                      </>
+                    )}
                   {rowData?.relieving_date_update_reason && (
-                    <Alert className="" variant="secondary">
-                      <Alert.Heading>
-                        <h6>{rowData?.relieving_date_update_reason}</h6>
-                      </Alert.Heading>
-                    </Alert>
+                    <>
+                      <p>Reason of changing relieving date</p>
+                      <Alert className="" variant="secondary">
+                        <Alert.Heading>
+                          <h6>{rowData?.relieving_date_update_reason}</h6>
+                        </Alert.Heading>
+                      </Alert>
+                    </>
                   )}
                   {rowData?.resignation_status == '3' && roleId == '5' && (
                     <>

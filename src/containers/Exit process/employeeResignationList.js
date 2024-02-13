@@ -148,6 +148,8 @@ const EmployeeResignationList = (props) => {
           ? 'Declined'
           : rowdata.resignation_status == '4'
           ? 'Cancelled'
+          : rowdata?.user?.relieved == true
+          ? 'Relieved'
           : 'Approved';
       },
     },

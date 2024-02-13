@@ -9,6 +9,7 @@ import Loader from '../../components/Loader/index';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
+import Table from '../../components/ReactTable/simpletable.component';
 
 const items = [
   { to: '/', label: 'Home' },
@@ -30,6 +31,57 @@ const PerformanceReport = () => {
   const [graphData, setGraphData] = useState([]);
   const [totalCompletedPercentage, setTotalCompletedPercentage] =
     useState(null);
+  const [rowData, setRowData] = useState('');
+  const [documentData, setDocumentData] = useState();
+
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    itemsPerPage: 10,
+    totalItems: 10,
+  });
+
+  const columns = [
+    {
+      label: 'Employee Name',
+      id: 'employee_name',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+    {
+      label: 'Total Allocated Task',
+      id: 'total_allocated_tasks',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+    {
+      label: 'Total Task',
+      id: 'total_task_count',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+    {
+      label: 'Total Bug',
+      id: 'total_bug_count',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+    {
+      label: 'Total Reopen',
+      id: 'total_reopen_count',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+    {
+      label: 'Quality',
+      id: 'new_quality_formula',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+    {
+      label: 'Productivity',
+      id: 'productivity',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+    {
+      label: 'Time Efficiency',
+      id: 'total_time_efficiency_based_on_minutes_in_per',
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    },
+  ];
 
   const filterSearch = (e) => {
     e.preventDefault();
@@ -59,7 +111,7 @@ const PerformanceReport = () => {
     if (isValid) {
       setFilterErr('');
       setShowLoader('');
-      getEmployeeById();
+      getEmployeeById(1);
     }
   };
 
@@ -72,10 +124,13 @@ const PerformanceReport = () => {
   }, []);
 
   const getEmployeeName = async () => {
+    setShowLoader(true);
     const { data, error } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?is_employees=true&type=all`
     );
     if (data && data?.success) {
+      setShowLoader(false);
+
       const allemp = [];
       data?.data?.map((item) => {
         return allemp.push({
@@ -84,8 +139,16 @@ const PerformanceReport = () => {
           joiningDate: item?.date_joined,
         });
       });
-      setAllEmployes(allemp || '');
+      const all = [
+        {
+          label: 'All Employess',
+          value: 'all_employess',
+        },
+      ];
+      setAllEmployes([...all, ...allemp]);
     } else {
+      setShowLoader(false);
+
       swal(error || 'Something went wrong', '', 'error');
     }
   };
@@ -94,15 +157,22 @@ const PerformanceReport = () => {
   //   if(!selectedEmployee) return;
   // },[selectedEmployee])
 
-  const getEmployeeById = async () => {
+  const getEmployeeById = async (pageNo) => {
     setShowLoader(true);
-    const endPoint = `${Api.employeeReportUrl}`;
-    const params = {
-      start_date: fromDate ? customFunctions.getDate(fromDate) : '',
-      user_id: selectedEmployeeId ? selectedEmployeeId : null,
-      end_date: toDate ? customFunctions.getDate(toDate) : '',
-      // date_joined: joiningDate ? customFunctions.getDate(joiningDate) : ''
-    };
+    const endPoint =
+      selectedEmployee?.value == 'all_employess'
+        ? `${Api.allEmployeePerformanceUrl}`
+        : `${Api.employeeReportUrl}`;
+    const params = {};
+    if (selectedEmployee?.value != 'all_employess') {
+      (params.start_date = fromDate ? customFunctions.getDate(fromDate) : ''),
+        (params.user_id = selectedEmployeeId ? selectedEmployeeId : null),
+        (params.end_date = toDate ? customFunctions.getDate(toDate) : '');
+    }
+    if (selectedEmployee?.value == 'all_employess') {
+      params.limit = 10, 
+      params.page = pageNo;
+    }
     // const params = {
     //   start_date:'2023-7-23',
     //   user_id: 15,
@@ -112,8 +182,17 @@ const PerformanceReport = () => {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {
       setShowLoader(false);
-      setSelectedEmployeeData(data?.data);
-
+      if (selectedEmployee?.value == 'all_employess') {
+        setPagination({
+          current_page:  pageNo,
+          activePage: Number(data?.data?.page),
+          itemsPerPage: Number(data?.data?.page_size),
+          totalItems: data?.data?.total_items,
+        });
+        setRowData(data?.data?.data);
+      } else {
+        setSelectedEmployeeData(data?.data);
+      }
       const incompletedtask = data?.data?.total_reopen_count;
       // - data?.data?.total_task_completed_count;
 
@@ -142,11 +221,40 @@ const PerformanceReport = () => {
     }
   };
 
+  const downloadReport = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.allEmployeePerformanceUrl}`;
+    const params = {
+      is_download: true,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+    if (data && data?.success) {
+      setShowLoader(false);
+      downloadFile(data?.data?.file);
+    } else {
+      setShowLoader(false);
+      swal(message || 'Something went wrong', '', 'error');
+    }
+  };
+
+  const downloadFile = (fileUrl, fileName) => {
+    // const url = window.URL.createObjectURL(new Blob([fileUrl]));
+    const link = document.createElement('a');
+
+    link.href = fileUrl;
+    link.setAttribute('download', fileName);
+    link.rel = 'noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
   const onClear = () => {
     // setFilterErr('');
     setFromDate('');
     setToDate('');
-    // setSearchKeyword('');
+    setRowData('');
     setSelectedEmployee('');
     setSelectedEmployeeData('');
     setCntClearFilter(cntClearFilter + 1);
@@ -202,6 +310,7 @@ const PerformanceReport = () => {
                               setSelectedEmployee(select);
                               setSelectedEmployeeId(select?.value);
                               setJoingDate(select?.joiningDate);
+                              setSelectedEmployeeData('');
                             }}
                             // isMulti
                           />
@@ -260,6 +369,18 @@ const PerformanceReport = () => {
                       </Col>
                     </Row>
                   </Form>
+                  {rowData && selectedEmployee?.value == 'all_employess' && (
+                    <div className="d-flex align-items-center justify-content-end">
+                      <a
+                        href="javascript:void(0)"
+                        onClick={() => {
+                          downloadReport();
+                        }}
+                      >
+                        <h5 className="card-title mb-0 mt-2 ">Download File</h5>
+                      </a>
+                    </div>
+                  )}
                 </Card.Title>
               </Card.Body>
             </Card>
@@ -279,7 +400,9 @@ const PerformanceReport = () => {
               <hr />
             </Row>
           )}
-          {selectedEmployeeData ? (
+
+          {selectedEmployeeData &&
+          selectedEmployee?.value != 'all_employess' ? (
             <div className="row align-items-center">
               <div className="col-xl-5 col-lg-6">
                 <div className="row">
@@ -450,20 +573,20 @@ const PerformanceReport = () => {
                           className="d-flex flex-column justify-content-center"
                         >
                           {/* {selectedEmployeeData?.total_task_count && ( */}
-                            <>
-                              <div className="d-flex justify-content-start align-items-start">
-                                <p
-                                  className="badge rounded-pill"
-                                  style={{ backgroundColor: '#8cc540' }}
-                                >
-                                  &nbsp;
-                                </p>
-                                &nbsp; Total tasks count:{' '}
-                                {selectedEmployeeData?.total_task_count
-                                  ? selectedEmployeeData?.total_task_count
-                                  : 0}
-                              </div>
-                              {/* <ul>
+                          <>
+                            <div className="d-flex justify-content-start align-items-start">
+                              <p
+                                className="badge rounded-pill"
+                                style={{ backgroundColor: '#8cc540' }}
+                              >
+                                &nbsp;
+                              </p>
+                              &nbsp; Total tasks count:{' '}
+                              {selectedEmployeeData?.total_task_count
+                                ? selectedEmployeeData?.total_task_count
+                                : 0}
+                            </div>
+                            {/* <ul>
                                 <li>
                                   Completed Task:{' '}
                                   {
@@ -477,24 +600,24 @@ const PerformanceReport = () => {
                                   }
                                 </li>
                               </ul> */}
-                            </>
+                          </>
                           {/* )} */}
 
                           {/* {selectedEmployeeData?.total_bug_count > 0 && ( */}
-                            <>
-                              <div className="d-flex justify-content-start align-items-start">
-                                <p
-                                  className="badge rounded-pill"
-                                  style={{ backgroundColor: '#FFC107' }}
-                                >
-                                  &nbsp;
-                                </p>
-                                &nbsp; Total bug count:{' '}
-                                {selectedEmployeeData?.total_bug_count > 0
-                                  ? selectedEmployeeData?.total_bug_count
-                                  : 0}
-                              </div>
-                              {/* <ul>
+                          <>
+                            <div className="d-flex justify-content-start align-items-start">
+                              <p
+                                className="badge rounded-pill"
+                                style={{ backgroundColor: '#FFC107' }}
+                              >
+                                &nbsp;
+                              </p>
+                              &nbsp; Total bug count:{' '}
+                              {selectedEmployeeData?.total_bug_count > 0
+                                ? selectedEmployeeData?.total_bug_count
+                                : 0}
+                            </div>
+                            {/* <ul>
                                 <li>
                                   Completed Bugs:{' '}
                                   {
@@ -508,24 +631,24 @@ const PerformanceReport = () => {
                                   }
                                 </li>
                               </ul> */}
-                            </>
+                          </>
                           {/* )} */}
 
                           {/* {selectedEmployeeData?.total_reopen_count > 0 && ( */}
-                            <>
-                              <div className="d-flex justify-content-start align-items-start">
-                                <p
-                                  className="badge rounded-pill"
-                                  style={{ backgroundColor: '#FF0000' }}
-                                >
-                                  &nbsp;
-                                </p>
-                                &nbsp; Total reopen count:{' '}
-                                {selectedEmployeeData?.total_reopen_count
-                                  ? selectedEmployeeData?.total_reopen_count
-                                  : 0}
-                              </div>
-                              {/* <ul>
+                          <>
+                            <div className="d-flex justify-content-start align-items-start">
+                              <p
+                                className="badge rounded-pill"
+                                style={{ backgroundColor: '#FF0000' }}
+                              >
+                                &nbsp;
+                              </p>
+                              &nbsp; Total reopen count:{' '}
+                              {selectedEmployeeData?.total_reopen_count
+                                ? selectedEmployeeData?.total_reopen_count
+                                : 0}
+                            </div>
+                            {/* <ul>
                                 <li>
                                   Completed:{' '}
                                   {
@@ -539,7 +662,7 @@ const PerformanceReport = () => {
                                   }
                                 </li>
                               </ul> */}
-                            </>
+                          </>
                           {/* )} */}
                         </Col>
                       </Row>
@@ -615,6 +738,24 @@ const PerformanceReport = () => {
                 </Row>
               </div> */}
             </div>
+          ) : rowData && selectedEmployee?.value == 'all_employess' ? (
+            <Table
+              columns={columns}
+              rows={rowData}
+              showPagination
+              paginationProps={{
+                ...pagination,
+                activePage: pagination.current_page,
+                onPageChange: (pageNo) => {
+                  getEmployeeById(pageNo)
+                },
+              }}
+              tableClass="table-striped"
+              dropdownContainerClass="mb-3"
+              emptyRender={() => (
+                <p className="text-center mb-0">No record found</p>
+              )}
+            />
           ) : null}
         </div>
       </section>
