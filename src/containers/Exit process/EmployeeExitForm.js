@@ -261,7 +261,7 @@ const EmployeeExitForm = (props) => {
           <Breadcrumb items={items} />
           {rowData && rowData?.length > 0 && (
             <div className="d-flex justify-content-end mb-3">
-              {[null, 2].includes(rowData?.[0]?.retain_status)&&
+              {!rowData?.[0]?.retain_status || [2].includes(rowData?.[0]?.retain_status)&&
               rowData?.[0]?.resignation_status == 1 ? (
                 <Button
                   onClick={() => {

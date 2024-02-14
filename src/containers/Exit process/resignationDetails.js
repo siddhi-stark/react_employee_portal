@@ -33,7 +33,6 @@ const ResignationDetails = (props) => {
   const [retainReason, setRetainReason] = useState('');
   const [roleId, setRoleId] = useState();
   const [approveReason, setApproveReason] = useState('');
-  const [hrResignationReason, setHrResignationReason] = useState('');
   const [document, setDocument] = useState(null);
   const [relievingDate, setRelievingDate] = useState('');
   const [relievingDateReason, setRelievingDateReason] = useState('');
@@ -559,7 +558,7 @@ const ResignationDetails = (props) => {
                   </Alert>
                 </div>
               )}
-              {rowData?.retain_status == '3' && (
+              {rowData?.retain_status == '3' &&  !rowData?.user?.relieved  && (
                 <>
                   <h5 className="d-flex justify-content-start">
                     Retention Reason
@@ -645,7 +644,7 @@ const ResignationDetails = (props) => {
                   </Alert>
                 </>
               )}
-              {rowData?.buy_back_status == '3' && (
+              {rowData?.buy_back_status == '3' && !rowData?.user?.relieved  && (
                 <>
                   <h5 className="d-flex justify-content-start">
                     Buy Back Reason
@@ -847,7 +846,7 @@ const ResignationDetails = (props) => {
             {rowData?.resignation_status != 2 && rowData?.retain_status != 1 && (
               <Row>
                 <Col sm={6}>
-                  {rowData?.user?.relieving_date ==
+                  {rowData?.user?.relieving_date <=
                     customFunctions.getDate(new Date()) && (
                     <>
                       <>
@@ -917,11 +916,29 @@ const ResignationDetails = (props) => {
                           </Card.Body>
                         </Card>
                       </>
-                      <input
+                      <TextInput
                         className="mb-3"
                         type="file"
-                        onChange={(e) => {
-                          setDocument(e.target.files[0]);
+                        onInputChange={(e) => {
+                          if (!e?.target?.files || e?.target?.files?.length < 1)
+                            return;
+                          if (
+                            ['docx', 'pdf'].includes(
+                              e?.target?.files[0].name?.split('.').pop()
+                            )
+                          ) {
+                            if (e?.target?.files[0].size > 1086147) {
+                              swal('File size is too big', '', 'error');
+                            } else {
+                              setDocument(e.target.files[0]);
+                            }
+                          } else {
+                            swal(
+                              'File extension is not supported',
+                              '',
+                              'error'
+                            );
+                          }
                         }}
                       />
                       <Button
@@ -932,6 +949,18 @@ const ResignationDetails = (props) => {
                       >
                         Upload
                       </Button>
+                      {/* <center className="mb-4 mt-3"> */}
+                      <h6 className="mt-5" style={{ fontSize: 'smaller' }}>
+                        <b>Note:</b>
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        1. Maximum upload file size limit is 1 MB.
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        2. File supported extension is pdf , docx
+                      </h6>
+
+                      {/* </center> */}
                     </>
                   )}
                 </Col>
@@ -966,9 +995,9 @@ const ResignationDetails = (props) => {
                           minDate={new Date()}
                         />
                         <Row>
-                          <Col>
+                          <Col sm={4}>
                             <Button
-                              className="mr-5 mb-3"
+                              className="mr-5 mb-3 mt-2"
                               disabled={!relievingDateReason}
                               onClick={() => {
                                 swal({
@@ -987,8 +1016,44 @@ const ResignationDetails = (props) => {
                               Update
                             </Button>
                           </Col>
-                          <Col>
-                            {/* <Button variant="secondary">Cancel</Button> */}
+                          <Col sm={8}>
+                            {rowData?.user?.relieving_date ==
+                              customFunctions.getDate(new Date()) && (
+                              <Form>
+                                {['checkbox'].map((type) => (
+                                  <div
+                                    key={`default-${type}`}
+                                    className="mb-3 mt-3 float-end"
+                                  >
+                                    <Form.Check // prettier-ignore
+                                      type={type}
+                                      id={`default-${type}`}
+                                      label={
+                                        rowData?.user?.relieved == true
+                                          ? 'Employee Relieved'
+                                          : `Click here to relieved employee`
+                                      }
+                                      // value={item?.isCheck}
+                                      disabled={rowData?.user?.relieved == true}
+                                      checked={rowData?.user?.relieved == true}
+                                      onChange={(e) => {
+                                        swal({
+                                          title: 'Are you sure?',
+                                          text: 'You want to relive this employee',
+                                          icon: 'warning',
+                                          buttons: true,
+                                          dangerMode: true,
+                                        }).then((willDelete) => {
+                                          if (willDelete) {
+                                            isRelived();
+                                          }
+                                        });
+                                      }}
+                                    />
+                                  </div>
+                                ))}
+                              </Form>
+                            )}
                           </Col>
                         </Row>
                       </>
@@ -1070,40 +1135,6 @@ const ResignationDetails = (props) => {
               </Row>
             )}
           </Row>
-          {rowData?.user?.relieving_date ==
-            customFunctions.getDate(new Date()) && (
-            <Form>
-              {['checkbox'].map((type) => (
-                <div key={`default-${type}`} className="mb-3 mt-3 float-end">
-                  <Form.Check // prettier-ignore
-                    type={type}
-                    id={`default-${type}`}
-                    label={
-                      rowData?.user?.relieved == true
-                        ? 'Employee Relieved'
-                        : `Click here to relieved employee`
-                    }
-                    // value={item?.isCheck}
-                    disabled={rowData?.user?.relieved == true}
-                    checked={rowData?.user?.relieved == true}
-                    onChange={(e) => {
-                      swal({
-                        title: 'Are you sure?',
-                        text: 'You want to relive this employee',
-                        icon: 'warning',
-                        buttons: true,
-                        dangerMode: true,
-                      }).then((willDelete) => {
-                        if (willDelete) {
-                          isRelived();
-                        }
-                      });
-                    }}
-                  />
-                </div>
-              ))}
-            </Form>
-          )}
 
           {/* {rowData?.user?.relieved == true &&
           <div
