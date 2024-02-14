@@ -377,7 +377,7 @@ const PerformanceReport = () => {
                           downloadReport();
                         }}
                       >
-                        <h5 className="card-title mb-0 mt-2 ">Download File</h5>
+                        <Button className="">Download File</Button>
                       </a>
                     </div>
                   )}

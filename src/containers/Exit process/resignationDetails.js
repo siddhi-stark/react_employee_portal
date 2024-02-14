@@ -57,36 +57,43 @@ const ResignationDetails = (props) => {
       name: 'Exit Form',
       isCheck: false,
       id: 1,
+      doc_id: '',
     },
     {
       name: 'Feedback Form',
       isCheck: false,
       id: 2,
+      doc_id: '',
     },
     {
       name: 'Handover Document',
       isCheck: false,
       id: 3,
+      doc_id: '',
     },
     {
       name: 'Experience Letter',
       isCheck: false,
       id: 4,
+      doc_id: '',
     },
     {
       name: 'Exit Interview Documents',
       isCheck: false,
       id: 5,
+      doc_id: '',
     },
     {
       name: 'Relieving Document',
       isCheck: false,
       id: 6,
+      doc_id: '',
     },
     {
       name: 'Other Document',
       isCheck: false,
       id: 7,
+      doc_id: '',
     },
   ]);
 
@@ -187,6 +194,7 @@ const ResignationDetails = (props) => {
             isCheck: true,
             isDiseable: true,
             url: uploadedDoc?.s3_url,
+            doc_id: uploadedDoc?.id,
           };
         } else {
           return {
@@ -415,6 +423,45 @@ const ResignationDetails = (props) => {
     }
   };
 
+  const deleteDocument = async (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure, do you want to remove the document ?',
+        icon: 'warning',
+        confirmBtnBsStyle: 'btn btn-primary btn-lg',
+        cancelBtnBsStyle: 'btn btn-lg btn-secondary',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          setShowLoader(true);
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.uploadDocumentsUrl}${id}/`
+          );
+          if (data) {
+            setShowLoader(false);
+            swal(data && data.message[0], '', 'success', {
+              // closeOnClickOutside: false,
+              // allowOutsideClick: false,
+              // buttons: false,
+              // timer: 2000,
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
+  };
+
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
 
@@ -558,7 +605,7 @@ const ResignationDetails = (props) => {
                   </Alert>
                 </div>
               )}
-              {rowData?.retain_status == '3' &&  !rowData?.user?.relieved  && (
+              {rowData?.retain_status == '3' && !rowData?.user?.relieved && (
                 <>
                   <h5 className="d-flex justify-content-start">
                     Retention Reason
@@ -644,7 +691,7 @@ const ResignationDetails = (props) => {
                   </Alert>
                 </>
               )}
-              {rowData?.buy_back_status == '3' && !rowData?.user?.relieved  && (
+              {rowData?.buy_back_status == '3' && !rowData?.user?.relieved && (
                 <>
                   <h5 className="d-flex justify-content-start">
                     Buy Back Reason
@@ -797,48 +844,6 @@ const ResignationDetails = (props) => {
             </Alert>
           )}
           <Row className="mt-3">
-            {/* {managerDeclineToggle && (
-              <>
-                <TextInput
-                  label="Reason for decline"
-                  asterisk="*"
-                  type="text"
-                  as="textarea"
-                  rows="5"
-                  value={managerDeclineReason}
-                  onInputChange={(e) => {
-                    setManagerDeclineReason(e.target.value);
-                  }}
-                  errorMessage={validator.current.message(
-                    'Decline reason',
-                    managerDeclineReason,
-                    'required'
-                  )}
-                />
-                <Row>
-                  <Col>
-                    <Button
-                      onClick={() => {
-                        declineResignation();
-                        isValid
-                      }}
-                    >
-                      Decline
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      variant="secondary"
-                      onClick={() => {
-                        setManagerDeclineToggle(false);
-                      }}
-                    >
-                      Cancle
-                    </Button>
-                  </Col>
-                </Row>
-              </>
-            )} */}
             <hr />
 
             {/* Hr Resignation form  */}
@@ -854,65 +859,89 @@ const ResignationDetails = (props) => {
                         <Card>
                           <Card.Body>
                             {documentsList &&
-                              documentsList.map((item, index) => (
-                                <Row>
-                                  <Col sm={10}>
-                                    <ul>
-                                      <input
-                                        className=""
-                                        type={'checkbox'}
-                                        value={item?.isCheck}
-                                        checked={item?.isCheck}
-                                        id="flexCheckDefaultBeneficiary"
-                                        onChange={(e) => {
-                                          setDocumentSelected(true);
-                                          let temData = [];
-                                          documentsList &&
-                                            documentsList.map((dt, ind) => {
-                                              if (dt?.isDiseable == true) {
-                                                temData.push({
-                                                  ...dt,
+                              documentsList.map(
+                                (item, index) => (
+                                  console.log('itemm', item),
+                                  (
+                                    <Row>
+                                      <Col sm={10}>
+                                        <ul>
+                                          <input
+                                            className=""
+                                            type={'checkbox'}
+                                            value={item?.isCheck}
+                                            checked={item?.isCheck}
+                                            id="flexCheckDefaultBeneficiary"
+                                            onChange={(e) => {
+                                              setDocumentSelected(true);
+                                              let temData = [];
+                                              documentsList &&
+                                                documentsList.map((dt, ind) => {
+                                                  if (dt?.isDiseable == true) {
+                                                    temData.push({
+                                                      ...dt,
+                                                    });
+                                                  } else {
+                                                    if (index == ind) {
+                                                      temData.push({
+                                                        name: dt.name,
+                                                        id: dt?.id,
+                                                        isCheck: true,
+                                                      });
+                                                      setSelectedDocument(
+                                                        dt?.id
+                                                      );
+                                                    } else {
+                                                      temData.push({
+                                                        name: dt.name,
+                                                        id: dt?.id,
+                                                        isCheck: false,
+                                                      });
+                                                    }
+                                                  }
                                                 });
-                                              } else {
-                                                if (index == ind) {
-                                                  temData.push({
-                                                    name: dt.name,
-                                                    id: dt?.id,
-                                                    isCheck: true,
-                                                  });
-                                                  setSelectedDocument(dt?.id);
-                                                } else {
-                                                  temData.push({
-                                                    name: dt.name,
-                                                    id: dt?.id,
-                                                    isCheck: false,
-                                                  });
-                                                }
-                                              }
-                                            });
-                                          setDocumentList(temData);
-                                          forceUpdate(count + 1);
-                                        }}
-                                        disabled={item?.isDiseable == true}
-                                      />{' '}
-                                      &nbsp;
-                                      {item?.name}
-                                    </ul>
-                                  </Col>
-                                  <Col sm={2}>
-                                    {item.isDiseable == true && (
-                                      <a href={item?.url} target="_blank">
-                                        <img
-                                          title="Download Image"
-                                          style={{ cursor: 'pointer' }}
-                                          src="/images/download1.svg"
-                                          alt="download-icon"
-                                        />
-                                      </a>
-                                    )}
-                                  </Col>
-                                </Row>
-                              ))}
+                                              setDocumentList(temData);
+                                              forceUpdate(count + 1);
+                                            }}
+                                            disabled={item?.isDiseable == true}
+                                          />{' '}
+                                          &nbsp;
+                                          {item?.name}
+                                        </ul>
+                                      </Col>
+                                      <Col sm={2}>
+                                        {item.isDiseable == true && (
+                                          <>
+                                            <a href={item?.url} target="_blank">
+                                              <img
+                                                title="Download Document"
+                                                style={{ cursor: 'pointer' }}
+                                                src="/images/download1.svg"
+                                                alt="download-icon"
+                                                className="me-3"
+                                              />
+                                            </a>
+
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                deleteDocument(item?.doc_id);
+                                              }}
+                                            >
+                                              <img
+                                                title="Remove Document"
+                                                style={{ cursor: 'pointer' }}
+                                                src="/images/delete.png"
+                                                alt="download-icon"
+                                              />
+                                            </a>
+                                          </>
+                                        )}
+                                      </Col>
+                                    </Row>
+                                  )
+                                )
+                              )}
                           </Card.Body>
                         </Card>
                       </>
