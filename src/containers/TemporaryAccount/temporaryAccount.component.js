@@ -46,6 +46,8 @@ function TemporaryAccount(props) {
       await setToggle(true);
     } else {
       swal(message, '', 'error');
+      props.callback(true);
+      console.log('🚀 ~ getData ~ message:', message);
     }
   };
 

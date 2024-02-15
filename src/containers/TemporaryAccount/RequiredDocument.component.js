@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Col, Button, Form } from 'react-bootstrap';
@@ -29,7 +30,15 @@ function RequiredDocument(props) {
   return (
     <>
       {isBtnClicked ? (
-        <TemporaryAccount password={password} token={matchUrltoken} />
+        <TemporaryAccount
+          password={password}
+          token={matchUrltoken}
+          callback={(isHide) => {
+            if (isHide == true) {
+              setIsBtnClicked(false);
+            }
+          }}
+        />
       ) : (
         <>
           <div className="login-page d-flex align-items-center justify-content-center flex-column">
