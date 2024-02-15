@@ -54,7 +54,6 @@ function TeamProject(props) {
   const history = useHistory();
   const [graphDetails, setGraphDetails] = useState(initialState);
   const [graphData, setGraphData] = useState({});
-  // console.log('graphData', graphData);
   const [title, setTitle] = useState('');
 
   // Declare variable column state

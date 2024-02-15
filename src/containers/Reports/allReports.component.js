@@ -20,7 +20,6 @@ const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
 
 function AllReports() {
   const [rows, setRows] = useState([]);
-  // console.log("🚀 ~ AllReports ~ rows:", rows)
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filterErr, setFilterErr] = useState('');

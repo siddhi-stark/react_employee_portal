@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Tabs, Tab, Button } from 'react-bootstrap';
@@ -34,8 +35,8 @@ function Applications(props) {
   const handleSelect = (emp) => {
     if (emp === 'currentEmployee') {
       setKey('currentEmployee');
-    } else if (emp === 'noticePeriod') {
-      setKey('noticePeriod');
+    } else if (emp === 'professional_details') {
+      setKey('professional_details');
     } else if (emp === 'oldPeriod') {
       setKey('oldPeriod');
     }
@@ -66,9 +67,9 @@ function Applications(props) {
         <section className="content-area">
           <div>
             <Tabs
-              defaultActiveKey="currentEmployee"
+              activeKey={key}
               onSelect={(e) => handleSelect(e)}
-            // id="uncontrolled-tab-example"
+              // id="uncontrolled-tab-example"
             >
               <Tab eventKey="currentEmployee" title="Basic Information">
                 <div className="row ml-2">
@@ -80,18 +81,22 @@ function Applications(props) {
                         setBasicInfo(value);
                         setIsBI(false);
                       }}
+                      callback={()=>{
+                        handleSelect('professional_details')
+                        setKey('professional_details')
+                      }}
                     />
                   )}
                 </div>
               </Tab>
               <Tab
-                eventKey="noticePeriod"
+                eventKey="professional_details"
                 title="Professional Details"
                 disabled={isBI}
               >
                 {(!id || (id && isBasicInfoId)) && (
                   <div className="row ml-2">
-                    {key === 'noticePeriod' && (
+                    {key === 'professional_details' && (
                       <ProfessonalDetails
                         isBasicInfoId={isBasicInfoId}
                         onProfDetInfo={(value) => {
@@ -114,8 +119,9 @@ function Applications(props) {
               >
                 {key === 'oldPeriod' && (
                   <div className="row ml-2">
-                    {(Number(group) === 4 || Number(group) === 3) || Number(group) === 7 &&
-                      isProfessionalInfoId ? (
+                    {Number(group) === 4 ||
+                    Number(group) === 3 ||
+                    (Number(group) === 7 && isProfessionalInfoId) ? (
                       <InterviewerRoundsStatus
                         isProfessionalInfoId={isProfessionalInfoId}
                       />

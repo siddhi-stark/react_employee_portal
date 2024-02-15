@@ -87,7 +87,6 @@ const AccountAddleaveComponent = () => {
       leave_to_type: leaveType.value,
       leave_to_date: customFunctions.getDate(toDate),
     };
-    // console.log('🚀 ~ ApplyLeave ~ postData:', postData);
 
     const callback = AuthApi.postDataToServer;
     const endPoint = Api.leavesUrl;

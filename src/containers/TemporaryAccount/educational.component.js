@@ -286,7 +286,6 @@ function EducationalDetails(props) {
     const endPoint = `${Api.onBoardingDocUpload}`;
     const { data, message } = await axios.post(endPoint, formData, {});
     if (data && data.success == true) {
-      console.log('🚀 ~ handelChange ~ data:', data);
 
       if (type == 'ssc') {
         setSscDocData({
@@ -333,6 +332,7 @@ function EducationalDetails(props) {
     const postData = {
       applicant: applicantId,
       doc_type: 1,
+      is_submitted: 1,
       educational_ducuments: [
         {
           file_id: sscDocData?.file_id,
@@ -359,7 +359,7 @@ function EducationalDetails(props) {
     if (data && data.success == true) {
       setShowLoader(false);
       swal(data && data.message[0], '', 'success').then(() => {
-
+         window.location.reload();
       });
     } else {
       setShowLoader(false);
@@ -539,9 +539,25 @@ function EducationalDetails(props) {
 
           <Button
             onClick={() => {
-              submitEducationalDoc();
+              swal({
+                title: 'Are you sure?',
+                text: 'Do you want to submit these documents?',
+                icon: 'warning',
+                confirmBtnBsStyle: 'btn btn-primary btn-lg',
+                cancelBtnBsStyle: 'btn btn-lg btn-secondary',
+                dangerMode: true,
+                buttons: true,
+                closeOnClickOutside: false,
+                allowOutsideClick: false,
+              }).then((Click) => {
+                if (Click) {
+                  submitEducationalDoc();
+                }
+              });
             }}
-            disabled={!sscDocData?.url && !hscDocData?.url && !graduationDocData?.url}
+            disabled={
+              !sscDocData?.url || !hscDocData?.url || !graduationDocData?.url
+            }
           >
             Submit
           </Button>

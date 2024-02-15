@@ -227,7 +227,6 @@ function AddLeave(props) {
           : customFunctions.getDate(formValues.leave_to_date),
     };
 
-    // console.log('postData',postData);
     if (leaveId) postData.id = Number(leaveId);
     if (
       defaultValues &&
@@ -271,7 +270,6 @@ function AddLeave(props) {
   };
 
   const submitForm = async (formValues) => {
-    // console.log('🚀 ~ submitForm ~ formValues:', formValues)
     if (formValues.leave_from_date) {
       setStartDate(formValues.leave_from_date);
       setFlag(true);

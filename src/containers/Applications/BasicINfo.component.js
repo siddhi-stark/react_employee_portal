@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -73,9 +74,9 @@ function BasicInformation(props) {
 
       const ds = data.data.applied_for_id
         ? {
-          label: data.data.applied_for_name,
-          value: data.data.applied_for_id,
-        }
+            label: data.data.applied_for_name,
+            value: data.data.applied_for_id,
+          }
         : '';
 
       const techStack = [];
@@ -127,7 +128,9 @@ function BasicInformation(props) {
       setShowLoader(false);
       onBasicInfo(data.data.id);
       customFunctions.setLocalStorage('applicantId', data.data.id);
-      swal(data && data.message[0], '', 'success');
+      swal(data && data.message[0], '', 'success').then(() => {
+        props.callback('professional_details');
+      });
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -184,7 +187,9 @@ function BasicInformation(props) {
   };
 
   useEffect(() => {
-    const ApplicantId = match.params.ID ? match.params.ID : customFunctions.getLocalStorage('applicantId');
+    const ApplicantId = match.params.ID
+      ? match.params.ID
+      : customFunctions.getLocalStorage('applicantId');
     if (ApplicantId) {
       setAppicantId(ApplicantId);
     }
@@ -207,22 +212,23 @@ function BasicInformation(props) {
         currentUser={currentUser}
         submitBtnText={
           Number(currentUser) === 2 ||
-            Number(currentUser) === 4 ||
-            Number(currentUser) === 3
+          Number(currentUser) === 4 ||
+          Number(currentUser) === 3
             ? ''
             : 'Save'
         }
-        btnContainerClass={`form-submit-buttons mb-4 ${Number(currentUser) === 2 ||
-            Number(currentUser) === 4 ||
-            Number(currentUser) === 3
+        btnContainerClass={`form-submit-buttons mb-4 ${
+          Number(currentUser) === 2 ||
+          Number(currentUser) === 4 ||
+          Number(currentUser) === 3
             ? 'd-none'
             : ''
-          }`}
+        }`}
         showResetBtn={false}
         showBtnClass={true}
         resetBtnText="Clear"
         isStepForm={false}
-        onFormReset={() => { }}
+        onFormReset={() => {}}
       />
     </>
   );

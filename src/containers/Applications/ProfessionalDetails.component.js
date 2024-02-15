@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import Loader from '../../components/Loader/index';
@@ -18,6 +19,7 @@ function ProfessionalDetails(props) {
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [isShowLoader, setShowLoader] = useState(false);
+  const history = useHistory();
 
   // Get user role
   const getUserRole = async () => {
@@ -135,12 +137,12 @@ function ProfessionalDetails(props) {
       onProfDetInfo(data.data.id);
       await localStorage.setItem('InterviewId', data.data.id);
       swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
+        // closeOnClickOutside: false,
+        // allowOutsideClick: false,
+        // buttons: false,
+        // timer: 2000,
       }).then(() => {
-        swal.close();
+        history.push('/recruitment');
       });
     } else {
       setShowLoader(false);

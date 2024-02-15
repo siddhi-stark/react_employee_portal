@@ -65,7 +65,6 @@ function NoticePeriodComponent() {
     data &&
       data.data.length > 0 &&
       data.data.map((op) => {
-        console.log('🚀 ~ data.data.map ~ op:', op);
         if ([1].includes(op.role_id)) return;
         dpOptions.push({ label: op.full_name, value: op.id });
       });

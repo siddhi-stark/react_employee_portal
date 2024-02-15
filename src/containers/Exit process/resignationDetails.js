@@ -861,7 +861,6 @@ const ResignationDetails = (props) => {
                             {documentsList &&
                               documentsList.map(
                                 (item, index) => (
-                                  console.log('itemm', item),
                                   (
                                     <Row>
                                       <Col sm={10}>

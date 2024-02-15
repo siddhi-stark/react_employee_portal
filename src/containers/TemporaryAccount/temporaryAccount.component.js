@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Tabs, Tab, Image, ProgressBar, Button } from 'react-bootstrap';
@@ -23,9 +24,10 @@ function TemporaryAccount(props) {
   const [id, setId] = useState('');
   const [personalInfo, setPersonalInfo] = useState(null);
   const [toggle, setToggle] = useState(false);
-  const [key, setKey] = useState('Personal');
+  const [key, setKey] = useState('');
   const [completion, setCompletion] = useState(null);
   const [trigger, setTrigger] = useState(false);
+  const [showED, setShowED] = useState(false);
 
   const getData = async () => {
     const endPoint = candidateId
@@ -47,6 +49,11 @@ function TemporaryAccount(props) {
     }
   };
 
+  useEffect(() => {
+    setKey('Personal');
+    setToggle(true);
+  }, []);
+
   const handleSelect = (emp) => {
     if (emp === 'Personal') {
       setKey('Personal');
@@ -60,7 +67,7 @@ function TemporaryAccount(props) {
   };
 
   useEffect(() => {
-    if(personalInfo) setId(personalInfo.id);
+    if (personalInfo) setId(personalInfo.id);
   }, [personalInfo]);
 
   useEffect(() => {
@@ -75,7 +82,7 @@ function TemporaryAccount(props) {
     if (trigger) {
       getCompletionData(completion);
     }
-  }, [trigger,completion]);
+  }, [trigger, completion]);
 
   return (
     <>
@@ -115,12 +122,16 @@ function TemporaryAccount(props) {
                           <h6>Email - {personalInfo && personalInfo.email}</h6>
                         </div>
                         <div className="col-md-4">
-                          <h6>Contact No - {personalInfo && personalInfo.mobile}</h6>
+                          <h6>
+                            Contact No - {personalInfo && personalInfo.mobile}
+                          </h6>
                         </div>
                         <div className="col-md-4">
                           <h6>
                             Pf Included -{' '}
-                            {personalInfo && personalInfo.pf_included === true ? 'Yes' : 'No'}
+                            {personalInfo && personalInfo.pf_included === true
+                              ? 'Yes'
+                              : 'No'}
                           </h6>
                         </div>
                       </div>
@@ -129,7 +140,10 @@ function TemporaryAccount(props) {
                     <div className="row d-flex">
                       <div className="col-md-12 d-flex">
                         <div className=" col-md-4">
-                          <h6>Offered CTC - {personalInfo && personalInfo.offered_ctc}</h6>
+                          <h6>
+                            Offered CTC -{' '}
+                            {personalInfo && personalInfo.offered_ctc}
+                          </h6>
                         </div>
                         <div className="col-md-4">
                           <h6>
@@ -148,12 +162,12 @@ function TemporaryAccount(props) {
                           now={
                             completion
                               ? Number(completion)
-                              : (personalInfo && Number(personalInfo.completion))
+                              : personalInfo && Number(personalInfo.completion)
                           }
                           label={`${
                             completion
                               ? Number(completion)
-                              : (personalInfo && Number(personalInfo.completion))
+                              : personalInfo && Number(personalInfo.completion)
                           }% completed`}
                         />
                       </div>
@@ -162,10 +176,7 @@ function TemporaryAccount(props) {
                 </div>
               </div>
 
-              <Tabs
-                defaultActiveKey="Personal"
-                onSelect={(e) => handleSelect(e)}
-              >
+              <Tabs activeKey={key} onSelect={(e) => handleSelect(e)}>
                 <Tab eventKey="Personal" title="Personal Documents">
                   {key === 'Personal' && toggle && (
                     <div className="row ml-2">
@@ -182,12 +193,20 @@ function TemporaryAccount(props) {
                             setCompletion(value);
                           }
                         }}
+                        callback={(value, isShow) => {
+                          handleSelect('educational');
+                          setShowED(isShow);
+                        }}
                       />
                     </div>
                   )}
                 </Tab>
-                <Tab eventKey="educational" title="Educational Documents">
-                  {String(key) === 'educational' && (
+                <Tab
+                  eventKey="educational"
+                  title="Educational Documents"
+                  disabled={!showED}
+                >
+                  {key === 'educational' && (
                     <div className="row ml-2">
                       <EducationalDetails
                         token={tokenProps}

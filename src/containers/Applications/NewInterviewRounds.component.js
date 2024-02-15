@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter,useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './NewInterviewRounds.json';
@@ -18,6 +18,7 @@ function NewInterviewRounds(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const [count, forceUpdate] = useState(0);
   const { isProfessionalInfoId } = props;
+  const history = useHistory();
 
   useEffect(() => {
     const formSchema = [...FormSections];
@@ -83,12 +84,12 @@ function NewInterviewRounds(props) {
     if (data) {
       setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
+        // closeOnClickOutside: false,
+        // allowOutsideClick: false,
+        // buttons: false,
+        // timer: 2000,
       }).then(() => {
-        swal.close();
+        history.push('/recruitment');
         getData(isProfessionalInfoId);
       });
     } else {
