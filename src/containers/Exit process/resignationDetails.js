@@ -108,9 +108,9 @@ const ResignationDetails = (props) => {
   }, [match?.params?.id]);
 
   useEffect(() => {
-    // if (userId) {
+    if (userId) {
       getUploadedDocuments();
-    // }
+    }
   }, [userId]);
 
   const getResignationDetails = async () => {
