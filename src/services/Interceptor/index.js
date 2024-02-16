@@ -10,7 +10,7 @@ export default {
         // requestConfig.headers['Content-Type'] = 'application/json';
 
         const configuration = config;
-        if (configuration.url.indexOf('upload') > -1) {
+        if (configuration.url.indexOf('file') > -1) {
           configuration.headers['Content-Type'] = 'multipart/form-data';
           // Ensure that the request data is an instance of FormData for file uploads
           if (!(configuration.data instanceof FormData)) {

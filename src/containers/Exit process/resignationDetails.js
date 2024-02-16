@@ -108,10 +108,10 @@ const ResignationDetails = (props) => {
   }, [match?.params?.id]);
 
   useEffect(() => {
-    if (userId) {
+    // if (userId) {
       getUploadedDocuments();
-    }
-  }, [userId, roleId]);
+    // }
+  }, [userId]);
 
   const getResignationDetails = async () => {
     setShowLoader(true);
@@ -173,18 +173,23 @@ const ResignationDetails = (props) => {
 
   const getUploadedDocuments = async () => {
     setShowLoader(true);
-    const endPoint = `${Api.uploadDocumentsUrl}`;
+    const endPoint = `https://developmentapi.starkdigital.in/api/v1/upload-document/`;
     const params = {
       user: userId,
     };
+    const token = customFunctions.getLocalStorage('access_token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await AuthApi.getDataFromServer(url);
+    const {data , message} = await axios.get(url, {
+      // headers: headers,
+    });
     if (data && data.success == true) {
       setShowLoader(false);
       let uploadedDoc = [];
-
       const updatedDocumentsList = documentsList.map((doc) => {
-        const uploadedDoc = data.data.find(
+        const uploadedDoc = data?.data?.find(
           (item) => doc.id === item.document_type
         );
 
@@ -206,8 +211,10 @@ const ResignationDetails = (props) => {
       });
 
       setDocumentList(updatedDocumentsList);
+    } else {
+      swal(message, '', 'error');
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
     setShowLoader(true);
@@ -235,8 +242,9 @@ const ResignationDetails = (props) => {
     });
     if (data && data.success == true) {
       setShowLoader(false);
+      getUploadedDocuments()
       swal('document uploaded successfully', '', 'success').then(() => {
-        window.location.reload();
+        // window.location.reload();
       });
     } else {
       setShowLoader(false);
@@ -859,88 +867,82 @@ const ResignationDetails = (props) => {
                         <Card>
                           <Card.Body>
                             {documentsList &&
-                              documentsList.map(
-                                (item, index) => (
-                                  (
-                                    <Row>
-                                      <Col sm={10}>
-                                        <ul>
-                                          <input
-                                            className=""
-                                            type={'checkbox'}
-                                            value={item?.isCheck}
-                                            checked={item?.isCheck}
-                                            id="flexCheckDefaultBeneficiary"
-                                            onChange={(e) => {
-                                              setDocumentSelected(true);
-                                              let temData = [];
-                                              documentsList &&
-                                                documentsList.map((dt, ind) => {
-                                                  if (dt?.isDiseable == true) {
-                                                    temData.push({
-                                                      ...dt,
-                                                    });
-                                                  } else {
-                                                    if (index == ind) {
-                                                      temData.push({
-                                                        name: dt.name,
-                                                        id: dt?.id,
-                                                        isCheck: true,
-                                                      });
-                                                      setSelectedDocument(
-                                                        dt?.id
-                                                      );
-                                                    } else {
-                                                      temData.push({
-                                                        name: dt.name,
-                                                        id: dt?.id,
-                                                        isCheck: false,
-                                                      });
-                                                    }
-                                                  }
+                              documentsList.map((item, index) => (
+                                <Row>
+                                  <Col sm={9}>
+                                    <ul>
+                                      <input
+                                        className=""
+                                        type={'checkbox'}
+                                        value={item?.isCheck}
+                                        checked={item?.isCheck}
+                                        id="flexCheckDefaultBeneficiary"
+                                        onChange={(e) => {
+                                          setDocumentSelected(true);
+                                          let temData = [];
+                                          documentsList &&
+                                            documentsList.map((dt, ind) => {
+                                              if (dt?.isDiseable == true) {
+                                                temData.push({
+                                                  ...dt,
                                                 });
-                                              setDocumentList(temData);
-                                              forceUpdate(count + 1);
-                                            }}
-                                            disabled={item?.isDiseable == true}
-                                          />{' '}
-                                          &nbsp;
-                                          {item?.name}
-                                        </ul>
-                                      </Col>
-                                      <Col sm={2}>
-                                        {item.isDiseable == true && (
-                                          <>
-                                            <a href={item?.url} target="_blank">
-                                              <img
-                                                title="Download Document"
-                                                style={{ cursor: 'pointer' }}
-                                                src="/images/download1.svg"
-                                                alt="download-icon"
-                                                className="me-3"
-                                              />
-                                            </a>
+                                              } else {
+                                                if (index == ind) {
+                                                  temData.push({
+                                                    name: dt.name,
+                                                    id: dt?.id,
+                                                    isCheck: true,
+                                                  });
+                                                  setSelectedDocument(dt?.id);
+                                                } else {
+                                                  temData.push({
+                                                    name: dt.name,
+                                                    id: dt?.id,
+                                                    isCheck: false,
+                                                  });
+                                                }
+                                              }
+                                            });
+                                          setDocumentList(temData);
+                                          forceUpdate(count + 1);
+                                        }}
+                                        disabled={item?.isDiseable == true}
+                                      />{' '}
+                                      &nbsp;
+                                      {item?.name}
+                                    </ul>
+                                  </Col>
+                                  <Col sm={3}>
+                                    {item.isDiseable == true && (
+                                      <>
+                                        <a href={item?.url} target="_blank">
+                                          <img
+                                            title="Download Document"
+                                            style={{ cursor: 'pointer' }}
+                                            src="/images/download1.svg"
+                                            alt="download-icon"
+                                            className="me-3"
+                                          />
+                                        </a>
 
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                deleteDocument(item?.doc_id);
-                                              }}
-                                            >
-                                              <img
-                                                title="Remove Document"
-                                                style={{ cursor: 'pointer' }}
-                                                src="/images/delete.png"
-                                                alt="download-icon"
-                                              />
-                                            </a>
-                                          </>
-                                        )}
-                                      </Col>
-                                    </Row>
-                                  )
-                                )
-                              )}
+                                        <a
+                                          href="javascript:void(0)"
+                                          onClick={() => {
+                                            deleteDocument(item?.doc_id);
+                                          }}
+                                        >
+                                          <img
+                                            title="Remove Document"
+                                            style={{ cursor: 'pointer' }}
+                                            src="/images/delete.png"
+                                            alt="download-icon"
+                                          />
+                                        </a>
+                                      </>
+                                    )}
+                                  </Col>
+                                </Row>
+                              ))}
                           </Card.Body>
                         </Card>
                       </>
