@@ -244,7 +244,7 @@ const ResignationDetails = (props) => {
       setShowLoader(false);
       getUploadedDocuments()
       swal('document uploaded successfully', '', 'success').then(() => {
-        // window.location.reload();
+        window.location.reload();
       });
     } else {
       setShowLoader(false);
