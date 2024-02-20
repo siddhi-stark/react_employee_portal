@@ -47,7 +47,6 @@ function TemporaryAccount(props) {
     } else {
       swal(message, '', 'error');
       props.callback(true);
-      console.log('🚀 ~ getData ~ message:', message);
     }
   };
 
