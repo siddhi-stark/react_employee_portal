@@ -10,20 +10,29 @@ export default {
         // requestConfig.headers['Content-Type'] = 'application/json';
 
         const configuration = config;
-        if (configuration.url.indexOf('file') > -1) {
-          configuration.headers['Content-Type'] = 'multipart/form-data';
-          // Ensure that the request data is an instance of FormData for file uploads
-          if (!(configuration.data instanceof FormData)) {
-            const formData = new FormData();
-            // Append your form data to formData
-            Object.entries(configuration.data).forEach(([key, value]) => {
-              formData.append(key, value);
-            });
-            configuration.data = formData;
-          }
+        if (configuration.url.indexOf('upload') > -1) {
+          console.log("🚀 ~ configuration:", configuration)
+          configuration.headers['Content-Type'] = 'multipart/form-data'; // eslint-disable-line
         } else {
-          configuration.headers['Content-Type'] = 'application/json';
+          configuration.headers['Content-Type'] = 'application/json'; // eslint-disable-line
         }
+
+        // const configuration = config;
+        // if (configuration.url.indexOf('file') > -1) {
+        //   console.log("🚀 ~ configuration:", configuration)
+        //   configuration.headers['Content-Type'] = 'multipart/form-data';
+        //   // Ensure that the request data is an instance of FormData for file uploads
+        //   if (!(configuration.data instanceof FormData)) {
+        //     const formData = new FormData();
+        //     // Append your form data to formData
+        //     Object.entries(configuration.data).forEach(([key, value]) => {
+        //       formData.append(key, value);
+        //     });
+        //     configuration.data = formData;
+        //   }
+        // } else {
+        //   configuration.headers['Content-Type'] = 'application/json';
+        // }
         const token = customFucntions.getLocalStorage('access_token');
         if (token) configuration.headers['Authorization'] = `Bearer ${token}`; // eslint-disable-line
         return configuration;
