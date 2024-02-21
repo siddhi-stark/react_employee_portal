@@ -358,7 +358,18 @@ function EducationalDetails(props) {
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
       setShowLoader(false);
-      swal(data && data.message[0], '', 'success').then(() => {
+      swal(  
+        {
+          title: 'Congratulations',
+          text: "You've successfully submitted your documents. You're one step closer to joining our team!",
+          icon: 'success',
+          confirmBtnBsStyle: 'btn btn-primary btn-lg',
+          cancelBtnBsStyle: 'btn btn-lg btn-secondary',
+          dangerMode: true,
+          buttons: true,
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
          window.location.reload();
       });
     } else {
