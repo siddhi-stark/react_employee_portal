@@ -197,12 +197,12 @@ const PerformanceReport = () => {
       // - data?.data?.total_task_completed_count;
 
       setGraphData({
-        labels: ['Completed Tasks', ' Completed bugs', 'Total reopen '],
+        labels: ['Completed Tasks', ' Completed bugs', 'Total reopen count'],
         datasets: [
           {
             data: [
-              data?.data?.total_task_completed_count,
-              data?.data?.total_bug_completed_count,
+              data?.data?.total_task_count,
+              data?.data?.total_bug_count,
               incompletedtask,
             ],
             backgroundColor: ['#8cc540', '#FFC107', '#FF0000'],
