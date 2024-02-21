@@ -852,7 +852,7 @@ const ResignationDetails = (props) => {
             </Alert>
           )}
 
-          {rowData?.user?.relieved == true && (
+          {/* {rowData?.user?.relieved == true && (
             <Alert className="text-center p-4" variant="info">
               <Alert.Heading>
                 <h4>
@@ -860,7 +860,7 @@ const ResignationDetails = (props) => {
                 </h4>
               </Alert.Heading>
             </Alert>
-          )}
+          )} */}
           <Row className="mt-3">
             <hr />
 
@@ -1057,7 +1057,24 @@ const ResignationDetails = (props) => {
                             </Button>
                           </Col>
                           <Col sm={8}>
-                            {rowData?.user?.relieving_date ==
+                            
+                          </Col>
+                        </Row>
+                      </>
+                    )}
+                   
+                  {rowData?.relieving_date_update_reason && (
+                    <>
+                      <p>Reason of changing relieving date</p>
+                      <Alert className="" variant="secondary">
+                        <Alert.Heading>
+                          <h6>{rowData?.relieving_date_update_reason}</h6>
+                        </Alert.Heading>
+                      </Alert>
+                    </>
+                  )}
+
+                  {rowData?.user?.relieving_date ==
                               customFunctions.getDate(new Date()) && (
                               <Form>
                                 {['checkbox'].map((type) => (
@@ -1094,20 +1111,6 @@ const ResignationDetails = (props) => {
                                 ))}
                               </Form>
                             )}
-                          </Col>
-                        </Row>
-                      </>
-                    )}
-                  {rowData?.relieving_date_update_reason && (
-                    <>
-                      <p>Reason of changing relieving date</p>
-                      <Alert className="" variant="secondary">
-                        <Alert.Heading>
-                          <h6>{rowData?.relieving_date_update_reason}</h6>
-                        </Alert.Heading>
-                      </Alert>
-                    </>
-                  )}
                   {rowData?.resignation_status == '3' && roleId == '5' && (
                     <>
                       <Row>
