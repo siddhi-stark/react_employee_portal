@@ -182,7 +182,7 @@ const ResignationDetails = (props) => {
       Authorization: `Bearer ${token}`,
     };
     const url = customFunctions.generateUrl(endPoint, params);
-    const {data , message} = await axios.get(url, {
+    const { data, message } = await axios.get(url, {
       // headers: headers,
     });
     if (data && data.success == true) {
@@ -214,7 +214,7 @@ const ResignationDetails = (props) => {
     } else {
       swal(message, '', 'error');
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     setShowLoader(true);
@@ -242,7 +242,7 @@ const ResignationDetails = (props) => {
     });
     if (data && data.success == true) {
       setShowLoader(false);
-      getUploadedDocuments()
+      getUploadedDocuments();
       swal('document uploaded successfully', '', 'success').then(() => {
         window.location.reload();
       });
@@ -837,7 +837,7 @@ const ResignationDetails = (props) => {
                 )}
             </Col>
           </Row>
-          {rowData?.resignation_status != '3' && (
+          { !rowData?.user?.relieved && rowData?.resignation_status != '3' && (
             <Alert className="text-center p-4" variant="info">
               <Alert.Heading>
                 <h4>
@@ -847,6 +847,16 @@ const ResignationDetails = (props) => {
                     : rowData?.resignation_status == '4'
                     ? 'Resignation Cancelled'
                     : 'Resignation Declined'}{' '}
+                </h4>
+              </Alert.Heading>
+            </Alert>
+          )}
+
+          {rowData?.user?.relieved == true && (
+            <Alert className="text-center p-4" variant="info">
+              <Alert.Heading>
+                <h4>
+                 Employee Relieved
                 </h4>
               </Alert.Heading>
             </Alert>
