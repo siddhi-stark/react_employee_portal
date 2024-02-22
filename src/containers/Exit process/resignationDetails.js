@@ -32,6 +32,7 @@ const ResignationDetails = (props) => {
   const [rowData, setRowData] = useState([]);
   const [retainReason, setRetainReason] = useState('');
   const [roleId, setRoleId] = useState();
+  console.log('🚀 ~ ResignationDetails ~ roleId:', roleId);
   const [approveReason, setApproveReason] = useState('');
   const [document, setDocument] = useState(null);
   const [relievingDate, setRelievingDate] = useState('');
@@ -44,6 +45,14 @@ const ResignationDetails = (props) => {
   const [showModal, setShowModal] = useState(false);
 
   const history = useHistory();
+
+  useEffect(() => {
+    if (roleId == '4') {
+      localStorage.clear();
+      window.location.href = '/login';
+    }
+  }, [roleId]);
+
   const items = props.data
     ? null
     : [
@@ -837,7 +846,7 @@ const ResignationDetails = (props) => {
                 )}
             </Col>
           </Row>
-          { !rowData?.user?.relieved && rowData?.resignation_status != '3' && (
+          {!rowData?.user?.relieved && rowData?.resignation_status != '3' && (
             <Alert className="text-center p-4" variant="info">
               <Alert.Heading>
                 <h4>
@@ -1056,13 +1065,11 @@ const ResignationDetails = (props) => {
                               Update
                             </Button>
                           </Col>
-                          <Col sm={8}>
-                            
-                          </Col>
+                          <Col sm={8}></Col>
                         </Row>
                       </>
                     )}
-                   
+
                   {rowData?.relieving_date_update_reason && (
                     <>
                       <p>Reason of changing relieving date</p>
@@ -1075,42 +1082,42 @@ const ResignationDetails = (props) => {
                   )}
 
                   {rowData?.user?.relieving_date ==
-                              customFunctions.getDate(new Date()) && (
-                              <Form>
-                                {['checkbox'].map((type) => (
-                                  <div
-                                    key={`default-${type}`}
-                                    className="mb-3 mt-3 float-end"
-                                  >
-                                    <Form.Check // prettier-ignore
-                                      type={type}
-                                      id={`default-${type}`}
-                                      label={
-                                        rowData?.user?.relieved == true
-                                          ? 'Employee Relieved'
-                                          : `Click here to relieved employee`
-                                      }
-                                      // value={item?.isCheck}
-                                      disabled={rowData?.user?.relieved == true}
-                                      checked={rowData?.user?.relieved == true}
-                                      onChange={(e) => {
-                                        swal({
-                                          title: 'Are you sure?',
-                                          text: 'You want to relive this employee',
-                                          icon: 'warning',
-                                          buttons: true,
-                                          dangerMode: true,
-                                        }).then((willDelete) => {
-                                          if (willDelete) {
-                                            isRelived();
-                                          }
-                                        });
-                                      }}
-                                    />
-                                  </div>
-                                ))}
-                              </Form>
-                            )}
+                    customFunctions.getDate(new Date()) && (
+                    <Form>
+                      {['checkbox'].map((type) => (
+                        <div
+                          key={`default-${type}`}
+                          className="mb-3 mt-3 float-end"
+                        >
+                          <Form.Check // prettier-ignore
+                            type={type}
+                            id={`default-${type}`}
+                            label={
+                              rowData?.user?.relieved == true
+                                ? 'Employee Relieved'
+                                : `Click here to relieved employee`
+                            }
+                            // value={item?.isCheck}
+                            disabled={rowData?.user?.relieved == true}
+                            checked={rowData?.user?.relieved == true}
+                            onChange={(e) => {
+                              swal({
+                                title: 'Are you sure?',
+                                text: 'You want to relive this employee',
+                                icon: 'warning',
+                                buttons: true,
+                                dangerMode: true,
+                              }).then((willDelete) => {
+                                if (willDelete) {
+                                  isRelived();
+                                }
+                              });
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </Form>
+                  )}
                   {rowData?.resignation_status == '3' && roleId == '5' && (
                     <>
                       <Row>

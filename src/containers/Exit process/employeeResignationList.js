@@ -24,8 +24,15 @@ const EmployeeResignationList = (props) => {
     itemsPerPage: 10,
     totalItems: 10,
   });
-
   const [roleId, setRoleId] = useState();
+
+  useEffect(() => {
+    if (roleId == '4') {
+      localStorage.clear();
+      window.location.href = '/login';
+    }
+  }, [roleId]);
+
 
   useEffect(() => {
     setRoleId(localStorage.getItem('group'));
@@ -74,7 +81,7 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return `SDMS - ${rowdata.user.emp_code}`;
+        return `SDMS - ${rowdata?.user?.emp_code}`;
       },
     },
     {
@@ -83,7 +90,7 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return `${rowdata.user.full_name}`;
+        return rowdata?.user?.full_name ? rowdata?.user?.full_name : "-";
       },
     },
     {
@@ -92,7 +99,7 @@ const EmployeeResignationList = (props) => {
       roleAccess: [1, 2, 3, 4, 5, 6, 7],
       render: (row) => {
         const rowdata = row;
-        return `${rowdata.user.designation_name}`;
+        return rowdata?.user?.designation_name ? rowdata?.user?.designation_name : "_"
       },
     },
     // {
