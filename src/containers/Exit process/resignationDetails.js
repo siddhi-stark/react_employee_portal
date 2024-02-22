@@ -48,8 +48,21 @@ const ResignationDetails = (props) => {
 
   useEffect(() => {
     if (roleId == '4') {
-      localStorage.clear();
-      window.location.href = '/login';
+      swal({
+        title: 'Unauthorized access',
+        text: '',
+        icon: 'error',
+        // confirmBtnBsStyle: 'btn btn-primary btn-lg',
+        // cancelBtnBsStyle: 'btn btn-lg btn-secondary',
+        dangerMode: true,
+        buttons: false,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        timer: 3000,
+      }).then(() => {
+        localStorage.clear();
+        window.location.href = '/login';
+      });
     }
   }, [roleId]);
 
@@ -140,10 +153,15 @@ const ResignationDetails = (props) => {
       setShowLoader(false);
     } else {
       setShowLoader(false);
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
+      if (message == 'Employee resignation not found.') {
+        localStorage.clear();
+        window.location.href = '/login';
+      } else {
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        });
+      }
     }
   };
 
