@@ -60,7 +60,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'emp_code',
       label: 'Employee Id',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
       // isDisplay: false,
       render: (row) => {
         const rowdata = row;
@@ -70,7 +70,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'resignation_status',
       label: 'Resignation Status',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
       render: (row) => {
         const rowdata = row;
         return rowdata.resignation_status == '3'
@@ -85,7 +85,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'date_joined',
       label: 'Joining Date',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
       render: (row) => {
         const rowdata = row;
         return customFunctions.getDMYDate(rowdata.user.date_joined);
@@ -94,7 +94,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'resignation_reason',
       label: 'Resignation Reason',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
       render: (row) => {
         const rowdata = row;
         return rowdata?.resignation_reason.length > 15 ? (
@@ -112,7 +112,7 @@ const EmployeeExitForm = (props) => {
     {
       id: 'relieving_date',
       label: 'Relieving Date',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,8],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 8],
       render: (row) => {
         const rowdata = row;
         return [2, 4].includes(rowdata?.resignation_status)
@@ -214,7 +214,17 @@ const EmployeeExitForm = (props) => {
 
   const onSubmit = () => {
     if (validator.current.allValid()) {
-      addEmployeeResignation();
+      swal({
+        title: 'Are you sure?',
+        text: 'You want to resign?',
+        icon: 'warning',
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          addEmployeeResignation();
+        }
+      });
     } else {
       validator.current.showMessages();
       forceUpdate(count + 1);
@@ -261,7 +271,8 @@ const EmployeeExitForm = (props) => {
           <Breadcrumb items={items} />
           {rowData && rowData?.length > 0 && (
             <div className="d-flex justify-content-end mb-3">
-              {(!rowData?.[0]?.retain_status || [2].includes(rowData?.[0]?.retain_status)) &&
+              {(!rowData?.[0]?.retain_status ||
+                [2].includes(rowData?.[0]?.retain_status)) &&
               rowData?.[0]?.resignation_status == 1 ? (
                 <Button
                   onClick={() => {
@@ -352,37 +363,33 @@ const EmployeeExitForm = (props) => {
                     <h6 className="content-title text-count-box float-end">
                       {`${resignationReason?.length}/100`}
                     </h6>
+                    <div 
+                    style={{marginLeft:"-12px"}}
+                    >
                     <Row>
                       <Col>
                         <Button
                           onClick={() => {
-                            swal({
-                              title: 'Are you sure?',
-                              text: 'You want to resign?',
-                              icon: 'warning',
-                              buttons: true,
-                              dangerMode: true,
-                            }).then((willDelete) => {
-                              if (willDelete) {
-                                onSubmit();
-                              }
-                            });
+                            onSubmit();
                           }}
+                          className="me-3"
                         >
                           Submit
                         </Button>
-                      </Col>
-                      <Col>
+                      {/* </Col>
+                      <Col> */}
                         <Button
                           variant="secondary"
                           onClick={() => {
                             setResignation(false);
+                            validator.current.hideMessages();
                           }}
                         >
                           Cancel
                         </Button>
                       </Col>
                     </Row>
+                    </div>
                   </Col>
                 </Row>
               </Card.Body>
