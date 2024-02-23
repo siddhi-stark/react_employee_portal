@@ -46,25 +46,25 @@ const ResignationDetails = (props) => {
 
   const history = useHistory();
 
-  useEffect(() => {
-    if (roleId == '4') {
-      swal({
-        title: 'Unauthorized access',
-        text: '',
-        icon: 'error',
-        // confirmBtnBsStyle: 'btn btn-primary btn-lg',
-        // cancelBtnBsStyle: 'btn btn-lg btn-secondary',
-        dangerMode: true,
-        buttons: false,
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        timer: 3000,
-      }).then(() => {
-        localStorage.clear();
-        window.location.href = '/login';
-      });
-    }
-  }, [roleId]);
+  // useEffect(() => {
+  //   if (roleId == '4') {
+  //     swal({
+  //       title: 'Unauthorized access',
+  //       text: '',
+  //       icon: 'error',
+  //       // confirmBtnBsStyle: 'btn btn-primary btn-lg',
+  //       // cancelBtnBsStyle: 'btn btn-lg btn-secondary',
+  //       dangerMode: true,
+  //       buttons: false,
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //       timer: 3000,
+  //     }).then(() => {
+  //       localStorage.clear();
+  //       window.location.href = '/login';
+  //     });
+  //   }
+  // }, [roleId]);
 
   const items = props.data
     ? null

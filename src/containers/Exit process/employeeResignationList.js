@@ -26,12 +26,12 @@ const EmployeeResignationList = (props) => {
   });
   const [roleId, setRoleId] = useState();
 
-  useEffect(() => {
-    if (roleId == '4') {
-      localStorage.clear();
-      window.location.href = '/login';
-    }
-  }, [roleId]);
+  // useEffect(() => {
+  //   if (roleId == '4') {
+  //     localStorage.clear();
+  //     window.location.href = '/login';
+  //   }
+  // }, [roleId]);
 
 
   useEffect(() => {
