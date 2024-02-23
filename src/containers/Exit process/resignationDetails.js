@@ -153,8 +153,9 @@ const ResignationDetails = (props) => {
     } else {
       setShowLoader(false);
       if (message == 'Employee resignation not found.') {
-        localStorage.clear();
-        window.location.href = '/login';
+        // localStorage.clear();
+        // window.location.href = '/login';
+        swal(message, "","error")
       } else {
         swal(message, '', 'error', {
           closeOnClickOutside: false,
