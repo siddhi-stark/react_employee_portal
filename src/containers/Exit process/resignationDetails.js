@@ -32,7 +32,6 @@ const ResignationDetails = (props) => {
   const [rowData, setRowData] = useState([]);
   const [retainReason, setRetainReason] = useState('');
   const [roleId, setRoleId] = useState();
-  console.log('🚀 ~ ResignationDetails ~ roleId:', roleId);
   const [approveReason, setApproveReason] = useState('');
   const [document, setDocument] = useState(null);
   const [relievingDate, setRelievingDate] = useState('');
@@ -130,9 +129,9 @@ const ResignationDetails = (props) => {
   }, [match?.params?.id]);
 
   useEffect(() => {
-    if (userId) {
+    // if (userId) {
       getUploadedDocuments();
-    }
+    // }
   }, [userId]);
 
   const getResignationDetails = async () => {
@@ -198,9 +197,10 @@ const ResignationDetails = (props) => {
     }
   };
 
+
   const getUploadedDocuments = async () => {
     setShowLoader(true);
-    const endPoint = `https://developmentapi.starkdigital.in/api/v1/upload-document/`;
+    const endPoint = `${Api.uploadDocumentsUrl}`;
     const params = {
       user: userId,
     };
