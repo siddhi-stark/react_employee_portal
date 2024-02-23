@@ -1147,6 +1147,7 @@ const ResignationDetails = (props) => {
                           as="textarea"
                           asterisk="*"
                           rows="5"
+                          // maxlength={100}
                           value={approveReason}
                           onInputChange={(e) => {
                             setApproveReason(e.target.value);
