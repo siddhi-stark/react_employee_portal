@@ -81,6 +81,7 @@ import EmployeeResignationList from './containers/Exit process/employeeResignati
 import ResignationDetails from './containers/Exit process/resignationDetails';
 import LeaveListingForAccountant from './containers/Leaves/LeaveListingForAccountant';
 import AccountAddleaveComponent from './containers/Leaves/AccountAddleave.component';
+import ResignationDetailsComponent from './containers/Exit process/resignationDetailsComponent'
 
 function Routes() {
   return (
@@ -214,18 +215,54 @@ function Routes() {
       <Route path="/employee-activity" exact component={EmployeeActivity} />
       <Route path="/policy-category" exact component={PolicyCategory} />
       <Route path="/add-policy-category" exact component={AddCategory} />
-      <Route path="/edit-policy-category/:categoryId" exact component={AddCategory} />
-      <Route path="/employee-leaves-report/:viewId" exact component={EmployeeDetails} />
+      <Route
+        path="/edit-policy-category/:categoryId"
+        exact
+        component={AddCategory}
+      />
+      <Route
+        path="/employee-leaves-report/:viewId"
+        exact
+        component={EmployeeDetails}
+      />
       <Route path="/support-ticket" exact component={SupportTicketComponent} />
       <Route path="/add-support-ticket" exact component={AddSupportTicket} />
-      <Route path="/edit-support-ticket/:supportId" exact component={AddSupportTicket} />
+      <Route
+        path="/edit-support-ticket/:supportId"
+        exact
+        component={AddSupportTicket}
+      />
       <Route path="/performance-report" exact component={PerformanceReport} />
-      <Route path="/resignation-application" exact component={EmployeeExitForm}/>
-      <Route path = "/resignation-applications" exact component={EmployeeResignationList}/>
-      <Route path= "/resignation-details/:id" exact component={ResignationDetails}/>
-      <Route path="/accountant-leaves" exact component={LeaveListingForAccountant}/>
-      <Route path ="/accountant-add-leaves" exact component={AccountAddleaveComponent} />
-
+      <Route
+        path="/resignation-application"
+        exact
+        component={EmployeeExitForm}
+      />
+      <Route
+        path="/resignation-applications"
+        exact
+        component={EmployeeResignationList}
+      />
+      <Route
+        path="/resignation-details/:id"
+        exact
+        component={ResignationDetails}
+      />
+      <Route
+        path="/accountant-leaves"
+        exact
+        component={LeaveListingForAccountant}
+      />
+      <Route
+        path="/accountant-add-leaves"
+        exact
+        component={AccountAddleaveComponent}
+      />
+      <Route
+        path="/resignation-detail"
+        exact
+        component={ResignationDetailsComponent}
+      />
       <Route component={NotFound} />
     </Switch>
   );
