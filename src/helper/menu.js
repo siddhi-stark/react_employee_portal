@@ -309,7 +309,7 @@ const menu = [
     path: '/resignation-application',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [4,5,6,7,8],
+    roleaccess: [3,4,5,6,7,8],
   },
 
   {

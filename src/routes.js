@@ -259,7 +259,7 @@ function Routes() {
         component={AccountAddleaveComponent}
       />
       <Route
-        path="/resignation-detail"
+        path="/resignation-detail/:id"
         exact
         component={ResignationDetailsComponent}
       />

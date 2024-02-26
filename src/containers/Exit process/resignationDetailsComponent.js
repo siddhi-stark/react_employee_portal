@@ -33,6 +33,7 @@ const ResignationDetailsComponent = (props) => {
   const { match } = props;
   const location = useLocation();
   const { state } = location;
+  console.log('🚀 ~ ResignationDetailsComponent ~ state:', state);
   const validator = useRef(new SimpleReactValidator({}));
   const [count, forceUpdate] = useState(0);
   const [managerDeclineToggle, setManagerDeclineToggle] = useState(false);
@@ -45,11 +46,15 @@ const ResignationDetailsComponent = (props) => {
   const [relievingDate, setRelievingDate] = useState('');
   const [relievingDateReason, setRelievingDateReason] = useState('');
   const [selectedDocument, setSelectedDocument] = useState('');
-  const [isDocumentSelected, setDocumentSelected] = useState(false);
+  const [key, setKey] = useState('1');
+  const [stepTwoKey, setStepTwoKey] = useState('0');
+  const [stepThreeKey, setStepThreeKey] = useState('0');
+  const [uniqueDocumentOptions, setUniqueDocumentOptions] = useState([]);
   const [userId, setUserId] = useState();
   const [buyBackReason, setBuyBackReason] = useState('');
   const [shoeError, setShowError] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const history = useHistory();
   const items = props.data
     ? null
     : [
@@ -109,6 +114,394 @@ const ResignationDetailsComponent = (props) => {
       label: 'Other Document',
     },
   ]);
+
+  useEffect(() => {
+    const unique =
+      documentsList && documentsList?.filter((item) => item?.isCheck == false);
+    setUniqueDocumentOptions(unique);
+  }, [documentsList]);
+
+  useEffect(() => {
+    setRoleId(customFunctions.getLocalStorage('group'));
+  }, [roleId]);
+
+  useEffect(() => {
+    if (match?.params?.id) {
+      getResignationDetails();
+    }
+  }, [match?.params?.id]);
+
+  useEffect(() => {
+    // if (userId) {
+    getUploadedDocuments();
+    // }
+  }, [userId]);
+
+  const getResignationDetails = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.getResignationListUrl}${match?.params?.id}`;
+
+    const url = customFunctions.generateUrl(endPoint);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (data && data.success) {
+      setRowData(data?.data);
+      setUserId(data?.data?.user?.id);
+      setRelievingDate(
+        data?.data?.user?.relieving_date
+          ? new Date(data?.data?.user?.relieving_date)
+          : ''
+      );
+      setShowLoader(false);
+    } else {
+      setShowLoader(false);
+      if (message == 'Employee resignation not found.') {
+        // localStorage.clear();
+        // window.location.href = '/login';
+        swal(message, '', 'error');
+      } else {
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        });
+      }
+    }
+  };
+
+  const approveResignation = async (status) => {
+    setShowLoader(true);
+    setShowError(false);
+
+    const postData = {
+      resignation_status: status,
+    };
+
+    if (status == 1) {
+      postData.resign_remark = approveReason;
+    } else {
+      postData.resignation_decline_note = approveReason;
+    }
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+      swal(
+        status == 1
+          ? 'Resignation approved successfully'
+          : 'Resignation declined successfully',
+        '',
+        'success'
+      ).then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const getUploadedDocuments = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.uploadDocumentsUrl}`;
+    const params = {
+      user: userId,
+    };
+    const token = customFunctions.getLocalStorage('access_token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await axios.get(url, {
+      // headers: headers,
+    });
+    if (data && data.success == true) {
+      setShowLoader(false);
+      let uploadedDoc = [];
+      const updatedDocumentsList = documentsList.map((doc) => {
+        console.log('docdoc', doc);
+        const uploadedDoc = data?.data?.find(
+          (item) => doc.id === item.document_type
+        );
+
+        if (uploadedDoc) {
+          return {
+            ...doc,
+            isCheck: true,
+            isDiseable: true,
+            url: uploadedDoc?.s3_url,
+            doc_id: uploadedDoc?.id,
+          };
+        } else {
+          return {
+            ...doc,
+            isCheck: false,
+            isDiseable: false,
+          };
+        }
+      });
+      setDocumentList(updatedDocumentsList);
+    } else {
+      swal(message, '', 'error');
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    setShowLoader(true);
+    const formData = new FormData();
+    if (document) {
+      formData.append('image', document);
+      formData.append('document_type', Number(selectedDocument?.id));
+      formData.append('user_id', Number(userId));
+    }
+
+    // const callback = AuthApi.postDataToServer;
+    const endPoint = `${Api.uploadDocumentsUrl}`;
+    const token = customFunctions.getLocalStorage('access_token');
+    const headers = {
+      accept: 'application/json',
+      platform: 'web',
+      version: '1.0',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      Authorization: `Bearer ${token}`,
+      maxBodyLength: Infinity,
+      // 'Content-Type': 'multipart/form-data',
+    };
+    const { data, message } = await axios.post(endPoint, formData, {
+      // headers: headers,
+    });
+    if (data && data.success == true) {
+      setShowLoader(false);
+      getUploadedDocuments();
+      swal('document uploaded successfully', '', 'success').then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const retainRequest = async (status) => {
+    setShowLoader(true);
+    setShowError(false);
+    const postData = {
+      retain_status: status,
+    };
+    if (status == 1) {
+      postData.retention_acceptance_reason = retainReason;
+    } else {
+      postData.retention_decline_reason = retainReason;
+    }
+
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+      swal(
+        status == 1
+          ? 'Retention approved successfully'
+          : 'Retention declined successfully',
+        '',
+        'success'
+      ).then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const buyBackRequest = async (status) => {
+    setShowLoader(true);
+    setShowError(false);
+    const postData = {
+      buy_back_status: status,
+    };
+
+    if (status == 1) {
+      postData.buy_back_acceptance_reason = buyBackReason;
+    } else {
+      postData.buy_back_decline_reason = buyBackReason;
+    }
+
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+      swal(
+        status == 1
+          ? 'Buy back request approved successfully'
+          : 'Buy back request declined successfully',
+        '',
+        'success'
+      ).then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowError(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const resignationRequestHr = async (status) => {
+    setShowLoader(true);
+    setShowError(false);
+    const postData = {
+      resignation_status: status,
+    };
+    if (status == 1) {
+      postData.resign_remark = approveReason;
+    } else {
+      postData.resignation_decline_note = approveReason;
+    }
+
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+
+      swal(
+        status == 1
+          ? 'Resignation approved successfully'
+          : 'Resignation declined successfully',
+        '',
+        'success'
+      ).then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const isValid = (type, status) => {
+    if (type == 'admin') {
+      if (status == 'approve_resign' && approveReason) {
+        approveResignation(1);
+      } else if (status == 'decline_resign' && approveReason) {
+        approveResignation(2);
+      } else {
+        setShowError(true);
+      }
+    }
+    if (type == 'hr') {
+      if (status == 'approve_resign' && approveReason) {
+        resignationRequestHr(1);
+      } else if (status == 'decline_resign' && approveReason) {
+        resignationRequestHr(2);
+      } else {
+        setShowError(true);
+      }
+    }
+
+    if (type == 'admin_retain') {
+      if (status == 'accept_retain' && retainReason) {
+        retainRequest(1);
+      } else if (status == 'decline_retain' && retainReason) {
+        retainRequest(2);
+      } else {
+        setShowError(true);
+      }
+    }
+
+    if (type == 'buy_back') {
+      if (status == 'accept' && buyBackReason) {
+        buyBackRequest(1);
+      } else if (status == 'decline' && buyBackReason) {
+        buyBackRequest(2);
+      } else {
+        setShowError(true);
+      }
+    }
+  };
+
+  const changeRelievingData = async () => {
+    setShowLoader(true);
+    const postData = {
+      relieving_date: customFunctions.getDate(relievingDate),
+      // relieving_date_update_reason: relievingDateReason,
+    };
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+
+      swal('Relieving date changed successfully', '', 'success').then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const isRelived = async () => {
+    setShowLoader(true);
+    const postData = {
+      is_relived: true,
+    };
+    const callback = AuthApi.putDataToServer;
+    const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
+    const { data, message } = await callback(endPoint, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+      swal('Employee release successfully', '', 'success').then(() => {
+        window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+  const deleteDocument = async (id) => {
+    if (id) {
+      swal({
+        title: 'Are you sure?',
+        text: 'Are you sure, do you want to remove the document ?',
+        icon: 'warning',
+        confirmBtnBsStyle: 'btn btn-primary btn-lg',
+        cancelBtnBsStyle: 'btn btn-lg btn-secondary',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(async (result) => {
+        if (result) {
+          setShowLoader(true);
+          const { data, message } = await AuthApi.deleteDataFromServer(
+            `${Api.uploadDocumentsUrl}${id}/`
+          );
+          if (data) {
+            setShowLoader(false);
+            swal(data && data.message[0], '', 'success', {
+              // closeOnClickOutside: false,
+              // allowOutsideClick: false,
+              // buttons: false,
+              // timer: 2000,
+            }).then(() => {
+              window.location.reload();
+            });
+          } else {
+            swal(message, '', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+          }
+        }
+      });
+    }
+  };
+
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 1);
   return (
     <>
       <Helmet title={pageTitle} />
@@ -131,17 +524,34 @@ const ResignationDetailsComponent = (props) => {
           <div className="d-flex justify-content-end mb-3"></div>
         </div>
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
         <div className="mt-5">
-          <Accordion defaultActiveKey="1">
+          <Accordion
+            activeKey={key}
+            onClick={() => {
+              if (key == '1') {
+                setKey('0');
+              } else {
+                setKey('1');
+              }
+            }}
+          >
             <Card>
               <Card.Header>
                 <div className="d-flex align-items-center justify-content-between">
                   <h6 className="text-primary m-0">Step 1</h6>
                   <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      <img src="/images/downarrow-18.svg" alt="" />
+                    <Accordion.Toggle as={Button} variant="link">
+                      <img
+                        src={
+                          key == '0'
+                            ? '/images/caret-down.svg'
+                            : '/images/caret-up.svg'
+                        }
+                        alt=""
+                      />
                     </Accordion.Toggle>
                   </div>
                 </div>
@@ -186,7 +596,7 @@ const ResignationDetailsComponent = (props) => {
                               <td>
                                 {rowData?.user?.date_joined
                                   ? rowData?.user?.date_joined
-                                  : '7/11/23'}
+                                  : '-'}
                               </td>
                             </tr>
                             <tr>
@@ -194,7 +604,7 @@ const ResignationDetailsComponent = (props) => {
                               <td>
                                 {rowData?.user?.department_name
                                   ? rowData?.user?.department_name
-                                  : 'Development'}
+                                  : '-'}
                               </td>
                             </tr>
                             <tr>
@@ -202,10 +612,18 @@ const ResignationDetailsComponent = (props) => {
                               <td>
                                 {rowData?.reporting_manager?.manager_name
                                   ? rowData?.reporting_manager?.manager_name
-                                  : 'Sanjay Mangalaram'}
+                                  : '-'}
                               </td>
                             </tr>
                             {/* {rowData?.user?.relieving_date && ( */}
+                            <tr>
+                              <th scope="row">Resignation Status</th>
+                              <td>
+                                {rowData?.resignation_status_name
+                                  ? rowData?.resignation_status_name
+                                  : '-'}
+                              </td>
+                            </tr>
                             <tr>
                               <th scope="row">Relieving Date</th>
                               <td>
@@ -213,19 +631,23 @@ const ResignationDetailsComponent = (props) => {
                                   ? customFunctions.getDMYDate(
                                       rowData?.user?.relieving_date
                                     )
-                                  : '1/1/2024'}
-                                <a className="ms-2" href="#">
-                                 <u> Update Date</u>
+                                  : '-'}
+                                <a
+                                  className="ms-2"
+                                  href="javascript:void(0)"
+                                  onClick={() => {
+                                    setShowModal(true);
+                                  }}
+                                >
+                                  <u> Update Date</u>
                                 </a>
                               </td>
                             </tr>
                             <tr>
                               <th scope="row">Relieving Status</th>
                               <td>
-                                {rowData?.user?.relieving_date
-                                  ? customFunctions.getDMYDate(
-                                      rowData?.user?.relieving_date
-                                    )
+                                {rowData?.user?.relieved == true
+                                  ? 'Approved'
                                   : 'Pending'}
                               </td>
                             </tr>
@@ -245,21 +667,21 @@ const ResignationDetailsComponent = (props) => {
                             <tr>
                               <th scope="row">Updated By</th>
                               <td>
-                                {rowData?.user?.relieving_date
-                                  ? customFunctions.getDMYDate(
-                                      rowData?.user?.relieving_date
-                                    )
-                                  : 'Sanjay Mangalaram'}
+                                {rowData?.reliving_date_updated_by
+                                  ? rowData?.reliving_date_updated_by
+                                  : '-'}
                               </td>
                             </tr>
                             <tr>
                               <th scope="row">Updated Date</th>
                               <td>
-                                {rowData?.user?.relieving_date
-                                  ? customFunctions.getDMYDate(
-                                      rowData?.user?.relieving_date
-                                    )
-                                  : '01/02/2024 5:30 PM'}
+                                {rowData?.relieving_date_updated_on_date
+                                  ? `${customFunctions.getDMYDate(
+                                      rowData?.relieving_date_updated_on_date
+                                    )} , ${customFunctions.formatAMPM(
+                                      rowData?.relieving_date_updated_on_date
+                                    )}`
+                                  : '-'}
                               </td>
                             </tr>
                           </tbody>
@@ -471,7 +893,6 @@ const ResignationDetailsComponent = (props) => {
                         </>
                       )}
                       {!managerDeclineToggle &&
-                        roleId == '1' &&
                         rowData?.resignation_status == '3' && (
                           <>
                             <TextInput
@@ -497,11 +918,11 @@ const ResignationDetailsComponent = (props) => {
                         )}
 
                       {!managerDeclineToggle &&
-                        roleId == '1' &&
                         rowData?.resignation_status == '3' && (
                           <Row>
                             <Col>
                               <Button
+                                className="me-3"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   // approveResignation();
@@ -510,8 +931,8 @@ const ResignationDetailsComponent = (props) => {
                               >
                                 Approve
                               </Button>
-                            </Col>
-                            <Col>
+                              {/* </Col>
+                            <Col> */}
                               <Button
                                 variant="secondary"
                                 onClick={() => {
@@ -531,14 +952,47 @@ const ResignationDetailsComponent = (props) => {
             </Card>
           </Accordion>
 
-          <Accordion defaultActiveKey="0">
+          <Accordion
+            activeKey={stepTwoKey}
+            onClick={() => {
+              if (
+                stepTwoKey == '0' &&
+                rowData?.user?.relieving_date <=
+                  customFunctions.getDate(new Date())
+              ) {
+                setStepTwoKey('1');
+              } else {
+                setStepTwoKey('0');
+              }
+            }}
+          >
             <Card>
               <Card.Header>
                 <div className="d-flex align-items-center justify-content-between">
                   <h6 className="text-primary m-0">Step 2</h6>
                   <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                      <img src="/images/downarrow-18.svg" alt="" />
+                    <Accordion.Toggle
+                      as={Button}
+                      variant="link"
+                      // eventKey={
+                      //   rowData?.user?.relieving_date <=
+                      //   customFunctions.getDate(new Date())
+                      //     ? '1'
+                      //     : '0'
+                      // }
+                      // isDiseable={
+                      //   rowData?.user?.relieving_date !=
+                      //   customFunctions.getDate(new Date())
+                      // }
+                    >
+                      <img
+                        src={
+                          stepTwoKey == '0'
+                            ? '/images/caret-down.svg'
+                            : '/images/caret-up.svg'
+                        }
+                        alt=""
+                      />
                     </Accordion.Toggle>
                   </div>
                 </div>
@@ -567,7 +1021,11 @@ const ResignationDetailsComponent = (props) => {
                     <Col sm={3}>
                       <DropdownInput
                         label="Select Document"
-                        options={documentsList}
+                        options={uniqueDocumentOptions}
+                        defaultValue={selectedDocument}
+                        onSelectHandler={(select) => {
+                          setSelectedDocument(select);
+                        }}
                       />
                     </Col>
                     <Col>
@@ -598,64 +1056,132 @@ const ResignationDetailsComponent = (props) => {
                         }}
                       />
                     </Col>
-                    <Col className="mt-4 ms-3" sm={5}>
-                      <Card>
-                        <Card.Body>
-                          {documentsList &&
-                            documentsList.map((item, index) => (
-                              <Row>
-                                <Col sm={9}>
-                                  <ul>
-                                    &nbsp;
-                                    <del>{item?.name}</del>
-                                  </ul>
-                                </Col>
-                                <Col sm={3}>
-                                  {/* {item.isDiseable == true && ( */}
-                                  <>
-                                    <a href={item?.url} target="_blank">
-                                      <img
-                                        title="Download Document"
-                                        style={{ cursor: 'pointer' }}
-                                        src="/images/download1.svg"
-                                        alt="download-icon"
-                                        className="me-3"
-                                      />
-                                    </a>
+                    <Col>
+                      <Button
+                        className="mt-4"
+                        onClick={(e) => {
+                          handleSubmit();
+                        }}
+                        disabled={!selectedDocument || document == null}
+                      >
+                        Upload
+                      </Button>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Col className="mt-4 ms-3" sm={5}>
+                        <Card>
+                          <Card.Body>
+                            {documentsList &&
+                              documentsList.map(
+                                (item, index) => (
+                                  console.log('item', item),
+                                  (
+                                    <Row>
+                                      <Col sm={9}>
+                                        <ul>
+                                          &nbsp;
+                                          <span>
+                                            {item.isDiseable == true ? (
+                                              <del>{item?.name}</del>
+                                            ) : (
+                                              item?.name
+                                            )}
+                                          </span>
+                                        </ul>
+                                      </Col>
+                                      <Col sm={3}>
+                                        {item.isDiseable == true && (
+                                          <>
+                                            <a href={item?.url} target="_blank">
+                                              <img
+                                                title="Download Document"
+                                                style={{ cursor: 'pointer' }}
+                                                src="/images/download1.svg"
+                                                alt="download-icon"
+                                                className="me-3"
+                                              />
+                                            </a>
 
-                                    <a
-                                      href="javascript:void(0)"
-                                      onClick={() => {
-                                        deleteDocument(item?.doc_id);
-                                      }}
-                                    >
-                                      <img
-                                        title="Remove Document"
-                                        style={{ cursor: 'pointer' }}
-                                        src="/images/delete.png"
-                                        alt="download-icon"
-                                      />
-                                    </a>
-                                  </>
-                                  {/* )} */}
-                                </Col>
-                              </Row>
-                            ))}
-                          <h6 style={{ marginLeft: '36px' }}>Exit Form</h6>
-                        </Card.Body>
-                      </Card>
+                                            <a
+                                              href="javascript:void(0)"
+                                              onClick={() => {
+                                                deleteDocument(item?.doc_id);
+                                              }}
+                                            >
+                                              <img
+                                                title="Remove Document"
+                                                style={{ cursor: 'pointer' }}
+                                                src="/images/delete.png"
+                                                alt="download-icon"
+                                              />
+                                            </a>
+                                          </>
+                                        )}
+                                      </Col>
+                                    </Row>
+                                  )
+                                )
+                              )}
+                          </Card.Body>
+                        </Card>
+                      </Col>
                     </Col>
                   </Row>
                 </Card.Body>
               </Accordion.Collapse>
             </Card>
           </Accordion>
-          <div className="mt-3 mb-3">
-            <Row>
-              <Col 
-              className='d-flex justify-content-end'
-              >
-              {/* <h6>
+
+          <Accordion
+            activeKey={stepThreeKey}
+            onClick={() => {
+              if (
+                stepThreeKey == '0' &&
+                rowData?.user?.relieving_date <=
+                  customFunctions.getDate(new Date())
+              ) {
+                setStepThreeKey('1');
+              } else {
+                setStepThreeKey('0');
+              }
+            }}
+          >
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <h6 className="text-primary m-0">Step 3</h6>
+                  <div className="d-flex align-items-center justify-content-end">
+                    <Accordion.Toggle
+                      as={Button}
+                      variant="link"
+                      // eventKey={
+                      //   rowData?.user?.relieving_date <=
+                      //   customFunctions.getDate(new Date())
+                      //     ? '1'
+                      //     : '0'
+                      // }
+                    >
+                      <img
+                        src={
+                          stepTwoKey == '0'
+                            ? '/images/caret-down.svg'
+                            : '/images/caret-up.svg'
+                        }
+                        alt=""
+                      />
+                    </Accordion.Toggle>
+                  </div>
+                </div>
+              </Card.Header>
+              <Accordion.Collapse eventKey="1">
+                <Card>
+                  <Card.Body>
+                    <div className="mt-3 mb-3">
+                      <Row>
+                        <Col className="d-flex justify-content-end">
+                          {/* <h6>
                 Please{' '}
                 <a href="#">
                   {' '}
@@ -663,10 +1189,15 @@ const ResignationDetailsComponent = (props) => {
                 </a>{' '}
                 to relieve Akshay Chavan
               </h6> */}
-              <Button>Relieve Employee</Button>
-              </Col>
-            </Row>
-          </div>
+                          <Button>Relieve Employee</Button>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
         </div>
       </section>
       <ModalInput
@@ -696,8 +1227,33 @@ const ResignationDetailsComponent = (props) => {
               placeholder="Select relieving date"
               minDate={new Date()}
             />
-            <TextInput label="Reason" />
-            <Button className="me-3">Update</Button>
+            <TextInput
+              label="Reason"
+              value={relievingDateReason}
+              onInputChange={(e) => {
+                setRelievingDateReason(e.target.value);
+              }}
+            />
+            <Button
+              className="mr-5 mb-3 mt-2"
+              // disabled={!relievingDateReason}
+              onClick={() => {
+                setShowModal(false);
+                swal({
+                  title: 'Are you sure?',
+                  text: 'You want to change relieving date',
+                  icon: 'warning',
+                  buttons: true,
+                  dangerMode: true,
+                }).then((willDelete) => {
+                  if (willDelete) {
+                    changeRelievingData();
+                  }
+                });
+              }}
+            >
+              Update
+            </Button>
             <Button variant="secondary">Cancel</Button>
           </div>
         }
