@@ -1189,7 +1189,23 @@ const ResignationDetailsComponent = (props) => {
                 </a>{' '}
                 to relieve Akshay Chavan
               </h6> */}
-                          <Button>Relieve Employee</Button>
+                          <Button
+                            onClick={() => {
+                              swal({
+                                title: 'Are you sure?',
+                                text: 'You want to relive this employee',
+                                icon: 'warning',
+                                buttons: true,
+                                dangerMode: true,
+                              }).then((willDelete) => {
+                                if (willDelete) {
+                                  isRelived();
+                                }
+                              });
+                            }}
+                          >
+                            Relieve Employee
+                          </Button>
                         </Col>
                       </Row>
                     </div>
