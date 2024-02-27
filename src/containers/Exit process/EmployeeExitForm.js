@@ -28,6 +28,7 @@ const EmployeeExitForm = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [retainNote, setRetainNote] = useState('');
   const [rowData, setRowData] = useState([]);
+  console.log('🚀 ~ EmployeeExitForm ~ rowData:', rowData);
   const [modalType, setModalType] = useState('');
   const [buyBackDate, setBuyBackDate] = useState('');
   const [buyBackReason, setBuyBackReason] = useState('');
@@ -269,7 +270,7 @@ const EmployeeExitForm = (props) => {
             </h2>
           </div>
           <Breadcrumb items={items} />
-          {rowData && rowData?.length > 0 && (
+          {rowData && rowData?.length > 0 && !rowData?.user?.relieved &&  (
             <div className="d-flex justify-content-end mb-3">
               {(!rowData?.[0]?.retain_status ||
                 [2].includes(rowData?.[0]?.retain_status)) &&
@@ -350,7 +351,7 @@ const EmployeeExitForm = (props) => {
                       as="textarea"
                       rows="5"
                       value={resignationReason}
-                      maxlength={100}
+                      maxlength={255}
                       onInputChange={(e) => {
                         setResignationReason(e.target.value);
                       }}
@@ -361,34 +362,32 @@ const EmployeeExitForm = (props) => {
                       )}
                     />
                     <h6 className="content-title text-count-box float-end">
-                      {`${resignationReason?.length}/100`}
+                      {`${resignationReason?.length}/255`}
                     </h6>
-                    <div 
-                    style={{marginLeft:"-12px"}}
-                    >
-                    <Row>
-                      <Col>
-                        <Button
-                          onClick={() => {
-                            onSubmit();
-                          }}
-                          className="me-3"
-                        >
-                          Submit
-                        </Button>
-                      {/* </Col>
+                    <div style={{ marginLeft: '-12px' }}>
+                      <Row>
+                        <Col>
+                          <Button
+                            onClick={() => {
+                              onSubmit();
+                            }}
+                            className="me-3"
+                          >
+                            Submit
+                          </Button>
+                          {/* </Col>
                       <Col> */}
-                        <Button
-                          variant="secondary"
-                          onClick={() => {
-                            setResignation(false);
-                            validator.current.hideMessages();
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      </Col>
-                    </Row>
+                          <Button
+                            variant="secondary"
+                            onClick={() => {
+                              setResignation(false);
+                              validator.current.hideMessages();
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                        </Col>
+                      </Row>
                     </div>
                   </Col>
                 </Row>
@@ -401,44 +400,46 @@ const EmployeeExitForm = (props) => {
               {!resignation && (
                 <div className="d-flex align-items-center justify-content-between">
                   <h5 className="card-title mb-3 mt-2 ">My Resignation </h5>
-                  {[3, 1].includes(rowData[0]?.resignation_status) ? (
-                    ''
-                  ) : (
-                    <a
-                      href="#"
-                      className="d-flex justify-content-end btn-link"
-                      onClick={() => {
-                        setResignation(true);
-                      }}
-                    >
-                      Apply For Resignation
-                    </a>
-                  )}
-                </div>
-              )}
-              <Row>
-                {rowData?.[0]?.retain_status != null && (
-                  <Col className="d-flex justify-content-end">
-                    <h6>Retain Status: </h6>
-                    {rowData?.[0]?.retain_status == '1' ? (
-                      <h6 bg="success">
-                        {' '}
-                        <b>Approved </b>{' '}
-                      </h6>
-                    ) : rowData?.[0]?.retain_status == '2' ? (
-                      <h6 bg="secondary">
-                        {' '}
-                        <b>Declined</b>{' '}
-                      </h6>
+
+                  <div className="d-flex flex-wrap justify-content-end">
+                    {[3, 1].includes(rowData[0]?.resignation_status) ? (
+                      ''
                     ) : (
-                      <h6 bg="secondary">
-                        {' '}
-                        <b>Pending</b>{' '}
+                      <a
+                        href="#"
+                        className="d-flex justify-content-end btn-link w-100 mb-2"
+                        onClick={() => {
+                          setResignation(true);
+                        }}
+                      >
+                        Apply For Resignation
+                      </a>
+                    )}
+                    {rowData?.[0]?.retain_status != null && (
+                      <h6>
+                        Retain Status: <b>{rowData?.[0]?.retain_status_name}</b>{' '}
                       </h6>
                     )}
-                  </Col>
-                )}
-              </Row>
+
+                    {/* {rowData?.[0]?.retain_status == '1' ? (
+                        <h6 bg="success">
+                          {' '}
+                          <b className="ms-2">Approved </b>{' '}
+                        </h6>
+                      ) : rowData?.[0]?.retain_status == '2' ? (
+                        <h6 bg="secondary">
+                          {' '}
+                          <b className="ms-2">Declined</b>{' '}
+                        </h6>
+                      ) : (
+                        <h6 bg="secondary">
+                          {' '}
+                          <b className="ms-2">Pending</b>{' '}
+                        </h6>
+                      )} */}
+                  </div>
+                </div>
+              )}
               <Row>
                 {rowData?.[0]?.buy_back_status != null && (
                   <Col className="d-flex justify-content-end">
@@ -500,7 +501,7 @@ const EmployeeExitForm = (props) => {
                       asterisk="*"
                       rows="5"
                       value={retainNote}
-                      maxlength={100}
+                      maxlength={255}
                       onInputChange={(e) => {
                         setRetainNote(e.target.value);
                         setShowError(false);
@@ -512,7 +513,7 @@ const EmployeeExitForm = (props) => {
                       </span>
                     )}
                     <h6 className="content-title text-count-box float-end">
-                      {`${retainNote?.length}/100`}
+                      {`${retainNote?.length}/255`}
                     </h6>
                   </>
                 )}
@@ -549,7 +550,7 @@ const EmployeeExitForm = (props) => {
                           asterisk="*"
                           as="textarea"
                           rows="5"
-                          maxlength={100}
+                          maxlength={255}
                           value={buyBackReason}
                           onInputChange={(e) => {
                             setBuyBackReason(e.target.value);
@@ -562,7 +563,7 @@ const EmployeeExitForm = (props) => {
                           </span>
                         )}
                         <h6 className="content-title text-count-box float-end">
-                          {`${buyBackReason?.length}/100`}
+                          {`${buyBackReason?.length}/255`}
                         </h6>
                       </Col>
                     </Row>

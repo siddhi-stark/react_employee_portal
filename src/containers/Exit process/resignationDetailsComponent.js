@@ -49,6 +49,10 @@ const ResignationDetailsComponent = (props) => {
   const [stepTwoKey, setStepTwoKey] = useState('0');
   const [stepThreeKey, setStepThreeKey] = useState('0');
   const [uniqueDocumentOptions, setUniqueDocumentOptions] = useState([]);
+  console.log(
+    '🚀 ~ ResignationDetailsComponent ~ uniqueDocumentOptions:',
+    uniqueDocumentOptions
+  );
   const [userId, setUserId] = useState();
   const [buyBackReason, setBuyBackReason] = useState('');
   const [shoeError, setShowError] = useState(false);
@@ -113,6 +117,15 @@ const ResignationDetailsComponent = (props) => {
       label: 'Other Document',
     },
   ]);
+
+  useEffect(() => {
+    if (rowData?.user?.relieving_date <= customFunctions.getDate(new Date())) {
+      setStepTwoKey('1');
+    }
+    if (rowData?.user?.relieved == true) {
+      setStepThreeKey('1');
+    }
+  }, [rowData]);
 
   useEffect(() => {
     const unique =
@@ -525,15 +538,20 @@ const ResignationDetailsComponent = (props) => {
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <section className="content-area">
-        <div className="mt-5">
+        <div className="mt-5 mb-5 ">
           <Accordion activeKey={key}>
             <Card>
-              <Card.Header className='position-relative'>
-                <div className="d-flex align-items-center justify-content-between" style={{minHeight: "30px"}}>
-                  <h6 className="text-primary m-0">Resignation Process</h6>
+              <Card.Header className="position-relative bg-primary">
+                <div
+                  className="d-flex align-items-center justify-content-between"
+                  style={{ minHeight: '30px' }}
+                >
+                  <h6 className="text-white m-0">
+                    Step 1 (Resignation Process)
+                  </h6>
                   <div className="d-flex align-items-center justify-content-end">
                     <Accordion.Toggle
-                      className='toggle-btn-accordion'
+                      className="toggle-btn-accordion"
                       as={Button}
                       variant="link"
                       onClick={() => {
@@ -550,6 +568,7 @@ const ResignationDetailsComponent = (props) => {
                             ? '/images/caret-down.svg'
                             : '/images/caret-up.svg'
                         }
+                        className="forWhiteImg"
                         alt=""
                       />
                     </Accordion.Toggle>
@@ -572,7 +591,7 @@ const ResignationDetailsComponent = (props) => {
                               <td>
                                 {rowData?.user?.full_name
                                   ? rowData?.user?.full_name
-                                  : 'Akshay Chavan'}
+                                  : '-'}
                               </td>
                             </tr>
                             <tr>
@@ -580,7 +599,7 @@ const ResignationDetailsComponent = (props) => {
                               <td>
                                 {rowData?.user?.emp_code
                                   ? rowData?.user?.emp_code
-                                  : '298'}
+                                  : '-'}
                               </td>
                             </tr>
                             <tr>
@@ -588,7 +607,7 @@ const ResignationDetailsComponent = (props) => {
                               <td>
                                 {rowData?.user?.designation_name
                                   ? rowData?.user?.designation_name
-                                  : 'Jr.Software developer'}
+                                  : '-'}
                               </td>
                             </tr>
                             <tr>
@@ -633,7 +652,7 @@ const ResignationDetailsComponent = (props) => {
                                     )
                                   : '-'}
                                 <a
-                                  className="ms-2"
+                                  className="d-block w-100"
                                   href="javascript:void(0)"
                                   onClick={() => {
                                     setShowModal(true);
@@ -645,14 +664,14 @@ const ResignationDetailsComponent = (props) => {
                                 </a>
                               </td>
                             </tr>
-                            <tr>
+                            {/* <tr>
                               <th scope="row">Relieving Status</th>
                               <td>
                                 {rowData?.user?.relieved == true
                                   ? 'Approved'
                                   : 'Pending'}
                               </td>
-                            </tr>
+                            </tr> */}
                             {/* )} */}
                             {rowData?.buy_back_date && (
                               <tr>
@@ -744,7 +763,7 @@ const ResignationDetailsComponent = (props) => {
                                 as="textarea"
                                 rows="5"
                                 value={retainReason}
-                                maxlength={100}
+                                maxlength={255}
                                 onInputChange={(e) => {
                                   setRetainReason(e.target.value);
                                   setShowError(false);
@@ -755,10 +774,14 @@ const ResignationDetailsComponent = (props) => {
                                   Reason field is required
                                 </span>
                               )}
+                              <h6 className="content-title text-count-box float-end">
+                                {`${retainReason?.length}/255`}
+                              </h6>
                             </>
                             <Row className="mt-3 mb-3">
                               <Col>
                                 <Button
+                                  className="me-3"
                                   onClick={() => {
                                     // retainRequest(1);
                                     isValid('admin_retain', 'accept_retain');
@@ -766,8 +789,7 @@ const ResignationDetailsComponent = (props) => {
                                 >
                                   Accept Retention
                                 </Button>
-                              </Col>
-                              <Col>
+
                                 <Button
                                   variant="secondary"
                                   onClick={() => {
@@ -828,12 +850,16 @@ const ResignationDetailsComponent = (props) => {
                               type="text"
                               as="textarea"
                               rows="4"
+                              maxlength={255}
                               value={buyBackReason}
                               onInputChange={(e) => {
                                 setBuyBackReason(e.target.value);
                                 setShowError(false);
                               }}
                             />
+                            <h6 className="content-title text-count-box float-end">
+                              {`${buyBackReason?.length}/255`}
+                            </h6>
                             {shoeError && (
                               <span style={{ color: 'red' }}>
                                 Buy back reason field is required
@@ -905,12 +931,15 @@ const ResignationDetailsComponent = (props) => {
                               as="textarea"
                               rows="5"
                               value={approveReason}
-                              maxlength={100}
+                              maxlength={255}
                               onInputChange={(e) => {
                                 setApproveReason(e.target.value);
                                 setShowError(false);
                               }}
                             />
+                            <h6 className="content-title text-count-box float-end">
+                              {`${approveReason?.length}/255`}
+                            </h6>
                             {shoeError && (
                               <span style={{ color: 'red' }}>
                                 Reason field is required
@@ -956,12 +985,15 @@ const ResignationDetailsComponent = (props) => {
 
           <Accordion activeKey={stepTwoKey}>
             <Card>
-              <Card.Header className='position-relative'>
-                <div className="d-flex align-items-center justify-content-between" style={{minHeight: "30px"}}>
-                  <h6 className="text-primary m-0">Exit Process</h6>
+              <Card.Header className="position-relative bg-primary">
+                <div
+                  className="d-flex align-items-center justify-content-between"
+                  style={{ minHeight: '30px' }}
+                >
+                  <h6 className="text-white m-0"> Step 2 (Exit Process)</h6>
                   <div className="d-flex align-items-center justify-content-end">
                     <Accordion.Toggle
-                      className='toggle-btn-accordion'
+                      className="toggle-btn-accordion"
                       as={Button}
                       variant="link"
                       onClick={() => {
@@ -982,6 +1014,7 @@ const ResignationDetailsComponent = (props) => {
                             ? '/images/caret-down.svg'
                             : '/images/caret-up.svg'
                         }
+                        className="forWhiteImg"
                         alt=""
                       />
                     </Accordion.Toggle>
@@ -1008,7 +1041,7 @@ const ResignationDetailsComponent = (props) => {
                       </a>
                     </Col>
                   </Row> */}
-                  <Row className="mt-3">
+                  <Row className="mt-3 d-flex align-items-end">
                     <Col sm={3}>
                       <DropdownInput
                         label="Select Document"
@@ -1017,6 +1050,7 @@ const ResignationDetailsComponent = (props) => {
                         onSelectHandler={(select) => {
                           setSelectedDocument(select);
                         }}
+                        disabled={uniqueDocumentOptions.length <= 0}
                       />
                     </Col>
                     <Col>
@@ -1045,11 +1079,12 @@ const ResignationDetailsComponent = (props) => {
                             );
                           }
                         }}
+                        disabled={uniqueDocumentOptions.length <= 0}
                       />
                     </Col>
                     <Col>
                       <Button
-                        className="mt-4"
+                        className="mt-4 mb-4"
                         onClick={(e) => {
                           handleSubmit();
                         }}
@@ -1059,64 +1094,96 @@ const ResignationDetailsComponent = (props) => {
                       </Button>
                     </Col>
                   </Row>
-                  <Row>
-                    <Col>
-                      <Col className="mt-4 ms-3" sm={5}>
-                        <Card>
-                          <Card.Body>
+                  <Row className="mt-4">
+                    <Col sm={6}>
+                      <Card className="border-0">
+                        <Card.Body>
+                          <ul>
                             {documentsList &&
-                              documentsList.map(
-                                (item, index) => (
-                                  (
-                                    <Row>
-                                      <Col sm={9}>
-                                        <ul>
-                                          &nbsp;
-                                          <span>
-                                            {item.isDiseable == true ? (
-                                              <del>{item?.name}</del>
-                                            ) : (
-                                              item?.name
-                                            )}
-                                          </span>
-                                        </ul>
-                                      </Col>
-                                      <Col sm={3}>
-                                        {item.isDiseable == true && (
-                                          <>
-                                            <a href={item?.url} target="_blank">
-                                              <img
-                                                title="Download Document"
-                                                style={{ cursor: 'pointer' }}
-                                                src="/images/download1.svg"
-                                                alt="download-icon"
-                                                className="me-3"
-                                              />
-                                            </a>
+                              documentsList?.slice(0, 4)?.map((item, index) => (
+                                <li className="mb-2 d-flex justify-content-between">
+                                  {item.isDiseable == true ? (
+                                    <del>{item?.name}</del>
+                                  ) : (
+                                    item?.name
+                                  )}
+                                  {item.isDiseable == true && (
+                                    <div className="btn-wrapper">
+                                      <a href={item?.url} target="_blank">
+                                        <img
+                                          title="Download Document"
+                                          style={{ cursor: 'pointer' }}
+                                          src="/images/download1.svg"
+                                          alt="download-icon"
+                                          className="me-3"
+                                        />
+                                      </a>
 
-                                            <a
-                                              href="javascript:void(0)"
-                                              onClick={() => {
-                                                deleteDocument(item?.doc_id);
-                                              }}
-                                            >
-                                              <img
-                                                title="Remove Document"
-                                                style={{ cursor: 'pointer' }}
-                                                src="/images/delete.png"
-                                                alt="download-icon"
-                                              />
-                                            </a>
-                                          </>
-                                        )}
-                                      </Col>
-                                    </Row>
-                                  )
-                                )
-                              )}
-                          </Card.Body>
-                        </Card>
-                      </Col>
+                                      <a
+                                        href="javascript:void(0)"
+                                        onClick={() => {
+                                          deleteDocument(item?.doc_id);
+                                        }}
+                                      >
+                                        <img
+                                          title="Remove Document"
+                                          style={{ cursor: 'pointer' }}
+                                          src="/images/delete.png"
+                                          alt="download-icon"
+                                        />
+                                      </a>
+                                    </div>
+                                  )}
+                                </li>
+                              ))}
+                          </ul>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col sm={6}>
+                      <Card className="border-0">
+                        <Card.Body>
+                          <ul>
+                            {documentsList &&
+                              documentsList?.slice(4, 7)?.map((item, index) => (
+                                <li className="mb-2 d-flex justify-content-between">
+                                  {item.isDiseable == true ? (
+                                    <del>{item?.name}</del>
+                                  ) : (
+                                    item?.name
+                                  )}
+                                  {item.isDiseable == true && (
+                                    <div className="btn-wrapper">
+                                      <a href={item?.url} target="_blank">
+                                        <img
+                                          title="Download Document"
+                                          style={{ cursor: 'pointer' }}
+                                          src="/images/download1.svg"
+                                          alt="download-icon"
+                                          className="me-3"
+                                        />
+                                      </a>
+
+                                      <a
+                                        href="javascript:void(0)"
+                                        onClick={() => {
+                                          deleteDocument(item?.doc_id);
+                                        }}
+                                      >
+                                        <img
+                                          title="Remove Document"
+                                          style={{ cursor: 'pointer' }}
+                                          src="/images/delete.png"
+                                          alt="download-icon"
+                                        />
+                                      </a>
+                                    </div>
+                                  )}
+                                </li>
+                              ))}
+                          </ul>
+                        </Card.Body>
+                      </Card>
                     </Col>
                   </Row>
                 </Card.Body>
@@ -1126,12 +1193,15 @@ const ResignationDetailsComponent = (props) => {
 
           <Accordion activeKey={stepThreeKey}>
             <Card>
-            <Card.Header className='position-relative'>
-                <div className="d-flex align-items-center justify-content-between" style={{minHeight: "30px"}}>
-                  <h6 className="text-primary m-0">Relieving Process</h6>
+              <Card.Header className="position-relative bg-primary">
+                <div
+                  className="d-flex align-items-center justify-content-between"
+                  style={{ minHeight: '30px' }}
+                >
+                  <h6 className="text-white m-0">Step 3 (Relieving Process)</h6>
                   <div className="d-flex align-items-center justify-content-end">
                     <Accordion.Toggle
-                      className='toggle-btn-accordion'
+                      className="toggle-btn-accordion"
                       as={Button}
                       variant="link"
                       onClick={() => {
@@ -1152,6 +1222,7 @@ const ResignationDetailsComponent = (props) => {
                             ? '/images/caret-down.svg'
                             : '/images/caret-up.svg'
                         }
+                        className="forWhiteImg"
                         alt=""
                       />
                     </Accordion.Toggle>
@@ -1163,8 +1234,9 @@ const ResignationDetailsComponent = (props) => {
                   <Card.Body>
                     <div className="mt-3 mb-3">
                       <Row>
-                        <Col className="d-flex justify-content-end">
-                          {/* <h6>
+                        {!rowData?.user?.relieved ? (
+                          <Col className="d-flex justify-content-start">
+                            {/* <h6>
                 Please{' '}
                 <a href="#">
                   {' '}
@@ -1172,24 +1244,30 @@ const ResignationDetailsComponent = (props) => {
                 </a>{' '}
                 to relieve Akshay Chavan
               </h6> */}
-                          <Button
-                            onClick={() => {
-                              swal({
-                                title: 'Are you sure?',
-                                text: 'You want to relive this employee',
-                                icon: 'warning',
-                                buttons: true,
-                                dangerMode: true,
-                              }).then((willDelete) => {
-                                if (willDelete) {
-                                  isRelived();
-                                }
-                              });
-                            }}
-                          >
-                            Relieve Employee
-                          </Button>
-                        </Col>
+
+                            <Button
+                              onClick={() => {
+                                swal({
+                                  title: 'Are you sure?',
+                                  text: 'Do you want to relieve this employee today?',
+                                  icon: 'warning',
+                                  buttons: true,
+                                  dangerMode: true,
+                                }).then((willDelete) => {
+                                  if (willDelete) {
+                                    isRelived();
+                                  }
+                                });
+                              }}
+                            >
+                              Relieve Employee
+                            </Button>
+                          </Col>
+                        ) : (
+                          <h4 className="d-flex justify-content-start">
+                            Employee has relieved
+                          </h4>
+                        )}
                       </Row>
                     </div>
                   </Card.Body>
@@ -1197,10 +1275,6 @@ const ResignationDetailsComponent = (props) => {
               </Accordion.Collapse>
             </Card>
           </Accordion>
-
-
-
-          
         </div>
       </section>
       <ModalInput
@@ -1257,7 +1331,14 @@ const ResignationDetailsComponent = (props) => {
             >
               Update
             </Button>
-            <Button variant="secondary">Cancel</Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setShowModal(false);
+              }}
+            >
+              Cancel
+            </Button>
           </div>
         }
       />
