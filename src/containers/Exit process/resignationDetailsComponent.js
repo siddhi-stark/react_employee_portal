@@ -33,7 +33,6 @@ const ResignationDetailsComponent = (props) => {
   const { match } = props;
   const location = useLocation();
   const { state } = location;
-  console.log('🚀 ~ ResignationDetailsComponent ~ state:', state);
   const validator = useRef(new SimpleReactValidator({}));
   const [count, forceUpdate] = useState(0);
   const [managerDeclineToggle, setManagerDeclineToggle] = useState(false);
@@ -219,7 +218,6 @@ const ResignationDetailsComponent = (props) => {
       setShowLoader(false);
       let uploadedDoc = [];
       const updatedDocumentsList = documentsList.map((doc) => {
-        console.log('docdoc', doc);
         const uploadedDoc = data?.data?.find(
           (item) => doc.id === item.document_type
         );
@@ -528,22 +526,24 @@ const ResignationDetailsComponent = (props) => {
 
       <section className="content-area">
         <div className="mt-5">
-          <Accordion
-            activeKey={key}
-            onClick={() => {
-              if (key == '1') {
-                setKey('0');
-              } else {
-                setKey('1');
-              }
-            }}
-          >
+          <Accordion activeKey={key}>
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h6 className="text-primary m-0">Step 1</h6>
+              <Card.Header className='position-relative'>
+                <div className="d-flex align-items-center justify-content-between" style={{minHeight: "30px"}}>
+                  <h6 className="text-primary m-0">Resignation Process</h6>
                   <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle as={Button} variant="link">
+                    <Accordion.Toggle
+                      className='toggle-btn-accordion'
+                      as={Button}
+                      variant="link"
+                      onClick={() => {
+                        if (key == '1') {
+                          setKey('0');
+                        } else {
+                          setKey('1');
+                        }
+                      }}
+                    >
                       <img
                         src={
                           key == '0'
@@ -639,7 +639,9 @@ const ResignationDetailsComponent = (props) => {
                                     setShowModal(true);
                                   }}
                                 >
-                                  <u> Update Date</u>
+                                  {rowData?.resignation_status == '1' && (
+                                    <u> Update Date</u>
+                                  )}
                                 </a>
                               </td>
                             </tr>
@@ -952,38 +954,27 @@ const ResignationDetailsComponent = (props) => {
             </Card>
           </Accordion>
 
-          <Accordion
-            activeKey={stepTwoKey}
-            onClick={() => {
-              if (
-                stepTwoKey == '0' &&
-                rowData?.user?.relieving_date <=
-                  customFunctions.getDate(new Date())
-              ) {
-                setStepTwoKey('1');
-              } else {
-                setStepTwoKey('0');
-              }
-            }}
-          >
+          <Accordion activeKey={stepTwoKey}>
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h6 className="text-primary m-0">Step 2</h6>
+              <Card.Header className='position-relative'>
+                <div className="d-flex align-items-center justify-content-between" style={{minHeight: "30px"}}>
+                  <h6 className="text-primary m-0">Exit Process</h6>
                   <div className="d-flex align-items-center justify-content-end">
                     <Accordion.Toggle
+                      className='toggle-btn-accordion'
                       as={Button}
                       variant="link"
-                      // eventKey={
-                      //   rowData?.user?.relieving_date <=
-                      //   customFunctions.getDate(new Date())
-                      //     ? '1'
-                      //     : '0'
-                      // }
-                      // isDiseable={
-                      //   rowData?.user?.relieving_date !=
-                      //   customFunctions.getDate(new Date())
-                      // }
+                      onClick={() => {
+                        if (
+                          stepTwoKey == '0' &&
+                          rowData?.user?.relieving_date <=
+                            customFunctions.getDate(new Date())
+                        ) {
+                          setStepTwoKey('1');
+                        } else {
+                          setStepTwoKey('0');
+                        }
+                      }}
                     >
                       <img
                         src={
@@ -1076,7 +1067,6 @@ const ResignationDetailsComponent = (props) => {
                             {documentsList &&
                               documentsList.map(
                                 (item, index) => (
-                                  console.log('item', item),
                                   (
                                     <Row>
                                       <Col sm={9}>
@@ -1134,38 +1124,31 @@ const ResignationDetailsComponent = (props) => {
             </Card>
           </Accordion>
 
-          <Accordion
-            activeKey={stepThreeKey}
-            onClick={() => {
-              if (
-                stepThreeKey == '0' &&
-                rowData?.user?.relieving_date <=
-                  customFunctions.getDate(new Date())
-              ) {
-                setStepThreeKey('1');
-              } else {
-                setStepThreeKey('0');
-              }
-            }}
-          >
+          <Accordion activeKey={stepThreeKey}>
             <Card>
-              <Card.Header>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h6 className="text-primary m-0">Step 3</h6>
+            <Card.Header className='position-relative'>
+                <div className="d-flex align-items-center justify-content-between" style={{minHeight: "30px"}}>
+                  <h6 className="text-primary m-0">Relieving Process</h6>
                   <div className="d-flex align-items-center justify-content-end">
                     <Accordion.Toggle
+                      className='toggle-btn-accordion'
                       as={Button}
                       variant="link"
-                      // eventKey={
-                      //   rowData?.user?.relieving_date <=
-                      //   customFunctions.getDate(new Date())
-                      //     ? '1'
-                      //     : '0'
-                      // }
+                      onClick={() => {
+                        if (
+                          stepThreeKey == '0' &&
+                          rowData?.user?.relieving_date <=
+                            customFunctions.getDate(new Date())
+                        ) {
+                          setStepThreeKey('1');
+                        } else {
+                          setStepThreeKey('0');
+                        }
+                      }}
                     >
                       <img
                         src={
-                          stepTwoKey == '0'
+                          stepThreeKey == '0'
                             ? '/images/caret-down.svg'
                             : '/images/caret-up.svg'
                         }
@@ -1214,6 +1197,10 @@ const ResignationDetailsComponent = (props) => {
               </Accordion.Collapse>
             </Card>
           </Accordion>
+
+
+
+          
         </div>
       </section>
       <ModalInput

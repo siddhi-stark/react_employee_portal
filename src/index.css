@@ -36,3 +36,10 @@ display: none;
 .bracket-round .minus-value {
   margin-right: 10px;
 }
+.toggle-btn-accordion {
+  width: 100%;
+  justify-content: flex-end !important;
+  align-items: flex-end !important;
+  display: flex;
+  position: absolute;
+}
