@@ -644,7 +644,7 @@ const ResignationDetailsComponent = (props) => {
                               </td>
                             </tr>
                             <tr>
-                              <th scope="row">Relieving Date</th>
+                              <th scope="row">Last Working Date</th>
                               <td>
                                 {rowData?.user?.relieving_date
                                   ? customFunctions.getDMYDate(

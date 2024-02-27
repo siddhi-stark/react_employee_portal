@@ -181,7 +181,7 @@ const EmployeeExitForm = (props) => {
     if (data && data.success == true) {
       setShowModal(false);
       setShowLoader(false);
-      swal(data && data.message[0], '', 'success').then(() =>
+      swal("Retain request send successfully", '', 'success').then(() =>
         window.location.reload()
       );
     } else {
