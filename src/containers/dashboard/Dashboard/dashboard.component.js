@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory, Link } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -54,6 +55,8 @@ function Dashboard() {
   const [newBirthdayData, setNewBirthdayData] = useState([]);
   const [broadcastDescription, setBroadcastDescription] = useState([]);
   const [confirmationEmployee, setConfirmationEmployee] = useState([]);
+  const [events, setEvents] = useState([]);
+  console.log("🚀 ~ Dashboard ~ events:", events)
   const dashboardKey = 'Dashboard';
 
   const d = new Date();
@@ -221,6 +224,17 @@ function Dashboard() {
     return true;
   };
 
+  const getEvents = async () => {
+    // ?type=all
+    // ?upcoming=true
+    const endPoint = `${Api.eventsUrl}?upcoming=true&sort_by=event_time`;
+    const { data } = await AuthApi.getDataFromServer(endPoint);
+    if (data) {
+      console.log('🚀 ~ getEvents ~ data:', data);
+      setEvents(data.data?.slice(0, 3));
+    }
+  };
+
   const getClockOutTime = () => {
     const localTime = customFunctions.getLocalStorage('time');
     setTime(localTime);
@@ -259,6 +273,7 @@ function Dashboard() {
       getAnniversary();
       getAppreciation();
       getUpcomingConfirmationEmployee();
+      getEvents();
     }
     document.addEventListener(
       'ProfileUpdate',
@@ -580,7 +595,7 @@ function Dashboard() {
                             <div className="media birthday-wish-section align-items-center">
                               <img
                                 className="mr-3 birth-wish-profile"
-                                src='/images/user.svg'
+                                src="/images/user.svg"
                                 alt="img"
                               />
                               <div className="media-body">
@@ -691,7 +706,7 @@ function Dashboard() {
                 </>
               )}
               <>
-            <NoticePeriodLastDay /> 
+                <NoticePeriodLastDay />
               </>
               {anniversary && anniversary.length > 0 && (
                 <>
@@ -902,7 +917,8 @@ function Dashboard() {
                                               <TextInput
                                                 onInputChange={(e) => {
                                                   setCount(e.target.value);
-                                                  empdata.greetMessage =e.target.value; // eslint-disable-line
+                                                  empdata.greetMessage =
+                                                    e.target.value; // eslint-disable-line
                                                   setNewBirthdayData(
                                                     appreciationData
                                                   );
@@ -1329,7 +1345,64 @@ function Dashboard() {
               </div>
             </div>
 
-            <div className="social-media">
+            <div className="col-xl-12">
+                    <div className="upcoming-bg faint-orange">
+                      <div className="upcoming-event-box">
+                        <div className="upcoming-event-img upcoming-event-img-edit">
+                          <img
+                            className="up-leaves1"
+                            src="/images/up-coming-event.svg"
+                          alt="Upcoming event"
+                          />
+                          <p>Events in {n}</p>
+                          <a href="/event">
+                          <Image
+                            src="/images/redirect.png"
+                            className="ms-3 up-leaves"
+                            onClick={() => {
+                              // onViewEvent();
+                            }}
+                          />
+                        </a>
+                        </div>
+
+                        { events?.length >0 ?  events &&
+                        events.map((ev, i) => (
+                          <>
+                            <div
+                              key={i}
+                              className="event-title date d-flex align-items-center"
+                            >
+                              <p className="bday-date">
+                                <img
+                                  src="/images/calendar-img.png"
+                                  alt="Upcoming event"
+                                />
+                              </p>
+                              <h6 className="text-success ms-1">
+                                  {ev.title}
+                                </h6>
+                            </div>
+                            {/* <Row>
+                            <Col> */}
+                            <p className="fw-lighter mb-0">
+                              {ev.datetime}
+                            </p>
+                            {/* </Col>
+                          </Row>{' '} */}
+                            <br />
+                          </>
+                        )) : 
+                        <p>No Upcoming Events</p>
+                         }
+                      </div>
+                    </div>
+                  </div>
+
+                  
+         
+
+            {/* <div className="social-media">
               <div className="card flex-fill w-100">
                 <div className="card-body">
                   <div className="table-title">
@@ -1358,7 +1431,7 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </Col>
         </Row>
       </section>

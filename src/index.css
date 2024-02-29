@@ -43,3 +43,13 @@ display: none;
   display: flex;
   position: absolute;
 }
+.eventCard p {
+  font-size: 12px;
+}
+.eventCard .card-text h6 {
+  font-size: 12px;
+}
+.upcoming-bg {
+  padding-left: 7px;
+  padding-right: 0px;
+}

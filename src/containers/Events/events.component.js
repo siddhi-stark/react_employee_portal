@@ -1,7 +1,8 @@
+/* eslint-disable */
 import CustomTable from 'stark-custom-datatable';
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory, Link } from 'react-router-dom';
-import { Card, Image } from 'react-bootstrap';
+import { Card, Image, Row, Col, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
@@ -10,6 +11,7 @@ import { Helmet, ModalInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 function Events() {
   const initialState = {
@@ -18,6 +20,7 @@ function Events() {
     eventDescription: '',
   };
   const [rowData, setRowData] = useState([]);
+  console.log('🚀 ~ Events ~ rowData:', rowData);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,15 +32,16 @@ function Events() {
   const employeeRole = customFunctions.getLocalStorage('group');
   const [showModal, setShowModal] = useState(false);
   const [eventDetails, setEventDetails] = useState(initialState);
+  console.log('🚀 ~ Events ~ eventDetails:', eventDetails);
 
   const handleActionCallback = (row) => {
     return (
       <>
         {' '}
         {Number(employeeRole) === 4 ||
-          Number(employeeRole) === 3 ||
-          Number(employeeRole) === 2 ||
-          Number(employeeRole) === 7 ? (
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2 ||
+        Number(employeeRole) === 7 ? (
           ''
         ) : (
           <>
@@ -53,9 +57,9 @@ function Events() {
               <Image alt="view" src="/images/eye.svg" />
             </a>
             {Number(employeeRole) === 4 ||
-              Number(employeeRole) === 3 ||
-              Number(employeeRole) === 2 ||
-              Number(employeeRole) === 7 ? (
+            Number(employeeRole) === 3 ||
+            Number(employeeRole) === 2 ||
+            Number(employeeRole) === 7 ? (
               ''
             ) : (
               <>
@@ -123,16 +127,16 @@ function Events() {
     {
       id:
         Number(employeeRole) === 4 ||
-          Number(employeeRole) === 3 ||
-          Number(employeeRole) === 2 ||
-          Number(employeeRole) === 7
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2 ||
+        Number(employeeRole) === 7
           ? ''
           : 'action',
       label:
         Number(employeeRole) === 4 ||
-          Number(employeeRole) === 3 ||
-          Number(employeeRole) === 2 ||
-          Number(employeeRole) === 7
+        Number(employeeRole) === 3 ||
+        Number(employeeRole) === 2 ||
+        Number(employeeRole) === 7
           ? ''
           : 'Action',
       render: handleActionCallback,
@@ -211,7 +215,7 @@ function Events() {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
-      <section className="content-area">
+      {/* <section className="content-area">
         <div className="mt-5">
           <Card>
             <Card.Body>
@@ -278,7 +282,78 @@ function Events() {
             }
           />
         </div>
-      </section>
+      </section> */}
+      <div>
+        <UserRestrictions permittedUsers={[1, 5, 6]} roleId={userRole}>
+          <Col className="mb-3 d-flex justify-content-end">
+            <Button
+              href="#"
+              onClick={() => {
+                history.push('/add-event');
+              }}
+            >
+              Add Event
+            </Button>
+          </Col>
+        </UserRestrictions>
+      </div>
+      <div>
+        <Row>
+          {rowData &&
+            rowData?.length &&
+            rowData?.map(
+              (item) => (
+                console.log('item', item),
+                (
+                  <Col sm={4}>
+                    <Card className="shadow eventCard bg-red">
+                      <Card.Img
+                        style={{ height: '233px', width: '302px' }}
+                        variant="top"
+                        src={
+                          item?.image
+                            ? item?.image
+                            : '/images/event_placeholder.png'
+                        }
+                      />
+                      <Card.Body>
+                        <p className="h6 fw-lighter mb-1">{item?.datetime}</p>
+                        <Card.Title>
+                          <h3 className="text-black fw-bold h3">
+                            {item?.title}
+                          </h3>
+                        </Card.Title>
+                        <Card.Text>
+                          <h6 className="fw-lighter ">{item?.description} </h6>
+                        </Card.Text>
+                      </Card.Body>
+                      <Card.Body className="text-end py-3 border-top radius-0 border-secondary">
+                        <Card.Link
+                          href="javascript:void(0)"
+                          onClick={() => {
+                            history.push(`/edit-event/${item?.id}`);
+                          }}
+                        >
+                          Edit
+                        </Card.Link>
+                        <Card.Link
+                          href="javascript:void(0)"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            removeHoliday(item?.id);
+                          }}
+                        >
+                          Delete
+                        </Card.Link>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                )
+              )
+            )}
+        </Row>
+      </div>
     </>
   );
 }
