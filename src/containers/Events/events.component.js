@@ -101,7 +101,8 @@ function Events() {
         return (
           <>
             {image ? (
-              <Link
+              <a
+              href='javascript:void(0)'
                 onClick={() => {
                   setEventDetails({
                     imgURL: image,
@@ -112,7 +113,7 @@ function Events() {
                 }}
               >
                 <strong> {title} </strong>
-              </Link>
+              </a>
             ) : (
               <span>{title}</span>
             )}
@@ -215,7 +216,7 @@ function Events() {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
-      {/* <section className="content-area">
+      <section className="content-area">
         <div className="mt-5">
           <Card>
             <Card.Body>
@@ -282,8 +283,8 @@ function Events() {
             }
           />
         </div>
-      </section> */}
-      <div>
+      </section>
+      {/* <div>
         <UserRestrictions permittedUsers={[1, 5, 6]} roleId={userRole}>
           <Col className="mb-3 d-flex justify-content-end">
             <Button
@@ -353,7 +354,7 @@ function Events() {
               )
             )}
         </Row>
-      </div>
+      </div> */}
     </>
   );
 }
