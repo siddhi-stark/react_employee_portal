@@ -257,6 +257,8 @@ const EmployeeExitForm = (props) => {
     setRetainNote('');
     setBuyBackDate('');
     setBuyBackReason('');
+    setResignationReason('')
+    setPersonalEmail('')
   };
 
   return (

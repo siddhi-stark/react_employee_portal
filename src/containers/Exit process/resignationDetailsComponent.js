@@ -614,7 +614,9 @@ const ResignationDetailsComponent = (props) => {
                               <th scope="row">Joining Date</th>
                               <td>
                                 {rowData?.user?.date_joined
-                                  ? rowData?.user?.date_joined
+                                  ? customFunctions.getDMYDate(
+                                      rowData?.user?.date_joined
+                                    )
                                   : '-'}
                               </td>
                             </tr>
@@ -728,7 +730,7 @@ const ResignationDetailsComponent = (props) => {
                         rowData?.resignation_decline_note) && (
                         <div>
                           <h6>
-                            <b>Remarks</b>
+                            <b>Resignation remarks</b>
                           </h6>
                           <Alert className="" variant="secondary">
                             <Alert.Heading>
@@ -778,29 +780,31 @@ const ResignationDetailsComponent = (props) => {
                                 {`${retainReason?.length}/255`}
                               </h6>
                             </>
-                            <Row className="mt-3 mb-3">
-                              <Col>
-                                <Button
-                                  className="me-3"
-                                  onClick={() => {
-                                    // retainRequest(1);
-                                    isValid('admin_retain', 'accept_retain');
-                                  }}
-                                >
-                                  Accept Retention
-                                </Button>
+                            <div style={{ marginLeft: '-12px' }}>
+                              <Row className="mt-3 mb-3">
+                                <Col>
+                                  <Button
+                                    className="me-3"
+                                    onClick={() => {
+                                      // retainRequest(1);
+                                      isValid('admin_retain', 'accept_retain');
+                                    }}
+                                  >
+                                    Accept Retention
+                                  </Button>
 
-                                <Button
-                                  variant="secondary"
-                                  onClick={() => {
-                                    // retainRequest(2);
-                                    isValid('admin_retain', 'decline_retain');
-                                  }}
-                                >
-                                  Decline
-                                </Button>
-                              </Col>
-                            </Row>
+                                  <Button
+                                    variant="secondary"
+                                    onClick={() => {
+                                      // retainRequest(2);
+                                      isValid('admin_retain', 'decline_retain');
+                                    }}
+                                  >
+                                    Decline
+                                  </Button>
+                                </Col>
+                              </Row>
+                            </div>
                           </>
                         )}
                       {rowData?.retain_status == 1 && (
@@ -865,29 +869,32 @@ const ResignationDetailsComponent = (props) => {
                                 Buy back reason field is required
                               </span>
                             )}
-                            <Row className="mt-0 mb-3">
-                              <Col>
-                                <Button
-                                  onClick={() => {
-                                    // buyBackRequest(1);
-                                    isValid('buy_back', 'accept');
-                                  }}
-                                >
-                                  Accept
-                                </Button>
-                              </Col>
-                              <Col>
-                                <Button
-                                  variant="secondary"
-                                  onClick={() => {
-                                    // buyBackRequest(2);
-                                    isValid('buy_back', 'decline');
-                                  }}
-                                >
-                                  Decline
-                                </Button>
-                              </Col>
-                            </Row>
+                            <div style={{ marginLeft: '-12px' }}>
+                              <Row className="mt-0 mb-3">
+                                <Col>
+                                  <Button
+                                    onClick={() => {
+                                      // buyBackRequest(1);
+                                      isValid('buy_back', 'accept');
+                                    }}
+                                    className="me-3"
+                                  >
+                                    Accept
+                                  </Button>
+                                  {/* </Col>
+                                <Col> */}
+                                  <Button
+                                    variant="secondary"
+                                    onClick={() => {
+                                      // buyBackRequest(2);
+                                      isValid('buy_back', 'decline');
+                                    }}
+                                  >
+                                    Decline
+                                  </Button>
+                                </Col>
+                              </Row>
+                            </div>
                           </>
                         )}
                       {/* {rowData?.buy_back_apply_reason && (
@@ -950,31 +957,33 @@ const ResignationDetailsComponent = (props) => {
 
                       {!managerDeclineToggle &&
                         rowData?.resignation_status == '3' && (
-                          <Row>
-                            <Col>
-                              <Button
-                                className="me-3"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  // approveResignation();
-                                  isValid('admin', 'approve_resign');
-                                }}
-                              >
-                                Approve
-                              </Button>
-                              {/* </Col>
+                          <div style={{ marginLeft: '-12px' }}>
+                            <Row>
+                              <Col>
+                                <Button
+                                  className="me-3"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    // approveResignation();
+                                    isValid('admin', 'approve_resign');
+                                  }}
+                                >
+                                  Approve
+                                </Button>
+                                {/* </Col>
                             <Col> */}
-                              <Button
-                                variant="secondary"
-                                onClick={() => {
-                                  // setManagerDeclineToggle(true);
-                                  // isValid('admin', 'decline_resign');
-                                }}
-                              >
-                                Decline
-                              </Button>
-                            </Col>
-                          </Row>
+                                <Button
+                                  variant="secondary"
+                                  onClick={() => {
+                                    // setManagerDeclineToggle(true);
+                                    isValid('admin', 'decline_resign');
+                                  }}
+                                >
+                                  Decline
+                                </Button>
+                              </Col>
+                            </Row>
+                          </div>
                         )}
                     </Col>
                   </Row>
@@ -1108,7 +1117,10 @@ const ResignationDetailsComponent = (props) => {
                                     item?.name
                                   )}
                                   {item.isDiseable == true && (
-                                    <div className="btn-wrapper">
+                                    <div
+                                      style={{ marginRight: '90px' }}
+                                      className="btn-wrapper"
+                                    >
                                       <a href={item?.url} target="_blank">
                                         <img
                                           title="Download Document"
@@ -1153,7 +1165,10 @@ const ResignationDetailsComponent = (props) => {
                                     item?.name
                                   )}
                                   {item.isDiseable == true && (
-                                    <div className="btn-wrapper">
+                                    <div
+                                      style={{ marginRight: '90px' }}
+                                      className="btn-wrapper"
+                                    >
                                       <a href={item?.url} target="_blank">
                                         <img
                                           title="Download Document"
@@ -1174,7 +1189,7 @@ const ResignationDetailsComponent = (props) => {
                                           title="Remove Document"
                                           style={{ cursor: 'pointer' }}
                                           src="/images/delete.png"
-                                          alt="download-icon"
+                                          alt="delete-icon"
                                         />
                                       </a>
                                     </div>
