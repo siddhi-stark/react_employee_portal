@@ -655,7 +655,7 @@ function EmployeeProfile(props) {
                         </>
                       )}
                     </div>
-                    {employeeDetails?.on_notice_period ? (
+                    {/* {employeeDetails?.on_notice_period ? (
                       <Button
                         onClick={() => {
                           setShowModal(true);
@@ -665,7 +665,7 @@ function EmployeeProfile(props) {
                       >
                         Relieve Now
                       </Button>
-                    ) : null}
+                    ) : null} */}
                     <div className="col-md-5">
                       {employeeDetails &&
                         !employeeDetails.confirmation_date &&
