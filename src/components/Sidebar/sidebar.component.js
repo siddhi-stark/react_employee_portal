@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Image, Col, Row } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import menu from '../../helper/menu';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
@@ -23,7 +23,6 @@ function Sidebar() {
   const [activeSubPath, setActiveSubPath] = useState(0);
 
   const [events, setEvents] = useState([]);
-  console.log('🚀 ~ Sidebar ~ events:', events);
   const [birthdays, setBirthdayData] = useState([]);
   const [isBirthDayPresent, setIsBirthDayPresent] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -72,27 +71,18 @@ function Sidebar() {
   };
 
   const getEvents = async () => {
-    const endPoint = `${Api.eventsUrl}?type=all&sort_by=event_time`;
+    const endPoint = `${Api.eventsUrl}?upcoming=true&sort_by=event_time`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
-      console.log('🚀 ~ getEvents ~ data:', data);
-      setEvents(data.data?.slice(0, 3));
+      setEvents(data.data);
     }
   };
 
   useEffect(() => {
     const LoginToken = customFunctions.getLocalStorage('access_token');
     if (LoginToken) {
-      // if (
-      //   ![
-      //     '/resignation-applications',
-      //     '/resignation-details/:id',
-      //     '/accountant-add-leaves',
-      //   ].includes(history?.location?.pathname)
-      // ) {
       getBirthday();
       getEvents();
-      // }
     }
 
     document.addEventListener('MenuChange', () => {
@@ -232,7 +222,7 @@ function Sidebar() {
 
           <div className="upcoming-events">
             <div className="upcoming-events">
-              {/* <div className="upcoming-bg">
+              <div className="upcoming-bg">
                 {events && events.length >= 1 ? (
                   <div className="upcoming-event-box up-event ">
                     <div className="upcoming-event-img">
@@ -264,6 +254,7 @@ function Sidebar() {
                                 src="/images/calendar-img.png"
                                 alt="Upcoming event"
                               />
+                              <span>{ev.datetime}</span>
                             </p>
                             {ev.image ? (
                               <p className="ms-1">
@@ -281,12 +272,9 @@ function Sidebar() {
                                 </Link>
                               </p>
                             ) : (
-                              <h6 className=" text-success ms-1">{ev.title}</h6>
+                              <p className="ms-1">{ev.title}</p>
                             )}
-                          </div>
-
-                          <p className="h6 fw-lighter mb-0">{ev.datetime}</p>
-
+                          </div>{' '}
                           <br />
                         </>
                       ))}
@@ -294,7 +282,7 @@ function Sidebar() {
                 ) : (
                   ''
                 )}
-              </div> */}
+              </div>
 
               {isBirthDayPresent && birthdays && birthdays.length >= 1 ? (
                 <>

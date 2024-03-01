@@ -49,10 +49,7 @@ const ResignationDetailsComponent = (props) => {
   const [stepTwoKey, setStepTwoKey] = useState('0');
   const [stepThreeKey, setStepThreeKey] = useState('0');
   const [uniqueDocumentOptions, setUniqueDocumentOptions] = useState([]);
-  console.log(
-    '🚀 ~ ResignationDetailsComponent ~ uniqueDocumentOptions:',
-    uniqueDocumentOptions
-  );
+
   const [userId, setUserId] = useState();
   const [buyBackReason, setBuyBackReason] = useState('');
   const [shoeError, setShowError] = useState(false);

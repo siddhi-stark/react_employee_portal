@@ -28,7 +28,6 @@ const EmployeeExitForm = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [retainNote, setRetainNote] = useState('');
   const [rowData, setRowData] = useState([]);
-  console.log('🚀 ~ EmployeeExitForm ~ rowData:', rowData);
   const [modalType, setModalType] = useState('');
   const [buyBackDate, setBuyBackDate] = useState('');
   const [buyBackReason, setBuyBackReason] = useState('');

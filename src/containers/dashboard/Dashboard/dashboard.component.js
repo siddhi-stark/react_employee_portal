@@ -56,7 +56,6 @@ function Dashboard() {
   const [broadcastDescription, setBroadcastDescription] = useState([]);
   const [confirmationEmployee, setConfirmationEmployee] = useState([]);
   const [events, setEvents] = useState([]);
-  console.log("🚀 ~ Dashboard ~ events:", events)
   const dashboardKey = 'Dashboard';
 
   const d = new Date();
@@ -230,7 +229,6 @@ function Dashboard() {
     const endPoint = `${Api.eventsUrl}?upcoming=true&sort_by=event_time`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
     if (data) {
-      console.log('🚀 ~ getEvents ~ data:', data);
       setEvents(data.data?.slice(0, 3));
     }
   };
@@ -1345,7 +1343,7 @@ function Dashboard() {
               </div>
             </div>
 
-            <div className="col-xl-12">
+            {/* <div className="col-xl-12">
                     <div className="upcoming-bg faint-orange">
                       <div className="upcoming-event-box">
                         <div className="upcoming-event-img upcoming-event-img-edit">
@@ -1383,13 +1381,11 @@ function Dashboard() {
                                   {ev.title}
                                 </h6>
                             </div>
-                            {/* <Row>
-                            <Col> */}
+                          
                             <p className="fw-lighter mb-0">
                               {ev.datetime}
                             </p>
-                            {/* </Col>
-                          </Row>{' '} */}
+                        
                             <br />
                           </>
                         )) : 
@@ -1397,7 +1393,7 @@ function Dashboard() {
                          }
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   
          

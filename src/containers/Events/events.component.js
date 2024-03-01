@@ -20,7 +20,6 @@ function Events() {
     eventDescription: '',
   };
   const [rowData, setRowData] = useState([]);
-  console.log('🚀 ~ Events ~ rowData:', rowData);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,7 +31,6 @@ function Events() {
   const employeeRole = customFunctions.getLocalStorage('group');
   const [showModal, setShowModal] = useState(false);
   const [eventDetails, setEventDetails] = useState(initialState);
-  console.log('🚀 ~ Events ~ eventDetails:', eventDetails);
 
   const handleActionCallback = (row) => {
     return (
@@ -304,7 +302,6 @@ function Events() {
             rowData?.length &&
             rowData?.map(
               (item) => (
-                console.log('item', item),
                 (
                   <Col sm={4}>
                     <Card className="shadow eventCard bg-red">
