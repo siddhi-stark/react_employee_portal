@@ -35,25 +35,25 @@ function EducationalDetails(props) {
 
   const [sscDocData, setSscDocData] = useState({
     type: 'sss',
-    file_id: 92,
+    file_id: '',
     educational_document_type: 1,
     url: '',
   });
   const [hscDocData, setHscDocData] = useState({
     type: 'hsc',
-    file_id: 93,
+    file_id: '',
     educational_document_type: 2,
     url: '',
   });
   const [graduationDocData, setGraduationDocData] = useState({
     type: 'graduation',
-    file_id: 93,
+    file_id: '',
     educational_document_type: 3,
     url: '',
   });
   const [postGraduationDocData, setPostGraduationDocData] = useState({
     type: 'postgraduation',
-    file_id: 93,
+    file_id: '',
     educational_document_type: 4,
     url: '',
   });
@@ -65,7 +65,10 @@ function EducationalDetails(props) {
 
   useEffect(() => {
     getUserRole();
-  }, []);
+    if(applicantId){
+      getUploadedDocuments()
+    }
+  }, [applicantId]);
 
   // const getData = async () => {
   //   let ssc = '';
@@ -286,7 +289,6 @@ function EducationalDetails(props) {
     const endPoint = `${Api.onBoardingDocUpload}`;
     const { data, message } = await axios.post(endPoint, formData, {});
     if (data && data.success == true) {
-
       if (type == 'ssc') {
         setSscDocData({
           ...sscDocData,
@@ -327,13 +329,64 @@ function EducationalDetails(props) {
     }
   };
 
+  const getUploadedDocuments = async () => {
+    console.log("insidee");
+    setShowLoader(true);
+    const endPoint = `${Api.onBoardingDocUpload}`;
+    const params = {
+      applicant: applicantId
+    };
+    const token = customFunctions.getLocalStorage('access_token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await axios.get(url, {
+      // headers: headers,
+    });
+    if (data && data.success == true) {
+      console.log("🚀 ~ getUploadedDocuments ~ data:", data)
+      data?.data && data?.data?.map((item)=>{
+        if(item?.educational_document_type == 1){
+          setSscDocData({
+            ...sscDocData,
+            file_id: item?.id,
+            url: item?.image_url,
+          });
+        }
+        if(item?.educational_document_type == 2){
+          setHscDocData({
+            ...hscDocData,
+            file_id: item?.id,
+            url: item?.image_url,
+          });
+        }
+        if(item?.educational_document_type == 3){
+          setGraduationDocData({
+            ...graduationDocData,
+            file_id: item?.id,
+            url: item?.image_url,
+          });
+        }
+        if(item?.educational_document_type == 3){
+          setPostGraduationDocData({
+            ...postGraduationDocData,
+            file_id: item?.id,
+            url: item?.image_url,
+          });
+        }
+      })
+      setShowLoader(false);
+    }
+  };
+
   const submitEducationalDoc = async () => {
     setShowLoader(true);
     const postData = {
       applicant: applicantId,
       doc_type: 1,
-      is_submitted: 1,
-      educational_ducuments: [
+      // is_submitted: 1,
+      educational_documents: [
         {
           file_id: sscDocData?.file_id,
           educational_document_type: 1,
@@ -358,19 +411,18 @@ function EducationalDetails(props) {
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
       setShowLoader(false);
-      swal(  
-        {
-          title: 'Congratulations',
-          text: "You've successfully submitted your documents. You're one step closer to joining our team!",
-          icon: 'success',
-          confirmBtnBsStyle: 'btn btn-primary btn-lg',
-          cancelBtnBsStyle: 'btn btn-lg btn-secondary',
-          dangerMode: true,
-          buttons: true,
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-        }).then(() => {
-         window.location.reload();
+      swal({
+        title: 'Congratulations',
+        text: "You've successfully submitted your documents. You're one step closer to joining our team!",
+        icon: 'success',
+        confirmBtnBsStyle: 'btn btn-primary btn-lg',
+        cancelBtnBsStyle: 'btn btn-lg btn-secondary',
+        dangerMode: true,
+        buttons: true,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(() => {
+        window.location.reload();
       });
     } else {
       setShowLoader(false);

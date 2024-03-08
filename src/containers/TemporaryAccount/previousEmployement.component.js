@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -25,304 +26,435 @@ function PreviousEmployement(props) {
   const [docId, setDocId] = useState([]);
   const [isShowLoader, setShowLoader] = useState(false);
 
+  const [salarSlip1, setSalarySlip] = useState({
+    type: 'sss',
+    file_id: 92,
+    educational_document_type: 1,
+    url: '',
+  });
+
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
   };
 
-  useEffect(() => {
-    getUserRole();
-  }, []);
+  // useEffect(() => {
+  //   getUserRole();
+  // }, []);
 
-  const getData = async () => {
-    const docIdArr = [];
-    let obj = '';
-    let salary1 = '';
-    let salary2 = '';
-    let salary3 = '';
-    let relive = '';
-    let experience = '';
+  // const getData = async () => {
+  //   const docIdArr = [];
+  //   let obj = '';
+  //   let salary1 = '';
+  //   let salary2 = '';
+  //   let salary3 = '';
+  //   let relive = '';
+  //   let experience = '';
 
-    const endPoint = candidateId
-      ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
-      : `${Api.applicantInfoUrl}`;
+  //   const endPoint = candidateId
+  //     ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
+  //     : `${Api.applicantInfoUrl}`;
 
-    const postData = {
-      email_hash: tokenProps,
-      password: passwordProps,
-    };
+  //   const postData = {
+  //     email_hash: tokenProps,
+  //     password: passwordProps,
+  //   };
 
-    const { data, message } = applicantId
-      ? await AuthApi.postDataToServer(endPoint, postData)
-      : await AuthApi.postDataToServer(endPoint);
+  //   const { data, message } = applicantId
+  //     ? await AuthApi.postDataToServer(endPoint, postData)
+  //     : await AuthApi.postDataToServer(endPoint);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      data.data &&
-        data.data.applicant_history &&
-        data.data.applicant_history.map((op) => {
-          obj = { label: op.company_name, value: op.company_name };
-          return op;
-        });
+  //   if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+  //     data.data &&
+  //       data.data.applicant_history &&
+  //       data.data.applicant_history.map((op) => {
+  //         obj = { label: op.company_name, value: op.company_name };
+  //         return op;
+  //       });
 
-      data.data &&
-        data.data.applicant_documents &&
-        data.data.applicant_documents.map((doc) => {
-          if (doc.doc_title === 'Salary Slip 1') {
-            salary1 = doc.document_url;
-          } else if (doc.doc_title === 'Salary Slip 2') {
-            salary2 = doc.document_url;
-          } else if (doc.doc_title === 'Salary Slip 3') {
-            salary3 = doc.document_url;
-          } else if (doc.doc_title === 'Reliving Letter') {
-            relive = doc.document_url;
-          } else if (doc.doc_title === 'Experience Letter') {
-            experience = doc.document_url;
-          }
+  //     data.data &&
+  //       data.data.applicant_documents &&
+  //       data.data.applicant_documents.map((doc) => {
+  //         if (doc.doc_title === 'Salary Slip 1') {
+  //           salary1 = doc.document_url;
+  //         } else if (doc.doc_title === 'Salary Slip 2') {
+  //           salary2 = doc.document_url;
+  //         } else if (doc.doc_title === 'Salary Slip 3') {
+  //           salary3 = doc.document_url;
+  //         } else if (doc.doc_title === 'Reliving Letter') {
+  //           relive = doc.document_url;
+  //         } else if (doc.doc_title === 'Experience Letter') {
+  //           experience = doc.document_url;
+  //         }
 
-          docIdArr.push({ name: doc.doc_title, id: doc.doc_id });
-          return doc;
-        });
+  //         docIdArr.push({ name: doc.doc_title, id: doc.doc_id });
+  //         return doc;
+  //       });
 
-      updateDefaultValues({
-        employee: obj,
-        salary_slip1: salary1,
-        salary_slip2: salary2,
-        salary_slip3: salary3,
-        reliving_letter: relive,
-        experience_letter: experience,
-      });
-      setDocId(docIdArr);
-    } else {
-      swal(message, '', 'error');
-    }
-  };
-  useEffect(() => {
-    if (candidateId || applicantId) {
-      getData();
-    }
-  }, []);
+  //     updateDefaultValues({
+  //       employee: obj,
+  //       salary_slip1: salary1,
+  //       salary_slip2: salary2,
+  //       salary_slip3: salary3,
+  //       reliving_letter: relive,
+  //       experience_letter: experience,
+  //     });
+  //     setDocId(docIdArr);
+  //   } else {
+  //     swal(message, '', 'error');
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (candidateId || applicantId) {
+  //     getData();
+  //   }
+  // }, []);
 
-  const fileUpload = async (formValues) => {
+  // const fileUpload = async (formValues) => {
 
-    const formData = new FormData();
+  //   const formData = new FormData();
 
-    formData.append('file_name', formValues[0]);
-    formData.append('employee_name', nameProps);
-    formData.append('employee_email', emailProps);
-    formData.append('folder_name', 'Employment');
-    formData.append('email_hash', tokenProps);
-    formData.append('password', passwordProps);
+  //   formData.append('file_name', formValues[0]);
+  //   formData.append('employee_name', nameProps);
+  //   formData.append('employee_email', emailProps);
+  //   formData.append('folder_name', 'Employment');
+  //   formData.append('email_hash', tokenProps);
+  //   formData.append('password', passwordProps);
 
-    const { data } = await AuthApi.postDataToServer(
-      `${Api.googleFileUploadUrl}`,
-      formData
-    );
-    let fileId = null;
-    if (!data || Object.keys(data).length === 0) {
-      swal('Document upload failed', '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
-      fileId = null;
-    } 
-    if (data && Object.keys(data).length && data.success) {
-      fileId = data.data.id;
-    }
-    return fileId;
-  };
+  //   const { data } = await AuthApi.postDataToServer(
+  //     `${Api.googleFileUploadUrl}`,
+  //     formData
+  //   );
+  //   let fileId = null;
+  //   if (!data || Object.keys(data).length === 0) {
+  //     swal('Document upload failed', '', 'error', {
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //     });
+  //     fileId = null;
+  //   } 
+  //   if (data && Object.keys(data).length && data.success) {
+  //     fileId = data.data.id;
+  //   }
+  //   return fileId;
+  // };
 
-  const getApplicantPercentage = async () => {
-    // eslint-disable-line
-    const endPoint = applicantId
-      ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`
-      : `${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
+  // const getApplicantPercentage = async () => {
+  //   // eslint-disable-line
+  //   const endPoint = applicantId
+  //     ? `${Api.applicantPercentageUrl}?applicant_id=${applicantId}`
+  //     : `${Api.applicantPercentageUrl}?applicant_id=${candidateId}`;
 
-    const { data, message } = await AuthApi.getDataFromServer(endPoint);
+  //   const { data, message } = await AuthApi.getDataFromServer(endPoint);
 
-    if (customFunctions.checkIfEmpty(data)) {
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
-    }
-    if (!customFunctions.checkIfEmpty(data) && data.success && data.data) {
-      getParentsData(data.data.completion);
-    }
-  };
+  //   if (customFunctions.checkIfEmpty(data)) {
+  //     swal(message, '', 'error', {
+  //       closeOnClickOutside: false,
+  //       allowOutsideClick: false,
+  //     });
+  //   }
+  //   if (!customFunctions.checkIfEmpty(data) && data.success && data.data) {
+  //     getParentsData(data.data.completion);
+  //   }
+  // };
 
-  const submitForm = async (formValues) => {
+  // const submitForm = async (formValues) => {
+  //   setShowLoader(true);
+
+  //   let slip1fileUrl = '';
+  //   let slip1fileUrlId = '';
+  //   let slip2fileUrl = '';
+  //   let slip2fileUrlId = '';
+  //   let slip3fileUrl = '';
+  //   let slip3fileUrlId = '';
+  //   let relivingfileUrl = '';
+  //   let relivingfileUrlId = '';
+  //   let experiencefileUrl = '';
+  //   let experiencefileUrlId = '';
+
+  //   docId &&
+  //     docId.map((document) => {
+  //       if (document.name === 'Salary Slip 1') {
+  //         slip1fileUrl = { id: document.id, label: document.name };
+  //       } else if (document.name === 'Salary Slip 2') {
+  //         slip2fileUrl = { id: document.id, label: document.name };
+  //       } else if (document.name === 'Salary Slip 3') {
+  //         slip3fileUrl = { id: document.id, label: document.name };
+  //       } else if (document.name === 'Reliving Letter') {
+  //         relivingfileUrl = { id: document.id, label: document.name };
+  //       } else if (document.name === 'Experience Letter') {
+  //         experiencefileUrl = { id: document.id, label: document.name };
+  //       }
+  //       return document;
+  //     });
+
+  //   if (formValues.salary_slip1) {
+  //     slip1fileUrlId =
+  //       typeof formValues.salary_slip1 === 'object' &&
+  //       (await fileUpload(formValues.salary_slip1));
+  //   }
+  //   if (formValues.salary_slip2) {
+  //     slip2fileUrlId =
+  //       typeof formValues.salary_slip2 === 'object' &&
+  //       (await fileUpload(formValues.salary_slip2));
+  //   }
+  //   if (formValues.salary_slip3) {
+  //     slip3fileUrlId =
+  //       typeof formValues.salary_slip3 === 'object' &&
+  //       (await fileUpload(formValues.salary_slip3));
+  //   }
+  //   if (formValues.reliving_letter) {
+  //     relivingfileUrlId =
+  //       typeof formValues.reliving_letter === 'object' &&
+  //       (await fileUpload(formValues.reliving_letter));
+  //   }
+  //   if (formValues.experience_letter) {
+  //     experiencefileUrlId =
+  //       typeof formValues.experience_letter === 'object' &&
+  //       (await fileUpload(formValues.experience_letter));
+  //   }
+
+  //   const postData = {
+  //     email_hash: tokenProps,
+  //     password: passwordProps,
+  //     applicant_id: candidateId ? Number(candidateId) : '',
+  //     doc_type: 3,
+  //     applicant_documents: [
+  //       {
+  //         doc_title: 'Salary Slip 1',
+  //         company_name: formValues.employee
+  //           ? formValues.employee.label
+  //           : slip1fileUrl.label,
+  //         doc: slip1fileUrlId ? Number(slip1fileUrlId) : slip1fileUrl.id,
+  //       },
+  //       {
+  //         doc_title: 'Salary Slip 2',
+  //         company_name: formValues.employee
+  //           ? formValues.employee.label
+  //           : slip2fileUrl.label,
+  //         doc: slip2fileUrlId ? Number(slip2fileUrlId) : slip2fileUrl.id,
+  //       },
+  //       {
+  //         doc_title: 'Salary Slip 3',
+  //         company_name: formValues.employee
+  //           ? formValues.employee.label
+  //           : slip3fileUrl.label,
+  //         doc: slip3fileUrlId ? Number(slip3fileUrlId) : slip3fileUrl.id,
+  //       },
+  //       {
+  //         doc_title: 'Reliving Letter',
+  //         company_name: formValues.employee
+  //           ? formValues.employee.label
+  //           : relivingfileUrl.label,
+  //         doc: relivingfileUrlId
+  //           ? Number(relivingfileUrlId)
+  //           : relivingfileUrl.id,
+  //       },
+  //       {
+  //         doc_title: 'Experience Letter',
+  //         company_name: formValues.employee
+  //           ? formValues.employee.label
+  //           : experiencefileUrl.label,
+  //         doc: experiencefileUrlId
+  //           ? Number(experiencefileUrlId)
+  //           : experiencefileUrl.id,
+  //       },
+  //     ],
+  //   };
+
+  //   if(slip1fileUrlId || (slip1fileUrl && slip2fileUrlId) ||(slip2fileUrl && slip3fileUrlId) || 
+  //     (slip3fileUrl && relivingfileUrlId) || (relivingfileUrl && experiencefileUrlId) || experiencefileUrl) {
+
+  //   const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
+  //     if (!data) {
+  //       setShowLoader(false);
+  //       swal(message, '', 'error', {
+  //         closeOnClickOutside: false,
+  //         allowOutsideClick: false,
+  //         buttons: false,
+  //         timer: 2000,
+  //       }).then(() => {
+  //         swal.close();
+  //       });
+  //     } else {
+  //       setShowLoader(false);
+  //       swal(data && data.message[0], '', 'success', {
+  //         closeOnClickOutside: false,
+  //         allowOutsideClick: false,
+  //       }).then(() => {
+  //         getApplicantPercentage();
+  //         if (candidateId) {
+  //           getData();
+  //         }
+  //         swal.close();
+  //       });
+  //     }
+  //   } else {
+  //     setShowLoader(false);
+  //   }
+  // };
+
+  // const getEmployee = async () => {
+  //   const postData = {
+  //     email_hash: tokenProps,
+  //     password: passwordProps,
+  //   };
+
+  //   const callback = AuthApi.postDataToServer;
+  //   const endPoint = candidateId
+  //     ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
+  //     : Api.applicantInfoUrl;
+
+  //   const { data } = await callback(endPoint, postData);
+
+  //   if (!data) {
+  //     return;
+  //   }
+
+  //   const dpOptions = [];
+  //   data &&
+  //     data.data &&
+  //     data.data.applicant_history &&
+  //     data.data.applicant_history.map((op) => {
+  //       dpOptions.push({ label: op.company_name, value: op.company_name });
+  //       return op;
+  //     });
+  //   const allOptions = {
+  //     ...options,
+  //     ...filterOptions,
+  //     employee: dpOptions,
+  //   };
+  //   filterOptions = { ...allOptions };
+  //   updateOptions(allOptions);
+  // };
+
+  // useEffect(() => {
+  //   getEmployee();
+  // }, [tokenProps]);
+
+  const handelChange = async (type, e) => {
     setShowLoader(true);
-
-    let slip1fileUrl = '';
-    let slip1fileUrlId = '';
-    let slip2fileUrl = '';
-    let slip2fileUrlId = '';
-    let slip3fileUrl = '';
-    let slip3fileUrlId = '';
-    let relivingfileUrl = '';
-    let relivingfileUrlId = '';
-    let experiencefileUrl = '';
-    let experiencefileUrlId = '';
-
-    docId &&
-      docId.map((document) => {
-        if (document.name === 'Salary Slip 1') {
-          slip1fileUrl = { id: document.id, label: document.name };
-        } else if (document.name === 'Salary Slip 2') {
-          slip2fileUrl = { id: document.id, label: document.name };
-        } else if (document.name === 'Salary Slip 3') {
-          slip3fileUrl = { id: document.id, label: document.name };
-        } else if (document.name === 'Reliving Letter') {
-          relivingfileUrl = { id: document.id, label: document.name };
-        } else if (document.name === 'Experience Letter') {
-          experiencefileUrl = { id: document.id, label: document.name };
-        }
-        return document;
-      });
-
-    if (formValues.salary_slip1) {
-      slip1fileUrlId =
-        typeof formValues.salary_slip1 === 'object' &&
-        (await fileUpload(formValues.salary_slip1));
-    }
-    if (formValues.salary_slip2) {
-      slip2fileUrlId =
-        typeof formValues.salary_slip2 === 'object' &&
-        (await fileUpload(formValues.salary_slip2));
-    }
-    if (formValues.salary_slip3) {
-      slip3fileUrlId =
-        typeof formValues.salary_slip3 === 'object' &&
-        (await fileUpload(formValues.salary_slip3));
-    }
-    if (formValues.reliving_letter) {
-      relivingfileUrlId =
-        typeof formValues.reliving_letter === 'object' &&
-        (await fileUpload(formValues.reliving_letter));
-    }
-    if (formValues.experience_letter) {
-      experiencefileUrlId =
-        typeof formValues.experience_letter === 'object' &&
-        (await fileUpload(formValues.experience_letter));
-    }
-
-    const postData = {
-      email_hash: tokenProps,
-      password: passwordProps,
-      applicant_id: candidateId ? Number(candidateId) : '',
-      doc_type: 3,
-      applicant_documents: [
-        {
-          doc_title: 'Salary Slip 1',
-          company_name: formValues.employee
-            ? formValues.employee.label
-            : slip1fileUrl.label,
-          doc: slip1fileUrlId ? Number(slip1fileUrlId) : slip1fileUrl.id,
-        },
-        {
-          doc_title: 'Salary Slip 2',
-          company_name: formValues.employee
-            ? formValues.employee.label
-            : slip2fileUrl.label,
-          doc: slip2fileUrlId ? Number(slip2fileUrlId) : slip2fileUrl.id,
-        },
-        {
-          doc_title: 'Salary Slip 3',
-          company_name: formValues.employee
-            ? formValues.employee.label
-            : slip3fileUrl.label,
-          doc: slip3fileUrlId ? Number(slip3fileUrlId) : slip3fileUrl.id,
-        },
-        {
-          doc_title: 'Reliving Letter',
-          company_name: formValues.employee
-            ? formValues.employee.label
-            : relivingfileUrl.label,
-          doc: relivingfileUrlId
-            ? Number(relivingfileUrlId)
-            : relivingfileUrl.id,
-        },
-        {
-          doc_title: 'Experience Letter',
-          company_name: formValues.employee
-            ? formValues.employee.label
-            : experiencefileUrl.label,
-          doc: experiencefileUrlId
-            ? Number(experiencefileUrlId)
-            : experiencefileUrl.id,
-        },
-      ],
-    };
-
-    if(slip1fileUrlId || (slip1fileUrl && slip2fileUrlId) ||(slip2fileUrl && slip3fileUrlId) || 
-      (slip3fileUrl && relivingfileUrlId) || (relivingfileUrl && experiencefileUrlId) || experiencefileUrl) {
-
-    const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
-      if (!data) {
-        setShowLoader(false);
-        swal(message, '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-        });
-      } else {
-        setShowLoader(false);
-        swal(data && data.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-        }).then(() => {
-          getApplicantPercentage();
-          if (candidateId) {
-            getData();
-          }
-          swal.close();
+    const formData = new FormData();
+    formData.append('file_name', e);
+    const endPoint = `${Api.onBoardingDocUpload}`;
+    const { data, message } = await axios.post(endPoint, formData, {});
+    if (data && data.success == true) {
+      if (type == 'pancard') {
+        setPanCardData({
+          ...panCardUrl,
+          file_id: data?.data?.id,
+          url: data?.data?.image,
         });
       }
+      if (type == 'aadharcard') {
+        setAadharCardData({
+          ...aadharCardData,
+          file_id: data?.data?.id,
+          url: data?.data?.image,
+        });
+      }
+
+      if (type == 'photo') {
+        setPhotoData({
+          ...photoData,
+          file_id: data?.data?.id,
+          url: data?.data?.image,
+        });
+      }
+      setShowLoader(false);
+      swal('document uploaded successfully', '', 'success').then(() => {
+        // window.location.reload();
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  }
+
+  const getUploadedDocuments = async () => {
+    console.log('insidee');
+    setShowLoader(true);
+    const endPoint = `${Api.onBoardingDocUpload}`;
+    const params = {
+      applicant: applicantId,
+    };
+    const token = customFunctions.getLocalStorage('access_token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await axios.get(url, {
+      // headers: headers,
+    });
+    if (data && data.success == true) {
+      console.log('🚀 ~ getUploadedDocuments ~ data:', data);
+      data?.data &&
+        data?.data?.map((item) => {
+          console.log('item----->>>', item);
+          if (item?.personal_document_type == 1) {
+            setPanCardData({
+              ...panCardUrl,
+              file_id: item?.id,
+              url: item?.image_url,
+            });
+          }
+          if (item?.personal_document_type == 2) {
+            setAadharCardData({
+              ...aadharCardData,
+              file_id: item?.id,
+              url: item?.image_url,
+            });
+          }
+          if (item?.personal_document_type == 3) {
+            setPhotoData({
+              ...photoData,
+              file_id: item?.id,
+              url: item?.image_url,
+            });
+          }
+        });
+
+      setShowLoader(false);
     } else {
       setShowLoader(false);
     }
   };
 
-  const getEmployee = async () => {
+  const submitPersonalDoc = async () => {
+    setShowLoader(true);
     const postData = {
-      email_hash: tokenProps,
-      password: passwordProps,
+      applicant: applicantId,
+      doc_type: 2,
+      personal_documents: [
+        {
+          file_id: panCardUrl?.file_id,
+          personal_document_type: 1,
+        },
+        {
+          file_id: aadharCardData?.file_id,
+          personal_document_type: 2,
+        },
+        {
+          file_id: photoData?.file_id,
+          personal_document_type: 3,
+        },
+      ],
     };
+    const url = `${Api.postDocumentData}`;
 
-    const callback = AuthApi.postDataToServer;
-    const endPoint = candidateId
-      ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
-      : Api.applicantInfoUrl;
-
-    const { data } = await callback(endPoint, postData);
-
-    if (!data) {
-      return;
+    const { data, message } = await axios.post(url, postData);
+    if (data && data.success == true) {
+      setShowLoader(false);
+      swal('Personal documents uploaded successfully', '', 'success').then(
+        () => {
+          props.callback('educational', true);
+        }
+      );
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
     }
-
-    const dpOptions = [];
-    data &&
-      data.data &&
-      data.data.applicant_history &&
-      data.data.applicant_history.map((op) => {
-        dpOptions.push({ label: op.company_name, value: op.company_name });
-        return op;
-      });
-    const allOptions = {
-      ...options,
-      ...filterOptions,
-      employee: dpOptions,
-    };
-    filterOptions = { ...allOptions };
-    updateOptions(allOptions);
   };
-
-  useEffect(() => {
-    getEmployee();
-  }, [tokenProps]);
 
   return (
     <>

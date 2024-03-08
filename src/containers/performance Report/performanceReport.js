@@ -197,7 +197,7 @@ const PerformanceReport = () => {
       // - data?.data?.total_task_completed_count;
 
       setGraphData({
-        labels: ['Completed Tasks', ' Completed bugs', 'Total reopen count'],
+        labels: ['Total tasks count', ' Total bug count', 'Total reopen count'],
         datasets: [
           {
             data: [

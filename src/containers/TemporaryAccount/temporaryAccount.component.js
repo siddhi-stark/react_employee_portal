@@ -202,10 +202,10 @@ function TemporaryAccount(props) {
                     </div>
                   )}
                 </Tab>
-                <Tab
+                {/* <Tab
                   eventKey="educational"
                   title="Educational Documents"
-                  disabled={!showED}
+                  // disabled={!showED}
                 >
                   {key === 'educational' && (
                     <div className="row ml-2">
@@ -225,8 +225,8 @@ function TemporaryAccount(props) {
                       />
                     </div>
                   )}
-                </Tab>
-                {personalInfo && !personalInfo.is_fresher && (
+                </Tab> */}
+                {/* {personalInfo && !personalInfo.is_fresher && (
                   <Tab eventKey="employmentHistory" title="Employment History">
                     {key === 'employmentHistory' && (
                       <div className="row ml-2">
@@ -249,7 +249,7 @@ function TemporaryAccount(props) {
                       </div>
                     )}
                   </Tab>
-                )}
+                )} */}
                 {personalInfo && !personalInfo.is_fresher && (
                   <Tab
                     eventKey="previousEmployment"
