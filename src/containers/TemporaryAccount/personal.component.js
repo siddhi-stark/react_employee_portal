@@ -45,14 +45,12 @@ function Personal(props) {
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [document, setDocument] = useState('');
-  console.log('🚀 ~ Personal ~ document:', document);
   const [isShowLoader, setShowLoader] = useState(false);
   const [stepOneKey, setStepOneKey] = useState('0');
   const [stepTwoKey, setStepTwoKey] = useState('0');
   const [stepThreeKey, setStepThreeKey] = useState('0');
   const [stepFourKey, setStepFourkey] = useState('0');
   const [selectedDocument, setSelectedDocument] = useState();
-  console.log('🚀 ~ Personal ~ selectedDocument:', selectedDocument);
   const [personalUniqueArray, setPersonalUniqueArray] = useState();
   const [educationalUniqueArray, setEducationalUniqueArray] = useState('');
 
@@ -85,7 +83,6 @@ function Personal(props) {
       isUploaded: false,
     },
   ]);
-  console.log('personalDocuments', personalDocuments);
 
   const [educationalDocuments, setEducationalDocuments] = useState([
     {
@@ -204,7 +201,6 @@ function Personal(props) {
     const endPoint = `${Api.onBoardingDocUpload}`;
     const { data, message } = await axios.post(endPoint, formData, {});
     if (data && data.success == true) {
-      console.log('🚀 ~ handelChange ~ data:', data?.data);
       setShowLoader(false);
 
       setPersonalDocuments(updatedDocumentsList);
@@ -238,7 +234,6 @@ function Personal(props) {
         const updateDoc = data?.data?.find(
           (doc) => item?.personal_document_type == doc?.personal_document_type
         );
-        console.log('🚀 ~ ------------', updateDoc);
         if (updateDoc) {
           return {
             ...item,

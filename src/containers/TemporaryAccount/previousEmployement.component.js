@@ -372,7 +372,6 @@ function PreviousEmployement(props) {
   }
 
   const getUploadedDocuments = async () => {
-    console.log('insidee');
     setShowLoader(true);
     const endPoint = `${Api.onBoardingDocUpload}`;
     const params = {
@@ -387,10 +386,8 @@ function PreviousEmployement(props) {
       // headers: headers,
     });
     if (data && data.success == true) {
-      console.log('🚀 ~ getUploadedDocuments ~ data:', data);
       data?.data &&
         data?.data?.map((item) => {
-          console.log('item----->>>', item);
           if (item?.personal_document_type == 1) {
             setPanCardData({
               ...panCardUrl,

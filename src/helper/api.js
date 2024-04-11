@@ -3,7 +3,8 @@ import { Component } from 'react';
 export default class Api extends Component {
   static baseUrl = Api.getBaseUrl();
 
-  static s3UrlnoProfile = 'https://empportal-serverless.s3.ap-south-1.amazonaws.com/noProfile.jpeg';
+  static s3UrlnoProfile =
+    'https://empportal-serverless.s3.ap-south-1.amazonaws.com/noProfile.jpeg';
 
   static s3Url = 'https://empportal-serverless.s3.amazonaws.com/media/';
 
@@ -145,7 +146,8 @@ export default class Api extends Component {
 
   static projectListUrl = `${Api.baseUrl}project-dropdown-list/`;
 
-  static fetchTeamworkDataUrl = 'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
+  static fetchTeamworkDataUrl =
+    'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
 
   static employeeBondDetailsUrl = `${Api.baseUrl}employee-bond-details/`;
 
@@ -183,21 +185,23 @@ export default class Api extends Component {
 
   static supportTicketUrl = `${Api.baseUrl}support-ticket/`;
 
-  static employeeReviewUrl = `${Api.baseUrl}employee_review/`
+  static employeeReviewUrl = `${Api.baseUrl}employee_review/`;
 
-  static employeeReportUrl = `${Api.baseUrl}dashboard-report/`
+  static employeeReportUrl = `${Api.baseUrl}dashboard-report/`;
 
-  static employeeResignationUrl = `${Api.baseUrl}employee-resignation/`
+  static employeeResignationUrl = `${Api.baseUrl}employee-resignation/`;
 
-  static getResignationListUrl = `${Api.baseUrl}employee-resignation/`
+  static getResignationListUrl = `${Api.baseUrl}employee-resignation/`;
 
-  static uploadDocumentsUrl = `${Api.baseUrl}upload-document/`
+  static uploadDocumentsUrl = `${Api.baseUrl}upload-document/`;
+  
+  static uploadDocumentsUrls = `${Api.baseUrl}upload-documents/`;
 
-  static onBoardingDocUpload = `${Api.baseUrl}document-upload/`
+  static onBoardingDocUpload = `${Api.baseUrl}document-upload/`;
 
-  static postDocumentData = `${Api.baseUrl}file-upload/`
+  static postDocumentData = `${Api.baseUrl}file-upload/`;
 
-  static allEmployeePerformanceUrl = `${Api.baseUrl}performance-report/`
+  static allEmployeePerformanceUrl = `${Api.baseUrl}performance-report/`;
 
   // Get base URL of APIs
   static getBaseUrl() {
@@ -207,9 +211,9 @@ export default class Api extends Component {
     switch (env) {
       case 'production':
         url = 'https://portalsapi.starkdigital.in/api/v1/';
-        // url = 'https://liveapi.starkdigital.in/api/v1/'; // for emp Production 
+        // url = 'https://liveapi.starkdigital.in/api/v1/'; // for emp Production
         // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/'; // for emp Production
-        // url = 'https://portalsapi.reviewtestlink.com/api/v1/'; 
+        // url = 'https://portalsapi.reviewtestlink.com/api/v1/';
         break;
       case 'stage':
         url = 'https://stage-portalsapi.starkdigital.in/api/v1/';

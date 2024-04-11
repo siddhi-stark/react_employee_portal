@@ -330,7 +330,6 @@ function EducationalDetails(props) {
   };
 
   const getUploadedDocuments = async () => {
-    console.log("insidee");
     setShowLoader(true);
     const endPoint = `${Api.onBoardingDocUpload}`;
     const params = {
@@ -345,7 +344,6 @@ function EducationalDetails(props) {
       // headers: headers,
     });
     if (data && data.success == true) {
-      console.log("🚀 ~ getUploadedDocuments ~ data:", data)
       data?.data && data?.data?.map((item)=>{
         if(item?.educational_document_type == 1){
           setSscDocData({

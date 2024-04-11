@@ -126,7 +126,6 @@ function InterviewRounds() {
     };
     const { data } = await AuthApi.postDataToServer(Api.roundsUrl, postData);
     if (data) {
-      console.log('data', data);
     }
   };
 
@@ -169,7 +168,6 @@ function InterviewRounds() {
     };
     const { data } = await AuthApi.postDataToServer(Api.roundsUrl, postData);
     if (data) {
-      console.log('data', data);
     }
   };
 
@@ -254,7 +252,6 @@ function InterviewRounds() {
           btnContainerClass="form-submit-buttons"
           isStepForm={false}
           onFormReset={() => {
-            console.log('form reset callback');
           }}
         />
       )}
@@ -279,7 +276,6 @@ function InterviewRounds() {
           btnContainerClass="form-submit-buttons"
           isStepForm={false}
           onFormReset={() => {
-            console.log('form reset callback');
           }}
         />
       )}

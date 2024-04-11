@@ -27,6 +27,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
+import { RFC_2822 } from 'moment';
 
 const ResignationDetailsComponent = (props) => {
   const [pageTitle, setPageTitle] = useState('Resignation');
@@ -49,6 +50,10 @@ const ResignationDetailsComponent = (props) => {
   const [stepTwoKey, setStepTwoKey] = useState('0');
   const [stepThreeKey, setStepThreeKey] = useState('0');
   const [uniqueDocumentOptions, setUniqueDocumentOptions] = useState([]);
+  
+  const [selectedDate, setSelectedDate] = useState(null);
+  const defaultDate = new Date();
+  defaultDate.setMonth(defaultDate.getMonth() + 2);
 
   const [userId, setUserId] = useState();
   const [buyBackReason, setBuyBackReason] = useState('');
@@ -63,55 +68,86 @@ const ResignationDetailsComponent = (props) => {
         { label: 'Applications details' },
       ];
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const getMaxDate = () => {
+    if (selectedDate) {
+      const maxDate = new Date(selectedDate);
+      maxDate.setMonth(maxDate.getMonth() + 2);
+      return maxDate;
+    }
+    return null;
+  };
+
   const [documentsList, setDocumentList] = useState([
-    {
-      name: 'Exit Form',
-      isCheck: false,
-      id: 1,
-      doc_id: '',
-      label: 'Exit Form',
-    },
-    {
-      name: 'Feedback Form',
-      isCheck: false,
-      id: 2,
-      doc_id: '',
-      label: 'Feedback Form',
-    },
     {
       name: 'Handover Document',
       isCheck: false,
-      id: 3,
+      id: 1,
       doc_id: '',
       label: 'Handover Document',
+      isRequired: true,
+    },
+    {
+      name: 'BGV Form',
+      isCheck: false,
+      id: 2,
+      doc_id: '',
+      label: 'BGV Form',
+      isRequired: false,
+    },
+    {
+      name: 'Exit Interview Form',
+      isCheck: false,
+      id: 3,
+      doc_id: '',
+      label: 'Exit Interview Form',
+      isRequired: true,
+    },
+
+    {
+      name: 'Exit Form',
+      isCheck: false,
+      id: 4,
+      doc_id: '',
+      label: 'Exit Form',
+      isRequired: true,
+    },
+
+    {
+      name: 'Relieving Letter',
+      isCheck: false,
+      id: 5,
+      doc_id: '',
+      label: 'Relieving Letter',
+      isRequired: true,
     },
     {
       name: 'Experience Letter',
       isCheck: false,
-      id: 4,
-      doc_id: '',
-      label: 'Experience Letter',
-    },
-    {
-      name: 'Exit Interview Documents',
-      isCheck: false,
-      id: 5,
-      doc_id: '',
-      label: 'Exit Interview Documents',
-    },
-    {
-      name: 'Relieving Document',
-      isCheck: false,
       id: 6,
       doc_id: '',
-      label: 'Relieving Document',
+      label: 'Experience Letter',
+      isRequired: false,
     },
+
     {
       name: 'Other Document',
       isCheck: false,
       id: 7,
       doc_id: '',
       label: 'Other Document',
+      isRequired: false,
+    },
+    {
+      name: 'FNF Letter',
+      isCheck: false,
+      id: 8,
+      doc_id: '',
+      label: 'FNF Letter',
+      isRequired: false,
     },
   ]);
 
@@ -127,7 +163,25 @@ const ResignationDetailsComponent = (props) => {
   useEffect(() => {
     const unique =
       documentsList && documentsList?.filter((item) => item?.isCheck == false);
-    setUniqueDocumentOptions(unique);
+    let newArray = [];
+    unique &&
+      unique?.map((dt) => {
+        if ([3, 1, 5, 4].includes(dt?.id)) {
+          let data = dt;
+          newArray.push({
+            ...data,
+            isRequired: true,
+            label: (
+              <>
+                {`${dt.label}`} <span className="text-danger">*</span>{' '}
+              </>
+            ),
+          });
+        } else {
+          return newArray.push(dt);
+        }
+      });
+    setUniqueDocumentOptions(newArray);
   }, [documentsList]);
 
   useEffect(() => {
@@ -180,7 +234,7 @@ const ResignationDetailsComponent = (props) => {
   const approveResignation = async (status) => {
     setShowLoader(true);
     setShowError(false);
-
+    setShowModal(false);
     const postData = {
       resignation_status: status,
     };
@@ -194,7 +248,10 @@ const ResignationDetailsComponent = (props) => {
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
-      setShowLoader(false);
+
+      if (status == 1) {
+        changeRelievingData();
+      }
       swal(
         status == 1
           ? 'Resignation approved successfully'
@@ -258,13 +315,13 @@ const ResignationDetailsComponent = (props) => {
     setShowLoader(true);
     const formData = new FormData();
     if (document) {
-      formData.append('image', document);
+      formData.append('file_name', document);
       formData.append('document_type', Number(selectedDocument?.id));
       formData.append('user_id', Number(userId));
     }
 
     // const callback = AuthApi.postDataToServer;
-    const endPoint = `${Api.uploadDocumentsUrl}`;
+    const endPoint = `${Api.uploadDocumentsUrls}`;
     const token = customFunctions.getLocalStorage('access_token');
     const headers = {
       accept: 'application/json',
@@ -440,7 +497,6 @@ const ResignationDetailsComponent = (props) => {
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
       setShowLoader(false);
-
       swal('Relieving date changed successfully', '', 'success').then(() => {
         window.location.reload();
       });
@@ -507,7 +563,6 @@ const ResignationDetailsComponent = (props) => {
       });
     }
   };
-
   const currentDate = new Date();
   currentDate.setDate(currentDate.getDate() + 1);
   return (
@@ -671,7 +726,7 @@ const ResignationDetailsComponent = (props) => {
                                   : 'Pending'}
                               </td>
                             </tr> */}
-                            {/* )} */}
+
                             {rowData?.buy_back_date && (
                               <tr>
                                 <th scope="row">Buy Back Date</th>
@@ -959,16 +1014,37 @@ const ResignationDetailsComponent = (props) => {
                               <Col>
                                 <Button
                                   className="me-3"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    // approveResignation();
-                                    isValid('admin', 'approve_resign');
+                                  onClick={() => {
+                                    if (approveReason !== '') {
+                                      setShowModal(false);
+                                      setShowModal(true);
+                                      // swal({
+                                      //   title: 'You want to change relieving date',
+                                      //   icon: 'warning',
+                                      //   buttons: true,
+                                      //   dangerMode: true,
+                                      // }).then((willApprove) => {
+                                      //   if (willApprove) {
+                                      //     // Open your modal here
+                                      //     setShowModal(true);
+                                      //     // changeRelievingData();
+                                      //   } else {
+                                      //     // Handle approval logic here
+                                      //     isValid('admin', 'approve_resign');
+                                      //   }
+                                      // });
+                                    } else {
+                                      swal(
+                                        'Error',
+                                        'Please fill in the reason field',
+                                        'error'
+                                      );
+                                    }
                                   }}
                                 >
                                   Approve
                                 </Button>
-                                {/* </Col>
-                            <Col> */}
+
                                 <Button
                                   variant="secondary"
                                   onClick={() => {
@@ -1100,6 +1176,20 @@ const ResignationDetailsComponent = (props) => {
                       </Button>
                     </Col>
                   </Row>
+                  <div className="mt-2">
+                    <h6 style={{ fontSize: 'smaller' }}>
+                      <b>Note:</b>
+                    </h6>
+                    <h6 style={{ fontSize: 'smaller' }}>
+                      1. Maximum upload file size limit is less then 1 MB.
+                    </h6>
+                    <h6 style={{ fontSize: 'smaller' }}>
+                      2. File supported extension is .pdf , .docx
+                    </h6>
+                    <h6 style={{ fontSize: 'smaller' }}>
+                      3. Upload required (*) documents to relieve employee
+                    </h6>
+                  </div>
                   <Row className="mt-4">
                     <Col sm={6}>
                       <Card className="border-0">
@@ -1154,7 +1244,7 @@ const ResignationDetailsComponent = (props) => {
                         <Card.Body>
                           <ul>
                             {documentsList &&
-                              documentsList?.slice(4, 7)?.map((item, index) => (
+                              documentsList?.slice(4, 8)?.map((item, index) => (
                                 <li className="mb-2 d-flex justify-content-between">
                                   {item.isDiseable == true ? (
                                     <del>{item?.name}</del>
@@ -1217,14 +1307,19 @@ const ResignationDetailsComponent = (props) => {
                       as={Button}
                       variant="link"
                       onClick={() => {
-                        if (
-                          stepThreeKey == '0' &&
-                          rowData?.user?.relieving_date <=
-                            customFunctions.getDate(new Date())
-                        ) {
-                          setStepThreeKey('1');
-                        } else {
-                          setStepThreeKey('0');
+                        const tempData = documentsList?.filter(
+                          (item) => item?.isRequired && item?.isCheck
+                        );
+                        if (tempData?.length == 4) {
+                          if (
+                            stepThreeKey == '0' &&
+                            rowData?.user?.relieving_date <=
+                              customFunctions.getDate(new Date())
+                          ) {
+                            setStepThreeKey('1');
+                          } else {
+                            setStepThreeKey('0');
+                          }
                         }
                       }}
                     >
@@ -1248,15 +1343,6 @@ const ResignationDetailsComponent = (props) => {
                       <Row>
                         {!rowData?.user?.relieved ? (
                           <Col className="d-flex justify-content-start">
-                            {/* <h6>
-                Please{' '}
-                <a href="#">
-                  {' '}
-                  <u>Click here</u>{' '}
-                </a>{' '}
-                to relieve Akshay Chavan
-              </h6> */}
-
                             <Button
                               onClick={() => {
                                 swal({
@@ -1308,13 +1394,16 @@ const ResignationDetailsComponent = (props) => {
               label="Date"
               selected={relievingDate}
               onChange={(e) => {
+                handleDateChange();
                 setRelievingDate(e);
               }}
               autoComplete="off"
               name="startDate"
               dateFormat="dd/MM/yyyy"
               placeholder="Select relieving date"
+              // minDate={new Date()}
               minDate={new Date()}
+              maxDate={getMaxDate()}
             />
             <TextInput
               label="Reason"
@@ -1327,18 +1416,19 @@ const ResignationDetailsComponent = (props) => {
               className="mr-5 mb-3 mt-2"
               // disabled={!relievingDateReason}
               onClick={() => {
+                // swal({
+                //   title: 'Are you sure?',
+                //   text: 'You want to change relieving date',
+                //   icon: 'warning',
+                //   buttons: true,
+                //   dangerMode: true,
+                // }).then((willDelete) => {
+                //   if (willDelete) {
+                approveResignation(1);
                 setShowModal(false);
-                swal({
-                  title: 'Are you sure?',
-                  text: 'You want to change relieving date',
-                  icon: 'warning',
-                  buttons: true,
-                  dangerMode: true,
-                }).then((willDelete) => {
-                  if (willDelete) {
-                    changeRelievingData();
-                  }
-                });
+                // changeRelievingData();
+                //     }
+                //   });
               }}
             >
               Update

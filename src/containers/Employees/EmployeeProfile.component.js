@@ -733,7 +733,6 @@ function EmployeeProfile(props) {
                             reviewId={reviewId}
                             empId={empId}
                             callbackBtn={(e) => {
-                              console.log('e', e);
                             }}
                           />
                         </div>
