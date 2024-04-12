@@ -205,7 +205,7 @@ export default class Api extends Component {
 
   // Get base URL of APIs
   static getBaseUrl() {
-    const env = 'stage';
+    const env = 'production';
 
     let url = '';
     switch (env) {
