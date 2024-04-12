@@ -1410,6 +1410,7 @@ const ResignationDetailsComponent = (props) => {
               value={relievingDateReason}
               onInputChange={(e) => {
                 setRelievingDateReason(e.target.value);
+                setApproveReason(e?.target?.value)
               }}
             />
             <Button

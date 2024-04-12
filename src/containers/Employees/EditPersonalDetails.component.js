@@ -21,7 +21,6 @@ function EditPersonalDetails(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const [testDate, setDate] = useState(null);
 
-
   // useEffect(() => {
   //   if(addInstituteId){
   //     const formSchema = [...FormSections];
@@ -34,8 +33,8 @@ function EditPersonalDetails(props) {
   //     })
   //     return s;
   //   })
-  // updateJsonSchema([...updatedSchema]);        
-  // } 
+  // updateJsonSchema([...updatedSchema]);
+  // }
   // }, []);
 
   useEffect(() => {
@@ -82,8 +81,6 @@ function EditPersonalDetails(props) {
     getUserRole();
   }, []);
 
-
-  
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const id = customFunctions.getLocalStorage('id');
@@ -93,13 +90,12 @@ function EditPersonalDetails(props) {
     };
 
     postData = {
-      ...postData,
       designation: formValues.designation ? formValues.designation.value : null,
       joining_date: formValues.joining_date
         ? customFunctions.getDate(formValues.joining_date)
         : '',
-      confirmation_date: formValues.confirm_date
-        ? customFunctions.getDate(formValues.confirm_date)
+      confirmation_date: formValues.confirmation_date
+        ? customFunctions.getDate(formValues.confirmation_date)
         : null,
       confirmed: formValues.confirm_date ? true : false, // eslint-disable-line
       relieving_date: formValues.relieving_date
@@ -119,12 +115,19 @@ function EditPersonalDetails(props) {
       //   formValues.notice_period_end_date && formValues.notice_period_start_date
       //     ? true
       //     : null,
-      remove_from_np : !formValues.notice_period_end_date && !formValues.notice_period_start_date ? true : null,
+      remove_from_np:
+        !formValues.notice_period_end_date &&
+        !formValues.notice_period_start_date
+          ? true
+          : null,
       probation_date: formValues.probation_date
         ? customFunctions.getDate(formValues.probation_date)
         : null,
+      mobile: formValues?.mobile ? formValues?.mobile : null,
+      personal_email: formValues?.personal_email
+        ? formValues?.personal_email
+        : null,
     };
-    // return;
 
     const { data } = await AuthApi.putDataToServer(
       `${Api.employeeUrl}${id}/`,
@@ -198,9 +201,13 @@ function EditPersonalDetails(props) {
         dob: noticeDate.dob
           ? new Date(customFunctions.getDate(noticeDate.dob))
           : null,
-        confirmation_date : noticeDate?.confirmation_date ? new Date(customFunctions.getDate(noticeDate?.confirmation_date)) : null,
+        confirmation_date: noticeDate?.confirmation_date
+          ? new Date(customFunctions.getDate(noticeDate?.confirmation_date))
+          : null,
         email: noticeDate.email ? noticeDate.email : null,
-        personal_email:noticeDate?.personal_email ? noticeDate?.personal_email : null, 
+        personal_email: noticeDate?.personal_email
+          ? noticeDate?.personal_email
+          : null,
         full_name: noticeDate.full_name ? noticeDate.full_name : null,
         joining_date: noticeDate.date_joined
           ? new Date(customFunctions.getDate(noticeDate.date_joined))
@@ -208,8 +215,10 @@ function EditPersonalDetails(props) {
         designation: {
           label: noticeDate?.designation_name,
         },
-        probation_date :  noticeDate?.probation_date ? new Date(customFunctions.getDate(noticeDate?.probation_date))
-        : null,
+        probation_date: noticeDate?.probation_date
+          ? new Date(customFunctions.getDate(noticeDate?.probation_date))
+          : null,
+        mobile: noticeDate?.mobile ? noticeDate?.mobile : null,
       });
     }
   };
@@ -245,7 +254,7 @@ function EditPersonalDetails(props) {
 
   return (
     <>
-      <Loader showLoader={isShowLoader} needFullPage={false}/>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
         containerClass="mb-2 mt-2"
         formHeaderClass=""

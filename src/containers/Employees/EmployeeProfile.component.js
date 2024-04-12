@@ -41,7 +41,6 @@ function EmployeeProfile(props) {
   const [modalShow, setShowModal] = useState(false);
   const [lastworkingDate, setLastWorkingDate] = useState('');
   const [showReview, setShowReview] = useState(false);
-  // console.log('showReview', showReview);
   const [editReview, setEditReview] = useState(false);
   const [pagetype, setPageType] = useState('');
   const [refreshData, setRefreshData] = useState(false);
@@ -49,7 +48,6 @@ function EmployeeProfile(props) {
   const [reviewId, setReviewId] = useState();
   const [currentUserId, setCurrentUserId] = useState();
   const [rowData, setRowData] = useState([]);
-  // console.log('rowData', rowData);
   const employeeID = match.params.id;
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
@@ -70,25 +68,24 @@ function EmployeeProfile(props) {
   }, [refreshData]);
 
   const handleActionCallback = (row) => {
-    // console.log('row', row);
     return (
       <>
-        { row?.status_name == 'Completed' &&
+        {row?.status_name == 'Completed' && (
           <a
-          href="/"
-          className="pl-2"
-          onClick={(e) => {
-            // console.log('testonClick');
-            e.preventDefault();
-            e.stopPropagation();
-            setShowReview(true);
-            setEditReview(true);
-            setPageType('view');
-            setReviewId(row.id);
-          }}
-        >
-          <Image alt="view" src="/images/eye.svg" title='View Review'/>
-        </a>}
+            href="/"
+            className="pl-2"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowReview(true);
+              setEditReview(true);
+              setPageType('view');
+              setReviewId(row.id);
+            }}
+          >
+            <Image alt="view" src="/images/eye.svg" title="View Review" />
+          </a>
+        )}
         {row.status_name != 'Completed' ? (
           <a
             href="/"
@@ -102,11 +99,9 @@ function EmployeeProfile(props) {
               setReviewId(row.id);
             }}
           >
-            <Image src="/images/edit-button.svg" title='Edit Review'/>
+            <Image src="/images/edit-button.svg" title="Edit Review" />
           </a>
-        ) : (
-          null
-        )}
+        ) : null}
       </>
     );
   };
@@ -120,7 +115,6 @@ function EmployeeProfile(props) {
       id: 'full_name',
       label: 'Reviewer Name',
       render: (rowData) => {
-        // console.log('rowData123', rowData);
         return <>{rowData?.reviewer?.full_name}</>;
       },
     },
@@ -429,7 +423,6 @@ function EmployeeProfile(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
-      // console.log('data', data);
       setTotalCount(data.paginator.total_count);
       setLimit(data.paginator.limit);
       setCurrentPage(Number(data.paginator.current_page));
@@ -483,7 +476,7 @@ function EmployeeProfile(props) {
           ? customFunctions.getDate(employeeDetails.date_joined)
           : '',
       confirmation_date:
-        employeeDetails && employeeDetails.confirmation_date
+        employeeDetails?.confirmation_date
           ? customFunctions.getDate(employeeDetails.confirmation_date)
           : null,
       confirmed:
@@ -643,7 +636,8 @@ function EmployeeProfile(props) {
                             {employeeDetails.confirmation_date
                               ? `Confirmation Date -`
                               : `Expected Confirmation Date-`}
-                            {employeeDetails.confirmation_date
+                            {employeeDetails.confirmation_date != null ||
+                            employeeDetails.confirmation_date != ''
                               ? customFunctions.getDMYDate(
                                   employeeDetails.confirmation_date
                                 )
@@ -732,8 +726,7 @@ function EmployeeProfile(props) {
                             pageType={pagetype}
                             reviewId={reviewId}
                             empId={empId}
-                            callbackBtn={(e) => {
-                            }}
+                            callbackBtn={(e) => {}}
                           />
                         </div>
                       )}
