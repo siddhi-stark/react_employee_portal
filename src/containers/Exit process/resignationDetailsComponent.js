@@ -50,7 +50,7 @@ const ResignationDetailsComponent = (props) => {
   const [stepTwoKey, setStepTwoKey] = useState('0');
   const [stepThreeKey, setStepThreeKey] = useState('0');
   const [uniqueDocumentOptions, setUniqueDocumentOptions] = useState([]);
-  
+
   const [selectedDate, setSelectedDate] = useState(null);
   const defaultDate = new Date();
   defaultDate.setMonth(defaultDate.getMonth() + 2);
@@ -237,6 +237,7 @@ const ResignationDetailsComponent = (props) => {
     setShowModal(false);
     const postData = {
       resignation_status: status,
+      relieving_date: customFunctions.getDate(relievingDate),
     };
 
     if (status == 1) {
@@ -248,7 +249,6 @@ const ResignationDetailsComponent = (props) => {
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
-
       if (status == 1) {
         changeRelievingData();
       }
@@ -1410,7 +1410,7 @@ const ResignationDetailsComponent = (props) => {
               value={relievingDateReason}
               onInputChange={(e) => {
                 setRelievingDateReason(e.target.value);
-                setApproveReason(e?.target?.value)
+                setApproveReason(e?.target?.value);
               }}
             />
             <Button
