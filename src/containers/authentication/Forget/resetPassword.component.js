@@ -124,6 +124,7 @@ function ResetPassword(props) {
               type="text"
               name="email"
               placeholder="Email"
+              value={email}
               onInputChange={(e) => setEmail(e.target.value)}
             />
             {validator.current.message('Email', email, 'required|email', {

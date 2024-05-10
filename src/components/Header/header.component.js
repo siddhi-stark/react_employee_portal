@@ -24,6 +24,8 @@ function Header() {
   const dispatch = useDispatch();
   const event = new Event('Login', { isLogin: false });
   let token = customFunctions.getLocalStorage('access_token');
+  const path = window.location.pathname.split('/');
+  const extractedPath = path.length > 1 ? path[1].toString() : '';
 
   const eventMenu = new Event('MenuChange', { isUpdated: true });
 
@@ -92,8 +94,6 @@ function Header() {
     setUserRole(Number(uRole));
     token = customFunctions.getLocalStorage('access_token');
     if (!token) {
-      const path = window.location.pathname.split('/');
-      const extractedPath = path.length > 1 ? path[1].toString() : '';
       if (
         extractedPath !== 'login' &&
         extractedPath !== 'forget-password' &&
@@ -109,6 +109,7 @@ function Header() {
   }, []);
 
   useEffect(() => {
+    if (extractedPath == 'password') return;
     getNotificationCount();
   }, []);
 
@@ -177,7 +178,7 @@ function Header() {
                   {imageProfile ? (
                     <img src={imageProfile} alt="Profile" />
                   ) : (
-                  <img src="/images/user.svg" alt="Edit Profile" />
+                    <img src="/images/user.svg" alt="Edit Profile" />
                   )}
                 </a>
               </div>
