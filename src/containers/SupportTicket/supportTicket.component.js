@@ -134,7 +134,7 @@ function SupportTicket(props) {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                history.push(`/edit-support-ticket/${rowData.id}`, {
+                history.push(`/view-support-ticket/${rowData.id}`, {
                   state: rowData.id,
                 });
               }}

@@ -48,7 +48,7 @@ function AddSupportTicket(props) {
   const [disableButton, setDisableButton] = useState(false);
   const [currentUser, updateCurrentUser] = useState(0);
   const [user, setUser] = useState(0);
-  const [supportId, setSupportId] = useState('');
+  const [supportId, setSupportId] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
   const userId = localStorage.getItem('userId');
 
@@ -198,12 +198,22 @@ function AddSupportTicket(props) {
     });
   };
 
-  const getData = async (editId) => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.supportTicketUrl}${editId}/`
+  useEffect(() => {
+    if (!supportId) return;
+    getData();
+  }, [supportId]);
+
+  const getData = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.supportTicketUrl}${supportId}/`
     );
     if (!data) {
-      return;
+      return swal(message ? message : 'Somthing went wrong!', '', 'error', {
+        closeOnClickOutside: false,
+        timer: 2000,
+      }).then(() => {
+        history.push('/support-ticket');
+      });
     }
     const statusArr = status.filter(
       (st) => st.value !== data.data.admin_status
@@ -253,7 +263,7 @@ function AddSupportTicket(props) {
   useEffect(() => {
     if (id) {
       setSupportId(id);
-      getData(id);
+      /* getData(id); */
       setTitle(view ? 'View Support Ticket' : 'Edit Support Ticket');
     } else {
       setTitle('Add Support Ticket');

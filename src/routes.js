@@ -228,7 +228,7 @@ function Routes() {
       <Route path="/support-ticket" exact component={SupportTicketComponent} />
       <Route path="/add-support-ticket" exact component={AddSupportTicket} />
       <Route
-        path="/edit-support-ticket/:supportId"
+        path="/view-support-ticket/:supportId"
         exact
         component={AddSupportTicket}
       />
