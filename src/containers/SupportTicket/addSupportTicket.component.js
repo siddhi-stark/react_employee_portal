@@ -20,7 +20,7 @@ function AddSupportTicket(props) {
     })
   );
   const { match, location } = props;
-  const { state } = useLocation()
+  const { state } = useLocation();
   const history = useHistory();
   const id = match.params.supportId;
   const view = location?.state?.state;
@@ -42,7 +42,7 @@ function AddSupportTicket(props) {
     status: '',
     admin_status: '',
     created_at: '',
-    updated_at: ''
+    updated_at: '',
   });
   const [count, forceUpdate] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
@@ -63,8 +63,7 @@ function AddSupportTicket(props) {
   const statusArray = [
     { label: 'Open', value: 1 },
     { label: 'Close', value: 2 },
-    { label: 'Resolve', value: 4 }
-
+    { label: 'Resolve', value: 4 },
   ];
 
   const ticketType = [
@@ -124,8 +123,9 @@ function AddSupportTicket(props) {
       : Api.supportTicketUrl;
     const { data, message } = await callback(endPoint, postData);
 
-    if (!data) { // const handleActionCallback = ({ id, status_id }) => { // eslint-disable-line
-      //   
+    if (!data) {
+      // const handleActionCallback = ({ id, status_id }) => { // eslint-disable-line
+      //
       //   return (
       //     <span className="d-flex">
       //       {[1, 2].includes(Number(userRole)) ? (
@@ -246,7 +246,7 @@ function AddSupportTicket(props) {
         value: data.data.ticket_type,
       },
       created_at: data.data.created_at,
-      updated_at: data.data.updated_at
+      updated_at: data.data.updated_at,
     });
   };
 
@@ -314,7 +314,7 @@ function AddSupportTicket(props) {
         <div className="title-breadcrumb-section">
           <Button
             className="float-end mb-4 mr-6"
-            style={{ minWidth: "80px" }}
+            style={{ minWidth: '80px' }}
             variant="btn btn-sm btn-primary"
             onClick={() => {
               history.push('/support-ticket');
@@ -337,23 +337,48 @@ function AddSupportTicket(props) {
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">Support Ticket{`${props.data ? ': SST-'+view : ' '}`}</h5>
+                <h5 className="card-title mb-0 mt-2 ">
+                  Support Ticket{`${props.data ? ': SST-' + view : ' '}`}
+                </h5>
               </div>
               <hr />
               {view ? (
                 <Row className="mb-5">
                   <Col>
-                    <Col><strong>TicketId: </strong>SST-{view}</Col>
-                    <Col className='mt-2'><strong>Ticket type:</strong> {supportDetails?.ticket_type?.label}</Col>
-                    <Col className='mt-2'><strong>Created Date:</strong> {`${customFunctions.getDMYDate(supportDetails.created_at)} 
+                    <Col>
+                      <strong>TicketId: </strong>SST-{view}
+                    </Col>
+                    <Col className="mt-2">
+                      <strong>Ticket type:</strong>{' '}
+                      {supportDetails?.ticket_type?.label}
+                    </Col>
+                    <Col className="mt-2">
+                      <strong>Created Date:</strong>{' '}
+                      {`${customFunctions.getDMYDate(
+                        supportDetails.created_at
+                      )} 
                     ${customFunctions.formatAMPM(supportDetails.created_at)}`}
                     </Col>
-                    <Col className='mt-2'><strong>{supportDetails?.comment == null ? null :'Comment:'}</strong> {supportDetails?.comment}</Col>
+                    <Col className="mt-2">
+                      <strong>
+                        {supportDetails?.comment == null ? null : 'Comment:'}
+                      </strong>{' '}
+                      {supportDetails?.comment}
+                    </Col>
                   </Col>
                   <Col>
-                    <Col ><strong>Title:</strong> {supportDetails?.title}</Col>
-                    <Col className='mt-2'><strong>Description:</strong> {supportDetails?.description}</Col>
-                    <Col className='mt-2'><strong>Updated Date:</strong> {`${customFunctions.getDMYDate(supportDetails.updated_at)} 
+                    <Col>
+                      <strong>Title:</strong> {supportDetails?.title}
+                    </Col>
+                    <Col className="mt-2">
+                      <strong>Description:</strong>{' '}
+                      {supportDetails?.description}
+                    </Col>
+                    <Col className="mt-2">
+                      <strong>Updated Date:</strong>{' '}
+                      {`${customFunctions.getDMYDate(
+                        supportDetails.updated_at
+                      )} 
                     ${customFunctions.formatAMPM(supportDetails.updated_at)}`}
                     </Col>
                   </Col>
@@ -503,22 +528,24 @@ function AddSupportTicket(props) {
                 ) : null} */}
                 </Row>
               )}
-              {view ? null : <div className="float-end">
-                <Button
-                  variant="primary"
-                  type="submit"
-                  disabled={disableButton}
-                >
-                  {supportId ? 'Update' : 'Add'}
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="ms-4"
-                  onClick={() => onCancel()}
-                >
-                  Cancel
-                </Button>
-              </div>}
+              {view ? null : (
+                <div className="float-end">
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={disableButton}
+                  >
+                    {supportId ? 'Update' : 'Add'}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="ms-4"
+                    onClick={() => onCancel()}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
             </Card.Body>
           </Card>
         </Form>

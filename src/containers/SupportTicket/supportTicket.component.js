@@ -48,32 +48,29 @@ function SupportTicket(props) {
 
   const statusArray = [
     currentUser == 7
-      ?
-      {
-        id: '3',
-        label: 'Resolved',
-      }
-      :
-      {
-        id: '2',
-        label: 'Close',
-      }
+      ? {
+          id: '3',
+          label: 'Resolved',
+        }
+      : {
+          id: '2',
+          label: 'Close',
+        },
   ];
 
   const statusArray1 = [
     {
       id: '3',
       label: 'Resolved',
-    }
+    },
   ];
 
   const statusArray2 = [
     {
       id: '2',
       label: 'Close',
-    }
+    },
   ];
-
 
   const submitCloseTicket = (onChangeData = '') => {
     if (onChangeData) {
@@ -104,7 +101,7 @@ function SupportTicket(props) {
           );
           if (data) {
             setShowLoader(false);
-            swal("Ticket status updated successfully!", "", "success", {
+            swal('Ticket status updated successfully!', '', 'success', {
               closeOnClickOutside: false,
               allowOutsideClick: false,
             }).then(() => {
@@ -112,7 +109,7 @@ function SupportTicket(props) {
               getRowData();
             });
           } else {
-            swal(message, "", "error", {
+            swal(message, '', 'error', {
               closeOnClickOutside: false,
               allowOutsideClick: false,
             });
@@ -132,13 +129,12 @@ function SupportTicket(props) {
         return (
           <div>
             <a
-
               href="javascript:void(0)"
               className="pl-2 ms-1"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                history.push(`/view-support-ticket/${rowData.id}`, {
+                history.push(`/edit-support-ticket/${rowData.id}`, {
                   state: rowData.id,
                 });
               }}
@@ -152,23 +148,18 @@ function SupportTicket(props) {
     {
       id: [1, 2, 7].includes(Number(userRole)) && 'user_full_name',
       label: [1, 2, 7].includes(Number(userRole)) && 'Name',
-      render: [1, 2, 7].includes(Number(userRole)) ? (row) => {
-        return (
-          <>{row?.user_name}</>
-        )
-      } : null
+      render: [1, 2, 7].includes(Number(userRole))
+        ? (row) => {
+            return <>{row?.user_name}</>;
+          }
+        : null,
     },
     {
       id: 'title',
       label: 'Title',
       render: ({ title }) => {
         return (
-          <div
-            title={title}
-          >
-            {' '}
-            {customFunctions.textAbstract(title, 15)}{' '}
-          </div>
+          <div title={title}> {customFunctions.textAbstract(title, 15)} </div>
         );
       },
     },
@@ -177,8 +168,7 @@ function SupportTicket(props) {
       label: 'Created Date',
       render: ({ created_at }) => {
         return (
-          <div
-          >{`${customFunctions.getDMYDate(
+          <div>{`${customFunctions.getDMYDate(
             created_at
           )} ${customFunctions.formatAMPM(created_at)}`}</div>
         );
@@ -190,13 +180,13 @@ function SupportTicket(props) {
       render: props?.data
         ? null
         : ({ comment }) => {
-          return (
-            <div title={comment}>
-              {' '}
-              {customFunctions.textAbstract(comment ? comment : '-', 20)}{' '}
-            </div>
-          );
-        },
+            return (
+              <div title={comment}>
+                {' '}
+                {customFunctions.textAbstract(comment ? comment : '-', 20)}{' '}
+              </div>
+            );
+          },
     },
     {
       id: props?.data ? null : 'updated_at',
@@ -204,12 +194,16 @@ function SupportTicket(props) {
       render: props?.data
         ? null
         : (rowData) => {
-          return (
-            <div>{rowData?.status_id == 1 ? '-' : (`${customFunctions.getDMYDate(
-              rowData?.updated_at
-            )} ${customFunctions.formatAMPM(rowData?.updated_at)}`)}</div>
-          );
-        },
+            return (
+              <div>
+                {rowData?.status_id == 1
+                  ? '-'
+                  : `${customFunctions.getDMYDate(
+                      rowData?.updated_at
+                    )} ${customFunctions.formatAMPM(rowData?.updated_at)}`}
+              </div>
+            );
+          },
     },
     // {
     //   id: 'ticket_type_name',
@@ -232,68 +226,78 @@ function SupportTicket(props) {
       render: (row) => {
         return (
           <div>
-            {
-              (currentUser == 1 && row.status_id === 1 && row.user != user)
-                //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
-                // || (currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)
-                ?
-                <DropdownInput
-                  // label={index === 0 ? "Document Type" : ""}
-                  placeholder=" Select Task"
-                  options={currentUser == 7 ? statusArray2 : statusArray1}
-                  defaultValue={
-                    { label: customFunctions.capitalizeFirstLetter(row.status), id: row.status_id }
+            {currentUser == 1 && row.status_id === 1 && row.user != user ? (
+              //  || (currentUser == 7 && row.status_id != 3 && row.status_id != 2 && row.user != user)
+              // || (currentUser == 7 && row.user === user && row.status_id != 2 && row.status_id != 1)
+              <DropdownInput
+                // label={index === 0 ? "Document Type" : ""}
+                placeholder=" Select Task"
+                options={currentUser == 7 ? statusArray2 : statusArray1}
+                defaultValue={{
+                  label: customFunctions.capitalizeFirstLetter(row.status),
+                  id: row.status_id,
+                }}
+                onSelectHandler={(select) => {
+                  // setTicketStatus(select);
+                  row.status = select.label;
+                  row.status_id = select.id;
+                  if (select.label === 'Resolved') {
+                    setUpdateShow(true);
+                    setCreateTask(row);
                   }
-                  onSelectHandler={(select) => {
-                    // setTicketStatus(select);
-                    row.status = select.label;
-                    row.status_id = select.id;
-                    if (select.label === 'Resolved') {
-                      setUpdateShow(true);
-                      setCreateTask(row);
+                  if (select.label === 'Close') {
+                    submitCloseTicket(row, 'onChange');
+                  }
+                }}
+                id="document"
+              />
+            ) : (
+              <>
+                {props?.data ||
+                (currentUser === 7 &&
+                  (row.status_id === 3 || row.status_id === 2)) ||
+                (currentUser != 7 &&
+                  (row.status_id === 2 || row.status_id === 1)) ||
+                (currentUser === 1 && row.user != user) ||
+                (currentUser === 1 &&
+                  row.user === user &&
+                  row.status_id === 1) ||
+                (currentUser === 7 &&
+                  row.user === user &&
+                  row.status_id === 1) ? (
+                  customFunctions.capitalizeFirstLetter(row?.status)
+                ) : (
+                  <DropdownInput
+                    // label={index === 0 ? "Document Type" : ""}
+                    placeholder=" Select Task"
+                    options={
+                      currentUser === 7 && row.user === user
+                        ? statusArray2
+                        : statusArray
                     }
-                    if (select.label === 'Close') {
-                      submitCloseTicket(row, 'onChange')
-                    }
-                  }}
-                  id="document"
-                />
-                :
-                <>
-                  {props?.data || (currentUser === 7 && (row.status_id === 3 || row.status_id === 2)) ||
-                    (currentUser != 7 && (row.status_id === 2 || row.status_id === 1))
-                    || currentUser === 1 && row.user != user || currentUser === 1 && row.user === user && row.status_id === 1
-                    || currentUser === 7 && row.user === user && row.status_id === 1
-                    ? customFunctions.capitalizeFirstLetter(row?.status) :
-                    <DropdownInput
-                      // label={index === 0 ? "Document Type" : ""}
-                      placeholder=" Select Task"
-                      options={currentUser === 7 && row.user === user ? statusArray2 : statusArray}
-                      defaultValue={
-                        { label: row.status, id: row.status_id }
+                    defaultValue={{ label: row.status, id: row.status_id }}
+                    onSelectHandler={(select) => {
+                      // setTicketStatus(select);
+                      row.status = select.label;
+                      row.status_id = select.id;
+                      if (select.label === 'Resolved') {
+                        setUpdateShow(true);
+                        setCreateTask(row);
                       }
-                      onSelectHandler={(select) => {
-                        // setTicketStatus(select);
-                        row.status = select.label;
-                        row.status_id = select.id;
-                        if (select.label === 'Resolved') {
-                          setUpdateShow(true);
-                          setCreateTask(row);
-                        }
-                        if (select.label === 'Close') {
-                          submitCloseTicket(row, 'onChange')
-                        }
-                      }}
-                      id="document"
-                    />}
-                </>
-            }
+                      if (select.label === 'Close') {
+                        submitCloseTicket(row, 'onChange');
+                      }
+                    }}
+                    id="document"
+                  />
+                )}
+              </>
+            )}
           </div>
         );
       },
     },
   ];
-
 
   // Declare methods
   const getRowData = async (pageNo = 1) => {
@@ -329,11 +333,11 @@ function SupportTicket(props) {
         const dateSecond = new Date(eDate);
 
         var hours = Math.abs(dateFirst - dateSecond) / 36e5;
-    
+
         if (hours > 4 && item.status === 'open') {
-          newItem.rowClass = 'alert-danger'
+          newItem.rowClass = 'alert-danger';
         }
-     
+
         return newItem;
       });
       const dateAndTime =
@@ -355,7 +359,7 @@ function SupportTicket(props) {
     getRowData(1);
   }, [filterData, !updateShow]);
 
-  // Get user role 
+  // Get user role
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -435,13 +439,14 @@ function SupportTicket(props) {
     <>
       <Helmet title={pageTitle} />
 
-      { props.data ? null :
+      {props.data ? null : (
         <div className="page-header">
-        <div className="title-breadcrumb-section">
-          <h2 className="main-content-title tx-24 mg-b-5">Support Ticket</h2>
-          <Breadcrumb items={items} />
+          <div className="title-breadcrumb-section">
+            <h2 className="main-content-title tx-24 mg-b-5">Support Ticket</h2>
+            <Breadcrumb items={items} />
+          </div>
         </div>
-      </div>}
+      )}
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div>
@@ -482,9 +487,10 @@ function SupportTicket(props) {
                         !formValues.status)
                     ) {
                       setFilterErr(
-                        `${[1, 2].includes(Number(currentUser))
-                          ? 'Please select the ticket type or employee name or status'
-                          : 'Please select the ticket type or status'
+                        `${
+                          [1, 2].includes(Number(currentUser))
+                            ? 'Please select the ticket type or employee name or status'
+                            : 'Please select the ticket type or status'
                         }`
                       );
                     } else {
@@ -514,7 +520,9 @@ function SupportTicket(props) {
           <Card>
             <Card.Body>
               <div className="d-flex align-items-center justify-content-between">
-                <h5 className="card-title mb-0 mt-2 ">{props.data ? 'Recently Added Tickets' : ' '}</h5>
+                <h5 className="card-title mb-0 mt-2 ">
+                  {props.data ? 'Recently Added Tickets' : ' '}
+                </h5>
               </div>
               {userRole != 7 && userRole != 1 ? (
                 <div className="d-flex align-items-center justify-content-between">
@@ -551,24 +559,22 @@ function SupportTicket(props) {
                 }}
               />
             </Card.Body>
-            {
-              props.data  && (
-                <Card.Footer>
-                  <div>
-                    <a
-                      className="d-flex align-items-center justify-content-end"
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        history.push("/support-ticket");
-                      }}
-                    >
-                      View all
-                    </a>
-                  </div>
-                </Card.Footer>
-              )
-            }
+            {props.data && (
+              <Card.Footer>
+                <div>
+                  <a
+                    className="d-flex align-items-center justify-content-end"
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      history.push('/support-ticket');
+                    }}
+                  >
+                    View all
+                  </a>
+                </div>
+              </Card.Footer>
+            )}
           </Card>
         </div>
       </section>
