@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 // import Doughnut from 'stark-doughnut-graph';
@@ -19,13 +20,14 @@ function TeamProject(props) {
   const teamid = props;
   const teamProjectId = teamid.match.params.teamProjectId;
   const archived = teamid.location.state ? teamid.location.state.archived : '';
+  const [bugStatus, setBugStatus] = useState('');
+  const [employeeBug, setEmployeeBug] = useState('');
   customFunctions.setLocalStorage('teamProjectId', teamProjectId);
   const [barGraphData, setBarGraphData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
   const [activityData, setActivityData] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [totalTask, setTotalTask] = useState(0);
-
   const items = [
     { to: '/', label: 'Home' },
     {
@@ -52,7 +54,7 @@ function TeamProject(props) {
   };
 
   const history = useHistory();
-  const [graphDetails, setGraphDetails] = useState(initialState);
+  const [graphDetails, setGraphDetails] = useState('');
   const [graphData, setGraphData] = useState({});
   const [title, setTitle] = useState('');
 
@@ -67,7 +69,6 @@ function TeamProject(props) {
   const [activeMenu, setActiveMenu] = useState('Summary');
   const [managerName, setManagerName] = useState('');
   const [remarksData, setRemarksData] = useState([]);
-  // const [taskRowData, setTaskRowData] = useState([]);
 
   // Declare columns
   const columns = [
@@ -77,12 +78,12 @@ function TeamProject(props) {
       isDisplay: false,
     },
     {
-      id: 'team',
-      label: 'Team',
-      render: ({ team, department }) => {
+      id: 'name',
+      label: 'Name',
+      render: ({ name, department_id }) => {
         return (
           <>
-            {team !== 'Total' ? (
+            {name !== 'Total' ? (
               <>
                 <a
                   href="/"
@@ -90,33 +91,33 @@ function TeamProject(props) {
                   onClick={(e) => {
                     customFunctions.setLocalStorage(
                       'departmentType',
-                      department
+                      department_id
                     );
                     customFunctions.setLocalStorage('projectName', name);
-                    customFunctions.setLocalStorage('departmentName', team);
+                    customFunctions.setLocalStorage('departmentName', name);
                     customFunctions.setLocalStorage('managerName', managerName);
                     e.preventDefault();
                     e.stopPropagation();
                     if (archived) {
-                      history.push(`/team/${team}`, {
+                      history.push(`/team/${name}`, {
                         graphDataObj,
                         projectStatus,
                         archived: true,
                       });
                     } else {
-                      history.push(`/team/${team}`, {
+                      history.push(`/team/${name}`, {
                         graphDataObj,
                         projectStatus,
                       });
                     }
                   }}
                 >
-                  <strong> {team}</strong>
+                  <strong> {name}</strong>
                 </a>
               </>
             ) : (
               <span>
-                <strong>{team}</strong>
+                <strong>{name}</strong>
               </span>
             )}
           </>
@@ -124,43 +125,36 @@ function TeamProject(props) {
       },
     },
     {
-      id: 'spend',
+      id: 's_hours',
       label: 'Spent Hours',
-      render: ({ spend }) => {
+      render: ({ s_hours }) => {
         return (
           <>
-            {Math.sign(spend) === 1 || Math.sign(spend) === 0 ? (
+            {Math.sign(s_hours) === 1 || Math.sign(s_hours) === 0 ? (
               <span>
-                {spend} {Math.sign(spend) === 0 ? 'Hr' : 'Hrs'}
+                {s_hours} {Math.sign(s_hours) === 0 ? 'Hr' : 'Hrs'}
               </span>
             ) : (
-              <span className="text-danger">{spend} Hrs</span>
+              <span /*  className="text-danger" */>{s_hours} Hrs</span>
             )}
           </>
         );
       },
     },
     {
-      id: 'allocated',
+      id: 'e_hours',
       label: 'Estimated Hours',
-      render: ({ allocated }) => {
-        return <>{allocated.toFixed(2)}</>;
+      render: ({ e_hours }) => {
+        return <>{e_hours.toFixed(2)} Hrs</>;
       },
     },
     {
-      id: 'hours_allocated',
-      label: 'Allocated Hours',
-      render: ({ hours_allocated }) => {
-        return <>{hours_allocated.toFixed(2)}</>;
-      },
-    },
-    {
-      id: 'remaining',
+      id: 'r_hours',
       label: 'Remaining Hours',
-      render: ({ remaining }) => {
+      render: ({ r_hours }) => {
         return (
           <>
-            <span>{remaining} %</span>
+            <span>{r_hours} Hrs</span>
           </>
         );
       },
@@ -175,228 +169,34 @@ function TeamProject(props) {
     setTitle('Team Project');
   }, []);
 
-  // Declare methods table method
-  const getRowData = async (pageNo = 1) => {
+  useEffect(() => {
+    setTeamDetailsData();
+  }, []);
+
+  const setTeamDetailsData = async () => {
+    let designHrs = '';
+    let developmentHrs = '';
+    let qaHrs = '';
+    let managementHrs = '';
     setShowLoader(true);
-    const newData = [];
-    const page = pageNo || currentPage;
-    const endPoint = `${Api.getProjects}${teamProjectId}/`;
+    const endPoint = `${Api.allDepartmentProject}`;
     const params = {
-      page,
-      limit,
+      project_id: teamProjectId,
+      is_all_data: true,
+      is_compress_data: true,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      let designHrs = '';
-      let developmentHrs = '';
-      let qaHrs = '';
-      let managementHrs = '';
       setShowLoader(false);
-      const graph = {
-        labels: ['Completed', 'Pending'],
-        datasets: [
-          {
-            data: [
-              data && data.data && data.data.completion,
-              data && data.data && data.data.remaining_perc,
-            ],
-            backgroundColor: ['#8cc540', '#e3e3e3'],
-          },
-        ],
-      };
-      setGraphDetails({
-        totalHrsSpend: data && data.data && data.data.spend,
-        totalHrsEstimate:
-          data && data.data && data.data.total && data.data.total.allocated,
-        totalHrsAllocated: data && data.data && data.data.hours_allocated,
-        projectCompletion: data && data.data && data.data.completion,
-        url: data && data.data && data.data.tw_id,
-        start_date:
-          data &&
-          data.data &&
-          data.data.start_date &&
-          customFunctions.getDMYDate(data.data.start_date),
-        end_date:
-          data &&
-          data.data &&
-          data.data.end_date &&
-          customFunctions.getDMYDate(data.data.end_date),
-      });
-      const allocated_hrs =
-        data && data.data && Number(data.data.hours_allocated);
-      const spend_hrs = data && data.data && Number(data.data.spend);
-      const total = Number(allocated_hrs) - Number(spend_hrs);
-      setManagerName(data.data.project_owner_name);
-      setProjectStatus(total);
-      setGraphData(graph);
-
-      data &&
-        data.data &&
-        data.data.project_dept_time_list &&
-        data.data.project_dept_time_list.map((projectDept) => {
-          switch (projectDept.team_name) {
-            case 'Project Management':
-              managementHrs =
-                data.data.hours_allocated &&
-                Number(data.data.hours_allocated) *
-                  (Number(projectDept.value) / 100);
-              break;
-            case 'Development':
-              developmentHrs =
-                data.data.hours_allocated &&
-                Number(data.data.hours_allocated) *
-                  (Number(projectDept.value) / 100);
-              break;
-            case 'Design':
-              designHrs =
-                data.data.hours_allocated &&
-                Number(data.data.hours_allocated) *
-                  (Number(projectDept.value) / 100);
-              break;
-            case 'Quality Analysis':
-              qaHrs =
-                data.data.hours_allocated &&
-                Number(data.data.hours_allocated) *
-                  (Number(projectDept.value) / 100);
-              break;
-            default:
-              return !projectDept.team_name;
-          }
-          return projectDept;
-        });
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-      setName(data.data.name);
-      newData.push(
-        {
-          team: 'Design',
-          rowClass: data.data.design.remaining > 100 ? 'alert-danger' : '',
-          spend:
-            data && data.data && data.data.design && data.data.design.spends,
-          allocated:
-            data && data.data && data.data.design && data.data.design.allocated,
-          remaining:
-            data && data.data && data.data.design && data.data.design.remaining,
-          status:
-            data && data.data && data.data.design && data.data.design.status,
-          department:
-            data && data.data && data.data.design && data.data.design.dept_id,
-          hours_allocated: designHrs,
-        },
-        {
-          team: 'Development',
-          rowClass: data.data.development.remaining > 100 ? 'alert-danger' : '',
-          spend:
-            data &&
-            data.data &&
-            data.data.development &&
-            data.data.development.spends,
-          allocated:
-            data &&
-            data.data &&
-            data.data.development &&
-            data.data.development.allocated,
-          remaining:
-            data &&
-            data.data &&
-            data.data.development &&
-            data.data.development.remaining,
-          status:
-            data &&
-            data.data &&
-            data.data.development &&
-            data.data.development.status,
-          department:
-            data &&
-            data.data &&
-            data.data.development &&
-            data.data.development.dept_id,
-          hours_allocated: developmentHrs,
-        },
-        {
-          team: 'QA',
-          rowClass:
-            data.data.quality_analyst.remaining > 100 ? 'alert-danger' : '',
-          spend:
-            data &&
-            data.data &&
-            data.data.quality_analyst &&
-            data.data.quality_analyst.spends,
-          allocated:
-            data &&
-            data.data &&
-            data.data.quality_analyst &&
-            data.data.quality_analyst.allocated,
-          remaining:
-            data &&
-            data.data &&
-            data.data.quality_analyst &&
-            data.data.quality_analyst.remaining,
-          status:
-            data &&
-            data.data &&
-            data.data.quality_analyst &&
-            data.data.quality_analyst.status,
-          department:
-            data &&
-            data.data &&
-            data.data.quality_analyst &&
-            data.data.quality_analyst.dept_id,
-          hours_allocated: qaHrs,
-        },
-        {
-          team: 'Project Management',
-          rowClass:
-            data.data.project_management.remaining > 100 ? 'alert-danger' : '',
-          spend:
-            data &&
-            data.data &&
-            data.data.project_management &&
-            data.data.project_management.spends,
-          allocated:
-            data &&
-            data.data &&
-            data.data.project_management &&
-            data.data.project_management.allocated,
-          remaining:
-            data &&
-            data.data &&
-            data.data.project_management &&
-            data.data.project_management.remaining,
-          status:
-            data &&
-            data.data &&
-            data.data.project_management &&
-            data.data.project_management.status,
-          department:
-            data &&
-            data.data &&
-            data.data.project_management &&
-            data.data.project_management.dept_id,
-          hours_allocated: managementHrs,
-        },
-        {
-          team: 'Total',
-          spend: data && data.data && data.data.total && data.data.total.spends,
-          allocated:
-            data && data.data && data.data.total && data.data.total.allocated,
-          remaining:
-            data && data.data && data.data.total && data.data.total.remaining,
-          status:
-            data && data.data && data.data.total && data.data.total.status,
-          hours_allocated:
-            Number(qaHrs) +
-            Number(managementHrs) +
-            Number(developmentHrs) +
-            Number(designHrs),
-        }
-      );
+      setRowData(data?.data);
+      setName(data?.data?.[0]?.project_name);
+      setProjectStatus(data?.data?.[0]?.project_completion);
+  
       setGraphDataObj({
-        completion: data && data.data && data.data.completion,
-        remaining_perc: data && data.data && data.data.remaining_perc,
+        completion: data && data.data && data?.data?.[0]?.project_completion,
+        remaining_perc: data?.data?.[0]?.r_hours,
         hours_allocated_qa: Number(qaHrs),
         hours_allocated_management: Number(managementHrs),
         hours_allocated_development: Number(developmentHrs),
@@ -412,7 +212,97 @@ function TeamProject(props) {
           data.data.end_date &&
           customFunctions.getDMYDate(data.data.end_date),
       });
-      setRowData(newData || []);
+
+      data.data.map((projectDept) => {
+        switch (projectDept.name) {
+          case 'Project Management':
+            managementHrs =
+              data.data.total_allocated_estimation &&
+              Number(data.data.total_allocated_estimation) *
+                (Number(projectDept.value) / 100);
+            break;
+          case 'Development':
+            developmentHrs =
+              data.data.total_allocated_estimation &&
+              Number(data.data.total_allocated_estimation) *
+                (Number(projectDept.value) / 100);
+            break;
+          case 'Design':
+            designHrs =
+              data.data.total_allocated_estimation &&
+              Number(data.data.total_allocated_estimation) *
+                (Number(projectDept.value) / 100);
+            break;
+          case 'Quality Analysis':
+            qaHrs =
+              data.data.total_allocated_estimation &&
+              Number(data.data.total_allocated_estimation) *
+                (Number(projectDept.value) / 100);
+            break;
+          default:
+            return !projectDept.name;
+        }
+        return projectDept;
+      });
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
+  // Declare methods table method
+  const getRowData = async (pageNo = 1) => {
+    setShowLoader(true);
+    const newData = [];
+    const page = pageNo || currentPage;
+    const endPoint = `${Api.bugCountProject}`;
+    const params = {
+      project_id: teamProjectId,
+      is_all_data: true,
+      page,
+      limit,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
+      const graph = {
+        labels: ['Completed', 'Pending'],
+        datasets: [
+          {
+            data: [
+              data &&
+                data.data &&
+                data.data.task_status_details?.total_task_completed_count,
+              data &&
+                data.data &&
+                data.data.task_status_details?.total_task_incomplete_count,
+            ],
+            backgroundColor: ['#8cc540', '#e3e3e3'],
+          },
+        ],
+      };
+      setGraphData(graph);
+
+      const graphEmployee = {
+        labels: ['Total Count', 'Pending'],
+        datasets: [
+          {
+            data: [
+              data.data.all_bugs_details?.total_bug_count,
+              data.data.all_bugs_details?.total_bug_incomplete_count,
+            ],
+            backgroundColor: ['#449c2c', '#e3e3e3'],
+          },
+        ],
+      };
+
+      setBugStatus(graphEmployee);
+
       setBarGraphData({
         labels: ['Allocated Hours  Estimated Hours  Spending Hours'],
         datasets: [
@@ -421,7 +311,10 @@ function TeamProject(props) {
             backgroundColor: '#3ad2e3',
             borderWidth: 1,
             data: [
-              data && data.data && data.data.total && data.data.hours_allocated,
+              data &&
+                data.data &&
+                data?.data?.hour_analysis_details
+                  ?.total_allocated_estimation_in_hours,
             ],
           },
           {
@@ -429,7 +322,10 @@ function TeamProject(props) {
             backgroundColor: '#8cc540',
             borderWidth: 1,
             data: [
-              data && data.data && data.data.total && data.data.total.allocated,
+              data &&
+                data.data &&
+                data?.data?.hour_analysis_details
+                  ?.total_given_estimation_in_hours,
             ],
           },
           {
@@ -437,10 +333,19 @@ function TeamProject(props) {
             backgroundColor: '#f4c222',
             borderWidth: 1,
             data: [
-              data && data.data && data.data.total && data.data.total.spends,
+              data &&
+                data.data &&
+                data?.data?.hour_analysis_details?.total_spent_time_in_hours,
             ],
           },
         ],
+      });
+      setGraphDetails({
+        totalHrsSpend: data?.data?.hour_analysis_details?.total_spent_time_in_hours,
+        totalHrsEstimate: data?.data?.hour_analysis_details?.total_given_estimation_in_hours,
+        projectCompletion: data?.data?.hour_analysis_details?.total_completion_percentage,
+        start_date: customFunctions.getDMYDate(data?.data?.project_start_date),
+        end_date: customFunctions.getDMYDate(data?.data?.project_end_date),
       });
     } else {
       setShowLoader(false);
@@ -522,14 +427,16 @@ function TeamProject(props) {
     e.preventDefault();
     setShowLoader(true);
     const postData = [];
-    remarksData && remarksData.length && remarksData.map((r)=> {
-      postData.push({
-        'progress': r.progress,
-        'remark': r.remark,
-        'project_id': Number(teamProjectId)
+    remarksData &&
+      remarksData.length &&
+      remarksData.map((r) => {
+        postData.push({
+          progress: r.progress,
+          remark: r.remark,
+          project_id: Number(teamProjectId),
+        });
+        return postData;
       });
-      return postData;
-    });
 
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.projectSummaryUrl}`;
@@ -610,41 +517,61 @@ function TeamProject(props) {
                       }}
                     /> */}
                     <div className="table-projects d-flex justify-content-center table-responsive ">
-                    {(tableData && tableData.length) ? (
-                      <table className="table">
-                        <thead>
-                          <tr>
-                            <th><b>Total Tasks</b></th>
-                            <th><b>{totalTask}</b></th>
-                            <th><b>Remarks</b></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {tableData.map((td,i) => (
+                      {tableData && tableData.length ? (
+                        <table className="table">
+                          <thead>
                             <tr>
-                              <td>{td.name}</td>
-                              <td>{(td.name === 'Not Started(0%)' || td.name === 'Inprogress(1-99%)' || td.name === 'Completed(100%)') ? <b>{td.value}</b>:<i>{td.value}</i>}</td>
-                              <td>
-                                <TextInput
-                                  onInputChange={(e) => {
-                                    tableData[i].remark = e.target.value;
-                                    tableData.map((tb)=> tb.name == td.name ? td.flag = false : td.flag = true); // eslint-disable-line
-                                    setRemarksData([...tableData]);
-                                  }}
-                                  autocomplete="off"
-                                  containerClass="mb-0"
-                                  type="text"
-                                  name="remark"
-                                  value={tableData[i].remark}
-                                />
-                              </td>
+                              <th>
+                                <b>Total Tasks</b>
+                              </th>
+                              <th>
+                                <b>{totalTask}</b>
+                              </th>
+                              <th>
+                                <b>Remarks</b>
+                              </th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    ):(<span>No record found.</span>)}
+                          </thead>
+                          <tbody>
+                            {tableData.map((td, i) => (
+                              <tr>
+                                <td>{td.name}</td>
+                                <td>
+                                  {td.name === 'Not Started(0%)' ||
+                                  td.name === 'Inprogress(1-99%)' ||
+                                  td.name === 'Completed(100%)' ? (
+                                    <b>{td.value}</b>
+                                  ) : (
+                                    <i>{td.value}</i>
+                                  )}
+                                </td>
+                                <td>
+                                  <TextInput
+                                    onInputChange={(e) => {
+                                      tableData[i].remark = e.target.value;
+                                      tableData.map((tb) =>
+                                        tb.name == td.name
+                                          ? (td.flag = false)
+                                          : (td.flag = true)
+                                      ); // eslint-disable-line
+                                      setRemarksData([...tableData]);
+                                    }}
+                                    autocomplete="off"
+                                    containerClass="mb-0"
+                                    type="text"
+                                    name="remark"
+                                    value={tableData[i].remark}
+                                  />
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      ) : (
+                        <span>No record found.</span>
+                      )}
                     </div>
-                    {(tableData && tableData.length) && (
+                    {tableData && tableData.length && (
                       <Button
                         onClick={(e) => getRemarksData(e)}
                         className="float-end"
@@ -662,8 +589,10 @@ function TeamProject(props) {
                       <strong>Task Status</strong>
                     </Card.Header>
                     <Card.Body>
-                      {Object.keys(graphData).length && (
+                      {Object.keys(graphData).length ? (
                         <Pie data={graphData} />
+                      ) : (
+                        'No Record Found'
                       )}
                     </Card.Body>
                   </Card>
@@ -674,7 +603,7 @@ function TeamProject(props) {
                       <strong>Hours Analysis</strong>
                     </Card.Header>
                     <Card.Body>
-                      {Object.keys(barGraphData).length && (
+                      {Object.keys(barGraphData).length ? (
                         <Bar
                           data={barGraphData}
                           options={{
@@ -689,11 +618,17 @@ function TeamProject(props) {
                             },
                           }}
                         />
+                      ) : (
+                        'No Record Found'
                       )}
                     </Card.Body>
                   </Card>
                 </Col>
-                <EmployeeBugList projectId={teamProjectId} />
+                <EmployeeBugList
+                  projectId={teamProjectId}
+                  bugStatus={bugStatus}
+                  bugEmployee={employeeBug}
+                />
                 <Card className="p-0">
                   <Card.Body>
                     <div className="d-flex align-items-center justify-content-between">
@@ -705,14 +640,14 @@ function TeamProject(props) {
                       rows={rowData}
                       tableclassName="table-striped"
                       showPagination={true}
-                      paginationProps={{
-                        totalItems: totalCount,
-                        itemsPerPage: limit,
-                        activePage: currentPage,
-                        onPageChange: (pageNo) => {
-                          getRowData(pageNo);
-                        },
-                      }}
+                      // paginationProps={{
+                      //   totalItems: totalCount,
+                      //   itemsPerPage: limit,
+                      //   activePage: currentPage,
+                      //   onPageChange: (pageNo) => {
+                      //     setTeamDetailsData(pageNo);
+                      //   },
+                      // }}
                       emptyRender={() => {
                         return 'No record found.';
                       }}

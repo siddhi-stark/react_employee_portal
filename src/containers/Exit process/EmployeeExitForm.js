@@ -180,7 +180,7 @@ const EmployeeExitForm = (props) => {
     if (data && data.success == true) {
       setShowModal(false);
       setShowLoader(false);
-      swal("Retain request send successfully", '', 'success').then(() =>
+      swal('Retain request send successfully', '', 'success').then(() =>
         window.location.reload()
       );
     } else {
@@ -256,8 +256,8 @@ const EmployeeExitForm = (props) => {
     setRetainNote('');
     setBuyBackDate('');
     setBuyBackReason('');
-    setResignationReason('')
-    setPersonalEmail('')
+    setResignationReason('');
+    setPersonalEmail('');
   };
 
   return (
@@ -271,7 +271,7 @@ const EmployeeExitForm = (props) => {
             </h2>
           </div>
           <Breadcrumb items={items} />
-          {rowData && rowData?.length > 0 && !rowData?.user?.relieved &&  (
+          {rowData && rowData?.length > 0 && !rowData?.user?.relieved && (
             <div className="d-flex justify-content-end mb-3">
               {(!rowData?.[0]?.retain_status ||
                 [2].includes(rowData?.[0]?.retain_status)) &&
@@ -352,7 +352,7 @@ const EmployeeExitForm = (props) => {
                       as="textarea"
                       rows="5"
                       value={resignationReason}
-                      maxlength={255}
+                      maxlength={60}
                       onInputChange={(e) => {
                         setResignationReason(e.target.value);
                       }}
@@ -363,7 +363,7 @@ const EmployeeExitForm = (props) => {
                       )}
                     />
                     <h6 className="content-title text-count-box float-end">
-                      {`${resignationReason?.length}/255`}
+                      {`${resignationReason?.length}/60`}
                     </h6>
                     <div style={{ marginLeft: '-12px' }}>
                       <Row>

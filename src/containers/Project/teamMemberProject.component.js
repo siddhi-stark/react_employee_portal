@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -56,12 +57,19 @@ function TeamMemberProject(props) {
     {
       id: 'spends',
       label: 'Spent Hours',
+      render: ({ spends }) => {
+        return (
+          <>
+            <span>{spends} Hrs</span>
+          </>
+        );
+      },
     },
     {
       id: 'allocated',
       label: 'Estimated Hours',
       render: ({ allocated }) => {
-        return <> {allocated.toFixed(2)} </>;
+        return <> {allocated.toFixed(2)} Hrs</>;
       },
     },
     {

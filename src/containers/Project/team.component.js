@@ -1,5 +1,15 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import { Bar, Pie } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -11,6 +21,15 @@ import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 import ProjectRightContainer from '../../components/RightContainer/projectRightContainer.component';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+)
 
 function Team(props) {
   const teamid = props;
@@ -55,23 +74,24 @@ function Team(props) {
   const [graphDetails, setGraphDetails] = useState(initialState);
   const [graphAllocatedHrs, setGraphAllocatedHrs] = useState(null);
   const [graphData, setGraphData] = useState({});
+  const [name, setName] = useState('');
   const [employeeGraphData, setEmployeeGraphData] = useState([]);
   const managerName = customFunctions.getLocalStorage('managerName');
 
   // Declare columns
   const columns = [
     {
-      id: 'emp_id',
+      id: 'employee_id',
       label: 'Id',
       isDisplay: false,
     },
     {
-      id: 'emp_name',
+      id: 'employee_name',
       label: 'Team',
-      render: ({ emp_id, emp_name }) => {
+      render: ({ employee_name, employee_id }) => {
         return (
           <>
-            {emp_name !== 'Total' &&
+            {employee_name !== 'Total' &&
             ((Number(currentUser) === 4 &&
               (Number(departmentId) === 8 ||
                 Number(departmentId) === 9 ||
@@ -85,62 +105,78 @@ function Team(props) {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  customFunctions.setLocalStorage('teamMemberId', emp_id);
-                  customFunctions.setLocalStorage('teamMemberName', emp_name);
+                  customFunctions.setLocalStorage('teamMemberId', employee_id);
+                  customFunctions.setLocalStorage(
+                    'teamMemberName',
+                    employee_name
+                  );
                   if (archived) {
-                    history.push(`/my-project/${emp_id}`, { archived: true });
+                    history.push(`/my-project/${employee_id}`, {
+                      archived: true,
+                    });
                   } else {
-                    history.push(`/my-project/${emp_id}`);
+                    history.push(`/my-project/${employee_id}`);
                   }
                 }}
               >
-                <strong> {emp_name} </strong>
+                <strong> {employee_name} </strong>
               </a>
             ) : (
-              <span>{emp_name}</span>
+              <span>{employee_name}</span>
             )}
           </>
         );
       },
     },
     {
-      id: 'spends',
+      id: 'total_spent_time_in_hours',
       label: 'Spent Hours',
-      render: ({ spends }) => {
+      render: ({ hour_analysis_details }) => {
+        const { total_spent_time_in_hours } = hour_analysis_details;
         return (
           <>
-            {Math.sign(spends) === 1 || Math.sign(spends) === 0 ? (
+            {Math.sign(total_spent_time_in_hours) === 1 ||
+            Math.sign(total_spent_time_in_hours) === 0 ? (
               <span>
-                {spends} {Math.sign(spends) === 0 ? 'Hr' : 'Hrs'}
+                {total_spent_time_in_hours}{' '}
+                {Math.sign(total_spent_time_in_hours) === 0 ? 'Hr' : 'Hrs'}
               </span>
             ) : (
-              <span className="text-danger">{spends} Hrs</span>
+              <span className="text-danger">
+                {total_spent_time_in_hours} Hrs
+              </span>
             )}
           </>
         );
       },
     },
     {
-      id: 'allocated',
+      id: 'total_given_estimation_in_hours',
       label: 'Estimated Hours',
-      render: ({ allocated }) => {
-        return <>{allocated.toFixed(2)}</>;
+      render: ({ hour_analysis_details }) => {
+        const { total_given_estimation_in_hours } = hour_analysis_details;
+        return <>{total_given_estimation_in_hours.toFixed(2)} Hrs</>;
       },
     },
     {
-      id: 'remaining',
+      id: 'total_remaining_est_in_hours',
       label: 'Remaining Hours',
-      render: ({ remaining }) => {
+      render: ({ hour_analysis_details }) => {
+        const { total_remaining_est_in_hours } = hour_analysis_details;
         return (
           <>
-            <span>{remaining} %</span>
+            <span>{total_remaining_est_in_hours} Hrs </span>
           </>
         );
       },
     },
     {
-      id: 'completed',
+      id: 'total_completed_tasks',
       label: 'Task Completed',
+      render: ({ task_status_details }) => {
+        const { total_completed_tasks } = task_status_details;
+        return <>{total_completed_tasks.toFixed(2)}</>;
+      },
     },
   ];
 
@@ -152,21 +188,17 @@ function Team(props) {
 
     setShowLoader(true);
     const page = pageNo || currentPage;
-    const endPoint = `${Api.departmentReportUrl}`;
+    const endPoint = `${Api.departmentReport}`;
     const params = {
-      department: DepartmentID,
+      department_id: DepartmentID,
       project_id: teamProjectId,
-      page,
-      limit: 1000,
+      is_all_data: true,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      data &&
-        data.data &&
-        data.data.employees_data &&
-        data.data.employees_data.length > 0 &&
-        data.data.employees_data.map((empdata) => {
+      data?.data?.length > 0 &&
+        data?.data?.map((empdata) => {
           const employeeNewData = empdata;
           const add = {
             rowClass:
@@ -180,106 +212,124 @@ function Team(props) {
           return employeeNewData;
         });
 
+      const graph = {
+        labels: ['Completed', 'Pending'],
+        datasets: [
+          {
+            data: [
+              data &&
+                data?.data &&
+                data?.data?.[0]?.department_details?.task_status_details
+                  ?.department_total_completed_tasks,
+              data &&
+                data?.data &&
+                data?.data?.[0]?.department_details?.task_status_details
+                  ?.department_total_task_incomplete_count,
+            ],
+            backgroundColor: ['#8cc540', '#e3e3e3'],
+          },
+        ],
+      };
+      setGraphData(graph);
+
+      setBarGraphData({
+        labels: ['Allocated Hours  Estimated Hours  Spending Hours'],
+        datasets: [
+          {
+            label: 'Allocated Hours',
+            backgroundColor: '#3ad2e3',
+            borderWidth: 1,
+            data: [
+              data?.data?.[0]?.department_details?.hour_analysis_details
+                ?.department_total_allocated_estimation_in_hours,
+            ],
+          },
+          {
+            label: 'Estimated Hours',
+            backgroundColor: '#8cc540',
+            borderWidth: 1,
+            data: [
+              data?.data?.[0]?.department_details?.hour_analysis_details
+                ?.department_total_given_estimation_in_hours,
+            ],
+          },
+          {
+            label: 'Spent Hours',
+            backgroundColor: '#f4c222',
+            borderWidth: 1,
+            data: [
+              data?.data?.[0]?.department_details?.hour_analysis_details
+                ?.department_total_spent_time_in_hours,
+            ],
+          },
+        ],
+      });
+      setGraphDetails({
+        totalHrsSpend:
+          data?.data?.[0]?.department_details?.hour_analysis_details
+            ?.department_total_spent_time_in_hours,
+        totalHrsEstimate:
+          data?.data?.[0]?.department_details?.hour_analysis_details
+            ?.department_total_given_estimation_in_hours,
+        projectCompletion: data?.data?.[0]?.total_project_completion_percentage,
+        // url: data && data.data && data.data.tw_id,
+        start_date: customFunctions.getDMYDate(
+          data?.data?.[0]?.project_start_date
+        ),
+        end_date: customFunctions.getDMYDate(data?.data?.[0]?.project_end_date),
+      });
+      employeeData.push(data?.data?.[0]?.employee_details?.[0]?.employee_name);
+      employeeSpendingHrs.push(
+        data?.data?.[0]?.employee_details?.[0]?.hour_analysis_details
+          ?.total_spent_time_in_hours
+      );
+      employeeEstimatedHrs.push(
+        data?.data?.[0]?.employee_details?.[0]?.hour_analysis_details
+          ?.total_given_estimation_in_hours
+      );
+
+      setEmployeeGraphData({
+        labels: data?.data?.[0]?.employee_details.map(
+          (item) => item?.employee_name
+        ),
+        datasets: [
+          {
+            label: 'Estimated Hours',
+            backgroundColor: '#85C51C',
+            borderWidth: 1,
+            data: 
+              data?.data?.[0]?.employee_details.map(
+                (item) =>
+                  item.hour_analysis_details?.total_given_estimation_in_hours
+              ),
+            
+          },
+          {
+            label: 'Spent Hours',
+            backgroundColor: '#F4C222',
+            borderWidth: 1,
+            data: 
+              data?.data?.[0]?.employee_details.map(
+                (item) => item.hour_analysis_details?.total_spent_time_in_hours
+              ),
+            
+          },
+        ],
+      });
+      setName(data?.data?.[0]?.department_name);
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setCurrentPage(Number(data.paginator.current_page));
       setProjectName(data && data.data && data.data.project_name);
-      setRowData((data && data.data && data.data.employees_data) || []);
-      switch (data && data.data && data.data.department) {
-        case 'Project Management':
-          setGraphAllocatedHrs(
-            graphDataObj && graphDataObj.hours_allocated_management
-          );
-          break;
-        case 'Development':
-          setGraphAllocatedHrs(
-            graphDataObj && graphDataObj.hours_allocated_development
-          );
-          break;
-        case 'Design':
-          setGraphAllocatedHrs(
-            graphDataObj && graphDataObj.hours_allocated_design
-          );
-          break;
-        case 'Quality Analysis':
-          setGraphAllocatedHrs(graphDataObj && graphDataObj.hours_allocated_qa);
-          break;
-        default:
-          return !data.data.department;
-      }
-
-      data &&
-        data.data &&
-        data.data.employees_data &&
-        data.data.employees_data.length > 0 &&
-        data.data.employees_data.map((emp) => {
-          if (emp.emp_name === 'Total') {
-            const graph = {
-              labels: ['Completed', 'Pending'],
-              datasets: [
-                {
-                  data: [
-                    emp.completion,
-                    emp.completion && 100 - Number(emp.completion),
-                  ],
-                  backgroundColor: ['#8cc540', '#e3e3e3'],
-                },
-              ],
-            };
-            setGraphData(graph);
-            setGraphDetails({
-              totalHrsSpend: emp.spends,
-              totalHrsEstimate: emp.allocated,
-              projectCompletion: emp.completion,
-              totalHrsAllocated: graphAllocatedHrs,
-            });
-            setBarGraphData({
-              labels: ['Allocated Hours  Estimated Hours  Spending Hours'],
-              datasets: [
-                {
-                  label: 'Allocated Hours',
-                  backgroundColor: '#3ad2e3',
-                  borderWidth: 1,
-                  data: [graphAllocatedHrs],
-                },
-                {
-                  label: 'Estimated Hours',
-                  backgroundColor: '#8cc540',
-                  borderWidth: 1,
-                  data: [emp.allocated],
-                },
-                {
-                  label: 'Spent Hours',
-                  backgroundColor: '#f4c222',
-                  borderWidth: 1,
-                  data: [emp.spends],
-                },
-              ],
-            });
-          } else {
-            employeeData.push(emp.emp_name);
-            employeeSpendingHrs.push(emp.spends);
-            employeeEstimatedHrs.push(emp.allocated);
-            setEmployeeGraphData({
-              labels: employeeData,
-              datasets: [
-                {
-                  label: 'Estimated Hours',
-                  backgroundColor: '#85C51C',
-                  borderWidth: 1,
-                  data: employeeEstimatedHrs,
-                },
-                {
-                  label: 'Spent Hours',
-                  backgroundColor: '#F4C222',
-                  borderWidth: 1,
-                  data: employeeSpendingHrs,
-                },
-              ],
-            });
-          }
-          return emp;
-        });
+      setRowData(
+        data &&
+          data.data &&
+          data.data?.[0] &&
+          data.data?.[0]?.employee_details &&
+          data.data?.[0]?.employee_details?.length
+          ? data.data?.[0]?.employee_details
+          : []
+      );
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -304,6 +354,22 @@ function Team(props) {
   useEffect(() => {
     getUserRole();
   }, []);
+
+  const graphOptions = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Team Bar Graph',
+        fontSize: 20,
+      },
+      legend: {
+        display: true,
+        position: 'right',
+      },
+    }
+  };
+
 
   return (
     <>
@@ -365,7 +431,7 @@ function Team(props) {
                 </Card>
               </Col>
               <Col sm={12} className="mb-3">
-                <Card className="team-performance">
+                <Card className="">
                   <Card.Header className="purple-bg">
                     <strong>Team's Performance</strong>
                   </Card.Header>
@@ -373,17 +439,7 @@ function Team(props) {
                     {Object.keys(employeeGraphData).length && (
                       <Bar
                         data={employeeGraphData}
-                        options={{
-                          title: {
-                            display: true,
-                            text: 'Team Bar Graph',
-                            fontSize: 20,
-                          },
-                          legend: {
-                            display: true,
-                            position: 'right',
-                          },
-                        }}
+                        options={graphOptions}
                       />
                     )}
                   </Card.Body>
@@ -417,11 +473,7 @@ function Team(props) {
           </Col>
           <Col sm={4}>
             <ProjectRightContainer
-              name={
-                getProjectName
-                  ? `${getProjectName} ${teamId} Team`
-                  : `${projectName} ${teamId} Team`
-              }
+              name={name}
               projectStatus={projectStatus}
               startDate={graphDetails.start_date}
               endDate={graphDetails.end_date}

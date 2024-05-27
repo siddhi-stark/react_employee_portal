@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Pie } from 'react-chartjs-2';
@@ -10,15 +11,14 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
 function EmployeeBugList(props) {
-  const { projectId } = props;
+  const { projectId, bugStatus, bugEmployee } = props;
   const [isShowLoader, setShowLoader] = useState(false);
-
-  // Declare variable
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [graphData, setGraphData] = useState({});
+  
 
   // Declare columns
   const columns = [
@@ -36,79 +36,43 @@ function EmployeeBugList(props) {
       label: 'Tasks',
     },
     {
-      id: 'bug_count',
+      id: 'bugs',
       label: 'Bugs',
     },
     {
-      id: 'employee_reopen_count',
+      id: 'reopen',
       label: 'Reopen',
     },
     {
       id: 'quality',
-      label: 'Quality',
+      label: 'Quality %',
     },
   ];
 
-  // Declare methods
-  const getRowData = async (pageNo = 1) => {
+  useEffect(() => {
+    if (bugStatus) {
+      setGraphData(bugStatus);
+    }
+  }, [bugStatus]);
+
+  useEffect(() => {
+    setDeptBugsData();
+  }, []);
+
+  //to set bugs count depart wise with qualitity
+  const setDeptBugsData = async () => {
     setShowLoader(true);
-    const page = pageNo || currentPage;
-    const endPoint = `${Api.teamMemberUrl}`;
+    const endPoint = `${Api.allDepartmentProject}`;
     const params = {
       project_id: projectId,
-      page,
-      limit,
+      is_all_data: true,
+      is_departments_bugs: true,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data?.success) {
       setShowLoader(false);
-      const newData = [...data.data.team_member_bug_count];
-      newData.map((item) => {
-        const newItem = item;
-        const qualityCount = (100 * (item.bug_count + item.employee_reopen_count * 2)) / (item.employee_tasks - item.bug_count);
-        const qualityCnt = `${qualityCount.toFixed(2)}`;
-        const totalQualityCnt = 100 - Number(qualityCnt);
-        newItem.tasks = item.employee_tasks - item.bug_count;
-        newItem.quality = `${totalQualityCnt} %`;
-        newItem.rowClass = totalQualityCnt < 0 && 'alert-danger';
-        newItem.rowClass = (totalQualityCnt > 0 && totalQualityCnt < 70) && 'alert-warning';
-        newItem.rowClass = totalQualityCnt > 70 && 'alert-success';
-        return newItem;
-      });
-      
-      const graph = {
-        labels: ['Total Count', 'Reopen', 'Resolve', 'Confirm', 'Close', 'Inprogress','Invalid'],
-        datasets: [
-          {
-            data: [
-              data && data.data && data.data.total_count,
-              data && data.data && data.data.reopen_count,
-              data && data.data && data.data.resolve_count,
-              data && data.data && data.data.confirm_count,
-              data && data.data && data.data.close_count,
-              data && data.data && data.data.in_progress_count,
-              data && data.data && data.data.invalid_count,
-            ],
-            backgroundColor: ['#449c2c', '#b82b21','#21b8a1', '#f4c222','#e3e3e3', '#6b4fc9', '#187070'],
-          },
-        ],
-      };
-      setGraphData(graph);
-      setTotalCount(
-        data &&
-          data.data &&
-          data.data.team_member_bug_count &&
-          data.data.team_member_bug_count.length
-      );
-      setLimit(10);
-      const startIndex = currentPage * 10 - 10;
-      const endIndex = startIndex + 10;
-      setRowData(
-        (data && data.data.team_member_bug_count).slice(startIndex, endIndex) ||
-          []
-      );
+      setRowData(data?.data);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -117,10 +81,6 @@ function EmployeeBugList(props) {
       });
     }
   };
-
-  useEffect(() => {
-    getRowData(1);
-  }, []);
 
   return (
     <>
@@ -133,7 +93,13 @@ function EmployeeBugList(props) {
                 <strong>Bug Status</strong>
               </Card.Header>
               <Card.Body>
-                {Object.keys(graphData).length &&  <Pie data={graphData} />}
+                {graphData?.datasets?.length &&
+                (graphData?.datasets[0]?.data[0] ||
+                  graphData?.datasets[0]?.data[1]) ? (
+                  <Pie data={graphData} />
+                ) : (
+                  'No Record Found'
+                )}
               </Card.Body>
             </Card>
           </Col>
@@ -141,7 +107,7 @@ function EmployeeBugList(props) {
             <Card className="h-100">
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Employees Bugs</h5>
+                  <h5 className="card-title mb-0 mt-2 ">Departments Bugs</h5>
                 </div>
                 <hr />
                 <CustomTable
@@ -154,7 +120,7 @@ function EmployeeBugList(props) {
                     itemsPerPage: limit,
                     activePage: currentPage,
                     onPageChange: (pageNo) => {
-                      getRowData(pageNo);
+                      allDepartment(pageNo);
                       setCurrentPage(Number(pageNo));
                     },
                   }}
@@ -170,5 +136,4 @@ function EmployeeBugList(props) {
     </>
   );
 }
-
 export default withRouter(EmployeeBugList);

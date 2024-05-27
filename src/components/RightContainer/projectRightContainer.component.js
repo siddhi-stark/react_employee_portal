@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Image } from 'react-bootstrap';
@@ -11,12 +12,24 @@ function ProjectRightContainer(props) {
     endDate,
     totalHrsSpend,
     totalHrsEstimate,
-    totalHrsAllocated,
+    // totalHrsAllocated,
     projectCompletion,
     url,
     managerName,
   } = props;
-
+  const currentDate = new Date();
+  const projectEndDate = new Date(endDate);
+  const isLate = projectEndDate > currentDate;
+  const buttonText =
+    projectStatus < 0
+      ? 'Late'
+      : isLate
+      ? 'Project Ontrack'
+      : 'Project in Delay';
+  const buttonClass =
+    buttonText === 'Project in Delay'
+      ? 'mt-4 btn text-danger disabled-link'
+      : 'mt-4 btn btn-primary disabled-link';
   return (
     <>
       <div className="project-info-box">
@@ -47,16 +60,8 @@ function ProjectRightContainer(props) {
                 End Date: <strong>{!endDate ? '-' : endDate}</strong>
               </li>
             </ul>
-            <a
-              href="#"
-              disabled
-              className={
-                projectStatus < 0
-                  ? 'mt-4 btn text-danger disabled-link'
-                  : 'mt-4 btn btn-primary disabled-link'
-              }
-            >
-              {projectStatus < 0 ? 'Project in Delay' : 'Project Ontrack'}
+            <a href="#" disabled className={buttonClass}>
+              {buttonText}
             </a>
           </Card.Body>
         </Card>
@@ -69,7 +74,7 @@ function ProjectRightContainer(props) {
               <li>
                 End Date: <strong>{!endDate ? '-' : endDate}</strong>
               </li> */}
-              <li> 
+              <li>
                 Total Hours Spent:{' '}
                 <strong>
                   {totalHrsSpend ? totalHrsSpend.toFixed(2) : '0.0'}
@@ -81,19 +86,19 @@ function ProjectRightContainer(props) {
                   {totalHrsEstimate ? totalHrsEstimate.toFixed(2) : '0.0'}
                 </strong>
               </li>
-              <li>
+              {/* <li>
                 Total Hours Allocated:{' '}
                 <strong>
                   {totalHrsAllocated ? totalHrsAllocated.toFixed(2) : '0.0'}
                 </strong>
-              </li>
+              </li> */}
               <li>
                 Project Completion:{' '}
                 <strong>
-                  {projectCompletion ? `${projectCompletion}%` : '0%'}
+                  {projectCompletion ? `${projectCompletion}` : '0%'}
                 </strong>
               </li>
-              <li>
+              {/* <li>
                 Team work URL:{' '}
                 {url ? (
                   <a href={`${constants.project}${url}`} target="_blank">
@@ -104,7 +109,7 @@ function ProjectRightContainer(props) {
                 ) : (
                   <strong className="float-end">-</strong>
                 )}
-              </li>
+              </li> */}
             </ul>
             <hr />
           </Card.Body>
@@ -114,3 +119,4 @@ function ProjectRightContainer(props) {
   );
 }
 export default withRouter(ProjectRightContainer);
+
