@@ -227,7 +227,7 @@ export default class Api extends Component {
         break;
       default:
         // url = 'http://92.204.146.45:1337/api/v1/';
-        url = 'https://developmentapi.starkdigital.in/api/v1/';
+        url = 'https://portalsapi.starkdigital.in/api/v1';
         break;
     }
     return url;
