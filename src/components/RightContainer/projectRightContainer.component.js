@@ -3,6 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Card, Image } from 'react-bootstrap';
 import constants from '../../helper/constants';
+import customFunctions from '../../helper/customFunctions';
 
 function ProjectRightContainer(props) {
   const {
@@ -17,15 +18,18 @@ function ProjectRightContainer(props) {
     url,
     managerName,
   } = props;
-  const currentDate = new Date();
-  const projectEndDate = new Date(endDate);
+  console.log('startDate: ', startDate);
+  console.log('endDate:', endDate);
+  const currentDate = new Date()
+  const projectEndDate = customFunctions.getDMYDate(endDate,"mdy")
   const isLate = projectEndDate > currentDate;
+  // console.log('isLate: ', isLate);
+
   const buttonText =
-    projectStatus < 0
-      ? 'Late'
-      : isLate
-      ? 'Project Ontrack'
-      : 'Project in Delay';
+    !projectStatus
+      ? 'Project Ontrack' :
+      'Project in Delay';
+      
   const buttonClass =
     buttonText === 'Project in Delay'
       ? 'mt-4 btn text-danger disabled-link'
@@ -54,10 +58,10 @@ function ProjectRightContainer(props) {
             <h2>{managerName}</h2>
             <ul className="list-unstyled p-0 project-information-total-hr">
               <li>
-                Start Date: <strong>{!startDate ? '-' : startDate}</strong>
+                Start Date: <strong>{!startDate ? '-' : customFunctions.getDMYDate(startDate,"dmy")}</strong>
               </li>
               <li>
-                End Date: <strong>{!endDate ? '-' : endDate}</strong>
+                End Date: <strong>{!endDate ? '-' : customFunctions.getDMYDate(endDate,"dmy")}</strong>
               </li>
             </ul>
             <a href="#" disabled className={buttonClass}>
@@ -119,4 +123,3 @@ function ProjectRightContainer(props) {
   );
 }
 export default withRouter(ProjectRightContainer);
-

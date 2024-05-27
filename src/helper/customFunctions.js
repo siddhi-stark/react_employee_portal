@@ -107,6 +107,23 @@ class CustomFunctions extends Component {
     return formattedate;
   };
 
+  getDMYDate = (dateTime, format = '') => {
+    const newdate = new Date(dateTime);
+    const d = newdate.getDate();
+    const m = newdate.getMonth() + 1;
+    const y = newdate.getFullYear();
+    let formattedate = '';
+    if (format === 'dmy') {
+      formattedate =
+        (d <= 9 ? '0' + d : d) + '/' + (m <= 9 ? '0' + m : m) + '/' + y; //eslint-disable-line
+    }
+    if (format === 'mdy') {
+      formattedate =
+        (m <= 9 ? '0' + m : m) + '/' + (d <= 9 ? '0' + d : d) + '/' + y; //eslint-disable-line
+    }
+    return formattedate;
+  };
+
   // getTimeFormatter = (dateTime) => {
   //   const newdate = new Date(dateTime);
   //   const h = newdate.getHours();

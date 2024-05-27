@@ -55,6 +55,7 @@ function TeamProject(props) {
 
   const history = useHistory();
   const [graphDetails, setGraphDetails] = useState('');
+  console.log('graphDetails: ', graphDetails);
   const [graphData, setGraphData] = useState({});
   const [title, setTitle] = useState('');
 
@@ -192,7 +193,7 @@ function TeamProject(props) {
       setShowLoader(false);
       setRowData(data?.data);
       setName(data?.data?.[0]?.project_name);
-      setProjectStatus(data?.data?.[0]?.project_completion);
+      setProjectStatus(data?.data?.project_status);
   
       setGraphDataObj({
         completion: data && data.data && data?.data?.[0]?.project_completion,
@@ -344,9 +345,12 @@ function TeamProject(props) {
         totalHrsSpend: data?.data?.hour_analysis_details?.total_spent_time_in_hours,
         totalHrsEstimate: data?.data?.hour_analysis_details?.total_given_estimation_in_hours,
         projectCompletion: data?.data?.hour_analysis_details?.total_completion_percentage,
-        start_date: customFunctions.getDMYDate(data?.data?.project_start_date),
-        end_date: customFunctions.getDMYDate(data?.data?.project_end_date),
+        // start_date: customFunctions.getDMYDate(new Date(data?.data?.project_start_date)),
+        // end_date: customFunctions.getDMYDate(new Date(data?.data?.project_end_date)),
+        start_date:data?.data?.project_start_date,
+        end_date: data?.data?.project_end_date,
       });
+      console.log('data: ', data);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {

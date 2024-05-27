@@ -175,7 +175,7 @@ function Team(props) {
       label: 'Task Completed',
       render: ({ task_status_details }) => {
         const { total_completed_tasks } = task_status_details;
-        return <>{total_completed_tasks.toFixed(2)}</>;
+        return <>{total_completed_tasks}</>;
       },
     },
   ];
