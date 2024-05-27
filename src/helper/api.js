@@ -26,6 +26,8 @@ export default class Api extends Component {
 
   static getProjects = `${Api.baseUrl}projects/`;
 
+  static getProjectDetails = `${Api.baseUrl}project-details/`;
+
   static reportListingUrl = `${Api.baseUrl}report/`;
 
   static dailyReportUrl = `${Api.baseUrl}daily-report/`;
@@ -33,6 +35,8 @@ export default class Api extends Component {
   static designationUrl = `${Api.baseUrl}designations/`;
 
   static employeeUrl = `${Api.baseUrl}employee/`;
+
+  static employeePerformanceUrl = `${Api.baseUrl}employee-performance/`;
 
   static TwEmployeeUrl = `${Api.baseUrl}tw-employee/`;
 
@@ -194,7 +198,9 @@ export default class Api extends Component {
   static getResignationListUrl = `${Api.baseUrl}employee-resignation/`;
 
   static uploadDocumentsUrl = `${Api.baseUrl}upload-document/`;
-  
+
+  static uploadDocumentsUrls = `${Api.baseUrl}upload-documents/`;
+
   static uploadDocumentsUrls = `${Api.baseUrl}upload-documents/`;
 
   static onBoardingDocUpload = `${Api.baseUrl}document-upload/`;
@@ -202,6 +208,22 @@ export default class Api extends Component {
   static postDocumentData = `${Api.baseUrl}file-upload/`;
 
   static allEmployeePerformanceUrl = `${Api.baseUrl}performance-report/`;
+
+  static applicantRounds = `${Api.baseUrl}applicant-interview-rounds/`;
+
+  static faqUrl = `${Api.baseUrl}faq/`;
+
+  static workLoad = `${Api.baseUrl}work-load-report/`;
+
+  static employeeAdd = `${Api.baseUrl}employee-account/`;
+  
+  static bugCountProject = `${Api.baseUrl}bugs-count-project-dashboard/`;
+
+  static allDepartmentProject = `${Api.baseUrl}all-department-project-details/`;
+  
+  static departmentReport = `${Api.baseUrl}department-project-details/`;
+
+  static employeeDetail = `${Api.baseUrl}employee-project-details/`;
 
   // Get base URL of APIs
   static getBaseUrl() {
@@ -227,7 +249,7 @@ export default class Api extends Component {
         break;
       default:
         // url = 'http://92.204.146.45:1337/api/v1/';
-        url = 'https://portalsapi.starkdigital.in/api/v1';
+        url = 'https://portalsapi.starkdigital.in/api/v1/';
         break;
     }
     return url;
