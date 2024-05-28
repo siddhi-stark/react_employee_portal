@@ -23,7 +23,7 @@ function ProjectRightContainer(props) {
   // const isLate = projectEndDate > currentDate;
   // console.log('isLate: ', isLate);
   const [buttonTitle, setButtonTitle] = useState('');
-
+ 
   var buttonText = null;
   if (projectStatus === false) {
     buttonText = 'Project in Delay';

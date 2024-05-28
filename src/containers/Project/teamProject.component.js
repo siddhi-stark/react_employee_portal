@@ -55,7 +55,6 @@ function TeamProject(props) {
 
   const history = useHistory();
   const [graphDetails, setGraphDetails] = useState('');
-  console.log('graphDetails: ', graphDetails);
   const [graphData, setGraphData] = useState({});
   const [title, setTitle] = useState('');
 
@@ -193,8 +192,8 @@ function TeamProject(props) {
       setShowLoader(false);
       setRowData(data?.data);
       setName(data?.data?.[0]?.project_name);
-      setProjectStatus(data?.data?.project_status);
-      console.log("🚀 ~ setTeamDetailsData ~ data:", data)
+      
+     
   
       setGraphDataObj({
         completion: data && data.data && data?.data?.[0]?.project_completion,
@@ -351,7 +350,7 @@ function TeamProject(props) {
         start_date:data?.data?.project_start_date,
         end_date: data?.data?.project_end_date,
       });
-      console.log('data: ', data);
+      setProjectStatus(data?.data?.project_status);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
