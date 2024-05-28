@@ -18,7 +18,6 @@ function ProjectRightContainer(props) {
     url,
     managerName,
   } = props;
-    console.log("🚀 ~ ProjectRightContainer ~ endDate:", endDate)
   // const currentDate = new Date()
   // const projectEndDate = customFunctions.getDMYDate(endDate,"mdy")
   // const isLate = projectEndDate > currentDate;

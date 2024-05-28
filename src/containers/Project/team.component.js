@@ -9,7 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
-} from "chart.js";
+} from 'chart.js';
 import { Bar, Pie } from 'react-chartjs-2';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
@@ -28,8 +28,8 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend,
-)
+  Legend
+);
 
 function Team(props) {
   const teamid = props;
@@ -38,6 +38,9 @@ function Team(props) {
     ? teamid.location.state.graphDataObj
     : '';
   const archived = teamid.location.state ? teamid.location.state.archived : '';
+  const completed = teamid.location.state
+    ? teamid.location.state.completed
+    : '';
   const projectStatus = teamid.location.state.projectStatus ? true : false;
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
@@ -46,7 +49,12 @@ function Team(props) {
   const items = [
     { to: '/', label: 'Home' },
     {
-      label: archived ? 'Archived Project' : 'Current Project',
+      // label: archived ? 'Archived Project' : 'Current Project',
+      label: archived
+        ? 'Archived Project'
+        : completed
+        ? 'Completed Project'
+        : 'Current Project',
     },
   ];
 
@@ -112,9 +120,21 @@ function Team(props) {
                     history.push(`/my-project/${employee_id}`, {
                       archived: true,
                     });
+                  } else if (completed) {
+                    history.push(`/my-project/${employee_id}`, {
+                      completed: true,
+                    });
                   } else {
                     history.push(`/my-project/${employee_id}`);
                   }
+
+                  // if (archived) {
+                  //   history.push(`/my-project/${employee_id}`, {
+                  //     archived: true,
+                  //   });
+                  // } else {
+                  //   history.push(`/my-project/${employee_id}`);
+                  // }
                 }}
               >
                 <strong> {employee_name} </strong>
@@ -272,8 +292,10 @@ function Team(props) {
         projectCompletion: data?.data?.[0]?.total_project_completion_percentage,
         // url: data && data.data && data.data.tw_id,
         start_date: data?.data?.[0]?.project_start_date,
+
         end_date: data?.data?.[0]?.project_end_date,
       });
+       
       employeeData.push(data?.data?.[0]?.employee_details?.[0]?.employee_name);
       employeeSpendingHrs.push(
         data?.data?.[0]?.employee_details?.[0]?.hour_analysis_details
@@ -293,22 +315,18 @@ function Team(props) {
             label: 'Estimated Hours',
             backgroundColor: '#85C51C',
             borderWidth: 1,
-            data: 
-              data?.data?.[0]?.employee_details.map(
-                (item) =>
-                  item.hour_analysis_details?.total_given_estimation_in_hours
-              ),
-            
+            data: data?.data?.[0]?.employee_details.map(
+              (item) =>
+                item.hour_analysis_details?.total_given_estimation_in_hours
+            ),
           },
           {
             label: 'Spent Hours',
             backgroundColor: '#F4C222',
             borderWidth: 1,
-            data: 
-              data?.data?.[0]?.employee_details.map(
-                (item) => item.hour_analysis_details?.total_spent_time_in_hours
-              ),
-            
+            data: data?.data?.[0]?.employee_details.map(
+              (item) => item.hour_analysis_details?.total_spent_time_in_hours
+            ),
           },
         ],
       });
@@ -316,7 +334,7 @@ function Team(props) {
       setShowLoader(false);
       setTotalCount(data.paginator.total_count);
       setCurrentPage(Number(data.paginator.current_page));
-      setProjectName(data && data.data && data.data.project_name);
+      setProjectName(data && data.data && data?.data?.project_name);
       setRowData(
         data &&
           data.data &&
@@ -363,9 +381,8 @@ function Team(props) {
         display: true,
         position: 'right',
       },
-    }
+    },
   };
-
 
   return (
     <>
@@ -378,8 +395,20 @@ function Team(props) {
               ? history.push(`/team-project/${teamProjectId}`, {
                   archived: true,
                 })
+              : completed
+              ? history.push(`/team-project/${teamProjectId}`, {
+                  completed: true,
+                })
               : history.push(`/team-project/${teamProjectId}`)
           }
+
+          // onClick={() =>
+          //   archived
+          //     ? history.push(`/team-project/${teamProjectId}`, {
+          //         archived: true,
+          //       })
+          //     : history.push(`/team-project/${teamProjectId}`)
+          // }
         >
           Back
         </Button>
@@ -433,10 +462,7 @@ function Team(props) {
                   </Card.Header>
                   <Card.Body>
                     {Object.keys(employeeGraphData).length && (
-                      <Bar
-                        data={employeeGraphData}
-                        options={graphOptions}
-                      />
+                      <Bar data={employeeGraphData} options={graphOptions} />
                     )}
                   </Card.Body>
                 </Card>
