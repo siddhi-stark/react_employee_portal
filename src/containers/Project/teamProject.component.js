@@ -194,6 +194,7 @@ function TeamProject(props) {
       setRowData(data?.data);
       setName(data?.data?.[0]?.project_name);
       setProjectStatus(data?.data?.project_status);
+      console.log("🚀 ~ setTeamDetailsData ~ data:", data)
   
       setGraphDataObj({
         completion: data && data.data && data?.data?.[0]?.project_completion,

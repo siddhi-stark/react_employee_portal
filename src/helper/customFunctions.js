@@ -107,7 +107,7 @@ class CustomFunctions extends Component {
     return formattedate;
   };
 
-  getDMYDate = (dateTime, format = '') => {
+  getDMYDateFormate = (dateTime, format = '') => {
     const newdate = new Date(dateTime);
     const d = newdate.getDate();
     const m = newdate.getMonth() + 1;

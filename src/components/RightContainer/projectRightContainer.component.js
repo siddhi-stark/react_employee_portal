@@ -18,18 +18,20 @@ function ProjectRightContainer(props) {
     url,
     managerName,
   } = props;
-  console.log('startDate: ', startDate);
-  console.log('endDate:', endDate);
-  const currentDate = new Date()
-  const projectEndDate = customFunctions.getDMYDate(endDate,"mdy")
-  const isLate = projectEndDate > currentDate;
+  // const currentDate = new Date()
+  // const projectEndDate = customFunctions.getDMYDate(endDate,"mdy")
+  // const isLate = projectEndDate > currentDate;
   // console.log('isLate: ', isLate);
 
-  const buttonText =
-    !projectStatus
-      ? 'Project Ontrack' :
-      'Project in Delay';
-      
+  var buttonText = null
+    if (projectStatus == false){
+      buttonText = 'Project in Delay';
+    }
+    else{
+      buttonText = 'Project Ontrack' ;
+       
+    }
+    
   const buttonClass =
     buttonText === 'Project in Delay'
       ? 'mt-4 btn text-danger disabled-link'
@@ -58,10 +60,10 @@ function ProjectRightContainer(props) {
             <h2>{managerName}</h2>
             <ul className="list-unstyled p-0 project-information-total-hr">
               <li>
-                Start Date: <strong>{!startDate ? '-' : customFunctions.getDMYDate(startDate,"dmy")}</strong>
+                Start Date: <strong>{!startDate ? '-' : customFunctions.getDMYDateFormate(startDate,"dmy")}</strong>
               </li>
               <li>
-                End Date: <strong>{!endDate ? '-' : customFunctions.getDMYDate(endDate,"dmy")}</strong>
+                End Date: <strong>{!endDate ? '-' : customFunctions.getDMYDateFormate(endDate,"dmy")}</strong>
               </li>
             </ul>
             <a href="#" disabled className={buttonClass}>
