@@ -38,9 +38,7 @@ function Team(props) {
     ? teamid.location.state.graphDataObj
     : '';
   const archived = teamid.location.state ? teamid.location.state.archived : '';
-  const projectStatus = teamid.location.state
-    ? teamid.location.state.projectStatus
-    : '';
+  const projectStatus = teamid.location.state.projectStatus ? true : false;
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
   const getProjectName = customFunctions.getLocalStorage('projectName');
@@ -273,10 +271,8 @@ function Team(props) {
             ?.department_total_given_estimation_in_hours,
         projectCompletion: data?.data?.[0]?.total_project_completion_percentage,
         // url: data && data.data && data.data.tw_id,
-        start_date: customFunctions.getDMYDate(
-          data?.data?.[0]?.project_start_date
-        ),
-        end_date: customFunctions.getDMYDate(data?.data?.[0]?.project_end_date),
+        start_date: data?.data?.[0]?.project_start_date,
+        end_date: data?.data?.[0]?.project_end_date,
       });
       employeeData.push(data?.data?.[0]?.employee_details?.[0]?.employee_name);
       employeeSpendingHrs.push(
