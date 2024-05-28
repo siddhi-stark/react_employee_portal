@@ -24,7 +24,7 @@ function ProjectRightContainer(props) {
   // console.log('isLate: ', isLate);
 
   var buttonText = null
-    if (projectStatus == false){
+    if (projectStatus === false){
       buttonText = 'Project in Delay';
     }
     else{
