@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -12,12 +13,16 @@ import customFunctions from '../../helper/customFunctions';
 
 function EditProject(props) {
   const idProps = props;
+  console.log('🚀 ~ EditProject ~ idProps:', idProps);
   const projectId = idProps.match.params.projectId;
   const viewOptions = idProps.location.state
     ? idProps.location.state.isView
     : '';
   const archived = idProps.location.state
     ? idProps.location.state.archived
+    : '';
+  const completed = idProps.location.state
+    ? idProps.location.state.completed
     : '';
   const userGroup = customFunctions.getLocalStorage('group');
   // Variable declarations
@@ -135,6 +140,8 @@ function EditProject(props) {
         if (okAction) {
           if (archived) {
             history.push('/archived-project');
+          } else if (completed) {
+            history.push('/completed-project');
           } else {
             history.push('/current-project');
           }
@@ -253,6 +260,8 @@ function EditProject(props) {
               onClick={() =>
                 archived
                   ? history.push('/archived-project')
+                  : completed
+                  ? history.push('/completed-project')
                   : history.push('/current-project')
               }
             >
@@ -285,6 +294,8 @@ function EditProject(props) {
             onFormReset={() => {
               if (archived) {
                 history.push('/archived-project');
+              } else if (completed) {
+                history.push('/completed-project');
               } else {
                 history.push('/current-project');
               }

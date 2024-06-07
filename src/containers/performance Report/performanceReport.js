@@ -33,6 +33,7 @@ const PerformanceReport = () => {
     useState(null);
   const [rowData, setRowData] = useState('');
   const [documentData, setDocumentData] = useState();
+  const [userRole, setUserRole] = useState(null);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -88,6 +89,8 @@ const PerformanceReport = () => {
     let filterSearchErr = '';
     let isValid = true;
     if (
+      allEmployes &&
+      allEmployes?.length > 1 &&
       customFunctions.checkIfEmpty(selectedEmployee) &&
       customFunctions.checkIfEmpty(fromDate) &&
       customFunctions.checkIfEmpty(toDate)
@@ -116,18 +119,28 @@ const PerformanceReport = () => {
   };
 
   useEffect(() => {
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
+  }, []);
+
+  useEffect(() => {
     setTitle('Employee Performance Report');
   }, []);
 
   useEffect(() => {
+    if (!userRole) return;
+    // if ([1, 3].includes(userRole)) {
     getEmployeeName();
-  }, []);
+    // }
+  }, [userRole]);
 
   const getEmployeeName = async () => {
     setShowLoader(true);
-    const { data, error } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?is_employees=true&type=all`
-    );
+
+    const url = [1].includes(userRole)
+      ? `${Api.employeeUrl}?is_employees=true&type=all`
+      : `${Api.employeePerformanceUrl}`;
+    const { data, error } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {
       setShowLoader(false);
 
@@ -145,10 +158,13 @@ const PerformanceReport = () => {
           value: 'all_employess',
         },
       ];
-      setAllEmployes([...all, ...allemp]);
+      if ([1].includes(userRole)) {
+        setAllEmployes([...all, ...allemp]);
+      } else {
+        setAllEmployes(allemp);
+      }
     } else {
       setShowLoader(false);
-
       swal(error || 'Something went wrong', '', 'error');
     }
   };
@@ -166,12 +182,14 @@ const PerformanceReport = () => {
     const params = {};
     if (selectedEmployee?.value != 'all_employess') {
       (params.start_date = fromDate ? customFunctions.getDate(fromDate) : ''),
-        (params.user_id = selectedEmployeeId ? selectedEmployeeId : null),
+        (params.user_id =
+          allEmployes && allEmployes?.length > 1 && selectedEmployeeId
+            ? selectedEmployeeId
+            : allEmployes[0]?.value),
         (params.end_date = toDate ? customFunctions.getDate(toDate) : '');
     }
     if (selectedEmployee?.value == 'all_employess') {
-      params.limit = 10, 
-      params.page = pageNo;
+      (params.limit = 10), (params.page = pageNo);
     }
     // const params = {
     //   start_date:'2023-7-23',
@@ -184,7 +202,7 @@ const PerformanceReport = () => {
       setShowLoader(false);
       if (selectedEmployee?.value == 'all_employess') {
         setPagination({
-          current_page:  pageNo,
+          current_page: pageNo,
           activePage: Number(data?.data?.page),
           itemsPerPage: Number(data?.data?.page_size),
           totalItems: data?.data?.total_items,
@@ -299,23 +317,26 @@ const PerformanceReport = () => {
                         }}
                       />
                     </Col> */}
-                      <Col sm={3}>
-                        <div className="search-bar-input">
-                          <DropdownInput
-                            options={allEmployes}
-                            placeholder="Select employee"
-                            defaultValue={selectedEmployee}
-                            onSelectHandler={(select) => {
-                              setFilterErr('');
-                              setSelectedEmployee(select);
-                              setSelectedEmployeeId(select?.value);
-                              setJoingDate(select?.joiningDate);
-                              setSelectedEmployeeData('');
-                            }}
-                            // isMulti
-                          />
-                        </div>
-                      </Col>
+                      {allEmployes && allEmployes?.length > 1 && (
+                        <Col sm={3}>
+                          <div className="search-bar-input">
+                            <DropdownInput
+                              options={allEmployes}
+                              placeholder="Select employee"
+                              defaultValue={selectedEmployee}
+                              onSelectHandler={(select) => {
+                                setFilterErr('');
+                                setSelectedEmployee(select);
+                                setSelectedEmployeeId(select?.value);
+                                setJoingDate(select?.joiningDate);
+                                setSelectedEmployeeData('');
+                              }}
+                              // isMulti
+                            />
+                          </div>
+                        </Col>
+                      )}
+
                       <Col sm={3}>
                         <Datepicker
                           className="form-control"
@@ -348,6 +369,7 @@ const PerformanceReport = () => {
                           placeholder="To Date"
                         />
                       </Col>
+
                       <Col sm={3}>
                         <div className="filter-btn">
                           <Button
@@ -747,7 +769,7 @@ const PerformanceReport = () => {
                 ...pagination,
                 activePage: pagination.current_page,
                 onPageChange: (pageNo) => {
-                  getEmployeeById(pageNo)
+                  getEmployeeById(pageNo);
                 },
               }}
               tableClass="table-striped"

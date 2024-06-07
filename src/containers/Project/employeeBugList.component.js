@@ -18,7 +18,6 @@ function EmployeeBugList(props) {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [graphData, setGraphData] = useState({});
-  
 
   // Declare columns
   const columns = [

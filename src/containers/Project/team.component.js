@@ -41,7 +41,7 @@ function Team(props) {
   const completed = teamid.location.state
     ? teamid.location.state.completed
     : '';
-  const projectStatus = teamid.location.state.projectStatus ? true : false;
+  const projectStatus = teamid?.location?.state?.projectStatus ? true : false;
   const teamProjectId = customFunctions.getLocalStorage('teamProjectId');
   const DepartmentID = customFunctions.getLocalStorage('departmentType');
   const getProjectName = customFunctions.getLocalStorage('projectName');
@@ -49,7 +49,6 @@ function Team(props) {
   const items = [
     { to: '/', label: 'Home' },
     {
-      // label: archived ? 'Archived Project' : 'Current Project',
       label: archived
         ? 'Archived Project'
         : completed
@@ -127,14 +126,6 @@ function Team(props) {
                   } else {
                     history.push(`/my-project/${employee_id}`);
                   }
-
-                  // if (archived) {
-                  //   history.push(`/my-project/${employee_id}`, {
-                  //     archived: true,
-                  //   });
-                  // } else {
-                  //   history.push(`/my-project/${employee_id}`);
-                  // }
                 }}
               >
                 <strong> {employee_name} </strong>
@@ -292,10 +283,9 @@ function Team(props) {
         projectCompletion: data?.data?.[0]?.total_project_completion_percentage,
         // url: data && data.data && data.data.tw_id,
         start_date: data?.data?.[0]?.project_start_date,
-
         end_date: data?.data?.[0]?.project_end_date,
       });
-       
+
       employeeData.push(data?.data?.[0]?.employee_details?.[0]?.employee_name);
       employeeSpendingHrs.push(
         data?.data?.[0]?.employee_details?.[0]?.hour_analysis_details
@@ -401,14 +391,6 @@ function Team(props) {
                 })
               : history.push(`/team-project/${teamProjectId}`)
           }
-
-          // onClick={() =>
-          //   archived
-          //     ? history.push(`/team-project/${teamProjectId}`, {
-          //         archived: true,
-          //       })
-          //     : history.push(`/team-project/${teamProjectId}`)
-          // }
         >
           Back
         </Button>

@@ -12,10 +12,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
-const items = [
-  { to: '/', label: 'Home' },
-  { label: 'Current Project' },
-];
+const items = [{ to: '/', label: 'Home' }, { label: 'Current Project' }];
 
 function Project() {
   const history = useHistory();
@@ -315,7 +312,7 @@ function Project() {
                   formSections={FormSections}
                   formHeading="Project Filter"
                   onFormSubmit={(formValues) => {
-                    if(!formValues.project_id) return;
+                    if (!formValues.project_id) return;
                     submitForm(formValues);
                   }}
                   callbacks={{}}
@@ -329,7 +326,7 @@ function Project() {
                   resetBtnText="Clear"
                   isStepForm={false}
                   onFormReset={() => {
-                    if(filterData && !Object.keys(filterData).length) return;
+                    if (filterData && !Object.keys(filterData).length) return;
                     setFilterData({});
                     setAllData({});
                   }}

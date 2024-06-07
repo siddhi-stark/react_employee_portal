@@ -25,11 +25,18 @@ function TeamMemberProject(props) {
     ? teamid.location.state.teamMemberName
     : '';
   const archived = teamid.location.state ? teamid.location.state.archived : '';
+  const completed = teamid.location.state
+    ? teamid.location.state.completed
+    : '';
   const teamMemberName = customFunctions.getLocalStorage('teamMemberName');
   const items = [
     { to: '/', label: 'Home' },
     {
-      label: archived ? 'Archived Project' : 'Current Project',
+      label: archived
+        ? 'Archived Project'
+        : completed
+        ? 'Completed Project'
+        : 'Current Project',
     },
   ];
 
@@ -104,21 +111,21 @@ function TeamMemberProject(props) {
         );
       },
     },
-    {
-      id: 'rt_support',
-      label: 'RT Support',
-      roleAccess: [4],
-      render: ({ rt_support }) => {
-        return (
-          <>
-            <Image
-              className="rt-support-link"
-              src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   id: 'rt_support',
+    //   label: 'RT Support',
+    //   roleAccess: [4],
+    //   render: ({ rt_support }) => {
+    //     return (
+    //       <>
+    //         <Image
+    //           className="rt-support-link"
+    //           src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
   ];
 
   // Declare methods table method
@@ -181,6 +188,8 @@ function TeamMemberProject(props) {
               history.push('/team-scheduler');
             } else if (archived) {
               history.push(`/team/${getTeamId}`, { archived: true });
+            } else if (completed) {
+              history.push(`/team/${getTeamId}`, { completed: true });
             } else {
               history.push(`/team/${getTeamId}`);
             }

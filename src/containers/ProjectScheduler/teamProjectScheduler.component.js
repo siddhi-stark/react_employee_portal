@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Image } from 'react-bootstrap';
@@ -12,17 +13,16 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 
-const items = [
-  { to: '/', label: 'Home' },
-  { label: 'Team Project Scheduler' },
-];
+const items = [{ to: '/', label: 'Home' }, { label: 'Team Project Scheduler' }];
 
 function TeamProjectScheduler() {
   const [title, setTitle] = useState('');
   const [rowData, setRowData] = useState([]);
+  console.log('🚀 ~ TeamProjectScheduler ~ rowData:', rowData);
   const [totalCount, setTotalCount] = useState(1);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  console.log('🚀 ~ TeamProjectScheduler ~ currentPage:', currentPage);
   const [filterData, setFilterData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
@@ -71,42 +71,42 @@ function TeamProjectScheduler() {
     },
     {
       id: '0-25',
-      label: '0-25',
+      label: '0-25%',
       roleAccess: [4],
     },
     {
       id: '25-75',
-      label: '25-75',
+      label: '25-75%',
     },
     {
       id: '75-95',
-      label: '75-95',
+      label: '75-95%',
       roleAccess: [4],
     },
     {
       id: '100',
-      label: '100',
+      label: '100%',
     },
     {
       id: 'total_open',
-      label: 'Total open project',
+      label: 'Total open tasks',
       roleAccess: [4],
     },
-    {
-      id: 'rt_support',
-      label: 'RT Support',
-      roleAccess: [4],
-      render: ({ rt_support }) => {
-        return (
-          <>
-            <Image
-              className="rt-support-link"
-              src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   id: 'rt_support',
+    //   label: 'RT Support',
+    //   roleAccess: [4],
+    //   render: ({ rt_support }) => {
+    //     return (
+    //       <>
+    //         <Image
+    //           className="rt-support-link"
+    //           src={rt_support ? '/images/success.svg' : '/images/fail.svg'}
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
   ];
 
   const getRowData = async (pageNo = 1) => {
@@ -119,26 +119,23 @@ function TeamProjectScheduler() {
         : {};
     const params = {
       show_percentage: 1,
-      team_id: !filterList ? '' : Number(teamId),
+      // team_id: !filterList ? '' : Number(teamId),
+      team_id: !filterList ? '' : 6,
       page,
       limit,
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
+    console.log('🚀 ~ getRowData ~ data:', data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      setShowLoader(false);
-      setTotalCount(
-        data &&
-          data.data &&
-          data.data.employees_data &&
-          data.data.employees_data.length
-      );
-      setLimit(10);
-      const startIndex = currentPage * 10 - 10;
-      const endIndex = startIndex + 10;
+      setTotalCount(data?.paginator?.total_count);
+      setLimit(Number(data?.paginator?.limit));
+      setCurrentPage(Number(data?.paginator?.current_page));
+
       const projectData = data && data.data && data.data.employees_data;
-      setRowData(projectData.slice(startIndex, endIndex) || []);
+      setRowData(data?.data || []);
+      setShowLoader(false);
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
@@ -147,13 +144,20 @@ function TeamProjectScheduler() {
       });
     }
   };
+  useEffect(() => {
+    getRowData(1);
+  }, [filterData]);
 
   useEffect(() => {
-    if (filterData) {
-      getRowData(currentPage);
-    }
     setTitle('Project Scheduler');
-  }, [filterData]);
+  }, []);
+
+  // useEffect(() => {
+  //   if (filterData) {
+  //     getRowData(currentPage);
+  //   }
+  //   setTitle('Project Scheduler');
+  // }, [filterData]);
 
   useEffect(() => {
     getRowData(currentPage);
@@ -172,7 +176,7 @@ function TeamProjectScheduler() {
   // Submit Form Filter
   const submitForm = async (formValues) => {
     const payload = {
-      date: formValues.month && customFunctions.getDate(formValues.month),
+      // date: formValues.month && customFunctions.getDate(formValues.month),
       team_id:
         formValues.team_id &&
         formValues.team_id.value &&
@@ -241,7 +245,7 @@ function TeamProjectScheduler() {
                     formSections={FormSections}
                     formHeading="Filter"
                     onFormSubmit={(formValues) => {
-                      if(!formValues.team_id && !formValues.month) return;
+                      if (!formValues.team_id) return;
                       submitForm(formValues);
                     }}
                     options={options}
@@ -250,12 +254,13 @@ function TeamProjectScheduler() {
                     currentUser={currentUser}
                     submitBtnText="Apply"
                     showResetBtn={true}
-                    showBtnClass={true}
+                    showBtnClass={false}
                     resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons pull-right"
+                    btnContainerClass="col-md-4 filter-apply-btns"
+                    formClass="row"
                     isStepForm={false}
                     onFormReset={() => {
-                      if(filterData && !Object.keys(filterData).length) return;
+                      if (filterData && !Object.keys(filterData).length) return;
                       setFilterData();
                     }}
                   />

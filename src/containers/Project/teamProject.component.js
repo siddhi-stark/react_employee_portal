@@ -18,8 +18,14 @@ import EmployeeBugList from './employeeBugList.component';
 
 function TeamProject(props) {
   const teamid = props;
-  const teamProjectId = teamid.match.params.teamProjectId;
+
+  const teamProjectId = teamid?.match?.params?.teamProjectId;
+  // const teamProjectId = teamid && teamid.match && teamid.match.params && teamid.match.params.teamProjectId;
+
   const archived = teamid.location.state ? teamid.location.state.archived : '';
+  const completed = teamid.location.state
+    ? teamid.location.state.completed
+    : '';
   const [bugStatus, setBugStatus] = useState('');
   const [employeeBug, setEmployeeBug] = useState('');
   customFunctions.setLocalStorage('teamProjectId', teamProjectId);
@@ -31,7 +37,12 @@ function TeamProject(props) {
   const items = [
     { to: '/', label: 'Home' },
     {
-      label: archived ? 'Archived Project' : 'Current Project',
+      // label: archived ? 'Archived Project' : 'Current Project',
+      label: archived
+        ? 'Archived Project'
+        : completed
+        ? 'Completed Project'
+        : 'Current Project',
     },
   ];
 
@@ -98,11 +109,24 @@ function TeamProject(props) {
                     customFunctions.setLocalStorage('managerName', managerName);
                     e.preventDefault();
                     e.stopPropagation();
-                    if (archived) {
+                    // if (archived) {
+                    //   history.push(`/team/${name}`, {
+                    //     graphDataObj,
+                    //     projectStatus,
+                    //     archived: true,
+                    //   });
+                    // } else {
+                    //   history.push(`/team/${name}`, {
+                    //     graphDataObj,
+                    //     projectStatus,
+                    //   });
+                    // }
+                    if (archived || completed) {
                       history.push(`/team/${name}`, {
                         graphDataObj,
                         projectStatus,
                         archived: true,
+                        completed: true,
                       });
                     } else {
                       history.push(`/team/${name}`, {
@@ -192,9 +216,8 @@ function TeamProject(props) {
       setShowLoader(false);
       setRowData(data?.data);
       setName(data?.data?.[0]?.project_name);
-      
-     
-  
+      // setProjectStatus(data?.data?.project_status);
+
       setGraphDataObj({
         completion: data && data.data && data?.data?.[0]?.project_completion,
         remaining_perc: data?.data?.[0]?.r_hours,
@@ -313,7 +336,7 @@ function TeamProject(props) {
             borderWidth: 1,
             data: [
               data &&
-                data.data &&
+                data?.data &&
                 data?.data?.hour_analysis_details
                   ?.total_allocated_estimation_in_hours,
             ],
@@ -342,12 +365,15 @@ function TeamProject(props) {
         ],
       });
       setGraphDetails({
-        totalHrsSpend: data?.data?.hour_analysis_details?.total_spent_time_in_hours,
-        totalHrsEstimate: data?.data?.hour_analysis_details?.total_given_estimation_in_hours,
-        projectCompletion: data?.data?.hour_analysis_details?.total_completion_percentage,
+        totalHrsSpend:
+          data?.data?.hour_analysis_details?.total_spent_time_in_hours,
+        totalHrsEstimate:
+          data?.data?.hour_analysis_details?.total_given_estimation_in_hours,
+        projectCompletion:
+          data?.data?.hour_analysis_details?.total_completion_percentage,
         // start_date: customFunctions.getDMYDate(new Date(data?.data?.project_start_date)),
         // end_date: customFunctions.getDMYDate(new Date(data?.data?.project_end_date)),
-        start_date:data?.data?.project_start_date,
+        start_date: data?.data?.project_start_date,
         end_date: data?.data?.project_end_date,
       });
       setProjectStatus(data?.data?.project_status);
@@ -436,7 +462,7 @@ function TeamProject(props) {
       remarksData.map((r) => {
         postData.push({
           progress: r.progress,
-          remark: r.remark,
+          remark:  r.remark ? r.remark : null,
           project_id: Number(teamProjectId),
         });
         return postData;
@@ -466,9 +492,16 @@ function TeamProject(props) {
       <div className="title-breadcrumb-section">
         <Button
           className="float-end mb-3"
+          // onClick={() =>
+          //   archived
+          //     ? history.push('/archived-project')
+          //     : history.push('/current-project')
+          // }
           onClick={() =>
             archived
               ? history.push('/archived-project')
+              : completed
+              ? history.push('/completed-project')
               : history.push('/current-project')
           }
         >
@@ -620,6 +653,14 @@ function TeamProject(props) {
                               display: true,
                               position: 'right',
                             },
+                            // scales: {
+                            //   yAxes:
+                            //     {
+                            //       min: 10,
+                            //       max: 1000,
+                            //     },
+
+                            // },
                           }}
                         />
                       ) : (

@@ -2,8 +2,8 @@
   {
     "sectionName": "schedulerfilter",
     "sectionTitle": "Scheduler Filter",
-    "layout": { "label": "2 Column", "value": "2column" },
-    "containerClass": "",
+    "layout": { "label": "1 Column", "value": "1 column" },
+    "containerClass": "col-md-4",
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
@@ -39,37 +39,10 @@
         "optionCallback": "getTeam",
         "optionsCallbackUrl": "InterviewRoundsUrl",
         "options": []
-      },
-      {
-        "name": "month",
-        "type": "date",
-        "label": "",
-        "id": "",
-        "placeholder": "Please select month",
-        "inputClass": "",
-        "containerClass": "",
-        "dateFormat": "MM/yyyy",
-        "showMonthYearPicker": "yes",
-        "validations": [],
-        "displayWhen": {},
-        "haveValidations": "false",
-        "haveDisplayOptions": "false",
-        "callback": "",
-        "callbackUrl": "",
-        "inputToChange": "",
-        "minDateSelector": "",
-        "maxDateSelector": "",
-        "disabled": false,
-        "isMulti": false,
-        "allowedUsers": [],
-        "fieldsToReset": [],
-        "fieldLayout": { "label": "1 Column", "value": "1column" },
-        "fields": [],
-        "optionCallback": "",
-        "options": []
       }
+     
     ],
     "allowedUsers": [],
-    "sectionLayout": "2column"
+    "sectionLayout": "1 column"
   }
 ]
