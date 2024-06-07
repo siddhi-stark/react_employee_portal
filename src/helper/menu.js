@@ -24,6 +24,12 @@ const menu = [
         icon: 'project.svg',
         roleaccess: [1, 2, 3, 4],
       },
+      {
+        title : 'Completed Project',
+        path: '/completed-project',
+        icon: 'project.svg',
+        roleaccess : [1, 2, 3, 4],
+      }
     ],
     roleaccess: [1, 2, 3, 4],
   },

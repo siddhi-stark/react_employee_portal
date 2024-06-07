@@ -82,6 +82,7 @@ import ResignationDetails from './containers/Exit process/resignationDetails';
 import LeaveListingForAccountant from './containers/Leaves/LeaveListingForAccountant';
 import AccountAddleaveComponent from './containers/Leaves/AccountAddleave.component';
 import ResignationDetailsComponent from './containers/Exit process/resignationDetailsComponent'
+import CompletedProject from './containers/Project/completedProject';
 
 function Routes() {
   return (
@@ -200,6 +201,7 @@ function Routes() {
       <Route path="/team-scheduler" exact component={TeamProjectScheduler} />
       <Route path="/project-fetch" exact component={ProjectFetch} />
       <Route path="/archived-project" exact component={ArchivedProject} />
+      <Route path="/completed-project" exact component={CompletedProject} />
       <Route
         path="/addemployement-history/:ID"
         exact
