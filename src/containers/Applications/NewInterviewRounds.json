@@ -133,7 +133,7 @@
             "minDateSelector": "",
             "maxDateSelector": "",
             "disabled": false,
-            "isMulti": false,
+            "isMulti": true,
             "allowedUsers": [],
             "fieldsToReset": [],
             "fieldLayout": {
@@ -308,6 +308,34 @@
             "options": []
           },
           {
+            "name": "meet_link",
+            "type": "text",
+            "label": "Meet Link",
+            "id": "",
+            "placeholder": "",
+            "inputClass": "",
+            "containerClass": "",
+            "displayWhen": {},
+            "haveValidations": "false",
+            "haveDisplayOptions": "false",
+            "callback": "onTaskName",
+            "callbackUrl": "",
+            "inputToChange": "",
+            "minDateSelector": "",
+            "maxDateSelector": "",
+            "disabled": true,
+            "isMulti": false,
+            "allowedUsers": [],
+            "fieldsToReset": [],
+            "fieldLayout": {
+              "label": "1 Column",
+              "value": "1column"
+            },
+            "fields": [],
+            "optionCallback": "",
+            "options": []
+          },
+          {
             "name": "id",
             "type": "hidden",
             "label": "ID",
@@ -335,7 +363,7 @@
             },
             "fields": [],
             "options": []
-          }
+          }          
         ],
         "optionCallback": "",
         "options": []
