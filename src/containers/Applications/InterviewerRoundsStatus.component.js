@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -10,10 +9,12 @@ import AuthApi from '../../helper/authApi';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
-import { param } from 'jquery';
 
 function InterviewerRoundsStatus(props) {
-  const items = [{ to: '/', label: 'Home' }, { label: 'Interview Rounds' }];
+  const items = [
+    { to: '/', label: 'Home' },
+    { label: 'Interview Rounds' },
+  ];
 
   const title = 'Interview Rounds';
   const initialState = {
@@ -24,109 +25,81 @@ function InterviewerRoundsStatus(props) {
   };
 
   const [defaultValues, updateDefaultValues] = useState({});
-  
   const [currentUser, updateCurrentUser] = useState(0);
-
   const [interviewData, setInterviewData] = useState(initialState);
   const [interviewId, setInterviewId] = useState('');
-  const [applicantInterviewId, setApplicantInterviewId] = useState('');
-
   const [applicantRoundsId, setApplicantRoundsId] = useState('');
-
   const history = useHistory();
-
   const { isProfessionalInfoId } = props;
+
   const statusObj = props;
+
   const Interview = statusObj.location.state
     ? statusObj.location.state.isInterview
     : '';
 
-  useEffect(() => {
-    const roleId = localStorage.getItem('group');
+  const getUserRole = async () => {
+    const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
+  };
+
+  useEffect(() => {
+    getUserRole();
   }, []);
 
   const getData = async (id) => {
-    // const isHRPersonalParam = currentUser == 5 ? '&is_hr_personal=1' : '';
-
-    const endpoint = `${Api.applicantRounds}${id}/`;
-    const params = {
-      // is_hr_personal:
-      is_interview_round: true,
-    };
-    if (currentUser == 5) {
-      params.is_hr_personal = 1;
-    }
-    const url = customFunctions.generateUrl(endpoint, params);
-    // const url = `${Api.applicantRounds}${id}/?is_interview_round=true${isHRPersonalParam}`;
-    const { data } = await AuthApi.getDataFromServer(url);
-
+    const { data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${id}/`);
     if (data) {
-      // const { data } = await AuthApi.getDataFromServer(param);
-      setApplicantInterviewId(
-        data?.data?.applicant_rounds?.[0]?.applicant_round_id
-      );
-      setApplicantRoundsId([data?.data]);
+      setApplicantRoundsId(data.data.applicant_rounds);
       setInterviewData({
-        interviewDate: data?.data?.applicant_rounds?.[0]?.int_date,
-        interviewTime: data?.data?.applicant_rounds?.[0]?.int_time,
-        interviewSelector:
-          data?.data?.applicant_rounds?.interviewers_details?.interviewer_name,
-        // interviewRound: data?.data?.applicant_rounds?.[0]?.status_name,
+        interviewDate: data.data.applicant_rounds[0].int_date,
+        interviewTime: data.data.applicant_rounds[0].int_time,
+        interviewSelector: data.data.applicant_rounds[0].interviewer_name,
+        interviewRound: data.data.applicant_rounds[0].status_name,
       });
-
-      let statusKey = data?.data?.applicant_rounds?.[0]?.status;
-      let stringStatusValue = statusKey.toString();
-
       updateDefaultValues({
-        status: stringStatusValue,
+        status: String(data.data.applicant_rounds[0].status),
         comments: data?.data?.applicant_rounds?.[0]?.comments,
         meet_link: data?.data?.applicant_rounds?.[0]?.meet_link,
 
       });
     }
   };
+
   useEffect(() => {
     setInterviewId(isProfessionalInfoId);
-    if (currentUser) {
-      getData(isProfessionalInfoId);
-    }
-  }, [isProfessionalInfoId, currentUser]);
+    getData(isProfessionalInfoId);
+  }, [isProfessionalInfoId]);
 
   const submitForm = async (formValues) => {
-    
-    // return;
     const applicantId = customFunctions.getLocalStorage('applicantId');
-    // const postData = [];
-    const postData = {
-      data: [
-        {
-          id: applicantRoundsId?.[0]?.applicant_rounds?.[0]?.applicant_round_id,
-          comments: formValues?.comments,
-          status: Number(formValues?.status),
+
+    const postData = [];
+    applicantRoundsId.map((intrw, i) => {
+      if (i !== 0) {
+        postData.push({
+          id: intrw.applicant_round_id,
+          comments: intrw.comments,
+          status: intrw.status,
           applicant: applicantId,
-          // is_my_interview_update: currentUser === 5 ? true : false,
-          is_my_interview_update: true,
-        },
-      ],
+        });
+      }
+      return intrw;
+    });
+
+    const newId = applicantRoundsId && applicantRoundsId[0].applicant_round_id;
+    const abc = {
+      id: newId ? Number(newId) : Number(interviewId),
+      comments: formValues ? formValues.comments : '',
+      status: formValues ? formValues.status : '',
+      applicant: applicantId,
     };
-    // if (applicantRoundsId?.length) {
-    //   console.log("🚀 ~ submitForm ~ applicantRoundsId:", applicantRoundsId)
-    //   postData.id =
-    //     applicantRoundsId?.[0]?.applicant_rounds?.[0]?.applicant_round_id;
-    //   (postData.comments = formValues?.comments),
-    //     (postData.status = Number(formValues?.status)),
-    //     (postData.applicant = applicantId),
-    //     currentUser == 5 ? (postData.is_my_interview_update = true) : (postData.is_my_interview_update = false);
-    // }
-    const { data, message } = await AuthApi.putDataToServer(
-      // `${Api.applicantRounds}`,
 
-      // { data: postData }
-      `${Api.applicantRounds}`,
-      postData
+    postData.push(abc);
+    const { data, message } = await AuthApi.postDataToServer(
+      `${Api.roundsUrl}`,
+      { data: postData }
     );
-
     if (data) {
       swal(data && data.message[0], '', 'success', {
         closeOnClickOutside: false,
@@ -136,7 +109,7 @@ function InterviewerRoundsStatus(props) {
       }).then(() => {
         swal.close();
       });
-      if (Interview) {
+      if(Interview){
         history.push('/interview-listing');
       } else {
         history.push('/recruitment');
@@ -148,6 +121,7 @@ function InterviewerRoundsStatus(props) {
       });
     }
   };
+
   return (
     <>
       <Helmet title={title} />
@@ -155,45 +129,41 @@ function InterviewerRoundsStatus(props) {
         <h2 className="main-content-title tx-24 mg-b-5">Interview Rounds</h2>
         <Breadcrumb items={items} />
       </div>
-      {applicantRoundsId?.length > 0 &&
-        applicantRoundsId?.map(
-          (round, i) => (
-           
-            (
-              <>
-                {i !== 0 && (
-                  <Card body className="mt-4">
-                    <Row>
-                      <Col md={6}>
-                        <p>
-                          Interview Date -{' '}
-                          {round.int_date
-                            ? customFunctions.getDDMMYYYYDate(round.int_date)
-                            : ''}{' '}
-                        </p>
-                      </Col>
-                      <Col md={6}>
-                        <p>Interview Time - {round.int_time} </p>
-                      </Col>
-                    </Row>
 
-                    <Row>
-                      <Col md={6}>
-                        <p>Round Name - {round.round_type_name} </p>
-                      </Col>
-                      <Col md={6}>
-                        <p>Round Status - {round.status_name} </p>
-                      </Col>
-                    </Row>
-                    <Col md={5}>
-                      <p>Comment - {round.comments} </p>
-                    </Col>
-                  </Card>
-                )}
-              </>
-            )
-          )
-        )}
+      {applicantRoundsId.length > 0 &&
+        applicantRoundsId.map((round, i) => (
+          <>
+            {i !== 0 && (
+              <Card body className="mt-4">
+                <Row>
+                  <Col md={6}>
+                    <p>
+                      Interview Date -{' '}
+                      {round.int_date
+                        ? customFunctions.getDDMMYYYYDate(round.int_date)
+                        : ''}{' '}
+                    </p>
+                  </Col>
+                  <Col md={6}>
+                    <p>Interview Time - {round.int_time} </p>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col md={6}>
+                    <p>Round Name - {round.round_type_name} </p>
+                  </Col>
+                  <Col md={6}>
+                    <p>Round Status - {round.status_name} </p>
+                  </Col>
+                </Row>
+                <Col md={5}>
+                  <p>Comment - {round.comments} </p>
+                </Col>
+              </Card>
+            )}
+          </>
+        ))}
 
       <Card body className="mt-4">
         <Row className="mt-3">
@@ -222,7 +192,7 @@ function InterviewerRoundsStatus(props) {
           defaultFormValues={defaultValues}
           currentUser={currentUser}
           submitBtnText="Submit"
-          showResetBtn={true}
+          showResetBtn={false}
           showBtnClass={true}
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
