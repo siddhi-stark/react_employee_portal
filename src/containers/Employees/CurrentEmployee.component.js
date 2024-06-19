@@ -18,6 +18,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Pagination from '../../components/Pagination/pagination.component';
+import RadioComponent from '../../components/FormInputs/radio.component';
 
 function CurrentEmployee() {
   const currentdate = new Date();
@@ -59,6 +60,7 @@ function CurrentEmployee() {
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
+  const [gender, setGender] = useState('');
   const [designation, setDesignation] = useState([]);
   const [twEmployee, setTwEmployee] = useState([]);
   const [mentorData, setMentorData] = useState([]);
@@ -75,7 +77,7 @@ function CurrentEmployee() {
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [twId, setTwId] = useState(null);
   const [date, setDate] = useState('');
-  const [probationDate , setProbationDate] =useState()
+  const [probationDate, setProbationDate] = useState();
   const [disableButton, setDisableButton] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [empCode, setEmpCode] = useState('');
@@ -87,9 +89,27 @@ function CurrentEmployee() {
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [selectedMentor, setSelectedMentor] = useState([]);
   const [currentUser, updateCurrentUser] = useState(0);
+  const genderOptions = [
+    {
+      label: 'Male',
+      value: '1',
+    },
+    {
+      label: 'Female',
+      value: '2',
+    },
+    {
+      label: 'Other',
+      value: '3',
+    },
+  ];
 
   let timmer = null;
   const history = useHistory();
+
+  const onSelectRadioButton = (e) => {
+    setGender(e.target.value);
+  };
 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
@@ -121,11 +141,14 @@ function CurrentEmployee() {
     if (data) {
       setShowLoader(false);
       let newEmp = [];
-      data && data.data && data.data?.length > 0 && data.data.map((item)=>{
-if(item?.on_notice_period == false){
-  newEmp.push(item);
-}
-      })
+      data &&
+        data.data &&
+        data.data?.length > 0 &&
+        data.data.map((item) => {
+          if (item?.on_notice_period == false) {
+            newEmp.push(item);
+          }
+        });
       // setEmployee([...newEmp]);
       setEmployee([...data.data]);
       setTotalCount(Number(data.paginator.total_count));
@@ -156,7 +179,7 @@ if(item?.on_notice_period == false){
     const dpOptions = [];
     data.data.length > 0 &&
       data.data.map((op) => {
-        if([1].includes(op.role_id)) return;
+        if ([1].includes(op.role_id)) return;
         dpOptions.push({ label: op.full_name, value: op.id });
       });
     options.employee = dpOptions;
@@ -187,7 +210,7 @@ if(item?.on_notice_period == false){
   const getEmployeeById = async (id) => {
     // eslint-disable-line
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}${id}/`
+      `${Api.employeeAdd}${id}/`
     );
 
     if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
@@ -248,23 +271,24 @@ if(item?.on_notice_period == false){
         return mntr;
       });
 
-      twEmployee.map((tw) => {
-        if (data.data.tw_id === tw.tw_id) {
-          setSelectedEmployee({ label: tw.full_name });
-          setTwId(tw.tw_id);
-        }
-        return tw;
-      });
+      // twEmployee.map((tw) => {
+      //   if (data.data.tw_id === tw.tw_id) {
+      //     setSelectedEmployee({ label: tw.full_name });
+      //     setTwId(tw.tw_id);
+      //   }
+      //   return tw;
+      // });
 
       newDepartment.map((dept) => {
         if (data.data.department_id === dept.id) {
           setSelectedDepartment({
-            id: dept.id,
             label: dept.name,
+            id: dept.id,
           });
         }
         return dept;
       });
+
       setSelectedDesignationOption(
         data.data.designation_id
           ? {
@@ -283,16 +307,18 @@ if(item?.on_notice_period == false){
           : ''
       );
 
-      setFullName(data.data.full_name);
-      setEmail(data.data.email);
-      setPassword(data.data.password);
-      setMobile(data.data.mobile);
-      setDate(data.data.dob ? new Date(data.data.dob) : null);
+      setGender(data?.data?.gender);
+      setFullName(data?.data?.full_name);
+      setEmail(data?.data?.email);
+      setPassword(data?.data?.password);
+      setMobile(data?.data?.mobile);
+      setDate(data?.data?.dob ? new Date(data?.data?.dob) : null);
       setJoiningDate(
-        data.data.date_joined ? new Date(data.data.date_joined) : null
+        data?.data?.date_joined ? new Date(data?.data?.date_joined) : null
       );
-      setEmpCode(data.data.emp_code);
+      setEmpCode(data?.data?.emp_code);
     }
+
   };
 
   const getDesignation = async () => {
@@ -313,14 +339,15 @@ if(item?.on_notice_period == false){
     }
   };
 
-  const getTwEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
-    );
-    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      setTwEmployee(data.data);
-    }
-  };
+  // const getTwEmployee = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(
+  //     `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
+  //   );
+  //   console.log("🚀 ~ getTwEmployee ~ data:", data)
+  //   if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+  //     setTwEmployee(data.data);
+  //   }
+  // };
 
   const getMentorList = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -376,7 +403,7 @@ if(item?.on_notice_period == false){
 
   useEffect(() => {
     getDesignation();
-    getTwEmployee();
+    // getTwEmployee();
     getRole();
     getManager();
     getTeamLead();
@@ -427,7 +454,7 @@ if(item?.on_notice_period == false){
 
   const onCancel = () => {
     validator.current.hideMessages();
-    setEmployeeTwId('');
+    // setEmployeeTwId('');
     setAddButton(false);
     setFullName('');
     setEmpCode('');
@@ -436,6 +463,7 @@ if(item?.on_notice_period == false){
     setEmail('');
     setMobile('');
     setPassword('');
+    setGender('');
     setSelectedDesignationOption('');
     setSelectedRole('');
     setSelectedManager('');
@@ -443,7 +471,7 @@ if(item?.on_notice_period == false){
     setSelectedDepartment('');
     setSelectedMentor('');
     setDate();
-    setProbationDate('')
+    setProbationDate('');
     setModalShow(false);
     if (timmer) clearTimeout(timmer);
     timmer = setTimeout(() => {
@@ -477,34 +505,25 @@ if(item?.on_notice_period == false){
 
     const postData = {
       full_name: fullName,
-      email,
-      mobile,
+      email: email,
+      mobile: mobile,
       role: selectedRole.id,
       team: selectedProjectTeam.id,
-      password,
+      password: password,
       emp_code: empCode && !employeeId ? Number(empCode.split('-')[1]) : '',
       team_leads: teamIdList,
       managers: managerList,
       dob: date ? customFunctions.getDate(date) : null,
       date_joined: joiningDate ? customFunctions.getDate(joiningDate) : null,
-      tw_emp: twId,
       department: selectedDepartment.id,
       mentor: mentorList,
+      gender: gender,
+      is_onboard: false,
+      applicant_id: null,
       // probation_date:probationDate ? customFunctions.getDate(probationDate) : null
     };
     if (selectedDesignationOption) {
       postData.designation = selectedDesignationOption.id;
-    }
-
-    const isFind = twEmployee.find(
-      (item) =>
-        selectedEmployee &&
-        selectedEmployee.label &&
-        item.full_name === selectedEmployee.label
-    );
-    if (isFind) {
-      postData.tw_emp = isFind.tw_id;
-      if (employeeId) postData.tw_emp = isFind.tw_id;
     }
 
     const payload = customFunctions.cleanObject(postData);
@@ -513,8 +532,8 @@ if(item?.on_notice_period == false){
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
     const endPoint = employeeId
-      ? `${Api.employeeUrl}${employeeId}/`
-      : Api.employeeUrl;
+      ? `${Api.employeeAdd}${employeeId}/`
+      : Api.employeeAdd;
     const { data, message } = await callback(endPoint, payload);
     if (data) {
       setShowLoader(false);
@@ -526,7 +545,6 @@ if(item?.on_notice_period == false){
         if (result) {
           setEmpCode('');
           setDisableButton(false);
-          setEmployeeTwId('');
           setEmployeeId();
           setSelectedDesignationOption();
           setSelectedRole();
@@ -534,11 +552,12 @@ if(item?.on_notice_period == false){
           setSelectedEmployee();
           setEmail();
           setPassword();
+          setGender();
           setMobile();
           setSelectedManager();
           setSelectedMentor();
           setDate();
-          setProbationDate()
+          setProbationDate();
           setJoiningDate();
           setSelectedTeamLead();
           setSelectedDepartment();
@@ -587,17 +606,7 @@ if(item?.on_notice_period == false){
     return op;
   };
 
-  const getEmployeeList = () => {
-    if (!twEmployee) return [];
-    const op = [];
-    twEmployee.map((emp) => {
-      return op.push({
-        label: emp.full_name,
-        id: emp.tw_id,
-      });
-    });
-    return op;
-  };
+  
 
   const getMentorData = () => {
     if (!mentorData) return [];
@@ -708,7 +717,7 @@ if(item?.on_notice_period == false){
       validator.current.fields.password = true;
     }
     return !employeeId
-      ? validator.current.message('password', password, 'required|min:6')
+      ? validator.current.message('password', password, 'required|min:8')
       : '';
   };
 
@@ -751,6 +760,7 @@ if(item?.on_notice_period == false){
                       setEmployeeId('');
                       setEmail('');
                       setPassword('');
+                      setGender('');
                       setSelectedTeamLead('');
                     }}
                   >
@@ -954,7 +964,7 @@ if(item?.on_notice_period == false){
             <Row>
               {!employeeId && (
                 <Col sm={6}>
-                  <DropdownInput
+                  {/* <DropdownInput
                     label="TW Employee"
                     asterisk="*"
                     options={getEmployeeList()}
@@ -967,11 +977,32 @@ if(item?.on_notice_period == false){
                     }}
                     disabled={employeeId && 'disabled'}
                     errorMessage={getTwEmployeeValidation()}
+                  /> */}
+                  <TextInput
+                    onInputChange={(e) => {
+                      const re = /^[a-zA-Z ]*$/;
+                      if (!e.target.value || re.test(e.target.value)) {
+                        setFullName(e.target.value);
+                      }
+                    }}
+                    label="Full Name"
+                    asterisk="*"
+                    containerClass="form-group"
+                    type="text"
+                    name="firstNameTitle"
+                    value={fullName}
+                    // disabled={(employeeId || employeetwId) && 'disabled'}
+                    placeholder="Enter Full  Name"
+                    errorMessage={validator.current.message(
+                      'Full Name',
+                      fullName,
+                      'required'
+                    )}
                   />
                 </Col>
               )}
               <Col sm={6}>
-                <TextInput
+                {/* <TextInput
                   onInputChange={(e) => {
                     const re = /^[a-zA-Z ]*$/;
                     if (!e.target.value || re.test(e.target.value)) {
@@ -984,16 +1015,14 @@ if(item?.on_notice_period == false){
                   type="text"
                   name="firstNameTitle"
                   value={fullName}
-                  disabled={(employeeId || employeetwId) && 'disabled'}
+                  // disabled={(employeeId || employeetwId) && 'disabled'}
                   placeholder="Enter Full  Name"
                   errorMessage={validator.current.message(
                     'Full Name',
                     fullName,
                     'required'
                   )}
-                />
-              </Col>
-              <Col sm={6}>
+                /> */}
                 <TextInput
                   onInputChange={(e) => setEmail(e.target.value)}
                   label="Email"
@@ -1001,7 +1030,7 @@ if(item?.on_notice_period == false){
                   asterisk="*"
                   containerClass="form-group"
                   type="text"
-                  disabled={(employeeId || employeetwId) && 'disabled'}
+                  // disabled={(employeeId || employeetwId) && 'disabled'}
                   value={email}
                   placeholder="Enter email"
                   errorMessage={validator.current.message(
@@ -1011,7 +1040,46 @@ if(item?.on_notice_period == false){
                   )}
                 />
               </Col>
-              {[1, 2, 7].includes(userRole) ? (
+              <Col sm={6}>
+                {/* <TextInput
+                  onInputChange={(e) => setEmail(e.target.value)}
+                  label="Email"
+                  autocomplete="off"
+                  asterisk="*"
+                  containerClass="form-group"
+                  type="text"
+                  // disabled={(employeeId || employeetwId) && 'disabled'}
+                  value={email}
+                  placeholder="Enter email"
+                  errorMessage={validator.current.message(
+                    'email',
+                    email,
+                    'required|email' // eslint-disable-line
+                  )}
+                /> */}
+                <Datepicker
+                  label="Joining Date"
+                  asterisk="*"
+                  className="form-control"
+                  selected={joiningDate}
+                  placeholder="dd/mm/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  // maxDate={new Date()}
+                  minDate={new Date()}
+                  onChange={(e) => {
+                    setJoiningDate(e);
+                  }}
+                  errorMessage={
+                    // joiningDate &&
+                    validator.current.message(
+                      'Joining Date',
+                      joiningDate,
+                      'required'
+                    )
+                  }
+                />
+              </Col>
+              {[1, 2, 5, 7].includes(userRole) ? (
                 <Col sm={6}>
                   <TextInput
                     onInputChange={(e) => setPassword(e.target.value)}
@@ -1051,7 +1119,7 @@ if(item?.on_notice_period == false){
                 />
               </Col>
 
-              <Col sm={6}>
+              {/* <Col sm={6}>
                 <Datepicker
                   label="Joining Date"
                   asterisk="*"
@@ -1072,7 +1140,7 @@ if(item?.on_notice_period == false){
                     )
                   }
                 />
-              </Col>
+              </Col> */}
 
               <Col sm={6}>
                 <TextInput
@@ -1139,6 +1207,7 @@ if(item?.on_notice_period == false){
               <Col sm={6}>
                 <DropdownInput
                   label="Manager"
+                  asterisk="*"
                   options={getManagerList()}
                   placeholder="Select Manager"
                   defaultValue={selectedManager}
@@ -1146,6 +1215,11 @@ if(item?.on_notice_period == false){
                   onSelectHandler={(select) => {
                     setSelectedManager(select);
                   }}
+                  errorMessage={validator.current.message(
+                    'Manager',
+                    selectedManager,
+                    'required'
+                  )}
                 />
               </Col>
 
@@ -1161,6 +1235,7 @@ if(item?.on_notice_period == false){
               <Col sm={6}>
                 <Datepicker
                   label="DOB"
+                  asterisk="*"
                   className="form-control"
                   selected={date}
                   placeholder="dd/mm/yyyy"
@@ -1169,11 +1244,11 @@ if(item?.on_notice_period == false){
                   onChange={(e) => {
                     setDate(e);
                   }}
-                  // errorMessage={validator.current.message(
-                  //   'DOB',
-                  //   date,
-                  //    `required | before_or_equal:${maxdate}`
-                  // )}
+                  errorMessage={validator.current.message(
+                    'DOB',
+                    date,
+                    'required'
+                  )}
                 />
               </Col>
 
@@ -1196,10 +1271,16 @@ if(item?.on_notice_period == false){
               <Col sm={6}>
                 <DropdownInput
                   label="Team"
+                  asterisk="*"
                   options={getProjectTeam()}
                   placeholder="Select Team"
                   defaultValue={selectedProjectTeam}
                   onSelectHandler={(select) => setSelectedProjectTeam(select)}
+                  errorMessage={validator.current.message(
+                    'Team',
+                    selectedProjectTeam,
+                    'required'
+                  )}
                 />
               </Col>
               {employeeId && (
@@ -1216,6 +1297,28 @@ if(item?.on_notice_period == false){
                   />
                 </Col>
               )}
+              <Col sm={6}>
+                <Form.Group>
+                  <Form.Label className="text-dark fs-6">
+                    Gender<span className="text-danger">*</span>
+                  </Form.Label>
+                  <div>
+                    {genderOptions.map((option) => (
+                      <Form.Check
+                        key={option.value}
+                        type="radio"
+                        id={`gender-${option.value}`}
+                        name="gender"
+                        value={option.value}
+                        label={option.label}
+                        checked={gender == option.value}
+                        onChange={onSelectRadioButton}
+                        inline
+                      />
+                    ))}
+                  </div>
+                </Form.Group>
+              </Col>
               {/* <Col sm={6}>
                 <Datepicker
                   label="Probation Date"
@@ -1236,7 +1339,12 @@ if(item?.on_notice_period == false){
               </Col> */}
             </Row>
             <div className="float-end">
-              <Button variant="primary" type="submit" disabled={disableButton}>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={disableButton}
+                onClick={addEmployee}
+              >
                 {employeeId ? 'Update' : 'Add'}
               </Button>
               <Button
