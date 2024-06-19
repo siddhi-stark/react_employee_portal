@@ -51,6 +51,7 @@ function InterviewerRoundsStatus(props) {
     const params = {
       // is_hr_personal:
       is_interview_round: true,
+      
     };
     if (currentUser == 5) {
       params.is_hr_personal = 1;

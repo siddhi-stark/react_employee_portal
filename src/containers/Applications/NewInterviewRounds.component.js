@@ -177,6 +177,7 @@ function NewInterviewRounds(props) {
     const params = {
       // is_hr_personal:
       is_interview_round: true,
+      
     };
     const url = customFunctions.generateUrl(endpoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
