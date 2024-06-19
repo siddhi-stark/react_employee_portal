@@ -48,7 +48,6 @@ function InterviewerRoundsStatus(props) {
 
   const getData = async (id) => {
    const endpoint = `${Api.applicantRounds}${id}/`;
-    console.log("🚀 ~ getData ~ id:", id)
     const params = {
       // is_hr_personal:
       is_interview_round: true,
