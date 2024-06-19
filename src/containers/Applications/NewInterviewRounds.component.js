@@ -170,9 +170,16 @@ function NewInterviewRounds(props) {
 
   const getData = async (interviewerId) => {
     setShowLoader(true);
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.applicantRounds}${interviewerId}/?is_interview_round=true`
-    );
+    // const { data } = await AuthApi.getDataFromServer(
+    //   `${Api.applicantRounds}${interviewerId}/?is_interview_round=true`
+    // );
+    const endpoint = `${Api.applicantRounds}${interviewerId}/`;
+    const params = {
+      // is_hr_personal:
+      is_interview_round: true,
+    };
+    const url = customFunctions.generateUrl(endpoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
 
     if (data) {
       setShowLoader(false);
