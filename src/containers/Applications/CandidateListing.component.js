@@ -65,7 +65,7 @@ function CandidateListing() {
         {completion.offer_status_name !== 'Declined' && (
           <ProgressBar
             bsPrefix="progress pbar"
-            variant="success"
+            variant="success pe-2"
             now={completion.completion ? completion.completion : 0}
             label={`${
               completion.completion ? completion.completion : 0
@@ -103,7 +103,9 @@ function CandidateListing() {
       render: ({ joining_date }) => {
         return (
           <>
-            <span>{joining_date ? customFunctions.getDMYDate(joining_date) :'-'}</span>
+            <span>
+              {joining_date ? customFunctions.getDMYDate(joining_date) : '-'}
+            </span>
           </>
         );
       },
@@ -183,7 +185,7 @@ function CandidateListing() {
                 formSections={SearchFormSections}
                 formHeading=""
                 onFormSubmit={(formValues) => {
-                  if(!formValues.keyword) return;
+                  if (!formValues.keyword) return;
                   submitForm(formValues);
                 }}
                 callbacks={{}}
@@ -195,7 +197,7 @@ function CandidateListing() {
                 resetBtnText="Clear"
                 isStepForm={false}
                 onFormReset={() => {
-                  if(filterData && !Object.keys(filterData).length) return;
+                  if (filterData && !Object.keys(filterData).length) return;
                   setFilterData();
                 }}
               />

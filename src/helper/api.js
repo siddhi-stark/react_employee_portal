@@ -36,6 +36,8 @@ export default class Api extends Component {
 
   static employeeUrl = `${Api.baseUrl}employee/`;
 
+  static employeeListUrl = `${Api.baseUrl}employee-list/`;
+
   static employeePerformanceUrl = `${Api.baseUrl}employee-performance/`;
 
   static TwEmployeeUrl = `${Api.baseUrl}tw-employee/`;
@@ -249,7 +251,7 @@ export default class Api extends Component {
         break;
       default:
         // url = 'http://92.204.146.45:1337/api/v1/';
-        url = 'https://portalsapi.starkdigital.in/api/v1/';
+        url = 'https://developmentapi.starkdigital.in/api/v1/';
         break;
     }
     return url;

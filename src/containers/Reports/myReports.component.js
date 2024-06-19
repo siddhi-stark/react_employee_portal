@@ -62,6 +62,11 @@ function AllReports() {
       roleAccess: [1, 2, 3, 4, 5, 7],
     },
     {
+      id: 'todaysestimation',
+      label: 'Todays Total Estimation',
+      roleAccess: [1, 2, 3, 4, 5, 7],
+    },
+    {
       id: 'report',
       label: 'View Report',
       roleAccess: [1, 2, 3, 4, 5, 7],
@@ -102,6 +107,7 @@ function AllReports() {
           date: customFunctions.getDMYDate(report.created_at),
           clockin: report.sign_in,
           clockout: report.sign_out,
+          todaysestimation :report.todays_total_estimation,
           total: `${report.estimation} Hrs`,
           report: (
             <Link to={{pathname:`/daily-report/${dt}/${report.user_id}`, state:{clockin: report.sign_in,clockout: report.sign_out}}}>

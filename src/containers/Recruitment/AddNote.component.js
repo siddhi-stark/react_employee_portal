@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -12,13 +14,11 @@ import FormSections from './note.json';
 function AddNote(props) {
   const { note, handleModalCLose, onStatusUpdate, show, statusId, statusData } =
     props;
-
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote, setShowNote] = useState(false);
   const [id, setStatusId] = useState('');
-  const [status, setStatusData] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   // Get user role
   const getUserRole = async () => {
@@ -35,7 +35,7 @@ function AddNote(props) {
     const postData = {
       notes: formValues ? formValues.notes : '',
       ids: [id],
-      status: status.label === 'declined' ? 6 : 2,
+      status: statusData.label === 'Declined' ? 6 : 2,
     };
 
     const { data } = await AuthApi.putDataToServer(
@@ -71,7 +71,6 @@ function AddNote(props) {
     }
     setShowNote(show);
     setStatusId(statusId);
-    setStatusData(statusData);
   }, []);
 
   const onCancelButton = () => {
@@ -83,7 +82,7 @@ function AddNote(props) {
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <ModalInput
-        size="sm"
+        size="md"
         centered
         show={showNote}
         onHide={onCancelButton}

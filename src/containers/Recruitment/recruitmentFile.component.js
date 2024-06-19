@@ -1,8 +1,9 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Row, Col, Image } from 'react-bootstrap';
+import { Card, Row, Col, Image, Button } from 'react-bootstrap';
 import { CSVLink } from 'react-csv';
 import FormSections from './formschema.json';
 import { Helmet } from '../../components/FormInputs';
@@ -53,7 +54,7 @@ function RecruitmentFileComponent() {
   const csvReport = {
     data: csvdata,
     headers: csvHeader,
-    filename: 'sample.csv',
+    filename: 'https://stage-portalsapi.starkdigital.in/media/static/applicant_data.xlsx',
   };
 
   const items = [{ to: '/', label: 'Home' }, { label: 'Bulk Upload' }];
@@ -67,7 +68,19 @@ function RecruitmentFileComponent() {
   const [filterData, setFilterData] = useState({}); //eslint-disable-line
   const [options, updateOptions] = useState({});
   const [fileValue, setFileValue] = useState();
+ 
 
+  const downloadFile = (fileUrl) => {
+    // const url = window.URL.createObjectURL(new Blob([fileUrl]));
+    const link = document.createElement("a");
+
+    link.href = fileUrl;
+    link.setAttribute("download", 'applicant_data.xlsx');
+    link.rel = "noreferrer";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -183,17 +196,29 @@ function RecruitmentFileComponent() {
               <Row>
                 <Col className="mt-4 ms-4 col-md-6">
                   <div title="Download sample.csv File" className="mt-2">
-                    <p>
+                    <p onClick={()=>downloadFile('https://stage-portalsapi.starkdigital.in/media/static/applicant_data.xlsx')}>
                       sample file download
-                      <CSVLink {...csvReport} target="_blank">
+                      
+                      {/* <CSVLink {...csvReport} target="_blank" > */}
                         <Image
                           className="ml-3"
                           src="/images/download.svg"
                           alt="Download File"
                         />
-                      </CSVLink>
+                      {/* </CSVLink> */}
                     </p>
                   </div>
+                </Col>
+                <Col className='mt-4 mr-3 d-flex justify-content-end' >
+                <Button
+                  variant="primary"
+                  className="mt-3 mb-4"
+                  onClick={() => {
+                    history.push('/recruitment');
+                  }}
+                >
+                  Back
+                </Button>
                 </Col>
               </Row>
               <Row>

@@ -72,7 +72,7 @@ function InterviewRounds() {
   };
 
   const getData = async () => {
-    const section = hrInterviewFormSections[0].fields[3].options;
+    // const section = hrInterviewFormSections[0].fields[3].options;
     const { data } = await AuthApi.getDataFromServer(`${Api.roundsUrl}${1}/`);
     if (data) {
       const intDate = data.data.int_date
@@ -80,7 +80,7 @@ function InterviewRounds() {
         : '';
       data.data.int_date = intDate ? new Date(intDate) : '';
       data.data.int_time = data.data.int_time
-        ? new Date(intDate + ' ' + data.data.int_time)
+        ? new Date(`${intDate} ${data.data.int_time}`)
         : ''; //eslint-disable-line
 
       const ds = data.data.interviewer_id
@@ -124,7 +124,10 @@ function InterviewRounds() {
         : '',
       interviewer: formValues.interviewer ? formValues.interviewer.value : '',
     };
-    const { data } = await AuthApi.postDataToServer(Api.roundsUrl, postData);
+    const { data } = await AuthApi.postDataToServer(
+      Api.applicantRounds,
+      postData
+    );
     if (data) {
     }
   };
@@ -166,7 +169,10 @@ function InterviewRounds() {
       interviewer: formValues.interviewer ? formValues.interviewer.value : '',
       applicant: id,
     };
-    const { data } = await AuthApi.postDataToServer(Api.roundsUrl, postData);
+    const { data } = await AuthApi.postDataToServer(
+      Api.applicantRounds,
+      postData
+    );
     if (data) {
     }
   };
@@ -251,8 +257,7 @@ function InterviewRounds() {
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
           isStepForm={false}
-          onFormReset={() => {
-          }}
+          onFormReset={() => {}}
         />
       )}
 
@@ -275,8 +280,7 @@ function InterviewRounds() {
           resetBtnText="Clear"
           btnContainerClass="form-submit-buttons"
           isStepForm={false}
-          onFormReset={() => {
-          }}
+          onFormReset={() => {}}
         />
       )}
       <UserRestrictions permittedUsers={[4, 3]} roleId={currentUser}>

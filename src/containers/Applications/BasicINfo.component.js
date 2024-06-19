@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useParams } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import Loader from '../../components/Loader/index';
@@ -8,23 +8,26 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import FormSections from './AddBasicInfo.json';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 function BasicInformation(props) {
-  const { onBasicInfo, match } = props;
+  const { onBasicInfo, match, notes } = props;
+  const params = useParams();
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [appicantId, setAppicantId] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-
+  const [basicInfoId, setBasicInfoId] = useState();
+  const history = useHistory();
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
   };
 
   useEffect(() => {
-    updateDefaultValues({ is_fresher: '0' });
+    updateDefaultValues();
     getUserRole();
     getDesignation();
     getTechnology();
@@ -50,7 +53,9 @@ function BasicInformation(props) {
             item.name === 'email' ||
             item.name === 'mobile' ||
             item.name === 'is_fresher' ||
-            item.name === 'alternative_no'
+            item.name === 'alternative_no' ||
+            item.name === 'gender' ||
+            item.name === 'locality'
           )
             itemData.disabled = true;
           return itemData;
@@ -63,15 +68,15 @@ function BasicInformation(props) {
   }, [currentUser]);
 
   const getData = async (technology, id) => {
+    if (id == 'undefined') return;
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.applicantsUrl}${id}/`
+      `${Api.applicantsUrl}${id}/?is_basic_details=true&is_professional_details=false`
     );
 
     if (data) {
       setShowLoader(false);
       customFunctions.setLocalStorage('notes', data.data.notes);
-
       const ds = data.data.applied_for_id
         ? {
             label: data.data.applied_for_name,
@@ -92,14 +97,24 @@ function BasicInformation(props) {
         ...data.data,
         applied_for: ds,
         tech_stack: techStack,
-        is_fresher: String(data.data.is_fresher) === 'false' ? '0' : '1',
+        gender: String(data?.data?.gender),
+        locality: data?.data?.locality,
+        is_fresher: String(data?.data?.is_fresher) === 'false' ? '0' : '1',
+        reason_job_change:
+          String(data?.data?.is_fresher) === 'false'
+            ? data?.data?.reason_job_change
+            : null,
       };
-      onBasicInfo(data.data.id);
-
+      onBasicInfo(data.data.id, data.data.notes);
+      setBasicInfoId(data.data.id);
+      // notes(data.data.notes);
       updateDefaultValues({ ...obj }); // updateDefaultValues(data);
       customFunctions.setLocalStorage('applicantId', data.data.id);
+    } else {
+      setShowLoader(false);
     }
   };
+
   const submitForm = async (formValues) => {
     setShowLoader(true);
 
@@ -113,23 +128,35 @@ function BasicInformation(props) {
       ...postData,
       tech_stack: techData,
       applied_for: formValues.applied_for ? formValues.applied_for.value : '',
+      gender: formValues.gender ? Number(formValues.gender) : '',
       is_fresher: formValues.is_fresher ? Number(formValues.is_fresher) : '',
+      reason_job_change: formValues?.reason_job_change,
+      locality: formValues?.locality,
     };
 
-    const callback = appicantId
-      ? AuthApi.putDataToServer
-      : AuthApi.postDataToServer;
-    const endPoint = appicantId
-      ? `${Api.applicantsUrl}${appicantId}/`
-      : Api.applicantsUrl;
+    const callback =
+      appicantId == 'undefined' || appicantId == ''
+        ? AuthApi.postDataToServer
+        : AuthApi.putDataToServer;
+    const endPoint =
+      appicantId == 'undefined' || appicantId == ''
+        ? Api.applicantsUrl
+        : `${Api.applicantsUrl}${appicantId}/`;
     const { data, message } = await callback(endPoint, postData);
 
     if (data) {
       setShowLoader(false);
-      onBasicInfo(data.data.id);
-      customFunctions.setLocalStorage('applicantId', data.data.id);
+      onBasicInfo(basicInfoId);
+      // notes(notes);
+      // customFunctions.setLocalStorage('applicantId', data.data.id);
       swal(data && data.message[0], '', 'success').then(() => {
+        if (params?.ID) {
+          history.push(`/applications/${params?.ID}`);
+        } else {
+          history.push(`/applications/${data?.data?.id}`);
+        }
         props.callback('professional_details');
+        // }
       });
     } else {
       setShowLoader(false);
@@ -191,9 +218,15 @@ function BasicInformation(props) {
       ? match.params.ID
       : customFunctions.getLocalStorage('applicantId');
     if (ApplicantId) {
-      setAppicantId(ApplicantId);
+      setAppicantId(ApplicantId || '');
     }
   }, [match]);
+
+  // useEffect(() => {
+  //   if (params?.ID) {
+  //     setAppicantId(params?.ID);
+  //   }
+  // }, [params]);
 
   return (
     <>
@@ -224,7 +257,7 @@ function BasicInformation(props) {
             ? 'd-none'
             : ''
         }`}
-        showResetBtn={false}
+        showResetBtn={true}
         showBtnClass={true}
         resetBtnText="Clear"
         isStepForm={false}

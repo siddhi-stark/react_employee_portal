@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, useParams } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import Loader from '../../components/Loader/index';
@@ -8,11 +8,14 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import FormSections from './AddProfessional.json';
+import applicationsComponent from './applications.component';
 
 function ProfessionalDetails(props) {
-  const { onProfDetInfo, isBasicInfoId } = props;
+  const { onProfDetInfo, isBasicInfoId, isFresherFlag } = props;
+
   let filterOptions = {};
 
+  const params = useParams();
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({}); // eslint-disable-line
@@ -54,6 +57,7 @@ function ProfessionalDetails(props) {
             item.name === 'notice_period'
           )
             itemData.disabled = true;
+          // if (Number(item.name == 'total_exp') > Number(item.name == 'rel_exp'))
           return itemData;
         });
         return s;
@@ -65,9 +69,12 @@ function ProfessionalDetails(props) {
 
   const getData = async (profId) => {
     setShowLoader(true);
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.applicantsUrl}${profId}/`
-    );
+    let params = {
+      is_professional_details: true,
+    };
+    const endpoint = `${Api.applicantsUrl}${profId}`;
+    const url = customFunctions.generateUrl(endpoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
 
     if (data) {
       setShowLoader(false);
@@ -102,23 +109,67 @@ function ProfessionalDetails(props) {
           label: 'Referal',
           value: data.data.resume_source,
         };
+      } else if (
+        data.data.resume_source === 'other' ||
+        data.data.resume_source === 'Other'
+      ) {
+        obj.resume_source = {
+          label: 'Other',
+          value: data.data.resume_source,
+        };
       }
       updateDefaultValues({ ...obj }); // updateDefaultValues(data);
+    } else {
+      setShowLoader(false);
     }
   };
 
   useEffect(() => {
+    if (isBasicInfoId === 'professional_details') return;
     const appId = isBasicInfoId;
     getData(appId);
-  }, []);
+  }, [isBasicInfoId]);
+
+  useEffect(() => {
+    if (params?.ID) {
+      getData(Number(params?.ID));
+    }
+  }, [params]);
 
   // Submit Form
   const submitForm = async (formValues) => {
     setShowLoader(true);
-    const applicantId = customFunctions.getLocalStorage('applicantId');
+
+    let expFlag = true;
+    if (
+      formValues &&
+      Number(formValues?.total_exp) < Number(formValues?.rel_exp)
+    ) {
+      expFlag = false;
+    }
+
+    if (!expFlag) {
+      setShowLoader(false);
+      return swal(
+        'Total experience should not be greater than relevent experience',
+        '',
+        'error'
+      );
+    }
+    const localApplicantId = customFunctions.getLocalStorage('applicantId');
 
     let postData = {
-      ...formValues,
+      total_exp: Number(formValues?.total_exp),
+      rel_exp: Number(formValues?.rel_exp),
+      notice_period: Number(formValues?.notice_period) || 0,
+      current_ctc: formValues?.current_ctc,
+      expected_ctc: formValues?.expected_ctc,
+      resume_source: formValues?.resume_source,
+      resume: formValues?.resume,
+      is_professional_details: true,
+      is_interview_round: false,
+      resume_source_details: formValues?.resume_source_details,
+      is_fresher: isFresherFlag == '1' ? true : false,
     };
 
     postData = {
@@ -127,6 +178,30 @@ function ProfessionalDetails(props) {
         ? formValues.resume_source.value
         : '',
     };
+
+    // return;
+    let applicantId;
+    // if (isBasicInfoId || localApplicantId) {
+    //   applicantId = isBasicInfoId || localApplicantId;
+    // } else {
+    applicantId = params?.ID;
+    // }
+    // if(applicationsComponent)
+
+    // let appID =
+    //   localApplicantId != 'undefined'
+    //     ? localApplicantId
+    //     : params?.ID || isBasicInfoId;
+
+    //     let appID;
+
+    // if (localApplicantId !== 'undefined' && localApplicantId !== 'null') {
+    //     appID = localApplicantId;
+    // } else if (params?.ID !== null && params?.ID !== undefined) {
+    //     appID = params.ID;
+    // } else {
+    //     appID = isBasicInfoId;
+    // }
 
     const { data, message } = await AuthApi.putDataToServer(
       `${Api.applicantsUrl}${applicantId}/`,
@@ -137,10 +212,10 @@ function ProfessionalDetails(props) {
       onProfDetInfo(data.data.id);
       await localStorage.setItem('InterviewId', data.data.id);
       swal(data && data.message[0], '', 'success', {
-        // closeOnClickOutside: false,
-        // allowOutsideClick: false,
-        // buttons: false,
-        // timer: 2000,
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: true,
+        timer: 3000,
       }).then(() => {
         history.push('/recruitment');
       });
@@ -170,6 +245,7 @@ function ProfessionalDetails(props) {
         dpOptions.push({ label: op.name, value: op.id });
         return op;
       });
+
     const allOptions = {
       ...options,
       ...filterOptions,
@@ -200,7 +276,7 @@ function ProfessionalDetails(props) {
           defaultFormValues={defaultValues}
           currentUser={currentUser}
           submitBtnText="Save"
-          showResetBtn={false}
+          showResetBtn={true}
           showBtnClass={true}
           resetBtnText="Clear"
           btnContainerClass={`form-submit-buttons mb-5 ${

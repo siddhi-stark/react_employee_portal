@@ -22,15 +22,27 @@ function Applications(props) {
   const Interview = statusObj.location.state
     ? statusObj.location.state.isInterview
     : '';
+  const pageType = props?.location?.state?.pageType;
   const items = [{ to: '/', label: 'Home' }, { label: 'Applications' }];
+  const [notes, setNotes] = useState(null);
   const [isBasicInfoId, setBasicInfo] = useState(null);
   const [isProfessionalInfoId, setProfessionalInfo] = useState(null);
+  const [isFresher, setIsFresher] = useState(null);
   const [isBI, setIsBI] = useState(true);
   const [isPD, setIsPD] = useState(true);
   const [key, setKey] = useState('currentEmployee');
   const history = useHistory();
 
   const group = customFunctions.getLocalStorage('group');
+
+  useEffect(() => {
+    if (isProfessionalInfoId) {
+      return
+      setIsPD(false);
+    } else {
+      setIsPD(true);
+    }
+  }, [isProfessionalInfoId]);
 
   const handleSelect = (emp) => {
     if (emp === 'currentEmployee') {
@@ -45,6 +57,7 @@ function Applications(props) {
   useEffect(() => {
     if (id) setIsPD(false);
   }, []);
+    
 
   return (
     <>
@@ -75,15 +88,19 @@ function Applications(props) {
                 <div className="row ml-2">
                   {key === 'currentEmployee' && (
                     <BasicInformation
-                      onBasicInfo={(value) => {
+                      onBasicInfo={(value, note) => {
                         setProfessionalInfo(value);
-
                         setBasicInfo(value);
+                        setNotes(note);
                         setIsBI(false);
                       }}
-                      callback={()=>{
-                        handleSelect('professional_details')
-                        setKey('professional_details')
+                      callback={(value) => {
+                        setProfessionalInfo(value);
+                        setIsBI(false);
+                        setBasicInfo(value);
+                        setNotes(value);
+                        handleSelect('professional_details');
+                        setKey('professional_details');
                       }}
                     />
                   )}
@@ -99,35 +116,34 @@ function Applications(props) {
                     {key === 'professional_details' && (
                       <ProfessonalDetails
                         isBasicInfoId={isBasicInfoId}
+                        isFresherFlag={isFresher}
                         onProfDetInfo={(value) => {
                           setProfessionalInfo(value);
-                          if (id) {
-                            setIsPD(false);
-                          } else {
-                            setIsPD(true);
-                          }
                         }}
                       />
                     )}
                   </div>
                 )}
               </Tab>
+              
               <Tab
                 eventKey="oldPeriod"
                 title="Interview Rounds"
                 disabled={isPD || paginationOptions === 'pending'}
-              >
+                >
                 {key === 'oldPeriod' && (
                   <div className="row ml-2">
                     {Number(group) === 4 ||
                     Number(group) === 3 ||
-                    (Number(group) === 7 && isProfessionalInfoId) ? (
+                    (Number(group) === 7 && isProfessionalInfoId) ||
+                    (Number(group) === 5 && pageType == 'My_Interview') ? (
                       <InterviewerRoundsStatus
                         isProfessionalInfoId={isProfessionalInfoId}
                       />
                     ) : (
                       <NewInterviewRounds
                         isProfessionalInfoId={isProfessionalInfoId}
+                        notes={notes}
                       />
                     )}
                   </div>

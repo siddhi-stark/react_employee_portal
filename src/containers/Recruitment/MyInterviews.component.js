@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import { withRouter, useHistory } from 'react-router-dom';
@@ -56,6 +57,7 @@ function MyInterviews() {
               history.push(`/applications/${id}`, {
                 statusObj: status_name,
                 isInterview: true,
+                pageType: 'My_Interview',
               });
             }}
           >
@@ -88,12 +90,12 @@ function MyInterviews() {
             href={resume}
             className="ms-2 pl-2"
             title="View Resume"
-            target="_Blank"
+            target="_blank"
           >
             <Image src="/images/download-file.svg" />
           </a>
         ) : (
-          ''
+          ' '
         )}
       </>
     );
@@ -141,6 +143,17 @@ function MyInterviews() {
     {
       id: 'status_name',
       label: 'Status',
+      render: (status_name) => {
+        const status = status_name;
+        
+        return (
+          <>
+            <span>
+              {`${customFunctions.capitalizeFirstLetter(status.status_name)}`}
+            </span>
+          </>
+        );
+      },
     },
     {
       id: 'round_one',
@@ -151,7 +164,7 @@ function MyInterviews() {
           <>
             <span>
               {
-                `${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
+                `${categoryData.status_name}` //eslint-disable-line
               }
             </span>
           </>
@@ -165,11 +178,7 @@ function MyInterviews() {
         const categoryData = round_two.round_two; //eslint-disable-line
         return (
           <>
-            <span>
-              {
-                `${categoryData.status_name} - ${categoryData.interviewer_name}` //eslint-disable-line
-              }
-            </span>
+            <span>{categoryData.status_name}</span>
           </>
         );
       },
@@ -200,8 +209,10 @@ function MyInterviews() {
       my_interview_round: 'true',
       ...filterList,
     };
+    
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
+    
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
@@ -211,8 +222,8 @@ function MyInterviews() {
 
       const newInterwArr = await data.data.map((dt) => {
         if (dt.applicant_round_list && dt.applicant_round_list.length > 0) {
-          dt.round_two = dt.applicant_round_list[0]; //eslint-disable-line
-          dt.round_one = dt.applicant_round_list[1]; //eslint-disable-line
+          dt.round_one = dt.applicant_round_list[0]; //eslint-disable-line
+          dt.round_two = dt.applicant_round_list[1]; //eslint-disable-line
         }
         return dt;
       });
@@ -225,6 +236,7 @@ function MyInterviews() {
       });
 
       setRowData(newInterwArr || []);
+      
     } else {
       setShowLoader(false);
       swal(message, '', 'error');
@@ -242,7 +254,10 @@ function MyInterviews() {
     const dpOptions = [];
     (await data.data) &&
       data.data.applicant_status.map((op) => {
-        dpOptions.push({ label: op.name, value: op.id });
+        dpOptions.push({
+          label: op?.name, // Capitalize first letter
+          value: op.id,
+        });
         return op;
       });
     const allOptions = {
@@ -250,6 +265,7 @@ function MyInterviews() {
       ...defaultFilterOptions,
       status_name: dpOptions,
     };
+    
     defaultFilterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
@@ -264,13 +280,22 @@ function MyInterviews() {
   }, []);
 
   const submitForm = async (formValues) => {
+    const capitalizeFirstLetter = (string) => {
+      
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    };
     const payload = {
       keyword: formValues && formValues.keyword ? formValues.keyword : '',
-      status:
-        formValues && formValues.status_name && formValues.status_name.value
-          ? formValues.status_name.value
-          : '',
+      // status:
+      //   formValues && formValues.status_name && formValues.status_name.value
+      //     ? formValues.status_name.value
+      //     : '',
+      status:formValues?.status_name?.value 
+      // formValues && formValues.status_name && formValues.status_name.value
+      // ? capitalizeFirstLetter(formValues.status_name)
+      // : '',
     };
+    
     setFilterData(payload);
   };
 

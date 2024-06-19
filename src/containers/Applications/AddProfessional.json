@@ -18,6 +18,7 @@
         "placeholder": "eg. 3",
         "inputClass": "",
         "containerClass": "",
+        "maxLength": "3",
         "validations": [
           {
             "type": "required",
@@ -93,11 +94,12 @@
       {
         "name": "notice_period",
         "type": "text",
-        "label": "Notice Period",
+        "label": "Notice Period (In Months)",
         "id": "",
         "placeholder": "eg.2 Months",
         "inputClass": "",
         "containerClass": "",
+        "maxLength": "1",
         "validations": [],
         "displayWhen": {},
         "haveValidations": "true",
@@ -142,7 +144,19 @@
         "placeholder": "eg.350000",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "maxLength": "7",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          },
+          {
+            "type": "numeric|min:0,num",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -171,7 +185,19 @@
         "placeholder": "eg.500000",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "maxLength": "7",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          },
+          {
+            "type": "numeric|min:0,num",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -252,6 +278,44 @@
             {
               "name": "resume_source",
               "value": "referal",
+              "condition": "=="
+            }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "false",
+        "haveDisplayOptions": "true",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "resume_source_details",
+        "type": "text",
+        "label": "Resume Source Details",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {
+          "conditions": [
+            {
+              "name": "resume_source",
+              "value": "other",
               "condition": "=="
             }
           ],

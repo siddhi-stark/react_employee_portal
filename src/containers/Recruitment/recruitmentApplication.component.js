@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useEffect } from 'react';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -30,6 +32,7 @@ function RecruitmentApplicationComponent() {
   const [status, setStatus] = useState(null);
   const [filterData, setFilterData] = useState({});
   const [activeMenu, setActiveMenu] = useState('all');
+
   const [title, setTitle] = useState('');
   const [statusId, setStatusId] = useState('');
   const [note, setNote] = useState('');
@@ -42,19 +45,19 @@ function RecruitmentApplicationComponent() {
   const ApplicantStatus = [
     {
       id: 2,
-      value: 'Shortlisted',
-      label: 'shortlisted',
+      value: 'shortlisted',
+      label: 'Shortlisted',
     },
     {
       id: 6,
-      value: 'Declined',
-      label: 'declined',
+      value: 'declined',
+      label: 'Declined',
     },
 
     {
       id: 4,
-      value: 'Pending',
-      label: 'pending',
+      value: 'pending',
+      label: 'Pending',
       isdisabled: true,
     },
   ];
@@ -74,12 +77,7 @@ function RecruitmentApplicationComponent() {
     return sectionData;
   });
 
-  const handleActionCallback = ({
-    id,
-    status_name,
-    notes,
-  }) => {
-
+  const handleActionCallback = ({ id, status_name, notes }) => {
     return (
       <span className="d-flex">
         {status_name !== 'declined' ? (
@@ -114,62 +112,67 @@ function RecruitmentApplicationComponent() {
           </a>
         )}
         {Number(group) === 4 ||
-          Number(group) === 3 ||
-          status_name === 'pending' ||
-          status_name === 'shortlisted' ||
-          status_name === 'reject' ||
-          status_name === 'declined' ||
-          status_name === 'rejected' ? ( //eslint-disable-line
-          ''
-        ) : (
-          <a
-            href="/"
-            className="p-r-2 text-info ms-2"
-            title="Send Offer"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              history.push('/generate-offerletter');
-              customFunctions.setLocalStorage('applicantId', id);
-              rowData &&
-                rowData.map((dt) => {
-                  if (id === dt.id) {
-                    customFunctions.setLocalStorage(
-                      'applicantName',
-                      dt.name && dt.name
-                    );
-                    customFunctions.setLocalStorage(
-                      'designation',
-                      dt.applied_for_name && dt.applied_for_name
-                    );
-                    customFunctions.setLocalStorage(
-                      'offerctc',
-                      dt.offered_ctc && dt.offered_ctc
-                    );
-                    customFunctions.setLocalStorage(
-                      'joiningdate',
-                      dt.joining_date && dt.joining_date
-                    );
-                    customFunctions.setLocalStorage(
-                      'pfInclude',
-                      dt.pf_included && dt.pf_included
-                    );
-                    customFunctions.setLocalStorage(
-                      'misInclude',
-                      dt.miscellaneous_included && dt.miscellaneous_included
-                    );
-                    customFunctions.setLocalStorage(
-                      'isFresher',
-                      dt.is_fresher && dt.is_fresher
-                    );
-                  }
-                  return dt;
-                });
-            }}
-          >
-            <Image src="/images/offer.svg" />
-          </a>
-        )}
+        Number(group) === 3 ||
+        status_name === 'Pending' ||
+        status_name === 'Shortlisted' ||
+        status_name === 'reject' ||
+        status_name === 'declined' ||
+        status_name === 'rejected' //eslint-disable-line
+          ? ''
+          : ['selected', 'offered'].includes(status_name) && (
+              <a
+                href="/"
+                className="p-r-2 text-info ms-2"
+                title="Send Offer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  history.push(`/generate-offerletter`);
+                  customFunctions.setLocalStorage('applicantId', id);
+                  rowData &&
+                    rowData.map((dt) => {
+                      if (id === dt.id) {
+                        customFunctions.setLocalStorage(
+                          'applicantName',
+                          dt.name && dt.name
+                        );
+                        customFunctions.setLocalStorage(
+                          'designation',
+                          dt.applied_for_name && dt.applied_for_name
+                        );
+                        customFunctions.setLocalStorage(
+                          'offerctc',
+                          dt.offered_ctc && dt.offered_ctc
+                        );
+                        customFunctions.setLocalStorage(
+                          'bonus',
+                          dt.bonus && dt.bonus
+                        );
+                        customFunctions.setLocalStorage(
+                          'joiningdate',
+                          dt.joining_date && dt.joining_date
+                        );
+                        
+                        customFunctions.setLocalStorage(
+                          'pfInclude',
+                          dt.pf_included && dt.pf_included
+                        );
+                        customFunctions.setLocalStorage(
+                          'misInclude',
+                          dt.miscellaneous_included && dt.miscellaneous_included
+                        );
+                        customFunctions.setLocalStorage(
+                          'isFresher',
+                          dt.is_fresher && dt.is_fresher
+                        );
+                      }
+                      return dt;
+                    });
+                }}
+              >
+                <Image src="/images/offer.svg" />
+              </a>
+            )}
       </span>
     );
   };
@@ -192,38 +195,55 @@ function RecruitmentApplicationComponent() {
       </span>
     );
   };
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`; // Truncate text and add ellipsis
+    }
+    return text;
+  };
 
   const getStatusId = (val) => {
     const data = ApplicantStatus.filter((i) => i.label === val);
     return data.length > 0 ? data[0] : {};
   };
+
   const handleStatus = (status_name) => {
+    const capitalizedStatus =
+      status_name.status_name.charAt(0).toUpperCase() +
+      status_name.status_name.slice(1);
+
     // eslint-disable-line
     return (
       <>
-        {status_name.status_name === 'pending' &&
-          (Number(group) === 5 || Number(group) === 6 || Number(group) === 1) ? ( // eslint-disable-line
+        {capitalizedStatus === 'Pending' &&
+        (Number(group) === 5 || Number(group) === 6 || Number(group) === 1) ? ( // eslint-disable-line
           <DropdownInput
             asterisk="*"
             options={getDepartment()}
             placeholder="Select status"
             defaultValue={
-              status_name.status_name
-                ? getStatusId(status_name.status_name)
-                : {}
+              capitalizedStatus ? getStatusId(capitalizedStatus) : {}
             }
             onSelectHandler={(select) => {
               setStatusId(status_name.id);
+
               // {select.label === 'decined'}
-              {//eslint-disable-line
-                (select.label === 'declined' || select.label === 'shortlisted') && setModalShow(true);
+              {
+                //eslint-disable-line
+                (select.label === 'Declined' ||
+                  select.label === 'Shortlisted') &&
+                  setModalShow(true);
               }
               setStatusData(select);
             }}
-            isOptionDisabled={(ApplicantStatus) => ApplicantStatus.isdisabled} //eslint-disable-line
+            isOptionDisabled={
+              (ApplicantStatus) => {
+                return ApplicantStatus.isdisabled;
+              } //eslint-disable-line
+            }
           />
         ) : (
-          <span>{status_name.status_name}</span>
+          <span>{capitalizedStatus}</span>
         )}
       </>
     );
@@ -273,6 +293,21 @@ function RecruitmentApplicationComponent() {
     {
       id: 'tech_stack_name',
       label: 'Technology',
+      render: (row) => {
+        const rowdata = row;
+        return rowdata?.tech_stack_name ? (
+          <span title={rowdata?.tech_stack_name}>
+            {rowdata?.tech_stack_name.slice(0, 15) + '' + '..'}
+          </span>
+        ) : rowdata?.tech_stack_name ? (
+          <span title={rowdata?.tech_stack_name}>
+            {rowdata?.tech_stack_name.slice(0, 15) + '' + '...'}
+          </span>
+        ) : (
+          '-'
+        );
+      },
+      // render: ({ tech_stack_name }) => truncateText(`${tech_stack_name}`, 15),
     },
     {
       id: 'notes',
@@ -307,11 +342,13 @@ function RecruitmentApplicationComponent() {
     if (!ApplicantStatus) return [];
     const depart = [];
     ApplicantStatus.map((dep) => {
-      return depart.push({
-        label: dep.label,
-        id: dep.id,
-        value: dep.value,
-      });
+      if (dep?.id != 4) {
+        return depart.push({
+          label: dep.label,
+          id: dep.id,
+          value: dep.value,
+        });
+      }
     });
     return depart;
   };
@@ -330,6 +367,8 @@ function RecruitmentApplicationComponent() {
       limit,
       sort_direction: 'descending',
       sort_by: 'updated_at',
+      is_recruitment: true,
+
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -355,7 +394,6 @@ function RecruitmentApplicationComponent() {
         newItem.tech_stack_name = stackArr.join(',');
         return newItem;
       });
-
       setRowData((data && data.data) || []);
     } else {
       setShowLoader(false);
@@ -392,14 +430,14 @@ function RecruitmentApplicationComponent() {
           : formValues.keyword,
       designation_id:
         formValues &&
-          formValues.designation_id &&
-          formValues.designation_id.value
+        formValues.designation_id &&
+        formValues.designation_id.value
           ? formValues.designation_id.value
           : formValues.designation_id,
       technology_stack_id:
         formValues &&
-          formValues.technology_stack_id &&
-          formValues.technology_stack_id.value
+        formValues.technology_stack_id &&
+        formValues.technology_stack_id.value
           ? formValues.technology_stack_id.value
           : formValues.technology_stack_id,
       start_date:
@@ -421,7 +459,6 @@ function RecruitmentApplicationComponent() {
     if (Number(status) === 0) {
       payload.status = '';
     }
-
     if (formValues) {
       setAllData(payload);
     }
@@ -463,7 +500,6 @@ function RecruitmentApplicationComponent() {
     if (!data) {
       return;
     }
-
     const dpOptions = [];
     data.data.map((op) => {
       dpOptions.push({
@@ -500,6 +536,7 @@ function RecruitmentApplicationComponent() {
     const allOptions = options;
     await updateOptions({ ...allOptions });
   };
+  
   useEffect(() => {
     getDesignation();
     getTechnology();
@@ -531,7 +568,15 @@ function RecruitmentApplicationComponent() {
                 formSections={FormSections}
                 formHeading="Filter Form"
                 onFormSubmit={(formValues) => {
-                  if (!formValues.keyword && !formValues.start_date && !formValues.end_date && !formValues.role_id && !formValues.designation_id && !formValues.technology_stack_id) return;
+                  if (
+                    !formValues.keyword &&
+                    !formValues.start_date &&
+                    !formValues.end_date &&
+                    !formValues.role_id &&
+                    !formValues.designation_id &&
+                    !formValues.technology_stack_id
+                  )
+                    return;
                   submitForm(formValues);
                 }}
                 options={options}
@@ -567,8 +612,8 @@ function RecruitmentApplicationComponent() {
                   className="btn-link"
                 >
                   {Number(group) === 4 ||
-                    Number(group) === 3 ||
-                    Number(group) === 2
+                  Number(group) === 3 ||
+                  Number(group) === 2
                     ? ''
                     : 'Add Applicant'}
                 </a>
@@ -581,16 +626,16 @@ function RecruitmentApplicationComponent() {
                 Number(group) === 3 ||
                 Number(group) === 2
               ) && (
-                  <Button
-                    variant="primary"
-                    className="mb-2"
-                    onClick={() => {
-                      history.push('/batch-upload');
-                    }}
-                  >
-                    Bulk Upload
-                  </Button>
-                )}
+                <Button
+                  variant="primary"
+                  className="mb-2"
+                  onClick={() => {
+                    history.push('/batch-upload');
+                  }}
+                >
+                  Bulk Upload
+                </Button>
+              )}
             </div>
             <div className="recruitment-links-wrapper">
               {!(
@@ -598,85 +643,91 @@ function RecruitmentApplicationComponent() {
                 Number(group) === 3 ||
                 Number(group) === 2
               ) && (
-                  <>
-                    <a
-                      href="#"
-                      className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
-                      onClick={() => {
-                        setActiveMenu('all');
-                        setStatus(0);
-                      }}
-                    >
-                      All
-                    </a>
-                    <a
-                      href="#"
-                      className={`ml-2 mb-2 ${activeMenu === 'selected' ? 'active' : ''
-                        }`}
-                      onClick={() => {
-                        setActiveMenu('selected');
-                        setStatus(1);
-                      }}
-                    >
-                      Selected
-                    </a>
-                    <a
-                      href="#"
-                      className={`ml-2 mb-2 ${activeMenu === 'Shortlisted' ? 'active' : ''
-                        }`}
-                      onClick={() => {
-                        setActiveMenu('Shortlisted');
-                        setStatus(2);
-                      }}
-                    >
-                      Shortlisted
-                    </a>
-                    <a
-                      href="#"
-                      className={`ml-2 mb-2 ${activeMenu === 'Rejected' ? 'active' : ''
-                        }`}
-                      onClick={() => {
-                        setActiveMenu('Rejected');
-                        setStatus(3);
-                      }}
-                    >
-                      Rejected
-                    </a>
-                    <a
-                      href="#"
-                      className={`ml-2 mb-2 ${activeMenu === 'Decline' ? 'active' : ''
-                        }`}
-                      onClick={() => {
-                        setActiveMenu('Decline');
-                        setStatus(6);
-                      }}
-                    >
-                      Declined
-                    </a>
-                    <a
-                      href="#"
-                      className={`ml-2 mb-2 ${activeMenu === 'Offer' ? 'active' : ''
-                        }`}
-                      onClick={() => {
-                        setActiveMenu('Offer');
-                        setStatus(4);
-                      }}
-                    >
-                      Offer Send
-                    </a>
-                    <a
-                      href="#"
-                      className={`ml-2 mb-2 ${activeMenu === 'Pending' ? 'active' : ''
-                        }`}
-                      onClick={() => {
-                        setActiveMenu('Pending');
-                        setStatus(5);
-                      }}
-                    >
-                      Pending
-                    </a>
-                  </>
-                )}
+                <>
+                  <a
+                    href="#"
+                    className={`mb-2 ${activeMenu === 'all' ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveMenu('all');
+                      setStatus(0);
+                    }}
+                  >
+                    All
+                  </a>
+                  <a
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'selected' ? 'active' : ''
+                    }`}
+                    onClick={() => {
+                      setActiveMenu('selected');
+                      setStatus(1);
+                    }}
+                  >
+                    Selected
+                  </a>
+                  <a
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'shortlisted' ? 'active' : ''
+                    }`}
+                    onClick={() => {
+                      setActiveMenu('Shortlisted');
+                      setStatus(2);
+                    }}
+                  >
+                    Shortlisted
+                  </a>
+                  <a
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'Rejected' ? 'active' : ''
+                    }`}
+                    onClick={() => {
+                      setActiveMenu('Rejected');
+                      setStatus(3);
+                    }}
+                  >
+                    Rejected
+                  </a>
+                  <a
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'decline' ? 'active' : ''
+                    }`}
+                    onClick={() => {
+                      setActiveMenu('decline');
+                      setStatus(6);
+                    }}
+                  >
+                    Declined
+                  </a>
+                  <a
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'Offer' ? 'active' : ''
+                    }`}
+                    onClick={() => {
+                      setActiveMenu('Offer');
+                      setStatus(4);
+                    }}
+                  >
+                    Offer Send
+                  </a>
+                  <a
+                    href="#"
+                    className={`ml-2 mb-2 ${
+                      activeMenu === 'Pending' ? 'active' : ''
+                    }`}
+                    onClick={() => {
+                      setActiveMenu('Pending');
+                      setStatus(5);
+                    }}
+                  >
+                    Pending
+                  </a>
+                </>
+              )}
             </div>
             <CustomTable
               tableContainerClass="mt-2"

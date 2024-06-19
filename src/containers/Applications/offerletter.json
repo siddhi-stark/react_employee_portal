@@ -18,7 +18,13 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "",
         "haveDisplayOptions": "false",
@@ -47,7 +53,13 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",
@@ -157,9 +169,10 @@
         "placeholder": "eg.350000",
         "inputClass": "",
         "containerClass": "",
+        "maxLength": "7",
         "validations": [
           {
-            "type": "required",
+            "type": "required|numeric",
             "applyWhen": [],
             "applyWhenRelation": "OR"
           }
@@ -227,6 +240,42 @@
             "value": "false"
           }
         ]
+      },
+      {
+        "name": "bonus_amount",
+        "type": "text",
+        "label": "Bonus",
+        "id": "",
+        "placeholder": "eg.5000",
+        "inputClass": "",
+        "containerClass": "",
+        "maxLength": "5",
+        "validations": [
+          {
+            "type": "required|numeric",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
       }
     ],
     "allowedUsers": [],

@@ -173,6 +173,11 @@
             "type": "required",
             "applyWhen": [],
             "applyWhenRelation": "OR"
+          },
+          {
+            "type": "required|email",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
           }
         ],
         "displayWhen": {},
@@ -206,7 +211,7 @@
         "containerClass": "",
         "validations": [
           {
-            "type": "required|min:10|max:10|regex:^[6-9]{1}[0-9]{9}$",
+            "type": "required|numeric|min:10|max:10|regex:^[6-9]{1}[0-9]{9}$",
             "applyWhen": [],
             "applyWhenRelation": "OR"
           },
@@ -247,15 +252,11 @@
         "containerClass": "",
         "validations": [
           {
-            "type": "min:10|max:10|regex:^[6-9]{1}[0-9]{9}$",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
-          },
-          {
-            "type": "phone",
+            "type": "numeric|min:10|max:10|regex:^[6-9]{1}[0-9]{9}$",
             "applyWhen": [],
             "applyWhenRelation": "OR"
           }
+         
         ],
         "displayWhen": {},
         "haveValidations": "true",
@@ -278,15 +279,57 @@
         "options": []
       },
       {
-        "name": "is_fresher",
-        "type": "radio",
-        "label": "",
+        "name": "locality",
+        "type": "text",
+        "label": "Locality",
         "id": "",
         "placeholder": "",
         "inputClass": "",
-        "containerClass": "mt-4",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+
+      {
+        "name": "gender",
+        "type": "radio",
+        "label": "Gender",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "mt-1",
         "inline": "true",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",
@@ -306,10 +349,97 @@
         "fields": [],
         "optionCallback": "",
         "options": [
+          { "label": "Male", "value": "1" },
+          { "label": "Female", "value": "2" }
+        ]
+      },
+      {
+        "name": "is_fresher",
+        "type": "radio",
+        "label": "Work Status",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "mt-1",
+        "inline": "true",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1 column"
+        },
+        "fields": [],
+        "optionCallback": "handleIsFresherChange",
+        "options": [
           { "label": "Fresher", "value": "1" },
           { "label": "Experience", "value": "0" }
         ]
+      },
+
+      {
+        "name": "reason_job_change",
+        "type": "text",
+        "label": "Reason for job change",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {
+          "conditions": [
+          {
+            "name": "is_fresher",
+            "value": "0",
+            "condition": "=="
+          }
+        ],
+        "displayWhenRelation": "OR"
+      },
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
       }
+     
+     
+      
     ],
     "allowedUsers": [],
     "sectionLayout": "2column"
