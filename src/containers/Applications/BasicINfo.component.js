@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { withRouter, useParams } from 'react-router-dom';
+import { withRouter, useParams, useLocation } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import Loader from '../../components/Loader/index';
@@ -21,6 +21,7 @@ function BasicInformation(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const [basicInfoId, setBasicInfoId] = useState();
   const history = useHistory();
+  const { state } = useLocation();
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
@@ -38,7 +39,8 @@ function BasicInformation(props) {
     if (
       Number(currentUser) === 2 ||
       Number(currentUser) === 4 ||
-      Number(currentUser) === 3
+      Number(currentUser) === 3 ||
+      Number(currentUser) === 5
     ) {
       const updatedSchema = formSchema.map((section) => {
         const s = { ...section };
@@ -57,7 +59,8 @@ function BasicInformation(props) {
             item.name === 'gender' ||
             item.name === 'locality'
           )
-            itemData.disabled = true;
+            itemData.disabled =
+              state?.pageType === 'My_Interview' ? true : false;
           return itemData;
         });
         return s;
@@ -65,7 +68,7 @@ function BasicInformation(props) {
 
       updateJsonSchema([...updatedSchema]);
     }
-  }, [currentUser]);
+  }, [currentUser, state]);
 
   const getData = async (technology, id) => {
     if (id == 'undefined') return;

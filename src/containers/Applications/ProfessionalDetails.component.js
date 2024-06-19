@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { withRouter, useHistory, useParams } from 'react-router-dom';
+import { withRouter, useHistory, useParams,useLocation } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import Loader from '../../components/Loader/index';
@@ -23,6 +23,7 @@ function ProfessionalDetails(props) {
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
+  const { state } = useLocation();
 
   // Get user role
   const getUserRole = async () => {
@@ -38,7 +39,8 @@ function ProfessionalDetails(props) {
     if (
       Number(currentUser) === 2 ||
       Number(currentUser) === 4 ||
-      Number(currentUser) === 3
+      Number(currentUser) === 3 ||
+      Number(currentUser) === 5
     ) {
       const formSchema = [...FormSections];
       const updatedSchema = formSchema.map((section) => {
@@ -56,7 +58,8 @@ function ProfessionalDetails(props) {
             item.name === 'upload' ||
             item.name === 'notice_period'
           )
-            itemData.disabled = true;
+          itemData.disabled =
+          state?.pageType === 'My_Interview' ? true : false;
           // if (Number(item.name == 'total_exp') > Number(item.name == 'rel_exp'))
           return itemData;
         });
@@ -65,7 +68,7 @@ function ProfessionalDetails(props) {
 
       updateJsonSchema([...updatedSchema]);
     }
-  }, [currentUser]);
+  }, [currentUser,state]);
 
   const getData = async (profId) => {
     setShowLoader(true);
