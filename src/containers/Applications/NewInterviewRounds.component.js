@@ -171,7 +171,7 @@ function NewInterviewRounds(props) {
   const getData = async (interviewerId) => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.applicantRounds}${interviewerId}?is_interview_round=true`
+      `${Api.applicantRounds}${interviewerId}/?is_interview_round=true`
     );
 
     if (data) {
