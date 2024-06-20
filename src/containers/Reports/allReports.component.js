@@ -202,7 +202,7 @@ function AllReports() {
           total: `${report.estimation} Hrs`,
           id: report.user_id,
           createdDate: report.created_at,
-          total_eta: `${report?.total_eta} Hrs`,
+          total_eta: `${report?.todays_total_estimation} Hrs`,
         };
         row.push(setRowData);
         return report;
