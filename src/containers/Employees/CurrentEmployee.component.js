@@ -1300,7 +1300,7 @@ function CurrentEmployee() {
               <Col sm={6}>
                 <Form.Group>
                   <Form.Label className="text-dark fs-6">
-                    Gender<span className="text-danger">*</span>
+                    Gender<span className="text-danger"></span>
                   </Form.Label>
                   <div>
                     {genderOptions.map((option) => (
@@ -1314,6 +1314,11 @@ function CurrentEmployee() {
                         checked={gender == option.value}
                         onChange={onSelectRadioButton}
                         inline
+                        errorMessage={validator.current.message(
+                          'gender',
+                          gender,
+                          'required'
+                        )}
                       />
                     ))}
                   </div>
@@ -1343,7 +1348,7 @@ function CurrentEmployee() {
                 variant="primary"
                 type="submit"
                 disabled={disableButton}
-                onClick={addEmployee}
+                onClick={onSubmit}
               >
                 {employeeId ? 'Update' : 'Add'}
               </Button>
