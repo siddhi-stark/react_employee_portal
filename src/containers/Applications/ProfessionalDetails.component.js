@@ -164,7 +164,7 @@ function ProfessionalDetails(props) {
     let postData = {
       total_exp: Number(formValues?.total_exp),
       rel_exp: Number(formValues?.rel_exp),
-      notice_period: Number(formValues?.notice_period) || 0,
+      notice_period: formValues?.notice_period,
       current_ctc: formValues?.current_ctc,
       expected_ctc: formValues?.expected_ctc,
       resume_source: formValues?.resume_source,

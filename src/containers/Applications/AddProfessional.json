@@ -99,10 +99,10 @@
         "placeholder": "eg.2 Months",
         "inputClass": "",
         "containerClass": "",
-        "maxLength": "1",
+        "maxLength": "",
         "validations": [],
         "displayWhen": {},
-        "haveValidations": "true",
+        "haveValidations": "false",
         "haveDisplayOptions": "false",
         "callback": "",
         "callbackUrl": "",
@@ -150,11 +150,6 @@
             "type": "required",
             "applyWhen": [],
             "applyWhenRelation": "OR"
-          },
-          {
-            "type": "numeric|min:0,num",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
           }
         ],
         "displayWhen": {},
@@ -191,12 +186,8 @@
             "type": "required",
             "applyWhen": [],
             "applyWhenRelation": "OR"
-          },
-          {
-            "type": "numeric|min:0,num",
-            "applyWhen": [],
-            "applyWhenRelation": "OR"
           }
+          
         ],
         "displayWhen": {},
         "haveValidations": "true",

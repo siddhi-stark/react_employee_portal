@@ -858,15 +858,16 @@ function Personal(props) {
                   </Row>
                   <span>
                     <div className="mt-3 ms-4">
-                      <h6 style={{ fontSize: 'smaller' }}>
-                        <b>Note:</b>
-                      </h6>
-                      <h6 style={{ fontSize: 'smaller' }}>
-                        1. Maximum upload file size limit is less then 1 MB.
+                    <h6 style={{ fontSize: 'smaller' }}>
+                        1. Maximum upload file size limit is less then 1 MB.<span className='text-danger'>*</span>
                       </h6>
                       <h6 style={{ fontSize: 'smaller' }}>
                         2. File supported extension is jpg , png , svg , jpeg ,
-                        pdf
+                        pdf.<span className='text-danger'>*</span>
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        3. Please provide the front and back photo in PDF formate of your Aadhaar card and a photo of your PAN card. 
+                        These are mandatory.<span className='text-danger'>*</span>
                       </h6>
                     </div>
                   </span>
