@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -103,6 +104,7 @@ function EmployementHistory(props) {
       setShowLoader(false);
       swal(message, '', 'error');
     }
+  
   };
 
   useEffect(() => {
@@ -142,8 +144,9 @@ function EmployementHistory(props) {
       }
       return rp;
     });
-    const  addEntry = formValues.addmore.entries();
-    for (const [index, history] of addEntry ) { // eslint-disable-line
+    const addEntry = formValues.addmore.entries();
+    for (const [index, history] of addEntry) {
+      // eslint-disable-line
       const candidateHistory = {
         designation: history.designation,
         company_name: history.company_name,

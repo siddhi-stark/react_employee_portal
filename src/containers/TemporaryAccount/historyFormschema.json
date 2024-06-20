@@ -3,7 +3,7 @@
     "sectionName": "history",
     "sectionTitle": "History",
     "layout": { "label": "2 Column", "value": "2column" },
-    "containerClass": "mt-4",
+    "containerClass": "mt-4 ps-4",
     "displaySection": true,
     "displaySectionTitle": false,
     "fields": [
@@ -104,7 +104,7 @@
                 "applyWhenRelation": "OR"
               },
               {
-                "type": "email",
+                "type": "",
                 "applyWhen": [
                   {
                     "name": "end_date",
@@ -143,11 +143,6 @@
             "validations": [
               {
                 "type": "required",
-                "applyWhen": [],
-                "applyWhenRelation": "OR"
-              },
-              {
-                "type": "email",
                 "applyWhen": [
                   {
                     "name": "start_date",
@@ -212,7 +207,9 @@
                 "type": "required",
                 "applyWhen": [],
                 "applyWhenRelation": "OR"
-              }
+              },
+
+              { "type": "url", "applyWhen": [], "applyWhenRelation": "OR" }
             ],
             "displayWhen": {},
             "haveValidations": "true",
@@ -392,7 +389,7 @@
             "type": "number",
             "label": "Manager Contact No",
             "id": "",
-            "placeholder": "HR Contact No",
+            "placeholder": "Manager Contact No",
             "inputClass": "",
             "containerClass": "",
             "validations": [],

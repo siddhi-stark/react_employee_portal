@@ -12,7 +12,7 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './onboard.json';
 
 function OnBoard(props) {
-  const { match,history } = props;
+  const { match, history } = props;
 
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
@@ -295,14 +295,17 @@ function OnBoard(props) {
   }, []);
 
   const getTeam = async () => {
-    const { data } = await AuthApi.getDataFromServer(`${Api.InterviewRoundsUrl}?constant_type=team`);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=team`
+    );
     if (!data) {
       return;
     }
 
     const dpOptions =
       (await data) &&
-      data.data && data.data.team.length > 0 &&
+      data.data &&
+      data.data.team.length > 0 &&
       data.data.team.map((op) => {
         return { label: op.name, value: op.id };
       });

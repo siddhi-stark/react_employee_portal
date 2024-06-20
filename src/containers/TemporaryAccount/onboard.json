@@ -309,7 +309,9 @@
         "placeholder": "Select Manager",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+        ],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",
@@ -339,7 +341,9 @@
         "placeholder": "Select TeamLead",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+        ],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",
@@ -433,7 +437,9 @@
         "placeholder": "Select Team",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+        ],
         "displayWhen": {},
         "haveValidations": "false",
         "haveDisplayOptions": "false",

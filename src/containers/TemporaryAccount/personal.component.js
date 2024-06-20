@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
@@ -27,10 +27,12 @@ import {
   Form,
 } from 'react-bootstrap';
 import axios from 'axios';
+import { doc } from 'prettier';
+import { te } from 'date-fns/locale';
 
 function Personal(props) {
-  const { getParentsData } = props;
-
+  const { getParentsData, personalInfo } = props;
+  const [fileToDelete, setFileToDelete] = useState(null); // State to track the file to delete
   const accProps = { props };
   const candidateId = accProps.props.match.params.ID;
   const applicantId = accProps.props.applicantId;
@@ -39,20 +41,28 @@ function Personal(props) {
   const tokenProps = accProps.props.token;
   const nameProps = accProps.props.name;
   const emailProps = accProps.props.email;
-
+  const uploadRef = useRef();
+  const personalRef = useRef();
+  const educationalRef = useRef();
   const idProps = accProps.props.match.params.ID;
 
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
-  const [document, setDocument] = useState('');
+  const [document, setDocument] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
-  const [stepOneKey, setStepOneKey] = useState('0');
+  const [stepOneKey, setStepOneKey] = useState('1');
   const [stepTwoKey, setStepTwoKey] = useState('0');
   const [stepThreeKey, setStepThreeKey] = useState('0');
   const [stepFourKey, setStepFourkey] = useState('0');
-  const [selectedDocument, setSelectedDocument] = useState();
+  const [selectedDocument, setSelectedDocument] = useState({
+    personalDoc: '',
+    educationalDoc: '',
+    employmentHistory: '',
+  });
   const [personalUniqueArray, setPersonalUniqueArray] = useState();
   const [educationalUniqueArray, setEducationalUniqueArray] = useState('');
+  const [employementUniqueArray, setEmployementUniqueArray] = useState('');
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   const [personalDocuments, setPersonalDocuments] = useState([
     {
@@ -63,6 +73,7 @@ function Personal(props) {
       personal_document_type: 1,
       // url: '',
       isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'Aadhar Card',
@@ -72,6 +83,7 @@ function Personal(props) {
       personal_document_type: 2,
       // url: '',
       isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'Photo',
@@ -81,6 +93,7 @@ function Personal(props) {
       personal_document_type: 3,
       // url: '',
       isUploaded: false,
+      primaryId: '',
     },
   ]);
 
@@ -89,33 +102,41 @@ function Personal(props) {
       label: 'SSC',
       value: 'ssc',
       type: 'ssc',
-      file_id: '',
+      // file_id: '',
       educational_document_type: 1,
-      url: '',
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'HSC',
       value: 'hsc',
       type: 'hsc',
-      file_id: '',
+      // file_id: '',
       educational_document_type: 2,
-      url: '',
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'Graduation',
       value: 'graduation',
       type: 'graduation',
-      file_id: '',
+      // file_id: '',
       educational_document_type: 3,
-      url: '',
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'Post Graduation',
       value: 'postgraduation',
       type: 'postgraduation',
-      file_id: '',
+      // file_id: '',
       educational_document_type: 4,
-      url: '',
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
     },
   ]);
 
@@ -125,47 +146,59 @@ function Personal(props) {
       value: 'salary_slip_1',
       file_id: '',
       url: '',
-      employment_document_type: '',
+      employment_document_type: 1,
+      isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'Salary Slip 2',
       value: 'salary_slip_2',
       file_id: '',
       url: '',
-      employment_document_type: '',
+      employment_document_type: 2,
+      isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'Salary Slip 3',
       value: 'salary_slip_3',
       file_id: '',
       url: '',
-      employment_document_type: '',
+      employment_document_type: 3,
+      isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'Relieving Letter',
       value: 'relieving_letter',
       file_id: '',
       url: '',
-      employment_document_type: '',
+      employment_document_type: 4,
+      isUploaded: false,
+      primaryId: '',
     },
     {
       label: 'Experience Letter',
       value: 'experience_letter',
       file_id: '',
       url: '',
-      employment_document_type: '',
+      employment_document_type: 5,
+      isUploaded: false,
+      primaryId: '',
     },
   ]);
 
-  const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
-    const sectionData = section;
-    if (sectionData.name === 'start_date' || sectionData.name === 'end_date') {
-      const date = new Date();
-      sectionData.maxDate = date;
+  const clearFileInput = () => {
+    if (uploadRef.current) {
+      uploadRef.current.value = null;
     }
-    return sectionData;
-  });
+    if (personalRef.current) {
+      personalRef.current.value = null;
+    }
+    if (educationalRef.current) {
+      educationalRef.current.value = null;
+    }
+  };
 
   useEffect(() => {
     const unique =
@@ -177,9 +210,16 @@ function Personal(props) {
   useEffect(() => {
     const unique =
       educationalDocuments &&
-      educationalDocuments?.filter((item) => item?.url == '');
+      educationalDocuments?.filter((item) => item?.isUploaded == false);
     setEducationalUniqueArray(unique);
   }, [educationalDocuments]);
+
+  useEffect(() => {
+    const unique =
+      previousEmployement &&
+      previousEmployement?.filter((item) => item?.isUploaded == false);
+    setEmployementUniqueArray(unique);
+  }, [previousEmployement]);
 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -193,21 +233,93 @@ function Personal(props) {
     }
   }, [applicantId]);
 
+  useEffect(() => {
+    const formSchema = [...FormSections];
+    const updatedSchema = formSchema?.[0]?.fields?.[0]?.fields?.map((item) => {
+      const itemData = item;
+      if (item.name === 'start_date' || item.name === 'end_date') {
+        const maxdate = new Date();
+        itemData.maxDate = maxdate;
+      }
+      return itemData;
+    });
+    updateJsonSchema([...updatedSchema, ...formSchema]);
+  }, [defaultValues]);
+
   const handelChange = async (type) => {
     setShowLoader(true);
     const formData = new FormData();
     formData.append('file_name', document);
-    formData.append('document_type', selectedDocument?.personal_document_type);
     const endPoint = `${Api.onBoardingDocUpload}`;
     const { data, message } = await axios.post(endPoint, formData, {});
     if (data && data.success == true) {
       setShowLoader(false);
+      if (selectedDocument?.personalDoc?.personal_document_type) {
+        const updatedDocumentsList = personalDocuments.find(
+          (item) =>
+            item?.personal_document_type ==
+            selectedDocument?.personalDoc?.personal_document_type
+        );
+        updatedDocumentsList.file_id = data?.data?.id;
+        updatedDocumentsList.fileName = data?.data?.image;
+        updatedDocumentsList.isUploaded = true;
+        const tempArray = personalDocuments?.filter(
+          (item) =>
+            item?.personal_document_type !=
+            updatedDocumentsList?.personal_document_type
+        );
+        setPersonalDocuments([...tempArray, updatedDocumentsList]);
+      }
 
-      setPersonalDocuments(updatedDocumentsList);
+      if (selectedDocument?.educationalDoc?.educational_document_type) {
+        const updateEducationDoc = educationalDocuments?.find(
+          (itm) =>
+            itm?.educational_document_type ==
+            selectedDocument?.educationalDoc?.educational_document_type
+        );
+        updateEducationDoc.file_id = data?.data?.id;
+        updateEducationDoc.fileName = data?.data?.image;
+        updateEducationDoc.isUploaded = true;
+        const eduArray = educationalDocuments?.filter(
+          (it) =>
+            it?.educational_document_type !=
+            updateEducationDoc?.educational_document_type
+        );
 
-      swal('document uploaded successfully', '', 'success').then(() => {
-        // window.location.reload();
+        setEducationalDocuments([...eduArray, updateEducationDoc]);
+      }
+
+      if (selectedDocument?.employmentHistory?.employment_document_type) {
+        const updateEmployementDoc = previousEmployement?.find(
+          (dt) =>
+            dt?.employment_document_type ==
+            selectedDocument?.employmentHistory?.employment_document_type
+        );
+        updateEmployementDoc.file_id = data?.data?.id;
+        updateEmployementDoc.fileName = data?.data?.image;
+        updateEmployementDoc.isUploaded = true;
+
+        const previousDocArray = previousEmployement?.filter(
+          (data) =>
+            data?.employment_document_type !=
+            updateEmployementDoc?.employment_document_type
+        );
+        setPreviousEmployement([...previousDocArray, updateEmployementDoc]);
+      }
+
+      swal('Document uploaded successfully', '', 'success').then(() => {
+        // const tempData = { ...selectedDocument }
+        // tempData.personalDoc = ''
+        // setSelectedDocument(tempData)
+
+        setSelectedDocument({
+          personalDoc: '',
+          educationalDoc: '',
+          employmentHistory: '',
+        });
         getUploadedDocuments();
+        setDocument(null);
+        clearFileInput();
       });
     } else {
       setShowLoader(false);
@@ -220,6 +332,7 @@ function Personal(props) {
     const endPoint = `${Api.onBoardingDocUpload}`;
     const params = {
       applicant: applicantId,
+      type: 'all',
     };
     const token = customFunctions.getLocalStorage('access_token');
     const headers = {
@@ -230,102 +343,159 @@ function Personal(props) {
       // headers: headers,
     });
     if (data && data.success == true) {
-      const updatedDocumentsList = personalDocuments.map((item) => {
-        const updateDoc = data?.data?.find(
-          (doc) => item?.personal_document_type == doc?.personal_document_type
+      const temData = [];
+      const educationData = [];
+      const employementData = [];
+
+      const updatedDocumentsList = personalDocuments.map((doc) => {
+        const uploadedDoc = data?.data?.find(
+          (item) => doc.personal_document_type === item.personal_document_type
         );
-        if (updateDoc) {
-          return {
-            ...item,
-            file_id: updateDoc?.id,
-            url: updateDoc?.image_url,
+        if (uploadedDoc) {
+          temData.push({
+            ...doc,
+            fileName: uploadedDoc?.image_url,
+            personal_document_type: uploadedDoc?.personal_document_type
+              ? uploadedDoc?.personal_document_type
+              : personalDocuments?.personal_document_type,
+            file_id: uploadedDoc?.document,
             isUploaded: true,
-          };
+            primaryId: uploadedDoc?.id,
+          });
         } else {
-          return {
-            ...item,
-          };
+          temData.push(doc);
         }
       });
+      setPersonalDocuments(temData);
 
-      const updateEduList = educationalDocuments?.map((itm) => {
-        const educationDoc = data?.data?.find(
-          (dt) =>
-            itm?.educational_document_type == dt?.educational_document_type
-        );
-        if (educationDoc) {
-          return {
-            ...itm,
-            file_id: educationDoc?.id,
-            url: educationDoc?.image_url,
-          };
+      const updateEducationDoc = educationalDocuments.map((dt) => {
+        const uploadDoc = data?.data?.find((item) => {
+          return (
+            dt.educational_document_type == item?.educational_document_type
+          );
+        });
+        if (uploadDoc) {
+          educationData.push({
+            ...dt,
+            fileName: uploadDoc?.image_url,
+            educational_document_type: uploadDoc?.educational_document_type
+              ? uploadDoc?.educational_document_type
+              : educationalDocuments?.educational_document_type,
+            file_id: uploadDoc?.document,
+            isUploaded: true,
+            primaryId: uploadDoc?.id,
+          });
+        } else {
+          educationData.push(dt);
         }
       });
+      setEducationalDocuments(educationData);
 
-      const updateEmployement = previousEmployement?.map((data) => {
-        let employementDoc = data?.data?.find(
-          (op) => data?.employment_document_type == op?.employment_document_type
-        );
-        if (employementDoc) {
-          return {
-            ...data,
-            file_id: employementDoc?.id,
-            url: employementDoc?.image_url,
-          };
+      const updateEmployementDoc = previousEmployement.map((dt) => {
+        const updateEmployement = data?.data?.find((item) => {
+          return dt?.employment_document_type == item?.employment_document_type;
+        });
+        if (updateEmployement) {
+          employementData.push({
+            ...dt,
+            fileName: updateEmployement?.image_url,
+            employment_document_type:
+              updateEmployement?.employment_document_type,
+            file_id: updateEmployement?.document,
+            isUploaded: true,
+            primaryId: updateEmployement?.id,
+          });
+        } else {
+          employementData.push(dt);
         }
       });
-      setPreviousEmployement(updateEmployement);
-      // setPersonalDocuments(updatedDocumentsList);
-      setEducationalDocuments(updateEduList);
+      setPreviousEmployement(employementData);
       setShowLoader(false);
     } else {
       setShowLoader(false);
     }
   };
 
-  const submitPersonalDoc = async (type,) => {
+  const submitDocumentsData = async (type) => {
     setShowLoader(true);
+    const headers = {
+      'Content-Type': 'application/json',
+    };
     const postData = {
       applicant: applicantId,
-
-      doc_type: 2,
-      personal_documents: [
-        {
-          file_id: panCardUrl?.file_id,
-          personal_document_type: 1,
-        },
-        {
-          file_id: aadharCardData?.file_id,
-          personal_document_type: 2,
-        },
-        {
-          file_id: photoData?.file_id,
-          personal_document_type: 3,
-        },
-      ],
     };
+    const personal = [];
+    const educational = [];
+    const employement = [];
 
-    
+    if (type == 'personal') {
+      personalDocuments &&
+        personalDocuments?.map((item) => {
+          if (item?.file_id) {
+            personal.push({
+              file_id: item?.file_id,
+              personal_document_type: item?.personal_document_type,
+            });
+          }
+        });
+    }
+
+    if (type == 'educational') {
+      educationalDocuments &&
+        educationalDocuments?.map((item) => {
+          if (item?.file_id) {
+            educational.push({
+              file_id: item?.file_id,
+              educational_document_type: item?.educational_document_type,
+            });
+          }
+        });
+    }
+
+    if (type == 'employement') {
+      previousEmployement &&
+        previousEmployement?.map((item) => {
+          if (item?.file_id) {
+            employement.push({
+              file_id: item?.file_id,
+              employment_document_type: item?.employment_document_type,
+            });
+          }
+        });
+    }
+
     if (type == 'personal') {
       postData.doc_type = 2;
+      postData.personal_documents = personal;
+    }
+
+    if (type == 'educational') {
+      postData.doc_type = 1;
+      postData.educational_documents = educational;
+    }
+
+    if (type == 'employement') {
+      postData.doc_type = 3;
+      postData.employment_documents = employement;
     }
     const url = `${Api.postDocumentData}`;
 
-    const { data, message } = await axios.post(url, postData);
+    const { data, message } = await axios.post(url, postData, {
+      headers: headers,
+    });
     if (data && data.success == true) {
+      setFileToDelete(null);
       setShowLoader(false);
-      swal('Personal documents uploaded successfully', '', 'success').then(
-        () => {
-          props.callback('educational', true);
-        }
-      );
+      swal('Documents submitted successfully', '', 'success').then(() => {
+        getUploadedDocuments();
+      });
     } else {
       setShowLoader(false);
       swal(message, '', 'error');
     }
   };
 
-  const deleteDocument = async (id) => {
+  const deleteDocument = async (id, type, doc_type) => {
     if (id) {
       swal({
         title: 'Are you sure?',
@@ -341,13 +511,76 @@ function Personal(props) {
         if (result) {
           setShowLoader(true);
           const { data, message } = await AuthApi.deleteDataFromServer(
-            `${Api.onBoardingDocUpload}${id}/`
+            `${Api.postDocumentData}${id}/`
           );
-          if (data) {
+          if (data && data?.success == true) {
             setShowLoader(false);
             swal(data && data.message[0], '', 'success', {}).then(() => {
               // window.location.reload();
-              getUploadedDocuments();
+              // getUploadedDocuments();
+              const personalData = [];
+              const educationalData = [];
+              const employementData = [];
+
+              if (type == 'personal') {
+                personalDocuments &&
+                  personalDocuments?.map((item) => {
+                    if (id == item?.primaryId) {
+                      personalData.push({
+                        label: item?.label,
+                        value: item?.value,
+                        type: item?.type,
+                        // file_id: '',
+                        personal_document_type: item?.personal_document_type,
+                        // url: '',
+                        isUploaded: false,
+                        primaryId: item?.primaryId,
+                      });
+                    } else {
+                      personalData.push(item);
+                    }
+                  });
+                setPersonalDocuments(personalData);
+              }
+              if (type == 'educational') {
+                educationalDocuments &&
+                  educationalDocuments?.map((item) => {
+                    if (id == item?.primaryId) {
+                      educationalData.push({
+                        label: item?.label,
+                        value: item?.value,
+                        type: item?.type,
+                        educational_document_type:
+                          item?.educational_document_type,
+                        isUploaded: false,
+                        primaryId: item?.primaryId,
+                      });
+                    } else {
+                      educationalData.push(item);
+                    }
+                  });
+                setEducationalDocuments(educationalData);
+              }
+              if (type == 'employement') {
+                previousEmployement &&
+                  previousEmployement?.map((item) => {
+                    if (id == item?.primaryId) {
+                      employementData.push({
+                        label: item?.label,
+                        value: item?.value,
+                        file_id: '',
+                        url: '',
+                        employment_document_type:
+                          item?.employment_document_type,
+                        isUploaded: false,
+                        primaryId: item?.primaryId,
+                      });
+                    } else {
+                      employementData.push(item);
+                    }
+                  });
+                setPreviousEmployement(employementData);
+              }
             });
           } else {
             swal(message, '', 'error', {
@@ -511,6 +744,7 @@ function Personal(props) {
           getData();
         }
         swal.close();
+        props.callback();
       });
     }
   };
@@ -519,7 +753,7 @@ function Personal(props) {
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
-        <div className="mt-5 mb-5 me-3 ms-3">
+        <div className="mt-2 mb-5 me-3 ms-3">
           <Accordion activeKey={stepOneKey}>
             <Card>
               <Card.Header className="position-relative bg-primary">
@@ -564,79 +798,100 @@ function Personal(props) {
                       <DropdownInput
                         label="Select Document"
                         options={personalUniqueArray}
-                        defaultValue={selectedDocument}
+                        defaultValue={selectedDocument.personalDoc}
                         onSelectHandler={(select) => {
-                          setSelectedDocument(select);
+                          const tempObject = { ...selectedDocument };
+                          tempObject.personalDoc = select;
+                          setSelectedDocument(tempObject);
                         }}
                         // disabled={uniqueDocumentOptions.length <= 0}
                       />
                     </Col>
                     <Col>
-                      <TextInput
-                        className="mb-3"
-                        label="Upload  document"
-                        type="file"
-                        onInputChange={(e) => {
-                          if (!e?.target?.files || e?.target?.files?.length < 1)
-                            return;
-                          if (
-                            ['png', 'jpeg', 'jpg'].includes(
-                              e?.target?.files[0].name?.split('.').pop()
+                      <div className="add-document-field">
+                        <input
+                          style={{ marginBottom: '22px' }}
+                          type="file"
+                          className="form-control"
+                          ref={personalRef}
+                          onChange={(e) => {
+                            if (
+                              !e?.target?.files ||
+                              e?.target?.files?.length < 1
                             )
-                          ) {
-                            if (e?.target?.files[0].size > 1086147) {
-                              swal('File size is too big', '', 'error');
+                              return;
+                            if (
+                              ['png', 'jpeg', 'jpg', 'svg', 'pdf'].includes(
+                                e?.target?.files[0].name?.split('.').pop()
+                              )
+                            ) {
+                              if (e?.target?.files[0].size > 1086147) {
+                                swal('File size is too big', '', 'error');
+                              } else {
+                                setDocument(e?.target?.files[0]);
+                              }
                             } else {
-                              setDocument(e.target.files[0]);
+                              swal(
+                                'File extension is not supported',
+                                '',
+                                'error'
+                              );
                             }
-                          } else {
-                            swal(
-                              'File extension is not supported',
-                              '',
-                              'error'
-                            );
-                          }
-                        }}
-                        // disabled={uniqueDocumentOptions.length <= 0}
-                      />
+                          }}
+                        />
+                      </div>
                     </Col>
                     <Col>
                       <Button
                         className="mt-4 mb-4"
                         onClick={(e) => {
-                          handelChange(selectedDocument?.value);
+                          handelChange(selectedDocument?.personalDoc?.value);
                         }}
-                        // disabled={!selectedDocument || document == null}
+                        disabled={
+                          selectedDocument?.personalDoc == '' ||
+                          document == null
+                        }
                       >
                         Upload
                       </Button>
                     </Col>
                   </Row>
+                  <span>
+                    <div className="mt-3 ms-4">
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        <b>Note:</b>
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        1. Maximum upload file size limit is less then 1 MB.
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        2. File supported extension is jpg , png , svg , jpeg ,
+                        pdf
+                      </h6>
+                    </div>
+                  </span>
                   <Row className="mt-4">
                     <Col sm={6}>
-                      <Card className="border-0">
+                      <Card style={{ width: '450px' }} className="border-0">
                         <Card.Body>
-                          <ul>
+                          <ul className="border-0">
                             {personalDocuments &&
                               personalDocuments?.map((item, index) => (
                                 <li className="mb-2 d-flex justify-content-between">
-                                  {item?.url ? (
+                                  {item?.fileName ? (
                                     <del>{item?.label}</del>
                                   ) : (
                                     item?.label
                                   )}
-                                  {item?.url && (
+                                  {item?.fileName && (
                                     <div
                                       style={{ marginRight: '90px' }}
                                       className="btn-wrapper"
                                     >
                                       <a
-                                        href={item?.url}
+                                        href={item?.fileName}
                                         target="_blank"
-                                        onClick={() => {
-                                          window.open(item?.url);
-                                        }}
-                                        className="me-3"
+                                        className="me-3 text-underline "
                                       >
                                         View
                                       </a>
@@ -644,8 +899,22 @@ function Personal(props) {
                                       <a
                                         href="javascript:void(0)"
                                         onClick={() => {
-                                          deleteDocument(item?.file_id);
+                                          if (item?.primaryId) {
+                                            deleteDocument(
+                                              item?.primaryId,
+                                              'personal'
+                                            );
+                                          } else {
+                                            const temData = [
+                                              ...personalDocuments,
+                                            ];
+                                            temData[index].fileName = '';
+                                            temData[index].file_id = '';
+                                            temData[index].isUploaded = false;
+                                            setPersonalDocuments(temData);
+                                          }
                                         }}
+                                        className="text-underline "
                                       >
                                         Delete
                                       </a>
@@ -654,6 +923,23 @@ function Personal(props) {
                                 </li>
                               ))}
                           </ul>
+
+                          <div>
+                            <Button
+                              onClick={() => {
+                                submitDocumentsData('personal');
+                              }}
+                              disabled={
+                                (personalDocuments &&
+                                  personalDocuments.every(
+                                    (item) => item?.primaryId
+                                  )) ||
+                                personalDocuments?.every((dt) => !dt?.file_id)
+                              }
+                            >
+                              Submit
+                            </Button>
+                          </div>
                         </Card.Body>
                       </Card>
                     </Col>
@@ -706,79 +992,104 @@ function Personal(props) {
                       <DropdownInput
                         label="Select Document"
                         options={educationalUniqueArray}
-                        defaultValue={selectedDocument}
+                        defaultValue={selectedDocument?.educationalDoc}
                         onSelectHandler={(select) => {
-                          setSelectedDocument(select);
+                          const tempObject = { ...selectedDocument };
+                          tempObject.educationalDoc = select;
+
+                          setSelectedDocument(tempObject);
                         }}
                         // disabled={uniqueDocumentOptions.length <= 0}
                       />
                     </Col>
                     <Col>
-                      <TextInput
-                        className="mb-3"
-                        label="Upload  document"
-                        type="file"
-                        onInputChange={(e) => {
-                          if (!e?.target?.files || e?.target?.files?.length < 1)
-                            return;
-                          if (
-                            ['png', 'jpeg', 'jpg'].includes(
-                              e?.target?.files[0].name?.split('.').pop()
+                      <div className="add-document-field">
+                        <input
+                          style={{ marginBottom: '22px' }}
+                          type="file"
+                          className="form-control"
+                          ref={educationalRef}
+                          onChange={(e) => {
+                            if (
+                              !e?.target?.files ||
+                              e?.target?.files?.length < 1
                             )
-                          ) {
-                            if (e?.target?.files[0].size > 1086147) {
-                              swal('File size is too big', '', 'error');
+                              return;
+                            if (
+                              ['png', 'jpeg', 'jpg', 'svg', 'pdf'].includes(
+                                e?.target?.files[0].name?.split('.').pop()
+                              )
+                            ) {
+                              if (e?.target?.files[0].size > 1086147) {
+                                swal('File size is too big', '', 'error');
+                              } else {
+                                setDocument(e?.target?.files[0]);
+                              }
                             } else {
-                              setDocument(e.target.files[0]);
+                              swal(
+                                'File extension is not supported',
+                                '',
+                                'error'
+                              );
                             }
-                          } else {
-                            swal(
-                              'File extension is not supported',
-                              '',
-                              'error'
-                            );
-                          }
-                        }}
-                        // disabled={uniqueDocumentOptions.length <= 0}
-                      />
+                          }}
+                        />
+                      </div>
                     </Col>
                     <Col>
                       <Button
                         className="mt-4 mb-4"
                         onClick={(e) => {
-                          handelChange(selectedDocument?.value);
+                          handelChange(selectedDocument?.educationalDoc?.value);
                         }}
-                        // disabled={!selectedDocument || document == null}
+                        disabled={
+                          selectedDocument?.educationalDoc == '' ||
+                          document == null
+                        }
                       >
                         Upload
                       </Button>
                     </Col>
                   </Row>
+                  <span>
+                    <div className="mt-3">
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        <b>Note:</b>
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        1. Maximum upload file size limit is less then 1 MB.
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        2. File supported extension is jpg , png , svg , jpeg,
+                        pdf
+                      </h6>
+                    </div>
+                  </span>
                   <Row className="mt-4">
                     <Col sm={6}>
-                      <Card className="border-0">
+                      <Card style={{ width: '450px' }} className="border-0">
                         <Card.Body>
-                          <ul>
+                          <ul className="border-0">
                             {educationalDocuments &&
                               educationalDocuments?.map((item, index) => (
                                 <li className="mb-2 d-flex justify-content-between">
-                                  {item?.url && item?.url ? (
+                                  {item?.fileName && item?.fileName ? (
                                     <del>{item?.label}</del>
                                   ) : (
                                     item?.label
                                   )}
-                                  {item?.url && item?.url && (
+                                  {item?.fileName && item?.fileName && (
                                     <div
                                       style={{ marginRight: '90px' }}
                                       className="btn-wrapper"
                                     >
                                       <a
-                                        href={item?.url}
+                                        href={item?.fileName}
                                         target="_blank"
                                         onClick={() => {
-                                          window.open(item?.url);
+                                          window.open(item?.fileName);
                                         }}
-                                        className="me-3"
+                                        className="me-3 text-underline "
                                       >
                                         View
                                       </a>
@@ -786,8 +1097,21 @@ function Personal(props) {
                                       <a
                                         href="javascript:void(0)"
                                         onClick={() => {
-                                          deleteDocument(item?.doc_id);
+                                          if (item?.primaryId) {
+                                            deleteDocument(
+                                              item?.primaryId,
+                                              'educational'
+                                            );
+                                          } else {
+                                            const temData = [
+                                              ...educationalDocuments,
+                                            ];
+                                            temData[index].fileName = '';
+                                            temData[index].isUploaded = false;
+                                            setEducationalDocuments(temData);
+                                          }
                                         }}
+                                        className="text-underline "
                                       >
                                         Delete
                                       </a>
@@ -796,6 +1120,25 @@ function Personal(props) {
                                 </li>
                               ))}
                           </ul>
+                          <div>
+                            <Button
+                              onClick={() => {
+                                submitDocumentsData('educational');
+                              }}
+                              disabled={
+                                (educationalDocuments &&
+                                  educationalDocuments?.every(
+                                    (item) => item?.primaryId
+                                  )) ||
+                                (educationalDocuments &&
+                                  educationalDocuments?.every(
+                                    (dt) => !dt?.file_id
+                                  ))
+                              }
+                            >
+                              Submit
+                            </Button>
+                          </div>
                         </Card.Body>
                       </Card>
                     </Col>
@@ -804,210 +1147,272 @@ function Personal(props) {
               </Accordion.Collapse>
             </Card>
           </Accordion>
-          <Accordion activeKey={stepThreeKey}>
-            <Card>
-              <Card.Header className="position-relative bg-primary">
-                <div
-                  className="d-flex align-items-center justify-content-between"
-                  style={{ minHeight: '30px' }}
-                >
-                  <h6 className="text-white m-0"> Employement History</h6>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle
-                      className="toggle-btn-accordion"
-                      as={Button}
-                      variant="link"
-                      onClick={() => {
-                        if (stepThreeKey == '0') {
-                          setStepThreeKey('1');
-                        } else {
-                          setStepThreeKey('0');
-                        }
-                      }}
-                    >
-                      <img
-                        src={
-                          stepThreeKey == '0'
-                            ? '/images/caret-down.svg'
-                            : '/images/caret-up.svg'
-                        }
-                        className="forWhiteImg"
-                        alt=""
-                      />
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body>
-                  <Loader showLoader={isShowLoader} needFullPage={false} />
-                  <StarkFormBuilder
-                    containerClass=""
-                    formHeaderClass=""
-                    formSections={FormSections}
-                    formHeading="Employement History"
-                    onFormSubmit={(formValues) => {
-                      submitForm(formValues);
-                    }}
-                    callbacks={{}}
-                    defaultFormValues={defaultValues}
-                    currentUser={currentUser}
-                    submitBtnText="Submit"
-                    showResetBtn={false}
-                    showBtnClass={true}
-                    resetBtnText="Clear"
-                    btnContainerClass="form-submit-buttons mb-4"
-                    isStepForm={false}
-                  />
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-          <Accordion activeKey={stepFourKey}>
-            <Card>
-              <Card.Header className="position-relative bg-primary">
-                <div
-                  className="d-flex align-items-center justify-content-between"
-                  style={{ minHeight: '30px' }}
-                >
-                  <h6 className="text-white m-0">
-                    {' '}
-                    Previous Employment Documents
-                  </h6>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle
-                      className="toggle-btn-accordion"
-                      as={Button}
-                      variant="link"
-                      onClick={() => {
-                        if (stepFourKey == '0') {
-                          setStepFourkey('1');
-                        } else {
-                          setStepFourkey('0');
-                        }
-                      }}
-                    >
-                      <img
-                        src={
-                          stepFourKey == '0'
-                            ? '/images/caret-down.svg'
-                            : '/images/caret-up.svg'
-                        }
-                        className="forWhiteImg"
-                        alt=""
-                      />
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body>
-                  <Card.Title>
-                    <Form onSubmit={(e) => {}}></Form>
-                  </Card.Title>
-                  <Row className="mt-3 d-flex align-items-end">
-                    <Col sm={3}>
-                      <DropdownInput
-                        label="Select Document"
-                        options={previousEmployement}
-                        defaultValue={selectedDocument}
-                        onSelectHandler={(select) => {
-                          setSelectedDocument(select);
-                        }}
-                        // disabled={uniqueDocumentOptions.length <= 0}
-                      />
-                    </Col>
-                    <Col>
-                      <TextInput
-                        className="mb-3"
-                        label="Upload  document"
-                        type="file"
-                        onInputChange={(e) => {
-                          if (!e?.target?.files || e?.target?.files?.length < 1)
-                            return;
-                          if (
-                            ['png', 'jpeg', 'jpg'].includes(
-                              e?.target?.files[0].name?.split('.').pop()
-                            )
-                          ) {
-                            if (e?.target?.files[0].size > 1086147) {
-                              swal('File size is too big', '', 'error');
-                            } else {
-                              setDocument(e.target.files[0]);
-                            }
+          {personalInfo && !personalInfo.is_fresher && (
+            <Accordion activeKey={stepThreeKey}>
+              <Card>
+                <Card.Header className="position-relative bg-primary">
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    style={{ minHeight: '30px' }}
+                  >
+                    <h6 className="text-white m-0"> Employement History</h6>
+                    <div className="d-flex align-items-center justify-content-end">
+                      <Accordion.Toggle
+                        className="toggle-btn-accordion"
+                        as={Button}
+                        variant="link"
+                        onClick={() => {
+                          if (stepThreeKey == '0') {
+                            setStepThreeKey('1');
                           } else {
-                            swal(
-                              'File extension is not supported',
-                              '',
-                              'error'
-                            );
+                            setStepThreeKey('0');
                           }
                         }}
-                        // disabled={uniqueDocumentOptions.length <= 0}
-                      />
-                    </Col>
-                    <Col>
-                      <Button
-                        className="mt-4 mb-4"
-                        onClick={(e) => {
-                          handelChange(selectedDocument?.value);
-                        }}
-                        // disabled={!selectedDocument || document == null}
                       >
-                        Upload
-                      </Button>
-                    </Col>
-                  </Row>
-                  <Row className="mt-4">
-                    <Col sm={6}>
-                      <Card className="border-0">
-                        <Card.Body>
-                          <ul>
-                            {previousEmployement &&
-                              previousEmployement?.map((item, index) => (
-                                <li className="mb-2 d-flex justify-content-between">
-                                  {item?.url ? (
-                                    <del>{item?.label}</del>
-                                  ) : (
-                                    item?.label
-                                  )}
-                                  {item?.url && (
-                                    <div
-                                      style={{ marginRight: '90px' }}
-                                      className="btn-wrapper"
-                                    >
-                                      <a
-                                        href={item?.url}
-                                        target="_blank"
-                                        onClick={() => {
-                                          window.open(item?.url);
-                                        }}
-                                        className="me-3"
+                        <img
+                          src={
+                            stepThreeKey == '0'
+                              ? '/images/caret-down.svg'
+                              : '/images/caret-up.svg'
+                          }
+                          className="forWhiteImg"
+                          alt=""
+                        />
+                      </Accordion.Toggle>
+                    </div>
+                  </div>
+                </Card.Header>
+                <Accordion.Collapse eventKey="1">
+                  <Card.Body>
+                    <Loader showLoader={isShowLoader} needFullPage={false} />
+                    <StarkFormBuilder
+                      containerClass=""
+                      formHeaderClass=""
+                      formSections={jsonSchema}
+                      formHeading="Employement History"
+                      onFormSubmit={(formValues) => {
+                        submitForm(formValues);
+                      }}
+                      callbacks={{}}
+                      defaultFormValues={defaultValues}
+                      currentUser={currentUser}
+                      submitBtnText="Submit"
+                      showResetBtn={false}
+                      showBtnClass={true}
+                      resetBtnText="Clear"
+                      btnContainerClass="form-submit-buttons mb-4"
+                      isStepForm={false}
+                    />
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          )}
+          {personalInfo && !personalInfo.is_fresher && (
+            <Accordion activeKey={stepFourKey}>
+              <Card>
+                <Card.Header className="position-relative bg-primary">
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    style={{ minHeight: '30px' }}
+                  >
+                    <h6 className="text-white m-0">
+                      {' '}
+                      Previous Employment Documents
+                    </h6>
+                    <div className="d-flex align-items-center justify-content-end">
+                      <Accordion.Toggle
+                        className="toggle-btn-accordion"
+                        as={Button}
+                        variant="link"
+                        onClick={() => {
+                          if (stepFourKey == '0') {
+                            setStepFourkey('1');
+                          } else {
+                            setStepFourkey('0');
+                          }
+                        }}
+                      >
+                        <img
+                          src={
+                            stepFourKey == '0'
+                              ? '/images/caret-down.svg'
+                              : '/images/caret-up.svg'
+                          }
+                          className="forWhiteImg"
+                          alt=""
+                        />
+                      </Accordion.Toggle>
+                    </div>
+                  </div>
+                </Card.Header>
+                <Accordion.Collapse eventKey="1">
+                  <Card.Body>
+                    <Card.Title>
+                      <Form onSubmit={(e) => {}}></Form>
+                    </Card.Title>
+                    <Row className=" d-flex align-items-end">
+                      <Col sm={3}>
+                        <DropdownInput
+                          label="Select Document"
+                          options={employementUniqueArray}
+                          defaultValue={selectedDocument?.employmentHistory}
+                          onSelectHandler={(select) => {
+                            const tempObject = { ...selectedDocument };
+                            tempObject.employmentHistory = select;
+                            setSelectedDocument(tempObject);
+                          }}
+                          // disabled={uniqueDocumentOptions.length <= 0}
+                        />
+                      </Col>
+                      <Col>
+                        <div className="add-document-field">
+                          <input
+                            style={{ marginBottom: '22px' }}
+                            type="file"
+                            className="form-control"
+                            ref={uploadRef}
+                            onChange={(e) => {
+                              if (
+                                !e?.target?.files ||
+                                e?.target?.files?.length < 1
+                              )
+                                return;
+                              if (
+                                ['png', 'jpeg', 'jpg', 'svg', 'pdf'].includes(
+                                  e?.target?.files[0].name?.split('.').pop()
+                                )
+                              ) {
+                                if (e?.target?.files[0].size > 1086147) {
+                                  swal('File size is too big', '', 'error');
+                                } else {
+                                  setDocument(e?.target?.files[0]);
+                                }
+                              } else {
+                                swal(
+                                  'File extension is not supported',
+                                  '',
+                                  'error'
+                                );
+                              }
+                            }}
+                          />
+                        </div>
+                      </Col>
+                      <Col>
+                        <Button
+                          className="mt-3 mb-4"
+                          onClick={(e) => {
+                            handelChange(
+                              selectedDocument?.employmentHistory?.value
+                            );
+                          }}
+                          disabled={
+                            !selectedDocument?.employmentHistory ||
+                            document == null
+                          }
+                        >
+                          Upload
+                        </Button>
+                      </Col>
+                    </Row>
+                    <span>
+                      <div className="mt-3">
+                        <h6 style={{ fontSize: 'smaller' }}>
+                          <b>Note:</b>
+                        </h6>
+                        <h6 style={{ fontSize: 'smaller' }}>
+                          1. Maximum upload file size limit is less then 1 MB.
+                        </h6>
+                        <h6 style={{ fontSize: 'smaller' }}>
+                          2. File supported extension is jpg , png , svg , jpeg
+                          , pdf
+                        </h6>
+                      </div>
+                    </span>
+                    <Row className="mt-4">
+                      <Col sm={6}>
+                        <Card style={{ width: '450px' }} className="border-0">
+                          <Card.Body>
+                            <ul>
+                              {previousEmployement &&
+                                previousEmployement?.map((item, index) => (
+                                  <li className="mb-2 d-flex justify-content-between">
+                                    {item?.fileName ? (
+                                      <del>{item?.label}</del>
+                                    ) : (
+                                      item?.label
+                                    )}
+                                    {item?.fileName && (
+                                      <div
+                                        style={{ marginRight: '90px' }}
+                                        className="btn-wrapper"
                                       >
-                                        View
-                                      </a>
+                                        <a
+                                          href={item?.fileName}
+                                          target="_blank"
+                                          onClick={() => {
+                                            window.open(item?.fileName);
+                                          }}
+                                          className="me-3 text-underline "
+                                        >
+                                          View
+                                        </a>
 
-                                      <a
-                                        href="javascript:void(0)"
-                                        onClick={() => {
-                                          deleteDocument(item?.doc_id);
-                                        }}
-                                      >
-                                        Delete
-                                      </a>
-                                    </div>
-                                  )}
-                                </li>
-                              ))}
-                          </ul>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
+                                        <a
+                                          href="javascript:void(0)"
+                                          onClick={() => {
+                                            if (item?.primaryId) {
+                                              deleteDocument(
+                                                item?.primaryId,
+                                                'employement'
+                                              );
+                                            } else {
+                                              const temData = [
+                                                ...previousEmployement,
+                                              ];
+                                              temData[index].fileName = '';
+                                              temData[index].isUploaded = false;
+                                              setPreviousEmployement(temData);
+                                            }
+                                          }}
+                                          className="text-underline"
+                                        >
+                                          Delete
+                                        </a>
+                                      </div>
+                                    )}
+                                  </li>
+                                ))}
+                            </ul>
+                            <div>
+                              <Button
+                                onClick={() => {
+                                  submitDocumentsData('employement');
+                                }}
+                                disabled={
+                                  (previousEmployement &&
+                                    previousEmployement?.every(
+                                      (item) => item?.primaryId
+                                    )) ||
+                                  (previousEmployement &&
+                                    previousEmployement?.every(
+                                      (dt) => !dt?.file_id
+                                    ))
+                                }
+                              >
+                                Submit
+                              </Button>
+                            </div>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          )}
         </div>
       </section>
     </>
@@ -1015,3 +1420,4 @@ function Personal(props) {
 }
 
 export default withRouter(Personal);
+

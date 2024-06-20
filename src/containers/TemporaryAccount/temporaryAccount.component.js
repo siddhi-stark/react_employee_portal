@@ -45,7 +45,13 @@ function TemporaryAccount(props) {
       setEmail(data.data.email);
       await setToggle(true);
     } else {
-      swal(message, '', 'error');
+      swal(
+        message == 'Please add valid email_hash and password.'
+          ? 'Incorrect password'
+          : message,
+        '',
+        'error'
+      );
       props.callback(true);
     }
   };
@@ -78,7 +84,7 @@ function TemporaryAccount(props) {
   const getCompletionData = (value) => {
     setCompletion(value);
   };
-
+  
   useEffect(() => {
     if (trigger) {
       getCompletionData(completion);
@@ -96,6 +102,7 @@ function TemporaryAccount(props) {
                 <Button
                   variant="primary"
                   onClick={() => {
+                    sessionStorage.clear();
                     if (candidateId) {
                       history.push('/candidates');
                     } else {
@@ -119,17 +126,25 @@ function TemporaryAccount(props) {
                   <div className="card-body">
                     <div className="row">
                       <div className="col-md-12 d-flex">
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                           <h6>Email - {personalInfo && personalInfo.email}</h6>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                           <h6>
                             Contact No - {personalInfo && personalInfo.mobile}
                           </h6>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                           <h6>
                             Pf Included -{' '}
+                            {personalInfo && personalInfo.pf_included === true
+                              ? 'Yes'
+                              : 'No'}
+                          </h6>
+                        </div>
+                        <div className="col-md-3">
+                          <h6>
+                            Miscellaneous Included -{' '}
                             {personalInfo && personalInfo.pf_included === true
                               ? 'Yes'
                               : 'No'}
@@ -140,13 +155,13 @@ function TemporaryAccount(props) {
                     <br />
                     <div className="row d-flex">
                       <div className="col-md-12 d-flex">
-                        <div className=" col-md-4">
+                        <div className=" col-md-3">
                           <h6>
                             Offered CTC -{' '}
                             {personalInfo && personalInfo.offered_ctc}
                           </h6>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-3">
                           <h6>
                             Joining Date -{' '}
                             {personalInfo && personalInfo.joining_date
@@ -159,7 +174,8 @@ function TemporaryAccount(props) {
                         <h6>Profile Completion - &nbsp; &nbsp;</h6>
                         <ProgressBar
                           bsPrefix="progress pbar"
-                          variant="success"
+                          variant="success pe-2"
+                          className=''
                           now={
                             completion
                               ? Number(completion)
@@ -169,7 +185,8 @@ function TemporaryAccount(props) {
                             completion
                               ? Number(completion)
                               : personalInfo && Number(personalInfo.completion)
-                          }% completed`}
+                          }% completed`} 
+                          
                         />
                       </div>
                     </div>
@@ -177,37 +194,38 @@ function TemporaryAccount(props) {
                 </div>
               </div>
 
-              <Tabs activeKey={key} onSelect={(e) => handleSelect(e)}>
-                <Tab eventKey="Personal" title="Personal Documents">
-                  {key === 'Personal' && toggle && (
-                    <div className="row ml-2">
-                      <Personal
-                        token={tokenProps}
-                        password={passwordProps}
-                        name={name}
-                        email={email}
-                        applicantId={id}
-                        getParentsData={(value) => {
-                          if (value) {
-                            setTrigger(true);
-                            getCompletionData(value);
-                            setCompletion(value);
-                          }
-                        }}
-                        callback={(value, isShow) => {
-                          handleSelect('educational');
-                          setShowED(isShow);
-                        }}
-                      />
-                    </div>
-                  )}
-                </Tab>
-                {/* <Tab
+              {/* <Tabs activeKey={key} onSelect={(e) => handleSelect(e)}>
+                <Tab eventKey="Personal" title="Upload Documents">
+                  {key === 'Personal' && toggle && ( */}
+              <div className="row ml-2">
+                <Personal
+                  token={tokenProps}
+                  password={passwordProps}
+                  name={name}
+                  email={email}
+                  personalInfo={personalInfo}
+                  applicantId={id}
+                  getParentsData={(value) => {
+                    if (value) {
+                      setTrigger(true);
+                      getCompletionData(value);
+                      setCompletion(value);
+                    }
+                  }}
+                  callback={(value, isShow) => {
+                    getData();
+                  }}
+                />
+              </div>
+              {/* )} */}
+              {/* </Tab> */}
+              {/* <Tab
                   eventKey="educational"
                   title="Educational Documents"
                   // disabled={!showED}
                 >
                   {key === 'educational' && (
+                   
                     <div className="row ml-2">
                       <EducationalDetails
                         token={tokenProps}
@@ -226,7 +244,7 @@ function TemporaryAccount(props) {
                     </div>
                   )}
                 </Tab> */}
-                {/* {personalInfo && !personalInfo.is_fresher && (
+              {/* {personalInfo && !personalInfo.is_fresher && (
                   <Tab eventKey="employmentHistory" title="Employment History">
                     {key === 'employmentHistory' && (
                       <div className="row ml-2">
@@ -250,7 +268,7 @@ function TemporaryAccount(props) {
                     )}
                   </Tab>
                 )} */}
-                {personalInfo && !personalInfo.is_fresher && (
+              {/* {personalInfo && !personalInfo.is_fresher && (
                   <Tab
                     eventKey="previousEmployment"
                     title="Previous Employment"
@@ -274,8 +292,8 @@ function TemporaryAccount(props) {
                       </div>
                     )}
                   </Tab>
-                )}
-              </Tabs>
+                )} */}
+              {/* </Tabs> */}
             </div>
           </div>
         </section>

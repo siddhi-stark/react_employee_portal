@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { Col, Button, Form } from 'react-bootstrap';
 import swal from 'sweetalert';
@@ -8,17 +8,32 @@ import TemporaryAccount from './temporaryAccount.component';
 import customFunctions from '../../helper/customFunctions';
 
 function RequiredDocument(props) {
-  const matchUrltoken = props.match.params.token; // eslint-disable-line
+  let matchUrltoken = props.match.params.token; // eslint-disable-line
   JSON.parse(customFunctions.getLocalStorage('candidateData'));
 
   const [isBtnClicked, setIsBtnClicked] = useState(false);
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    const tempToken = sessionStorage.getItem('tempAccountToken');
+    const tempPass = sessionStorage.getItem('passWord');
+    if (tempToken && tempPass) {
+      addPassword();
+      setPassword(tempPass);
+      matchUrltoken = tempToken;
+    }
+  }, [matchUrltoken]);
+
+  useEffect(() => {
+    sessionStorage.setItem('tempAccountToken', matchUrltoken);
+  }, []);
 
   const addPassword = () => {
     setIsBtnClicked(true);
   };
 
   const onSubmit = (e) => {
+    sessionStorage.setItem('passWord', password);
     e.preventDefault();
     if (password !== '') {
       addPassword();
@@ -26,7 +41,6 @@ function RequiredDocument(props) {
       swal('Please enter the password provided in the link.', '', 'error');
     }
   };
-
   return (
     <>
       {isBtnClicked ? (

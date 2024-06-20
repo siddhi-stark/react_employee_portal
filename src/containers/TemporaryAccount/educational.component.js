@@ -65,8 +65,8 @@ function EducationalDetails(props) {
 
   useEffect(() => {
     getUserRole();
-    if(applicantId){
-      getUploadedDocuments()
+    if (applicantId) {
+      getUploadedDocuments();
     }
   }, [applicantId]);
 
@@ -333,7 +333,7 @@ function EducationalDetails(props) {
     setShowLoader(true);
     const endPoint = `${Api.onBoardingDocUpload}`;
     const params = {
-      applicant: applicantId
+      applicant: applicantId,
     };
     const token = customFunctions.getLocalStorage('access_token');
     const headers = {
@@ -344,36 +344,37 @@ function EducationalDetails(props) {
       // headers: headers,
     });
     if (data && data.success == true) {
-      data?.data && data?.data?.map((item)=>{
-        if(item?.educational_document_type == 1){
-          setSscDocData({
-            ...sscDocData,
-            file_id: item?.id,
-            url: item?.image_url,
-          });
-        }
-        if(item?.educational_document_type == 2){
-          setHscDocData({
-            ...hscDocData,
-            file_id: item?.id,
-            url: item?.image_url,
-          });
-        }
-        if(item?.educational_document_type == 3){
-          setGraduationDocData({
-            ...graduationDocData,
-            file_id: item?.id,
-            url: item?.image_url,
-          });
-        }
-        if(item?.educational_document_type == 3){
-          setPostGraduationDocData({
-            ...postGraduationDocData,
-            file_id: item?.id,
-            url: item?.image_url,
-          });
-        }
-      })
+      data?.data &&
+        data?.data?.map((item) => {
+          if (item?.educational_document_type == 1) {
+            setSscDocData({
+              ...sscDocData,
+              file_id: item?.id,
+              url: item?.image_url,
+            });
+          }
+          if (item?.educational_document_type == 2) {
+            setHscDocData({
+              ...hscDocData,
+              file_id: item?.id,
+              url: item?.image_url,
+            });
+          }
+          if (item?.educational_document_type == 3) {
+            setGraduationDocData({
+              ...graduationDocData,
+              file_id: item?.id,
+              url: item?.image_url,
+            });
+          }
+          if (item?.educational_document_type == 3) {
+            setPostGraduationDocData({
+              ...postGraduationDocData,
+              file_id: item?.id,
+              url: item?.image_url,
+            });
+          }
+        });
       setShowLoader(false);
     }
   };
