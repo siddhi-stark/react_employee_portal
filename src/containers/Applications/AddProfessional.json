@@ -144,7 +144,7 @@
         "placeholder": "eg.350000",
         "inputClass": "",
         "containerClass": "",
-        "maxLength": "7",
+        "maxLength": "",
         "validations": [
           {
             "type": "required",
@@ -180,7 +180,7 @@
         "placeholder": "eg.500000",
         "inputClass": "",
         "containerClass": "",
-        "maxLength": "7",
+        "maxLength": "",
         "validations": [
           {
             "type": "required",
