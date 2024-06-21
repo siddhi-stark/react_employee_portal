@@ -134,7 +134,7 @@ function AllReports() {
     },
     {
       id: 'total_eta',
-      label: 'Todays Estimation',
+      label: 'Estimation',
       roleAccess: [1, 2, 3, 4, 5, 6,7],
     },
     {

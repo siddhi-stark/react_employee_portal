@@ -63,7 +63,7 @@ function AllReports() {
     },
     {
       id: 'todaysestimation',
-      label: 'Todays Total Estimation',
+      label: 'Estimation',
       roleAccess: [1, 2, 3, 4, 5, 7],
     },
     {
