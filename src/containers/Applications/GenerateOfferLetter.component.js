@@ -490,7 +490,7 @@ function GenerateOfferLetter() {
                   containerClass="form-group"
                   type="text"
                   name="bonusTitle"
-                  maxlength="5"
+                  maxlength="10"
                   value={bonus}
                   placeholder="eg.5000"
                   errorMessage={validator.current.message(
