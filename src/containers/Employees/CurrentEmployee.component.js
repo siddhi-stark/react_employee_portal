@@ -429,7 +429,7 @@ function CurrentEmployee() {
       }).then(async (result) => {
         if (result) {
           const { data, message } = await AuthApi.deleteDataFromServer(
-            `${Api.employeeUrl}${id}/`
+            `${Api.employeeAdd}${id}/`
           );
           if (data) {
             swal(data && data.message[0], '', 'success', {
