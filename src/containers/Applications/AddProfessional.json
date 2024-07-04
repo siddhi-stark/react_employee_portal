@@ -18,7 +18,7 @@
         "placeholder": "eg. 3",
         "inputClass": "",
         "containerClass": "",
-        "maxLength": "3",
+        "maxLength": "",
         "validations": [
           {
             "type": "required",
