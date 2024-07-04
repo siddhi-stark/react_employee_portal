@@ -94,7 +94,7 @@ function HrReports() {
 
   const getHrName = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?role_id=5&is_dropdown=1`
+      `${Api.employeeUrl}?role_id=5&is_dropdown=1&status=active`
     );
     if (!data) {
       return;

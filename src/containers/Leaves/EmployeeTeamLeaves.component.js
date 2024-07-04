@@ -209,7 +209,7 @@ function EmployeeTeamLeaves(props) {
   
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
+      `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
     );
     if (!data) {
       return;

@@ -239,7 +239,7 @@ function AllReports() {
 
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
+      `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setEmployeeList(data.data);

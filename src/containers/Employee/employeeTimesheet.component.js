@@ -317,7 +317,7 @@ function EmployeeTimesheet() {
 
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
+      `${Api.employeeUrl}?type=all&status=active&is_dropdown=1`
     );
     if (!data) {
       return;

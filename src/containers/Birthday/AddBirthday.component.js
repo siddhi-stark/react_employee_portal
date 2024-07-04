@@ -220,7 +220,7 @@ function AddBirthday(props) {
 
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
+      `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
     );
     const dpOptions =
       (await data) &&

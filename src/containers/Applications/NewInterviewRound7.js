@@ -161,7 +161,7 @@ function NewInterviewRounds7(props) {
 
     const getInterviewer = async () => {
         const { data } = await AuthApi.getDataFromServer(
-            `${Api.employeeUrl}?type=all&show_self=1`
+            `${Api.employeeUrl}?type=all&status=active&show_self=1`
         );
         if (!data) {
             return;

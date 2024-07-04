@@ -104,7 +104,7 @@ function AddTechnologyStack(props) {
   const getEmployee = async () => {
     // const id = props.match.params.stackId;
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
+      `${Api.employeeUrl}?type=all&status=active&is_dropdown=1`
     );
     const dpOptions =
       (await data) &&

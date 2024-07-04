@@ -88,7 +88,7 @@ const AddReview = (props) => {
   const getEmployeeList = async () => {
     setShowLoader(true);
     const { data, message } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1`
+      `${Api.employeeUrl}?type=all&status=active&show_self=1`
     );
 
     if (data && data.success === true) {

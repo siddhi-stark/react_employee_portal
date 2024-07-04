@@ -400,7 +400,7 @@ function SupportTicket(props) {
 
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all`
+      `${Api.employeeUrl}?type=all&status=active`
     );
     if (!data) {
       // show error

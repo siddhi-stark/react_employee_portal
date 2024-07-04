@@ -351,7 +351,7 @@ function CurrentEmployee() {
 
   const getMentorList = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending&type=all&is_dropdown=1`
+      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending&type=all&is_dropdown=1&status=active`
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setMentorData(data.data);
