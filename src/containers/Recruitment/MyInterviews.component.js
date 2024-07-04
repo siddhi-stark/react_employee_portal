@@ -209,6 +209,9 @@ function MyInterviews() {
       my_interview_round: 'true',
       ...filterList,
     };
+    if(Number(group) === 1){
+      params.is_admin_personal=1;
+    }
     
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);

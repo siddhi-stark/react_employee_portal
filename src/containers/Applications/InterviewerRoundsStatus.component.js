@@ -56,6 +56,9 @@ function InterviewerRoundsStatus(props) {
     if (currentUser == 5) {
       params.is_hr_personal = 1;
     }
+    if(currentUser == 1){
+      params.is_admin_personal=1;
+    }
     const url = customFunctions.generateUrl(endpoint, params);
     // const url = `${Api.applicantRounds}${id}/?is_interview_round=true${isHRPersonalParam}`;
     const { data } = await AuthApi.getDataFromServer(url);
