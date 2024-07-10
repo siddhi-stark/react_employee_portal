@@ -27,6 +27,7 @@ function CandidateListing() {
   const actionCallBack = (row) => {
     return (
       <span className="d-flex">
+        {row.offer_status_name !== 'Pending' && (
         <a
           href="/"
           title="Edit Candidate"
@@ -39,6 +40,7 @@ function CandidateListing() {
         >
           <Image src="/images/edit-button.svg" />
         </a>
+        )}
         {new Date(row.joining_date).getTime() <= new Date().getTime() &&
           row.offer_status_name !== 'Declined' &&
           !row.is_onboard && (
