@@ -129,16 +129,16 @@ function Routes() {
       <Route path="/applications" exact component={Applications} />
       <Route path="/applications/:ID" exact component={Applications} />
       <Route path="/batch-upload" exact component={RecruitmentFileComponent} />
-      <Route path="/abscond-table" exact component={AbscondTable} />
-      <Route path="/abscond-form" exact component={FormAbscondTermination} />
-      <Route
+      {/* <Route path="/abscond-table" exact component={AbscondTable} /> */}
+      {/* <Route path="/abscond-form" exact component={FormAbscondTermination} /> */}
+      {/* <Route
         path="/edit-abscond-form/:aid"
         exact
         component={FormAbscondTermination}
-      />
-      <Route path="/faq-listing" exact component={FAQListing} />
-      <Route path="/faq-form" exact component={FAQForm} />
-      <Route path="/edit-faq/:fid" exact component={FAQForm} />
+      /> */}
+      {/* <Route path="/faq-listing" exact component={FAQListing} /> */}
+      {/* <Route path="/faq-form" exact component={FAQForm} />
+      <Route path="/edit-faq/:fid" exact component={FAQForm} /> */}
       <Route
         path="/add-technology-stack"
         exact
@@ -289,7 +289,7 @@ function Routes() {
         component={ResignationDetailsComponent}
       />
       <Route component={NotFound} />
-      <Route path="/terminate-process" exact component={AbscoundComponent} />
+      {/* <Route path="/terminate-process" exact component={AbscoundComponent} /> */}
     </Switch>
   );
 }
