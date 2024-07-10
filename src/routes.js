@@ -87,7 +87,7 @@ import AbscondTable from './containers/TerminationAndAbscoud/AbscondTable';
 import FormAbscondTermination from './containers/TerminationAndAbscoud/FormAbscondTermination';
 import FAQListing from './containers/FAQs/FAQListing';
 import FAQForm from './containers/FAQs/FAQForm';
-import EmployeeWorkload from './containers/Employee Workload/employeeWorkload';
+// import EmployeeWorkload from './containers/Employee Workload/employeeWorkload';
 import CompletedProject from './containers/Project/completedProject';
 // import TemporayDocument from './containers/Employees/TemporayDocument';
 import AddDocuments from './containers/Employees/AddDocuments';
@@ -257,7 +257,7 @@ function Routes() {
         component={AddSupportTicket}
       />
       <Route path="/performance-report" exact component={PerformanceReport} />
-      <Route path="/employee-workload" exact component={EmployeeWorkload} />
+      {/* <Route path="/employee-workload" exact component={EmployeeWorkload} /> */}
       <Route
         path="/resignation-application"
         exact
