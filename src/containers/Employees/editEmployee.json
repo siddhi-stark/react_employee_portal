@@ -128,7 +128,7 @@
         "containerClass": "",
         "validations": [
           {
-            "type": "",
+            "type": "required",
             "applyWhen": [],
             "applyWhenRelation": "OR"
           }
@@ -189,9 +189,9 @@
         "options": []
       },
       {
-        "name": "mobile",
-        "type": "text",
-        "label": "Contact Number",
+        "name": "department",
+        "type": "select",
+        "label": "Department",
         "id": "",
         "placeholder": "",
         "inputClass": "",
@@ -220,9 +220,392 @@
           "value": "1column"
         },
         "fields": [],
+        "optionCallback": "getDesignation",
+        "optionsCallbackUrl": "designationUrl",
+        "options": [
+          {
+            "value": 1,
+            "label": "Management"
+        },
+        {
+            "value": 2,
+            "label": "Development"
+        },
+        {
+            "value": 3,
+            "label": "Design"
+        },
+        {
+            "value": 4,
+            "label": "Quality Analysis"
+        },
+        {
+            "value": 5,
+            "label": "Other"
+        },
+        {
+            "value": 6,
+            "label": "Marketing"
+        },
+        {
+            "value": 7,
+            "label": "Support Team"
+        },
+        {
+            "value": 8,
+            "label": "Account"
+        },
+        {
+            "value": 9,
+            "label": "Project Management"
+        }
+      ]
+      },
+      {
+        "name": "mobile",
+        "type": "text",
+        "label": "Contact Number",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
         "optionCallback": "",
         "options": []
       },
+      {
+        "name": "employee_code",
+        "type": "text",
+        "label": "Employee code",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "manager",
+        "type": "select",
+        "label": "Manager",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "dateFormat": "dd/MM/yyyy",
+
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": [
+          {
+            "value": 1,
+            "label": "admin stark"
+        },
+        {
+            "value": 2,
+            "label": "Amit Mohol"
+        },
+        {
+            "value": 8,
+            "label": "Kartik Shete"
+        },
+        {
+            "value": 9,
+            "label": "Sanjay Mangalaram"
+        },
+        {
+            "value": 40,
+            "label": "Shirish Mirkale"
+        },
+        {
+            "value": 59,
+            "label": "Kanchan Mohol"
+        },
+        {
+            "value": 62,
+            "label": "Stark Admin"
+        }
+        ]
+      },
+      {
+        "name": "team",
+        "type": "select",
+        "label": "Team",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "dateFormat": "dd/MM/yyyy",
+
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": [
+          {
+            "value": 1,
+            "label": "Python"
+        },
+        {
+            "value": 2,
+            "label": "Node JS"
+        },
+        {
+            "value": 3,
+            "label": "React Native / Web"
+        },
+        {
+            "value": 4,
+            "label": "Laravel"
+        },
+        {
+            "value": 5,
+            "label": "Graphic Designer"
+        },
+        {
+            "value": 6,
+            "label": "HTML Designer"
+        },
+        {
+            "value": 7,
+            "label": "Other"
+        },
+        {
+            "value": 8,
+            "label": "Quality Analysis"
+        },
+        {
+            "value": 9,
+            "label": "Marketing"
+        }
+
+        ]
+      },
+      {
+        "name": "role",
+        "type": "select",
+        "label": "Role Name",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getDesignation",
+        "optionsCallbackUrl": "designationUrl",
+        "options": [
+          {
+            "value": 8,
+            "label": "Accountant"
+          },
+          {
+            "value": 7,
+            "label": "System Admin"
+          },
+          {
+            "value": 6,
+            "label": "HR Team Lead"
+          },
+          {
+            "value": 5,
+            "label": "HR"
+          },
+          {
+            "value": 4,
+            "label": "Employee"
+          },
+          {
+            "value": 3,
+            "label": "Team Lead"
+          },
+          {
+            "value": 2,
+            "label": "Manager"
+          }
+        ]
+      },
+      {
+        "name": "reporting_person",
+        "type": "select",
+        "label": "Reporting Person",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "dateFormat": "dd/MM/yyyy",
+
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": [
+
+          {
+            "value": 8,
+            "label": "Accountant"
+          },
+          {
+            "value": 7,
+            "label": "System Admin"
+          },
+          {
+            "value": 6,
+            "label": "HR Team Lead"
+          },
+          {
+            "value": 5,
+            "label": "HR"
+          },
+          {
+            "value": 4,
+            "label": "Employee"
+          },
+          {
+            "value": 3,
+            "label": "Team Lead"
+          },
+          {
+            "value": 2,
+            "label": "Manager"
+          }
+        ]
+      },
+
+
       {
         "name": "probation_date",
         "type": "date",

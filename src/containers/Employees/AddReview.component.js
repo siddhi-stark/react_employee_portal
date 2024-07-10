@@ -26,6 +26,7 @@ const AddReview = (props) => {
     empId,
     callbackBtn,
   } = props;
+
   const [isShowLoader, setShowLoader] = useState(false);
   const [reviewDate, setReviewDate] = useState('');
   const [selectedEmployee, setSelectedEmployee] = useState('');
@@ -85,29 +86,55 @@ const AddReview = (props) => {
     setCurrentUserId(customFunctions.getLocalStorage('candidateId'));
   }, []);
 
+  // const getEmployeeList = async () => {
+  //   setShowLoader(true);
+  //   const { data, message } = await AuthApi.getDataFromServer(
+  //     `${Api.employeeListUrl}?type=all&is_dropdown=1`
+  //   );
+
+  //   if (data && data.success === true) {
+  //     console.log("🚀 ~ getEmployeeList ~ data:", data)
+  //     setShowLoader(false);
+  //     const employeeName = [];
+  //     data &&
+  //       data.data &&
+  //       data.data.length > 0 &&
+  //       data.data.map((item) => {
+  //         // if (empId == item?.id) return;
+  //         employeeName.push({
+  //           label: item.full_name,
+  //           value: item.id,
+  //         });
+  //       });
+  //     setEmployeeList(employeeName);
+  //     console.log("🚀 ~ getEmployeeList ~ employeeName:", employeeName)
+  //   } else {
+  //     setShowLoader(false);
+  //     swal(message || 'Something went Wrong', '', 'error');
+  //   }
+  // };
   const getEmployeeList = async () => {
     setShowLoader(true);
-    const { data, message } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&status=active&show_self=1`
-    );
 
-    if (data && data.success === true) {
+    try {
+      const response = await AuthApi.getDataFromServer(
+        `${Api.employeeUrl}?type=all&status=active&show_self=1`
+      );
+
+      if (response.data && response.data.success) {
+        const employees = response.data.data.map((item) => ({
+          label: item.full_name,
+          value: item.id,
+        }));
+
+        setEmployeeList(employees);
+      } else {
+        swal(response.data.message || 'Something went wrong', '', 'error');
+      }
+    } catch (error) {
+      swal('Error', 'Failed to fetch employees', 'error');
+    } finally {
       setShowLoader(false);
-      const employeeName = [];
-      data &&
-        data.data &&
-        data.data.length > 0 &&
-        data.data.map((item) => {
-          if (empId == item?.id) return;
-          employeeName.push({
-            label: item.full_name,
-            value: item.id,
-          });
-        });
-      setEmployeeList(employeeName);
-    } else {
-      setShowLoader(false);
-      swal(message || 'Something went Wrong', '', 'error');
     }
   };
 
@@ -189,7 +216,6 @@ const AddReview = (props) => {
       setDisableButton(false);
     }
   };
-
 
   return (
     <>
@@ -302,7 +328,7 @@ const AddReview = (props) => {
                 />
               </Col>
             </>
-          ) : null }
+          ) : null}
         </Row>
 
         {pageType != 'view' && (

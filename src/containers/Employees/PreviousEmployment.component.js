@@ -47,7 +47,7 @@ function PreviousEmployment(props) {
         allowOutsideClick: false,
       });
       fileId = null;
-    } 
+    }
     if (data && Object.keys(data).length && data.success) {
       fileId = data.data.id;
     }
@@ -141,10 +141,18 @@ function PreviousEmployment(props) {
       ],
     };
 
-    if(slip1fileUrlId || (slip1fileUrl && slip2fileUrlId) ||(slip2fileUrl && slip3fileUrlId) || 
-      (slip3fileUrl && relivingfileUrlId) || (relivingfileUrl && experiencefileUrlId) || experiencefileUrl) {
-
-    const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
+    if (
+      slip1fileUrlId ||
+      (slip1fileUrl && slip2fileUrlId) ||
+      (slip2fileUrl && slip3fileUrlId) ||
+      (slip3fileUrl && relivingfileUrlId) ||
+      (relivingfileUrl && experiencefileUrlId) ||
+      experiencefileUrl
+    ) {
+      const { data, message } = await AuthApi.postDataToServer(
+        `${Api.applicantDocumentUrl}`,
+        postData
+      );
       if (!data) {
         setShowLoader(false);
         swal(message, '', 'error', {
@@ -171,25 +179,25 @@ function PreviousEmployment(props) {
 
   return (
     <>
-    <Loader showLoader={isShowLoader} needFullPage={false} />
-    <StarkFormBuilder
-      containerClass="mt-3"
-      formHeaderClass=""
-      formSections={FormSections}
-      onFormSubmit={(formValues) => {
-        submitForm(formValues);
-      }}
-      options={options}
-      callbacks={{}}
-      defaultFormValues={defaultValues}
-      currentUser={currentUser}
-      submitBtnText="Submit"
-      showResetBtn={true}
-      resetBtnText="Clear"
-      btnContainerClass="form-submit-buttons"
-      showBtnClass={true}
-      isStepForm={false}
-    />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+      <StarkFormBuilder
+        containerClass="mt-3"
+        formHeaderClass=""
+        formSections={FormSections}
+        onFormSubmit={(formValues) => {
+          submitForm(formValues);
+        }}
+        options={options}
+        callbacks={{}}
+        defaultFormValues={defaultValues}
+        currentUser={currentUser}
+        submitBtnText="Submit"
+        showResetBtn={true}
+        resetBtnText="Clear"
+        btnContainerClass="form-submit-buttons"
+        showBtnClass={true}
+        isStepForm={false}
+      />
     </>
   );
 }

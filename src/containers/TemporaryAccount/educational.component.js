@@ -22,8 +22,8 @@ function EducationalDetails(props) {
   const { getParentsData } = props;
 
   const accProps = { props };
-  const candidateId = accProps.props.match.params.ID;
-  const applicantId = accProps.props.applicantId;
+  const employeeId = accProps?.props?.match?.params?.ID;
+  const applicantId = accProps?.props?.applicantId;
   // const passwordProps = accProps.props.password;
   // const tokenProps = accProps.props.token;
   // const nameProps = accProps.props.name;
@@ -331,9 +331,14 @@ function EducationalDetails(props) {
 
   const getUploadedDocuments = async () => {
     setShowLoader(true);
-    const endPoint = `${Api.onBoardingDocUpload}`;
+    const idParam = employeeId
+      ? { employee_id: employeeId }
+      : { applicant: applicantId };
+
     const params = {
-      applicant: applicantId,
+      // applicant: applicantId,
+      ...idParam,
+      type: 'all',
     };
     const token = customFunctions.getLocalStorage('access_token');
     const headers = {
@@ -382,7 +387,7 @@ function EducationalDetails(props) {
   const submitEducationalDoc = async () => {
     setShowLoader(true);
     const postData = {
-      applicant: applicantId,
+      employee_id: employeeId,
       doc_type: 1,
       // is_submitted: 1,
       educational_documents: [

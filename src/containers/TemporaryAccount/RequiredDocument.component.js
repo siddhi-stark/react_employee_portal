@@ -81,7 +81,7 @@ function RequiredDocument(props) {
               </h6>
               <ul>
                 <li>SSC</li>
-                <li>HSC</li>
+                <li>HSC / Diploma</li>
               </ul>
 
               <Col md={12}>
@@ -91,7 +91,7 @@ function RequiredDocument(props) {
                   }}
                 >
                   <TextInput
-                    onInputChange={(e) => setPassword(e.target.value)}
+                    onInputChange={(e) => setPassword(e?.target?.value)}
                     label="Password"
                     autocomplete="off"
                     containerClass="form-group"

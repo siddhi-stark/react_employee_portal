@@ -114,6 +114,8 @@ export default class Api extends Component {
 
   static applicantInfoUrl = `${Api.baseUrl}applicant-information/`;
 
+  static employeeInfo = `${Api.baseUrl}employee-information/`;
+
   static googleFileUploadUrl = `${Api.baseUrl}google-upload/`;
 
   static workingHrsUrl = `${Api.baseUrl}working-hours/`;
@@ -226,6 +228,10 @@ export default class Api extends Component {
   static departmentReport = `${Api.baseUrl}department-project-details/`;
 
   static employeeDetail = `${Api.baseUrl}employee-project-details/`;
+
+  static employeeOnboard = `${Api.baseUrl}employee-onboard/`;
+
+
 
   // Get base URL of APIs
   static getBaseUrl() {

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
@@ -13,14 +14,14 @@ import FormSections from './onboard.json';
 
 function OnBoard(props) {
   const { match, history } = props;
-
   const [defaultValues, updateDefaultValues] = useState({});
   const [options, updateOptions] = useState({});
+  const [personalEmail, setPersonalEmail] = useState('');
   const [currentUser, updateCurrentUser] = useState(0);
   const [twEmployee, setTwEmployee] = useState([]);
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-  const applicantId = match.params.ID;
+  const employeeId = match.params.ID;
   const items = [{ to: '/', label: 'Home' }, { label: 'Add Employee' }];
 
   const formSchema = [...FormSections];
@@ -48,57 +49,62 @@ function OnBoard(props) {
 
   const submitForm = async (formValues) => {
     setShowLoader(true);
+
+    // const prefixedEmpCode = formValues?.emp_code ? `sdms${formValues?.emp_code}` : '';
     const managerList = [];
-    formValues.managers &&
-      formValues.managers.map((mngr) => {
-        managerList.push(mngr.value);
+    formValues?.managers &&
+      formValues?.managers.map((mngr) => {
+        managerList.push(mngr?.value);
         return mngr;
       });
     const teamIdList = [];
-    if (formValues.team_leads) {
-      teamIdList.push(formValues.team_leads.value);
+    if (formValues?.team_leads) {
+      teamIdList.push(formValues?.team_leads?.value);
     }
     const postData = {
       date_joined: formValues.date_joined
-        ? customFunctions.getDate(formValues.date_joined)
+        ? customFunctions.getDate(formValues?.date_joined)
         : '',
-      full_name: formValues.full_name,
-      email: formValues.email,
-      mobile: formValues.mobile,
-      password: formValues.password,
-      department: formValues.department
-        ? Number(formValues.department.value)
+      full_name: formValues?.full_name,
+      email: formValues?.eemail,
+      personal_email: personalEmail,
+      mobile: formValues?.mobile,
+      gender: formValues.gender ? Number(formValues.gender) : '',
+      password: formValues?.password,
+      department: formValues?.department
+        ? Number(formValues?.department?.value)
         : '',
       designation: formValues.designation ? formValues.designation.value : '',
       team: formValues.team ? formValues.team.value : '',
       dob: formValues.dob ? customFunctions.getDate(formValues.dob) : '',
       role: formValues.role ? formValues.role.value : '',
-      emp_code: Number(formValues.emp_code),
+      emp_code: Number(formValues?.emp_code),
+      // emp_code: prefixedEmpCode,
       managers: managerList,
       team_leads: teamIdList,
       is_onboard: true,
-      applicant_id: Number(applicantId),
+      emp_id: Number(employeeId),
     };
 
-    const isFind = twEmployee.find(
-      (item) =>
-        formValues.tw_emp &&
-        formValues.tw_emp.label &&
-        item.full_name === formValues.tw_emp.label
-    );
-    if (isFind) {
-      postData.tw_emp = isFind.tw_id;
-    }
+    // const isFind = twEmployee.find(
+    //   (item) =>
+    //     formValues?.tw_emp &&
+    //     formValues?.tw_emp?.label &&
+    //     item?.full_name === formValues?.tw_emp?.label
+    // );
+    // if (isFind) {
+    //   postData.tw_emp = isFind.tw_id;
+    // }
 
-    const { data, message } = await AuthApi.postDataToServer(
-      Api.employeeUrl,
+    const { data, message } = await AuthApi.putDataToServer(
+      `${Api.employeeOnboard}${employeeId}/`,
       postData
     );
 
     if (data) {
       setShowLoader(false);
       swal({
-        title: data.message[0],
+        title: 'Employee Created Sucessfully',
         icon: 'success',
       }).then((okAction) => {
         if (okAction) {
@@ -122,7 +128,7 @@ function OnBoard(props) {
   const getData = async () => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.applicantsUrl}${applicantId}/`
+      `${Api.employeeUrl}${employeeId}/`
     );
     if (!data) {
       return;
@@ -132,21 +138,29 @@ function OnBoard(props) {
       setShowLoader(false);
       let newDate = '';
 
-      const ds = data.data.applied_for_id
+      const ds = data?.data?.designation_id
         ? {
-            label: data.data.applied_for_name,
-            value: data.data.applied_for_id,
+            label: data?.data?.designation_name,
+            value: data?.data?.designation_id,
           }
         : '';
-      if (!customFunctions.checkIfEmpty(data.data.joining_date)) {
-        newDate = new Date(data.data.joining_date);
+      if (!customFunctions.checkIfEmpty(data?.data?.date_joined)) {
+        newDate = new Date(data?.data?.date_joined);
       }
+      // if (!customFunctions.checkIfEmpty(data?.data?.date_joined)) {
+      //   const dateStr = data?.data?.date_joined;
+      //   newDate = new Date(dateStr);
+      // }
+      setPersonalEmail(data?.data?.email);
 
       const obj = {
-        ...data.data,
-        full_name: data.data.name,
+        // ...data?.data,
+        full_name: data?.data?.full_name,
         date_joined: newDate,
+        // date_joined: new Date(),
+        // dob:new Date(data?.data?.dob),
         designation: ds,
+        gender: String(data?.data?.gender),
       };
 
       updateDefaultValues({ ...obj });
@@ -157,40 +171,42 @@ function OnBoard(props) {
     getData();
   }, []);
 
-  const getTwEmp = async () => {
+  // const getTwEmp = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(
+  //     `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
+  //   );
+  //   if (!data) {
+  //     return;
+  //   }
+
+  //   const dpOptions =
+  //     (await data) &&
+  //     data?.data?.length > 0 &&
+  //     data?.data.map((op) => {
+  //       return { label: op?.full_name, value: op?.id };
+  //     });
+
+  //   options.tw_emp = dpOptions;
+  //   const allOptions = options;
+  //   await updateOptions({ ...allOptions });
+  //   await setTwEmployee(data?.data);
+  // };
+
+  // useEffect(() => {
+  //   getTwEmp();
+  // }, []);
+
+  const getDesignation = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.TwEmployeeUrl}?sort_by=full_name&sort_direction=ascending`
+      `${Api.designationUrl}?type=all`
     );
     if (!data) {
       return;
     }
-
     const dpOptions =
       (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
-        return { label: op.full_name, value: op.id };
-      });
-
-    options.tw_emp = dpOptions;
-    const allOptions = options;
-    await updateOptions({ ...allOptions });
-    await setTwEmployee(data.data);
-  };
-
-  useEffect(() => {
-    getTwEmp();
-  }, []);
-
-  const getDesignation = async () => {
-    const { data } = await AuthApi.getDataFromServer(Api.designationUrl);
-    if (!data) {
-      return;
-    }
-    const dpOptions =
-      (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
+      data?.data?.length > 0 &&
+      data?.data.map((op) => {
         return { label: op.name, value: op.id };
       });
 
@@ -211,8 +227,8 @@ function OnBoard(props) {
 
     const dpOptions =
       (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
+      data?.data?.length > 0 &&
+      data?.data.map((op) => {
         return { label: op.name, value: op.id };
       });
 
@@ -235,9 +251,9 @@ function OnBoard(props) {
 
     const dpOptions =
       (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
-        return { label: op.full_name, value: op.id };
+      data?.data?.length > 0 &&
+      data?.data.map((op) => {
+        return { label: op?.full_name, value: op?.id };
       });
 
     options.managers = dpOptions;
@@ -259,9 +275,9 @@ function OnBoard(props) {
 
     const dpOptions =
       (await data) &&
-      data.data.length > 0 &&
-      data.data.map((op) => {
-        return { label: op.full_name, value: op.id };
+      data?.data?.length > 0 &&
+      data?.data.map((op) => {
+        return { label: op?.full_name, value: op?.id };
       });
 
     options.team_leads = dpOptions;
@@ -280,9 +296,9 @@ function OnBoard(props) {
 
     const dpOptions =
       (await data) &&
-      data.data.department.length > 0 &&
-      data.data.department.map((op) => {
-        return { label: op.name, value: op.id };
+      data?.data?.department?.length > 0 &&
+      data?.data?.department.map((op) => {
+        return { label: op?.name, value: op?.id };
       });
 
     options.department = dpOptions;
@@ -304,10 +320,10 @@ function OnBoard(props) {
 
     const dpOptions =
       (await data) &&
-      data.data &&
-      data.data.team.length > 0 &&
-      data.data.team.map((op) => {
-        return { label: op.name, value: op.id };
+      data?.data &&
+      data?.data?.team?.length > 0 &&
+      data?.data?.team.map((op) => {
+        return { label: op?.name, value: op?.id };
       });
 
     options.team = dpOptions;

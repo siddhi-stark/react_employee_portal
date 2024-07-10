@@ -81,12 +81,21 @@ import EmployeeResignationList from './containers/Exit process/employeeResignati
 import ResignationDetails from './containers/Exit process/resignationDetails';
 import LeaveListingForAccountant from './containers/Leaves/LeaveListingForAccountant';
 import AccountAddleaveComponent from './containers/Leaves/AccountAddleave.component';
-import ResignationDetailsComponent from './containers/Exit process/resignationDetailsComponent'
+import ResignationDetailsComponent from './containers/Exit process/resignationDetailsComponent';
+import AbscoundComponent from './containers/Exit process/Abscound.component';
+import AbscondTable from './containers/TerminationAndAbscoud/AbscondTable';
+import FormAbscondTermination from './containers/TerminationAndAbscoud/FormAbscondTermination';
+import FAQListing from './containers/FAQs/FAQListing';
+import FAQForm from './containers/FAQs/FAQForm';
+import EmployeeWorkload from './containers/Employee Workload/employeeWorkload';
 import CompletedProject from './containers/Project/completedProject';
+// import TemporayDocument from './containers/Employees/TemporayDocument';
+import AddDocuments from './containers/Employees/AddDocuments';
 
 function Routes() {
   return (
     <Switch>
+      {/* <Route path='*' element={<NotFound />} /> */}
       <Route path="/" exact component={Dashboard} />
       <Route path="/login" exact component={Login} />
       <Route path="/forget-password" exact component={ForgetPassword} />
@@ -120,6 +129,16 @@ function Routes() {
       <Route path="/applications" exact component={Applications} />
       <Route path="/applications/:ID" exact component={Applications} />
       <Route path="/batch-upload" exact component={RecruitmentFileComponent} />
+      <Route path="/abscond-table" exact component={AbscondTable} />
+      <Route path="/abscond-form" exact component={FormAbscondTermination} />
+      <Route
+        path="/edit-abscond-form/:aid"
+        exact
+        component={FormAbscondTermination}
+      />
+      <Route path="/faq-listing" exact component={FAQListing} />
+      <Route path="/faq-form" exact component={FAQForm} />
+      <Route path="/edit-faq/:fid" exact component={FAQForm} />
       <Route
         path="/add-technology-stack"
         exact
@@ -131,6 +150,8 @@ function Routes() {
         component={AddTechnologyStack}
       />
       <Route path="/employee-profile/:id" exact component={EmployeeProfile} />
+      <Route path="/add-document/:id" exact component={AddDocuments} />
+
       <Route path="/confirmation" exact component={Confirmation} />
       <Route
         path="/interviewer-round"
@@ -184,6 +205,7 @@ function Routes() {
       <Route path="/greetings" exact component={Greetings} />
       <Route path="/interview-listing" exact component={MyInterviews} />
       <Route path="/current-project" exact component={Project} />
+
       <Route path="/edit-project/:projectId" exact component={EditProject} />
       <Route path="/view-project/:projectId" exact component={EditProject} />
       <Route
@@ -235,6 +257,7 @@ function Routes() {
         component={AddSupportTicket}
       />
       <Route path="/performance-report" exact component={PerformanceReport} />
+      <Route path="/employee-workload" exact component={EmployeeWorkload} />
       <Route
         path="/resignation-application"
         exact
@@ -266,6 +289,7 @@ function Routes() {
         component={ResignationDetailsComponent}
       />
       <Route component={NotFound} />
+      <Route path="/terminate-process" exact component={AbscoundComponent} />
     </Switch>
   );
 }

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
+import { saveAs } from 'file-saver';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import {
@@ -34,18 +35,18 @@ function Personal(props) {
   const { getParentsData, personalInfo } = props;
   const [fileToDelete, setFileToDelete] = useState(null); // State to track the file to delete
   const accProps = { props };
-  const candidateId = accProps.props.match.params.ID;
-  const applicantId = accProps.props.applicantId;
-  const employeeId = accProps.props.ID;
-  const passwordProps = accProps.props.password;
-  const tokenProps = accProps.props.token;
-  const nameProps = accProps.props.name;
-  const emailProps = accProps.props.email;
+  const employeeId = accProps?.props?.match?.params?.ID;
+  const applicantId = accProps?.props?.applicantId;
+  // const empId = accProps?.props?.empId;
+  const passwordProps = accProps?.props?.password;
+  const tokenProps = accProps?.props?.token;
+  const nameProps = accProps?.props?.name;
+  const emailProps = accProps?.props?.email;
   const uploadRef = useRef();
   const personalRef = useRef();
   const educationalRef = useRef();
-  const idProps = accProps.props.match.params.ID;
-
+  const idProps = accProps?.props?.match?.params?.ID;
+  const [empId, setEmpId] = useState('');
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
   const [currentUser, updateCurrentUser] = useState(0);
   const [document, setDocument] = useState(null);
@@ -63,7 +64,6 @@ function Personal(props) {
   const [educationalUniqueArray, setEducationalUniqueArray] = useState('');
   const [employementUniqueArray, setEmployementUniqueArray] = useState('');
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
-
   const [personalDocuments, setPersonalDocuments] = useState([
     {
       label: 'Pan Card',
@@ -109,7 +109,7 @@ function Personal(props) {
       primaryId: '',
     },
     {
-      label: 'HSC',
+      label: 'HSC/ Diploma',
       value: 'hsc',
       type: 'hsc',
       // file_id: '',
@@ -228,16 +228,16 @@ function Personal(props) {
 
   useEffect(() => {
     getUserRole();
-    if (applicantId) {
+    if (empId) {
       getUploadedDocuments();
     }
-  }, [applicantId]);
+  }, [empId]);
 
   useEffect(() => {
     const formSchema = [...FormSections];
     const updatedSchema = formSchema?.[0]?.fields?.[0]?.fields?.map((item) => {
       const itemData = item;
-      if (item.name === 'start_date' || item.name === 'end_date') {
+      if (item?.name === 'start_date' || item?.name === 'end_date') {
         const maxdate = new Date();
         itemData.maxDate = maxdate;
       }
@@ -306,7 +306,7 @@ function Personal(props) {
         );
         setPreviousEmployement([...previousDocArray, updateEmployementDoc]);
       }
-
+      // setEmpId(data?.data?.emp_id);
       swal('Document uploaded successfully', '', 'success').then(() => {
         // const tempData = { ...selectedDocument }
         // tempData.personalDoc = ''
@@ -329,18 +329,23 @@ function Personal(props) {
 
   const getUploadedDocuments = async () => {
     setShowLoader(true);
+
     const endPoint = `${Api.onBoardingDocUpload}`;
+    const idParam = empId ? { employee_id: empId } : { applicant: applicantId };
+
     const params = {
-      applicant: applicantId,
+      // applicant: applicantId,
+      ...idParam,
       type: 'all',
     };
+
     const token = customFunctions.getLocalStorage('access_token');
     const headers = {
       Authorization: `Bearer ${token}`,
     };
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data, message } = await axios.get(url, {
-      // headers: headers,
+    const { data } = await axios.get(url, {
+      headers: headers,
     });
     if (data && data.success == true) {
       const temData = [];
@@ -422,7 +427,8 @@ function Personal(props) {
       'Content-Type': 'application/json',
     };
     const postData = {
-      applicant: applicantId,
+      // applicant: applicantId,
+      employee: Number(empId),
     };
     const personal = [];
     const educational = [];
@@ -487,7 +493,9 @@ function Personal(props) {
       setFileToDelete(null);
       setShowLoader(false);
       swal('Documents submitted successfully', '', 'success').then(() => {
-        getUploadedDocuments();
+        if (empId) {
+          getUploadedDocuments();
+        }
       });
     } else {
       setShowLoader(false);
@@ -602,8 +610,8 @@ function Personal(props) {
 
     const addmoreData = [];
 
-    const endPoint = candidateId
-      ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
+    const endPoint = employeeId
+      ? `${Api.applicantInfoUrl}?employee_id=${employeeId}`
       : `${Api.applicantInfoUrl}`;
 
     const postData = {
@@ -614,38 +622,39 @@ function Personal(props) {
     const { data, message } = applicantId
       ? await AuthApi.postDataToServer(endPoint, postData)
       : await AuthApi.postDataToServer(endPoint);
-
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      data.data &&
-        data.data.applicant_history &&
-        data.data.applicant_history.length > 0 &&
-        data.data.applicant_history.map((doc) => {
+
+      setEmpId(data?.data?.emp_id);
+      data?.data &&
+        data?.data?.applicant_history &&
+        data?.data?.applicant_history?.length > 0 &&
+        data?.data?.applicant_history.map((doc) => {
           const reportingData = {};
-          doc.reportings &&
-            doc.reportings.length > 0 &&
-            doc.reportings.map((report) => {
-              if (report.is_hr) {
-                reportingData.reporting_person_hr = report.reporting_person;
-                reportingData.hr_email = report.email;
-                reportingData.hr_mobile = report.mobile;
+          doc?.reportings &&
+            doc?.reportings?.length > 0 &&
+            doc?.reportings.map((report) => {
+              if (report?.is_hr) {
+                reportingData.reporting_person_hr = report?.reporting_person;
+                reportingData.hr_email = report?.email;
+                reportingData.hr_mobile = report?.mobile;
               } else {
                 reportingData.reporting_person_manager =
-                  report.reporting_person || '';
-                reportingData.manager_email = report.email || '';
-                reportingData.manager_mobile = report.mobile || '';
+                  report?.reporting_person || '';
+                reportingData.manager_email = report?.email || '';
+                reportingData.manager_mobile = report?.mobile || '';
               }
               return report;
             });
 
           addmoreData.push({
-            company_name: doc.company_name && doc.company_name,
-            designation: doc.designation && doc.designation,
-            company_url: doc.company_url && doc.company_url,
-            start_date: doc.start_date && new Date(doc.start_date),
-            end_date: doc.end_date && new Date(doc.end_date),
-            duration: doc.duration && doc.duration,
-            location: doc.location && doc.location,
+            company_name: doc?.company_name && doc?.company_name,
+            designation: doc?.designation && doc?.designation,
+            company_url: doc?.company_url && doc?.company_url,
+            start_date: doc?.start_date && new Date(doc?.start_date),
+            end_date: doc?.end_date && new Date(doc?.end_date),
+            duration: doc?.duration && doc?.duration,
+            location: doc?.location && doc?.location,
             reporting_person_hr: reportingData.reporting_person_hr,
 
             hr_email: reportingData.hr_email,
@@ -656,6 +665,7 @@ function Personal(props) {
           });
           return doc;
         });
+
       updateDefaultValues({ addmore: [...addmoreData] });
     } else {
       setShowLoader(false);
@@ -664,18 +674,20 @@ function Personal(props) {
   };
 
   useEffect(() => {
-    if (candidateId || applicantId || stepThreeKey == '1') {
+    if (props?.empId || empId || stepThreeKey == '1') {
       getData();
     }
-  }, [stepThreeKey]);
+  }, [stepThreeKey, props]);
 
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const payload = {
       email_hash: tokenProps,
       password: passwordProps,
-      applicant_id: idProps,
+      employee: Number(empId),
+      // employee_id: employeeId,
     };
+
     const postData = [];
 
     const report = {};
@@ -684,18 +696,18 @@ function Personal(props) {
       report[i] = [];
       const hrReport = {};
       const managerReport = {};
-      if (rp.reporting_person_hr) {
-        hrReport.reporting_person = rp.reporting_person_hr;
-        hrReport.email = rp.hr_email;
-        hrReport.mobile = rp.hr_mobile;
+      if (rp?.reporting_person_hr) {
+        hrReport.reporting_person = rp?.reporting_person_hr;
+        hrReport.email = rp?.hr_email;
+        hrReport.mobile = rp?.hr_mobile;
         hrReport.is_hr = true;
         report[i].push(hrReport);
       }
 
-      if (rp.reporting_person_manager) {
-        managerReport.reporting_person = rp.reporting_person_manager;
-        managerReport.email = rp.manager_email;
-        managerReport.mobile = rp.manager_mobile;
+      if (rp?.reporting_person_manager) {
+        managerReport.reporting_person = rp?.reporting_person_manager;
+        managerReport.email = rp?.manager_email;
+        managerReport.mobile = rp?.manager_mobile;
         report[i].push(managerReport);
       }
       return rp;
@@ -704,16 +716,16 @@ function Personal(props) {
     for (const [index, history] of addEntry) {
       // eslint-disable-line
       const candidateHistory = {
-        designation: history.designation,
-        company_name: history.company_name,
-        company_url: history.company_url,
-        start_date: history.start_date
-          ? customFunctions.getDate(history.start_date)
+        designation: history?.designation,
+        company_name: history?.company_name,
+        company_url: history?.company_url,
+        start_date: history?.start_date
+          ? customFunctions.getDate(history?.start_date)
           : '',
-        end_date: history.end_date
-          ? customFunctions.getDate(history.end_date)
+        end_date: history?.end_date
+          ? customFunctions.getDate(history?.end_date)
           : '',
-        location: history.location,
+        location: history?.location,
         reportings: report[index],
       };
       postData.push(candidateHistory);
@@ -736,19 +748,23 @@ function Personal(props) {
       });
     } else {
       setShowLoader(false);
-      swal(data && data.message[0], '', 'success', {
+      swal(data && data?.message[0], '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        if (candidateId) {
-          getData();
-        }
+        getData();
+
         swal.close();
         props.callback();
       });
     }
   };
-
+  const downloadCSVPDF = async (image_url) => {
+    let filename = image_url.split('/');
+    let len = filename[filename.length - 1];
+    saveAs(image_url, len);
+    // window.open(data.data.file, '_blank');
+  };
   return (
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -858,16 +874,22 @@ function Personal(props) {
                   </Row>
                   <span>
                     <div className="mt-3 ms-4">
-                    <h6 style={{ fontSize: 'smaller' }}>
-                        1. Maximum upload file size limit is less then 1 MB.<span className='text-danger'>*</span>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        <b>Note:</b>
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        1. Maximum upload file size limit is less then 1 MB.
+                        <span className="text-danger">*</span>
                       </h6>
                       <h6 style={{ fontSize: 'smaller' }}>
                         2. File supported extension is jpg , png , svg , jpeg ,
-                        pdf.<span className='text-danger'>*</span>
+                        pdf.<span className="text-danger">*</span>
                       </h6>
                       <h6 style={{ fontSize: 'smaller' }}>
-                        3. Please provide the front and back photo in PDF formate of your Aadhaar card and a photo of your PAN card. 
-                        These are mandatory.<span className='text-danger'>*</span>
+                        3. Please provide the front and back photo in PDF
+                        formate of your Aadhaar card and a photo of your PAN
+                        card. These are mandatory.
+                        <span className="text-danger">*</span>
                       </h6>
                     </div>
                   </span>
@@ -918,6 +940,21 @@ function Personal(props) {
                                         className="text-underline "
                                       >
                                         Delete
+                                      </a>
+                                      <a
+                                        href={'/'}
+                                        target="_blank"
+                                        className="ms-3 text-underline "
+                                      >
+                                        <img
+                                          title="Download Document"
+                                          src="/images/download1.svg"
+                                          alt="download-icon"
+                                          onClick={() => {
+                                            downloadCSVPDF(item?.fileName);
+                                          }}
+                                          className="me-3"
+                                        />
                                       </a>
                                     </div>
                                   )}
@@ -1115,6 +1152,21 @@ function Personal(props) {
                                         className="text-underline "
                                       >
                                         Delete
+                                      </a>
+                                      <a
+                                        href={'/'}
+                                        target="_blank"
+                                        className="ms-3 text-underline "
+                                      >
+                                        <img
+                                          title="Download Document"
+                                          src="/images/download1.svg"
+                                          alt="download-icon"
+                                          onClick={() => {
+                                            downloadCSVPDF(item?.fileName);
+                                          }}
+                                          className="me-3"
+                                        />
                                       </a>
                                     </div>
                                   )}
@@ -1381,6 +1433,21 @@ function Personal(props) {
                                         >
                                           Delete
                                         </a>
+                                        <a
+                                          href={'/'}
+                                          target="_blank"
+                                          className="ms-3 text-underline "
+                                        >
+                                          <img
+                                            title="Download Document"
+                                            src="/images/download1.svg"
+                                            alt="download-icon"
+                                            onClick={() => {
+                                              downloadCSVPDF(item?.fileName);
+                                            }}
+                                            className="me-3"
+                                          />
+                                        </a>
                                       </div>
                                     )}
                                   </li>
@@ -1421,4 +1488,3 @@ function Personal(props) {
 }
 
 export default withRouter(Personal);
-

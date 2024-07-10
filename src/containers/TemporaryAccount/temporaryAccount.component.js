@@ -14,15 +14,16 @@ import customFunctions from '../../helper/customFunctions';
 
 function TemporaryAccount(props) {
   const accProps = { props };
-  const candidateId = accProps.props.match.params.ID;
-  const passwordProps = accProps.props.password;
-  const tokenProps = accProps.props.token;
+  const employeeId = accProps?.props?.match?.params?.ID;
+  const passwordProps = accProps?.props?.password;
+  const tokenProps = accProps?.props?.token;
   const title = 'Applications';
   const history = useHistory();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [id, setId] = useState('');
   const [personalInfo, setPersonalInfo] = useState(null);
+  const [idEmp, setEmpId]= useState('');
   const [toggle, setToggle] = useState(false);
   const [key, setKey] = useState('');
   const [completion, setCompletion] = useState(null);
@@ -30,8 +31,8 @@ function TemporaryAccount(props) {
   const [showED, setShowED] = useState(false);
 
   const getData = async () => {
-    const endPoint = candidateId
-      ? `${Api.applicantInfoUrl}?applicant_id=${candidateId}`
+    const endPoint = employeeId
+      ? `${Api.applicantInfoUrl}?employee_id=${employeeId}`
       : `${Api.applicantInfoUrl}`;
     const payload = {
       email_hash: tokenProps,
@@ -40,9 +41,10 @@ function TemporaryAccount(props) {
     const { data, message } = await AuthApi.postDataToServer(endPoint, payload);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      setPersonalInfo((data && data.data) || []);
-      setName(data.data.name);
-      setEmail(data.data.email);
+      setPersonalInfo((data && data?.data) || []);
+      setName(data?.data?.name);
+      setEmail(data?.data?.email);
+      setEmpId(data?.data?.emp_id);
       await setToggle(true);
     } else {
       swal(
@@ -84,7 +86,7 @@ function TemporaryAccount(props) {
   const getCompletionData = (value) => {
     setCompletion(value);
   };
-  
+
   useEffect(() => {
     if (trigger) {
       getCompletionData(completion);
@@ -103,14 +105,14 @@ function TemporaryAccount(props) {
                   variant="primary"
                   onClick={() => {
                     sessionStorage.clear();
-                    if (candidateId) {
+                    if (employeeId) {
                       history.push('/candidates');
                     } else {
                       history.push('/login');
                     }
                   }}
                 >
-                  {candidateId ? 'Back' : 'Logout'}
+                  {employeeId ? 'Back' : 'Logout'}
                 </Button>
               </div>
               <div className="profile-bg">
@@ -119,25 +121,25 @@ function TemporaryAccount(props) {
                   <Image src={`${Api.s3UrlnoProfile}`} alt="Card image cap" />
                 </div>
               </div>
-              <h3>{personalInfo && personalInfo.name}</h3>
-              <h5>{personalInfo && personalInfo.applied_for_name}</h5>
+              <h3>{personalInfo && personalInfo?.name}</h3>
+              <h5>{personalInfo && personalInfo?.applied_for_name}</h5>
               <div className="table-projects">
                 <div className="mt-4 card">
                   <div className="card-body">
                     <div className="row">
                       <div className="col-md-12 d-flex">
                         <div className="col-md-3">
-                          <h6>Email - {personalInfo && personalInfo.email}</h6>
+                          <h6>Email - {personalInfo && personalInfo?.email}</h6>
                         </div>
                         <div className="col-md-3">
                           <h6>
-                            Contact No - {personalInfo && personalInfo.mobile}
+                            Contact No - {personalInfo && personalInfo?.mobile}
                           </h6>
                         </div>
                         <div className="col-md-3">
                           <h6>
                             Pf Included -{' '}
-                            {personalInfo && personalInfo.pf_included === true
+                            {personalInfo && personalInfo?.pf_included === true
                               ? 'Yes'
                               : 'No'}
                           </h6>
@@ -158,7 +160,7 @@ function TemporaryAccount(props) {
                         <div className=" col-md-3">
                           <h6>
                             Offered CTC -{' '}
-                            {personalInfo && personalInfo.offered_ctc}
+                            {personalInfo && personalInfo?.offered_ctc}
                           </h6>
                         </div>
                         <div className="col-md-3">
@@ -166,7 +168,7 @@ function TemporaryAccount(props) {
                             Joining Date -{' '}
                             {personalInfo && personalInfo.joining_date
                               ? customFunctions.getDMYDate(
-                                  personalInfo.joining_date
+                                  personalInfo?.joining_date
                                 )
                               : ''}
                           </h6>
@@ -175,18 +177,17 @@ function TemporaryAccount(props) {
                         <ProgressBar
                           bsPrefix="progress pbar"
                           variant="success pe-2"
-                          className=''
+                          className=""
                           now={
                             completion
                               ? Number(completion)
-                              : personalInfo && Number(personalInfo.completion)
+                              : personalInfo && Number(personalInfo?.completion)
                           }
                           label={`${
                             completion
                               ? Number(completion)
-                              : personalInfo && Number(personalInfo.completion)
-                          }% completed`} 
-                          
+                              : personalInfo && Number(personalInfo?.completion)
+                          }% completed`}
                         />
                       </div>
                     </div>
@@ -205,6 +206,7 @@ function TemporaryAccount(props) {
                   email={email}
                   personalInfo={personalInfo}
                   applicantId={id}
+                  empId ={idEmp}
                   getParentsData={(value) => {
                     if (value) {
                       setTrigger(true);

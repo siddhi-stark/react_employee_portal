@@ -1,23 +1,26 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Button, Image, Row, Col, Card } from 'react-bootstrap';
+import { Button, Image, Row, Card } from 'react-bootstrap';
 import { Link, useHistory, withRouter } from 'react-router-dom';
 // import CustomTable from 'stark-custom-datatable';
+import axios from 'axios';
 import swal from 'sweetalert';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import { Helmet, ModalInput, Datepicker } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
+import { Tabs, Tab } from 'react-bootstrap';
 import customFunctions from '../../helper/customFunctions';
 import AddBondHistory from './AddBondHistory.component';
 import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
 import AddReview from './AddReview.component';
 import CustomTable from 'stark-custom-datatable';
+import AddEmployeeComponent from './addEmpolyeeComponent';
 
 function EmployeeProfile(props) {
-  const { match } = props;
+  const { match, accProps } = props;
   const empId = props.match.params.id;
   const [showEmployee, setShowEMployee] = useState(false);
   const [dataa, setData] = useState({});
@@ -49,9 +52,148 @@ function EmployeeProfile(props) {
   const [currentUserId, setCurrentUserId] = useState();
   const [rowData, setRowData] = useState([]);
   const employeeID = match.params.id;
+  const [applicatId, setApplicatId] = useState('');
+  // const [empId, setEmpId] = useState('');
   const items = [{ to: '/', label: 'Home' }, { label: 'Employee' }];
   const history = useHistory();
+  const [accordionOpen, setAccordionOpen] = useState(false);
+  const [key, setKey] = useState('personalDocument');
+
+  const [personalDocuments, setPersonalDocuments] = useState([
+    {
+      label: 'Pan Card',
+      value: 'panCard',
+      type: 'panCard',
+      // file_id: '',
+      personal_document_type: 1,
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'Aadhar Card',
+      value: 'aadharCard',
+      type: 'aadharCard',
+      // file_id: '',
+      personal_document_type: 2,
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'Photo',
+      value: 'photo',
+      type: 'photo',
+      // file_id: '',
+      personal_document_type: 3,
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
+    },
+  ]);
+
+  const [educationalDocuments, setEducationalDocuments] = useState([
+    {
+      label: 'SSC',
+      value: 'ssc',
+      type: 'ssc',
+      // file_id: '',
+      educational_document_type: 1,
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'HSC/ Diploma',
+      value: 'hsc',
+      type: 'hsc',
+      // file_id: '',
+      educational_document_type: 2,
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'Graduation',
+      value: 'graduation',
+      type: 'graduation',
+      // file_id: '',
+      educational_document_type: 3,
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'Post Graduation',
+      value: 'postgraduation',
+      type: 'postgraduation',
+      // file_id: '',
+      educational_document_type: 4,
+      // url: '',
+      isUploaded: false,
+      primaryId: '',
+    },
+  ]);
+
+  const [previousEmployement, setPreviousEmployement] = useState([
+    {
+      label: 'Salary Slip 1',
+      value: 'salary_slip_1',
+      file_id: '',
+      url: '',
+      employment_document_type: 1,
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'Salary Slip 2',
+      value: 'salary_slip_2',
+      file_id: '',
+      url: '',
+      employment_document_type: 2,
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'Salary Slip 3',
+      value: 'salary_slip_3',
+      file_id: '',
+      url: '',
+      employment_document_type: 3,
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'Relieving Letter',
+      value: 'relieving_letter',
+      file_id: '',
+      url: '',
+      employment_document_type: 4,
+      isUploaded: false,
+      primaryId: '',
+    },
+    {
+      label: 'Experience Letter',
+      value: 'experience_letter',
+      file_id: '',
+      url: '',
+      employment_document_type: 5,
+      isUploaded: false,
+      primaryId: '',
+    },
+  ]);
   // const navigate = useNavigate()
+  // Retrieve applicant ID from localStorage
+
+  const handleSelect = (doc) => {
+    if (doc === 'personalDocument') {
+      setKey('personalDocument');
+    } else if (doc === 'educationalDocument') {
+      setKey('educationalDocument');
+    } else if (doc === 'previouDocument') {
+      setKey('previouDocument');
+    }
+  };
 
   useEffect(() => {
     if (currentUserId) {
@@ -67,6 +209,62 @@ function EmployeeProfile(props) {
     getEmployeeHIstory();
   }, [refreshData]);
 
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    mobile: '',
+    dob: '',
+    gender: '',
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const toggleAccordion = () => {
+    setAccordionOpen(!accordionOpen);
+  };
+  const validate = () => {
+    const errors = {};
+    if (!formData.fullName) errors.fullName = 'Full Name is required';
+    if (!formData.email) errors.email = 'Email is required';
+    if (!formData.mobile) errors.mobile = 'Mobile Number is required';
+    if (!formData.dob) errors.dob = 'Date of Birth is required';
+    if (!formData.gender) errors.gender = 'Gender is required';
+    return errors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length === 0) {
+      // Submit form data
+    } else {
+      setErrors(validationErrors);
+    }
+  };
+  const handleRadioChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const handleClear = () => {
+    setFormData({
+      fullName: '',
+      email: '',
+      mobile: '',
+      dob: '',
+      gender: '',
+    });
+    setErrors({});
+  };
   const handleActionCallback = (row) => {
     return (
       <>
@@ -150,6 +348,102 @@ function EmployeeProfile(props) {
     },
   ];
 
+  // const personalColumns = [
+  //   {
+  //     id: 'personal_document_type_name',
+  //     label: 'Name',
+  //   },
+  //   {
+  //     id: 'action',
+  //     label: 'Action',
+  //     render: ({ personalDocuments }) => {
+  //       console.log("🚀 ~ EmployeeProfile ~ personalDocuments:", personalDocuments)
+  //       // eslint-disable-line
+  //       return (
+  //         <>
+  //           <a
+  //             href={document_url}
+  //             target="_blank" // eslint-disable-line
+  //           >
+  //             <Image src="/images/download-file.svg" />
+  //           </a>
+  //         </>
+  //       );
+  //     },
+  //   },
+  // ];
+  // const educationalColumns = [
+  //   {
+  //     id: 'title',
+  //     label: 'Name',
+  //   },
+  //   {
+  //     id: 'action',
+  //     label: 'Action',
+  //     render: ({ document_url }) => {
+  //       // eslint-disable-line
+  //       return (
+  //         <>
+  //           <a
+  //             href={document_url}
+  //             target="_blank" // eslint-disable-line
+  //           >
+  //             <Image src="/images/download-file.svg" />
+  //           </a>
+  //         </>
+  //       );
+  //     },
+  //   },
+  // ];
+
+  // const employmentColumns = [
+  //   {
+  //     id: 'title',
+  //     label: 'Name',
+  //   },
+  //   {
+  //     id: 'action',
+  //     label: 'Action',
+  //     render: ({ document_url }) => {
+  //       // eslint-disable-line
+  //       return (
+  //         <>
+  //           <a
+  //             href={document_url}
+  //             target="_blank" // eslint-disable-line
+  //           >
+  //             <Image src="/images/download-file.svg" />
+  //           </a>
+  //         </>
+  //       );
+  //     },
+  //   },
+  // ];
+
+  // const otherColumns = [
+  //   {
+  //     id: 'title',
+  //     label: 'Name',
+  //   },
+  //   {
+  //     id: 'action',
+  //     label: 'Action',
+  //     render: ({ document_url }) => {
+  //       // eslint-disable-line
+  //       return (
+  //         <>
+  //           <a
+  //             href={document_url}
+  //             target="_blank" // eslint-disable-line
+  //           >
+  //             <Image src="/images/download-file.svg" />
+  //           </a>
+  //         </>
+  //       );
+  //     },
+  //   },
+  // ];
+
   const getEmployeeDetails = async () => {
     setShowLoader(true);
     const employeeId = match.params.id;
@@ -157,10 +451,113 @@ function EmployeeProfile(props) {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${employeeId}/`
     );
+
     if (data) {
       setShowLoader(false);
+      setApplicatId(data?.data?.applicant_id);
       setEmployeeDetails(data.data);
-      getEmployeeDocument(data.data && data.data.full_name);
+
+      // getEmployeeDocument(data.data && data.data.full_name);
+    }
+  };
+
+  useEffect(() => {
+    if (empId) {
+      getUploadedDocuments();
+    }
+  }, [empId]);
+
+  const getUploadedDocuments = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.onBoardingDocUpload}`;
+    const idParam = employeeID
+      ? { employee_id: employeeID }
+      : { applicant: applicatId };
+
+    const params = {
+      // applicant: applicantId,
+      ...idParam,
+      type: 'all',
+    };
+    const token = customFunctions.getLocalStorage('access_token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await axios.get(url, {
+      headers: headers,
+    });
+    if (data && data.success == true) {
+      const temData = [];
+      const educationData = [];
+      const employementData = [];
+
+      const updatedDocumentsList = personalDocuments.map((doc) => {
+        const uploadedDoc = data?.data?.find(
+          (item) => doc.personal_document_type === item.personal_document_type
+        );
+        if (uploadedDoc) {
+          temData.push({
+            ...doc,
+            fileName: uploadedDoc?.image_url,
+            personal_document_type: uploadedDoc?.personal_document_type
+              ? uploadedDoc?.personal_document_type
+              : personalDocuments?.personal_document_type,
+            file_id: uploadedDoc?.document,
+            isUploaded: true,
+            primaryId: uploadedDoc?.id,
+          });
+        } else {
+          temData.push(doc);
+        }
+      });
+      setPersonalDocuments(temData);
+
+      const updateEducationDoc = educationalDocuments.map((dt) => {
+        const uploadDoc = data?.data?.find((item) => {
+          return (
+            dt.educational_document_type == item?.educational_document_type
+          );
+        });
+        if (uploadDoc) {
+          educationData.push({
+            ...dt,
+            fileName: uploadDoc?.image_url,
+            educational_document_type: uploadDoc?.educational_document_type
+              ? uploadDoc?.educational_document_type
+              : educationalDocuments?.educational_document_type,
+            file_id: uploadDoc?.document,
+            isUploaded: true,
+            primaryId: uploadDoc?.id,
+          });
+        } else {
+          educationData.push(dt);
+        }
+      });
+      setEducationalDocuments(educationData);
+
+      const updateEmployementDoc = previousEmployement.map((dt) => {
+        const updateEmployement = data?.data?.find((item) => {
+          return dt?.employment_document_type == item?.employment_document_type;
+        });
+        if (updateEmployement) {
+          employementData.push({
+            ...dt,
+            fileName: updateEmployement?.image_url,
+            employment_document_type:
+              updateEmployement?.employment_document_type,
+            file_id: updateEmployement?.document,
+            isUploaded: true,
+            primaryId: updateEmployement?.id,
+          });
+        } else {
+          employementData.push(dt);
+        }
+      });
+      setPreviousEmployement(employementData);
+      setShowLoader(false);
+    } else {
+      setShowLoader(false);
     }
   };
 
@@ -175,135 +572,39 @@ function EmployeeProfile(props) {
     }
   };
 
-  const personalColumns = [
-    {
-      id: 'title',
-      label: 'Name',
-    },
-    {
-      id: 'action',
-      label: 'Action',
-      render: ({ document_url }) => {
-        // eslint-disable-line
-        return (
-          <>
-            <a
-              href={document_url}
-              target="_blank" // eslint-disable-line
-            >
-              <Image src="/images/download-file.svg" />
-            </a>
-          </>
-        );
-      },
-    },
-  ];
+  // const getEmployeeDocument = async (name) => {
+  //   setShowLoader(true);
+  //   const formData = new FormData();
 
-  const educationalColumns = [
-    {
-      id: 'title',
-      label: 'Name',
-    },
-    {
-      id: 'action',
-      label: 'Action',
-      render: ({ document_url }) => {
-        // eslint-disable-line
-        return (
-          <>
-            <a
-              href={document_url}
-              target="_blank" // eslint-disable-line
-            >
-              <Image src="/images/download-file.svg" />
-            </a>
-          </>
-        );
-      },
-    },
-  ];
+  //   formData.append('employee_name', name);
 
-  const employmentColumns = [
-    {
-      id: 'title',
-      label: 'Name',
-    },
-    {
-      id: 'action',
-      label: 'Action',
-      render: ({ document_url }) => {
-        // eslint-disable-line
-        return (
-          <>
-            <a
-              href={document_url}
-              target="_blank" // eslint-disable-line
-            >
-              <Image src="/images/download-file.svg" />
-            </a>
-          </>
-        );
-      },
-    },
-  ];
-
-  const otherColumns = [
-    {
-      id: 'title',
-      label: 'Name',
-    },
-    {
-      id: 'action',
-      label: 'Action',
-      render: ({ document_url }) => {
-        // eslint-disable-line
-        return (
-          <>
-            <a
-              href={document_url}
-              target="_blank" // eslint-disable-line
-            >
-              <Image src="/images/download-file.svg" />
-            </a>
-          </>
-        );
-      },
-    },
-  ];
-
-  const getEmployeeDocument = async (name) => {
-    setShowLoader(true);
-    const formData = new FormData();
-
-    formData.append('employee_name', name);
-
-    const endPoint = `${Api.driveUploadDocumentUrl}`;
-    const { data, message } = await AuthApi.postDataToServer(
-      endPoint,
-      formData
-    );
-    if (data) {
-      setShowLoader(false);
-      setEmployeeDocument(data.data);
-      data.data &&
-        data.data.map((document) => {
-          if (document.title === 'Personal') {
-            setRowPersonalData(document.files);
-          } else if (document.title === 'Educational') {
-            setRowEducationalData(document.files);
-          } else if (document.title === 'Employment') {
-            setRowEmploymentData(document.files);
-          } else if (document.title === 'Other Documents') {
-            setRowOtherData(document.files);
-          }
-          return document;
-        });
-    }
-    if (!data) {
-      setShowLoader(false);
-      swal(message, '', 'error');
-    }
-  };
+  //   const endPoint = `${Api.driveUploadDocumentUrl}`;
+  //   const { data, message } = await AuthApi.postDataToServer(
+  //     endPoint,
+  //     formData
+  //   );
+  //   if (data) {
+  //     setShowLoader(false);
+  //     setEmployeeDocument(data.data);
+  //     data.data &&
+  //       data.data.map((document) => {
+  //         if (document.title === 'Personal') {
+  //           setRowPersonalData(document.files);
+  //         } else if (document.title === 'Educational') {
+  //           setRowEducationalData(document.files);
+  //         } else if (document.title === 'Employment') {
+  //           setRowEmploymentData(document.files);
+  //         } else if (document.title === 'Other Documents') {
+  //           setRowOtherData(document.files);
+  //         }
+  //         return document;
+  //       });
+  //   }
+  //   if (!data) {
+  //     setShowLoader(false);
+  //     swal(message, '', 'error');
+  //   }
+  // };
 
   useEffect(() => {
     getEmployeeHIstory();
@@ -461,7 +762,7 @@ function EmployeeProfile(props) {
       email: employeeDetails.email,
       mobile: employeeDetails?.mobile ? employeeDetails?.mobile : null,
       emp_code: employeeDetails?.emp_code,
-      tw_emp: employeeDetails?.tw_id,
+      // tw_emp: employeeDetails?.tw_id,
       role: employeeDetails?.role_id,
       department: employeeDetails?.department_id,
       status: employeeDetails?.status,
@@ -475,10 +776,9 @@ function EmployeeProfile(props) {
         employeeDetails && employeeDetails.date_joined
           ? customFunctions.getDate(employeeDetails.date_joined)
           : '',
-      confirmation_date:
-        employeeDetails?.confirmation_date
-          ? customFunctions.getDate(employeeDetails.confirmation_date)
-          : null,
+      confirmation_date: employeeDetails?.confirmation_date
+        ? customFunctions.getDate(employeeDetails.confirmation_date)
+        : null,
       confirmed:
         employeeDetails && employeeDetails.confirmation_date ? true : false, // eslint-disable-line
       relieving_date: lastworkingDate
@@ -503,7 +803,7 @@ function EmployeeProfile(props) {
     );
     if (data) {
       setShowLoader(false);
-      swal(data && data.message[0]);
+      swal(data && data.message[0], '', 'success');
       setShowModal(false);
       getEmployeeDetails();
       //   // onPersonalDetailChanges();
@@ -558,140 +858,142 @@ function EmployeeProfile(props) {
                 </div>
               </div>
             ) : (
-              <div className="mt-4 card">
-                <div className="card-body">
-                  <div className=" d-flex align-items-center justify-content-between mb-2">
-                    <div className="date-edit-option d-flex align-items-center justify-content-between w-100">
-                      <h6 className="me-5">
-                        DOB -{' '}
-                        {employeeDetails.dob
-                          ? customFunctions.getDMYDate(employeeDetails.dob)
-                          : ''}
-                      </h6>
-                      <a
-                        href="javascript:void()"
-                        onClick={() => {
-                          setShowPersonalDetails(true);
-                        }}
-                      >
-                        {!employeeDetails.relieved && (
-                          <Image
-                            src="/images/edit-button.svg"
-                            alt="Edit Profile"
-                          />
-                        )}
-                      </a>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-3">
-                      <h6>
-                        Joining Date -{' '}
-                        {employeeDetails.date_joined
-                          ? customFunctions.getDMYDate(
-                              employeeDetails.date_joined
-                            )
-                          : ''}
-                      </h6>
-                    </div>
-                    <div className="col-md-4">
-                      <h6>Email - {employeeDetails.email}</h6>
-                    </div>
-                    <div className="col-md-5">
-                      <h6>Personal Email - {employeeDetails.personal_email}</h6>
-                    </div>
-                  </div>
-                  <br />
-                  <div className="row">
-                    <div className="col-md-3">
-                      <h6>Contact No - {employeeDetails.mobile}</h6>
-                    </div>
-                    <div className="col-md-4">
-                      {employeeDetails.on_notice_period ? (
-                        <h6>
-                          Expected Relieving Date -{' '}
-                          {employeeDetails.last_working_date
-                            ? customFunctions.getDMYDate(
-                                employeeDetails.last_working_date
-                              )
-                            : ''}
-                        </h6>
-                      ) : employeeDetails.relieved === true ? (
-                        <h6>
-                          Relieved Date -{' '}
-                          {customFunctions.getDMYDate(
-                            employeeDetails.relieving_date
-                          )}
-                        </h6>
-                      ) : employeeDetails.probation_date ? (
-                        <h6>
-                          Probation End Date -{' '}
-                          {customFunctions.getDMYDate(
-                            employeeDetails.probation_date
-                          )}
-                        </h6>
-                      ) : (
-                        <>
-                          <h6>
-                            {employeeDetails.confirmation_date
-                              ? `Confirmation Date -`
-                              : `Expected Confirmation Date-`}
-                            {employeeDetails.confirmation_date != null ||
-                            employeeDetails.confirmation_date != ''
-                              ? customFunctions.getDMYDate(
-                                  employeeDetails.confirmation_date
-                                )
-                              : employeeDetails.expected_confirmation_date &&
-                                customFunctions.getDMYDate(
-                                  employeeDetails.expected_confirmation_date
-                                )}
-                          </h6>
-                        </>
-                      )}
-                    </div>
-                    {/* {employeeDetails?.on_notice_period ? (
-                      <Button
-                        onClick={() => {
-                          setShowModal(true);
-                        }}
-                        type="button"
-                        className="btn btn-primary col-1"
-                      >
-                        Relieve Now
-                      </Button>
-                    ) : null} */}
-                    <div className="col-md-5">
-                      {employeeDetails &&
-                        !employeeDetails.confirmation_date &&
-                        !employeeDetails.relieving_date &&
-                        !employeeDetails?.on_notice_period && (
-                          <button
-                            onClick={() => {
-                              history.push('/confirmation', {
-                                employeeID: Number(employeeID),
-                              });
-                            }}
-                            type="button"
-                            className="btn btn-primary"
-                          >
-                            Confirm Now
-                          </button>
-                        )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              // <div className="mt-4 card">
+              //   <div className="card-body">
+              //     <div className=" d-flex align-items-center justify-content-between mb-2">
+              //       <div className="date-edit-option d-flex align-items-center justify-content-between w-100">
+              //         <h6 className="me-5">
+              //           DOB -{' '}
+              //           {employeeDetails.dob
+              //             ? customFunctions.getDMYDate(employeeDetails.dob)
+              //             : ''}
+              //         </h6>
+              //         <a
+              //           href="javascript:void()"
+              //           title='Edit'
+              //           onClick={() => {
+              //             setShowPersonalDetails(true);
+              //           }}
+              //         >
+              //           {!employeeDetails.relieved && (
+              //             <Image
+              //               src="/images/edit-button.svg"
+              //               alt="Edit Profile"
+              //             />
+              //           )}
+              //         </a>
+              //       </div>
+              //     </div>
+              //     <div className="row">
+              //       <div className="col-md-3">
+              //         <h6>
+              //           Joining Date -{' '}
+              //           {employeeDetails.date_joined
+              //             ? customFunctions.getDMYDate(
+              //                 employeeDetails.date_joined
+              //               )
+              //             : ''}
+              //         </h6>
+              //       </div>
+              //       <div className="col-md-4">
+              //         <h6>Email - {employeeDetails.email}</h6>
+              //       </div>
+              //       <div className="col-md-5">
+              //         <h6>Personal Email - {employeeDetails.personal_email}</h6>
+              //       </div>
+              //     </div>
+              //     <br />
+              //     <div className="row">
+              //       <div className="col-md-3">
+              //         <h6>Contact No - {employeeDetails.mobile}</h6>
+              //       </div>
+              //       <div className="col-md-4">
+              //         {employeeDetails.on_notice_period ? (
+              //           <h6>
+              //             Expected Relieving Date -{' '}
+              //             {employeeDetails.last_working_date
+              //               ? customFunctions.getDMYDate(
+              //                   employeeDetails.last_working_date
+              //                 )
+              //               : ''}
+              //           </h6>
+              //         ) : employeeDetails.relieved === true ? (
+              //           <h6>
+              //             Relieved Date -{' '}
+              //             {customFunctions.getDMYDate(
+              //               employeeDetails.relieving_date
+              //             )}
+              //           </h6>
+              //         ) : employeeDetails.probation_date ? (
+              //           <h6>
+              //             Probation End Date -{' '}
+              //             {customFunctions.getDMYDate(
+              //               employeeDetails.probation_date
+              //             )}
+              //           </h6>
+              //         ) : (
+              //           <>
+              //             <h6>
+              //               {employeeDetails.confirmation_date
+              //                 ? `Confirmation Date -`
+              //                 : `Expected Confirmation Date-`}
+              //               {employeeDetails.confirmation_date != null ||
+              //               employeeDetails.confirmation_date != ''
+              //                 ? customFunctions.getDMYDate(
+              //                     employeeDetails.confirmation_date
+              //                   )
+              //                 : employeeDetails.expected_confirmation_date &&
+              //                   customFunctions.getDMYDate(
+              //                     employeeDetails.expected_confirmation_date
+              //                   )}
+              //             </h6>
+              //           </>
+              //         )}
+              //       </div>
+              //       {/* {employeeDetails?.on_notice_period ? (
+              //         <Button
+              //           onClick={() => {
+              //             setShowModal(true);
+              //           }}
+              //           type="button"
+              //           className="btn btn-primary col-1"
+              //         >
+              //           Relieve Now
+              //         </Button>
+              //       ) : null} */}
+              //       <div className="col-md-5">
+              //         {employeeDetails &&
+              //           !employeeDetails.confirmation_date &&
+              //           !employeeDetails.relieving_date &&
+              //           !employeeDetails?.on_notice_period && (
+              //             <button
+              //               onClick={() => {
+              //                 history.push('/confirmation', {
+              //                   employeeID: Number(employeeID),
+              //                 });
+              //               }}
+              //               type="button"
+              //               className="btn btn-primary"
+              //             >
+              //               Confirm Now
+              //             </button>
+              //           )}
+              //       </div>
+              //     </div>
+              //   </div>
+              // </div>
+              <AddEmployeeComponent />
             )}
           </div>
           <div className="profile-details">
-            <div className="row">
+            <div className="mt-3 row">
               <div className="col-sm-12">
                 {!employeeDetails.relieved && (
                   <div className="card">
                     <div className="card-body">
                       <div className="d-flex align-items-start justify-content-between mb-4">
                         {showReview && (
-                          <div className="mt-2">
+                          <div className="mt-3">
                             <h5>
                               {pagetype === 'edit'
                                 ? 'Edit Review'
@@ -755,7 +1057,7 @@ function EmployeeProfile(props) {
                     </div>
                   </div>
                 )}
-                {!employeeDetails.relieved && (
+                {!employeeDetails.is_fresher && (
                   <div className="card">
                     <div className="card-body">
                       <div className="d-flex align-items-start justify-content-between mb-4">
@@ -763,7 +1065,7 @@ function EmployeeProfile(props) {
                           <h5 className="card-title">Experience</h5>
                         )}
 
-                        {!employeeDetails.relieved && (
+                        {/* {!employeeDetails.is_fresher && (
                           <button
                             onClick={() => {
                               setShowEMployee(true);
@@ -774,11 +1076,13 @@ function EmployeeProfile(props) {
                           >
                             Add History
                           </button>
-                        )}
+                        )} */}
                       </div>
-                      {showEmployee && (
+                      {/* {showEmployee &&  ( */}
+                      {!employeeDetails.is_fresher && (
                         <div className="mt-4 card">
                           <AddHistory
+                            employeeId={empId}
                             optionsData={dataa}
                             handleModalCLose={(e) => setShowEMployee(e)}
                             onChanges={() => {
@@ -795,7 +1099,7 @@ function EmployeeProfile(props) {
                               key={i}
                             >
                               <div className="media">
-                                <Image
+                                {/* <Image
                                   src={
                                     comp.company_name === 'Stark Digital'
                                       ? '/images/stark-logo.png'
@@ -803,7 +1107,7 @@ function EmployeeProfile(props) {
                                   }
                                   className="mr-3"
                                   alt="image"
-                                />
+                                /> */}
                                 <div className="media-body">
                                   <h5 className="mt-0">{comp.designation}</h5>
                                   <p>{comp.company_name}</p>
@@ -891,20 +1195,21 @@ function EmployeeProfile(props) {
                                 <div className="media">
                                   <div className="media-body">
                                     <p>
-                                      Start Date:{' '}
+                                      <b>Start Date:</b>{' '}
                                       {bond.start_date &&
                                         customFunctions.getDMYDate(
                                           bond.start_date
                                         )}{' '}
-                                      &nbsp; End Date:{' '}
+                                      <br />
+                                      <b>End Date:</b>{' '}
                                       {bond.end_date &&
                                         customFunctions.getDMYDate(
                                           bond.end_date
                                         )}{' '}
                                       <br />
-                                      Document Link:
+                                      <b>Document Link:</b>
                                       <Link
-                                        className="mt-3 ms-2"
+                                        className="mt-3 ms-2 text-primary"
                                         title="Document Link"
                                         to={{ pathname: `${bond.file_name}` }}
                                         target="_blank"
@@ -953,105 +1258,167 @@ function EmployeeProfile(props) {
                     </div>
                   )}
 
-                {employeeDocument && employeeDocument.length > 0 ? (
-                  <>
-                    <div className="card">
-                      <div className="card-body">
-                        <div className="d-flex align-items-center justify-content-between">
-                          <h5 className="card-title mb-0 mt-2 ">Documents</h5>
-                          <button
-                            onClick={() => {
-                              setShowBond(true);
-                              history.push(
-                                `/addemployement-history/${employeeID}`,
-                                {
-                                  email: employeeDetails.email,
-                                  name: employeeDetails.full_name,
-                                }
-                              );
-                            }}
-                            type="button"
-                            className="btn btn-primary"
-                          >
-                            Add Documents
-                          </button>
-                        </div>
-                        <hr />
-                        <div className="row">
-                          {employeeDocument &&
-                            employeeDocument.map((document, index) => (
-                              <>
-                                {document.title === 'Personal' && (
-                                  <div className="col-md-4" key={index}>
-                                    <h5 className="mb-3">Personal</h5>
-                                    <CustomTable
-                                      tableContainerClass="mt-2"
-                                      columns={personalColumns}
-                                      rows={rowPersonalData}
-                                      tableClass="table-striped"
-                                      showPagination={true}
-                                      emptyRender={() => {
-                                        return 'No record found.';
-                                      }}
-                                    />
-                                  </div>
+                {/* {employeeDocument && employeeDocument.length > 0 ? ( */}
+                <>
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <h5 className="card-title mb-0 mt-2 ">Documents</h5>
+                        <button
+                          onClick={() => {
+                            setShowBond(true);
+                            history.push(`/add-document/${empId}`, {
+                              state: {
+                                employeeId: Number(empId),
+                                applicantId: applicatId,
+                              },
+                            });
+                          }}
+                          type="button"
+                          className="btn btn-primary"
+                        >
+                          Add Documents
+                        </button>
+                      </div>
+                      <hr />
+                      <div className="row">
+                        <Card>
+                          <Card.Body>
+                            <Tabs
+                              defaultActiveKey="personalDocument"
+                              onSelect={(e) => handleSelect(e)}
+                            >
+                              <Tab
+                                eventKey="personalDocument"
+                                title=" Personal Document"
+                              >
+                                {key === 'personalDocument' && (
+                                  <ul className="border-0">
+                                    {personalDocuments &&
+                                      personalDocuments?.map((item, index) => (
+                                        <li
+                                          key={index}
+                                          className="mb-2 ms-5 ps-5 d-flex justify-content-between"
+                                        >
+                                          <span>{index + 1}. </span>
+                                          <span>
+                                            {item?.fileName ? (
+                                              <del>{item?.label}</del>
+                                            ) : (
+                                              item?.label
+                                            )}
+                                          </span>
+                                          <div
+                                            style={{ marginRight: '90px' }}
+                                            className="btn-wrapper"
+                                          >
+                                            <a
+                                              href={item?.fileName}
+                                              target="_blank"
+                                              className="me-5 pe-5 text-underline "
+                                            >
+                                              View
+                                            </a>
+                                          </div>
+                                        </li>
+                                      ))}
+                                  </ul>
                                 )}
-                                {document.title === 'Educational' && (
-                                  <div className="col-md-4">
-                                    <h5 className="mb-3">Educational</h5>
-                                    <CustomTable
-                                      tableContainerClass="mt-2"
-                                      columns={educationalColumns}
-                                      rows={rowEducationalData}
-                                      tableClass="table-striped"
-                                      showPagination={true}
-                                      emptyRender={() => {
-                                        return 'No record found.';
-                                      }}
-                                    />
-                                  </div>
+                              </Tab>
+                              <Tab
+                                eventKey="educationalDocument"
+                                title="Educational Document"
+                              >
+                                {key === 'educationalDocument' && (
+                                  <ul className="border-0">
+                                    {educationalDocuments &&
+                                      educationalDocuments?.map(
+                                        (item, index) => (
+                                          <li
+                                            key={index}
+                                            className="mb-2 ms-5 ps-5 d-flex justify-content-between"
+                                          >
+                                            <span>{index + 1}. </span>
+                                            <span>
+                                              {item?.fileName &&
+                                              item?.fileName ? (
+                                                <del>{item?.label}</del>
+                                              ) : (
+                                                item?.label
+                                              )}
+                                            </span>
+                                            <div
+                                              style={{ marginRight: '90px' }}
+                                              className="btn-wrapper"
+                                            >
+                                              <a
+                                                href={item?.fileName}
+                                                target="_blank"
+                                                onClick={() => {
+                                                  window.open(item?.fileName);
+                                                }}
+                                                className="me-5 pe-5 text-underline "
+                                              >
+                                                View
+                                              </a>
+                                            </div>
+                                          </li>
+                                        )
+                                      )}
+                                  </ul>
                                 )}
-                                {document.title === 'Employment' && (
-                                  <div className="col-md-4">
-                                    <h5 className="mb-3">
-                                      Previous Employment
-                                    </h5>
-                                    <CustomTable
-                                      tableContainerClass="mt-2"
-                                      columns={employmentColumns}
-                                      rows={rowEmploymentData}
-                                      tableClass="table-striped"
-                                      showPagination={true}
-                                      emptyRender={() => {
-                                        return 'No record found.';
-                                      }}
-                                    />
-                                  </div>
-                                )}
-                                {document.title === 'Other Documents' && (
-                                  <div className="col-md-4">
-                                    <h5 className="mb-3">Other Documents</h5>
-                                    <CustomTable
-                                      tableContainerClass="mt-2"
-                                      columns={otherColumns}
-                                      rows={rowOtherData}
-                                      tableClass="table-striped"
-                                      showPagination={true}
-                                      emptyRender={() => {
-                                        return 'No record found.';
-                                      }}
-                                    />
-                                  </div>
-                                )}
-                              </>
-                            ))}
-                        </div>
+                              </Tab>
+                              {!employeeDetails.is_fresher && (
+                                <Tab
+                                  eventKey="previouDocument"
+                                  title="Previous Employement Document"
+                                >
+                                  {key === 'previouDocument' && (
+                                    <ul className="border-0">
+                                      {previousEmployement &&
+                                        previousEmployement?.map(
+                                          (item, index) => (
+                                            <li
+                                              key={index}
+                                              className="mb-2 ms-5 ps-5 d-flex justify-content-between"
+                                            >
+                                              <span>{index + 1}. </span>
+                                              <span>
+                                                {item?.fileName ? (
+                                                  <del>{item?.label}</del>
+                                                ) : (
+                                                  item?.label
+                                                )}
+                                              </span>
+                                              <div
+                                                style={{ marginRight: '90px' }}
+                                                className="btn-wrapper"
+                                              >
+                                                <a
+                                                  href={item?.fileName}
+                                                  target="_blank"
+                                                  onClick={() => {
+                                                    window.open(item?.fileName);
+                                                  }}
+                                                  className="me-5 pe-5 text-underline "
+                                                >
+                                                  View
+                                                </a>
+                                              </div>
+                                            </li>
+                                          )
+                                        )}
+                                    </ul>
+                                  )}
+                                </Tab>
+                              )}
+                            </Tabs>
+                          </Card.Body>
+                        </Card>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  ''
-                )}
+                  </div>
+                </>
               </div>
             </div>
           </div>

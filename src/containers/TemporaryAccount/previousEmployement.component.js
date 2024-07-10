@@ -12,12 +12,12 @@ import FormSections from './employmentFormschema.json';
 function PreviousEmployement(props) {
   const {getParentsData} = props;
   const accProps = { props };
-  const candidateId = accProps.props.match.params.ID;
-  const applicantId = accProps.props.applicantId;
-  const passwordProps = accProps.props.password;
-  const tokenProps = accProps.props.token;
-  const nameProps = accProps.props.name;
-  const emailProps = accProps.props.email;
+  const employeeId = accProps?.props?.match?.params?.ID;
+  const applicantId = accProps?.props?.applicantId;
+  const passwordProps = accProps?.props?.password;
+  const tokenProps = accProps?.props?.token;
+  const nameProps = accProps?.props?.name;
+  const emailProps = accProps?.props?.email;
 
   let filterOptions = {};
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
@@ -374,8 +374,12 @@ function PreviousEmployement(props) {
   const getUploadedDocuments = async () => {
     setShowLoader(true);
     const endPoint = `${Api.onBoardingDocUpload}`;
+    const idParam = employeeId ? { employee_id: employeeId } : { applicant: applicantId };
+
     const params = {
-      applicant: applicantId,
+      // applicant: applicantId,
+      ...idParam,
+      type: 'all',
     };
     const token = customFunctions.getLocalStorage('access_token');
     const headers = {
@@ -420,7 +424,7 @@ function PreviousEmployement(props) {
   const submitPersonalDoc = async () => {
     setShowLoader(true);
     const postData = {
-      applicant: applicantId,
+      employee_id: employeeId,
       doc_type: 2,
       personal_documents: [
         {

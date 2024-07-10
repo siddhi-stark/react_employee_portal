@@ -12,6 +12,7 @@ import FormSections from './editEmployee.json';
 
 function EditPersonalDetails(props) {
   const { handleModalCLose, onPersonalDetailChanges } = props;
+
   // Variable declarations
   // const history = useHistory()
   const [defaultValues, updateDefaultValues] = useState({});
@@ -20,7 +21,9 @@ function EditPersonalDetails(props) {
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [isShowLoader, setShowLoader] = useState(false);
   const [testDate, setDate] = useState(null);
-
+  const [manager, setManager] = useState([]);
+  const [projectTeam, setProjectTeam] = useState([]);
+  const [selectedManager, setSelectedManager] = useState([]);
   // useEffect(() => {
   //   if(addInstituteId){
   //     const formSchema = [...FormSections];
@@ -82,7 +85,8 @@ function EditPersonalDetails(props) {
   }, []);
 
   const submitForm = async (formValues) => {
-    setShowLoader(true);
+    return;
+    // setShowLoader(true);
     const id = customFunctions.getLocalStorage('id');
 
     let postData = {
@@ -91,6 +95,7 @@ function EditPersonalDetails(props) {
 
     postData = {
       designation: formValues.designation ? formValues.designation.value : null,
+      department: formValues.department ? formValues.department_value : null,
       joining_date: formValues.joining_date
         ? customFunctions.getDate(formValues.joining_date)
         : '',
@@ -127,6 +132,7 @@ function EditPersonalDetails(props) {
       personal_email: formValues?.personal_email
         ? formValues?.personal_email
         : null,
+      emp_code: formValues?.emp_code ? formValues?.emp_code : null,
     };
 
     const { data } = await AuthApi.putDataToServer(
@@ -135,7 +141,7 @@ function EditPersonalDetails(props) {
     );
     if (data) {
       setShowLoader(false);
-      swal(data && data.message[0]);
+      swal(data && data.message[0], '', 'success');
       handleModalCLose(false);
       onPersonalDetailChanges();
       // history.push('/employees',{
@@ -153,8 +159,10 @@ function EditPersonalDetails(props) {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}${id}/`
     );
+
     if (data && data.success) {
       setShowLoader(false);
+
       data.data.confirmation_date = data.data.confirmation_date
         ? new Date(customFunctions.getDate(data.data.confirmation_date))
         : '';
@@ -167,6 +175,7 @@ function EditPersonalDetails(props) {
       data.data.joining_date = data.data.date_joined
         ? new Date(customFunctions.getDate(data.data.date_joined))
         : '';
+
       // data.data.notice_period_date = data.data.notice_period_date
       // ? customFunctions.getDMYDate(data.data.notice_period_date)
       // : '';
@@ -179,6 +188,19 @@ function EditPersonalDetails(props) {
             value: data.data.designation_id,
           }
         : '';
+      const roles = data.data.role_id
+        ? {
+            label: data.data.role_name,
+            value: data.data.role_id,
+          }
+        : '';
+      const dept = data.data.department_id
+        ? {
+            label: data.data.department_name,
+            value: data.data.department_id,
+          }
+        : '';
+      const EmpCode = data.data.emp_code;
       setDate(
         (data.data.notice_period_date = data.data.notice_period_date
           ? customFunctions.getDate(data.data.notice_period_date)
@@ -188,9 +210,33 @@ function EditPersonalDetails(props) {
       const obj = {
         ...data.data,
         designation: ds,
+        role: roles,
+        department: dept,
+        emp_code: EmpCode,
       };
       // updateDefaultValues({ ...obj });
+      // const noticeDate = obj;
       const noticeDate = obj;
+
+      //   let isStaticData={
+      //     full_name: "Akash Belokar",
+      //     joining_date: "2023-12-26",
+      //     personal_email: "test@yopmail.com",
+      //     email: "test@yopmail.com",
+      //     mobile: "9022903955",
+      //     probation_date: "2024-03-26",
+      //     confirmation_date: null,
+      //     dob: "2001-08-22",
+      //     confirmed: false,
+      //     relieving_date: null,
+      //     remove_from_np: true,
+      //     role:{value: 7, label: 'System Admin'},
+      //     department:{value: 2, label: "Development"},
+      //     team :{value: 7, label: "Other"},
+      //     manager :{value: 9, label: "Sanjay Mangalaram"},
+      //     emp_code:"325",
+
+      // }
       updateDefaultValues({
         notice_period_end_date: noticeDate.last_working_date
           ? new Date(customFunctions.getDate(noticeDate.last_working_date))
@@ -219,6 +265,15 @@ function EditPersonalDetails(props) {
           ? new Date(customFunctions.getDate(noticeDate?.probation_date))
           : null,
         mobile: noticeDate?.mobile ? noticeDate?.mobile : null,
+        emp_code: noticeDate?.emp_code ? noticeDate?.emp_code : null,
+
+        department: {
+          label: noticeDate?.department_name,
+        },
+
+        manager: noticeDate?.manager,
+        team: noticeDate?.team,
+        role: noticeDate?.role,
       });
     }
   };
@@ -246,12 +301,49 @@ function EditPersonalDetails(props) {
 
   useEffect(() => {
     getDesignation();
+    getManager();
+    getTeam();
   }, []);
 
   const onClear = () => {
     handleModalCLose(false);
   };
 
+  const getTeam = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.InterviewRoundsUrl}?constant_type=team`
+    );
+
+    if (!data) {
+      return;
+    }
+    // if (data && data?.data) {
+    //   setProjectTeam(data?.data?.team);
+    // }
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
+
+    options.team = dpOptions;
+    const allOptions = options;
+    await updateOptions({ ...allOptions });
+    getData();
+  };
+
+  const getManager = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${
+        Api.employeeUrl
+      }?role_id=${2}&is_dropdown=1&show_self=True&status=active`
+    );
+
+    if (!customFunctions.checkIfEmpty(data && data?.data, 'A')) {
+      setManager(data?.data?.full_name);
+    }
+  };
   return (
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />

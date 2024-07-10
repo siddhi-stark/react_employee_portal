@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
-import { withRouter, useHistory } from 'react-router-dom';
+import { withRouter, useHistory, useLocation } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import { Row, Col, Card, Button, Image, Form } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
@@ -21,6 +21,7 @@ import Pagination from '../../components/Pagination/pagination.component';
 import RadioComponent from '../../components/FormInputs/radio.component';
 
 function CurrentEmployee() {
+  const state = useLocation();
   const currentdate = new Date();
   const maxdate = new Date(currentdate.setYear(currentdate.getFullYear() - 18));
   const [employeeId, setEmployeeId] = useState(null);
@@ -53,7 +54,7 @@ function CurrentEmployee() {
   const [filterData, setFilterData] = useState({});
   const [defaultValues, updateDefaultValues] = useState({}); //eslint-disable-line
   const [isShowLoader, setShowLoader] = useState(false);
-
+  const [applicantId, setApplicantId] = useState('');
   const [modalShow, setModalShow] = useState(false);
   const [count, forceUpdate] = useState(0);
   const [fullName, setFullName] = useState('');
@@ -306,7 +307,7 @@ function CurrentEmployee() {
             }
           : ''
       );
-
+      setApplicantId(data?.data?.applicant_id);
       setGender(data?.data?.gender);
       setFullName(data?.data?.full_name);
       setEmail(data?.data?.email);
@@ -318,7 +319,6 @@ function CurrentEmployee() {
       );
       setEmpCode(data?.data?.emp_code);
     }
-
   };
 
   const getDesignation = async () => {
@@ -351,7 +351,7 @@ function CurrentEmployee() {
 
   const getMentorList = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending&type=all&is_dropdown=1&status=active`
+      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending&type=all&is_dropdown=1`
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       setMentorData(data.data);
@@ -520,6 +520,7 @@ function CurrentEmployee() {
       gender: gender,
       is_onboard: false,
       applicant_id: null,
+
       // probation_date:probationDate ? customFunctions.getDate(probationDate) : null
     };
     if (selectedDesignationOption) {
@@ -535,6 +536,7 @@ function CurrentEmployee() {
       ? `${Api.employeeAdd}${employeeId}/`
       : Api.employeeAdd;
     const { data, message } = await callback(endPoint, payload);
+
     if (data) {
       setShowLoader(false);
       validator.current.hideMessages();
@@ -605,8 +607,6 @@ function CurrentEmployee() {
     });
     return op;
   };
-
-  
 
   const getMentorData = () => {
     if (!mentorData) return [];
@@ -919,7 +919,12 @@ function CurrentEmployee() {
                       size="sm"
                       className="pull-right"
                       onClick={() => {
-                        history.push(`/employee-profile/${emp.id}`);
+                        history.push(`/employee-profile/${emp.id}`, {
+                          state: {
+                            empId: emp?.id,
+                            applicantId: emp?.applicant_id,
+                          },
+                        });
                         localStorage.setItem('employeeName', emp.full_name);
                         customFunctions.setLocalStorage(
                           'title',
@@ -1314,11 +1319,6 @@ function CurrentEmployee() {
                         checked={gender == option.value}
                         onChange={onSelectRadioButton}
                         inline
-                        errorMessage={validator.current.message(
-                          'gender',
-                          gender,
-                          'required'
-                        )}
                       />
                     ))}
                   </div>

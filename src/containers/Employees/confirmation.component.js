@@ -1,11 +1,11 @@
 /* eslint-disable */
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Form, Button, Card, Row, Col } from 'react-bootstrap';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { EditorState, convertFromHTML, ContentState } from 'draft-js';
-import SimpleReactValidator from "simple-react-validator";
+import SimpleReactValidator from 'simple-react-validator';
 import swal from 'sweetalert';
 import { Datepicker, Helmet, DropdownInput } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
@@ -15,7 +15,9 @@ import Api from '../../helper/api';
 
 function Confirmation(props) {
   const propsData = props;
-  const employeeID = propsData.location.state ? propsData.location.state.employeeID:'';
+  const employeeID = propsData.location.state
+    ? propsData.location.state.employeeID
+    : '';
   const history = useHistory();
   const name = customFunctions.getLocalStorage('employeeName');
   const id = localStorage.getItem('candidateId');
@@ -151,12 +153,12 @@ function Confirmation(props) {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-       <Button
-        className="float-end mt-2 mb-2 mr-3"
-        onClick={() => history.push(`/employee-profile/${employeeID}`)}
-      >
-        Back
-      </Button>
+        <Button
+          className="float-end mt-2 mb-2 mr-3"
+          onClick={() => history.push(`/employee-profile/${employeeID}`)}
+        >
+          Back
+        </Button>
         <h2 className="main-content-title tx-24 mg-b-5">Confirmation</h2>
         <Breadcrumb items={items} />
       </div>

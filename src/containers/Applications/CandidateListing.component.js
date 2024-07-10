@@ -34,14 +34,14 @@ function CandidateListing() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            history.push(`/candidates/${row.id}`);
+            history.push(`/candidates/${row.emp_id}`);
           }}
         >
           <Image src="/images/edit-button.svg" />
         </a>
         {new Date(row.joining_date).getTime() <= new Date().getTime() &&
           row.offer_status_name !== 'Declined' &&
-          !row.employee_id && (
+          !row.is_onboard && (
             <a
               href="/"
               title="Onboard Candidate"
@@ -49,7 +49,7 @@ function CandidateListing() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                history.push(`/onboard/${row.id}`);
+                history.push(`/onboard/${row.emp_id}`);
               }}
             >
               <Image src="/images/onboard.svg" />
@@ -135,6 +135,7 @@ function CandidateListing() {
       limit,
       sort_direction: 'descending',
       status: 4,
+      is_candidate_details: true,
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);

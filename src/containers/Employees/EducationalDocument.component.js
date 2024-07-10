@@ -29,7 +29,6 @@ function EducationalDocument(props) {
   }, []);
 
   const fileUpload = async (formValues) => {
-
     const formData = new FormData();
 
     formData.append('file_name', formValues[0]);
@@ -49,7 +48,7 @@ function EducationalDocument(props) {
         allowOutsideClick: false,
       });
       fileId = null;
-    } 
+    }
     if (data && Object.keys(data).length && data.success) {
       fileId = data.data.id;
     }
@@ -99,7 +98,7 @@ function EducationalDocument(props) {
           doc: sscfileUrlId ? Number(sscfileUrlId) : sscfileUrl,
         },
         {
-          doc_title: 'HSC',
+          doc_title: 'HSC/Diploma',
           doc: hscfileUrlId ? Number(hscfileUrlId) : hscfileUrl,
         },
         {
@@ -113,55 +112,62 @@ function EducationalDocument(props) {
       ],
     };
 
-    if(graduatefileUrlId || (graduatefileUrl && hscfileUrlId) ||(hscfileUrl && postfileUrlId) ||
-        (postfileUrl && sscfileUrlId) || sscfileUrl) {
-
-    const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
-    if (!data) {
-      setShowLoader(false);
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-      });
+    if (
+      graduatefileUrlId ||
+      (graduatefileUrl && hscfileUrlId) ||
+      (hscfileUrl && postfileUrlId) ||
+      (postfileUrl && sscfileUrlId) ||
+      sscfileUrl
+    ) {
+      const { data, message } = await AuthApi.postDataToServer(
+        `${Api.applicantDocumentUrl}`,
+        postData
+      );
+      if (!data) {
+        setShowLoader(false);
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+        });
+      } else {
+        setShowLoader(false);
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+          swal.close();
+        });
+      }
     } else {
-      setShowLoader(false);
-      swal(data && data.message[0], '', 'success', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      }).then(() => {
-        swal.close();
-      });
-    }
-     } else {
       setShowLoader(false);
     }
   };
 
   return (
     <>
-    <Loader showLoader={isShowLoader} needFullPage={false} />
-    <StarkFormBuilder
-      containerClass="mt-3"
-      formHeaderClass=""
-      formSections={FormSections}
-      onFormSubmit={(formValues) => {
-        submitForm(formValues);
-      }}
-      options={options}
-      callbacks={{}}
-      defaultFormValues={defaultValues}
-      currentUser={currentUser}
-      submitBtnText="Submit"
-      showResetBtn={true}
-      resetBtnText="Clear"
-      btnContainerClass="form-submit-buttons"
-      showBtnClass={true}
-      isStepForm={false}
-    />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+      <StarkFormBuilder
+        containerClass="mt-3"
+        formHeaderClass=""
+        formSections={FormSections}
+        onFormSubmit={(formValues) => {
+          submitForm(formValues);
+        }}
+        options={options}
+        callbacks={{}}
+        defaultFormValues={defaultValues}
+        currentUser={currentUser}
+        submitBtnText="Submit"
+        showResetBtn={true}
+        resetBtnText="Clear"
+        btnContainerClass="form-submit-buttons"
+        showBtnClass={true}
+        isStepForm={false}
+      />
     </>
   );
 }

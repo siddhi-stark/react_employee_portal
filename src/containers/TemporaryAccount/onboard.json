@@ -11,37 +11,6 @@
     "displaySectionTitle": false,
     "fields": [
       {
-        "name": "tw_emp",
-        "type": "select",
-        "label": "Tw Employee",
-        "id": "",
-        "placeholder": "Select TW Employee",
-        "inputClass": "",
-        "containerClass": "",
-        "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
-        ],
-        "displayWhen": {},
-        "haveValidations": "false",
-        "haveDisplayOptions": "false",
-        "callback": "",
-        "callbackUrl": "",
-        "inputToChange": "",
-        "minDateSelector": "",
-        "maxDateSelector": "",
-        "disabled": false,
-        "isMulti": false,
-        "allowedUsers": [],
-        "fieldsToReset": [],
-        "fieldLayout": {
-          "label": "1 Column",
-          "value": "1column"
-        },
-        "fields": [],
-        "optionCallback": "getTw_emp",
-        "options": []
-      },
-      {
         "name": "full_name",
         "type": "text",
         "label": "Full Name",
@@ -73,7 +42,7 @@
         "options": []
       },
       {
-        "name": "email",
+        "name": "eemail",
         "type": "email",
         "label": "Email",
         "id": "",
@@ -82,7 +51,11 @@
         "containerClass": "",
         "validations": [
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" },
-          { "type": "required|regex:^[\\w.+-]+@starkdigital.net$", "applyWhen": [], "applyWhenRelation": "OR" }
+          {
+            "type": "email",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
         ],
         "displayWhen": {},
         "haveValidations": "true",
@@ -144,7 +117,11 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required|min:6", "applyWhen": [], "applyWhenRelation": "OR" }
+          {
+            "type": "required|min:6",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
         ],
         "displayWhen": {},
         "haveValidations": "true",
@@ -176,6 +153,7 @@
         "containerClass": "",
         "validations": [
           { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+          
         ],
         "displayWhen": {},
         "haveValidations": "true",
@@ -205,6 +183,7 @@
         "placeholder": "Mobile",
         "inputClass": "",
         "containerClass": "",
+        "maxLength": "10",
         "validations": [
           {
             "type": "required|min:0|max:10",
@@ -460,6 +439,51 @@
         "optionCallback": "getTeam",
         "optionsCallbackUrl": "InterviewRoundsUrl",
         "options": []
+      },
+      {
+        "name": "gender",
+        "type": "radio",
+        "label": "Gender",
+        "id": "",
+        "placeholder": "Gender",
+        "inputClass": "",
+        "containerClass": "",
+        "inline": "true",
+        "validations": [
+          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": [
+          {
+            "value": "1",
+            "label": "Male"
+          },
+          {
+            "value": "2",
+            "label": "Female"
+          },
+          {
+            "value": "3",
+            "label": "Other"
+          }
+        ]
       }
     ],
     "allowedUsers": [],

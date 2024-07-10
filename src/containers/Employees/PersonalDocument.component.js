@@ -37,7 +37,7 @@ function PersonalDocument(props) {
     formData.append('folder_name', 'Personal');
 
     const { data } = await AuthApi.postDataToServer(
-      `${Api.googleFileUploadUrl}`,
+      `${Api.onBoardingDocUpload}`,
       formData
     );
     let fileId = null;
@@ -47,7 +47,7 @@ function PersonalDocument(props) {
         allowOutsideClick: false,
       });
       fileId = null;
-    } 
+    }
     if (data && Object.keys(data).length && data.success) {
       fileId = data.data.id;
     }
@@ -99,11 +99,17 @@ function PersonalDocument(props) {
         },
       ],
     };
-    
-    if(pancardfileUrlId || (pancardfileUrl && adharfileUrlId) ||(adharfileUrl && photofileUrlId) ||
-        photofileUrl) {
 
-      const { data, message } = await AuthApi.postDataToServer(`${Api.applicantDocumentUrl}`, postData);
+    if (
+      pancardfileUrlId ||
+      (pancardfileUrl && adharfileUrlId) ||
+      (adharfileUrl && photofileUrlId) ||
+      photofileUrl
+    ) {
+      const { data, message } = await AuthApi.postDataToServer(
+        `${Api.postDocumentData}`,
+        postData
+      );
 
       if (!data) {
         setShowLoader(false);
@@ -131,25 +137,25 @@ function PersonalDocument(props) {
 
   return (
     <>
-    <Loader showLoader={isShowLoader} needFullPage={false} />
-    <StarkFormBuilder
-      containerClass="mt-3"
-      formHeaderClass=""
-      formSections={FormSections}
-      onFormSubmit={(formValues) => {
-        submitForm(formValues);
-      }}
-      options={options}
-      callbacks={{}}
-      defaultFormValues={defaultValues}
-      currentUser={currentUser}
-      submitBtnText="Submit"
-      showResetBtn={true}
-      resetBtnText="Clear"
-      btnContainerClass="form-submit-buttons"
-      showBtnClass={true}
-      isStepForm={false}
-    />
+      <Loader showLoader={isShowLoader} needFullPage={false} />
+      <StarkFormBuilder
+        containerClass="mt-3"
+        formHeaderClass=""
+        formSections={FormSections}
+        onFormSubmit={(formValues) => {
+          submitForm(formValues);
+        }}
+        options={options}
+        callbacks={{}}
+        defaultFormValues={defaultValues}
+        currentUser={currentUser}
+        submitBtnText="Submit"
+        showResetBtn={true}
+        resetBtnText="Clear"
+        btnContainerClass="form-submit-buttons"
+        showBtnClass={true}
+        isStepForm={false}
+      />
     </>
   );
 }
