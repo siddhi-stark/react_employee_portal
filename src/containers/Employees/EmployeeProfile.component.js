@@ -17,7 +17,7 @@ import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
 import AddReview from './AddReview.component';
 import CustomTable from 'stark-custom-datatable';
-import AddEmployeeComponent from './addEmpolyeeComponent';
+import AddEmployeeComponent from './addEmployeeComponent';
 
 function EmployeeProfile(props) {
   const { match, accProps } = props;
@@ -982,7 +982,7 @@ function EmployeeProfile(props) {
               //     </div>
               //   </div>
               // </div>
-              <AddEmployeeComponent />
+              <AddEmployeeComponent/>
             )}
           </div>
           <div className="profile-details">
