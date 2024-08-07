@@ -21,6 +21,7 @@ function OnBoard(props) {
   const [twEmployee, setTwEmployee] = useState([]);
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
+
   const employeeId = match.params.ID;
   const items = [{ to: '/', label: 'Home' }, { label: 'Add Employee' }];
 
@@ -43,87 +44,17 @@ function OnBoard(props) {
   };
 
   useEffect(() => {
-    getUserRole();
     setTitle('Add Employee');
+    getData();
+    getUserRole();
+    getRole();
+    getDesignation();
+    getManagers();
+    getTeamLeads();
+    getMentorList();
+    getDepartment();
+    getTeam();
   }, []);
-
-  const submitForm = async (formValues) => {
-    setShowLoader(true);
-
-    // const prefixedEmpCode = formValues?.emp_code ? `sdms${formValues?.emp_code}` : '';
-    const managerList = [];
-    formValues?.managers &&
-      formValues?.managers.map((mngr) => {
-        managerList.push(mngr?.value);
-        return mngr;
-      });
-    const teamIdList = [];
-    if (formValues?.team_leads) {
-      teamIdList.push(formValues?.team_leads?.value);
-    }
-    const postData = {
-      date_joined: formValues.date_joined
-        ? customFunctions.getDate(formValues?.date_joined)
-        : '',
-      full_name: formValues?.full_name,
-      email: formValues?.eemail,
-      personal_email: personalEmail,
-      mobile: formValues?.mobile,
-      gender: formValues.gender ? Number(formValues.gender) : '',
-      password: formValues?.password,
-      department: formValues?.department
-        ? Number(formValues?.department?.value)
-        : '',
-      designation: formValues.designation ? formValues.designation.value : '',
-      team: formValues.team ? formValues.team.value : '',
-      dob: formValues.dob ? customFunctions.getDate(formValues.dob) : '',
-      role: formValues.role ? formValues.role.value : '',
-      emp_code: Number(formValues?.emp_code),
-      // emp_code: prefixedEmpCode,
-      managers: managerList,
-      team_leads: teamIdList,
-      is_onboard: true,
-      emp_id: Number(employeeId),
-    };
-
-    // const isFind = twEmployee.find(
-    //   (item) =>
-    //     formValues?.tw_emp &&
-    //     formValues?.tw_emp?.label &&
-    //     item?.full_name === formValues?.tw_emp?.label
-    // );
-    // if (isFind) {
-    //   postData.tw_emp = isFind.tw_id;
-    // }
-
-    const { data, message } = await AuthApi.putDataToServer(
-      `${Api.employeeOnboard}${employeeId}/`,
-      postData
-    );
-
-    if (data) {
-      setShowLoader(false);
-      swal({
-        title: 'Employee Created Sucessfully',
-        icon: 'success',
-      }).then((okAction) => {
-        if (okAction) {
-          history.push('/employees');
-          customFunctions.setLocalStorage('isShowOnBoard', 'true');
-        }
-      });
-    } else {
-      setShowLoader(false);
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-        buttons: false,
-        timer: 2000,
-      }).then(() => {
-        swal.close();
-      });
-    }
-  };
 
   const getData = async () => {
     setShowLoader(true);
@@ -157,6 +88,7 @@ function OnBoard(props) {
         // ...data?.data,
         full_name: data?.data?.full_name,
         date_joined: newDate,
+        mobile: data?.data?.mobile,
         // date_joined: new Date(),
         // dob:new Date(data?.data?.dob),
         designation: ds,
@@ -167,9 +99,108 @@ function OnBoard(props) {
     }
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const submitForm = async (formValues) => {
+    // setShowLoader(true);
+
+    // const prefixedEmpCode = formValues?.emp_code ? `sdms${formValues?.emp_code}` : '';
+    const managerList = [];
+    let reportingManagerIds =
+      formValues?.reportingPerson?.length > 0 &&
+      formValues?.reportingPerson.map((ele) => ele?.value);
+    formValues?.managers &&
+      formValues?.managers.map((mngr) => {
+        managerList.push(mngr?.value);
+        return mngr;
+      });
+    
+    const teamIdList = [];
+
+  if (formValues?.team_leads && formValues?.team_leads?.label !== 'Select Team Lead') {
+    teamIdList.push(formValues?.team_leads?.value);
+  }
+
+    let updatedEmpcode;
+    if (typeof empCode == 'string') {
+      updatedEmpcode = empCode && empCode?.split('-');
+    }
+    const postData = {
+      date_joined: formValues.date_joined
+        ? customFunctions.getDate(formValues?.date_joined)
+        : '',
+      full_name: formValues?.full_name,
+      email: formValues?.eemail,
+      personal_email: personalEmail,
+      mobile: formValues?.mobile,
+      gender: formValues.gender ? Number(formValues.gender) : '',
+      password: formValues?.password,
+      department: formValues?.department
+        ? Number(formValues?.department?.value)
+        : '',
+      designation: formValues.designation ? formValues.designation.value : '',
+      team: formValues.team ? formValues.team.value : '',
+      dob: formValues.dob ? customFunctions.getDate(formValues.dob) : '',
+      role: formValues.role ? formValues.role.value : '',
+      emp_code: Number(formValues?.emp_code),
+      mentor: formValues?.reportingPerson ? reportingManagerIds : '',
+      //  emp_code:
+      //   typeof empCode == 'number'
+      //     ? empCode
+      //     : updatedEmpcode
+      //     ? Number(updatedEmpcode[updatedEmpcode.length - 1])
+      //     : '',
+      // emp_code: prefixedEmpCode,
+      managers: managerList ? managerList : [],
+      // team_leads: teamIdList.length > 0 ? teamIdList.map(tl => tl.value) : [],
+      team_leads: teamIdList,
+      is_onboard: true,
+      emp_id: Number(employeeId),
+    };
+
+    // const isFind = twEmployee.find(
+    //   (item) =>
+    //     formValues?.tw_emp &&
+    //     formValues?.tw_emp?.label &&
+    //     item?.full_name === formValues?.tw_emp?.label
+    // );
+    // if (isFind) {
+    //   postData.tw_emp = isFind.tw_id;
+    // }
+
+    const  data = await AuthApi.putDataToServer(
+      `${Api.employeeOnboard}${employeeId}/`,
+      postData
+    );
+
+    if (data?.success || data?.data?.success) {
+      setShowLoader(false);
+      // swal({
+      //   title: 'Employee Created Sucessfully',
+      //   icon: 'success',
+      // }).then((okAction) => {
+      //   if (okAction) {
+      //     history.push('/employees');
+      //     customFunctions.setLocalStorage('isShowOnBoard', 'true');
+      //   }
+      // });
+      swal('Employee Created Sucessfully', '', 'success', {
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        history.push('/employees');
+        customFunctions.setLocalStorage('isShowOnBoard', 'true');
+      });
+    } else {
+      setShowLoader(false);
+      swal(data?.message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+      });
+    }
+  };
 
   // const getTwEmp = async () => {
   //   const { data } = await AuthApi.getDataFromServer(
@@ -215,10 +246,6 @@ function OnBoard(props) {
     await updateOptions({ ...allOptions });
   };
 
-  useEffect(() => {
-    getDesignation();
-  }, []);
-
   const getRole = async () => {
     const { data } = await AuthApi.getDataFromServer(Api.roleUrl);
     if (!data) {
@@ -236,10 +263,6 @@ function OnBoard(props) {
     const allOptions = options;
     await updateOptions({ ...allOptions });
   };
-
-  useEffect(() => {
-    getRole();
-  }, []);
 
   const getManagers = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -261,10 +284,6 @@ function OnBoard(props) {
     await updateOptions({ ...allOptions });
   };
 
-  useEffect(() => {
-    getManagers();
-  }, []);
-
   const getTeamLeads = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?role_id=${3}&is_dropdown=1`
@@ -280,14 +299,39 @@ function OnBoard(props) {
         return { label: op?.full_name, value: op?.id };
       });
 
-    options.team_leads = dpOptions;
+    const optionsWithDefault = [
+      { label: 'Select Team Lead', value: '' },
+      ...dpOptions,
+    ];
+
+    options.team_leads = optionsWithDefault;
     const allOptions = options;
     await updateOptions({ ...allOptions });
   };
 
-  useEffect(() => {
-    getTeamLeads();
-  }, []);
+  const getMentorList = async () => {
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}?sort_by=full_name&sort_direction=ascending&type=all&is_dropdown=1&status=active`
+    );
+    // if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+    //   setMentorData(data.data);
+    // }
+
+    if (!data) {
+      return;
+    }
+
+    const dpOptions =
+      (await data) &&
+      data?.data?.length > 0 &&
+      data?.data.map((item) => {
+        return { label: item?.full_name, value: item?.id };
+      });
+
+    options.reportingPerson = dpOptions;
+    const allOptions = options;
+    await updateOptions({ ...allOptions });
+  };
 
   const getDepartment = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -305,10 +349,6 @@ function OnBoard(props) {
     const allOptions = options;
     await updateOptions({ ...allOptions });
   };
-
-  useEffect(() => {
-    getDepartment();
-  }, []);
 
   const getTeam = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -330,10 +370,6 @@ function OnBoard(props) {
     const allOptions = options;
     await updateOptions({ ...allOptions });
   };
-
-  useEffect(() => {
-    getTeam();
-  }, []);
 
   return (
     <>

@@ -81,7 +81,7 @@
         "name": "emp_code",
         "type": "text",
         "label": "Employee Code",
-        "id": "",
+        "id": "emp_code",
         "placeholder": "Employee Code",
         "inputClass": "",
         "containerClass": "",
@@ -321,7 +321,7 @@
         "inputClass": "",
         "containerClass": "",
         "validations": [
-          { "type": "required", "applyWhen": [], "applyWhenRelation": "OR" }
+         
         ],
         "displayWhen": {},
         "haveValidations": "false",
@@ -438,6 +438,38 @@
         "fields": [],
         "optionCallback": "getTeam",
         "optionsCallbackUrl": "InterviewRoundsUrl",
+        "options": []
+      },
+      {
+        "name": "reportingPerson",
+        "type": "select",
+        "label": "Reporting person",
+        "id": "",
+        "placeholder": "Select Reporting person",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+         
+        ],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": true,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getMentorList",
+        "optionsCallbackUrl": "employeeUrl",
         "options": []
       },
       {
