@@ -75,6 +75,13 @@ function OnBoard(props) {
             value: data?.data?.designation_id,
           }
         : '';
+        const departmentName = data?.data?.department_id
+        ? {
+            label: data?.data?.department_name            ,
+            value: data?.data?.department_id
+            ,
+          }
+        : '';
       if (!customFunctions.checkIfEmpty(data?.data?.date_joined)) {
         newDate = new Date(data?.data?.date_joined);
       }
@@ -92,6 +99,7 @@ function OnBoard(props) {
         // date_joined: new Date(),
         // dob:new Date(data?.data?.dob),
         designation: ds,
+        department: departmentName,
         gender: String(data?.data?.gender),
       };
 

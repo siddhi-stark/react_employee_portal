@@ -13,7 +13,6 @@ import customFunctions from '../../helper/customFunctions';
 
 function EditProject(props) {
   const idProps = props;
-  console.log('🚀 ~ EditProject ~ idProps:', idProps);
   const projectId = idProps.match.params.projectId;
   const viewOptions = idProps.location.state
     ? idProps.location.state.isView

@@ -134,7 +134,7 @@ function Dashboard() {
         SharedService.clockIn.next(true);
         setShowLoader(false);
       } else {
-        if ([2, 3, 4, 5, 6, 7, 10].includes(Number(roleId))) {
+        if ([2, 3, 4, 7, 10].includes(Number(roleId))) {
           swal('Please Clock In first and Send Report', '', 'warning');
         }
         if(userRole === 1 && isProjectManager){
@@ -235,7 +235,7 @@ function Dashboard() {
     if (data && data.data) {
       setEmployeeName(data.data.full_name);
       setPmsId(data?.data?.tw_id);
-      await customFunctions?.setLocalStorage('isProjectManager', data?.data?.is_project_manager);
+      customFunctions?.setLocalStorage('isProjectManager', data?.data?.is_project_manager);
       setIsProjectManager(data?.data?.is_project_manager);
     }
     return true;
@@ -540,9 +540,8 @@ function Dashboard() {
                   className="d-flex justify-content-space-between flex-wrap"
                 >
                   <UserRestrictions
-                    permittedUsers={[2, 3, 4, 5, 6, 7, 10]}
+                    permittedUsers={[2, 3, 4, 7, 10]}
                     userRole={userRole}
-                    isProjectManager={isProjectManager}
                   >
                     <div className="check-in">
                       {showClockIn && (
@@ -1128,13 +1127,13 @@ function Dashboard() {
                 )}
               </UserRestrictions>
             </div>
-            {(!isProjectManager && userRole === 1) && (
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
+            {(!isProjectManager && userRole === 1) && (
               <div className="mt-0">
                 <EmployeeListComponent />
               </div>
-            </UserRestrictions>
             )}
+            </UserRestrictions>
             <UserRestrictions
               permittedUsers={[2, 3, 4, 5, 6, 10]}
               roleId={userRole}

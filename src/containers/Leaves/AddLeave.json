@@ -54,7 +54,12 @@
             "id": "2",
             "label": "Sick Leave(SL)",
             "value": "Sick Leave"
-          }
+          },
+          {
+            "id": "3",
+            "label": "Optional Holiday(OH)",
+            "value": "Optional Holiday"
+            }
         ]
       },
       {

@@ -18,11 +18,9 @@ const items = [{ to: '/', label: 'Home' }, { label: 'Team Project Scheduler' }];
 function TeamProjectScheduler() {
   const [title, setTitle] = useState('');
   const [rowData, setRowData] = useState([]);
-  console.log('🚀 ~ TeamProjectScheduler ~ rowData:', rowData);
   const [totalCount, setTotalCount] = useState(1);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  console.log('🚀 ~ TeamProjectScheduler ~ currentPage:', currentPage);
   const [filterData, setFilterData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
@@ -127,7 +125,6 @@ function TeamProjectScheduler() {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('🚀 ~ getRowData ~ data:', data);
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setTotalCount(data?.paginator?.total_count);
       setLimit(Number(data?.paginator?.limit));

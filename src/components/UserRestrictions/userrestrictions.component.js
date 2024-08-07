@@ -13,10 +13,13 @@ export default function UserRestrictions(props) {
     setRoleID(JSON.parse(roleId));
     const departmentId = customFunctions.getLocalStorage('department');
     setdepartmentID(JSON.parse(departmentId));
+  }, []);
+
+  useEffect(() => {
     const isProjectManager =
       customFunctions?.getLocalStorage('isProjectManager');
     setIsManager(JSON.parse(isProjectManager));
-  }, []);
+  }, [customFunctions?.getLocalStorage('isProjectManager')]);
 
   const childRoute =
     children &&

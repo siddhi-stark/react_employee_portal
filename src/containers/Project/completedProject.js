@@ -84,7 +84,6 @@ function CompletedProject() {
       label: 'Project Name',
       roleAccess: [4],
       render: ({ id, name }) => {
-        console.log('🚀 ~ CompletedProject ~ Id:', id);
         return (
           <>
             <a

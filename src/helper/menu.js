@@ -81,7 +81,7 @@ const menu = [
         path: '/employees',
         icon: 'Employee.svg',
         submenu: [],
-        roleaccess: [1, 2, 3, 5, 6, 10],
+        roleaccess: [1, 2, 5, 6, 10],
       },
 
       {
@@ -89,17 +89,17 @@ const menu = [
         path: '/resignation-applications',
         icon: 'report.svg',
         submenu: [],
-        roleaccess: [1, 2, 3, 5, 6, 10],
+        roleaccess: [1, 2, 5, 6, 10],
       },
       {
         title: 'Terminate and Abscond Employee',
         path: '/abscond-table',
         icon: 'report.svg',
         submenu: [],
-        roleaccess: [1, 2, 3, 5, 6, 10],
+        roleaccess: [1, 2, 5, 6, 10],
       },
     ],
-    roleaccess: [1, 2, 3, 5, 6, 10],
+    roleaccess: [1, 2, 5, 6 ,10],
   },
   // {
   //   title: 'Employees',
