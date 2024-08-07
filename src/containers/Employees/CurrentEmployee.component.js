@@ -136,6 +136,7 @@ function CurrentEmployee() {
       user_id:
         filterData && filterData.employee ? filterData.employee.value : '',
       hide_admin: 1,
+      is_onboard :'true',
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
@@ -171,7 +172,7 @@ function CurrentEmployee() {
 
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all`
+      `${Api.employeeUrl}?type=all&is_onboard=true`
     );
 
     // &is_dropdown=1
@@ -800,6 +801,7 @@ function CurrentEmployee() {
         <div className="row mt-3 row-cols-1 row-cols-md-3 g-4 employee-grid-list">
           {employee &&
             employee.map((emp) => (
+             
               <Col>
                 <Card className="h-100">
                   <Card.Body>
@@ -854,7 +856,7 @@ function CurrentEmployee() {
                               getTwEmployeeValidation();
                             }}
                           >
-                            <Image src="/images/edit-button.svg" />
+                            {/* <Image src="/images/edit-button.svg" /> */}
                           </a>
                         )}
                         <Card.Title>{emp.name}</Card.Title>
@@ -872,20 +874,34 @@ function CurrentEmployee() {
                               emp.date_joined
                             )}`}{' '}
                           {emp.date_joined && <br />}
-                          {emp.confirmation_date &&
-                            `Confirmation Date- ${customFunctions.getDMYDate(
+                          {emp.confirmation_date && (
+                            <>
+                            <span className="d-block mt-3">
+                              Confirmation Date- {customFunctions.getDMYDate(emp.confirmation_date)}
+                            </span>
+                            <br />
+                          </>
+                          )}
+                            {/* `Confirmation Date- ${customFunctions.getDMYDate(
                               emp.confirmation_date
-                            )}`}{' '}
+                            )}`}{' '} */}
                           {emp.confirmation_date && <br />}
                           {emp.expected_confirmation_date &&
-                            !emp.confirmation_date &&
-                            `Expected Confirmation Date- ${customFunctions.getDMYDate(
+                            !emp.confirmation_date && (
+                              <>
+                              <span className="d-block mt-3">
+                              Expected Confirmation Date- {customFunctions.getDMYDate(emp.expected_confirmation_date)}
+                              </span>
+                              <br />
+                            </>
+                            )}
+                            {/* `Expected Confirmation Date- ${customFunctions.getDMYDate(
                               emp.expected_confirmation_date
-                            )}`}
+                            )}`} */}
                           {emp.expected_confirmation_date &&
                             !emp.confirmation_date && <br />}
                           {emp.on_notice_period &&
-                            emp.notice_period_date &&
+                            emp.notice_period_date && 
                             `Expected Relieving Date- ${customFunctions.getDMYDate(
                               emp.last_working_date
                             )}`}

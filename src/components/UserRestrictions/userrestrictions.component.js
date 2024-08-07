@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import customFunctions from '../../helper/customFunctions';
 
 export default function UserRestrictions(props) {
   const { children, permittedUsers } = props;
-  const roleId = customFunctions.getLocalStorage('group');
-  const departmentId = customFunctions.getLocalStorage('department');
+
+  const [roleID, setRoleID] = useState(null);
+  const [departmentID, setdepartmentID] = useState(null);
+  const [isManager, setIsManager] = useState(null);
+
+  useEffect(() => {
+    const roleId = customFunctions.getLocalStorage('group');
+    setRoleID(JSON.parse(roleId));
+    const departmentId = customFunctions.getLocalStorage('department');
+    setdepartmentID(JSON.parse(departmentId));
+    const isProjectManager =
+      customFunctions?.getLocalStorage('isProjectManager');
+    setIsManager(JSON.parse(isProjectManager));
+  }, []);
 
   const childRoute =
     children &&
@@ -20,7 +32,8 @@ export default function UserRestrictions(props) {
     children.props.children &&
     children.props.children.props &&
     children.props.children.props.to;
-  const childrenArr = [
+  
+    const childrenArr = [
     '/archived-project',
     '/interview-listing',
     '/recruitment',
@@ -32,51 +45,50 @@ export default function UserRestrictions(props) {
   const childProjectArr = ['/scheduler', '/team-scheduler'];
 
   const hasPermissions =
-    permittedUsers &&
-    permittedUsers.length &&
-    permittedUsers.includes(Number(roleId));
+    (Number(roleID) === 1 && isManager) || // All access if roleId is 1 and isManager is true
+    (permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))); // Normal permission check
 
   if (
-    Number(roleId) === 4 &&
-    Number(departmentId) !== 7 &&
-    Number(departmentId) !== 8 &&
+    Number(roleID) === 4 &&
+    Number(departmentID) !== 7 &&
+    Number(departmentID) !== 8 &&
     childRoute === '/emp-timesheet'
   ) {
     return <></>;
   }
 
   if (
-    Number(roleId) === 4 &&
-    Number(departmentId) === 7 &&
+    Number(roleID) === 4 &&
+    Number(departmentID) === 7 &&
     childrenArr.includes(childRoute)
   ) {
     return <></>;
   }
 
   if (
-    Number(roleId) === 4 &&
-    Number(departmentId) === 7 &&
+    Number(roleID) === 4 &&
+    Number(departmentID) === 7 &&
     (childrenArr.includes(subChildRoute) || !childRoute)
   ) {
     return <></>;
   }
 
   if (
-    Number(roleId) === 4 &&
-    Number(departmentId) === 8 &&
+    Number(roleID) === 4 &&
+    Number(departmentID) === 8 &&
     childArr.includes(childRoute)
   ) {
     return <></>;
   }
 
   if (
-    Number(roleId) === 4 &&
-    (Number(departmentId) === 2 ||
-      Number(departmentId) === 3 ||
-      Number(departmentId) === 4 ||
-      Number(departmentId) === 5 ||
-      Number(departmentId) === 6 ||
-      Number(departmentId) === 7) &&
+    Number(roleID) === 4 &&
+    (Number(departmentID) === 2 ||
+      Number(departmentID) === 3 ||
+      Number(departmentID) === 4 ||
+      Number(departmentID) === 5 ||
+      Number(departmentID) === 6 ||
+      Number(departmentID) === 7) &&
     childProjectArr.includes(childRoute)
   ) {
     return <></>;

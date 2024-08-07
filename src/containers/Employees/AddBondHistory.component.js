@@ -9,7 +9,7 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './AddBondHistory.json';
 
 function AddBondHistory(props) {
-  const { handleModalCLose, onChanges } = props;
+  const { handleModalCLose, onChanges, bondType, setBondType } = props;
   // Variable declarations
   const history = customFunctions.getLocalStorage('bondHistoryID');
   const [defaultValues, updateDefaultValues] = useState({});
@@ -29,98 +29,127 @@ function AddBondHistory(props) {
     getUserRole();
   }, []);
 
-  const fileUpload = async (formValues) => {
-    const formData = new FormData();
-
-    formData.append('file_name', formValues[0]);
-
-    const { data, message } = await AuthApi.postDataToServer(
-      `${Api.fileUploadUrl}`,
-      formData
-    );
-    if (customFunctions.checkIfEmpty(data)) {
-      swal(message, '', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
-    }
-    if (!customFunctions.checkIfEmpty(data) && data.success) {
-      return data.data.id;
-    }
-    return formValues;
-  };
-
-  const submitForm = async (formValues) => {
-    let fileUrlId = '';
-    if (formValues.attachments) {
-      fileUrlId =
-        typeof formValues.attachments === 'object' &&
-        (await fileUpload(formValues.attachments));
-    }
-
-    setShowLoader(true);
-    const employeeId = customFunctions.getLocalStorage('id');
-    const postData = {
-      employee: Number(employeeId),
-      attachement: fileUrlId ? Number(fileUrlId) : Number(attachmentId),
-      start_date: formValues.bond_start_date
-        ? customFunctions.getDate(formValues.bond_start_date)
-        : '',
-      end_date: formValues.bond_end_date
-        ? customFunctions.getDate(formValues.bond_end_date)
-        : '',
-    };
-    const callback = history
-      ? AuthApi.putDataToServer
-      : AuthApi.postDataToServer;
-    const endPoint = history
-      ? `${Api.employeeBondDetailsUrl}`
-      : Api.employeeBondDetailsUrl;
-
-    if (history) {
-      postData.id = history;
-    }
-
-    const { data } = await callback(endPoint, postData);
-    if (data) {
-      setShowLoader(false);
-      swal({
-        title: data.message[0],
-        icon: 'success',
-      }).then((okAction) => {
-        if (okAction) {
-          handleModalCLose(false);
-          onChanges();
-          customFunctions.removeLocalStorage('bondHistoryID');
-        }
-      });
-    }
-  };
-
   const getData = async (id) => {
-    setShowLoader(true);
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeBondDetailsUrl}${id}/`
-    );
-    if (data) {
+    try {
+      setShowLoader(true);
+      const { data } = await AuthApi.getDataFromServer(
+        `${Api.employeeBondDetailsUrl}${id}/`
+      );
+      if (data) {
+        setShowLoader(false);
+        data.data.bond_start_date = data.data.start_date
+          ? new Date(customFunctions.getDate(data.data.start_date))
+          : '';
+        data.data.bond_end_date = data.data.end_date
+          ? new Date(customFunctions.getDate(data.data.end_date))
+          : '';
+        const obj = {
+          ...data.data,
+          attachments: data.data.file_name,
+        };
+        setAttachmentId(data && data.data && data.data.attachement_id);
+        updateDefaultValues({ ...obj }); // updateDefaultValues(data);
+      }
       setShowLoader(false);
-      data.data.bond_start_date = data.data.start_date
-        ? new Date(customFunctions.getDate(data.data.start_date))
-        : '';
-      data.data.bond_end_date = data.data.end_date
-        ? new Date(customFunctions.getDate(data.data.end_date))
-        : '';
-      const obj = {
-        ...data.data,
-        attachments: data.data.file_name,
+    } catch (error) {
+      setShowLoader(false);
+    }
+  };
+
+  const fileUpload = async (formValues) => {
+    setShowLoader(true);
+    const formData = new FormData();
+    try {
+      formData.append('file_name', formValues?.attachments[0]);
+
+      const { data, message } = await AuthApi.postDataToServer(
+        `${Api.fileUploadUrl}`,
+        formData
+      );
+
+      if (!customFunctions.checkIfEmpty(data) && data.success) {
+        setShowLoader(false);
+        swal(
+          data.message ? data.message[0] : 'File uploaded',
+          '',
+          'success'
+        ).then(() => {
+          submitForm(formValues, data?.data?.id);
+        });
+      } else {
+        setShowLoader(false);
+        swal(message || data?.data?.message[0], '', 'error');
+      }
+    } catch {
+      setShowLoader(false);
+      swal('File not uploaded', '', 'error');
+    }
+  };
+
+  const submitForm = async (formValues, fileUrlId) => {
+    try {
+      setShowLoader(true);
+
+      const employeeId = customFunctions.getLocalStorage('id');
+      const postData = {
+        employee: Number(employeeId),
+        attachement: fileUrlId ? Number(fileUrlId) : Number(attachmentId),
+        start_date: formValues.bond_start_date
+          ? customFunctions.getDate(formValues.bond_start_date)
+          : '',
+        end_date: formValues.bond_end_date
+          ? customFunctions.getDate(formValues.bond_end_date)
+          : '',
       };
-      setAttachmentId(data && data.data && data.data.attachement_id);
-      updateDefaultValues({ ...obj }); // updateDefaultValues(data);
+      const callback = history
+        ? AuthApi.putDataToServer
+        : AuthApi.postDataToServer;
+      const endPoint = history
+        ? `${Api.employeeBondDetailsUrl}`
+        : Api.employeeBondDetailsUrl;
+
+      if (history) {
+        postData.id = history;
+      }
+
+      const { data, message } = await callback(endPoint, postData);
+      if (data) {
+        setShowLoader(false);
+        swal({
+          title: data.message[0],
+          icon: 'success',
+        }).then((okAction) => {
+          if (okAction) {
+            handleModalCLose(false);
+            setBondType('');
+            onChanges();
+            customFunctions.removeLocalStorage('bondHistoryID');
+          }
+        });
+      } else {
+        swal({
+          title: message,
+          icon: 'error',
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then((okAction) => {
+          if (okAction) {
+            handleModalCLose(false);
+            setBondType('');
+            onChanges();
+            customFunctions.removeLocalStorage('bondHistoryID');
+          }
+        });
+      }
+      setShowLoader(false);
+    } catch (error) {
+      setShowLoader(false);
     }
   };
 
   const onClear = () => {
     handleModalCLose(false);
+    setBondType('');
   };
 
   return (
@@ -131,12 +160,13 @@ function AddBondHistory(props) {
         formHeaderClass=""
         formSections={FormSections}
         onFormSubmit={(formValues) => {
-          submitForm(formValues);
+          // submitForm(formValues);
+          fileUpload(formValues);
         }}
         callbacks={{}}
         defaultFormValues={defaultValues}
         currentUser={currentUser}
-        submitBtnText="Submit"
+        submitBtnText={bondType ? 'Update' : 'Submit'}
         showResetBtn={true}
         showBtnClass={true}
         resetBtnText="Cancel"

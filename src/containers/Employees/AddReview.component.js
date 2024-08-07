@@ -169,7 +169,7 @@ const AddReview = (props) => {
     setShowLoader(true);
     let review_id = reviewId;
     const postData = {
-      employee: currentUserId,
+      employee: Number(currentUserId),
       reviewer: selectedEmployee?.value,
       review_date: customFunctions.getDate(reviewDate),
       status: reviewStatus?.value,
@@ -188,10 +188,11 @@ const AddReview = (props) => {
       ? AuthApi.putDataToServer
       : AuthApi.postDataToServer;
     const { data, message } = await callback(endPoint, postData);
-    if (data && data.success === true) {
+    if (data && data.success == true) {
       setShowLoader(false);
       swal(
-        review_id ? 'Review update successfully!' : 'Review post successfully!',
+        // review_id ? 'Review update successfully!' : 'Review post successfully!',
+        data?.message?.[0],
         ' ',
         'success'
       ).then(() => {
@@ -200,7 +201,7 @@ const AddReview = (props) => {
       });
     } else {
       setShowLoader(false);
-      swal('Something went wrong', ' ', 'err');
+      swal(data?.message?.[0], ' ', 'error');
     }
   };
 
@@ -235,7 +236,7 @@ const AddReview = (props) => {
               disabled={pageType == 'view'}
               placeholder="dd-mm-yyyy"
               dateFormat="dd-MM-yyyy"
-              minDate={new Date()}
+              // minDate={new Date()}
               onChange={(e) => {
                 setReviewDate(e);
               }}
@@ -327,6 +328,19 @@ const AddReview = (props) => {
                   )}
                 />
               </Col>
+              {pageType == 'view' && (
+                <div className="d-flex justify-content-end mb-3">
+                  <Button
+                    className="ml-10 "
+                    variant="primary"
+                    onClick={() => {
+                      handleModalCLose(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
             </>
           ) : null}
         </Row>
@@ -338,7 +352,7 @@ const AddReview = (props) => {
                 validateForm(e);
               }}
             >
-              Add Review
+              {pageType == "edit" ? "Update" : "Add Review"}
             </Button>{' '}
             &nbsp;
             <Button

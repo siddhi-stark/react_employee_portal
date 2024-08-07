@@ -49,7 +49,7 @@ const NoticePeriodLastDay = () => {
 
   return (
     <>
-      {employeeDetails.notice_period_date ===
+      {employeeDetails.relieving_date ===
       customFunctions.getDate(new Date()) ? (
         <div className="p-3 mb-3 mt-3 alert alert-info" role="alert">
           Hello{' '}

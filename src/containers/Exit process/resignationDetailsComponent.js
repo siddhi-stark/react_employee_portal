@@ -85,7 +85,7 @@ const ResignationDetailsComponent = (props) => {
     {
       name: 'Handover Document',
       isCheck: false,
-      id: 1,
+      id: 3,
       doc_id: '',
       label: 'Handover Document',
       isRequired: true,
@@ -101,7 +101,7 @@ const ResignationDetailsComponent = (props) => {
     {
       name: 'Exit Interview Form',
       isCheck: false,
-      id: 3,
+      id: 5,
       doc_id: '',
       label: 'Exit Interview Form',
       isRequired: true,
@@ -110,7 +110,7 @@ const ResignationDetailsComponent = (props) => {
     {
       name: 'Exit Form',
       isCheck: false,
-      id: 4,
+      id: 1,
       doc_id: '',
       label: 'Exit Form',
       isRequired: true,
@@ -119,7 +119,7 @@ const ResignationDetailsComponent = (props) => {
     {
       name: 'Relieving Letter',
       isCheck: false,
-      id: 5,
+      id: 6,
       doc_id: '',
       label: 'Relieving Letter',
       isRequired: true,
@@ -127,7 +127,7 @@ const ResignationDetailsComponent = (props) => {
     {
       name: 'Experience Letter',
       isCheck: false,
-      id: 6,
+      id: 4,
       doc_id: '',
       label: 'Experience Letter',
       isRequired: false,
@@ -148,6 +148,13 @@ const ResignationDetailsComponent = (props) => {
       doc_id: '',
       label: 'FNF Letter',
       isRequired: false,
+    },
+    {
+      name: 'FNF Letter',
+      isCheck: false,
+      id: 8,
+      doc_id: '',
+      label: 'FNF Letter',
     },
   ]);
 
@@ -234,10 +241,9 @@ const ResignationDetailsComponent = (props) => {
   const approveResignation = async (status) => {
     setShowLoader(true);
     setShowError(false);
-    setShowModal(false);
+    // setShowModal(false);
     const postData = {
       resignation_status: status,
-      relieving_date: customFunctions.getDate(relievingDate),
     };
 
     if (status == 1) {
@@ -261,6 +267,7 @@ const ResignationDetailsComponent = (props) => {
       ).then(() => {
         window.location.reload();
       });
+      setShowLoader(false);
     } else {
       setShowLoader(false);
       swal(message, '', 'error');
@@ -490,7 +497,9 @@ const ResignationDetailsComponent = (props) => {
     setShowLoader(true);
     const postData = {
       relieving_date: customFunctions.getDate(relievingDate),
-      // relieving_date_update_reason: relievingDateReason,
+      relieving_date_update_reason: relievingDateReason
+        ? relievingDateReason
+        : '',
     };
     const callback = AuthApi.putDataToServer;
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
@@ -498,7 +507,7 @@ const ResignationDetailsComponent = (props) => {
     if (data && data.success == true) {
       setShowLoader(false);
       swal('Relieving date changed successfully', '', 'success').then(() => {
-        window.location.reload();
+        resignationRequestHr();
       });
     } else {
       setShowLoader(false);
@@ -689,14 +698,16 @@ const ResignationDetailsComponent = (props) => {
                               </td>
                             </tr>
                             {/* {rowData?.user?.relieving_date && ( */}
-                            <tr>
-                              <th scope="row">Resignation Status</th>
-                              <td>
-                                {rowData?.resignation_status_name
-                                  ? rowData?.resignation_status_name
-                                  : '-'}
-                              </td>
-                            </tr>
+                            {rowData?.resignation_type == '2' && (
+                              <tr>
+                                <th scope="row">Resignation Status</th>
+                                <td>
+                                  {rowData?.resignation_status_name
+                                    ? rowData?.resignation_status_name
+                                    : '-'}
+                                </td>
+                              </tr>
+                            )}
                             <tr>
                               <th scope="row">Last Working Date</th>
                               <td>
@@ -712,9 +723,10 @@ const ResignationDetailsComponent = (props) => {
                                     setShowModal(true);
                                   }}
                                 >
-                                  {rowData?.resignation_status == '1' && (
-                                    <u> Update Date</u>
-                                  )}
+                                  {rowData?.resignation_status == '1' &&
+                                    rowData?.resignation_type == '2' && (
+                                      <u> Update Date</u>
+                                    )}
                                 </a>
                               </td>
                             </tr>
@@ -739,38 +751,45 @@ const ResignationDetailsComponent = (props) => {
                                 </td>
                               </tr>
                             )}
-                            <tr>
-                              <th scope="row">Updated By</th>
-                              <td>
-                                {rowData?.reliving_date_updated_by
-                                  ? rowData?.reliving_date_updated_by
-                                  : '-'}
-                              </td>
-                            </tr>
-                            <tr>
-                              <th scope="row">Updated Date</th>
-                              <td>
-                                {rowData?.relieving_date_updated_on_date
-                                  ? `${customFunctions.getDMYDate(
-                                      rowData?.relieving_date_updated_on_date
-                                    )} , ${customFunctions.formatAMPM(
-                                      rowData?.relieving_date_updated_on_date
-                                    )}`
-                                  : '-'}
-                              </td>
-                            </tr>
+                            {rowData?.resignation_type == '2' && (
+                              <tr>
+                                <th scope="row">Updated By</th>
+                                <td>
+                                  {rowData?.reliving_date_updated_by
+                                    ? rowData?.reliving_date_updated_by
+                                    : '-'}
+                                </td>
+                              </tr>
+                            )}
+                            {rowData?.resignation_type == '2' && (
+                              <tr>
+                                <th scope="row">Updated Date</th>
+                                <td>
+                                  {rowData?.relieving_date_updated_on_date
+                                    ? `${customFunctions.getDMYDate(
+                                        rowData?.relieving_date_updated_on_date
+                                      )} , ${customFunctions.formatAMPM(
+                                        rowData?.relieving_date_updated_on_date
+                                      )}`
+                                    : '-'}
+                                </td>
+                              </tr>
+                            )}
                           </tbody>
                         </table>
                       </div>
                     </Col>
                     <Col sm={8}>
                       <h5 className="d-flex justify-content-start">
-                        Resignation Intimation
+                        {rowData?.resignation_type == '3'
+                          ? 'Termination Information'
+                          : 'Resignation Intimation'}
                       </h5>
                       <h6 className="d-flex justify-content-start">
                         <b>
-                          The reason {rowData?.user?.full_name} has applied for
-                          resignation
+                          {rowData?.resignation_type == '3'
+                            ? 'The Reason for Termination'
+                            : `The reason ${rowData?.user?.full_name} has applied for resignation`}
                         </b>
                       </h6>
                       <Alert className="" variant="secondary">
@@ -778,25 +797,26 @@ const ResignationDetailsComponent = (props) => {
                           <h6>{rowData?.resignation_reason}</h6>
                         </Alert.Heading>
                       </Alert>
-                      {(rowData?.resign_remark ||
-                        rowData?.resignation_decline_note) && (
-                        <div>
-                          <h6>
-                            <b>Resignation remarks</b>
-                          </h6>
-                          <Alert className="" variant="secondary">
-                            <Alert.Heading>
-                              <h6>
-                                {rowData?.resign_remark
-                                  ? rowData?.resign_remark
-                                  : rowData?.resignation_decline_note
-                                  ? rowData?.resignation_decline_note
-                                  : ''}
-                              </h6>
-                            </Alert.Heading>
-                          </Alert>
-                        </div>
-                      )}
+                      {rowData?.resignation_type == '2' &&
+                        (rowData?.resign_remark ||
+                          rowData?.resignation_decline_note) && (
+                          <div>
+                            <h6>
+                              <b>Resignation remarks</b>
+                            </h6>
+                            <Alert className="" variant="secondary">
+                              <Alert.Heading>
+                                <h6>
+                                  {rowData?.resign_remark
+                                    ? rowData?.resign_remark
+                                    : rowData?.resignation_decline_note
+                                    ? rowData?.resignation_decline_note
+                                    : ''}
+                                </h6>
+                              </Alert.Heading>
+                            </Alert>
+                          </div>
+                        )}
                       {rowData?.retain_status == '3' &&
                         !rowData?.user?.relieved && (
                           <>
@@ -1027,7 +1047,7 @@ const ResignationDetailsComponent = (props) => {
                                       //   if (willApprove) {
                                       //     // Open your modal here
                                       //     setShowModal(true);
-                                      //     // changeRelievingData();
+                                      // changeRelievingData();
                                       //   } else {
                                       //     // Handle approval logic here
                                       //     isValid('admin', 'approve_resign');
@@ -1064,315 +1084,327 @@ const ResignationDetailsComponent = (props) => {
               </Accordion.Collapse>
             </Card>
           </Accordion>
-
-          <Accordion activeKey={stepTwoKey}>
-            <Card>
-              <Card.Header className="position-relative bg-primary">
-                <div
-                  className="d-flex align-items-center justify-content-between"
-                  style={{ minHeight: '30px' }}
-                >
-                  <h6 className="text-white m-0"> Step 2 (Exit Process)</h6>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle
-                      className="toggle-btn-accordion"
-                      as={Button}
-                      variant="link"
-                      onClick={() => {
-                        if (
-                          stepTwoKey == '0' &&
-                          rowData?.user?.relieving_date <=
-                            customFunctions.getDate(new Date())
-                        ) {
-                          setStepTwoKey('1');
-                        } else {
-                          setStepTwoKey('0');
-                        }
-                      }}
-                    >
-                      <img
-                        src={
-                          stepTwoKey == '0'
-                            ? '/images/caret-down.svg'
-                            : '/images/caret-up.svg'
-                        }
-                        className="forWhiteImg"
-                        alt=""
-                      />
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body>
-                  <Card.Title>
-                    <Form onSubmit={(e) => {}}></Form>
-                  </Card.Title>
-                  {/* <Row>
-                    <Col>
-                      <h4>Last working date of employee name is: 22/2/22</h4>
-                    </Col>
-                    <Col className="d-flex justify-content-end">
-                      <a
-                        href="javascript:void(0)"
+          {rowData?.resignation_type == '2' && (
+            <Accordion activeKey={stepTwoKey}>
+              <Card>
+                <Card.Header className="position-relative bg-primary">
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    style={{ minHeight: '30px' }}
+                  >
+                    <h6 className="text-white m-0"> Step 2 (Exit Process)</h6>
+                    <div className="d-flex align-items-center justify-content-end">
+                      <Accordion.Toggle
+                        className="toggle-btn-accordion"
+                        as={Button}
+                        variant="link"
                         onClick={() => {
-                          setShowModal(true);
-                        }}
-                      >
-                        Update date
-                      </a>
-                    </Col>
-                  </Row> */}
-                  <Row className="mt-3 d-flex align-items-end">
-                    <Col sm={3}>
-                      <DropdownInput
-                        label="Select Document"
-                        options={uniqueDocumentOptions}
-                        defaultValue={selectedDocument}
-                        onSelectHandler={(select) => {
-                          setSelectedDocument(select);
-                        }}
-                        disabled={uniqueDocumentOptions.length <= 0}
-                      />
-                    </Col>
-                    <Col>
-                      <TextInput
-                        className="mb-3"
-                        label="Upload  document"
-                        type="file"
-                        onInputChange={(e) => {
-                          if (!e?.target?.files || e?.target?.files?.length < 1)
-                            return;
                           if (
-                            ['docx', 'pdf'].includes(
-                              e?.target?.files[0].name?.split('.').pop()
-                            )
-                          ) {
-                            if (e?.target?.files[0].size > 1086147) {
-                              swal('File size is too big', '', 'error');
-                            } else {
-                              setDocument(e.target.files[0]);
-                            }
-                          } else {
-                            swal(
-                              'File extension is not supported',
-                              '',
-                              'error'
-                            );
-                          }
-                        }}
-                        disabled={uniqueDocumentOptions.length <= 0}
-                      />
-                    </Col>
-                    <Col>
-                      <Button
-                        className="mt-4 mb-4"
-                        onClick={(e) => {
-                          handleSubmit();
-                        }}
-                        disabled={!selectedDocument || document == null}
-                      >
-                        Upload
-                      </Button>
-                    </Col>
-                  </Row>
-                  <div className="mt-2">
-                    <h6 style={{ fontSize: 'smaller' }}>
-                      <b>Note:</b>
-                    </h6>
-                    <h6 style={{ fontSize: 'smaller' }}>
-                      1. Maximum upload file size limit is less then 1 MB.
-                    </h6>
-                    <h6 style={{ fontSize: 'smaller' }}>
-                      2. File supported extension is .pdf , .docx
-                    </h6>
-                    <h6 style={{ fontSize: 'smaller' }}>
-                      3. Upload required (*) documents to relieve employee
-                    </h6>
-                  </div>
-                  <Row className="mt-4">
-                    <Col sm={6}>
-                      <Card className="border-0">
-                        <Card.Body>
-                          <ul>
-                            {documentsList &&
-                              documentsList?.slice(0, 4)?.map((item, index) => (
-                                <li className="mb-2 d-flex justify-content-between">
-                                  {item.isDiseable == true ? (
-                                    <del>{item?.name}</del>
-                                  ) : (
-                                    item?.name
-                                  )}
-                                  {item.isDiseable == true && (
-                                    <div
-                                      style={{ marginRight: '90px' }}
-                                      className="btn-wrapper"
-                                    >
-                                      <a href={item?.url} target="_blank">
-                                        <img
-                                          title="Download Document"
-                                          style={{ cursor: 'pointer' }}
-                                          src="/images/download1.svg"
-                                          alt="download-icon"
-                                          className="me-3"
-                                        />
-                                      </a>
-
-                                      <a
-                                        href="javascript:void(0)"
-                                        onClick={() => {
-                                          deleteDocument(item?.doc_id);
-                                        }}
-                                      >
-                                        <img
-                                          title="Remove Document"
-                                          style={{ cursor: 'pointer' }}
-                                          src="/images/delete.png"
-                                          alt="download-icon"
-                                        />
-                                      </a>
-                                    </div>
-                                  )}
-                                </li>
-                              ))}
-                          </ul>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                    <Col sm={6}>
-                      <Card className="border-0">
-                        <Card.Body>
-                          <ul>
-                            {documentsList &&
-                              documentsList?.slice(4, 8)?.map((item, index) => (
-                                <li className="mb-2 d-flex justify-content-between">
-                                  {item.isDiseable == true ? (
-                                    <del>{item?.name}</del>
-                                  ) : (
-                                    item?.name
-                                  )}
-                                  {item.isDiseable == true && (
-                                    <div
-                                      style={{ marginRight: '90px' }}
-                                      className="btn-wrapper"
-                                    >
-                                      <a href={item?.url} target="_blank">
-                                        <img
-                                          title="Download Document"
-                                          style={{ cursor: 'pointer' }}
-                                          src="/images/download1.svg"
-                                          alt="download-icon"
-                                          className="me-3"
-                                        />
-                                      </a>
-
-                                      <a
-                                        href="javascript:void(0)"
-                                        onClick={() => {
-                                          deleteDocument(item?.doc_id);
-                                        }}
-                                      >
-                                        <img
-                                          title="Remove Document"
-                                          style={{ cursor: 'pointer' }}
-                                          src="/images/delete.png"
-                                          alt="delete-icon"
-                                        />
-                                      </a>
-                                    </div>
-                                  )}
-                                </li>
-                              ))}
-                          </ul>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
-
-          <Accordion activeKey={stepThreeKey}>
-            <Card>
-              <Card.Header className="position-relative bg-primary">
-                <div
-                  className="d-flex align-items-center justify-content-between"
-                  style={{ minHeight: '30px' }}
-                >
-                  <h6 className="text-white m-0">Step 3 (Relieving Process)</h6>
-                  <div className="d-flex align-items-center justify-content-end">
-                    <Accordion.Toggle
-                      className="toggle-btn-accordion"
-                      as={Button}
-                      variant="link"
-                      onClick={() => {
-                        const tempData = documentsList?.filter(
-                          (item) => item?.isRequired && item?.isCheck
-                        );
-                        if (tempData?.length == 4) {
-                          if (
-                            stepThreeKey == '0' &&
+                            stepTwoKey == '0' &&
                             rowData?.user?.relieving_date <=
                               customFunctions.getDate(new Date())
                           ) {
-                            setStepThreeKey('1');
+                            setStepTwoKey('1');
                           } else {
-                            setStepThreeKey('0');
+                            setStepTwoKey('0');
                           }
-                        }
-                      }}
-                    >
-                      <img
-                        src={
-                          stepThreeKey == '0'
-                            ? '/images/caret-down.svg'
-                            : '/images/caret-up.svg'
-                        }
-                        className="forWhiteImg"
-                        alt=""
-                      />
-                    </Accordion.Toggle>
-                  </div>
-                </div>
-              </Card.Header>
-              <Accordion.Collapse eventKey="1">
-                <Card>
-                  <Card.Body>
-                    <div className="mt-3 mb-3">
-                      <Row>
-                        {!rowData?.user?.relieved ? (
-                          <Col className="d-flex justify-content-start">
-                            <Button
-                              onClick={() => {
-                                swal({
-                                  title: 'Are you sure?',
-                                  text: 'Do you want to relieve this employee today?',
-                                  icon: 'warning',
-                                  buttons: true,
-                                  dangerMode: true,
-                                }).then((willDelete) => {
-                                  if (willDelete) {
-                                    isRelived();
-                                  }
-                                });
-                              }}
-                            >
-                              Relieve Employee
-                            </Button>
-                          </Col>
-                        ) : (
-                          <h4 className="d-flex justify-content-start">
-                            Employee has relieved
-                          </h4>
-                        )}
-                      </Row>
+                        }}
+                      >
+                        <img
+                          src={
+                            stepTwoKey == '0'
+                              ? '/images/caret-down.svg'
+                              : '/images/caret-up.svg'
+                          }
+                          className="forWhiteImg"
+                          alt=""
+                        />
+                      </Accordion.Toggle>
                     </div>
+                  </div>
+                </Card.Header>
+                <Accordion.Collapse eventKey="1">
+                  <Card.Body>
+                    <Card.Title>
+                      <Form onSubmit={(e) => {}}></Form>
+                    </Card.Title>
+                    {/* <Row>
+                     <Col>
+                       <h4>Last working date of employee name is: 22/2/22</h4>
+                     </Col>
+                     <Col className="d-flex justify-content-end">
+                       <a
+                         href="javascript:void(0)"
+                         onClick={() => {
+                           setShowModal(true);
+                         }}
+                       >
+                         Update date
+                       </a>
+                     </Col>
+                   </Row> */}
+                    <Row className="mt-3 d-flex align-items-end">
+                      <Col sm={3}>
+                        <DropdownInput
+                          label="Select Document"
+                          options={uniqueDocumentOptions}
+                          defaultValue={selectedDocument}
+                          onSelectHandler={(select) => {
+                            setSelectedDocument(select);
+                          }}
+                          disabled={uniqueDocumentOptions.length <= 0}
+                        />
+                      </Col>
+                      <Col>
+                        <TextInput
+                          className="mb-3"
+                          label="Upload  document"
+                          type="file"
+                          onInputChange={(e) => {
+                            if (
+                              !e?.target?.files ||
+                              e?.target?.files?.length < 1
+                            )
+                              return;
+                            if (
+                              ['docx', 'pdf'].includes(
+                                e?.target?.files[0].name?.split('.').pop()
+                              )
+                            ) {
+                              if (e?.target?.files[0].size > 1086147) {
+                                swal('File size is too big', '', 'error');
+                              } else {
+                                setDocument(e.target.files[0]);
+                              }
+                            } else {
+                              swal(
+                                'File extension is not supported',
+                                '',
+                                'error'
+                              );
+                            }
+                          }}
+                          disabled={uniqueDocumentOptions.length <= 0}
+                        />
+                      </Col>
+                      <Col>
+                        <Button
+                          className="mt-4 mb-4"
+                          onClick={(e) => {
+                            handleSubmit();
+                          }}
+                          disabled={!selectedDocument || document == null}
+                        >
+                          Upload
+                        </Button>
+                      </Col>
+                    </Row>
+                    <div className="mt-2">
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        <b>Note:</b>
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        1. Maximum upload file size limit is less then 1 MB.
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        2. File supported extension is .pdf , .docx
+                      </h6>
+                      <h6 style={{ fontSize: 'smaller' }}>
+                        3. Upload required (*) documents to relieve employee
+                      </h6>
+                    </div>
+                    <Row className="mt-4">
+                      <Col sm={6}>
+                        <Card className="border-0">
+                          <Card.Body>
+                            <ul>
+                              {documentsList &&
+                                documentsList
+                                  ?.slice(0, 4)
+                                  ?.map((item, index) => (
+                                    <li className="mb-2 d-flex justify-content-between">
+                                      {item.isDiseable == true ? (
+                                        <del>{item?.name}</del>
+                                      ) : (
+                                        item?.name
+                                      )}
+                                      {item.isDiseable == true && (
+                                        <div
+                                          style={{ marginRight: '90px' }}
+                                          className="btn-wrapper"
+                                        >
+                                          <a href={item?.url} target="_blank">
+                                            <img
+                                              title="Download Document"
+                                              style={{ cursor: 'pointer' }}
+                                              src="/images/download1.svg"
+                                              alt="download-icon"
+                                              className="me-3"
+                                            />
+                                          </a>
+
+                                          <a
+                                            href="javascript:void(0)"
+                                            onClick={() => {
+                                              deleteDocument(item?.doc_id);
+                                            }}
+                                          >
+                                            <img
+                                              title="Remove Document"
+                                              style={{ cursor: 'pointer' }}
+                                              src="/images/delete.png"
+                                              alt="download-icon"
+                                            />
+                                          </a>
+                                        </div>
+                                      )}
+                                    </li>
+                                  ))}
+                            </ul>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                      <Col sm={6}>
+                        <Card className="border-0">
+                          <Card.Body>
+                            <ul>
+                              {documentsList &&
+                                documentsList
+                                  ?.slice(4, 8)
+                                  ?.map((item, index) => (
+                                    <li className="mb-2 d-flex justify-content-between">
+                                      {item.isDiseable == true ? (
+                                        <del>{item?.name}</del>
+                                      ) : (
+                                        item?.name
+                                      )}
+                                      {item.isDiseable == true && (
+                                        <div
+                                          style={{ marginRight: '90px' }}
+                                          className="btn-wrapper"
+                                        >
+                                          <a href={item?.url} target="_blank">
+                                            <img
+                                              title="Download Document"
+                                              style={{ cursor: 'pointer' }}
+                                              src="/images/download1.svg"
+                                              alt="download-icon"
+                                              className="me-3"
+                                            />
+                                          </a>
+
+                                          <a
+                                            href="javascript:void(0)"
+                                            onClick={() => {
+                                              deleteDocument(item?.doc_id);
+                                            }}
+                                          >
+                                            <img
+                                              title="Remove Document"
+                                              style={{ cursor: 'pointer' }}
+                                              src="/images/delete.png"
+                                              alt="delete-icon"
+                                            />
+                                          </a>
+                                        </div>
+                                      )}
+                                    </li>
+                                  ))}
+                            </ul>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    </Row>
                   </Card.Body>
-                </Card>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          )}
+
+          {rowData?.resignation_type == '2' && (
+            <Accordion activeKey={stepThreeKey}>
+              <Card>
+                <Card.Header className="position-relative bg-primary">
+                  <div
+                    className="d-flex align-items-center justify-content-between"
+                    style={{ minHeight: '30px' }}
+                  >
+                    <h6 className="text-white m-0">
+                      Step 3 (Relieving Process)
+                    </h6>
+                    <div className="d-flex align-items-center justify-content-end">
+                      <Accordion.Toggle
+                        className="toggle-btn-accordion"
+                        as={Button}
+                        variant="link"
+                        onClick={() => {
+                          const tempData = documentsList?.filter(
+                            (item) => item?.isRequired && item?.isCheck
+                          );
+                          if (tempData?.length == 4) {
+                            if (
+                              stepThreeKey == '0' &&
+                              rowData?.user?.relieving_date <=
+                                customFunctions.getDate(new Date())
+                            ) {
+                              setStepThreeKey('1');
+                            } else {
+                              setStepThreeKey('0');
+                            }
+                          }
+                        }}
+                      >
+                        <img
+                          src={
+                            stepThreeKey == '0'
+                              ? '/images/caret-down.svg'
+                              : '/images/caret-up.svg'
+                          }
+                          className="forWhiteImg"
+                          alt=""
+                        />
+                      </Accordion.Toggle>
+                    </div>
+                  </div>
+                </Card.Header>
+                <Accordion.Collapse eventKey="1">
+                  <Card>
+                    <Card.Body>
+                      <div className="mt-3 mb-3">
+                        <Row>
+                          {!rowData?.user?.relieved ? (
+                            <Col className="d-flex justify-content-start">
+                              <Button
+                                onClick={() => {
+                                  swal({
+                                    title: 'Are you sure?',
+                                    text: 'Do you want to relieve this employee today?',
+                                    icon: 'warning',
+                                    buttons: true,
+                                    dangerMode: true,
+                                  }).then((willDelete) => {
+                                    if (willDelete) {
+                                      isRelived();
+                                    }
+                                  });
+                                }}
+                              >
+                                Relieve Employee
+                              </Button>
+                            </Col>
+                          ) : (
+                            <h4 className="d-flex justify-content-start">
+                              Employee has relieved
+                            </h4>
+                          )}
+                        </Row>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          )}
         </div>
       </section>
       <ModalInput
@@ -1425,9 +1457,9 @@ const ResignationDetailsComponent = (props) => {
                 //   dangerMode: true,
                 // }).then((willDelete) => {
                 //   if (willDelete) {
-                approveResignation(1);
+                changeRelievingData();
                 setShowModal(false);
-                // changeRelievingData();
+
                 //     }
                 //   });
               }}

@@ -5,17 +5,15 @@ import swal from 'sweetalert';
 import { Button, Card, Form, Col, Row } from 'react-bootstrap';
 import SimpleReactValidator from 'simple-react-validator';
 import Api from '../../helper/api';
-import { Helmet } from '../../components/FormInputs';
+import { DropdownInput, Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import AuthApi from '../../helper/authApi';
-import {
-  TextInput,
-  Datepicker,
-} from '../../components/FormInputs';
+import { TextInput, Datepicker } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 
 function GenerateOfferLetter() {
+  //state declared here
   const history = useHistory();
   const [currentUser, updateCurrentUser] = useState(0);
   const [fullName, setFullName] = useState('');
@@ -23,8 +21,18 @@ function GenerateOfferLetter() {
   const [designation, setDesignation] = useState([]);
   const [pfInclude, setPfInclude] = useState(false);
   const [miscellaneous_included, setMiscellaneousInclude] = useState(false);
+  const [selectedDesignationOption, setSelectedDesignationOption] =
+  useState(null);
   const [bonus, setBonus] = useState('');
   const [count, forceUpdate] = useState(0);
+  const [emailBody, setEmailBody] = useState('');
+  const [document, setDocument] = useState('');
+  const [checked, setChecked] = useState('');
+  const [isShowLoader, setShowLoader] = useState(false);
+  const [title, setTitle] = useState('');
+  const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
+  const isFresher = customFunctions.getLocalStorage('isFresher');
+  const [OfferedCtc, setOfferedCtc] = useState('');
 
   const options = [
     {
@@ -55,14 +63,7 @@ function GenerateOfferLetter() {
       },
     })
   );
-  const [emailBody, setEmailBody] = useState('');
-  const [document, setDocument] = useState('');
-  const [checked, setChecked] = useState('');
-  const [isShowLoader, setShowLoader] = useState(false);
-  const [title, setTitle] = useState('');
-  const items = [{ to: '/', label: 'Home' }, { label: 'Offer Letter' }];
-  const isFresher = customFunctions.getLocalStorage('isFresher');
-  const [OfferedCtc, setOfferedCtc] = useState('');
+    
 
   const onSelectRadioButton = (e) => {
     setPfInclude(e.target.value);
@@ -91,15 +92,28 @@ function GenerateOfferLetter() {
     const bonus = customFunctions.getLocalStorage('bonus');
 
     setFullName(fName);
-    setDesignation(designationName);
+    // setDesignation(designationName);
     setOfferedCtc(OfferCtc && OfferCtc !== 'null' ? OfferCtc : null);
-    setJoiningDate(joining_Date && joining_Date !== 'null'? new Date(joining_Date) : null);
+    setJoiningDate(
+      joining_Date && joining_Date !== 'null' ? new Date(joining_Date) : null
+    );
     setPfInclude(PfInclude);
     setMiscellaneousInclude(misInclude);
     setBonus(bonus && bonus !== 'null' ? bonus : null);
-
+   
+    // Fetch designation data and set default designation
+   
+        // const defaultDesignation = designation?.find((item) => item?.name === designationName);
+        // console.log("🚀 ~ getDesignation ~ defaultDesignation:", defaultDesignation)
+        // if (defaultDesignation) {
+        //   setSelectedDesignationOption({
+        //     label: defaultDesignation?.name,
+        //     id: defaultDesignation?.id,
+        //   });
+        // }
+     
   }, []);
- 
+
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -107,11 +121,57 @@ function GenerateOfferLetter() {
 
   useEffect(() => {
     getUserRole();
+    getDesignation();
     getEmailTemplateData();
   }, []);
-
   
+  // useEffect(() => {
+  //   getEmailTemplateData();
 
+  // },[selectedDesignationOption])
+
+  const getDesignationList = () => {
+    if (!designation) return [];
+    const options = [];
+    designation.map((desgn) => {  
+      return options.push({
+        label: desgn.name,
+        id: desgn.id,
+      });
+    });
+    return options;
+  }
+  
+  const getDesignation = async () => {
+    try {
+
+      const designationName = customFunctions.getLocalStorage('designation');
+      const { data } = await AuthApi.getDataFromServer(
+        `${Api.designationUrl}?type=all`
+      );
+      
+      if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+        const designationList = data.data;
+        setDesignation(designationList);
+        
+        // Find the default designation after setting the state
+        const defaultDesignation = designationList?.find(
+          (item) => item?.name == designationName
+        );
+        
+        if (defaultDesignation) {
+          setSelectedDesignationOption({
+            label: defaultDesignation?.name,
+            id: defaultDesignation?.id,
+          });
+          customFunctions?.setLocalStorage('designation', selectedDesignationOption?.label)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching designations:', error);
+    }
+  };
+  
   const getEmailTemplateData = async () => {
     const endPoint =
       isFresher === 'true'
@@ -214,6 +274,7 @@ function GenerateOfferLetter() {
       body,
       joining_date: joiningDate ? customFunctions.getDate(joiningDate) : null,
       offered_ctc: Number(OfferedCtc),
+      designation: selectedDesignationOption ? selectedDesignationOption?.id : '',
     };
 
     if (isFresher !== 'true') postData.attachment = checked ? doc : '';
@@ -261,6 +322,7 @@ function GenerateOfferLetter() {
       applicant_id: Number(id),
       body: emailBody,
       generate_offer: Boolean(true),
+      designation: selectedDesignationOption ? selectedDesignationOption?.id : '',
       offered_ctc: Number(OfferedCtc),
       pf_included: pfInclude === 'true' ? true : false, // eslint-disable-line
       miscellaneous_included: miscellaneous_included === 'true' ? true : false, // eslint-disable-line
@@ -272,6 +334,7 @@ function GenerateOfferLetter() {
       Api.generateContentUrl,
       postData
     );
+    // sendMailUrl
     if (data) {
       setShowLoader(false);
       swal(data && data.message[0], '', 'success', {
@@ -343,7 +406,25 @@ function GenerateOfferLetter() {
                 />
               </Col>
               <Col sm={6}>
-                <TextInput
+              <DropdownInput
+                  label="Designation"
+                  asterisk="*"
+                  options={getDesignationList()}
+                  placeholder="Select Designation"
+                  defaultValue={selectedDesignationOption} 
+                  onSelectHandler={(select) => {
+                    setSelectedDesignationOption(select);
+                   customFunctions?.setLocalStorage('designation', select?.label);
+
+                  }}
+                  errorMessage={validator.current.message(
+                    'Designation',
+                    selectedDesignationOption,
+                    'required'
+                  )}
+                />
+
+                {/* <TextInput
                   onInputChange={(e) => {
                     const re = /^[a-zA-Z ]*$/;
                     if (!e.target.value || re.test(e.target.value)) {
@@ -363,7 +444,7 @@ function GenerateOfferLetter() {
                     designation,
                     'required'
                   )}
-                />
+                /> */}
               </Col>
             </Row>
             <Row>
@@ -395,7 +476,7 @@ function GenerateOfferLetter() {
               <Col sm={6}>
                 <Form.Group>
                   <Form.Label className="text-dark fs-6">
-                  PF Included<span className="text-danger ms-2">*</span>
+                    PF Included<span className="text-danger ms-2">*</span>
                   </Form.Label>
                   <div>
                     {options.map((option) => (
@@ -408,15 +489,12 @@ function GenerateOfferLetter() {
                         label={option.label}
                         checked={pfInclude == option.value}
                         onChange={onSelectRadioButton}
-                        errorMessage={
-                          validator.current.message(
-                            'pfInclude',
-                            pfInclude,
-                            'required'
-                          )
-                        }
+                        errorMessage={validator.current.message(
+                          'pfInclude',
+                          pfInclude,
+                          'required'
+                        )}
                       />
-                      
                     ))}
                   </div>
                 </Form.Group>
@@ -448,7 +526,7 @@ function GenerateOfferLetter() {
               <Col sm={6}>
                 <Form.Group>
                   <Form.Label className="text-dark fs-6">
-                  Miscellaneous Included
+                    Miscellaneous Included
                     <span className="text-danger ms-2">*</span>
                   </Form.Label>
                   <div>
@@ -462,13 +540,11 @@ function GenerateOfferLetter() {
                         label={option.label}
                         checked={miscellaneous_included == option.value}
                         onChange={onSelectRadio}
-                        errorMessage={
-                          validator.current.message(
-                            'miscellaneous_included',
-                            miscellaneous_included,
-                            'required'
-                          )
-                        }
+                        errorMessage={validator.current.message(
+                          'miscellaneous_included',
+                          miscellaneous_included,
+                          'required'
+                        )}
                       />
                     ))}
                   </div>

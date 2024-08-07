@@ -12,31 +12,44 @@ import Loader from '../../components/Loader/index';
 function AddHistory(props) {
   // const accProps = { props };
   const { state } = useLocation();
-  const { employeeId, applicatId, accProps } = props;
+  const { employeeId, applicantId, accProps, handleModalClose } = props;
   const passwordProps = accProps?.props?.password;
   const tokenProps = accProps?.props?.token;
   const idProps = accProps?.props?.match?.params?.ID;
+  const [jsonSchema, updateJsonSchema] = useState(FormSections);
 
   const [appId, setAppId] = useState('');
 
   const [defaultValues, updateDefaultValues] = useState({}); // eslint-disable-line
+
   const [currentUser, updateCurrentUser] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);
   const candidateId = localStorage.getItem('candidateId');
 
-  const formSchema = [...FormSections];
-  formSchema[0].fields.map((section) => {
-    const sectionData = section;
-    if (
-      sectionData?.name === 'start_date' ||
-      sectionData?.name === 'end_date'
-    ) {
-      const date = new Date();
-      sectionData.maxDate = date;
-    }
-    return sectionData;
-  });
-
+  // const formSchema = [...FormSections];
+  // formSchema[0].fields.map((section) => {
+  //   const sectionData = section;
+  //   if (
+  //     sectionData?.name === 'start_date' ||
+  //     sectionData?.name === 'end_date'
+  //   ) {
+  //     const date = new Date();
+  //     sectionData.maxDate = date;
+  //   }
+  //   return sectionData;
+  // });
+  useEffect(() => {
+    const formSchema = [...FormSections];
+    const updatedSchema = formSchema?.[0]?.fields?.[0]?.fields?.map((item) => {
+      const itemData = item;
+      if (item?.name === 'start_date' || item?.name === 'end_date') {
+        const maxdate = new Date();
+        itemData.maxDate = maxdate;
+      }
+      return itemData;
+    });
+    updateJsonSchema([...updatedSchema, ...formSchema]);
+  }, [defaultValues]);
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
     updateCurrentUser(Number(roleId));
@@ -54,12 +67,11 @@ function AddHistory(props) {
 
   const getData = async () => {
     setShowLoader(true);
-
     const addmoreData = [];
-    const endPoint = state?.state?.applicantId
-      ? `${Api.applicantInfoUrl}?employee_id=${state?.state?.empId}`
-      : state?.state?.empId
-      ? `${Api.employeeInfo}?employee_id=${state?.state?.empId}`
+    const endPoint = applicantId
+      ? `${Api.applicantInfoUrl}?employee_id=${employeeId}`
+      : employeeId
+      ? `${Api.employeeInfo}?employee_id=${employeeId}`
       : `${Api.employeeInfo}`;
 
     const postData = {
@@ -68,7 +80,7 @@ function AddHistory(props) {
     };
 
     let response;
-    if (state?.state?.applicantId) {
+    if (applicantId) {
       response = await AuthApi.postDataToServer(endPoint, postData);
     } else {
       response = await AuthApi.getDataFromServer(endPoint);
@@ -86,22 +98,21 @@ function AddHistory(props) {
         data?.data?.applicant_history &&
         data?.data?.applicant_history?.length > 0 &&
         data?.data?.applicant_history.map((doc) => {
-          const reportingData = {};
-          doc?.reportings &&
-            doc?.reportings?.length > 0 &&
-            doc?.reportings.map((report) => {
-              if (report?.is_hr) {
-                reportingData.reporting_person_hr = report?.reporting_person;
-                reportingData.hr_email = report?.email;
-                reportingData.hr_mobile = report?.mobile;
-              } else {
-                reportingData.reporting_person_manager =
-                  report?.reporting_person || '';
-                reportingData.manager_email = report?.email || '';
-                reportingData.manager_mobile = report?.mobile || '';
-              }
-              return report;
-            });
+          // const reportingData = {};
+          // doc?.reportings &&
+          //   doc?.reportings?.length > 0 &&
+          //   doc?.reportings.map((report) => {
+          //     if (report?.is_hr) {
+          //       reportingData.reporting_person_hr = report?.reporting_person;
+          //       reportingData.hr_email = report?.email;
+          //       reportingData.hr_mobile = report?.mobile;
+          //     } else {
+          //       reportingData.reporting_person_manager = report?.reporting_person || '';
+          //       reportingData.manager_email = report?.email || '';
+          //       reportingData.manager_mobile = report?.mobile || '';
+          //     }
+          //     return report;
+          //   });
 
           addmoreData.push({
             company_name: doc?.company_name && doc?.company_name,
@@ -111,13 +122,20 @@ function AddHistory(props) {
             end_date: doc?.end_date && new Date(doc?.end_date),
             duration: doc?.duration && doc?.duration,
             location: doc?.location && doc?.location,
-            reporting_person_hr: reportingData.reporting_person_hr,
-
-            hr_email: reportingData.hr_email,
-            hr_mobile: reportingData.hr_mobile,
-            reporting_person_manager: reportingData.reporting_person_manager,
-            manager_email: reportingData.manager_email,
-            manager_mobile: reportingData.manager_mobile,
+            employement_history_id:
+              doc?.employement_history_id && doc?.employement_history_id,
+            hr_name: doc?.hr_name && doc?.hr_name,
+            hr_email: doc?.hr_email && doc?.hr_email,
+            hr_mobile: doc?.hr_mobile && doc?.hr_mobile,
+            manager_name: doc?.manager_name && doc?.manager_name,
+            manager_email: doc?.manager_email && doc?.manager_email,
+            manager_mobile: doc?.manager_mobile && doc?.manager_mobile,
+            // reporting_person_hr: reportingData.reporting_person_hr,
+            // hr_email: reportingData.hr_email,
+            // hr_mobile: reportingData.hr_mobile,
+            // reporting_person_manager: reportingData.reporting_person_manager,
+            // manager_email: reportingData.manager_email,
+            // manager_mobile: reportingData.manager_mobile,
           });
           return doc;
         });
@@ -129,42 +147,42 @@ function AddHistory(props) {
   };
 
   useEffect(() => {
-    if (state?.state?.applicantId || state?.state?.empId) {
+    if (applicantId || employeeId) {
       getData();
     }
-  }, [state]);
+  }, [applicantId, employeeId]);
 
   const submitForm = async (formValues) => {
     setShowLoader(true);
     const payload = {
       email_hash: tokenProps,
       password: passwordProps,
-      employee_id: Number(employeeId),
+      employee: Number(employeeId),
     };
     const postData = [];
 
     const report = {};
 
-    await formValues.addmore.map((rp, i) => {
-      report[i] = [];
-      const hrReport = {};
-      const managerReport = {};
-      if (rp.reporting_person_hr) {
-        hrReport.reporting_person = rp?.reporting_person_hr;
-        hrReport.email = rp?.hr_email;
-        hrReport.mobile = rp?.hr_mobile;
-        hrReport.is_hr = true;
-        report[i].push(hrReport);
-      }
+    // await formValues.addmore.map((rp, i) => {
+    //   report[i] = [];
+    //   const hrReport = {};
+    //   const managerReport = {};
+    //   if (rp.reporting_person_hr) {
+    //     hrReport.reporting_person = rp?.hr_name;
+    //     hrReport.email = rp?.hr_email;
+    //     hrReport.mobile = rp?.hr_mobile;
+    //     hrReport.is_hr = true;
+    //     report[i].push(hrReport);
+    //   }
 
-      if (rp?.reporting_person_manager) {
-        managerReport.reporting_person = rp?.reporting_person_manager;
-        managerReport.email = rp?.manager_email;
-        managerReport.mobile = rp?.manager_mobile;
-        report[i].push(managerReport);
-      }
-      return rp;
-    });
+    //   if (rp?.reporting_person_manager) {
+    //     managerReport.reporting_person = rp?.manager_name;
+    //     managerReport.email = rp?.manager_email;
+    //     managerReport.mobile = rp?.manager_mobile;
+    //     report[i].push(managerReport);
+    //   }
+    //   return rp;
+    // });
     const addEntry = formValues.addmore.entries();
     for (const [index, history] of addEntry) {
       // eslint-disable-line
@@ -179,7 +197,13 @@ function AddHistory(props) {
           ? customFunctions.getDate(history?.end_date)
           : '',
         location: history?.location,
-        reportings: report[index],
+        hr_name: history?.hr_name,
+        hr_email: history?.hr_email,
+        hr_mobile: history?.hr_mobile,
+        manager_name: history?.manager_name,
+        manager_email: history?.manager_email,
+        manager_mobile: history?.manager_mobile,
+        // reportings: report[index],
       };
       postData.push(candidateHistory);
     }
@@ -191,17 +215,19 @@ function AddHistory(props) {
 
     if (!data) {
       setShowLoader(false);
+      handleModalClose(false);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
         buttons: false,
-        timer: 2000,
+        timer: 3000,
       }).then(() => {
         swal.close();
       });
     } else {
       setShowLoader(false);
-      swal(data?.message[0], '', 'success', {
+      handleModalClose(false);
+      swal('Employement History Created Sucessfully', '', 'success', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
@@ -216,7 +242,7 @@ function AddHistory(props) {
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <StarkFormBuilder
-        containerClass=""
+        containerClass="historyModal"
         formHeaderClass=""
         formSections={FormSections}
         formHeading="Add Document"

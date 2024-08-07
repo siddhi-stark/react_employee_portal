@@ -31,7 +31,6 @@ function OldEmployee() {
   const [employeeList, setEmployeeList] = useState('');
   const history = useHistory();
 
-
   const getEmployee = async (pageNo = 1, filter) => {
     setShowLoader(true);
     setEmployee([]);
@@ -106,9 +105,9 @@ function OldEmployee() {
   //   );
   // };
 
-  useEffect(()=>{
+  useEffect(() => {
     getEmployeeName();
-  },[])
+  }, []);
 
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
@@ -261,9 +260,10 @@ function OldEmployee() {
                             }
                             alt="Card image cap"
                           />
-                          {emp.on_notice_period === true && emp?.relieved == false &&  (
-                            <span className="np-sup">NP</span>
-                          )}
+                          {emp.on_notice_period === true &&
+                            emp?.relieved == false && (
+                              <span className="np-sup">NP</span>
+                            )}
                         </span>
                       </Col>
                       <Col className="col-md-8">

@@ -4,7 +4,7 @@ const menu = [
     path: '/',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7, 8],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 8, 10],
   },
   {
     title: 'Project',
@@ -16,22 +16,22 @@ const menu = [
         title: 'Current Project',
         path: '/current-project',
         icon: 'project.svg',
-        roleaccess: [1, 2, 3, 4],
+        roleaccess: [1, 2, 3, 4, 10],
       },
       {
         title: 'Archived Project',
         path: '/archived-project',
         icon: 'project.svg',
-        roleaccess: [1, 2, 3, 4],
+        roleaccess: [1, 2, 3, 4, 10],
       },
       {
         title : 'Completed Project',
         path: '/completed-project',
         icon: 'project.svg',
-        roleaccess : [1, 2, 3, 4],
+        roleaccess : [1, 2, 3, 4, 10],
       }
     ],
-    roleaccess: [1, 2, 3, 4],
+    roleaccess: [1, 2, 3, 4, 10],
   },
 
   {
@@ -54,14 +54,14 @@ const menu = [
     path: '/team-scheduler',
     icon: 'leaves.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4],
+    roleaccess: [1, 2, 3, 4, 10],
   },
   {
     title: 'Quotes',
     path: '/quotes',
     icon: 'quote.svg',
     submenu: [],
-    roleaccess: [1, 3, 5, 6],
+    roleaccess: [1, 3, 5, 6, 10],
   },
   {
     title: 'Employee Timesheet',
@@ -81,7 +81,7 @@ const menu = [
         path: '/employees',
         icon: 'Employee.svg',
         submenu: [],
-        roleaccess: [1, 2, 3, 5, 6],
+        roleaccess: [1, 2, 3, 5, 6, 10],
       },
 
       {
@@ -89,10 +89,17 @@ const menu = [
         path: '/resignation-applications',
         icon: 'report.svg',
         submenu: [],
-        roleaccess: [1, 2, 3, 5, 6],
+        roleaccess: [1, 2, 3, 5, 6, 10],
+      },
+      {
+        title: 'Terminate and Abscond Employee',
+        path: '/abscond-table',
+        icon: 'report.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 5, 6, 10],
       },
     ],
-    roleaccess: [1, 2,3,5, 6],
+    roleaccess: [1, 2, 3, 5, 6, 10],
   },
   // {
   //   title: 'Employees',
@@ -106,7 +113,7 @@ const menu = [
     path: '/interview-listing',
     icon: 'recruitement.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6],
+    roleaccess: [1, 2, 3, 4, 5, 6, 10],
   },
 
   {
@@ -182,12 +189,12 @@ const menu = [
       {
         title: 'My Leaves',
         path: '/my-leaves',
-        roleaccess: [2, 3, 6, 5],
+        roleaccess: [2, 3, 6, 5, 10],
       },
       {
         title: 'Team Leaves',
         path: '/team-leaves',
-        roleaccess: [2, 3, 6],
+        roleaccess: [2, 3, 6, 10],
       },
       {
         title: 'Employee Leaves',
@@ -195,28 +202,28 @@ const menu = [
         roleaccess: [1, 6, 5],
       },
     ],
-    roleaccess: [1, 2, 3, 6, 5],
+    roleaccess: [1, 2, 3, 6, 5,10],
   },
   {
     title: 'Event',
     path: '/event',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [5, 6, 1, 2, 3, 4, 7],
+    roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
   },
   {
     title: 'Holidays',
     path: '/holidays',
     icon: 'holiday.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
   {
     title: 'Greetings',
     path: '/greetings',
     icon: 'greetings.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 5, 6],
+    roleaccess: [1, 2, 3, 5, 6, 10],
   },
   {
     title: 'My Timesheet',
@@ -235,13 +242,13 @@ const menu = [
         title: 'My Timesheet',
         path: '/my-report',
         icon: 'timesheet.svg',
-        roleaccess: [2, 3, 6, 5],
+        roleaccess: [2, 3, 6, 5, 10],
       },
       {
         title: 'Team Timesheet',
         path: '/team-report',
         icon: 'timesheet.svg',
-        roleaccess: [2, 3, 6],
+        roleaccess: [2, 3, 6, 10],
       },
       {
         title: 'Employee Timesheet',
@@ -250,7 +257,7 @@ const menu = [
         roleaccess: [5, 6],
       },
     ],
-    roleaccess: [2, 3, 6, 5],
+    roleaccess: [2, 3, 6, 5, 10],
   },
   {
     title: 'Employee Timesheet',
@@ -264,14 +271,21 @@ const menu = [
     path: '/performance-report',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1, 3, 4],
+    roleaccess: [1, 3, 4, 10],
+  },
+  {
+    title: 'Employee Workload',
+    path: '/employee-workload',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [1, 8],
   },
   {
     title: 'Policy',
     path: '/policy',
     icon: 'policy.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
   {
     title: 'Broadcast',
@@ -315,7 +329,7 @@ const menu = [
     path: '/resignation-application',
     icon: 'report.svg',
     submenu: [],
-    roleaccess: [3,4,5,6,7,8],
+    roleaccess: [3, 4, 5, 6, 7, 8, 10],
   },
 
   {
@@ -323,7 +337,14 @@ const menu = [
     path: '/support-ticket',
     icon: 'ticket.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
+  },
+  {
+    title: 'FAQs',
+    path: '/faq-listing',
+    icon: 'ticket.svg',
+    submenu: [],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
   {
     title: 'Setting',
@@ -340,12 +361,13 @@ const menu = [
     ],
     roleaccess: [1],
   },
+
   {
     title: 'Log Out',
     path: '#',
     icon: 'logout.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
 ];
 

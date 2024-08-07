@@ -229,9 +229,9 @@ export default class Api extends Component {
 
   static employeeDetail = `${Api.baseUrl}employee-project-details/`;
 
+  static employeeAbscond = `${Api.baseUrl}employee-abscound/`;
+
   static employeeOnboard = `${Api.baseUrl}employee-onboard/`;
-
-
 
   // Get base URL of APIs
   static getBaseUrl() {

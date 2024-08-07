@@ -55,6 +55,8 @@ function Dashboard() {
   const [newBirthdayData, setNewBirthdayData] = useState([]);
   const [broadcastDescription, setBroadcastDescription] = useState([]);
   const [confirmationEmployee, setConfirmationEmployee] = useState([]);
+  const [isProjectManager, setIsProjectManager] = useState(false);
+
   const [events, setEvents] = useState([]);
   const dashboardKey = 'Dashboard';
 
@@ -91,26 +93,34 @@ function Dashboard() {
     {
       id: 'date',
       label: 'Date',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
     },
     {
       id: 'clockin',
       label: 'In',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
     },
     {
       id: 'clockout',
       label: 'Out',
-      roleAccess: [2, 3, 4, 5, 6, 7],
+      roleAccess: [2, 3, 4, 5, 6, 7, 10],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [2, 3, 4, 5, 6, 7],
+      roleAccess: [2, 3, 4, 5, 6, 7, 10],
     },
   ];
 
-  const getDailyActivity = async () => {
+  // useEffect(() => {
+  //     if (!showClockIn) {
+
+  //       swal('Please Clock In first', '', 'warning');
+  //     }
+
+  // }, []);
+
+  const getDailyActivity = async (roleId) => {
     setShowLoader(true);
     const { data } = await AuthApi.getDataFromServer(`${Api.dailyActivityUrl}`);
     if (!customFunctions.checkIfEmpty(data, 'O') && data.success) {
@@ -124,6 +134,12 @@ function Dashboard() {
         SharedService.clockIn.next(true);
         setShowLoader(false);
       } else {
+        if ([2, 3, 4, 5, 6, 7, 10].includes(Number(roleId))) {
+          swal('Please Clock In first and Send Report', '', 'warning');
+        }
+        if(userRole === 1 && isProjectManager){
+          swal('Please Clock In first and Send Report', '', 'warning');
+        }
         setShowLoader(false);
       }
     } else {
@@ -219,6 +235,8 @@ function Dashboard() {
     if (data && data.data) {
       setEmployeeName(data.data.full_name);
       setPmsId(data?.data?.tw_id);
+      await customFunctions?.setLocalStorage('isProjectManager', data?.data?.is_project_manager);
+      setIsProjectManager(data?.data?.is_project_manager);
     }
     return true;
   };
@@ -235,7 +253,12 @@ function Dashboard() {
 
   const getClockOutTime = () => {
     const localTime = customFunctions.getLocalStorage('time');
-    setTime(localTime);
+
+    if (localTime) {
+      setTime(localTime);
+    } else {
+      localStorage.removeItem('time');
+    }
   };
 
   const getUpcomingHoliday = async () => {
@@ -286,17 +309,17 @@ function Dashboard() {
         getClockOutTime();
       }
     });
-
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
     getClockOutTime();
     getProfile();
-    getDailyActivity();
+    getDailyActivity(Number(uRole));
     getWeeklyStatus('this_week');
     getTimeSheetList();
     getWorkingHrs();
     getBroadcastData();
     setTitle('Dashboard');
-    const uRole = customFunctions.getLocalStorage('group');
-    setUserRole(Number(uRole));
+
     const quote = customFunctions.getLocalStorage('quote');
     setQuotesContent(quote);
     const userclockedin = customFunctions.getLocalStorage('userclockedin');
@@ -313,7 +336,7 @@ function Dashboard() {
     if (Number(uRole) !== 4) {
       getLeavesUpdate();
     }
-    getInterviewsUpdate();
+    // getInterviewsUpdate();
   }, []);
 
   const onViewButtonClick = () => {
@@ -399,6 +422,7 @@ function Dashboard() {
         anniversary &&
           anniversary.map((i) => {
             const dt = i;
+
             if (dt.id === id) {
               dt.message = '';
             }
@@ -442,6 +466,7 @@ function Dashboard() {
   const getUpcomingConfirmationEmployee = async () => {
     const endPoint = `${Api.employeeUrl}?show_dashboard=true`;
     const { data } = await AuthApi.getDataFromServer(endPoint);
+
     if (data) {
       setConfirmationEmployee(data.data);
     }
@@ -515,8 +540,9 @@ function Dashboard() {
                   className="d-flex justify-content-space-between flex-wrap"
                 >
                   <UserRestrictions
-                    permittedUsers={[2, 3, 4, 5, 6, 7]}
-                    roleId={userRole}
+                    permittedUsers={[2, 3, 4, 5, 6, 7, 10]}
+                    userRole={userRole}
+                    isProjectManager={isProjectManager}
                   >
                     <div className="check-in">
                       {showClockIn && (
@@ -570,7 +596,7 @@ function Dashboard() {
             {/* <NoticePeriodLastDay /> */}
             {showClockIn && (
               <UserRestrictions
-                permittedUsers={[2, 3, 4, 5, 6, 7]}
+                permittedUsers={[2, 3, 4, 5, 6, 7, 10]}
                 roleId={userRole}
               >
                 <div className="p-3 mb-3 bg-success mt-3 bg-success-main log-time-bar">
@@ -717,7 +743,11 @@ function Dashboard() {
                             <div className="media birthday-wish-section align-items-center">
                               <img
                                 className="mr-3 birth-wish-profile"
-                                src={emp.profile_image_url}
+                                src={
+                                  emp.profile_image_url
+                                    ? emp.profile_image_url
+                                    : '/images/noProfile.jpeg'
+                                }
                                 alt="img"
                               />
                               <div className="media-body">
@@ -1098,14 +1128,15 @@ function Dashboard() {
                 )}
               </UserRestrictions>
             </div>
+            {(!isProjectManager && userRole === 1) && (
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
               <div className="mt-0">
                 <EmployeeListComponent />
               </div>
             </UserRestrictions>
-
+            )}
             <UserRestrictions
-              permittedUsers={[2, 3, 4, 5, 6]}
+              permittedUsers={[2, 3, 4, 5, 6, 10]}
               roleId={userRole}
             >
               {showClockIn && !morningMail && (
@@ -1127,7 +1158,7 @@ function Dashboard() {
             {showClockIn && (
               <ToDoList
                 pmsId={pmsId}
-                onMorningSendScrum={getDailyActivity}
+                onMorningSendScrum={() => getDailyActivity(userRole)}
                 onClockoutReport={getTimeSheetList}
                 totalHrs={totalHrs}
                 callback={getWorkingHrs}
@@ -1135,7 +1166,10 @@ function Dashboard() {
             )}
           </Col>
           <Col xl={4} id="right-sidebar">
-            <UserRestrictions permittedUsers={[1, 2, 3, 4]} roleId={userRole}>
+            <UserRestrictions
+              permittedUsers={[1, 2, 3, 4, 10]}
+              roleId={userRole}
+            >
               <Card className="flex-fill w-100 weekly-status-box">
                 <Card.Body>
                   <Row>
@@ -1188,7 +1222,7 @@ function Dashboard() {
               </Card>
             </UserRestrictions>
             <UserRestrictions
-              permittedUsers={[2, 3, 4, 5, 6, 7]}
+              permittedUsers={[2, 3, 4, 5, 6, 7, 10]}
               roleId={userRole}
             >
               <div className="table-projects time-sheet-table">
@@ -1278,7 +1312,7 @@ function Dashboard() {
                 </div>
 
                 <UserRestrictions
-                  permittedUsers={[2, 3, 4, 5, 6, 7]}
+                  permittedUsers={[2, 3, 4, 5, 6, 7, 10]}
                   roleId={userRole}
                 >
                   <div className="col-xl-6">

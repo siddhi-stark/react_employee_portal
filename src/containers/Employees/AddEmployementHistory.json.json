@@ -2,7 +2,7 @@
   {
     "sectionName": "history",
     "sectionTitle": "History",
-    "layout": { "label": "2 Column", "value": "2column" },
+    "layout": { "label": "1 Column", "value": "1column" },
     "containerClass": "mt-4 ps-4",
     "displaySection": true,
     "displaySectionTitle": false,
@@ -259,7 +259,7 @@
             "options": []
           },
           {
-            "name": "reporting_person_hr",
+            "name": "hr_name",
             "type": "text",
             "label": "Hr Name",
             "id": "",
@@ -310,13 +310,24 @@
           },
           {
             "name": "hr_mobile",
-            "type": "number",
+            "type": "text",
             "label": "HR Contact No",
             "id": "",
             "placeholder": "HR Contact No",
             "inputClass": "",
             "containerClass": "",
-            "validations": [],
+            "validations": [
+              {
+                "type": "numeric|min:10|max:10|regex:^[7-9]{1}[0-9]{9}$",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              },
+              {
+                "type": "phone",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
+            ],
             "displayWhen": {},
             "haveValidations": "false",
             "haveDisplayOptions": "false",
@@ -335,7 +346,7 @@
             "options": []
           },
           {
-            "name": "reporting_person_manager",
+            "name": "manager_name",
             "type": "text",
             "label": "Manager Name",
             "id": "",
@@ -386,13 +397,24 @@
           },
           {
             "name": "manager_mobile",
-            "type": "number",
+            "type": "text",
             "label": "Manager Contact No",
             "id": "",
             "placeholder": "Manager Contact No",
             "inputClass": "",
             "containerClass": "",
-            "validations": [],
+            "validations": [
+              {
+                "type": "numeric|min:10|max:10|regex:^[7-9]{1}[0-9]{9}$",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              },
+              {
+                "type": "phone",
+                "applyWhen": [],
+                "applyWhenRelation": "OR"
+              }
+            ],
             "displayWhen": {},
             "haveValidations": "false",
             "haveDisplayOptions": "false",
@@ -401,7 +423,7 @@
             "inputToChange": "",
             "minDateSelector": "",
             "maxDateSelector": "",
-            "maxLength": 10,
+            "maxLength": "10",
             "disabled": false,
             "isMulti": false,
             "allowedUsers": [],
@@ -416,6 +438,6 @@
       }
     ],
     "allowedUsers": [],
-    "sectionLayout": "2column"
+    "sectionLayout": "1column"
   }
 ]

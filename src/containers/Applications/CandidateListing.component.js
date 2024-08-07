@@ -25,9 +25,10 @@ function CandidateListing() {
   const history = useHistory();
 
   const actionCallBack = (row) => {
+   
     return (
       <span className="d-flex">
-        {row.offer_status_name !== 'Pending' && (
+        {row.offer_status_name !== 'Pending' && !row.is_onboard && (
         <a
           href="/"
           title="Edit Candidate"
@@ -40,7 +41,7 @@ function CandidateListing() {
         >
           <Image src="/images/edit-button.svg" />
         </a>
-        )}
+         )} 
         {new Date(row.joining_date).getTime() <= new Date().getTime() &&
           row.offer_status_name !== 'Declined' &&
           !row.is_onboard && (

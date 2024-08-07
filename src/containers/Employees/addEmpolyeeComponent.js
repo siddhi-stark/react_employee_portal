@@ -21,12 +21,12 @@ import RadioComponent from '../../components/FormInputs/radio.component';
 
 const AddEmployeeComponent = () => {
   const params = useParams();
-
   const history = useHistory();
 
   const [employeeId, setEmployeeId] = useState();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [personalEmail, setPersonalEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [gender, setGender] = useState('');
@@ -36,6 +36,7 @@ const AddEmployeeComponent = () => {
     useState(null);
   const [role, setRole] = useState([]);
   const [teamLead, setTeamLead] = useState([]);
+
   const [date, setDate] = useState('');
   const [newDepartment, setNewDepartment] = useState([]);
   const [options, updateOptions] = useState({});
@@ -45,17 +46,21 @@ const AddEmployeeComponent = () => {
   const [selectedEmployee, setSelectedEmployee] = useState('');
 
   const [selectedRole, setSelectedRole] = useState('');
-  const [selectedTeamLead, setSelectedTeamLead] = useState('');
+  const [selectedTeamLead, setSelectedTeamLead] = useState();
+
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [manager, setManager] = useState([]);
+
   const [selectedManager, setSelectedManager] = useState([]);
+
   const [projectTeam, setProjectTeam] = useState([]);
-  const [selectedProjectTeam, setSelectedProjectTeam] = useState('');
+  const [selectedProjectTeam, setSelectedProjectTeam] = useState([]);
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [empCode, setEmpCode] = useState('');
   const [disableButton, setDisableButton] = useState(false);
   const [userRole, setUserRole] = useState('');
   const [selectedMentor, setSelectedMentor] = useState([]);
+
   const [mentorData, setMentorData] = useState([]);
   const [count, forceUpdate] = useState(0);
 
@@ -119,6 +124,7 @@ const AddEmployeeComponent = () => {
       return op.push({
         label: desgn.name,
         id: desgn.id,
+        value: desgn.name,
       });
     });
     return op;
@@ -176,20 +182,44 @@ const AddEmployeeComponent = () => {
     return depart;
   };
 
+  // const getTeamLeadList = () => {
+  //   if (!teamLead) return [];
+  //   const op = [];
+  //   if (Number(selectedRole && selectedRole.id) !== 3) {
+  //     teamLead.map((data) => {
+  //       return op.push({
+  //         label: data.full_name,
+  //         id: data.id,
+  //         value: data.full_name,
+  //       });
+  //     });
+  //   }
+  //   return op;
+  // };
   const getTeamLeadList = () => {
     if (!teamLead) return [];
+  
     const op = [];
+  
+    // Add the default option
+    op.push({
+      label: 'Select Team Lead',
+      value: '', // or another suitable value for default
+    });
+  
     if (Number(selectedRole && selectedRole.id) !== 3) {
       teamLead.map((data) => {
-        return op.push({
+        op.push({
           label: data.full_name,
           id: data.id,
           value: data.full_name,
         });
       });
     }
+  
     return op;
   };
+  
 
   useEffect(() => {
     getDesignation();
@@ -265,6 +295,32 @@ const AddEmployeeComponent = () => {
     }
   };
 
+  const getProjectTeam = () => {
+    if (!teamLead) return [];
+    const op = [];
+    projectTeam.map((data) => {
+      return op.push({
+        label: data.name,
+        id: data.id,
+        value: data.name,
+      });
+    });
+    return op;
+  };
+
+  const getMentorData = () => {
+    if (!mentorData) return [];
+    const op = [];
+    mentorData.map((mntr) => {
+      return op.push({
+        label: mntr.full_name,
+        id: mntr.id,
+        value: mntr.full_name,
+      });
+    });
+    return op;
+  };
+
   const updateData = (e) => {
     twEmployee.map((emp) => {
       if (emp.full_name === e.label) {
@@ -307,6 +363,7 @@ const AddEmployeeComponent = () => {
     setJoiningDate('');
     setSelectedEmployee('');
     setEmail('');
+    setPersonalEmail('');
     setMobile('');
     setPassword('');
     setGender('');
@@ -352,12 +409,92 @@ const AddEmployeeComponent = () => {
     }
   }, [params]);
 
+  useEffect(() => {
+    if (!employeeId) return;
+    getEmployeeById();
+  }, [employeeId]);
+
+  const getEmployeeById = async () => {
+    // eslint-disable-line
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.employeeAdd}${employeeId}/`
+    );
+
+    if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      const employeeDetails = data?.data;
+      setFullName(employeeDetails?.full_name);
+      setEmail(employeeDetails?.email);
+      setPersonalEmail(employeeDetails?.personal_email);
+      setJoiningDate(
+        employeeDetails?.date_joined
+          ? new Date(employeeDetails?.date_joined)
+          : null
+      );
+      setEmpCode(employeeDetails?.emp_code);
+      setMobile(employeeDetails?.mobile);
+      setSelectedDesignationOption({
+        label: employeeDetails?.designation_name,
+        id: employeeDetails?.designation_id,
+        value: employeeDetails?.designation_name,
+      });
+      setSelectedRole({
+        label: employeeDetails?.role_name,
+        value: employeeDetails?.role_id,
+      });
+      let assignManagers = [];
+      employeeDetails.assigned_managers.map((element) => {
+        assignManagers.push({
+          label: element.name,
+          id: element.id,
+          value: element.name,
+        });
+      });
+      setSelectedManager(assignManagers);
+      if (employeeDetails.assigned_team_leads?.length > 0) {
+        setSelectedTeamLead({
+          label: employeeDetails.assigned_team_leads[0].name,
+          id: employeeDetails.assigned_team_leads[0].id,
+          value: employeeDetails.assigned_team_leads[0].value,
+        });
+      } 
+      // else {
+      //   setSelectedTeamLead({});
+      // }
+
+      setDate(employeeDetails?.dob ? new Date(employeeDetails?.dob) : null);
+      setSelectedDepartment({
+        label: employeeDetails?.department_name,
+        id: employeeDetails?.department_id,
+        value: employeeDetails?.department_name,
+      });
+      setGender(employeeDetails?.gender);
+      setSelectedProjectTeam({
+        label: employeeDetails?.team_name,
+        id: employeeDetails?.team_id,
+        value: employeeDetails?.team_name,
+      });
+      let assignMentors = [];
+      employeeDetails?.assigned_mentors?.length > 0 &&
+        employeeDetails?.assigned_mentors?.map((element) => {
+          assignMentors.push({
+            label: element?.name,
+            id: element?.id,
+            value: element?.name,
+          });
+        });
+      setSelectedMentor(assignMentors);
+    } else {
+      swal(message ? message : 'Somthing went wrong', '', 'error');
+    }
+  };
+
   const editEmployee = async () => {
     setShowLoader(true);
     const teamIdList = [];
-    if (selectedTeamLead) {
+    if (selectedTeamLead && selectedTeamLead?.label != "Select Team Lead") {
       teamIdList.push(selectedTeamLead.id);
     }
+
     const managerList = [];
     if (selectedManager && selectedManager.length > 0) {
       selectedManager.map((mngr) => {
@@ -365,6 +502,7 @@ const AddEmployeeComponent = () => {
         return mngr;
       });
     }
+
     const mentorList = [];
     if (selectedMentor && selectedMentor.length > 0) {
       selectedMentor.map((mt) => {
@@ -372,16 +510,22 @@ const AddEmployeeComponent = () => {
         return mt;
       });
     }
+    let updatedEmpcode;
+    if (typeof empCode == 'string') {
+      updatedEmpcode = empCode && empCode?.split('-');
+    }
     const postData = {
       full_name: fullName,
       email: email,
+      personal_email: personalEmail,
       mobile: mobile,
       role: selectedRole.id,
       team: selectedProjectTeam.id,
-      password: password,
       emp_code:
-        empCode && !employeeId && typeof empCode === 'string'
-          ? Number(empCode.split('-')[1])
+        typeof empCode == 'number'
+          ? empCode
+          : updatedEmpcode
+          ? Number(updatedEmpcode[updatedEmpcode.length - 1])
           : '',
       team_leads: teamIdList,
       managers: managerList,
@@ -400,12 +544,6 @@ const AddEmployeeComponent = () => {
     }
 
     const payload = customFunctions.cleanObject(postData);
-    // const callback = employeeId
-    //   ? AuthApi.putDataToServer
-    //   : AuthApi.postDataToServer;
-    // const endPoint = employeeId
-    //   ? `${Api.employeeAdd}${employeeId}/`
-    //   : Api.employeeAdd;
     const endPoint = `${Api.employeeAdd}${employeeId}/`;
 
     const { data, message } = await AuthApi.putDataToServer(endPoint, payload);
@@ -416,28 +554,8 @@ const AddEmployeeComponent = () => {
       setAddButton(false);
       setSelectedDesignationOption();
       setModalShow(false);
-      swal(data && data.message[0], '', 'success').then((result) => {
-        if (result) {
-          // setEmpCode('');
-          // setDisableButton(false);
-          // setEmployeeId();
-          // setSelectedDesignationOption();
-          // setSelectedRole();
-          // setFullName();
-          // setSelectedEmployee();
-          // setEmail();
-          // setPassword();
-          // setGender();
-          // setMobile();
-          // setSelectedManager([]);
-          // setSelectedMentor();
-          // setDate();
-          // setJoiningDate();
-          // setSelectedTeamLead();
-          // setSelectedDepartment();
-          // setModalShow(false);
-          // getEmployeeData(currentPage);
-        }
+      swal(data && data.message[0], '', 'success').then(() => {
+        history.push(`/employee-profile/${employeeId}`);
       });
     } else {
       setShowLoader(false);
@@ -454,134 +572,6 @@ const AddEmployeeComponent = () => {
     }
   };
 
-  useEffect(() => {
-    if (params && teamLead && projectTeam && manager && newDepartment) {
-      getEmployeeById(params?.id);
-    }
-  }, [params, teamLead, projectTeam, manager, newDepartment]);
-
-  const getEmployeeById = async (id) => {
-    // eslint-disable-line
-    const { data, message } = await AuthApi.getDataFromServer(
-      `${Api.employeeAdd}${id}/`
-    );
-
-    if (customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      const managerList = [];
-      const mentorList = [];
-
-      teamLead.map((team) => {
-        data.data.assigned_team_leads.map((assign) => {
-          if (team.id === assign) {
-            setSelectedTeamLead({
-              id: team.id,
-              label: team.full_name,
-            });
-          }
-
-          return assign;
-        });
-
-        return team;
-      });
-
-      projectTeam.map((pt) => {
-        if (pt.id === data.data.team_id) {
-          setSelectedProjectTeam({
-            id: pt.id,
-            label: pt.name,
-          });
-        }
-        return pt;
-      });
-
-      manager &&
-        manager.filter((ele) => {
-          if (data.data.assigned_managers.includes(ele.id)) {
-            managerList.push({
-              id: ele.id,
-              label: ele.full_name,
-              value: ele.full_name,
-            });
-          }
-        });
-      setSelectedManager(managerList);
-
-      // twEmployee.map((tw) => {
-      //   if (data.data.tw_id === tw.tw_id) {
-      //     setSelectedEmployee({ label: tw.full_name });
-      //     setTwId(tw.tw_id);
-      //   }
-      //   return tw;
-      // });
-
-      newDepartment.map((dept) => {
-        if (data.data.department_id === dept.id) {
-          setSelectedDepartment({
-            label: dept.name,
-            id: dept.id,
-          });
-        }
-        return dept;
-      });
-
-      setSelectedDesignationOption(
-        data.data.designation_id
-          ? {
-              label: data.data.designation_name,
-              id: data.data.designation_id,
-            }
-          : ''
-      );
-
-      setSelectedRole(
-        data.data.role_id
-          ? {
-              label: data.data.role_name,
-              id: data.data.role_id,
-            }
-          : ''
-      );
-
-      setGender(data?.data?.gender);
-      setFullName(data?.data?.full_name);
-      setEmail(data?.data?.email);
-      setPassword(data?.data?.password);
-      setMobile(data?.data?.mobile);
-      setDate(data?.data?.dob ? new Date(data?.data?.dob) : null);
-      setJoiningDate(
-        data?.data?.date_joined ? new Date(data?.data?.date_joined) : null
-      );
-      setEmpCode(data?.data?.emp_code);
-    } else {
-      swal(message ? message : 'Somthing went wrong', '', 'error');
-    }
-  };
-
-  const getProjectTeam = () => {
-    if (!teamLead) return [];
-    const op = [];
-    projectTeam.map((data) => {
-      return op.push({
-        label: data.name,
-        id: data.id,
-        value: data.name,
-      });
-    });
-    return op;
-  };
-  const getMentorData = () => {
-    if (!mentorData) return [];
-    const op = [];
-    mentorData.map((mntr) => {
-      return op.push({
-        label: mntr.full_name,
-        id: mntr.id,
-        value: mntr.full_name,
-      });
-    });
-    return op;
-  };
   return (
     <>
       <div className="row">
@@ -605,67 +595,30 @@ const AddEmployeeComponent = () => {
                   autocomplete="off"
                 >
                   <Row>
-                    {!employeeId && (
-                      <Col sm={6}>
-                        {/* <DropdownInput
-                    label="TW Employee"
-                    asterisk="*"
-                    options={getEmployeeList()}
-                    placeholder="Select Employee"
-                    defaultValue={selectedEmployee}
-                    onSelectHandler={(select) => {
-                      setSelectedEmployee(select);
-                      updateData(select);
-                      setEmployeeTwId(select.id);
-                    }}
-                    disabled={employeeId && 'disabled'}
-                    errorMessage={getTwEmployeeValidation()}
-                  /> */}
-                        <TextInput
-                          onInputChange={(e) => {
-                            const re = /^[a-zA-Z ]*$/;
-                            if (!e.target.value || re.test(e.target.value)) {
-                              setFullName(e.target.value);
-                            }
-                          }}
-                          label="Full Name"
-                          asterisk="*"
-                          containerClass="form-group"
-                          type="text"
-                          name="firstNameTitle"
-                          value={fullName}
-                          // disabled={(employeeId || employeetwId) && 'disabled'}
-                          placeholder="Enter Full  Name"
-                          errorMessage={validator.current.message(
-                            'Full Name',
-                            fullName,
-                            'required'
-                          )}
-                        />
-                      </Col>
-                    )}
                     <Col sm={6}>
-                      {/* <TextInput
-                  onInputChange={(e) => {
-                    const re = /^[a-zA-Z ]*$/;
-                    if (!e.target.value || re.test(e.target.value)) {
-                      setFullName(e.target.value);
-                    }
-                  }}
-                  label="Full Name"
-                  asterisk="*"
-                  containerClass="form-group"
-                  type="text"
-                  name="firstNameTitle"
-                  value={fullName}
-                  // disabled={(employeeId || employeetwId) && 'disabled'}
-                  placeholder="Enter Full  Name"
-                  errorMessage={validator.current.message(
-                    'Full Name',
-                    fullName,
-                    'required'
-                  )}
-                /> */}
+                      <TextInput
+                        onInputChange={(e) => {
+                          const re = /^[a-zA-Z ]*$/;
+                          if (!e.target.value || re.test(e.target.value)) {
+                            setFullName(e.target.value);
+                          }
+                        }}
+                        label="Full Name"
+                        asterisk="*"
+                        containerClass="form-group"
+                        type="text"
+                        name="firstNameTitle"
+                        value={fullName}
+                        // disabled={(employeeId || employeetwId) && 'disabled'}
+                        placeholder="Enter Full  Name"
+                        errorMessage={validator.current.message(
+                          'Full Name',
+                          fullName,
+                          'required'
+                        )}
+                      />
+                    </Col>
+                    <Col sm={6}>
                       <TextInput
                         onInputChange={(e) => setEmail(e.target.value)}
                         label="Email"
@@ -691,19 +644,15 @@ const AddEmployeeComponent = () => {
                         selected={joiningDate}
                         placeholder="dd/mm/yyyy"
                         dateFormat="dd/MM/yyyy"
-                        // maxDate={new Date()}
                         minDate={new Date()}
                         onChange={(e) => {
                           setJoiningDate(e);
                         }}
-                        errorMessage={
-                          // joiningDate &&
-                          validator.current.message(
-                            'Joining Date',
-                            joiningDate,
-                            'required'
-                          )
-                        }
+                        errorMessage={validator.current.message(
+                          'Joining Date',
+                          joiningDate,
+                          'required'
+                        )}
                       />
                     </Col>
                     {[1, 2, 5, 7].includes(userRole) ? (
@@ -773,6 +722,25 @@ const AddEmployeeComponent = () => {
                       />
                     </Col>
                     <Col sm={6}>
+                    <TextInput
+                        onInputChange={(e) => setPersonalEmail(e.target.value)}
+                        label="Personal Email"
+                        name='personalEmail'
+                        autocomplete="off"
+                        asterisk="*"
+                        containerClass="form-group"
+                        type="text"
+                        // disabled={(employeeId || employeetwId) && 'disabled'}
+                        value={personalEmail}
+                        placeholder="Enter personal email"
+                        errorMessage={validator.current.message(
+                          'email',
+                          personalEmail,
+                          'required|email' // eslint-disable-line
+                        )}
+                      />
+                    </Col>
+                    <Col sm={6}>
                       <DropdownInput
                         label="Designation"
                         asterisk="*"
@@ -833,7 +801,7 @@ const AddEmployeeComponent = () => {
                       <DropdownInput
                         label="Team Lead"
                         options={getTeamLeadList()}
-                        placeholder="Select TeamLead"
+                        placeholder="Select Team Lead"
                         defaultValue={selectedTeamLead}
                         onSelectHandler={(select) =>
                           setSelectedTeamLead(select)
@@ -900,7 +868,7 @@ const AddEmployeeComponent = () => {
                         <DropdownInput
                           label="Reporting Person"
                           options={getMentorData()}
-                          placeholder="Select Mentor"
+                          placeholder="Select Reporting Person"
                           defaultValue={selectedMentor}
                           isMulti
                           onSelectHandler={(select) => {
@@ -966,7 +934,7 @@ const AddEmployeeComponent = () => {
                       className="ms-4"
                       onClick={() =>
                         // onCancel()
-                        history.push('/employees')
+                        history.push(`/employee-profile/${employeeId}`)
                       }
                     >
                       Cancel

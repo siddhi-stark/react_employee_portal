@@ -7,7 +7,8 @@ import ForgetPassword from './containers/authentication/Forget/forgetPassword.co
 import ResetPassword from './containers/authentication/Forget/resetPassword.component';
 import AllReports from './containers/Reports/allReports.component';
 import Reports from './containers/Reports/reports.component';
-import RightContainer from './components/RightContainer/RightContainer.component';
+// import RightContainer from './components/RightContainer/rightContainer.component';
+import RightContainer from './components/RightContainer/rightContainer.component';
 import Projects from './containers/Projects/Projects.component';
 import Designation from './containers/Designations/designation.component';
 import Employee from './containers/Employee/employee.component';
@@ -82,15 +83,20 @@ import ResignationDetails from './containers/Exit process/resignationDetails';
 import LeaveListingForAccountant from './containers/Leaves/LeaveListingForAccountant';
 import AccountAddleaveComponent from './containers/Leaves/AccountAddleave.component';
 import ResignationDetailsComponent from './containers/Exit process/resignationDetailsComponent';
-// import AbscoundComponent from './containers/Exit process/Abscound.component';
-// import AbscondTable from './containers/TerminationAndAbscoud/AbscondTable';
-// import FormAbscondTermination from './containers/TerminationAndAbscoud/FormAbscondTermination';
+import AbscondTable from './containers/TerminationAndAbscoud/AbscondTable';
+import FormAbscondTermination from './containers/TerminationAndAbscoud/FormAbscondTermination';
+
+// FAQ not added to live 
 // import FAQListing from './containers/FAQs/FAQListing';
 // import FAQForm from './containers/FAQs/FAQForm';
-// import EmployeeWorkload from './containers/Employee Workload/employeeWorkload';
+
 import CompletedProject from './containers/Project/completedProject';
 // import TemporayDocument from './containers/Employees/TemporayDocument';
 import AddDocuments from './containers/Employees/AddDocuments';
+import AddEmployeeComponent from './containers/Employees/addEmpolyeeComponent';
+import EmployeeWorkload from './containers/Employee Workload/employeeWorkload';
+// import AddHistory from './containers/Employees/AddHistory.component';
+// import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
 
 function Routes() {
   return (
@@ -129,15 +135,15 @@ function Routes() {
       <Route path="/applications" exact component={Applications} />
       <Route path="/applications/:ID" exact component={Applications} />
       <Route path="/batch-upload" exact component={RecruitmentFileComponent} />
-      {/* <Route path="/abscond-table" exact component={AbscondTable} /> */}
-      {/* <Route path="/abscond-form" exact component={FormAbscondTermination} /> */}
-      {/* <Route
+      <Route path="/abscond-table" exact component={AbscondTable} />
+      <Route path="/abscond-form" exact component={FormAbscondTermination} />
+      <Route
         path="/edit-abscond-form/:aid"
         exact
         component={FormAbscondTermination}
-      /> */}
-      {/* <Route path="/faq-listing" exact component={FAQListing} /> */}
-      {/* <Route path="/faq-form" exact component={FAQForm} />
+      />
+      {/* <Route path="/faq-listing" exact component={FAQListing} />
+      <Route path="/faq-form" exact component={FAQForm} />
       <Route path="/edit-faq/:fid" exact component={FAQForm} /> */}
       <Route
         path="/add-technology-stack"
@@ -151,6 +157,9 @@ function Routes() {
       />
       <Route path="/employee-profile/:id" exact component={EmployeeProfile} />
       <Route path="/add-document/:id" exact component={AddDocuments} />
+      <Route path="/add-history/:id" exact component={AddEmployementHistory} />
+
+      <Route path="/edit-employee-info/:id" exact component={AddEmployeeComponent} />
 
       <Route path="/confirmation" exact component={Confirmation} />
       <Route
@@ -257,7 +266,8 @@ function Routes() {
         component={AddSupportTicket}
       />
       <Route path="/performance-report" exact component={PerformanceReport} />
-      {/* <Route path="/employee-workload" exact component={EmployeeWorkload} /> */}
+
+      <Route path="/employee-workload" exact component={EmployeeWorkload} />
       <Route
         path="/resignation-application"
         exact
@@ -289,7 +299,7 @@ function Routes() {
         component={ResignationDetailsComponent}
       />
       <Route component={NotFound} />
-      {/* <Route path="/terminate-process" exact component={AbscoundComponent} /> */}
+      
     </Switch>
   );
 }
