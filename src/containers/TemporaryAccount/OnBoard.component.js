@@ -88,7 +88,7 @@ function OnBoard(props) {
         // ...data?.data,
         full_name: data?.data?.full_name,
         date_joined: newDate,
-        mobile: data?.data?.mobile,
+        mobile: data?.data?.mobile, 
         // date_joined: new Date(),
         // dob:new Date(data?.data?.dob),
         designation: ds,
