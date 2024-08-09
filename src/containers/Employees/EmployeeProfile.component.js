@@ -17,6 +17,7 @@ import AddHistory from './AddHistory.component';
 import EditPersonalDetails from './EditPersonalDetails.component';
 import AddReview from './AddReview.component';
 import CustomTable from 'stark-custom-datatable';
+import AddEmployeeComponent from './addEmpolyeeComponent';
 
 function EmployeeProfile(props) {
   const { match, accProps } = props;
@@ -28,7 +29,9 @@ function EmployeeProfile(props) {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [employeeDetails, setEmployeeDetails] = useState({});
-  
+  console.log("🚀 ~ EmployeeProfile ~ employeeDetails:", employeeDetails)
+  const [employeeBGVDetails, setEmployeeBGVDetails] = useState(null);
+  console.log("🚀 ~ EmployeeProfile ~ employeeBGVDetails:", employeeBGVDetails)
   const [showPersonalDetails, setShowPersonalDetails] = useState(false);
   const [companyList, setCompanyList] = useState([]);
   const [empHistoryId, setEmpHistoryId] = useState('');
@@ -54,7 +57,7 @@ function EmployeeProfile(props) {
   const [reviewId, setReviewId] = useState();
   const [currentUserId, setCurrentUserId] = useState();
   const [rowData, setRowData] = useState([]);
-  
+
   const employeeID = match.params.id;
   const [applicatId, setApplicatId] = useState('');
   const [fullName, setFullName] = useState('');
@@ -65,6 +68,7 @@ function EmployeeProfile(props) {
   const [accordionOpen, setAccordionOpen] = useState(false);
   const [key, setKey] = useState('personalDocument');
   const [detailsKeys, setDetailsKeys] = useState('personalInfo');
+  console.log("🚀 ~ EmployeeProfile ~ detailsKeys****:", detailsKeys)
   const [currentTab, setCurrentTab] = useState('personalInfo');
   const [showModalHistory, setShowModalHistory] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -114,7 +118,6 @@ function EmployeeProfile(props) {
       primaryId: '',
     },
   ]);
-  
 
   const [educationalDocuments, setEducationalDocuments] = useState([
     // {
@@ -263,7 +266,7 @@ function EmployeeProfile(props) {
       primaryId: '',
     },
   ]);
-  
+
   // const navigate = useNavigate()
   // Retrieve applicant ID from localStorage
 
@@ -276,11 +279,14 @@ function EmployeeProfile(props) {
       setKey('previouDocument');
     }
   };
+
   const handleSelectDetails = (det) => {
     if (det === 'personalInfo') {
       setDetailsKeys('personalInfo');
     } else if (det === 'officialInfo') {
       setDetailsKeys('officialInfo');
+    } else if (det === 'empVerificationInfo') {
+      setDetailsKeys('empVerificationInfo');
     }
   };
   // const handleSelectDetails = (key) => {
@@ -378,31 +384,31 @@ function EmployeeProfile(props) {
           </a>
         )}
         {row.status_name != 'Completed' ? (
-          <div className='d-flex'>
-          <a
-            href="/"
-            className="pl-2 ms-1"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowReview(true);
-              setEditReview(true);
-              setPageType('edit');
-              setReviewId(row.id);
-            }}
-          >
-            <Image src="/images/edit-button.svg" title="Edit Review" />
-          </a>
-          <a href="javascript:void()" className='mx-3'>
-          <Image
-            src="/images/delete.png"
-            title="delete"
-            onClick={() => {
-              deleteReview(row?.id);
-            }}
-          />
-        </a>
-        </div>
+          <div className="d-flex">
+            <a
+              href="/"
+              className="pl-2 ms-1"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowReview(true);
+                setEditReview(true);
+                setPageType('edit');
+                setReviewId(row.id);
+              }}
+            >
+              <Image src="/images/edit-button.svg" title="Edit Review" />
+            </a>
+            <a href="javascript:void()" className="mx-3">
+              <Image
+                src="/images/delete.png"
+                title="delete"
+                onClick={() => {
+                  deleteReview(row?.id);
+                }}
+              />
+            </a>
+          </div>
         ) : null}
       </>
     );
@@ -565,7 +571,10 @@ function EmployeeProfile(props) {
 
       const updateCurrentEmpDoc = currentEmpDocument.map((dt) => {
         const updateCurrentEmployement = data?.data?.find((item) => {
-          return dt?.current_employment_document_type == item?.current_employment_document_type;
+          return (
+            dt?.current_employment_document_type ==
+            item?.current_employment_document_type
+          );
         });
         if (updateCurrentEmployement) {
           currentEmpData.push({
@@ -704,7 +713,6 @@ function EmployeeProfile(props) {
               const employementData = [];
               const currentData = [];
 
-
               if (type == 'personal') {
                 personalDocuments &&
                   personalDocuments?.map((item) => {
@@ -798,6 +806,8 @@ function EmployeeProfile(props) {
 
   useEffect(() => {
     getData();
+    getEnployeeBGVDetails();
+
     getEmployeeDetails();
     getBondHistory();
     setTitle('Employee Profile');
@@ -968,6 +978,30 @@ function EmployeeProfile(props) {
           }
         }
       });
+    }
+  };
+
+  const getEnployeeBGVDetails = async () => {
+    setShowLoader(true);
+
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.employeeVerificationUrl}?employee=${empId}`
+    );
+    console.log('data: ', data);
+    if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      }).then(() => {
+        swal.close();
+      });
+    }
+    const bgvDetails = data?.data?.[0];
+    console.log('bgvDetails: ', bgvDetails);
+
+    if (data && data?.success) {
+      setEmployeeBGVDetails(data?.data?.[0]);
+      setEmployeeDetails({ ...employeeDetails, bgvDetails });
     }
   };
 
@@ -1287,6 +1321,128 @@ function EmployeeProfile(props) {
                   </div>
                 )}
               </Tab>
+              {employeeDetails?.status == 'inactive' && (
+                <Tab
+                  eventKey="empVerificationInfo"
+                  title="Employee Verification Details"
+                >
+                  {detailsKeys === 'empVerificationInfo' && (
+                    <div className="row mt-3 mx-5">
+                      <div className="col-md-12 d-flex">
+                       
+                        <ul className="list-unstyled d-flex w-100 flex-wrap employeeDetailsInner">
+                          <li className="p-0 border-bottom border-1 mx-2">
+                            <label>
+                              <strong>Employee Annual Compensation</strong>
+                            </label>
+                            <p>{employeeBGVDetails?.annual_compensation ? employeeBGVDetails?.annual_compensation : 'N/A'}</p>
+                          </li>
+                          <li className="p-0 border-bottom border-1 mx-2">
+                            <label>
+                              <strong>Reason Of Leaving</strong>
+                            </label>
+                            <p>{employeeBGVDetails?.reason_of_leaving ? employeeBGVDetails?.reason_of_leaving : 'N/A'}</p>
+                          </li>
+                          <li className="p-0 border-bottom border-1 mx-2">
+                            <label>
+                              <strong>Employee Status</strong>
+                            </label>
+                            <p>{employeeBGVDetails?.employee_status_name ? employeeBGVDetails?.employee_status_name : 'N/A'}</p>
+                          </li>
+                          <li className="p-0 border-bottom border-1 mx-2">
+                            <label>
+                              <strong>Final Settlement Status Name</strong>
+                            </label>
+                            <p>
+                              {employeeBGVDetails?.final_settlement_status_name ? employeeBGVDetails?.final_settlement_status_name : 'N/A'}
+                            </p>
+                          </li>
+                          <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                            <label>
+                              <strong>Final Settlement Reason</strong>
+                            </label>
+                            <p>{employeeBGVDetails?.final_settlement_reason ? employeeBGVDetails?.final_settlement_reason : 'N/A'}</p>
+                          </li>
+                          <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                            <label>
+                              <strong>Eligible For Rehire</strong>
+                            </label>
+                            <p>
+                              {employeeBGVDetails?.eligible_for_rehire
+                                ? 'Yes'
+                                : 'No'}
+                            </p>
+                          </li>
+                          <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                            <label>
+                              <strong>Eligible For Rehire Reason</strong>
+                            </label>
+                            <p>
+                              {employeeBGVDetails?.eligible_for_rehire_reason ? employeeBGVDetails?.eligible_for_rehire_reason : 'N/A'}
+                            </p>
+                          </li>
+                        </ul>
+                        <div>
+                        {employeeBGVDetails ? (
+                          <Button
+                          variant='link'
+                          onClick={() =>{
+                            history.push(`/employee-verification/${empId}`,{
+                              state: {
+                                employeeId: Number(empId),
+                                  applicantId: applicatId,
+                                  employeeName: fullName,
+                                  employeeDesignation: designation,
+                                  edit: 'edit',
+                              }
+                            });
+                          }}
+                          >
+                            <Image
+                            src="/images/edit-button.svg"
+                            alt="Edit Profile"
+                            onClick={() => {
+                              // history.push(`/employee-verification/${empId}`, {
+                              //   state: {
+                              //     employeeId: Number(empId),
+                              //     applicantId: applicatId,
+                              //     employeeName: fullName,
+                              //     employeeDesignation: designation,
+                              //     edit: 'edit',
+                              //   },
+                              // });
+                            }}
+                          />
+                          </Button>
+                        ) : (
+                          <div>
+                            <Button
+                              className="px-2 text center"
+                              variant="primary"
+                              onClick={() => {
+                                history.push(
+                                  `/employee-verification/${empId}`,
+                                  {
+                                    state: {
+                                      employeeId: Number(empId),
+                                      applicantId: applicatId,
+                                      employeeName: fullName,
+                                      employeeDesignation: designation,
+                                    },
+                                  }
+                                );
+                              }}
+                            >
+                              Add Employee verification
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                      </div>
+                    </div>
+                  )}
+                </Tab>
+              )}
             </Tabs>
           </Card.Body>
           {employeeDetails &&
@@ -1309,7 +1465,7 @@ function EmployeeProfile(props) {
                   </button>
                 </div>
               </Card.Body>
-            )} 
+            )}
         </Card>
         {/* card not show when the employee is fresher */}
         {!employeeDetails.is_fresher && (
@@ -1328,67 +1484,73 @@ function EmployeeProfile(props) {
                 )}
               </div>
               {companyList.length > 0 && (
-              <ul className="list-unstyled mt-3 d-flex w-100 flex-wrap  employeeDetailsInner">
-                {companyList.map((item, index) => (
-                <li 
-                className={companyList?.length > 2 ? "p-0 border-bottom border-1 mx-2" : "p-0 border-1 mx-2"}
-                // className="p-0 border-bottom border-1 mx-2" 
-                 key={index}>
-                  <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0">
-                      <Image
-                        alt="Company icon"
-                        src="../company-icon.svg"
-                        className="mxW-50"
-                      />
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                      <h5 className="fw-bold text-primary">
-                        {item?.designation}
-                      </h5>
-                      <h5 className="d-flex fw-normal">
-                        {item?.company_name} 
-                        {/* POOINFOTECH · Full-time */}
-                      </h5>
-                      <p className="fw-lighter">
-                        {new Date(
-                                        item?.start_date
-                                      ).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                      })} -  {new Date(
-                                        item?.end_date
-                                      ).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                      })} · {item?.duration} <br></br>
-                        {item?.location} 
-                      </p>
-                    </div>
-                  </div>
-                </li>
-                
-                               ))}
-                            {/* // ) : (
+                <ul className="list-unstyled mt-3 d-flex w-100 flex-wrap  employeeDetailsInner">
+                  {companyList.map((item, index) => (
+                    <li
+                      className={
+                        companyList?.length > 2
+                          ? 'p-0 border-bottom border-1 mx-2'
+                          : 'p-0 border-1 mx-2'
+                      }
+                      // className="p-0 border-bottom border-1 mx-2"
+                      key={index}
+                    >
+                      <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                          <Image
+                            alt="Company icon"
+                            src="../company-icon.svg"
+                            className="mxW-50"
+                          />
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                          <h5 className="fw-bold text-primary">
+                            {item?.designation}
+                          </h5>
+                          <h5 className="d-flex fw-normal">
+                            {item?.company_name}
+                            {/* POOINFOTECH · Full-time */}
+                          </h5>
+                          <p className="fw-lighter">
+                            {new Date(item?.start_date).toLocaleDateString(
+                              'en-US',
+                              {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              }
+                            )}{' '}
+                            -{' '}
+                            {new Date(item?.end_date).toLocaleDateString(
+                              'en-US',
+                              {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              }
+                            )}{' '}
+                            · {item?.duration} <br></br>
+                            {item?.location}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                  {/* // ) : (
                             //   <p>No company data available</p> */}
-              </ul>
-                            )}
-              
+                </ul>
+              )}
             </Card.Body>
           </Card>
         )}
 
         <Card className="mt-3 mb-3 rounded-1 shadow-none reviewHistory">
           <Card.Body>
-            <div className='d-flex justify-content-between align-items-center'>
-              <h4 className='mb-3 mt-2 text-primary'>Review</h4>
+            <div className="d-flex justify-content-between align-items-center">
+              <h4 className="mb-3 mt-2 text-primary">Review</h4>
               {showReview && (
                 <div className="mt-3">
-                  <h5>
-                    {pagetype === 'edit' ? 'Edit Review' : 'Add Review'}
-                  </h5>
+                  <h5>{pagetype === 'edit' ? 'Edit Review' : 'Add Review'}</h5>
                 </div>
               )}
               {!showReview && (
@@ -1405,42 +1567,42 @@ function EmployeeProfile(props) {
               )}
             </div>
             {showReview && (
-                      <div className="mt-4 card">
-                        <AddReview
-                          handleModalCLose={(e) => {
-                            setShowReview(e);
-                            getRowData();
-                            setPageType('');
-                            setReviewId('');
-                            setRefreshData(true);
-                          }}
-                          reviewEdit={editReview}
-                          pageType={pagetype}
-                          reviewId={reviewId}
-                          empId={empId}
-                          callbackBtn={(e) => {}}
-                        />
-                      </div>
-                    )}
+              <div className="mt-4 card">
+                <AddReview
+                  handleModalCLose={(e) => {
+                    setShowReview(e);
+                    getRowData();
+                    setPageType('');
+                    setReviewId('');
+                    setRefreshData(true);
+                  }}
+                  reviewEdit={editReview}
+                  pageType={pagetype}
+                  reviewId={reviewId}
+                  empId={empId}
+                  callbackBtn={(e) => {}}
+                />
+              </div>
+            )}
             <div className="table-responsive employeeTable mt-3">
               <CustomTable
-                        columns={tableColumn}
-                        rows={rowData}
-                        // role={1}
-                        showPagination={true}
-                        tableClass="table-bordered"
-                        paginationProps={{
-                          totalItems: totalCount,
-                          itemsPerPage: limit,
-                          activePage: currentPage,
-                          onPageChange: (pageNo) => {
-                            getRowData(pageNo);
-                          },
-                        }}
-                        // emptyRender={() => {
-                        //   return 'No record found.';
-                        // }}
-                      />
+                columns={tableColumn}
+                rows={rowData}
+                // role={1}
+                showPagination={true}
+                tableClass="table-bordered"
+                paginationProps={{
+                  totalItems: totalCount,
+                  itemsPerPage: limit,
+                  activePage: currentPage,
+                  onPageChange: (pageNo) => {
+                    getRowData(pageNo);
+                  },
+                }}
+                // emptyRender={() => {
+                //   return 'No record found.';
+                // }}
+              />
               {/* <Table bordered hover>
                 <thead>
                   <tr>
@@ -1488,23 +1650,24 @@ function EmployeeProfile(props) {
           <Card.Body>
             <div className="d-flex align-items-start justify-content-between">
               {/* {!bondList.length < 1 && ( */}
-                {/* <h4 className="mt-2 text-primary">Training Argument</h4> */}
-                <h4 className="mt-2 text-primary">Bond History</h4>
+              {/* <h4 className="mt-2 text-primary">Training Argument</h4> */}
+              <h4 className="mt-2 text-primary">Bond History</h4>
               {/* )} */}
 
-              {bondType == 'editBond' ? <h5 className="me-3">Edit Bond</h5>
-              : 
-               <button
-               onClick={() => {
-                 setShowBond(true);
-                 customFunctions.removeLocalStorage('bondHistoryID');
-               }}
-               type="button"
-               className="btn btn-primary"
-             >
-               Add Bond
-             </button>
-             }
+              {bondType == 'editBond' ? (
+                <h5 className="me-3">Edit Bond</h5>
+              ) : (
+                <button
+                  onClick={() => {
+                    setShowBond(true);
+                    customFunctions.removeLocalStorage('bondHistoryID');
+                  }}
+                  type="button"
+                  className="btn btn-primary"
+                >
+                  Add Bond
+                </button>
+              )}
             </div>
             {showBond && (
               <div className="mt-2 card">
@@ -1522,17 +1685,17 @@ function EmployeeProfile(props) {
             )}
 
             {bondList.length > 0 && (
-            <div className="table-responsive employeeTable mt-3">
-              <Table bordered hover>
-                <thead>
-                  <tr>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Document Link</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <div className="table-responsive employeeTable mt-3">
+                <Table bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Start Date</th>
+                      <th>End Date</th>
+                      <th>Document Link</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     {bondList?.map((bond, index) => (
                       <tr key={index}>
                         <td>
@@ -1556,7 +1719,7 @@ function EmployeeProfile(props) {
                         </td>
                         <td>
                           <a href="javascript:void()">
-                          <Image
+                            <Image
                               src="/images/edit-button.svg"
                               title="Edit Profile"
                               className="me-3"
@@ -1583,10 +1746,10 @@ function EmployeeProfile(props) {
                         </td>
                       </tr>
                     ))}
-                </tbody>
-              </Table>
-            </div>
-          )}
+                  </tbody>
+                </Table>
+              </div>
+            )}
           </Card.Body>
         </Card>
         <Card className="mt-3 mb-3 rounded-1 shadow-none">
@@ -1611,243 +1774,829 @@ function EmployeeProfile(props) {
                 Add Documents
               </button>
             </div>
-            <Row className='mt-4'>
+            <Row className="mt-4">
               <Col md={6}>
-                <h5 className='mb-4 mt-3 text-black text-center'>
+                <h5 className="mb-4 mt-3 text-black text-center">
                   Personal Document
                 </h5>
-                <ul className='list-unstyled m-0 p-0'>
-                {personalDocuments?.length &&  (
-                  personalDocuments?.map((item,index) => (
-                    <li className='d-flex justify-content-between' key={index}>
-                      <div className='d-flex align-items-center'>
-                        {item?.isUploaded ?
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#51B773" class="bi bi-check-square-fill me-2" viewBox="0 0 16 16">
-                          <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
-                          </svg>
-                        :
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#666" class="bi bi-check-square me-2" viewBox="0 0 16 16">
-                          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                          <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
-                          </svg> }
-                      
-                        <a href={item?.fileName} target='_blank'>
-                          {item?.label}
-                        </a>
-                      </div>
-                      {item?.isUploaded && (
-                        <a href="javascript:void()">
-                          <Image
-                            src="/images/delete.png"
-                            title="delete"
-                            onClick={() => {
-                              if (item?.primaryId) {
-                                deleteDocument(
-                                  item?.primaryId,
-                                  'personal'
-                                );
-                              } else {
-                                const temData = [
-                                  ...personalDocuments,
-                                ];
-                                temData[index].fileName =
-                                  '';
-                                temData[index].file_id = '';
-                                temData[
-                                  index
-                                ].isUploaded = false;
-                                setPersonalDocuments(
-                                  temData
-                                );
-                              }
-                            }}
-                          />
-                        </a>
-                      )}
-                    </li>
-                    ))
-                )}
+                <ul className="list-unstyled m-0 p-0">
+                  {personalDocuments?.length &&
+                    personalDocuments?.map((item, index) => (
+                      <li
+                        className="d-flex justify-content-between"
+                        key={index}
+                      >
+                        <div className="d-flex align-items-center">
+                          {item?.isUploaded ? (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#51B773"
+                              class="bi bi-check-square-fill me-2"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z" />
+                            </svg>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#666"
+                              class="bi bi-check-square me-2"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                              <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                            </svg>
+                          )}
+
+                          <a href={item?.fileName} target="_blank">
+                            {item?.label}
+                          </a>
+                        </div>
+                        {item?.isUploaded && (
+                          <a href="javascript:void()">
+                            <Image
+                              src="/images/delete.png"
+                              title="delete"
+                              onClick={() => {
+                                if (item?.primaryId) {
+                                  deleteDocument(item?.primaryId, 'personal');
+                                } else {
+                                  const temData = [...personalDocuments];
+                                  temData[index].fileName = '';
+                                  temData[index].file_id = '';
+                                  temData[index].isUploaded = false;
+                                  setPersonalDocuments(temData);
+                                }
+                              }}
+                            />
+                          </a>
+                        )}
+                      </li>
+                    ))}
                 </ul>
               </Col>
-              <Col md={6} className='border-1 border-start border-secondary pb-3'>
-                <h5 className='mb-4 mt-3 text-black text-center'>
+              <Col
+                md={6}
+                className="border-1 border-start border-secondary pb-3"
+              >
+                <h5 className="mb-4 mt-3 text-black text-center">
                   Educational Document
                 </h5>
-                <ul className='list-unstyled m-0 p-0'>
-                {educationalDocuments?.length &&  (
-                  educationalDocuments?.map((item,index) => (
-                    <li className='d-flex justify-content-between' key={index}>
-                      <div className='d-flex align-items-center'>
-                        {item?.isUploaded ?
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#51B773" class="bi bi-check-square-fill me-2" viewBox="0 0 16 16">
-                          <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
-                          </svg>
-                        :
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#666" class="bi bi-check-square me-2" viewBox="0 0 16 16">
-                          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                          <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
-                          </svg> }
-                      
-                        <a href={item?.fileName} target='_blank'>
-                          {item?.label}
-                        </a>
-                      </div>
-                      {item?.isUploaded && (
-                        <a href="javascript:void()">
-                          <Image
-                            src="/images/delete.png"
-                            title="delete"
-                            onClick={() => {
-                              if (item?.primaryId) {
-                                deleteDocument(
-                                  item?.primaryId,
-                                  'educational'
-                                );
-                              } else {
-                                const temData = [
-                                  ...educationalDocuments,
-                                ];
-                                temData[index].fileName =
-                                  '';
-                                temData[
-                                  index
-                                ].isUploaded = false;
-                                setEducationalDocuments(
-                                  temData
-                                );
-                              }
-                            }}
-                          />
-                        </a>
-                      )}
-                    </li>
-                    ))
-                )}
+                <ul className="list-unstyled m-0 p-0">
+                  {educationalDocuments?.length &&
+                    educationalDocuments?.map((item, index) => (
+                      <li
+                        className="d-flex justify-content-between"
+                        key={index}
+                      >
+                        <div className="d-flex align-items-center">
+                          {item?.isUploaded ? (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#51B773"
+                              class="bi bi-check-square-fill me-2"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z" />
+                            </svg>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#666"
+                              class="bi bi-check-square me-2"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                              <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                            </svg>
+                          )}
+
+                          <a href={item?.fileName} target="_blank">
+                            {item?.label}
+                          </a>
+                        </div>
+                        {item?.isUploaded && (
+                          <a href="javascript:void()">
+                            <Image
+                              src="/images/delete.png"
+                              title="delete"
+                              onClick={() => {
+                                if (item?.primaryId) {
+                                  deleteDocument(
+                                    item?.primaryId,
+                                    'educational'
+                                  );
+                                } else {
+                                  const temData = [...educationalDocuments];
+                                  temData[index].fileName = '';
+                                  temData[index].isUploaded = false;
+                                  setEducationalDocuments(temData);
+                                }
+                              }}
+                            />
+                          </a>
+                        )}
+                      </li>
+                    ))}
                 </ul>
               </Col>
             </Row>
-            <hr/>
-            <Row className=''>
-              <Col md={6} >
-                <h5 className='mb-4 mt-3 text-black text-center'>
+            <hr />
+            <Row className="">
+              <Col md={6}>
+                <h5 className="mb-4 mt-3 text-black text-center">
                   Previous Employement Document
                 </h5>
-                <ul className='list-unstyled m-0 p-0'>
-                {previousEmployement?.length &&  (
-                  previousEmployement?.map((item,index) => (
-                    <li className='d-flex justify-content-between' key={index}>
-                      <div className='d-flex align-items-center'>
-                        {item?.isUploaded ?
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#51B773" class="bi bi-check-square-fill me-2" viewBox="0 0 16 16">
-                          <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
-                          </svg>
-                        :
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#666" class="bi bi-check-square me-2" viewBox="0 0 16 16">
-                          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                          <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
-                          </svg> }
-                      
-                        <a href={item?.fileName} target='_blank'>
-                          {item?.label}
-                        </a>
-                      </div>
-                      {item?.isUploaded && (
-                        <a href="javascript:void()">
-                          <Image
-                            src="/images/delete.png"
-                            title="delete"
-                            onClick={() => {
-                              if (item?.primaryId) {
-                                deleteDocument(
-                                  item?.primaryId,
-                                  'employement'
-                                );
-                              } else {
-                                const temData = [
-                                  ...previousEmployement,
-                                ];
-                                temData[
-                                  index
-                                ].fileName = '';
-                                temData[
-                                  index
-                                ].isUploaded = false;
-                                setPreviousEmployement(
-                                  temData
-                                );
-                              }
-                            }}
-                          />
-                        </a>
-                      )}
-                    </li>
-                    ))
-                )}
+                <ul className="list-unstyled m-0 p-0">
+                  {previousEmployement?.length &&
+                    previousEmployement?.map((item, index) => (
+                      <li
+                        className="d-flex justify-content-between"
+                        key={index}
+                      >
+                        <div className="d-flex align-items-center">
+                          {item?.isUploaded ? (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#51B773"
+                              class="bi bi-check-square-fill me-2"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z" />
+                            </svg>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#666"
+                              class="bi bi-check-square me-2"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                              <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                            </svg>
+                          )}
+
+                          <a href={item?.fileName} target="_blank">
+                            {item?.label}
+                          </a>
+                        </div>
+                        {item?.isUploaded && (
+                          <a href="javascript:void()">
+                            <Image
+                              src="/images/delete.png"
+                              title="delete"
+                              onClick={() => {
+                                if (item?.primaryId) {
+                                  deleteDocument(
+                                    item?.primaryId,
+                                    'employement'
+                                  );
+                                } else {
+                                  const temData = [...previousEmployement];
+                                  temData[index].fileName = '';
+                                  temData[index].isUploaded = false;
+                                  setPreviousEmployement(temData);
+                                }
+                              }}
+                            />
+                          </a>
+                        )}
+                      </li>
+                    ))}
                 </ul>
               </Col>
-              
-              <Col md={6} className='border-1 border-start border-secondary pb-3'>
-                <h5 className='mb-4 mt-3 text-black text-center'>
+
+              <Col
+                md={6}
+                className="border-1 border-start border-secondary pb-3"
+              >
+                <h5 className="mb-4 mt-3 text-black text-center">
                   Current Employement Document
                 </h5>
-                <ul className='list-unstyled m-0 p-0'>
-                {currentEmpDocument?.length &&  (
-                  currentEmpDocument?.map((item,index) => (
-                    <li className='d-flex justify-content-between' key={index}>
-                      <div className='d-flex align-items-center'>
-                        {item?.isUploaded ?
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#51B773" class="bi bi-check-square-fill me-2" viewBox="0 0 16 16">
-                          <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z"/>
-                          </svg>
-                        :
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#666" class="bi bi-check-square me-2" viewBox="0 0 16 16">
-                          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                          <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
-                          </svg> }
-                      
-                        <a href={item?.fileName} target='_blank'>
-                          {item?.label}
-                        </a>
-                      </div>
-                      {item?.isUploaded && (
-                        <a href="javascript:void()">
-                          <Image
-                            src="/images/delete.png"
-                            title="delete"
-                            onClick={() => {
-                              if (item?.primaryId) {
-                                deleteDocument(
-                                  item?.primaryId,
-                                  'current'
-                                );
-                              } else {
-                                const temData = [
-                                  ...currentEmpDocument,
-                                ];
-                                temData[
-                                  index
-                                ].fileName = '';
-                                temData[
-                                  index
-                                ].isUploaded = false;
-                                setCurrentEmpDocument(
-                                  temData
-                                );
-                              }
-                            }}
-                          />
-                        </a>
-                      )}
-                    </li>
-                    ))
-                )}
+                <ul className="list-unstyled m-0 p-0">
+                  {currentEmpDocument?.length &&
+                    currentEmpDocument?.map((item, index) => (
+                      <li
+                        className="d-flex justify-content-between"
+                        key={index}
+                      >
+                        <div className="d-flex align-items-center">
+                          {item?.isUploaded ? (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#51B773"
+                              class="bi bi-check-square-fill me-2"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm10.03 4.97a.75.75 0 0 1 .011 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.75.75 0 0 1 1.08-.022z" />
+                            </svg>
+                          ) : (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="#666"
+                              class="bi bi-check-square me-2"
+                              viewBox="0 0 16 16"
+                            >
+                              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+                              <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                            </svg>
+                          )}
+
+                          <a href={item?.fileName} target="_blank">
+                            {item?.label}
+                          </a>
+                        </div>
+                        {item?.isUploaded && (
+                          <a href="javascript:void()">
+                            <Image
+                              src="/images/delete.png"
+                              title="delete"
+                              onClick={() => {
+                                if (item?.primaryId) {
+                                  deleteDocument(item?.primaryId, 'current');
+                                } else {
+                                  const temData = [...currentEmpDocument];
+                                  temData[index].fileName = '';
+                                  temData[index].isUploaded = false;
+                                  setCurrentEmpDocument(temData);
+                                }
+                              }}
+                            />
+                          </a>
+                        )}
+                      </li>
+                    ))}
                 </ul>
               </Col>
             </Row>
           </Card.Body>
         </Card>
+
+        <Card className="mt-3 mb-3 rounded-1 shadow-none">
+          <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h4 className="mb-0 mt-2 text-primary">Documents</h4>
+              <button
+                onClick={() => {
+                  setShowBond(true);
+                  history.push(`/add-document/${empId}`, {
+                    state: {
+                      employeeId: Number(empId),
+                      applicantId: applicatId,
+                      employeeName: fullName,
+                      employeeDesignation: designation,
+                    },
+                  });
+                }}
+                type="button"
+                className="btn btn-primary"
+              >
+                Employee verification
+              </button>
+            </div>
+            <Row className="mt-4">
+              <Col md={6}></Col>
+            </Row>
+          </Card.Body>
+        </Card>
+
+        {/* <div className="employee-new-profile">
+          <div className="profile-details">
+            <div className="mt-3 row">
+              <div className="col-sm-12"> */}
+
+        {/* {!employeeDetails.relieved && ( */}
+        {/* <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex align-items-start justify-content-between mb-4">
+                      {showReview && (
+                        <div className="mt-3">
+                          <h5>
+                            {pagetype === 'edit' ? 'Edit Review' : 'Add Review'}
+                          </h5>
+                        </div>
+                      )}
+                      {!showReview && (
+                        <button
+                          onClick={() => {
+                            setShowReview(true);
+                            setPageType('add');
+                          }}
+                          type="button"
+                          className="btn btn-primary"
+                        >
+                          Add Review
+                        </button>
+                      )}
+                    </div>
+                    {showReview && (
+                      <div className="mt-4 card">
+                        <AddReview
+                          handleModalCLose={(e) => {
+                            setShowReview(e);
+                            getRowData();
+                            setPageType('');
+                            setReviewId('');
+                            setRefreshData(true);
+                          }}
+                          reviewEdit={editReview}
+                          pageType={pagetype}
+                          reviewId={reviewId}
+                          empId={empId}
+                          callbackBtn={(e) => {}}
+                        />
+                      </div>
+                    )}
+                    <Card>
+                      <Card.Body>
+                        <CustomTable
+                          columns={tableColumn}
+                          rows={rowData}
+                          // role={1}
+                          showPagination={true}
+                          tableClass="table-striped"
+                          paginationProps={{
+                            totalItems: totalCount,
+                            itemsPerPage: limit,
+                            activePage: currentPage,
+                            onPageChange: (pageNo) => {
+                              getRowData(pageNo);
+                            },
+                          }}
+                          emptyRender={() => {
+                            return 'No record found.';
+                          }}
+                        />
+                      </Card.Body>
+                    </Card>
+                  </div>
+                </div> */}
+        {/* )} */}
+
+        {/* {!employeeDetails.is_fresher && (
+                  <div className="card">
+                    <div className="card-body">
+                      <div className="d-flex align-items-start justify-content-between mb-4">
+                        <h3 className="card-title mb-0 mt-2 text-primary ">
+                          Employement History
+                        </h3>
+
+                        {!employeeDetails.is_fresher && (
+                          <button
+                            onClick={handleModalOpen}
+                            type="button"
+                            className="btn btn-primary"
+                          >
+                            Add History
+                          </button>
+                        )}
+                      </div>
+                      <Modal
+                        show={showModalHistory}
+                        onHide={handleModalClose}
+                        backdrop="static"
+                        dialogClassName="modal-lg"
+                      >
+                        <Modal.Header closeButton>
+                          <div>
+                            <h3>{employeeDetails.full_name}</h3>
+                            <h5>{employeeDetails.designation_name}</h5>
+                          </div>
+                        </Modal.Header>
+                        <Modal.Body>
+                          <AddHistory
+                            applicantId={applicatId}
+                            employeeId={empId}
+                            optionsData={dataa}
+                            handleModalClose={(value) => {
+                              handleModalClose();
+                            }}
+                            onChanges={onChangeInHistory}
+                          />
+                        </Modal.Body>
+                      </Modal>
+                      <>
+                        <div className="">
+                          <hr />
+                          <Table className="table-striped">
+                            <thead>
+                              <tr>
+                                <th>Sr No.</th>
+                                <th>Company Name</th>
+                                <th>Designation</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Duration of Date</th>
+                                <th>Location</th>
+                                <th>Hr Name</th>
+                                <th>Hr Email</th>
+                                <th>Hr Contact</th>
+                                <th>Manager Name</th>
+                                <th>Manager Email</th>
+                                <th>Manager Contact</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {companyList.length > 0 ? (
+                                companyList.map((comp, index) => (
+                                  <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{comp.company_name}</td>
+                                    <td>{comp.designation}</td>
+                                    <td>
+                                      {new Date(
+                                        comp.start_date
+                                      ).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                      })}
+                                    </td>
+                                    <td>
+                                      {new Date(
+                                        comp.end_date
+                                      ).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                      })}
+                                    </td>
+
+                                    <td>{comp.duration}</td>
+                                    <td>{comp.location}</td>
+                                    <td>{comp.hr_name ? comp.hr_name : '-'}</td>
+                                    <td>
+                                      {comp.hr_email ? (
+                                        <>
+                                          {comp.hr_email.slice(0, 5)}
+                                          <br />
+                                          {comp.hr_email.slice(5)}
+                                        </>
+                                      ) : (
+                                        '-'
+                                      )}
+                                    </td>
+
+                                    <td>
+                                      {comp.hr_mobile ? comp.hr_mobile : '-'}
+                                    </td>
+                                    <td>
+                                      {comp.manager_name
+                                        ? comp.manager_name
+                                        : '-'}
+                                    </td>
+                                    <td>
+                                      {comp.manager_email ? (
+                                        <>
+                                          {comp.manager_email.slice(0, 5)}
+                                          <br />
+                                          {comp.manager_email.slice(5)}
+                                        </>
+                                      ) : (
+                                        '-'
+                                      )}
+                                    </td>
+                                    <td>
+                                      {comp.manager_mobile
+                                        ? comp.manager_mobile
+                                        : '-'}
+                                    </td>
+                                    <td>
+                                      <a href="javascript:void()">
+                                        <Image
+                                          src="/images/edit-button.svg"
+                                          title="Edit Profile"
+                                          onClick={handleModalOpen}
+                                        />
+                                      </a>
+                                      <a href="javascript:void()">
+                                        <Image
+                                          src="/images/delete.png"
+                                          title="delete"
+                                          onClick={() => {
+                                            deleteEmployeeHistory(
+                                              comp?.employement_history_id
+                                            );
+                                          }}
+                                        />
+                                      </a>
+                                    </td>
+                                  </tr>
+                                ))
+                              ) : (
+                                <tr>
+                                  <td colSpan="14" className="text-center">
+                                    No Records Found
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </Table>
+                        </div>
+                        <hr />
+                      </>
+                    </div>
+                  </div>
+                )}
+                 */}
+
+        {/* )} */}
+
+        {/* {employeeDocument && employeeDocument.length > 0 ? ( */}
+        <>
+          {/* <div className="card">
+                    <div className="card-body">
+                      <div className="d-flex align-items-center justify-content-between">
+                        <h3 className="card-title mb-0 mt-2 text-primary ">
+                          Documents
+                        </h3>
+                        <button
+                          onClick={() => {
+                            setShowBond(true);
+                            history.push(`/add-document/${empId}`, {
+                              state: {
+                                employeeId: Number(empId),
+                                applicantId: applicatId,
+                                employeeName: fullName,
+                                employeeDesignation: designation,
+                              },
+                            });
+                          }}
+                          type="button"
+                          className="btn btn-primary"
+                        >
+                          Add Documents
+                        </button>
+                      </div>
+                      <hr />
+                      <div className="row">
+                        <Card>
+                          <Card.Body>
+                            <Tabs
+                              defaultActiveKey="personalDocument"
+                              onSelect={(e) => handleSelect(e)}
+                            >
+                              <Tab
+                                eventKey="personalDocument"
+                                title=" Personal Document"
+                              >
+                                {key === 'personalDocument' && (
+                                  <ul className="border-0">
+                                    {personalDocuments &&
+                                    personalDocuments.length > 0 ? (
+                                      personalDocuments.map((item, index) => (
+                                        <li
+                                          key={index}
+                                          className="mb-2 ms-5 ps-5 d-flex justify-content-between text-primary"
+                                        >
+                                          {item?.fileName && (
+                                            <div className="col-md-4">
+                                              {item?.fileName ? (
+                                                <h5>{item?.label}</h5>
+                                              ) : (
+                                                item?.label
+                                              )}
+                                            </div>
+                                          )}
+                                          {item?.fileName && (
+                                            <div
+                                              style={{ marginRight: '90px' }}
+                                              className=" col-md-4 btn-wrapper"
+                                            >
+                                              <a
+                                                href={item?.fileName}
+                                                target="_blank"
+                                                className="me-5 pe-5 text-underline "
+                                                rel="noopener noreferrer"
+                                              >
+                                                View
+                                              </a>
+                                              <a
+                                                href="javascript:void(0)"
+                                                onClick={() => {
+                                                  if (item?.primaryId) {
+                                                    deleteDocument(
+                                                      item?.primaryId,
+                                                      'personal'
+                                                    );
+                                                  } else {
+                                                    const temData = [
+                                                      ...personalDocuments,
+                                                    ];
+                                                    temData[index].fileName =
+                                                      '';
+                                                    temData[index].file_id = '';
+                                                    temData[
+                                                      index
+                                                    ].isUploaded = false;
+                                                    setPersonalDocuments(
+                                                      temData
+                                                    );
+                                                  }
+                                                }}
+                                                className="text-underline"
+                                              >
+                                                Delete
+                                              </a>
+                                            </div>
+                                          )}
+                                        </li>
+                                      ))
+                                    ) : (
+                                      <li className="text-center text-muted">
+                                        No record found
+                                      </li>
+                                    )}
+                                  </ul>
+                                )}
+                              </Tab>
+                              <Tab
+                                eventKey="educationalDocument"
+                                title="Educational Document"
+                              >
+                                {key === 'educationalDocument' && (
+                                  <ul className="border-0">
+                                    {educationalDocuments &&
+                                    educationalDocuments.length > 0 ? (
+                                      educationalDocuments?.map(
+                                        (item, index) => (
+                                          <li
+                                            key={index}
+                                            className="mb-2 ms-5 ps-5 d-flex justify-content-between"
+                                          >
+                                            {item?.fileName && (
+                                              <div className="col-md-4">
+                                                {item?.fileName &&
+                                                item?.fileName ? (
+                                                  <h5>{item?.label}</h5>
+                                                ) : (
+                                                  item?.label
+                                                )}
+                                              </div>
+                                            )}
+                                            {item?.fileName && (
+                                              <div
+                                                style={{ marginRight: '90px' }}
+                                                className=" col-md-4 btn-wrapper"
+                                              >
+                                                <a
+                                                  href={item?.fileName}
+                                                  target="_blank"
+                                                  onClick={() => {
+                                                    window.open(item?.fileName);
+                                                  }}
+                                                  className="me-5 pe-5 text-underline "
+                                                >
+                                                  View
+                                                </a>
+                                                <a
+                                                  href="javascript:void(0)"
+                                                  onClick={() => {
+                                                    if (item?.primaryId) {
+                                                      deleteDocument(
+                                                        item?.primaryId,
+                                                        'educational'
+                                                      );
+                                                    } else {
+                                                      const temData = [
+                                                        ...educationalDocuments,
+                                                      ];
+                                                      temData[index].fileName =
+                                                        '';
+                                                      temData[
+                                                        index
+                                                      ].isUploaded = false;
+                                                      setEducationalDocuments(
+                                                        temData
+                                                      );
+                                                    }
+                                                  }}
+                                                  className="text-underline "
+                                                >
+                                                  Delete
+                                                </a>
+                                              </div>
+                                            )}
+                                          </li>
+                                        )
+                                      )
+                                    ) : (
+                                      <li className="text-center text-muted">
+                                        No record found
+                                      </li>
+                                    )}
+                                  </ul>
+                                )}
+                              </Tab>
+                              {!employeeDetails.is_fresher && (
+                                <Tab
+                                  eventKey="previouDocument"
+                                  title="Previous Employement Document"
+                                >
+                                  {key === 'previouDocument' && (
+                                    <ul className="border-0">
+                                      {previousEmployement &&
+                                        previousEmployement?.map(
+                                          (item, index) => (
+                                            <li
+                                              key={index}
+                                              className="mb-2 ms-5 ps-5 d-flex justify-content-between"
+                                            >
+                                              {item?.fileName && (
+                                                <div className="col-md-4">
+                                                  {item?.fileName ? (
+                                                    <h5>{item?.label}</h5>
+                                                  ) : (
+                                                    item?.label
+                                                  )}
+                                                </div>
+                                              )}
+                                              {item?.fileName && (
+                                                <div
+                                                  style={{
+                                                    marginRight: '90px',
+                                                  }}
+                                                  className="col-md-4 btn-wrapper"
+                                                >
+                                                  <a
+                                                    href={item?.fileName}
+                                                    target="_blank"
+                                                    onClick={() => {
+                                                      window.open(
+                                                        item?.fileName
+                                                      );
+                                                    }}
+                                                    className="me-5 pe-5 text-underline "
+                                                  >
+                                                    View
+                                                  </a>
+
+                                                  <a
+                                                    href="javascript:void(0)"
+                                                    onClick={() => {
+                                                      if (item?.primaryId) {
+                                                        deleteDocument(
+                                                          item?.primaryId,
+                                                          'employement'
+                                                        );
+                                                      } else {
+                                                        const temData = [
+                                                          ...previousEmployement,
+                                                        ];
+                                                        temData[
+                                                          index
+                                                        ].fileName = '';
+                                                        temData[
+                                                          index
+                                                        ].isUploaded = false;
+                                                        setPreviousEmployement(
+                                                          temData
+                                                        );
+                                                      }
+                                                    }}
+                                                    className="text-underline"
+                                                  >
+                                                    Delete
+                                                  </a>
+                                                </div>
+                                              )}
+                                            </li>
+                                          )
+                                        )}
+                                    </ul>
+                                  )}
+                                </Tab>
+                              )}
+                            </Tabs>
+                          </Card.Body>
+                        </Card>
+                      </div>
+                    </div>
+                  </div> */}
+        </>
+        {/* </div>
+            </div>
+          </div>
+        </div> */}
       </div>
-      
+
       <Modal
         show={showModalHistory}
         onHide={handleModalClose}

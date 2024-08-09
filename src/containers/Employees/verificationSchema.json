@@ -1,0 +1,491 @@
+[
+  {
+    "sectionName": "employeeverification",
+    "sectionTitle": "Employee verification",
+    "layout": {
+      "label": "2 Column",
+      "value": "2column"
+    },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": true,
+    "fields": [
+      {
+        "name": "employee_name",
+        "type": "text",
+        "label": "Employee Name",
+        "id": "",
+        "placeholder": "Enter employee name",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": true,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "annual_compensation",
+        "type": "text",
+        "label": "Annual Compensation",
+        "id": "",
+        "placeholder": "Enter annual aompensation",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "reason_of_leaving",
+        "type": "text",
+        "label": "Reason Of Leaving",
+        "id": "",
+        "placeholder": "Enter reason of leaving",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "employee_status",
+        "type": "select",
+        "label": "Employee Status",
+        "id": "",
+        "placeholder": "select employee Status",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "true",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getEmployee Status",
+        "options": [
+          {
+            "id": 1,
+            "label": "Resigned And Relieved",
+            "value": "resigned_and_relieved"
+          },
+          {
+            "id": 2,
+            "label": "Absconding",
+            "value": "absconding"
+          },
+          {
+            "id": 3,
+            "label": "Terminated",
+            "value": "terminated"
+          }
+        ]
+      },
+      {
+        "name": "final_settlement_status",
+        "type": "select",
+        "label": "Final Settlement Status",
+        "id": "",
+        "placeholder": "Select final settlement",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {
+          "conditions": [
+            {
+              "name": "employee_status",
+              "value": "resigned_and_relieved",
+              "condition": "=="
+            },
+            {
+              "name": "employee_status",
+              "value": "resigned",
+              "condition": "=="
+            }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "true",
+        "haveDisplayOptions": "true",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getFinal_settlement_status",
+        "options": [
+          {
+            "id": 1,
+            "label": "Complete",
+            "value": "complete"
+          },
+          {
+            "id": 2,
+            "label": "Pending",
+            "value": "pending"
+          },
+          {
+            "id": 3,
+            "label": "Not-Applicable",
+            "value": "not_applicable"
+          }
+        ]
+      },
+      {
+        "name": "final_settlement_reason",
+        "type": "text",
+        "label": "Final Settlement Reason",
+        "id": "",
+        "placeholder": "Enter final settlement reason",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {
+          "conditions": [
+            {
+              "name": "employee_status",
+              "value": "resigned_and_relieved",
+              "condition": "=="
+            },
+            {
+              "name": "employee_status",
+              "value": "resigned",
+              "condition": "=="
+            }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "notice_period_served_status",
+        "type": "select",
+        "label": "Notice Period Served Status",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {
+          "conditions": [
+            {
+              "name": "employee_status",
+              "value": "resigned_and_relieved",
+              "condition": "=="
+            },
+            {
+              "name": "employee_status",
+              "value": "resigned",
+              "condition": "=="
+            }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "false",
+        "haveDisplayOptions": "true",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "getNotice_period_served_status",
+        "options": [
+          {
+            "id": 1,
+            "label": "Yes",
+            "value": "yes"
+          },
+          {
+            "id": 2,
+            "label": "No",
+            "value": "no"
+          },
+          {
+            "id": 3,
+            "label": "Not-Required",
+            "value": "not_required"
+          },
+          {
+            "id": 4,
+            "label": "Waived-Off",
+            "value": "waived_off"
+          }
+        ]
+      },
+      {
+        "name": "notice_period_served_reason",
+        "type": "text",
+        "label": "Notice Period Served Reason",
+        "id": "",
+        "placeholder": "Enter notice period served reason",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {
+          "conditions": [
+            {
+              "name": "employee_status",
+              "value": "resigned_and_relieved",
+              "condition": "=="
+            },
+            {
+              "name": "employee_status",
+              "value": "resigned",
+              "condition": "=="
+            }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "true",
+        "haveDisplayOptions": "true",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "eligible_for_rehire",
+        "type": "checkbox",
+        "label": "",
+        "id": "",
+        "placeholder": "",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [],
+        "displayWhen": {},
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "inline": true,
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": [{ "label": "Eligible For Rehire", "value": "true" }]
+      },
+      {
+        "name": "eligible_for_rehire_reason",
+        "type": "text",
+        "label": "Eligible For Rehire Reason",
+        "id": "",
+        "placeholder": "Enter  eligible for rehire reason",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {
+          "conditions": [
+            {
+              "name": "eligible_for_rehire",
+              "value": "true",
+              "condition": "=="
+            }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "remark",
+        "type": "text",
+        "label": "Remark",
+        "id": "",
+        "placeholder": "Enter remark",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "2column"
+  }
+]
