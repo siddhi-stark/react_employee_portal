@@ -13,13 +13,10 @@ import Loader from '../../components/Loader';
 
 function EmployeeVerification(props) {
   const { state } = useLocation();
-    console.log('state: ', state);
   const { match, history } = props;
-  console.log('match: ', match);
   const employeeId = match?.params?.id;
   const empName = state?.state?.employeeName;
   // const [empName, setEmpName] = useState()
-  console.log('empName: ', empName);
 
   const historyData = useHistory();
 
@@ -27,7 +24,6 @@ function EmployeeVerification(props) {
 
   // Variable declarations
   const [defaultValues, updateDefaultValues] = useState({});
-  console.log('defaultValues: ', defaultValues);
   const [options, updateOptions] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);

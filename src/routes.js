@@ -94,7 +94,7 @@ import CompletedProject from './containers/Project/completedProject';
 // import TemporayDocument from './containers/Employees/TemporayDocument';
 import AddDocuments from './containers/Employees/AddDocuments';
 import AddEmployeeComponent from './containers/Employees/addEmpolyeeComponent';
-import EmployeeWorkload from './containers/Employee Workload/employeeWorkload';
+import EmployeeVerificationComponent from './containers/Employees/EmployeeVerification.component';
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
 
@@ -238,6 +238,8 @@ function Routes() {
         exact
         component={AddEmployementHistory}
       />
+      <Route path="/employee-verification/:id" exact component={EmployeeVerificationComponent} />
+
       <Route path="/broadcast" exact component={Broadcast} />
       <Route path="/add-broadcast" exact component={AddBroadcast} />
       <Route path="/edit-broadcast/:broadid" exact component={AddBroadcast} />
@@ -267,7 +269,7 @@ function Routes() {
       />
       <Route path="/performance-report" exact component={PerformanceReport} />
 
-      <Route path="/employee-workload" exact component={EmployeeWorkload} />
+      {/* <Route path="/employee-workload" exact component={EmployeeWorkload} /> */}
       <Route
         path="/resignation-application"
         exact

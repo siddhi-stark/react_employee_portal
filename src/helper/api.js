@@ -233,6 +233,8 @@ export default class Api extends Component {
 
   static employeeOnboard = `${Api.baseUrl}employee-onboard/`;
 
+  static employeeVerificationUrl = `${Api.baseUrl}employee-bgv/`;
+
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'production';
