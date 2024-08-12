@@ -14,7 +14,9 @@ import CustomTable from 'stark-custom-datatable';
 const EmployeeWorkload = () => {
   const titleHeading = 'Employee Workload';
   const [allEmployes, setAllEmployes] = useState([]);
+  const [projectList, setProjectList] = useState([]);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
+  const [selectedProject, setSelectedProject] = useState("");
   const [userRole, setUserRole] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
   const [employeeList, setEmployeeList] = useState([]);
@@ -189,41 +191,86 @@ const EmployeeWorkload = () => {
     // }
   }, [userRole]);
 
-  //API integration for AllEmployee list
-  const getEmployeeName = async () => {
+  useEffect(() => {
+    getprojectList();
+    // getTaskData();
+  }, []);
+
+  //API integration for Allproject list
+  const getprojectList = async () => {
     setShowLoader(true);
-
-    const url = [1, 8].includes(userRole)
-      ? `${Api.employeeUrl}?is_employees=true&type=all&status=active`
-      : '';
-    const { data, error } = await AuthApi.getDataFromServer(url);
-    if (data && data?.success) {
-      setShowLoader(false);
-
-      const allemp = [];
-      data?.data?.map((item) => {
-        return allemp.push({
-          label: item?.full_name,
-          value: item?.id,
-          joiningDate: item?.date_joined,
+    const endPoint = `${Api.projectListUrl}`;
+    const params = {
+      sort_by:'name',
+      status:'active',
+      type:'all'
+    };
+    const url = customFunctions.generateUrl(endPoint,params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+    if (data && data.success) {
+      const Tempprojects = [];
+      data.data &&
+        data.data.map((item) => {
+          //only added standard user and who is not admin
+         // if(item?.roleId ==3  && item?.is_admin == 0){
+          Tempprojects.push({
+              label: `${item?.name}`,
+              value: item?.id,
+            });
+          
         });
-      });
-      const all = [
+      const temData = [
         {
-          label: 'All Employess',
-          value: 'all_employess',
+          label: "All Projects",
+          value: "all_project",
         },
       ];
-      if ([1, 8].includes(userRole)) {
-        setAllEmployes([...all, ...allemp]);
-      } else {
-        setAllEmployes(allemp);
-      }
+      setProjectList([...temData, ...Tempprojects]);
+      setShowLoader(false);
     } else {
       setShowLoader(false);
-      swal(error || 'Something went wrong', '', 'error');
+      swal(message, "", "error", {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
     }
   };
+
+    //API integration for AllEmployee list
+    const getEmployeeName = async () => {
+      setShowLoader(true);
+  
+      const url = [1, 8].includes(userRole)
+        ? `${Api.employeeUrl}?is_employees=true&type=all&status=active`
+        : '';
+      const { data, error } = await AuthApi.getDataFromServer(url);
+      if (data && data?.success) {
+        setShowLoader(false);
+  
+        const allemp = [];
+        data?.data?.map((item) => {
+          return allemp.push({
+            label: item?.full_name,
+            value: item?.id,
+            joiningDate: item?.date_joined,
+          });
+        });
+        const all = [
+          {
+            label: 'All Employess',
+            value: 'all_employess',
+          },
+        ];
+        if ([1, 8].includes(userRole)) {
+          setAllEmployes([...all, ...allemp]);
+        } else {
+          setAllEmployes(allemp);
+        }
+      } else {
+        setShowLoader(false);
+        swal(error || 'Something went wrong', '', 'error');
+      }
+    };
 
   //Employee detail table listing
   const getEmployeeById = async (pageNo) => {
@@ -234,6 +281,7 @@ const EmployeeWorkload = () => {
     if (selectedEmployee?.value != 'all_employess') {
       (params.start_date = fromDate ? customFunctions.getDate(fromDate) : ''),
         (params.user_id = selectedEmployee?.value),
+        (params.project_id = selectedProject?.value),
         // (params.user_id =
         //   allEmployes && allEmployes?.length > 1 && selectedEmployeeId
         //     ? selectedEmployeeId
@@ -282,6 +330,7 @@ const EmployeeWorkload = () => {
     const endPoint = `${Api.workLoad}`;
     const params = {
       user_id: selectedEmployee?.value,
+      project_id : selectedProject?.value,
       start_date: customFunctions.getDate(fromDate),
       end_date: customFunctions.getDate(toDate),
       type: 'all',
@@ -365,7 +414,22 @@ const EmployeeWorkload = () => {
             </div>
           )}
           <Row>
-            <Col sm={4}>
+          <Col sm={3}>
+              <DropdownInput
+                label="Select Project"
+                options={projectList}
+                defaultValue={selectedProject}
+                onSelectHandler={(select) => {
+                  setFilterErr("");
+                  setSelectedProject(select);
+                  // setFromDate("");
+                  // setToDate("");
+                  setRowData("");
+                }}
+                // isMulti
+              />
+            </Col>
+            <Col sm={3}>
               <DropdownInput
                 label="Select Employee"
                 asterisk="*"
@@ -385,7 +449,7 @@ const EmployeeWorkload = () => {
             </Col>
             {/* {selectedEmployee?.value != "all_employess" && ( */}
             <>
-              <Col sm={4}>
+              <Col sm={3}>
                 <Datepicker
                   className="form-control"
                   label="Select from date"
@@ -402,7 +466,7 @@ const EmployeeWorkload = () => {
                   placeholder="Select from date"
                 />
               </Col>
-              <Col sm={4}>
+              <Col sm={3}>
                 <Datepicker
                   className="form-control"
                   label="Select to date"

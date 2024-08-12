@@ -220,11 +220,11 @@ export default class Api extends Component {
   static workLoad = `${Api.baseUrl}work-load-report/`;
 
   static employeeAdd = `${Api.baseUrl}employee-account/`;
-  
+
   static bugCountProject = `${Api.baseUrl}bugs-count-project-dashboard/`;
 
   static allDepartmentProject = `${Api.baseUrl}all-department-project-details/`;
-  
+
   static departmentReport = `${Api.baseUrl}department-project-details/`;
 
   static employeeDetail = `${Api.baseUrl}employee-project-details/`;
@@ -237,7 +237,7 @@ export default class Api extends Component {
 
   // Get base URL of APIs
   static getBaseUrl() {
-    const env = 'stage';
+    const env = 'production';
 
     let url = '';
     switch (env) {
