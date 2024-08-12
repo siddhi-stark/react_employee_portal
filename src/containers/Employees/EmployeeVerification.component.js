@@ -9,7 +9,6 @@ import AuthApi from '../../helper/authApi';
 import { Helmet } from '../../components/FormInputs';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader';
-// import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 function EmployeeVerification(props) {
   const { state } = useLocation();
@@ -91,8 +90,6 @@ function EmployeeVerification(props) {
       });
     }
     const tempData = data?.data?.[0];
-    console.log('tempData: ', tempData);
-    
     if (tempData){
     let employeeStatus = null;
    
@@ -123,7 +120,6 @@ function EmployeeVerification(props) {
               id: tempData.resignation_type,
            };
           };
-          console.log('employeeStatus=====>>: ', employeeStatus);
     const obj = {
       employee_name: tempData?.user?.full_name ? tempData?.user?.full_name : empName,
       employee_status: employeeStatus,
@@ -141,11 +137,10 @@ function EmployeeVerification(props) {
       };
       updateDefaultValues({
         ...obj,
-      })
+      });
       setShowLoader(false);
     }
   };
-
 
   const getEnployeeBGVDetails = async () => {
     setShowLoader(true);
@@ -265,10 +260,7 @@ function EmployeeVerification(props) {
   // Submit Form
 
   const submitForm = async (formValues) => {
-    console.log('formValues: ', formValues);
-
     setShowLoader(true);
-
     const postData = {
       employee: +employeeId,
       employee_name: formValues?.employee_name,
