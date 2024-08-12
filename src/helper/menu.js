@@ -339,28 +339,28 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
-  {
-    title: 'FAQs',
-    path: '/faq-listing',
-    icon: 'ticket.svg',
-    submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
-  },
-  {
-    title: 'Setting',
-    path: '#',
-    redirect: false,
-    icon: 'setting.svg',
-    submenu: [
-      {
-        title: 'Project Fetch',
-        path: '/project-fetch',
-        icon: 'report.svg',
-        roleaccess: [1],
-      },
-    ],
-    roleaccess: [1],
-  },
+  // {
+  //   title: 'FAQs',
+  //   path: '/faq-listing',
+  //   icon: 'ticket.svg',
+  //   submenu: [],
+  //   roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
+  // },
+  // {
+  //   title: 'Setting',
+  //   path: '#',
+  //   redirect: false,
+  //   icon: 'setting.svg',
+  //   submenu: [
+  //     {
+  //       title: 'Project Fetch',
+  //       path: '/project-fetch',
+  //       icon: 'report.svg',
+  //       roleaccess: [1],
+  //     },
+  //   ],
+  //   roleaccess: [1],
+  // },
 
   {
     title: 'Log Out',
