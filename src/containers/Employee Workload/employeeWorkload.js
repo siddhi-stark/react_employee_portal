@@ -15,8 +15,10 @@ const EmployeeWorkload = () => {
   const titleHeading = 'Employee Workload';
   const [allEmployes, setAllEmployes] = useState([]);
   const [projectList, setProjectList] = useState([]);
+  console.log('🚀 ~ projectList:', projectList)
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
   const [selectedProject, setSelectedProject] = useState("");
+  console.log("selectedProject+++++",selectedProject)
   const [userRole, setUserRole] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
   const [employeeList, setEmployeeList] = useState([]);
@@ -207,10 +209,12 @@ const EmployeeWorkload = () => {
     };
     const url = customFunctions.generateUrl(endPoint,params);
     const { data, message } = await AuthApi.getDataFromServer(url);
+console.log("data=========",data);
     if (data && data.success) {
       const Tempprojects = [];
       data.data &&
         data.data.map((item) => {
+          console.log('item-----',item)
           //only added standard user and who is not admin
          // if(item?.roleId ==3  && item?.is_admin == 0){
           Tempprojects.push({
@@ -274,46 +278,42 @@ const EmployeeWorkload = () => {
 
   //Employee detail table listing
   const getEmployeeById = async (pageNo) => {
+    const page = pageNo || currentPage;
     setShowLoader(true);
     const endPoint = `${Api.workLoad}`;
+    const params = {
+      start_date: customFunctions.getDate(fromDate),
+      end_date: customFunctions.getDate(toDate),
+      page: page,
+      limit: limit,
+    };  
 
-    const params = {};
-    if (selectedEmployee?.value != 'all_employess') {
-      (params.start_date = fromDate ? customFunctions.getDate(fromDate) : ''),
-        (params.user_id = selectedEmployee?.value),
-        (params.project_id = selectedProject?.value),
-        // (params.user_id =
-        //   allEmployes && allEmployes?.length > 1 && selectedEmployeeId
-        //     ? selectedEmployeeId
-        //     : [allEmployes[0]?.value]),
-        (params.limit = 10),
-        (params.page = pageNo),
-        (params.end_date = toDate
-          ? customFunctions.getDate(new Date(toDate))
-          : '');
-    }
-
-    if (selectedEmployee?.value === 'all_employess') {
-      (params.limit = 10), (params.page = pageNo);
-    }
-    setShowLoader(false);
+     if(selectedProject?.value !='all_project')
+      {
+        params.project_id = +selectedProject?.value;
+      }
+      if (selectedEmployee?.value != 'all_employess') {
+        params.user_id = +selectedEmployee?.value;
+      } 
+      if (selectedEmployee?.value == 'all_employess') {
+        params.page = page;
+        params.limit =limit;
+      }
+      if (selectedProject?.value == 'all_project') {
+        params.page = page;
+        params.limit =limit;
+      }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success == true) {
       if (selectedEmployee?.value == 'all_employess') {
-        // const filteredRowData = data?.data.filter((item) => item !== null);
         setRowData(data?.data);
-
-        // setTotalCount(data?.paginator?.total_count);
-        // setLimit(Number(data?.paginator?.limit));
-        // setCurrentPage(Number(data?.paginator?.current_page));
         setTotalCount(data?.paginator?.total_count);
         setLimit(data?.paginator?.limit);
         setCurrentPage(Number(data?.paginator?.current_page));
         setShowLoader(false);
       } else {
         setRowData(data?.data);
-
         setTotalCount(data?.paginator?.total_count);
         setLimit(data?.paginator?.limit);
         setCurrentPage(Number(data?.paginator?.current_page));
@@ -329,8 +329,6 @@ const EmployeeWorkload = () => {
     setShowLoader(true);
     const endPoint = `${Api.workLoad}`;
     const params = {
-      user_id: selectedEmployee?.value,
-      project_id : selectedProject?.value,
       start_date: customFunctions.getDate(fromDate),
       end_date: customFunctions.getDate(toDate),
       type: 'all',
@@ -338,14 +336,13 @@ const EmployeeWorkload = () => {
       page: 1,
       limit: 10,
     };
-    if (selectedEmployee?.value == 'all_employess') {
-      // params.isAll = 1,
-      params.page = 1;
-      params.limit = 10;
-    }
-    if (selectedEmployee && selectedEmployee?.value != 'all_employess') {
-      // params.userArray = [selectedEmployee?.value]
-    }
+    if(selectedProject?.value !='all_project')
+      {
+        params.project_id = +selectedProject?.value;
+      }
+      if (selectedEmployee?.value != 'all_employess') {
+        params.user_id = +selectedEmployee?.value;
+      } 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {
