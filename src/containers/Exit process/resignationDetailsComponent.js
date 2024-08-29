@@ -50,7 +50,8 @@ const ResignationDetailsComponent = (props) => {
   const [stepTwoKey, setStepTwoKey] = useState('0');
   const [stepThreeKey, setStepThreeKey] = useState('0');
   const [uniqueDocumentOptions, setUniqueDocumentOptions] = useState([]);
-
+  const [newStatus,setNewStatus]=useState();
+  console.log("🚀 ~ newStatus:", newStatus)
   const [selectedDate, setSelectedDate] = useState(null);
   const defaultDate = new Date();
   defaultDate.setMonth(defaultDate.getMonth() + 2);
@@ -239,14 +240,15 @@ const ResignationDetailsComponent = (props) => {
   };
 
   const approveResignation = async (status) => {
+    console.log("🚀 ~ approveResignation ~ status======================:", status)
     setShowLoader(true);
     setShowError(false);
     // setShowModal(false);
     const postData = {
-      resignation_status: status,
+      resignation_status: newStatus,
     };
 
-    if (status == 1) {
+    if (newStatus == 1) {
       postData.resign_remark = approveReason;
     } else {
       postData.resignation_decline_note = approveReason;
@@ -255,13 +257,13 @@ const ResignationDetailsComponent = (props) => {
     const endPoint = `${Api.employeeResignationUrl}${state?.state?.resignationId}/`;
     const { data, message } = await callback(endPoint, postData);
     if (data && data.success == true) {
-      if (status == 1) {
+      if (newStatus == 1) {
         changeRelievingData();
       }
       swal(
-        status == 1
+        newStatus == 1
           ? 'Resignation approved successfully'
-          : 'Resignation declined successfully',
+          : 'Resignation declined successfully=======================',
         '',
         'success'
       ).then(() => {
@@ -420,6 +422,8 @@ const ResignationDetailsComponent = (props) => {
   };
 
   const resignationRequestHr = async (status) => {
+    console.log("🚀 ~ resignationRequestHr ~ status+++++++++++++++:", status)
+    setNewStatus(status)
     setShowLoader(true);
     setShowError(false);
     const postData = {
@@ -440,7 +444,7 @@ const ResignationDetailsComponent = (props) => {
       swal(
         status == 1
           ? 'Resignation approved successfully'
-          : 'Resignation declined successfully',
+          : 'Resignation declined successfully+++++++++++++++++++++++++',
         '',
         'success'
       ).then(() => {
@@ -453,6 +457,7 @@ const ResignationDetailsComponent = (props) => {
   };
 
   const isValid = (type, status) => {
+    console.log("🚀 ~ isValid ~ status:", status)
     if (type == 'admin') {
       if (status == 'approve_resign' && approveReason) {
         approveResignation(1);
@@ -493,7 +498,7 @@ const ResignationDetailsComponent = (props) => {
     }
   };
 
-  const changeRelievingData = async () => {
+  const changeRelievingData = async (status) => {
     setShowLoader(true);
     const postData = {
       relieving_date: customFunctions.getDate(relievingDate),
@@ -507,7 +512,7 @@ const ResignationDetailsComponent = (props) => {
     if (data && data.success == true) {
       setShowLoader(false);
       swal('Relieving date changed successfully', '', 'success').then(() => {
-        resignationRequestHr();
+        resignationRequestHr(status);
       });
     } else {
       setShowLoader(false);
@@ -1036,8 +1041,8 @@ const ResignationDetailsComponent = (props) => {
                                   className="me-3"
                                   onClick={() => {
                                     if (approveReason !== '') {
-                                      setShowModal(false);
-                                      setShowModal(true);
+                                        // setShowModal(false);
+                                        setShowModal(true);
                                       // swal({
                                       //   title: 'You want to change relieving date',
                                       //   icon: 'warning',
@@ -1046,8 +1051,9 @@ const ResignationDetailsComponent = (props) => {
                                       // }).then((willApprove) => {
                                       //   if (willApprove) {
                                       //     // Open your modal here
-                                      //     setShowModal(true);
-                                      // changeRelievingData();
+                                      //     // setShowModal(true);
+                                      //     isValid('hr', 'approve_resign');
+                                      // // changeRelievingData();
                                       //   } else {
                                       //     // Handle approval logic here
                                       //     isValid('admin', 'approve_resign');
@@ -1069,7 +1075,8 @@ const ResignationDetailsComponent = (props) => {
                                   variant="secondary"
                                   onClick={() => {
                                     // setManagerDeclineToggle(true);
-                                    isValid('admin', 'decline_resign');
+                                    isValid('admins', 'decline_resign');
+                                    isValid('hr', 'decline_resign');
                                   }}
                                 >
                                   Decline
@@ -1457,7 +1464,7 @@ const ResignationDetailsComponent = (props) => {
                 //   dangerMode: true,
                 // }).then((willDelete) => {
                 //   if (willDelete) {
-                changeRelievingData();
+                changeRelievingData(1);
                 setShowModal(false);
 
                 //     }
