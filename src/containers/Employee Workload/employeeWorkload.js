@@ -13,16 +13,16 @@ import CustomTable from 'stark-custom-datatable';
 
 const EmployeeWorkload = () => {
   const titleHeading = 'Employee Workload';
-  const [allEmployes, setAllEmployes] = useState([]);
+  const [allEmployes, setAllEmployes] = useState([{label: 'All Employess', value: 'all_employess'},]);
   const [projectList, setProjectList] = useState([]);
-  console.log('🚀 ~ projectList:', projectList)
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
-  const [selectedProject, setSelectedProject] = useState("");
-  console.log("selectedProject+++++",selectedProject)
+  const [selectedProject, setSelectedProject] = useState([{label: "All Projects", value: "all_project",}]);
+  const [selectedTaskStatus, setSelectedStatus] = useState([{label: 'All type', value: 3},])
+  console.log("selectedTaskStatus+++++",selectedTaskStatus)
   const [userRole, setUserRole] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
   const [employeeList, setEmployeeList] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState('');
+  const [selectedEmployee, setSelectedEmployee] = useState([{label: 'All Employess', value: 'all_employess'},]);
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [rowData, setRowData] = useState('');
@@ -35,6 +35,22 @@ const EmployeeWorkload = () => {
   const items = [
     { to: '/', label: 'Dashboard' },
     { label: 'Employee Workload' },
+  ];
+
+  const taskStatus = [
+    {
+      label: 'All type',
+      value: 3,
+    },
+    {
+      label: 'Pending',
+      value: 1,
+    },
+    {
+      label: 'Completed',
+      value: 2,
+    },
+    
   ];
 
   //Column for table
@@ -287,7 +303,10 @@ console.log("data=========",data);
       page: page,
       limit: limit,
     };  
-
+    
+    if (selectedTaskStatus?.value != 3){
+      params.status = +selectedTaskStatus?.value
+    }
      if(selectedProject?.value !='all_project')
       {
         params.project_id = +selectedProject?.value;
@@ -426,10 +445,10 @@ console.log("data=========",data);
                 // isMulti
               />
             </Col>
-            <Col sm={3}>
+            <Col sm={2}>
               <DropdownInput
                 label="Select Employee"
-                asterisk="*"
+                // asterisk="*"
                 options={allEmployes}
                 defaultValue={selectedEmployee}
                 onSelectHandler={(select) => {
@@ -444,9 +463,25 @@ console.log("data=========",data);
                 // isMulti
               />
             </Col>
+            <Col sm={2}>
+              <DropdownInput
+                label="Task Status"
+                // asterisk="*"
+                options={taskStatus}
+                defaultValue={selectedTaskStatus}
+                onSelectHandler={(select) => {
+                  setFilterErr('');
+                  setSelectedStatus(select);
+                  setRowData('');
+                  setFilterErr('');
+                }}
+                // isMulti
+              />
+            </Col>
+  
             {/* {selectedEmployee?.value != "all_employess" && ( */}
             <>
-              <Col sm={3}>
+              <Col sm={2}>
                 <Datepicker
                   className="form-control"
                   label="Select from date"
@@ -456,20 +491,20 @@ console.log("data=========",data);
                     setFromDate(e);
                     setToDate(null);
                   }}
-                  maxDate={new Date()}
+                  // maxDate={new Date()}
                   autoComplete="off"
                   name="startDate"
                   dateFormat="dd/MM/yyyy"
                   placeholder="Select from date"
                 />
               </Col>
-              <Col sm={3}>
+              <Col sm={2}>
                 <Datepicker
                   className="form-control"
                   label="Select to date"
                   asterisk="*"
                   selected={toDate}
-                  maxDate={new Date()}
+                  // maxDate={new Date()}
                   minDate={fromDate}
                   onChange={(e) => {
                     setToDate(e);
