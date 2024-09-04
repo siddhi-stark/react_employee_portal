@@ -212,32 +212,6 @@ function AllReports() {
     }
   };
 
-  // useEffect(() => {
-  //   if (state != '') getEmployeReportById();
-  // }, [state]);
-
-  // const getEmployeReportById = async (pageNo = 0) => {
-  //   setShowLoader(true);
-  //   const page = pageNo || pagination.current_page;
-  //   const endPoint = `${Api.reportListingUrl}/${state.state.EmpId}/`;
-  //   const params = {
-  //     page,
-  //     limit: pagination.itemsPerPage,
-  //     keyword: searchKeyword && searchKeyword,
-  //     start_date: fromDate ? customFunctions.getDate(fromDate) : '',
-  //     end_date: toDate ? customFunctions.getDate(toDate) : '',
-  //   };
-  //   const url = customFunctions.generateUrl(endPoint, params);
-  //   const { data } = await AuthApi.getDataFromServer(url, endPoint);
-  // };
-
-  // const getEmployeeById = async () => {
-  //   const { data } = await AuthApi.getDataFromServer(
-  //     `${Api.reportListingUrl}user_id=${state?.state?.EmpId}`
-  //   );
-  //   // setEmployeeList(data.data);
-  // };
-
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
