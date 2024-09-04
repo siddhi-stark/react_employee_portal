@@ -16,7 +16,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import Loader from '../../components/Loader/index';
 
-const items = [{ to: '/', label: 'Home' }, { label: 'Employee Timesheet' }];
+const items = [{ to: '/', label: 'Home' }, { label: '' }];
 
 function AllReports() {
   const [rows, setRows] = useState([]);
@@ -80,6 +80,7 @@ function AllReports() {
                 reporterName: name,
                 pagination: pagination.current_page,
                 state:{
+                  empId:id,
                   clockIn:clockin,
                   clockout:clockout
                 }

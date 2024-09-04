@@ -75,6 +75,7 @@ import EmployeeActivity from './containers/Employee/employeeActivity.component';
 import PolicyCategory from './containers/Policy/category.component';
 import AddCategory from './containers/Policy/addCategory.component';
 import EmployeeDetails from './containers/Leaves/EmployeeDetails.component';
+import EmployeeCurrentReport from './containers/Leaves/EmployeeCurrentReport.component';
 import SupportTicketComponent from './containers/SupportTicket/supportTicket.component';
 import AddSupportTicket from './containers/SupportTicket/addSupportTicket.component';
 import EmployeeExitForm from './containers/Exit process/EmployeeExitForm';
@@ -295,6 +296,13 @@ function Routes() {
         exact
         component={ResignationDetailsComponent}
       />
+
+      <Route
+        path="/employee-current-report"
+        exact
+        component={EmployeeCurrentReport}
+      />
+
       <Route component={NotFound} />
       
     </Switch>

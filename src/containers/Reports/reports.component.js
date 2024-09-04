@@ -12,6 +12,8 @@ import customFunctions from '../../helper/customFunctions';
 function Reports(props) {
   const { match, location } = props;
   const state = useLocation();
+  const history = useHistory();
+  
   const [rows, setRows] = useState([]);
   const [showButton, setShowButton] = useState(1);
   const [reportDate, setReportDate] = useState('');
@@ -22,16 +24,21 @@ function Reports(props) {
   const [clockIn, setClockIn] = useState();
   const [clockOut, setClockOut] = useState();
   const [userName, setUserName] = useState();
-  const history = useHistory();
+  const [isShowCurrent, setShowCurrent] = useState(false)
+  
   const report = props;
-
+  const empId = state?.state?.state?.empId
+  const callBackDate = customFunctions.getDate(new Date(Number(match.params.date)));
+  
   
 useEffect(()=>{
   setClockIn(state?.state?.state?.clockIn)
-  setClockOut(state?.state?.state?.clockout)
+  setClockOut(state?.state?.state?.clockout)  
+  if (state?.state?.state?.clockout == '-'){
+    setShowCurrent(true)
+  }
 },[state])
  
-
 
   const employeeReport = report.location.state
     ? report.location.state.employeeReport
@@ -46,9 +53,6 @@ useEffect(()=>{
     totalItems: 10,
   });
 
-  // useEffect(() => {
-  //   setPage(state.state.pagination);
-  // });
 
   const columns = [
     {
@@ -93,6 +97,8 @@ useEffect(()=>{
     const page = pagination.current_page || pageNo;
     const dt = customFunctions.getDate(new Date(Number(match.params.date)));
     const userId = match.params.id;
+    console.log('userId', userId);
+    
     setReportDate(customFunctions.getFormattedDate(dt));
     const endPoint = `${Api.dailyReportUrl}`;
     const params = {
@@ -144,6 +150,7 @@ useEffect(()=>{
     setTitle('Detail Report');
   }, [cntClearFilter]);
 
+
   return (
     <>
       <Helmet title={title} />
@@ -183,6 +190,25 @@ useEffect(()=>{
                 >
                   Evening Report
                 </Button>
+                {isShowCurrent && (
+                  <Button
+                  type="button"
+                  onClick={() => {
+                    history.push(`/employee-current-report`, {
+                      state:{
+                        empId:empId,
+                        clockIn:clockIn,
+                        clockOut:clockOut,
+                        reportDate: callBackDate
+                      }
+                    });
+                  }}
+                  variant={`${showButton ? 'primary ml-1' : 'secondary ml-1'}`}
+                >
+                  Current Report
+                </Button>
+                )}
+                
                 <Button
                   type="button"
                   onClick={() => {
