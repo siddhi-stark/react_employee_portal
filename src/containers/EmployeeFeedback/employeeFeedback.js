@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -18,19 +20,34 @@ function EmployeeFeedback() {
   const [isShowLoader, setShowLoader] = useState(false);
   const [taskId, setTaskId] = useState(null);
   const [ShowDelete, setShowDelete] = useState(false);
+  const [setTable, setTableToggle] = useState(false);
+  
   useEffect(() => {
     setTitle('Employee Feedback');
     getQuestionList();
   }, []);
 
+  useEffect(() => {
+    setTitle('Employee Feedback');
+    getQuestionList();
+  }, [setTable]);
+
   const getQuestionList = async () => {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
-    const params = {
-      is_personal_feedback: true,
-      is_show_table: true,
-    };
+    const params = {}
+    if (setTable){
+      params.is_reviewers_feedback = true
+      params.is_show_table= true
+
+    }
+    else{
+      params.is_personal_feedback = true
+      params.is_show_table= true
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
+    console.log('url', url)
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
       setEmpFeedbackdata(data?.data);
@@ -102,15 +119,32 @@ function EmployeeFeedback() {
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="mb-0 mt-2">Feedback Details</h5>
               <div className="d-flex align-items-center justify-content-end">
+              <div className="d-flex align-items-center justify-content-end">
                 <a
                   href="#"
                   onClick={() => {
+                    setTableToggle(false)
                     history.push('/add-feedback');
                   }}
                   className="btn-link"
                 >
                   Add Feedback
                 </a>
+                </div>
+
+              <div className="d-flex align-items-center justify-content-end">
+                <a
+                  href="#"
+                  onClick={() => {
+                    // history.push('/add-feedback');
+                    setTableToggle(true)
+
+                  }}
+                  className="btn-link"
+                >
+                  Team Feedback Details
+                </a>
+                </div>
               </div>
             </div>
             <div className="table-responsive">

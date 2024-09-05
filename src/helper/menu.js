@@ -273,13 +273,13 @@ const menu = [
     submenu: [],
     roleaccess: [1, 3, 4, 10],
   },
-  // {
-  //   title: 'Employee Feedback',
-  //   path: '/employee-feedback',
-  //   icon: 'person-feedback.svg',
-  //   submenu: [],
-  //   roleaccess: [2, 3, 4, 6],
-  // },
+  {
+    title: 'Employee Feedback',
+    path: '/employee-feedback',
+    icon: 'template.svg',
+    submenu: [],
+    roleaccess: [2, 3, 4, 6],
+  },
   {
     title: 'Employee Workload',
     path: '/employee-workload',
