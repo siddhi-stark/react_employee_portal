@@ -1665,7 +1665,7 @@ function EmployeeProfile(props) {
                   type="button"
                   className="btn btn-primary"
                 >
-                  Add Bond
+                  Add contract
                 </button>
               )}
             </div>

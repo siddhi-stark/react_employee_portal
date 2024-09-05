@@ -180,16 +180,6 @@ useEffect(()=>{
                 >
                   Morning Report
                 </Button>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setShowButton(0);
-                    setCntClearFilter(cntClearFilter + 1);
-                  }}
-                  variant={`${!showButton ? 'primary ml-1' : 'secondary ml-1'}`}
-                >
-                  Evening Report
-                </Button>
                 {isShowCurrent && (
                   <Button
                   type="button"
@@ -208,6 +198,17 @@ useEffect(()=>{
                   Current Report
                 </Button>
                 )}
+                
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setShowButton(0);
+                    setCntClearFilter(cntClearFilter + 1);
+                  }}
+                  variant={`${!showButton ? 'primary ml-1' : 'secondary ml-1'}`}
+                >
+                  Evening Report
+                </Button>
                 
                 <Button
                   type="button"
