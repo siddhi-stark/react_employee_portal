@@ -63,14 +63,14 @@ const menu = [
     submenu: [],
     roleaccess: [1, 3, 5, 6, 10],
   },
-  // {
-  //   title: 'Employee Timesheet',
-  //   path: '/emp-timesheet',
-  //   icon: 'timesheet.svg',
-  //   submenu: [],
-  //   roleaccess: [4],
-  //   // roleaccess: [1, 5, 4, 6],
-  // },
+  {
+    title: 'Employee Daily Report',
+    path: '/emp-timesheet',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [4],
+    // roleaccess: [1, 5, 4, 6],
+  },
   {
     title: 'Employees',
     path: '#',
@@ -264,7 +264,7 @@ const menu = [
     path: '/reports',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1, 7],
+    roleaccess: [7],
   },
   {
     title: 'Performance Report',
@@ -273,6 +273,13 @@ const menu = [
     submenu: [],
     roleaccess: [1, 3, 4, 10],
   },
+  // {
+  //   title: 'Employee Feedback',
+  //   path: '/employee-feedback',
+  //   icon: 'person-feedback.svg',
+  //   submenu: [],
+  //   roleaccess: [2, 3, 4, 6],
+  // },
   {
     title: 'Employee Workload',
     path: '/employee-workload',

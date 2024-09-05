@@ -92,6 +92,8 @@ import CompletedProject from './containers/Project/completedProject';
 import AddDocuments from './containers/Employees/AddDocuments';
 import AddEmployeeComponent from './containers/Employees/addEmpolyeeComponent';
 import EmployeeVerificationComponent from './containers/Employees/EmployeeVerification.component';
+import AddEmployeeFeedback from './containers/EmployeeFeedback/addEmployeeFeedback';
+import EmployeeFeedback from './containers/EmployeeFeedback/employeeFeedback';
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
 
@@ -302,6 +304,10 @@ function Routes() {
         exact
         component={EmployeeCurrentReport}
       />
+
+      <Route path="/add-feedback" exact component={AddEmployeeFeedback} />
+      <Route path="/employee-feedback" exact component={EmployeeFeedback} />
+      <Route path="/add-feedback/:id" exact component={AddEmployeeFeedback} />
 
       <Route component={NotFound} />
       

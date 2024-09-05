@@ -306,7 +306,7 @@ function EmployeeTimesheet() {
 
   useEffect(() => {
     getUserRole();
-    setTitle('Employee Timesheet');
+    setTitle('Employee Daily Report');
   }, []);
 
   const submitForm = async (formValues) => {
@@ -394,10 +394,10 @@ function EmployeeTimesheet() {
           <div className="d-flex align-items-center justify-content-between">
             <h5 className="card-title mb-0 mt-2 ">{`${
               filterData.full_name
-                ? `Employee Timesheet for ${filterData.full_name.label}`
-                : 'Employees Timesheet'
+                ? `Employee Daily Report for ${filterData.full_name.label}`
+                : 'Employees Daily Report'
             }`}</h5>
-             {(Number(currentUser) === 1 || Number(currentUser) === 3) && (
+             {/* {(Number(currentUser) === 1 || Number(currentUser) === 3) && (
             <div className="d-flex align-items-center justify-content-end">
                 <a
                   href="#"
@@ -409,7 +409,7 @@ function EmployeeTimesheet() {
                   Workload
                 </a>
               </div>
-              )}
+              )} */}
           </div>
           <hr />
           {filterData.is_detail &&
