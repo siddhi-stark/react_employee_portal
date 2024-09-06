@@ -22,9 +22,9 @@ function EmployeeFeedback() {
   const [taskId, setTaskId] = useState(null);
   const [ShowDelete, setShowDelete] = useState(false);
   const [setTable, setTableToggle] = useState(false);
-  const [pageReferesh,setPageReferesh] = useState(false)
+  const [pageReferesh, setPageReferesh] = useState(false)
   const [feedbackTitle, setFeedbackTitle] = useState('Team Feedback Details')
-  
+
   useEffect(() => {
     setTitle('Employee Feedback');
     getQuestionList();
@@ -40,34 +40,36 @@ function EmployeeFeedback() {
     getQuestionList();
   }, [setTable]);
 
-  function getQuarterByString(value){
-    if (value == 'April - June'){
-        return 1}
-    else if (value == 'July - September'){
-        return 2}
-    else if (value == 'October - December'){
-        return 3}
-    else{
-        return 4
-      }
+  function getQuarterByString(value) {
+    if (value == 'April - June') {
+      return 1
+    }
+    else if (value == 'July - September') {
+      return 2
+    }
+    else if (value == 'October - December') {
+      return 3
+    }
+    else {
+      return 4
+    }
   }
 
   const getQuestionList = async () => {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
     const params = {}
-    if (setTable){
+    if (setTable) {
       params.is_reviewers_feedback = true
-      params.is_show_table= true
+      params.is_show_table = true
 
     }
-    else{
+    else {
       params.is_personal_feedback = true
-      params.is_show_table= true
+      params.is_show_table = true
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log('url', url)
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
       setEmpFeedbackdata(data?.data);
@@ -81,54 +83,54 @@ function EmployeeFeedback() {
     }
   };
 
-  function getParamsData (id){  
+  function getParamsData(id) {
     let empId = null
     let quarter = null
     let year = null
-    if(empFeedbackdata){
+    if (empFeedbackdata) {
       empFeedbackdata?.length && empFeedbackdata.map((item, index) => {
-        if (item.id == id){
+        if (item.id == id) {
           setEmployeeId(item.employee_id)
-          empId   = item.employee_id
-          quarter= item.quarter
-          year= item.year
+          empId = item.employee_id
+          quarter = item.quarter
+          year = item.year
         }
       })
     }
-    quarter = getQuarterByString(quarter)  
-    const params={
+    quarter = getQuarterByString(quarter)
+    const params = {
       empId: empId,
-      quarter:quarter,
-      year:year,
+      quarter: quarter,
+      year: year,
     }
     return params
   }
 
   const deleteTask = async (id) => {
-  const endPoint = `${Api.empFeedbackUrl}`;
-  
-  let empId = null
-  let quarter = null
-  let year = null
+    const endPoint = `${Api.empFeedbackUrl}`;
 
-  if(empFeedbackdata){
-    empFeedbackdata?.length && empFeedbackdata.map((item, index) => {
-      if (item.id == id){
-        setEmployeeId(item.employee_id)
-        empId   = item.employee_id
-        quarter= item.quarter
-        year= item.year
-      }
-    })
-  }
-  quarter = getQuarterByString(quarter)  
-  const params={
-    employee_id: empId,
-    quarter:quarter,
-    year:year,
-  }
-  const url = customFunctions.generateUrl(endPoint, params);
-  const { data } = await AuthApi.deleteDataFromServer(url);
+    let empId = null
+    let quarter = null
+    let year = null
+
+    if (empFeedbackdata) {
+      empFeedbackdata?.length && empFeedbackdata.map((item, index) => {
+        if (item.id == id) {
+          setEmployeeId(item.employee_id)
+          empId = item.employee_id
+          quarter = item.quarter
+          year = item.year
+        }
+      })
+    }
+    quarter = getQuarterByString(quarter)
+    const params = {
+      employee_id: empId,
+      quarter: quarter,
+      year: year,
+    }
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await AuthApi.deleteDataFromServer(url);
     if (data) {
       swal(data && data?.message[0], '', 'success').then((result) => {
         if (result) {
@@ -177,17 +179,17 @@ function EmployeeFeedback() {
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="mb-0 mt-2">Feedback Details</h5>
               <div className="d-flex align-items-center justify-content-end">
-              {!setTable && (
-                <a
-                  href="#"
-                  onClick={() => {
-                    setTableToggle(false)
-                    history.push('/add-feedback');
-                  }}
-                  className="btn-link"
-                >
-                  Add Feedback
-                </a>
+                {!setTable && (
+                  <a
+                    href="#"
+                    onClick={() => {
+                      setTableToggle(false)
+                      history.push('/add-feedback');
+                    }}
+                    className="btn-link"
+                  >
+                    Add Feedback
+                  </a>
                 )}
 
                 {!setTable ? (<a
@@ -198,16 +200,16 @@ function EmployeeFeedback() {
                   className="btn-link ml-3"
                 >
                   Team Feedback Details
-                </a>):(
+                </a>) : (
                   <a
-                  href="#"
-                  onClick={() => {
-                    setTableToggle(false)
-                  }}
-                  className="btn-link ml-3"
-                >
-                  Personal Feedback Details
-                </a>
+                    href="#"
+                    onClick={() => {
+                      setTableToggle(false)
+                    }}
+                    className="btn-link ml-3"
+                  >
+                    Personal Feedback Details
+                  </a>
                 )}
 
               </div>
@@ -228,52 +230,67 @@ function EmployeeFeedback() {
                 <tbody>
                   {empFeedbackdata?.length
                     ? empFeedbackdata.map((item, index) => (
-                        <tr key={index + 1}>
-                          <td>{index+1}</td>
-                          <td>
-                            {item?.employee_name ? item?.employee_name : 'N/A'}
-                          </td>
-                          <td>{item?.quarter ? item?.quarter : 'N/A'}</td>
-                          <td>{item?.year ? item?.year : 'N/A'}</td>
-                          <td>
-                            {item?.submission_date
-                              ? item?.submission_date
-                              : 'N/A'}
-                          </td>
-                          <td>
-                            {item?.review_status_name
-                              ? item?.review_status_name
-                              : 'N/A'}
-                          </td>
-                          <td>
+                      <tr key={index + 1}>
+                        <td>{index + 1}</td>
+                        <td>
+                          {item?.employee_name ? item?.employee_name : 'N/A'}
+                        </td>
+                        <td>{item?.quarter ? item?.quarter : 'N/A'}</td>
+                        <td>{item?.year ? item?.year : 'N/A'}</td>
+                        <td>
+                          {item?.submission_date
+                            ? item?.submission_date
+                            : 'N/A'}
+                        </td>
+                        <td>
+                          {item?.review_status_name
+                            ? item?.review_status_name
+                            : 'N/A'}
+                        </td>
+                        <td>
+                          {/* item?.review_status == 1 */}
+                          {item?.review_status && (
                             <a
-                            onClick={() => {
-                              let paramsData = getParamsData(item?.id)
-                              history.push(`/add-feedback/${item?.id}`, {state:paramsData});
 
-                            }}
+                              onClick={() => {
+                                if (!setTable) {
+                                  console.log('Hello from personal')
+                                  let paramsData = getParamsData(item?.id)
+                                  history.push(`/add-feedback/${item?.id}`, { state: paramsData });
+
+                                } else { 
+                                  console.log('Hello from Team')
+                                  let paramsData = getParamsData(item?.id)
+                                  history.push(`/update-feedback/${item?.id}`, { state: paramsData });
+                                }
+                              }}
                               // href={`/add-feedback/${item?.id}`}
                               className="pl-2 me-2"
-                              
                             >
-                              <img src="/images/edit.svg" alt="edit icon" />
+                              <img
+                                src="/images/edit.svg"
+                                alt="edit icon"
+                                style={{
+                                  filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
+                                }}
+                              />
                             </a>
-                            <a
-                              href='\'
-                              className="text-decoration-none"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setShowDelete(true);
-                                setTaskId(item?.id);
-                                console.log('item?.id',item?.id);
-                              }}
-                            >
-                              <img src="/images/delete.png" alt="delete icon" />
-                            </a>
-                          </td>
-                        </tr>
-                      ))
+                          )}
+                          <a
+                            href='\'
+                            className="text-decoration-none"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setShowDelete(true);
+                              setTaskId(item?.id);
+                            }}
+                          >
+                            <img src="/images/delete.png" alt="delete icon" />
+                          </a>
+                        </td>
+                      </tr>
+                    ))
                     : null}
                 </tbody>
               </table>
