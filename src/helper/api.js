@@ -241,6 +241,8 @@ export default class Api extends Component {
 
   static empFeedbackUrl = `${Api.baseUrl}employee-feedback-review/`
 
+  static questionUrl = `${Api.baseUrl}questionnaire/`
+
 
   // Get base URL of APIs
   static getBaseUrl() {
