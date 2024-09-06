@@ -164,7 +164,7 @@ function EmployeeProfile(props) {
 
   const [previousEmployement, setPreviousEmployement] = useState([
     {
-      label: 'Salary Slip 1',
+      label: 'Salary Slips',
       value: 'salary_slip_1',
       file_id: '',
       url: '',
@@ -172,24 +172,24 @@ function EmployeeProfile(props) {
       isUploaded: false,
       primaryId: '',
     },
-    {
-      label: 'Salary Slip 2',
-      value: 'salary_slip_2',
-      file_id: '',
-      url: '',
-      employment_document_type: 2,
-      isUploaded: false,
-      primaryId: '',
-    },
-    {
-      label: 'Salary Slip 3',
-      value: 'salary_slip_3',
-      file_id: '',
-      url: '',
-      employment_document_type: 3,
-      isUploaded: false,
-      primaryId: '',
-    },
+    // {
+    //   label: 'Salary Slip 2',
+    //   value: 'salary_slip_2',
+    //   file_id: '',
+    //   url: '',
+    //   employment_document_type: 2,
+    //   isUploaded: false,
+    //   primaryId: '',
+    // },
+    // {
+    //   label: 'Salary Slip 3',
+    //   value: 'salary_slip_3',
+    //   file_id: '',
+    //   url: '',
+    //   employment_document_type: 3,
+    //   isUploaded: false,
+    //   primaryId: '',
+    // },
     {
       label: 'Relieving Letter',
       value: 'relieving_letter',

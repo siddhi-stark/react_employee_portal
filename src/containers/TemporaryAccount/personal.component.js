@@ -142,7 +142,7 @@ function Personal(props) {
 
   const [previousEmployement, setPreviousEmployement] = useState([
     {
-      label: 'Salary Slip 1',
+      label: 'Salary Slips',
       value: 'salary_slip_1',
       file_id: '',
       url: '',
@@ -150,24 +150,24 @@ function Personal(props) {
       isUploaded: false,
       primaryId: '',
     },
-    {
-      label: 'Salary Slip 2',
-      value: 'salary_slip_2',
-      file_id: '',
-      url: '',
-      employment_document_type: 2,
-      isUploaded: false,
-      primaryId: '',
-    },
-    {
-      label: 'Salary Slip 3',
-      value: 'salary_slip_3',
-      file_id: '',
-      url: '',
-      employment_document_type: 3,
-      isUploaded: false,
-      primaryId: '',
-    },
+    // {
+    //   label: 'Salary Slip 2',
+    //   value: 'salary_slip_2',
+    //   file_id: '',
+    //   url: '',
+    //   employment_document_type: 2,
+    //   isUploaded: false,
+    //   primaryId: '',
+    // },
+    // {
+    //   label: 'Salary Slip 3',
+    //   value: 'salary_slip_3',
+    //   file_id: '',
+    //   url: '',
+    //   employment_document_type: 3,
+    //   isUploaded: false,
+    //   primaryId: '',
+    // },
     {
       label: 'Relieving Letter',
       value: 'relieving_letter',
@@ -1370,19 +1370,25 @@ function Personal(props) {
                       </Col>
                     </Row>
                     <span>
-                      <div className="mt-3">
-                        <h6 style={{ fontSize: 'smaller' }}>
-                          <b>Note:</b>
+                        <div className="mt-3">
+                          <h6 style={{ fontSize: 'smaller' }}>
+                            <b>Note:</b>
+                          </h6>
+                          <h6 style={{ fontSize: 'smaller' }}>
+                            1. Maximum upload file size limit is less then 1 MB.
+                            <span className="text-danger">*</span>
+                          </h6>
+                          <h6 style={{ fontSize: 'smaller' }}>
+                            2. File supported extension is jpg , png , svg , jpeg
+                            , pdf.
+                            <span className="text-danger">*</span>
+                          </h6>
+                          <h6 style={{ fontSize: 'smaller' }}>
+                            3. After uploading the document, please click on submit button.
+                          <span className="text-danger">*</span>
                         </h6>
-                        <h6 style={{ fontSize: 'smaller' }}>
-                          1. Maximum upload file size limit is less then 1 MB.
-                        </h6>
-                        <h6 style={{ fontSize: 'smaller' }}>
-                          2. File supported extension is jpg , png , svg , jpeg
-                          , pdf
-                        </h6>
-                      </div>
-                    </span>
+                        </div>
+                      </span>
                     <Row className="mt-4">
                       <Col sm={6}>
                         <Card style={{ width: '450px' }} className="border-0">
