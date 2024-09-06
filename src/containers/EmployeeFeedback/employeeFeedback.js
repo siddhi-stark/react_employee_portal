@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -18,19 +20,53 @@ function EmployeeFeedback() {
   const [isShowLoader, setShowLoader] = useState(false);
   const [taskId, setTaskId] = useState(null);
   const [ShowDelete, setShowDelete] = useState(false);
+  const [setTable, setTableToggle] = useState(false);
+  const [pageReferesh,setPageReferesh] = useState(false)
+  const [feedbackTitle, setFeedbackTitle] = useState('Team Feedback Details')
+  
   useEffect(() => {
     setTitle('Employee Feedback');
     getQuestionList();
   }, []);
 
+  useEffect(() => {
+    setTitle('Employee Feedback');
+    getQuestionList();
+  }, [pageReferesh]);
+
+  useEffect(() => {
+    setTitle('Employee Feedback');
+    getQuestionList();
+  }, [setTable]);
+
+  function getQuarterByString(value){
+    if (value == 'April - June'){
+        return 1}
+    else if (value == 'July - September'){
+        return 2}
+    else if (value == 'October - December'){
+        return 3}
+    else{
+        return 4
+      }
+  }
+
   const getQuestionList = async () => {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
-    const params = {
-      is_personal_feedback: true,
-      is_show_table: true,
-    };
+    const params = {}
+    if (setTable){
+      params.is_reviewers_feedback = true
+      params.is_show_table= true
+
+    }
+    else{
+      params.is_personal_feedback = true
+      params.is_show_table= true
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
+    console.log('url', url)
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
       setEmpFeedbackdata(data?.data);
@@ -45,21 +81,35 @@ function EmployeeFeedback() {
   };
 
   const deleteTask = async (id) => {
-  const endPoint = `${Api.empFeedbackUrl}${id}/`;
-  // const param={
-  //   employee_id:
-  //   quarter:
-  //   year:
-  // }
-  const url = customFunctions.generateUrl(endPoint);
-  const { data } = await AuthApi.getDataFromServer(url);
-    // const { data } = await AuthApi.deleteDataFromServer(`${Api.empFeedbackUrl}${id}/`);
+  const endPoint = `${Api.empFeedbackUrl}`;
+  
+  let empId = null
+  let quarter = null
+  let year = null
+
+  if(empFeedbackdata){
+    empFeedbackdata?.length && empFeedbackdata.map((item, index) => {
+      if (item.id == id){
+        empId   = item.employee_id
+        quarter= item.quarter
+        year= item.year
+      }
+    })
+  }
+  quarter = getQuarterByString(quarter)  
+  const params={
+    employee_id: empId,
+    quarter:quarter,
+    year:year,
+  }
+  const url = customFunctions.generateUrl(endPoint, params);
+  const { data } = await AuthApi.deleteDataFromServer(url);
     if (data) {
-      console.log('data-------->>>',data);
       swal(data && data?.message[0], '', 'success').then((result) => {
         if (result) {
           setShowDelete(false);
           setTaskId(null);
+          setPageReferesh(true)
         }
       });
     } else {
@@ -102,15 +152,39 @@ function EmployeeFeedback() {
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="mb-0 mt-2">Feedback Details</h5>
               <div className="d-flex align-items-center justify-content-end">
+              {!setTable && (
                 <a
                   href="#"
                   onClick={() => {
+                    setTableToggle(false)
                     history.push('/add-feedback');
                   }}
                   className="btn-link"
                 >
                   Add Feedback
                 </a>
+                )}
+
+                {!setTable ? (<a
+                  href="#"
+                  onClick={() => {
+                    setTableToggle(true)
+                  }}
+                  className="btn-link ml-3"
+                >
+                  Team Feedback Details
+                </a>):(
+                  <a
+                  href="#"
+                  onClick={() => {
+                    setTableToggle(false)
+                  }}
+                  className="btn-link ml-3"
+                >
+                  Personal Feedback Details
+                </a>
+                )}
+
               </div>
             </div>
             <div className="table-responsive">

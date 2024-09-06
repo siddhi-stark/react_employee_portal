@@ -38,7 +38,7 @@ function AddEmployeeFeedback() {
 
   const getQuestionList = async () => {
     setShowLoader(true);
-    const endPoint = `${Api.feedbackQuestionUrl}`;
+    const endPoint = `${Api.questionUrl}`;
     const params = {
       show_all:'true'
     };

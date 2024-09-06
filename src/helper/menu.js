@@ -276,7 +276,7 @@ const menu = [
   // {
   //   title: 'Employee Feedback',
   //   path: '/employee-feedback',
-  //   icon: 'person-feedback.svg',
+  //   icon: 'template.svg',
   //   submenu: [],
   //   roleaccess: [2, 3, 4, 6],
   // },
