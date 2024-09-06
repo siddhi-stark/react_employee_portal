@@ -1,7 +1,8 @@
+/* eslint-disable */
 
 import React, { useEffect,useRef,useState } from 'react';
 import { Button, ButtonGroup, Card, Form } from 'react-bootstrap';
-import { withRouter ,useHistory } from 'react-router-dom';
+import { withRouter ,useHistory, useParams, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import { Helmet } from '../../components/FormInputs';
@@ -15,6 +16,11 @@ const items = [{ to: '/employee-feedback', label: 'Employee Feedback' }, { label
 
 function AddEmployeeFeedback() {
   const validator = useRef(new SimpleReactValidator({}));
+  const state = useLocation();
+  const { id } = useParams();
+  const quarter = state?.state?.state?.quarter;
+  const year = state?.state?.state?.year;
+  const [employeeId, setEmployeeId] = useState()
   const history = useHistory(); 
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
@@ -32,9 +38,52 @@ function AddEmployeeFeedback() {
   });
 
   useEffect(() => {
+    setEmployeeId(localStorage.getItem('userId'))
     setTitle('Add Employee Feedback');
     getQuestionList();
   }, []);
+
+  useEffect(()=>{
+    if (id){
+      getUpdateData()
+    }
+  },[id])
+
+  const getUpdateData = async () =>{
+    setShowLoader(true);
+    const endPoint = `${Api.empFeedbackUrl}`;
+    const params = {
+      is_personal_feedback : true,
+    };
+    if (employeeId && quarter && year){
+      params.employee_id = employeeId
+      params.quarter = quarter
+      params.year = year
+    }
+    const url = customFunctions.generateUrl(endPoint,params);
+    const { data ,message } = await AuthApi.getDataFromServer(url);
+    
+    let oldData = []
+
+
+    console.log("sssss", data?.data);
+    
+    if (data && data.success) {
+      data?.data.length > 0 && data.data.map((item, index) => {
+
+      })
+      }
+    //   setShowLoader(false);
+    // } else {
+    //   setShowLoader(false);
+    //   swal(message, '', 'error', {
+    //     closeOnClickOutside: false,
+    //     allowOutsideClick: false,
+    //   });
+    // }
+    setShowLoader(false);
+
+  }
 
   const getQuestionList = async () => {
     setShowLoader(true);

@@ -17,6 +17,7 @@ function EmployeeFeedback() {
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [empFeedbackdata, setEmpFeedbackdata] = useState([]);
+  const [employeeId, setEmployeeId] = useState(0)
   const [isShowLoader, setShowLoader] = useState(false);
   const [taskId, setTaskId] = useState(null);
   const [ShowDelete, setShowDelete] = useState(false);
@@ -80,6 +81,29 @@ function EmployeeFeedback() {
     }
   };
 
+  function getParamsData (id){  
+    let empId = null
+    let quarter = null
+    let year = null
+    if(empFeedbackdata){
+      empFeedbackdata?.length && empFeedbackdata.map((item, index) => {
+        if (item.id == id){
+          setEmployeeId(item.employee_id)
+          empId   = item.employee_id
+          quarter= item.quarter
+          year= item.year
+        }
+      })
+    }
+    quarter = getQuarterByString(quarter)  
+    const params={
+      empId: empId,
+      quarter:quarter,
+      year:year,
+    }
+    return params
+  }
+
   const deleteTask = async (id) => {
   const endPoint = `${Api.empFeedbackUrl}`;
   
@@ -90,6 +114,7 @@ function EmployeeFeedback() {
   if(empFeedbackdata){
     empFeedbackdata?.length && empFeedbackdata.map((item, index) => {
       if (item.id == id){
+        setEmployeeId(item.employee_id)
         empId   = item.employee_id
         quarter= item.quarter
         year= item.year
@@ -222,11 +247,14 @@ function EmployeeFeedback() {
                           </td>
                           <td>
                             <a
-                              href={`/add-feedback/${item?.id}`}
+                            onClick={() => {
+                              let paramsData = getParamsData(item?.id)
+                              history.push(`/add-feedback/${item?.id}`, {state:paramsData});
+
+                            }}
+                              // href={`/add-feedback/${item?.id}`}
                               className="pl-2 me-2"
-                              // onClick={() => {
-                              //   setPageTypes('edit');
-                              // }}
+                              
                             >
                               <img src="/images/edit.svg" alt="edit icon" />
                             </a>
