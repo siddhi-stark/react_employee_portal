@@ -23,7 +23,6 @@ function EmployeeFeedback() {
   const [ShowDelete, setShowDelete] = useState(false);
   const [setTable, setTableToggle] = useState(false);
   const [pageReferesh, setPageReferesh] = useState(false)
-  const [feedbackTitle, setFeedbackTitle] = useState('Team Feedback Details')
 
   useEffect(() => {
     setTitle('Employee Feedback');
@@ -62,7 +61,6 @@ function EmployeeFeedback() {
     if (setTable) {
       params.is_reviewers_feedback = true
       params.is_show_table = true
-
     }
     else {
       params.is_personal_feedback = true
@@ -267,6 +265,7 @@ function EmployeeFeedback() {
                               // href={`/add-feedback/${item?.id}`}
                               className="pl-2 me-2"
                             >
+                              {item?.review_status == 2 ? (
                               <img
                                 src="/images/edit.svg"
                                 alt="edit icon"
@@ -274,6 +273,15 @@ function EmployeeFeedback() {
                                   filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
                                 }}
                               />
+                              ):
+                              <img
+                                src="/images/view-eye.svg"
+                                alt="view icon"
+                                style={{
+                                  filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
+                                }}
+                              />
+                              }
                             </a>
                           )}
                           <a
@@ -291,7 +299,7 @@ function EmployeeFeedback() {
                         </td>
                       </tr>
                     ))
-                    : null}
+                    :null}
                 </tbody>
               </table>
             </div>

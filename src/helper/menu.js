@@ -278,7 +278,21 @@ const menu = [
     path: '/employee-feedback',
     icon: 'template.svg',
     submenu: [],
-    roleaccess: [2, 3, 4, 6],
+    roleaccess: [3, 4],
+  },
+  {
+    title: 'Employee Feedback',
+    path: '/employee-feedback-review',
+    icon: 'template.svg',
+    submenu: [],
+    roleaccess: [5, 6],
+  },
+  {
+    title: 'Employee Feedback',
+    path: '/employee-feedback-review',
+    icon: 'template.svg',
+    submenu: [],
+    roleaccess: [1],
   },
   {
     title: 'Employee Workload',

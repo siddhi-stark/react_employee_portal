@@ -22,9 +22,13 @@ function UpdateTeamFeedback() {
   const teamEmpId = state?.state?.state?.empId;
   const year = state?.state?.state?.year;
   const [employeeId, setEmployeeId] = useState()
+  const [empRoleId, setEmpRoleId] = useState()
+  const [isHrLogin, setIsHrLogin] = useState(false)  
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
+  const [fieldsDisabled, setFieldsDisabled] = useState(false)
+  const [empDepartment, setEmpDepartment] = useState()
   const [questions, setQuestions] = useState([
     {
       questionnaire_id: '',
@@ -39,18 +43,36 @@ function UpdateTeamFeedback() {
     review_status: '',
     quarter: ''
   });
-  console.log("id", id)
+
+  console.log("isHrLogin", isHrLogin);
+  
   useEffect(() => {
-    setEmployeeId(localStorage.getItem('userId'))
+    if (empRoleId ==  5 || empRoleId ==  6){
+      setIsHrLogin(true)
+      setEmpDepartment(state?.state?.state?.departmentId)
+    }else{
+      setEmpDepartment(localStorage.getItem('department'))
+    } 
+  
     setTitle('Add Employee Feedback');
-    getQuestionList();
-  }, []);
+  }, [empRoleId, empDepartment]);
+  
+  useEffect (()=>{
+    setEmployeeId(localStorage.getItem('userId'))
+    setEmpRoleId(localStorage.getItem('group'))
+  },[])
+
+  useEffect(()=>{    
+    if(empDepartment){
+      getQuestionList();
+    } 
+  },[empDepartment])
 
   useEffect(() => {
     if (id && employeeId) {
       getUpdateData()
     }
-  }, [id, employeeId])
+  }, [id, employeeId, empDepartment])
 
   function getQuarterByString(value) {
     if (value == 'April - June') {
@@ -73,13 +95,22 @@ function UpdateTeamFeedback() {
     const params = {
       is_reviewer_feedback: true,
     };
-    console.log("employeeId && quarter && year", employeeId, quarter, year);
 
-    if (employeeId && quarter && year) {
+    if (teamEmpId && quarter && year) {
       params.employee = teamEmpId
       params.quarter = quarter
       params.year = year
     }
+
+    if (empDepartment){
+      if (empDepartment == 1 || empDepartment == 2){
+        params.questionnaire_type = 1
+      }
+      else if(empDepartment == 6){
+        params.questionnaire_type = 2
+      }
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
     console.log("url", url);
 
@@ -95,8 +126,8 @@ function UpdateTeamFeedback() {
           questionnaire_id: item?.questionnaire_id,
           answer: item?.employee_feedback,
           empRating: item?.employee_rating,
-          reviewerAnswer: item?.reviewer_rating,
-          reviewerRating: item?.reviewer_feedback,
+          reviewerAnswer: item?.reviewer_feedback,
+          reviewerRating: item?.reviewer_rating,
           submission_date: item?.submission_date,
           review_status: item?.review_status,
           quarter: String(getQuarterByString(item?.quarter))
@@ -108,6 +139,9 @@ function UpdateTeamFeedback() {
       quarter: oldData?.length ? oldData[0]?.quarter : '',
       review_status: oldData?.length ? oldData[0]?.review_status : '',
     }))
+    if (oldData?.length && oldData[0].review_status == 1){
+      setFieldsDisabled(true)
+    }
     setQuestions(oldData)
     setShowLoader(false);
   }
@@ -118,6 +152,15 @@ function UpdateTeamFeedback() {
     const params = {
       show_all: 'true'
     };
+    if (empDepartment){
+      if (empDepartment == 1 || empDepartment == 2){
+        params.questionnaire_type = 1
+      }
+      else if(empDepartment == 6){
+        params.questionnaire_type = 2
+      }
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
@@ -160,10 +203,10 @@ function UpdateTeamFeedback() {
           postData.questionnaire_id = +item?.id;
         }
         if (item?.reviewerAnswer) {
-          postData.reviewer_rating = item?.reviewerAnswer
+          postData.reviewer_feedback = item?.reviewerAnswer
         }
         if (item?.reviewerRating) {
-          postData.reviewer_feedback = item?.reviewerRating
+          postData.reviewer_rating = +item?.reviewerRating
         }
 
         questionData.push(postData);
@@ -250,7 +293,6 @@ function UpdateTeamFeedback() {
                   <Card>
                     <Card.Body>
                       <Row>
-
                         <Col sm={2}>
                           <Form.Group controlId='formQuestionnaire'>
                             <Form.Label>
@@ -265,6 +307,8 @@ function UpdateTeamFeedback() {
                                 data.quarter = e?.target?.value;
                                 setFormData(data);
                               }}
+                              disabled = {formData?.review_status == 2 && isHrLogin ? false : true}
+
                             >
                               <option value='' hidden>Select quarter type</option>
                               <option value='1'>April - June</option>
@@ -289,6 +333,7 @@ function UpdateTeamFeedback() {
                                 data.review_status = e?.target?.value;
                                 setFormData(data);
                               }}
+                              disabled = {formData?.review_status == 2 && isHrLogin ? false : true}
                             >
                               <option value='' hidden>Select review status</option>
                               <option value='1'>Completed</option>
@@ -307,7 +352,7 @@ function UpdateTeamFeedback() {
                           {/* <h4><b> Team Employee Feedback Form : </b></h4>
                           <br /> */}
                           {/* <div className="d-flex align-items-center justify-content-between"> */}
-                            <h5 className="card-title mb-0 mt-2 ">Team Employee Feedback Form</h5>
+                            <h5 className="card-title">Team Employee Feedback Form</h5>
                           {/* </div> */}
                           {/* <hr style={{ borderColor: "white" }} /> */}
                         </>
@@ -332,6 +377,7 @@ function UpdateTeamFeedback() {
                                     data[index].answer = e?.target?.value;
                                     setQuestions(data);
                                   }}
+                                  disabled = {isHrLogin ? false : true}
                                 />
 
                               </Form.Group>
@@ -348,6 +394,8 @@ function UpdateTeamFeedback() {
                                     data[index].empRating = e?.target?.value;
                                     setQuestions(data);
                                   }}
+                                  disabled = {isHrLogin ? false : true}
+
                                 >
                                   <option value='' hidden>Select Rating</option>
                                   <option value='1'>1</option>
@@ -368,11 +416,13 @@ function UpdateTeamFeedback() {
                             <br />
                              */}
                             {/* <div className="d-flex align-items-center justify-content-between"> */}
-                              <h5 className="card-title mb-0">Reviewer Feedback Form</h5>
+                              <h5 className="card-title">Reviewer Feedback Form</h5>
                             {/* </div> */}
                             {/* <hr style={{ borderColor: "white" }} /> */}
                           </>
                           )}
+                            <h5 className="card-title">     </h5>
+                            <hr style={{ borderColor: "white" }} />
 
                           <Card>
                             <Card.Body>
@@ -393,6 +443,8 @@ function UpdateTeamFeedback() {
                                     data[index].reviewerAnswer = e?.target?.value;
                                     setQuestions(data);
                                   }}
+                                  disabled = {item?.review_status == 2 && isHrLogin ? false : true}
+
                                 />
 
                               </Form.Group>
@@ -409,6 +461,7 @@ function UpdateTeamFeedback() {
                                     data[index].reviewerRating = e?.target?.value;
                                     setQuestions(data);
                                   }}
+                                  disabled = {item?.review_status == 2 && isHrLogin ? false : true}
                                 >
                                   <option value='' hidden>Select Rating</option>
                                   <option value='1'>1</option>
