@@ -48,7 +48,10 @@ export default function UserRestrictions(props) {
   const childProjectArr = ['/scheduler', '/team-scheduler'];
 
   const hasPermissions =
-    (Number(roleID) === 1 && isManager) || // All access if roleId is 1 and isManager is true
+    (Number(roleID) === 1 && isManager && permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))) 
+    || 
+    (Number(roleID) === 1 && !isManager) 
+    || 
     (permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))); // Normal permission check
 
   if (
