@@ -17,6 +17,14 @@ import EmployeeLeavesDetails from './EmployeeLeavesDetails.component';
 
 function EmployeeTeamLeaves(props) {
   const { location } = props;
+  const [isManager, setIsManager] = useState(null);
+
+  useEffect(() => {
+    const isProjectManager =
+      customFunctions?.getLocalStorage('isProjectManager');
+    setIsManager(JSON.parse(isProjectManager));
+  }, [customFunctions?.getLocalStorage('isProjectManager')]);
+
   // Declare columns
   const columns = [
     {
@@ -268,7 +276,7 @@ function EmployeeTeamLeaves(props) {
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               <div className="d-flex align-items-center justify-content-end">
-                <UserRestrictions permittedUsers={[4]} roleId={userRole}>
+                <UserRestrictions permittedUsers={isManager ? [1,4] : [4]} roleId={userRole}>
                   <a
                     href="#"
                     onClick={() => {

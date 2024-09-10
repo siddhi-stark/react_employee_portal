@@ -34,13 +34,12 @@ const menu = [
     roleaccess: [1, 2, 3, 4, 10],
   },
 
-  {
-    title: 'Leave',
-    path: '/accountant-leaves',
-    icon: 'leaves.svg',
-    submenu: [],
-    roleaccess: [8],
-  },
+  // {
+  //   title: 'Leave',
+  //   path: '/accountant-leaves',
+  //   icon: 'leaves.svg',
+  //   roleaccess: [8],
+  // },
 
   // {
   //   title: 'Project',
@@ -134,7 +133,6 @@ const menu = [
     title: 'Leaves',
     path: '/leaves',
     icon: 'leaves.svg',
-    submenu: [],
     roleaccess: [4, 7],
   },
   {
@@ -189,7 +187,7 @@ const menu = [
       {
         title: 'My Leaves',
         path: '/my-leaves',
-        roleaccess: [2, 3, 6, 5, 10],
+        roleaccess: [1, 2, 3, 6, 5, 10],
       },
       {
         title: 'Team Leaves',
@@ -264,7 +262,7 @@ const menu = [
     path: '/reports',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [7],
+    roleaccess: [1, 7],
   },
   {
     title: 'Performance Report',
