@@ -24,6 +24,8 @@ function UpdateTeamFeedback() {
   const [employeeId, setEmployeeId] = useState()
   const [empRoleId, setEmpRoleId] = useState()
   const [isHrLogin, setIsHrLogin] = useState(false)  
+  const [isAdmin, setIsAdmin] = useState(false)  
+  const [isProjectManager, setProjectManager] = useState(false)  
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
@@ -45,12 +47,17 @@ function UpdateTeamFeedback() {
   });
 
   console.log("isHrLogin", isHrLogin);
+  console.log("isAdmin", isAdmin);
+  
   
   useEffect(() => {
     if (empRoleId ==  5 || empRoleId ==  6){
       setIsHrLogin(true)
       setEmpDepartment(state?.state?.state?.departmentId)
-    }else{
+    }else if (empRoleId == 1){
+      setIsAdmin(true)
+    }
+    else{
       setEmpDepartment(localStorage.getItem('department'))
     } 
   
@@ -60,6 +67,7 @@ function UpdateTeamFeedback() {
   useEffect (()=>{
     setEmployeeId(localStorage.getItem('userId'))
     setEmpRoleId(localStorage.getItem('group'))
+    setProjectManager(localStorage.getItem('isProjectManager'))
   },[])
 
   useEffect(()=>{    
@@ -307,7 +315,7 @@ function UpdateTeamFeedback() {
                                 data.quarter = e?.target?.value;
                                 setFormData(data);
                               }}
-                              disabled = {formData?.review_status == 2 && isHrLogin ? false : true}
+                              disabled = {formData?.review_status == 2 && isHrLogin || isAdmin ? false : true}
 
                             >
                               <option value='' hidden>Select quarter type</option>
@@ -333,7 +341,7 @@ function UpdateTeamFeedback() {
                                 data.review_status = e?.target?.value;
                                 setFormData(data);
                               }}
-                              disabled = {formData?.review_status == 2 && isHrLogin ? false : true}
+                              disabled = {formData?.review_status == 2 && isHrLogin || isAdmin ? false : true}
                             >
                               <option value='' hidden>Select review status</option>
                               <option value='1'>Completed</option>
@@ -377,7 +385,7 @@ function UpdateTeamFeedback() {
                                     data[index].answer = e?.target?.value;
                                     setQuestions(data);
                                   }}
-                                  disabled = {isHrLogin ? false : true}
+                                  disabled = {isHrLogin || isAdmin ? false : true}
                                 />
 
                               </Form.Group>
@@ -394,7 +402,7 @@ function UpdateTeamFeedback() {
                                     data[index].empRating = e?.target?.value;
                                     setQuestions(data);
                                   }}
-                                  disabled = {isHrLogin ? false : true}
+                                  disabled = {isHrLogin || isAdmin ? false : true}
 
                                 >
                                   <option value='' hidden>Select Rating</option>
@@ -443,7 +451,7 @@ function UpdateTeamFeedback() {
                                     data[index].reviewerAnswer = e?.target?.value;
                                     setQuestions(data);
                                   }}
-                                  disabled = {item?.review_status == 2 && isHrLogin ? false : true}
+                                  disabled = {item?.review_status == 2 && isHrLogin || isAdmin ? false : true}
 
                                 />
 
@@ -461,7 +469,7 @@ function UpdateTeamFeedback() {
                                     data[index].reviewerRating = e?.target?.value;
                                     setQuestions(data);
                                   }}
-                                  disabled = {item?.review_status == 2 && isHrLogin ? false : true}
+                                  disabled = {item?.review_status == 2 && isHrLogin || isAdmin ? false : true}
                                 >
                                   <option value='' hidden>Select Rating</option>
                                   <option value='1'>1</option>

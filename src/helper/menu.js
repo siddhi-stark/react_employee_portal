@@ -273,25 +273,40 @@ const menu = [
   },
   {
     title: 'Employee Feedback',
-    path: '/employee-feedback',
+    path: '#',
+    redirect: false,
     icon: 'template.svg',
-    submenu: [],
-    roleaccess: [3, 4],
+    submenu: [
+      {
+        title: 'Employee Feedback',
+        path: '/employee-feedback',
+        icon: 'template.svg',
+        roleaccess: [3, 4],
+      },
+      {
+        title: 'Questionnaire',
+        path: '#',
+        icon: 'template.svg',
+        roleaccess: [1, 5, 6],
+      },
+      {
+        title: 'Employee Feedback Review',
+        path: '/employee-feedback-review',
+        icon: 'template.svg',
+        submenu: [],
+        roleaccess: [5, 6],
+      },
+      {
+        title: 'Employee Feedback Review',
+        path: '/employee-feedback-review-admins',
+        icon: 'template.svg',
+        submenu: [],
+        roleaccess: [1],
+      },
+    ],
+    roleaccess: [1, 3, 4, 5, 6],
   },
-  {
-    title: 'Employee Feedback',
-    path: '/employee-feedback-review',
-    icon: 'template.svg',
-    submenu: [],
-    roleaccess: [5, 6],
-  },
-  {
-    title: 'Employee Feedback',
-    path: '/employee-feedback-review',
-    icon: 'template.svg',
-    submenu: [],
-    roleaccess: [1],
-  },
+  
   {
     title: 'Employee Workload',
     path: '/employee-workload',

@@ -16,6 +16,7 @@ const items = [{ to: '/', label: 'Home' }, { label: 'Employee Feedback' }];
 function EmployeesFeedbackReviewByMangers() {
   const history = useHistory();
   const [title, setTitle] = useState('');
+  const [subTitle, setSubTitle] = useState('Team Feedback Details');
   const [empFeedbackdata, setEmpFeedbackdata] = useState([]);
   const [employeeId, setEmployeeId] = useState(0)
   const [isShowLoader, setShowLoader] = useState(false);
@@ -23,27 +24,29 @@ function EmployeesFeedbackReviewByMangers() {
   const [ShowDelete, setShowDelete] = useState(false);
   const [setTable, setTableToggle] = useState(false);
   const [setTableAll, setTableForAll] = useState(false)
+  const [showTeamDetails, setShowTeamDetails] = useState(false)
+  const [showPersonalDetails, setShowPersonalDetails] = useState(false)
   const [pageReferesh, setPageReferesh] = useState(false)
+  const [isProjectManager, setProjectManager] = useState(false)
+
+  useEffect(() => {
+    setTitle('Employee Feedback');
+    const isProjectManager =
+      customFunctions?.getLocalStorage('isProjectManager');
+    setProjectManager(JSON.parse(isProjectManager));
+  }, [localStorage.getItem('isProjectManager')]);
+
+  useEffect(() => {
+    if (isProjectManager) {
+      setSubTitle('Personal Feedback Details')
+    }
+  }, [isProjectManager])
+
 
   useEffect(() => {
     setTitle('Employee Feedback');
     getQuestionList();
-  }, []);
-
-  useEffect(() => {
-    setTitle('Employee Feedback');
-    getQuestionList();
-  }, [pageReferesh]);
-
-  useEffect(() => {
-    setTitle('Employee Feedback');
-    getQuestionList();
-  }, [setTable]);
-
-  useEffect(() => {
-    setTitle('Employee Feedback');
-    getQuestionList();
-  }, [setTableAll]);
+  }, [setTableAll, setTable]);
 
   function getQuarterByString(value) {
     if (value == 'April - June') {
@@ -64,19 +67,38 @@ function EmployeesFeedbackReviewByMangers() {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
     const params = {}
-    if (setTable) {
+    let localVar = localStorage.getItem('isProjectManager')
+    const manager = JSON.parse(localVar)
+
+    console.log('setTable', setTable);
+
+    console.log('showPersonalDetails', manager, showPersonalDetails, setTable);
+    
+    if (manager == true && !setTable && !showPersonalDetails) {
+        // setShowPersonalDetails(true)
+        // setTableToggle(true)
+        params.is_personal_feedback = true
+        params.is_show_table = true
+    }
+    else if(manager == true && setTable && showPersonalDetails){
+        console.log('Hello second')
+        // setShowPersonalDetails(false)
+        // setTableToggle(true)
+        params.is_reviewers_feedback = true
+        params.is_show_table = true
+      }
+    else if (!setTableAll && manager == false) {
+      setShowTeamDetails(true)
       params.is_reviewers_feedback = true
       params.is_show_table = true
     }
-    else if (setTableAll) {
-      params.is_show_table = true
-    }
     else {
-      params.is_personal_feedback = true
       params.is_show_table = true
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
+    console.log('url', url);
+    
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
       setEmpFeedbackdata(data?.data);
@@ -183,32 +205,35 @@ function EmployeesFeedbackReviewByMangers() {
         <div className="table">
           <div className="card p-2">
             <div className="d-flex align-items-center justify-content-between">
-              <h5 className="mb-0 mt-2">Personal Feedback Details</h5>
+              <h5 className="mb-0 mt-2">{subTitle}</h5>
               <div className="d-flex align-items-center justify-content-end">
 
-                {!setTableAll ? (<a
-                  href="#"
-                  onClick={() => {
-                    setTableForAll(true)
-                    setTableToggle(false)
-                  }}
-                  className="btn-link"
-                >
-                  All Employees Feedback
-                </a>) : (
+                {isProjectManager == false && !setTableAll && !setTable ? (
                   <a
                     href="#"
                     onClick={() => {
+                      setSubTitle('All Employees Feedback')
+                      setTableForAll(true)
+                      setTableToggle(false)
+                    }}
+                    className="btn-link"
+                  >
+                    All Employees Feedback
+                  </a>
+                ) : showTeamDetails ? (
+                  <a
+                    href="#"
+                    onClick={() => {
+                      setSubTitle('Team Feedback Details')
                       setTableForAll(false)
                       setTableToggle(false)
                     }}
                     className="btn-link ml-3"
                   >
-                    Personal Feedback Details
-                  </a>) 
-                  }
-                
-                {!setTable && (
+                    Team Feedback Details
+                  </a>):''}
+
+                {isProjectManager == true && !setTableAll && !setTable ? (
                   <a
                     href="#"
                     onClick={() => {
@@ -220,9 +245,33 @@ function EmployeesFeedbackReviewByMangers() {
                   >
                     Add Feedback
                   </a>
-                )}
+                ):''}
 
-                {!setTable ? (<a
+                {isProjectManager && !showPersonalDetails ? (<a
+                  href="#"
+                  onClick={() => {
+                    setSubTitle('Team Feedback Details')
+                    setShowPersonalDetails(true)
+                    setTableToggle(true)
+                  }}
+                  className="btn-link ml-3"
+                >
+                  Team Feedback Details
+                </a>) : isProjectManager ? (
+                  <a
+                    href="#"
+                    onClick={() => {
+                      setSubTitle('Personal Feedback Details')
+                      setShowPersonalDetails(false)
+                      setTableToggle(false)
+                    }}
+                    className="btn-link ml-3"
+                  >
+                    Personal Feedback Details
+                  </a>
+                ) : ''}
+
+                {/* <a
                   href="#"
                   onClick={() => {
                     setTableToggle(true)
@@ -230,17 +279,7 @@ function EmployeesFeedbackReviewByMangers() {
                   className="btn-link ml-3"
                 >
                   Team Feedback Details
-                </a>) : (
-                  <a
-                    href="#"
-                    onClick={() => {
-                      setTableToggle(false)
-                    }}
-                    className="btn-link ml-3"
-                  >
-                    Personal Feedback Details
-                  </a>
-                )}
+                </a> */}
 
               </div>
             </div>
@@ -297,23 +336,23 @@ function EmployeesFeedbackReviewByMangers() {
                               // href={`/add-feedback/${item?.id}`}
                               className="pl-2 me-2"
                             >
-                              {item?.review_status == 2 && setTableAll ? (
-                                <img
-                                  src="/images/edit.svg"
-                                  alt="edit icon"
-                                  style={{
-                                    filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
-                                  }}
-                                />
-                              ) :
+                              {/* {item?.review_status == 2 ? ( */}
+                              <img
+                                src="/images/edit.svg"
+                                alt="edit icon"
+                                style={{
+                                  filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
+                                }}
+                              />
+                              {/* ) :
                                 <img
                                   src="/images/view-eye.svg"
                                   alt="view icon"
                                   style={{
                                     filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
                                   }}
-                                />
-                              }
+                                /> */}
+                              {/* } */}
                             </a>
                           )}
                           <a

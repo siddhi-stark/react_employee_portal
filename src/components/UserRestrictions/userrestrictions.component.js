@@ -6,7 +6,7 @@ export default function UserRestrictions(props) {
 
   const [roleID, setRoleID] = useState(null);
   const [departmentID, setdepartmentID] = useState(null);
-  const [isManager, setIsManager] = useState(null);
+  // const [isManager, setIsManager] = useState(null);
 
   useEffect(() => {
     const roleId = customFunctions.getLocalStorage('group');
@@ -16,9 +16,9 @@ export default function UserRestrictions(props) {
   }, []);
 
   useEffect(() => {
-    const isProjectManager =
-      customFunctions?.getLocalStorage('isProjectManager');
-    setIsManager(JSON.parse(isProjectManager));
+    // const isProjectManager =
+    //   customFunctions?.getLocalStorage('isProjectManager');
+    // setIsManager(JSON.parse(isProjectManager));
   }, [customFunctions?.getLocalStorage('isProjectManager')]);
 
   const childRoute =
@@ -48,10 +48,9 @@ export default function UserRestrictions(props) {
   const childProjectArr = ['/scheduler', '/team-scheduler'];
 
   const hasPermissions =
-    (Number(roleID) === 1 && isManager && permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))) 
-    || 
-    (Number(roleID) === 1 && !isManager) 
-    || 
+    // (Number(roleID) === 1 && isManager && permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))) 
+    // || 
+    // (Number(roleID) === 1 && !isManager)  
     (permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))); // Normal permission check
 
   if (
