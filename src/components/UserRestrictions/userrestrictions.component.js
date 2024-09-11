@@ -15,11 +15,11 @@ export default function UserRestrictions(props) {
     setdepartmentID(JSON.parse(departmentId));
   }, []);
 
-  useEffect(() => {
-    // const isProjectManager =
-    //   customFunctions?.getLocalStorage('isProjectManager');
-    // setIsManager(JSON.parse(isProjectManager));
-  }, [customFunctions?.getLocalStorage('isProjectManager')]);
+  // useEffect(() => {
+  //   const isProjectManager =
+  //     customFunctions?.getLocalStorage('isProjectManager');
+  //   setIsManager(JSON.parse(isProjectManager));
+  // }, [customFunctions?.getLocalStorage('isProjectManager')]);
 
   const childRoute =
     children &&
@@ -50,7 +50,8 @@ export default function UserRestrictions(props) {
   const hasPermissions =
     // (Number(roleID) === 1 && isManager && permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))) 
     // || 
-    // (Number(roleID) === 1 && !isManager)  
+    // (Number(roleID) === 1 && !isManager) 
+    // || 
     (permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))); // Normal permission check
 
   if (

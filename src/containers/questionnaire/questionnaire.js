@@ -14,7 +14,7 @@ import Api from '../../helper/api';
 import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
-
+const items = [{ to: '/', label: 'Home' }, { label: 'Employee Feedback / Questionnaire' }];
 
 const Questionnaire = () => {
   const [pageTitle, setPageTitle] = useState('Resignation');
@@ -111,7 +111,7 @@ const Questionnaire = () => {
           <h2 className="main-content-title tx-24 mg-b-5">
             Employees Feedback Questionnaire
           </h2>
-          {/* <Breadcrumb items="Hello world" /> */}
+          <Breadcrumb items={items} />
           <div className="d-flex justify-content-end mb-3"></div>
         </div>
       </div>
@@ -177,7 +177,8 @@ const Questionnaire = () => {
                     <a
                       href="#"
                       onClick={() => {
-                        history.push('/add-questionnaire');
+                        const paramsData = { questionId: questionId, }
+                        history.push('/add-questionnaire', { state: paramsData });
                       }}
                       className="btn-link"
                     >
@@ -210,16 +211,8 @@ const Questionnaire = () => {
                                 <a
 
                                   onClick={() => {
-                                    if (!setTable) {
-                                      console.log('Hello from personal')
-                                      let paramsData = getParamsData(item?.id)
-                                      history.push(`/add-feedback/${item?.id}`, { state: paramsData });
-
-                                    } else {
-                                      console.log('Hello from Team')
-                                      let paramsData = getParamsData(item?.id)
-                                      history.push(`/update-feedback/${item?.id}`, { state: paramsData });
-                                    }
+                                    const paramsData = { questionId: item?.id, }
+                                    history.push('/add-questionnaire', { state: paramsData });
                                   }}
                                   className="pl-2 me-2"
                                 >
