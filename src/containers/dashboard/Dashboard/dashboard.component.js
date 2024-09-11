@@ -540,7 +540,7 @@ function Dashboard() {
                   className="d-flex justify-content-space-between flex-wrap"
                 >
                   <UserRestrictions
-                    permittedUsers={[2, 3, 4, 7, 10]}
+                    permittedUsers={isProjectManager ? [1, 2, 3, 4, 7, 10] : [2, 3, 4, 7, 10]}
                     userRole={userRole}
                   >
                     <div className="check-in">

@@ -55,7 +55,14 @@ function ToDoList(props) {
   const [timeMinutes, setTimeMinutes] = useState('');
   const [showSendReport, setShowSendReport] = useState(false);
   const [isShowLoader, setShowLoader] = useState(false);
+  const [isManager, setIsManager] = useState(null);
   // const [pmsId, setPmsId] = useState(null);
+
+  useEffect(() => {
+    const isProjectManager =
+      customFunctions?.getLocalStorage('isProjectManager');
+    setIsManager(JSON.parse(isProjectManager));
+  }, [customFunctions?.getLocalStorage('isProjectManager')]);
 
   const [pagination, setPagination] = useState({
     current_page: 1,
@@ -744,7 +751,7 @@ function ToDoList(props) {
       <section className="content-area">
         <div className="0">
           <UserRestrictions
-            permittedUsers={[2, 3, 4, 5, 6, 7]}
+            permittedUsers={isManager ? [1, 2, 3, 4, 7, 10] : [2, 3, 4, 7, 10]}
             roleId={userRole}
           >
             <Card>
