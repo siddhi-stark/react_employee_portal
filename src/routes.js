@@ -97,6 +97,8 @@ import EmployeeFeedback from './containers/EmployeeFeedback/employeeFeedback';
 import EmployeesFeedbackReviewByHR from './containers/EmployeeFeedback/employeesFeedbackReviewByHR';
 import EmployeesFeedbackReviewByMangers from './containers/EmployeeFeedback/employeesFeedbackReviewByMangers';
 import UpdateTeamFeedback from './containers/EmployeeFeedback/updateTeamFeedback'
+import Questionnaire from './containers/questionnaire/questionnaire'
+import AddQuestionnaire from './containers/questionnaire/addQuestionnaire'
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
 
@@ -314,6 +316,9 @@ function Routes() {
       <Route path="/employee-feedback-review-admins" exact component={EmployeesFeedbackReviewByMangers} />
       <Route path="/add-feedback/:id" exact component={AddEmployeeFeedback} />
       <Route path="/update-feedback/:id" exact component={UpdateTeamFeedback} />
+      
+      <Route path="/questionnaire" exact component={Questionnaire} />
+      <Route path="/add-questionnaire" exact component={AddQuestionnaire} />
 
       <Route component={NotFound} />
       

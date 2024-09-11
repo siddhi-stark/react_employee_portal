@@ -285,7 +285,7 @@ const menu = [
       },
       {
         title: 'Questionnaire',
-        path: '#',
+        path: '/questionnaire',
         icon: 'template.svg',
         roleaccess: [1, 5, 6],
       },
