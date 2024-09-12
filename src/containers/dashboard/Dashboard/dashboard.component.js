@@ -103,12 +103,12 @@ function Dashboard() {
     {
       id: 'clockout',
       label: 'Out',
-      roleAccess: [2, 3, 4, 5, 6, 7, 10],
+      roleAccess: [1,2, 3, 4, 5, 6, 7, 10],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [2, 3, 4, 5, 6, 7, 10],
+      roleAccess: [1,2, 3, 4, 5, 6, 7, 10],
     },
   ];
 
@@ -595,7 +595,7 @@ function Dashboard() {
             {/* <NoticePeriodLastDay /> */}
             {showClockIn && (
               <UserRestrictions
-                permittedUsers={[2, 3, 4, 5, 6, 7, 10]}
+                permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
                 roleId={userRole}
               >
                 <div className="p-3 mb-3 bg-success mt-3 bg-success-main log-time-bar">
@@ -1135,7 +1135,7 @@ function Dashboard() {
             )}
             </UserRestrictions>
             <UserRestrictions
-              permittedUsers={[2, 3, 4, 5, 6, 10]}
+              permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 10] : [2, 3, 4, 5, 6, 10]}
               roleId={userRole}
             >
               {showClockIn && !morningMail && (
@@ -1221,7 +1221,7 @@ function Dashboard() {
               </Card>
             </UserRestrictions>
             <UserRestrictions
-              permittedUsers={[2, 3, 4, 5, 6, 7, 10]}
+              permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
               roleId={userRole}
             >
               <div className="table-projects time-sheet-table">
@@ -1311,7 +1311,7 @@ function Dashboard() {
                 </div>
 
                 <UserRestrictions
-                  permittedUsers={[2, 3, 4, 5, 6, 7, 10]}
+                  permittedUsers={isProjectManager ? [1,2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
                   roleId={userRole}
                 >
                   <div className="col-xl-6">
