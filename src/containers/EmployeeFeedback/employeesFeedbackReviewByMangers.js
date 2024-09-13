@@ -10,6 +10,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import BootstapPaginationComponent from "../../components/Pagination/bootstrapPagination";
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Employee Feedback' }];
 
@@ -28,6 +29,11 @@ function EmployeesFeedbackReviewByMangers() {
   const [showPersonalDetails, setShowPersonalDetails] = useState(false)
   const [pageReferesh, setPageReferesh] = useState(false)
   const [isProjectManager, setProjectManager] = useState(false)
+  const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
+  const [totalCount, setTotalCount] = useState(10);
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  
 
   useEffect(() => {
     setTitle('Employee Feedback');
@@ -63,10 +69,13 @@ function EmployeesFeedbackReviewByMangers() {
     }
   }
 
-  const getQuestionList = async () => {
+  const getQuestionList = async (pageNo) => {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
-    const params = {}
+    const params = {
+      page: pageNo || currentPage,
+      limit,}
+
     let localVar = localStorage.getItem('isProjectManager')
     const manager = JSON.parse(localVar)
 
@@ -78,22 +87,22 @@ function EmployeesFeedbackReviewByMangers() {
         // setShowPersonalDetails(true)
         // setTableToggle(true)
         params.is_personal_feedback = true
-        params.is_show_table = true
+        // params.is_show_table = true
     }
     else if(manager == true && setTable && showPersonalDetails){
         console.log('Hello second')
         // setShowPersonalDetails(false)
         // setTableToggle(true)
         params.is_reviewers_feedback = true
-        params.is_show_table = true
+        // params.is_show_table = true
       }
     else if (!setTableAll && manager == false) {
       setShowTeamDetails(true)
       params.is_reviewers_feedback = true
-      params.is_show_table = true
+      // params.is_show_table = true
     }
     else {
-      params.is_show_table = true
+      // params.is_show_table = true
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
@@ -102,6 +111,15 @@ function EmployeesFeedbackReviewByMangers() {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
       setEmpFeedbackdata(data?.data);
+      const { current_page, total_count, limit } = data.paginator;
+      setPagination({
+        current_page: parseInt(current_page, 10),
+        totalItems: parseInt(total_count, 10),
+        itemsPerPage: parseInt(limit, 10),
+      });
+      setTotalCount(total_count);
+      setLimit(limit);
+      setCurrentPage(current_page);
       setShowLoader(false);
     } else {
       setShowLoader(false);
@@ -373,6 +391,17 @@ function EmployeesFeedbackReviewByMangers() {
                     : null}
                 </tbody>
               </table>
+              <BootstapPaginationComponent
+                activePage={pagination?.current_page}
+                itemsPerPage={pagination?.limit}
+                totalItems={pagination?.totalItems}
+                onPageChange={(page) => {
+                  setPagination({
+                    ...pagination,
+                    activePage: page
+                  });
+                  getQuestionList(page);
+                }} />
             </div>
           </div>
         </div>

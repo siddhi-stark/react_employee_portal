@@ -315,7 +315,7 @@ function UpdateTeamFeedback() {
                                 data.quarter = e?.target?.value;
                                 setFormData(data);
                               }}
-                              disabled = {formData?.review_status == 2 && isHrLogin || isAdmin ? false : true}
+                              // disabled = {formData?.review_status == 2 && isHrLogin || isAdmin ? false : true}
 
                             >
                               <option value='' hidden>Select quarter type</option>
@@ -341,7 +341,7 @@ function UpdateTeamFeedback() {
                                 data.review_status = e?.target?.value;
                                 setFormData(data);
                               }}
-                              disabled = {formData?.review_status == 2 && isHrLogin || isAdmin ? false : true}
+                              // disabled = {formData?.review_status == 2 && isHrLogin || isAdmin ? false : true}
                             >
                               <option value='' hidden>Select review status</option>
                               <option value='1'>Completed</option>
@@ -451,7 +451,7 @@ function UpdateTeamFeedback() {
                                     data[index].reviewerAnswer = e?.target?.value;
                                     setQuestions(data);
                                   }}
-                                  disabled = {item?.review_status == 2 && isHrLogin || isAdmin ? false : true}
+                                  // disabled = {item?.review_status == 2 && isHrLogin || isAdmin ? false : true}
 
                                 />
 
@@ -469,7 +469,7 @@ function UpdateTeamFeedback() {
                                     data[index].reviewerRating = e?.target?.value;
                                     setQuestions(data);
                                   }}
-                                  disabled = {item?.review_status == 2 && isHrLogin || isAdmin ? false : true}
+                                  // disabled = {item?.review_status == 2 && isHrLogin || isAdmin ? false : true}
                                 >
                                   <option value='' hidden>Select Rating</option>
                                   <option value='1'>1</option>

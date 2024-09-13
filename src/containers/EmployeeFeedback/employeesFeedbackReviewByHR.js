@@ -10,6 +10,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
+import BootstapPaginationComponent from "../../components/Pagination/bootstrapPagination";
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Employee Feedback' }];
 
@@ -24,7 +25,13 @@ function EmployeesFeedbackReviewByHR() {
   const [setTable, setTableToggle] = useState(false);
   const [setTableAll, setTableForAll] = useState(false)
   const [pageReferesh, setPageReferesh] = useState(false)
-
+  const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
+  const [totalCount, setTotalCount] = useState(10);
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+ 
+  console.log('pagination', pagination);
+  
   useEffect(() => {
     setTitle('Employee Feedback');
     getQuestionList();
@@ -60,14 +67,28 @@ function EmployeesFeedbackReviewByHR() {
     }
   }
 
-  const getQuestionList = async () => {
+  const getQuestionList = async (pageNo) => {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
-    const params = {is_show_table : true}    
+    // const params = {is_show_table : true}    
+    const params = {
+      page: pageNo || currentPage,
+      limit,
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
       setEmpFeedbackdata(data?.data);
+      const { current_page, total_count, limit } = data.paginator;
+      setPagination({
+        current_page: parseInt(current_page, 10),
+        totalItems: parseInt(total_count, 10),
+        itemsPerPage: parseInt(limit, 10),
+      });
+      setTotalCount(total_count);
+      setLimit(limit);
+      setCurrentPage(current_page);
       setShowLoader(false);
     } else {
       setShowLoader(false);
@@ -99,7 +120,7 @@ function EmployeesFeedbackReviewByHR() {
       empId: empId,
       quarter: quarter,
       year: year,
-      departmentId : departmentId,
+      departmentId: departmentId,
     }
     return params
   }
@@ -214,19 +235,19 @@ function EmployeesFeedbackReviewByHR() {
                             <a
 
                               onClick={() => {
-                                  console.log('Hello from Team')
-                                  let paramsData = getParamsData(item?.id)
-                                  history.push(`/update-feedback/${item?.id}`, { state: paramsData });
+                                console.log('Hello from Team')
+                                let paramsData = getParamsData(item?.id)
+                                history.push(`/update-feedback/${item?.id}`, { state: paramsData });
                               }}
                               className="pl-2 me-2"
                             >
-                                <img
-                                  src="/images/edit.svg"
-                                  alt="edit icon"
-                                  style={{
-                                    filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
-                                  }}
-                                /> 
+                              <img
+                                src="/images/edit.svg"
+                                alt="edit icon"
+                                style={{
+                                  filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
+                                }}
+                              />
                             </a>
                           )}
                           <a
@@ -247,6 +268,17 @@ function EmployeesFeedbackReviewByHR() {
                     : null}
                 </tbody>
               </table>
+              <BootstapPaginationComponent
+                activePage={pagination?.current_page}
+                itemsPerPage={pagination?.limit}
+                totalItems={pagination?.totalItems}
+                onPageChange={(page) => {
+                  setPagination({
+                    ...pagination,
+                    activePage: page
+                  });
+                  getQuestionList(page);
+                }} />
             </div>
           </div>
         </div>

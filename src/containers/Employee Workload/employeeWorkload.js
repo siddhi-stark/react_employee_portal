@@ -13,16 +13,16 @@ import CustomTable from 'stark-custom-datatable';
 
 const EmployeeWorkload = () => {
   const titleHeading = 'Employee Workload';
-  const [allEmployes, setAllEmployes] = useState([{label: 'All Employess', value: 'all_employess'},]);
+  const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' },]);
   const [projectList, setProjectList] = useState([]);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
-  const [selectedProject, setSelectedProject] = useState([{label: "All Projects", value: "all_project",}]);
-  const [selectedTaskStatus, setSelectedStatus] = useState([{label: 'All type', value: 3},])
-  console.log("selectedTaskStatus+++++",selectedTaskStatus)
+  const [selectedProject, setSelectedProject] = useState([{ label: "All Projects", value: "all_project", }]);
+  const [selectedTaskStatus, setSelectedStatus] = useState([{ label: 'All type', value: 3 },])
+  console.log("selectedTaskStatus+++++", selectedTaskStatus)
   const [userRole, setUserRole] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
   const [employeeList, setEmployeeList] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState([{label: 'All Employess', value: 'all_employess'},]);
+  const [selectedEmployee, setSelectedEmployee] = useState([{ label: 'All Employess', value: 'all_employess' },]);
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [rowData, setRowData] = useState('');
@@ -50,7 +50,7 @@ const EmployeeWorkload = () => {
       label: 'Completed',
       value: 2,
     },
-    
+
   ];
 
   //Column for table
@@ -115,9 +115,8 @@ const EmployeeWorkload = () => {
         function convertToHours(minutes) {
           const hours = Math.floor(minutes / 60);
           const minutesRemaining = minutes % 60;
-          return `${hours}:${
-            minutesRemaining < 10 ? '0' : ''
-          }${minutesRemaining}`;
+          return `${hours}:${minutesRemaining < 10 ? '0' : ''
+            }${minutesRemaining}`;
         }
         const minutes = rowData?.estimation;
         const totaltime = convertToHours(minutes);
@@ -137,9 +136,8 @@ const EmployeeWorkload = () => {
         function convertToHours(minutes) {
           const hours = Math.floor(minutes / 60);
           const minutesRemaining = minutes % 60;
-          return `${hours}:${
-            minutesRemaining < 10 ? '0' : ''
-          }${minutesRemaining}`;
+          return `${hours}:${minutesRemaining < 10 ? '0' : ''
+            }${minutesRemaining}`;
         }
         const minutes = rowData?.time_log;
         const totaltime = convertToHours(minutes);
@@ -219,25 +217,25 @@ const EmployeeWorkload = () => {
     setShowLoader(true);
     const endPoint = `${Api.projectListUrl}`;
     const params = {
-      sort_by:'name',
-      status:'active',
-      type:'all'
+      sort_by: 'name',
+      status: 'active',
+      type: 'all'
     };
-    const url = customFunctions.generateUrl(endPoint,params);
+    const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-console.log("data=========",data);
+    console.log("data=========", data);
     if (data && data.success) {
       const Tempprojects = [];
       data.data &&
         data.data.map((item) => {
-          console.log('item-----',item)
+          console.log('item-----', item)
           //only added standard user and who is not admin
-         // if(item?.roleId ==3  && item?.is_admin == 0){
+          // if(item?.roleId ==3  && item?.is_admin == 0){
           Tempprojects.push({
-              label: `${item?.name}`,
-              value: item?.id,
-            });
-          
+            label: `${item?.name}`,
+            value: item?.id,
+          });
+
         });
       const temData = [
         {
@@ -256,41 +254,41 @@ console.log("data=========",data);
     }
   };
 
-    //API integration for AllEmployee list
-    const getEmployeeName = async () => {
-      setShowLoader(true);
-  
-      const url = [1, 8].includes(userRole)
-        ? `${Api.employeeUrl}?is_employees=true&type=all&status=active`
-        : '';
-      const { data, error } = await AuthApi.getDataFromServer(url);
-      if (data && data?.success) {
-        setShowLoader(false);
-  
-        const allemp = [];
-        data?.data?.map((item) => {
-          return allemp.push({
-            label: item?.full_name,
-            value: item?.id,
-            joiningDate: item?.date_joined,
-          });
+  //API integration for AllEmployee list
+  const getEmployeeName = async () => {
+    setShowLoader(true);
+
+    const url = [1, 8].includes(userRole)
+      ? `${Api.employeeUrl}?is_employees=true&type=all&status=active`
+      : '';
+    const { data, error } = await AuthApi.getDataFromServer(url);
+    if (data && data?.success) {
+      setShowLoader(false);
+
+      const allemp = [];
+      data?.data?.map((item) => {
+        return allemp.push({
+          label: item?.full_name,
+          value: item?.id,
+          joiningDate: item?.date_joined,
         });
-        const all = [
-          {
-            label: 'All Employess',
-            value: 'all_employess',
-          },
-        ];
-        if ([1, 8].includes(userRole)) {
-          setAllEmployes([...all, ...allemp]);
-        } else {
-          setAllEmployes(allemp);
-        }
+      });
+      const all = [
+        {
+          label: 'All Employess',
+          value: 'all_employess',
+        },
+      ];
+      if ([1, 8].includes(userRole)) {
+        setAllEmployes([...all, ...allemp]);
       } else {
-        setShowLoader(false);
-        swal(error || 'Something went wrong', '', 'error');
+        setAllEmployes(allemp);
       }
-    };
+    } else {
+      setShowLoader(false);
+      swal(error || 'Something went wrong', '', 'error');
+    }
+  };
 
   //Employee detail table listing
   const getEmployeeById = async (pageNo) => {
@@ -302,26 +300,25 @@ console.log("data=========",data);
       end_date: customFunctions.getDate(toDate),
       page: page,
       limit: limit,
-    };  
-    
-    if (selectedTaskStatus?.value != 3){
+    };
+
+    if (selectedTaskStatus?.value != 3) {
       params.status = +selectedTaskStatus?.value
     }
-     if(selectedProject?.value !='all_project')
-      {
-        params.project_id = +selectedProject?.value;
-      }
-      if (selectedEmployee?.value != 'all_employess') {
-        params.user_id = +selectedEmployee?.value;
-      } 
-      if (selectedEmployee?.value == 'all_employess') {
-        params.page = page;
-        params.limit =limit;
-      }
-      if (selectedProject?.value == 'all_project') {
-        params.page = page;
-        params.limit =limit;
-      }
+    if (selectedProject?.value != 'all_project') {
+      params.project_id = +selectedProject?.value;
+    }
+    if (selectedEmployee?.value != 'all_employess') {
+      params.user_id = +selectedEmployee?.value;
+    }
+    if (selectedEmployee?.value == 'all_employess') {
+      params.page = page;
+      params.limit = limit;
+    }
+    if (selectedProject?.value == 'all_project') {
+      params.page = page;
+      params.limit = limit;
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success == true) {
@@ -355,13 +352,12 @@ console.log("data=========",data);
       page: 1,
       limit: 10,
     };
-    if(selectedProject?.value !='all_project')
-      {
-        params.project_id = +selectedProject?.value;
-      }
-      if (selectedEmployee?.value != 'all_employess') {
-        params.user_id = +selectedEmployee?.value;
-      } 
+    if (selectedProject?.value != 'all_project') {
+      params.project_id = +selectedProject?.value;
+    }
+    if (selectedEmployee?.value != 'all_employess') {
+      params.user_id = +selectedEmployee?.value;
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {
@@ -388,7 +384,7 @@ console.log("data=========",data);
     link.remove();
   };
 
-  const isValid = () => {};
+  const isValid = () => { };
 
   const isClear = () => {
     setFilterErr('');
@@ -430,7 +426,7 @@ console.log("data=========",data);
             </div>
           )}
           <Row>
-          <Col sm={3}>
+            <Col sm={3}>
               <DropdownInput
                 label="Select Project"
                 options={projectList}
@@ -442,7 +438,7 @@ console.log("data=========",data);
                   // setToDate("");
                   setRowData("");
                 }}
-                // isMulti
+              // isMulti
               />
             </Col>
             <Col sm={2}>
@@ -460,7 +456,7 @@ console.log("data=========",data);
                   setRowData('');
                   setFilterErr('');
                 }}
-                // isMulti
+              // isMulti
               />
             </Col>
             <Col sm={2}>
@@ -475,10 +471,10 @@ console.log("data=========",data);
                   setRowData('');
                   setFilterErr('');
                 }}
-                // isMulti
+              // isMulti
               />
             </Col>
-  
+
             {/* {selectedEmployee?.value != "all_employess" && ( */}
             <>
               <Col sm={2}>
