@@ -308,6 +308,14 @@ const menu = [
   },
   
   {
+    title: 'Employee KRA KPI',
+    path: '/kra-kpi',
+    icon: 'technology.svg',
+    submenu: [],
+    roleaccess: [1, 8],
+  },
+
+  {
     title: 'Employee Workload',
     path: '/employee-workload',
     icon: 'timesheet.svg',

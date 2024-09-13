@@ -242,7 +242,8 @@ export default class Api extends Component {
   static empFeedbackUrl = `${Api.baseUrl}employee-feedback-review/`
 
   static questionUrl = `${Api.baseUrl}questionnaire/`
-
+  
+  static kraKpiUrl = `${Api.baseUrl}kra-kpi-forms/`
 
   // Get base URL of APIs
   static getBaseUrl() {
@@ -251,8 +252,8 @@ export default class Api extends Component {
     let url = '';
     switch (env) {
       case 'production':
-        url = 'https://portalsapi.starkdigital.in/api/v1/';
-        // url = 'https://stage-portalsapi.starkdigital.in/api/v1/';
+        // url = 'https://portalsapi.starkdigital.in/api/v1/';
+        url = 'https://stage-portalsapi.starkdigital.in/api/v1/';
         // url = 'https://liveapi.starkdigital.in/api/v1/'; // for emp Production
         // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/'; // for emp Production
         // url = 'https://portalsapi.reviewtestlink.com/api/v1/';

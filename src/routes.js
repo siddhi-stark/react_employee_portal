@@ -99,6 +99,10 @@ import EmployeesFeedbackReviewByMangers from './containers/EmployeeFeedback/empl
 import UpdateTeamFeedback from './containers/EmployeeFeedback/updateTeamFeedback'
 import Questionnaire from './containers/questionnaire/questionnaire'
 import AddQuestionnaire from './containers/questionnaire/addQuestionnaire'
+import KraKpi from './containers/kra kpi/kraKpi'
+import AddKraKpi from './containers/kra kpi/addKraKpi'
+
+
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
 
@@ -320,6 +324,9 @@ function Routes() {
       <Route path="/questionnaire" exact component={Questionnaire} />
       <Route path="/add-questionnaire" exact component={AddQuestionnaire} />
 
+      <Route path="/kra-kpi" exact component={KraKpi} />
+      <Route path="/add-kra-kpi" exact component={AddKraKpi} />
+      
       <Route component={NotFound} />
       
     </Switch>
