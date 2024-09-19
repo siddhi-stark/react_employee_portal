@@ -312,7 +312,14 @@ const menu = [
     path: '/kra-kpi',
     icon: 'technology.svg',
     submenu: [],
-    roleaccess: [1, 8],
+    roleaccess: [1, 5, 6, 8],
+  },
+  {
+    title: 'Employee KRA KPI',
+    path: '/kra-kpi-employees',
+    icon: 'technology.svg',
+    submenu: [],
+    roleaccess: [3, 4],
   },
 
   {

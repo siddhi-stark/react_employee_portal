@@ -100,6 +100,7 @@ import UpdateTeamFeedback from './containers/EmployeeFeedback/updateTeamFeedback
 import Questionnaire from './containers/questionnaire/questionnaire'
 import AddQuestionnaire from './containers/questionnaire/addQuestionnaire'
 import KraKpi from './containers/kra kpi/kraKpi'
+import KraKpiEmployees from './containers/kra kpi/kraKpiEmployees'
 import AddKraKpi from './containers/kra kpi/addKraKpi'
 
 
@@ -325,7 +326,9 @@ function Routes() {
       <Route path="/add-questionnaire" exact component={AddQuestionnaire} />
 
       <Route path="/kra-kpi" exact component={KraKpi} />
+      <Route path="/kra-kpi-employees" exact component={KraKpiEmployees} />
       <Route path="/add-kra-kpi" exact component={AddKraKpi} />
+      
       
       <Route component={NotFound} />
       

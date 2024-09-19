@@ -56,7 +56,7 @@ const KraKpi = () => {
 
   const getEmployeeName = async () => {
     setShowLoader(true);
-    const url = [1, 8].includes(userRole)
+    const url = [1, 5, 6, 8].includes(userRole)
       ? `${Api.employeeUrl}?type=all&status=active&hide_admin=1`
       : '';
     const { data, error } = await AuthApi.getDataFromServer(url);
@@ -84,7 +84,6 @@ const KraKpi = () => {
     const params = {
       page: pageNo,
       limit,
-      show_table: true,
     };
 
     if (selectedEmployeeId !== 'all_employess') {
@@ -107,6 +106,7 @@ const KraKpi = () => {
           to_user: item.to_user,
           average_rating: item.average_rating,
           created_at: item.created_at,
+          to_user_id: item.to_user_id,
         }));
 
         const { current_page, total_count, limit } = data.paginator;
@@ -154,16 +154,18 @@ const KraKpi = () => {
     {
       id: 'action',
       label: 'Action',
-      render: ({ id }) => (
+      render: ({ id, created_at, to_user_id, to_user }) => (
         <>
+        {console.log("Hello world ", id, created_at, to_user_id)}
           <a
             href="/"
             onClick={(e) => {
               e.preventDefault();
-              history.push('/add-questionnaire', { state: { feedbackId: id } });
+              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate : created_at, toUserId : to_user_id, toUserName : to_user } });
             }}
           >
-            <Image src="/images/edit-button.svg" alt="Edit" />
+            <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+
           </a>
           <a
             href="/"
@@ -185,9 +187,9 @@ const KraKpi = () => {
     const url = customFunctions.generateUrl(`${Api.kraKpiUrl}${feedbackId}`);
     const { data } = await AuthApi.deleteDataFromServer(url);
     if (data.success) {
-      swal(data.message || 'Deleted successfully', '', 'success').then(() => {
+      swal('Deleted successfully', '', 'success').then(() => {
         setShowDelete(false);
-        setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
+        setSelectedEmployee()
         setJoiningDate(null)
         setRefereshPage(true)
 
@@ -204,7 +206,7 @@ const KraKpi = () => {
       <Card>
         <Card.Body>
           <Row>
-            <Col>
+            <Col sm={2}>
               <DropdownInput
                 options={allEmployes}
                 defaultValue={selectedEmployee}
@@ -214,7 +216,7 @@ const KraKpi = () => {
                 }}
               />
             </Col>
-            <Col>
+            <Col sm={2}>
               <Datepicker
                 className="form-control"
                 selected={joiningDate}
@@ -229,6 +231,7 @@ const KraKpi = () => {
               <Button variant="primary" onClick={applyFilters}>Apply</Button>
               <Button variant="secondary" onClick={() => {
                 setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
+                setSelectedEmployeeId('all_employess')
                 setJoiningDate(null)
                 setRefereshPage(true)
               }
@@ -257,18 +260,18 @@ const KraKpi = () => {
                 Add Feedback
               </a>
             )}
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              showPagination={true}
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                currentPage: pagination.current_page,
-                handlePageChange: (page) => setCurrentPage(page),
-              }}
-            />
           </div>
+          <CustomTable
+            columns={columns}
+            rows={rowData}
+            showPagination={true}
+            paginationProps={{
+              totalItems: totalCount,
+              itemsPerPage: limit,
+              currentPage: pagination.current_page,
+              handlePageChange: (page) => setCurrentPage(page),
+            }}
+          />
         </Card.Body>
       </Card>
 
@@ -280,8 +283,13 @@ const KraKpi = () => {
           confirmBtnText="Yes, Delete"
           confirmBtnBsStyle="danger"
           cancelBtnBsStyle="light"
-          onConfirm={deleteTask}
-          onCancel={() => setShowDelete(false)}
+          onConfirm={() => {
+            deleteTask();
+            setShowDelete(false);
+          }}
+          onCancel={() => {
+            setShowDelete(false);
+          }}
         />
       )}
     </>

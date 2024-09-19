@@ -244,7 +244,13 @@ export default class Api extends Component {
   static questionUrl = `${Api.baseUrl}questionnaire/`
   
   static kraKpiUrl = `${Api.baseUrl}kra-kpi-forms/`
+  
+  static kraKpiQuestionnaire = `${Api.baseUrl}kra-kpi-questionnaire/`
 
+  static kraKpiAdd = `${Api.baseUrl}kra-kpi/`
+
+
+  
   // Get base URL of APIs
   static getBaseUrl() {
     const env = 'production';
