@@ -7,6 +7,7 @@ import { Helmet, ModalInput, TextInput } from '../../../components/FormInputs';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
+import '../../../helper/employeePortal.css';
 import ToDoList from '../../ToDoList/toDoList.component';
 import customFunctions from '../../../helper/customFunctions';
 import Table from '../../../components/ReactTable/simpletable.component';
@@ -59,6 +60,15 @@ function Dashboard() {
 
   const [events, setEvents] = useState([]);
   const dashboardKey = 'Dashboard';
+  const [kraKpiNotification, setKraKpiNotification] = useState(false);
+
+  useEffect(() => {
+    const today = new Date().getDay();
+    if (today === 5) {
+      setKraKpiNotification(true);
+    }
+  }, []);
+
 
   const d = new Date();
   const day = d.getDate(); // eslint-disable-line
@@ -103,12 +113,12 @@ function Dashboard() {
     {
       id: 'clockout',
       label: 'Out',
-      roleAccess: [1,2, 3, 4, 5, 6, 7, 10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
     },
     {
       id: 'total',
       label: 'Total Working',
-      roleAccess: [1,2, 3, 4, 5, 6, 7, 10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
     },
   ];
 
@@ -137,7 +147,7 @@ function Dashboard() {
         if ([2, 3, 4, 7, 10].includes(Number(roleId))) {
           swal('Please Clock In first and Send Report', '', 'warning');
         }
-        if(userRole === 1 && isProjectManager){
+        if (userRole === 1 && isProjectManager) {
           swal('Please Clock In first and Send Report', '', 'warning');
         }
         setShowLoader(false);
@@ -398,9 +408,9 @@ function Dashboard() {
       message:
         newData && newData.length && newData[0].greetMessage
           ? newData &&
-            newData.length &&
-            newData[0].greetMessage &&
-            newData[0].greetMessage
+          newData.length &&
+          newData[0].greetMessage &&
+          newData[0].greetMessage
           : newGreetData && newGreetData.length && newGreetData[0].message,
     };
 
@@ -593,6 +603,25 @@ function Dashboard() {
               </Row>
             </Jumbotron>
             {/* <NoticePeriodLastDay /> */}
+            
+            {showClockIn && kraKpiNotification && (
+              <UserRestrictions
+                permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
+                roleId={userRole}
+              >
+                <div className="notification-message" onClick={()=>{
+                  if (userRole == 3 || userRole == 4){
+                    history.push('/kra-kpi-employees')
+                  }
+                  else{
+                    history.push('/kra-kpi')
+                  }
+                }}>
+                📋 Reminder: Don't forget to complete your KRA and KPI forms for this Week!
+                </div>
+              </UserRestrictions>
+            )}
+
             {showClockIn && (
               <UserRestrictions
                 permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
@@ -600,7 +629,7 @@ function Dashboard() {
               >
                 <div className="p-3 mb-3 bg-success mt-3 bg-success-main log-time-bar">
                   <div className="img-text">
-                    Today's Logged Time: {`${totalHrs}`}
+                    Today's Logged Time
                   </div>
                 </div>
               </UserRestrictions>
@@ -936,10 +965,10 @@ function Dashboard() {
 
                                       {(appr.comment_allow &&
                                         Number(empdata.id) ===
-                                          Number(UserID)) ||
+                                        Number(UserID)) ||
                                         (appr.comment_allow &&
                                           Number(empdata.id) !==
-                                            Number(UserID) && (
+                                          Number(UserID) && (
                                             <div className="birth-input-field mt-3">
                                               <TextInput
                                                 onInputChange={(e) => {
@@ -1075,7 +1104,7 @@ function Dashboard() {
                   <Card classNameName="dark-blue-bg mb-4 col-md-12">
                     <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
                       {confirmationEmployee &&
-                      confirmationEmployee.length > 0 ? (
+                        confirmationEmployee.length > 0 ? (
                         <div className="purple-bg card-header">
                           <span>Upcoming Confirmation</span>
                         </div>
@@ -1128,11 +1157,11 @@ function Dashboard() {
               </UserRestrictions>
             </div>
             <UserRestrictions permittedUsers={[5, 6]} roleId={userRole}>
-            {(!isProjectManager && userRole === 1) && (
-              <div className="mt-0">
-                <EmployeeListComponent />
-              </div>
-            )}
+              {(!isProjectManager && userRole === 1) && (
+                <div className="mt-0">
+                  <EmployeeListComponent />
+                </div>
+              )}
             </UserRestrictions>
             <UserRestrictions
               permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 10] : [2, 3, 4, 5, 6, 10]}
@@ -1311,7 +1340,7 @@ function Dashboard() {
                 </div>
 
                 <UserRestrictions
-                  permittedUsers={isProjectManager ? [1,2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
+                  permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
                   roleId={userRole}
                 >
                   <div className="col-xl-6">
@@ -1428,8 +1457,8 @@ function Dashboard() {
                     </div>
                   </div> */}
 
-                  
-         
+
+
 
             {/* <div className="social-media">
               <div className="card flex-fill w-100">
@@ -1479,5 +1508,15 @@ function Dashboard() {
     </>
   );
 }
+
+const notificationStyle = {
+  backgroundColor: '#E0E4FF', // Soft blue/purple background to match the portal theme
+  padding: '10px',
+  margin: '10px 0',
+  borderRadius: '5px',
+  color: '#333', // Dark text for readability
+  fontWeight: 'bold',
+  border: '1px solid #B3B6FF' // Light border to match the theme
+};
 
 export default withRouter(Dashboard);

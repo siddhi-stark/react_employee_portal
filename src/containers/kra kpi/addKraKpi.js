@@ -13,7 +13,7 @@ import Loader from '../../components/Loader';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 
-const items = [{ to: '/employee-feedback', label: 'Employee Feedback' }, { label: 'Add Employee Feedback' }];
+const items = [{ to: '/employee-feedback', label: 'Employee KRA-KPI' }, { label: 'Fill KRA-KPI' }];
 
 const AddKraKpi = () => {
   const validator = useRef(new SimpleReactValidator());
@@ -61,7 +61,7 @@ const AddKraKpi = () => {
   useEffect(() => {
     setEmployeeId(localStorage.getItem('userId'))
     setEmpDepartment(localStorage.getItem('department'))
-    setTitle('Add Employee Feedback');
+    setTitle('Fill KRA-KPI');
   }, []);
 
   function getCategoryById(categoryId) {
@@ -136,18 +136,6 @@ const AddKraKpi = () => {
       swal(error || 'Something went wrong', '', 'error');
     }
   };
-
-  const departmentList = [
-    { lable: "Management", value: 1 },
-    { lable: "Development", value: 2 },
-    { lable: "Design", value: 3 },
-    { lable: "Quality Analysis", value: 4 },
-    { lable: "Other", value: 5 },
-    { lable: "Marketing", value: 6 },
-    { lable: "Support Team", value: 7 },
-    { lable: "Account", value: 8 },
-    { lable: "Project Management", value: 9 }
-  ]
 
   const getUpdateData = async () => {
     console.log('inside update function');
@@ -264,12 +252,11 @@ const AddKraKpi = () => {
       };
 
     const response = await AuthApi.postDataToServer(Api.kraKpiAdd, obj);
-    console.log('response', response);
     let { data, message } = response;
-    if(!message){
+    if (!message) {
       message = response?.data?.message
     }
- 
+    
     if (data) {
       swal(message[0], '', 'success').then(() => {
         if ([3, 4].includes(userRole)) {
@@ -338,7 +325,7 @@ const AddKraKpi = () => {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Add Employee Feedback</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Fill KRA-KPI</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -347,25 +334,25 @@ const AddKraKpi = () => {
         <Card>
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">Add Feedback</h5>
+              <h5 className="card-title mb-0 mt-2 ">KRA-KPI Form</h5>
             </div>
             <hr style={{ borderColor: "white" }} />
             <Card>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-between">
                   <h5 className="card-title mb-0 mt-2 ">Select Quarter and Review Status</h5>
-                    <Button
-                      variant="secondary"
-                      className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
-                      type="submit"
-                      onClick={handleClear}
-                    >
-                      Back
-                    </Button>
+                  <Button
+                    variant="secondary"
+                    className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                    type="submit"
+                    onClick={handleClear}
+                  >
+                    Back
+                  </Button>
                 </div>
                 <hr style={{ borderColor: "white" }} />
 
-                <Form onSubmit={handleSubmit}>
+                <Form >
                   <Card>
                     <Card.Body>
                       <Row>
@@ -391,6 +378,16 @@ const AddKraKpi = () => {
                               <option value='' hidden>Select Department</option>
                               <option value='1'>Management</option>
                               <option value='2'>Development</option>
+                              <option value='3'>Design</option>
+                              <option value='4'>Quality Analysis</option>
+                              <option value='5'>Other</option>
+                              <option value='6'>Marketing</option>
+                              <option value='7'>Support Team</option>
+                              <option value='8'>Account</option>
+                              <option value='9'>Project Management</option>
+
+
+
                             </Form.Control>
                             <p className='text-danger'>{validator.current.message(
                               'Department',
@@ -439,7 +436,7 @@ const AddKraKpi = () => {
                               <option value='' hidden>Select Position</option>
                               <option value='1'>Senior</option>
                               <option value='2'>Junior</option>
-                              <option value='3'>Both</option>
+                              <option value='3'>Senior & Junior</option>
                             </Form.Control>
                             <p className='text-danger'>{validator.current.message(
                               'Position',
@@ -461,7 +458,7 @@ const AddKraKpi = () => {
                           </Col>
                           <Col sm={2}>
                             <Form.Label>
-                              Rated By <span className="text-danger">*</span>
+                              Reviewed By <span className="text-danger">*</span>
                             </Form.Label>
                             <Form.Control
                               type='text'
@@ -475,9 +472,9 @@ const AddKraKpi = () => {
                             <Button className='mt-4' variant="primary" onClick={() => {
                               console.log('validator.current.errorMessages', validator.current.errorMessages);
                               validator.current.errorMessages.EmployeeRating = null
-                              validator.current.errorMessages.metric = null
+                              validator.current.errorMessages.review = null
                               validator.current.fields.EmployeeRating = true
-                              validator.current.fields.metric = true
+                              validator.current.fields.review = true
 
                               if (validator.current.allValid()) {
                                 console.log('inside valid');
@@ -499,13 +496,18 @@ const AddKraKpi = () => {
 
                         </Col>
                       </Row>
+                      {questions && questions.length != 0 && showTable && departments && (
+                        <Row>
+                          <div className="d-flex align-items-center justify-content-between">
+                            <p className="text-muted">Note : If you do not have an answer to a question, please enter "N/A" as the response for that question.</p>
+                          </div>
+                        </Row>
+                      )}
+
                     </Card.Body>
                   </Card>
 
                   <Row>
-                    {console.log('questions && showTable && departments', questions, showTable, departments)
-                    }
-
                     {questions && questions.length != 0 && showTable && departments ? (
                       // Group questions by category ID and render each group in its own card
                       questions.reduce((acc, question) => {
@@ -523,7 +525,6 @@ const AddKraKpi = () => {
                         <Col sm={12} key={category}>
                           <Card>
                             <Card.Body>
-                              {/* {console.log("Hello World", getCategoryById(category))} */}
                               <h5 className="card-title">Category : {category && getCategoryById(category) ? getCategoryById(category) : category} Feedback Form</h5>
                               <hr />
                               {questions.filter(q => q.category === Number(category)).map((item, index) => (
@@ -546,8 +547,8 @@ const AddKraKpi = () => {
                                   <p className='text-danger'>
                                     {validator.current.message(
 
-                                      `metric`,
-                                      item?.metric,
+                                      `review`,
+                                      item?.review,
                                       'required'
                                     )}</p>
                                   <br />
@@ -568,30 +569,33 @@ const AddKraKpi = () => {
                                   />
 
                                   <br />
-                                  <Form.Label>Employee Rating <span className="text-danger">*</span></Form.Label>
-                                  <Form.Control
-                                    as='select'
-                                    value={item?.rating}
-                                    onChange={(e) => {
-                                      const data = [...questions];
-                                      data[questions.indexOf(item)].rating = e?.target?.value;
-                                      setQuestions(data);
-                                    }}
-                                    disabled={isViewOnly ? true : false}
-                                  >
-                                    <option value='' hidden>Select Rating</option>
-                                    <option value='0'>0</option>
-                                    <option value='1'>1</option>
-                                    <option value='2'>2</option>
-                                    <option value='3'>3</option>
-                                    <option value='4'>4</option>
-                                    <option value='5'>5</option>
-                                  </Form.Control>
-                                  <p className='text-danger'>{validator.current.message(
-                                    'EmployeeRating',
-                                    item?.rating,
-                                    'required|numeric|max:5|min:0'
-                                  )}</p>
+                                  <Col sm={1}>
+
+                                    <Form.Label>Employee Rating <span className="text-danger">*</span></Form.Label>
+                                    <Form.Control
+                                      as='select'
+                                      value={item?.rating}
+                                      onChange={(e) => {
+                                        const data = [...questions];
+                                        data[questions.indexOf(item)].rating = e?.target?.value;
+                                        setQuestions(data);
+                                      }}
+                                      disabled={isViewOnly ? true : false}
+                                    >
+                                      <option value='' hidden>Select Rating</option>
+                                      <option value='0'>0</option>
+                                      <option value='1'>1</option>
+                                      <option value='2'>2</option>
+                                      <option value='3'>3</option>
+                                      <option value='4'>4</option>
+                                      <option value='5'>5</option>
+                                    </Form.Control>
+                                    <p className='text-danger'>{validator.current.message(
+                                      'EmployeeRating',
+                                      item?.rating,
+                                      'required|numeric|max:5|min:0'
+                                    )}</p>
+                                  </Col>
                                 </Form.Group>
                               ))}
                             </Card.Body>
@@ -654,7 +658,7 @@ const AddKraKpi = () => {
 
             </div>
           </Card.Body>
-        </Card>
+        </Card >
         {showAddPopUp && (
           <SweetAlert
             warning
@@ -672,8 +676,9 @@ const AddKraKpi = () => {
               setAddPopUp(false)
             }}
           />
-        )}
-      </section>
+        )
+        }
+      </section >
     </>
   );
 }

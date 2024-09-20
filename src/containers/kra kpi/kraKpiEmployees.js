@@ -12,6 +12,7 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 
+const items = [{ to: '/', label: 'Home' }, { label: 'Employees KRA-KPI' }];
 
 const KraKpiEmployees = () => {
   const history = useHistory();
@@ -31,25 +32,28 @@ const KraKpiEmployees = () => {
   const [joiningDate, setJoiningDate] = useState(null);
   const [refereshPage, setRefereshPage] = useState(false);
   const [setTable, setTableToggle] = useState(false);
+  const [title, setTitle] = useState('');
+
 
 
   useEffect(() => {
+    setTitle("Employees KRA-KPI");
     if (!apiCalled) {
       getKraKpiDetails();
     }
-  }, [currentPage]);
+  }, [currentPage, refereshPage]);
 
   useEffect(() => {
-    getKraKpiDetails();
-  }, [refereshPage])
+    setTitle("Employees KRA-KPI")
 
-  useEffect(() => {
     if (userRole) {
       getEmployeeName();
     }
   }, [userRole]);
 
   useEffect(() => {
+    setTitle("Employees KRA-KPI")
+
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
   }, []);
@@ -76,7 +80,7 @@ const KraKpiEmployees = () => {
   };
 
   const getKraKpiDetails = async (pageNo = currentPage) => {
-    if (apiCalled) return;
+    if (apiCalled) return; // Prevent duplicate calls
 
     setApiCalled(true);
     setShowLoader(true);
@@ -97,7 +101,6 @@ const KraKpiEmployees = () => {
     try {
       const { data } = await AuthApi.getDataFromServer(url);
       setShowLoader(false);
-      setApiCalled(false);
 
       if (data && data.success) {
         const finalData = data.data.map((item, index) => ({
@@ -123,9 +126,10 @@ const KraKpiEmployees = () => {
         swal(data.message || 'Error fetching data', '', 'error');
       }
     } catch (error) {
-      setShowLoader(false);
-      setApiCalled(false);
       swal('Error fetching data', '', 'error');
+    } finally {
+      setShowLoader(false);
+      setApiCalled(false); 
     }
   };
 
@@ -198,9 +202,12 @@ const KraKpiEmployees = () => {
 
   return (
     <>
-      <Helmet title="Employee Feedback Questionnaire" />
-      <Breadcrumb items={[{ to: '/', label: 'Home' }, { label: 'Employee Feedback / Questionnaire' }]} />
-      <Loader showLoader={isShowLoader} />
+      <Helmet title={title} />
+      <div className="title-breadcrumb-section">
+        <h2 className="main-content-title tx-24 mg-b-5">Employees KRA-KPI</h2>
+        <Breadcrumb items={items} />
+      </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <Card>
         <Card.Body>

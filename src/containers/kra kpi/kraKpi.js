@@ -12,6 +12,7 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 
+const items=[{ to: '/', label: 'Home' }, { label: 'Employees KRA-KPI' }];
 
 const KraKpi = () => {
   const history = useHistory();
@@ -31,25 +32,26 @@ const KraKpi = () => {
   const [joiningDate, setJoiningDate] = useState(null);
   const [refereshPage, setRefereshPage] = useState(false);
   const [setTable, setTableToggle] = useState(false);
+  const [title, setTitle] = useState('');
 
 
   useEffect(() => {
+    setTitle("Employees KRA-KPI");
     if (!apiCalled) {
       getKraKpiDetails();
     }
-  }, [currentPage]);
+  }, [currentPage, refereshPage]);
+  
 
   useEffect(() => {
-    getKraKpiDetails();
-  }, [refereshPage])
-
-  useEffect(() => {
+    setTitle("Employees KRA-KPI")
     if (userRole) {
       getEmployeeName();
     }
   }, [userRole]);
 
   useEffect(() => {
+    setTitle("Employees KRA-KPI")
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
   }, []);
@@ -76,29 +78,28 @@ const KraKpi = () => {
   };
 
   const getKraKpiDetails = async (pageNo = currentPage) => {
-    if (apiCalled) return;
-
+    if (apiCalled) return; // Prevent duplicate calls
+  
     setApiCalled(true);
     setShowLoader(true);
-
+  
     const params = {
       page: pageNo,
       limit,
     };
-
+  
     if (selectedEmployeeId !== 'all_employess') {
       params.user = selectedEmployeeId;
     }
     if (joiningDate) {
       params.start_date = customFunctions.getDate(joiningDate);
     }
-
+  
     const url = customFunctions.generateUrl(Api.kraKpiUrl, params);
     try {
       const { data } = await AuthApi.getDataFromServer(url);
       setShowLoader(false);
-      setApiCalled(false);
-
+  
       if (data && data.success) {
         const finalData = data.data.map((item, index) => ({
           no: (pagination.current_page - 1) * 10 + index + 1,
@@ -108,7 +109,7 @@ const KraKpi = () => {
           created_at: item.created_at,
           to_user_id: item.to_user_id,
         }));
-
+  
         const { current_page, total_count, limit } = data.paginator;
         setRowData(finalData);
         setPagination({
@@ -123,9 +124,10 @@ const KraKpi = () => {
         swal(data.message || 'Error fetching data', '', 'error');
       }
     } catch (error) {
-      setShowLoader(false);
-      setApiCalled(false);
       swal('Error fetching data', '', 'error');
+    } finally {
+      setShowLoader(false);
+      setApiCalled(false); 
     }
   };
 
@@ -156,12 +158,12 @@ const KraKpi = () => {
       label: 'Action',
       render: ({ id, created_at, to_user_id, to_user }) => (
         <>
-        {console.log("Hello world ", id, created_at, to_user_id)}
+          {console.log("Hello world ", id, created_at, to_user_id)}
           <a
             href="/"
             onClick={(e) => {
               e.preventDefault();
-              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate : created_at, toUserId : to_user_id, toUserName : to_user } });
+              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user } });
             }}
           >
             <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
@@ -169,7 +171,7 @@ const KraKpi = () => {
           </a>
           <a
             href="/"
-            className="ml-2"
+            className="ml-1"
             onClick={(e) => {
               e.preventDefault();
               setShowDelete(true);
@@ -199,9 +201,12 @@ const KraKpi = () => {
 
   return (
     <>
-      <Helmet title="Employee Feedback Questionnaire" />
-      <Breadcrumb items={[{ to: '/', label: 'Home' }, { label: 'Employee Feedback / Questionnaire' }]} />
-      <Loader showLoader={isShowLoader} />
+      <Helmet title={title} />
+      <div className="title-breadcrumb-section">
+        <h2 className="main-content-title tx-24 mg-b-5">Employees KRA-KPI</h2>
+        <Breadcrumb items={items} />
+      </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 
       <Card>
         <Card.Body>
