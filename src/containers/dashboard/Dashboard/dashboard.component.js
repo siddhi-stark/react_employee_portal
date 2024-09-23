@@ -606,7 +606,7 @@ function Dashboard() {
             
             {showClockIn && kraKpiNotification && (
               <UserRestrictions
-                permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
+                permittedUsers={[1, 2, 3, 4, 5, 6, 7, 10]}
                 roleId={userRole}
               >
                 <div className="notification-message" onClick={()=>{
