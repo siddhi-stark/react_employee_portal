@@ -311,24 +311,29 @@ const AddKraKpi = () => {
 
     questions?.length &&
       questions.forEach((item) => {
+        if (!item?.rating){
+          item.rating = 0
+        }
         const postData = {
           review: item?.review,
           rating: +item?.rating,
           kra_kpi_questionnaire: +item?.id,
           position_level: item?.position_level
         };
-        if (item?.review) {
+        if (item?.note) {
           postData.note = item?.note;
         }
         questionData.push(postData);
 
       });
+    
     let obj = null;
     if (questionData)
       obj = {
         'to_user': selectedEmployeeId,
         'data': questionData,
       };
+      setShowLoader(false);
 
     const response = await AuthApi.postDataToServer(Api.kraKpiAdd, obj);
     let { data, message } = response;
