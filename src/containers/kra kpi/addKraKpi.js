@@ -35,6 +35,14 @@ const AddKraKpi = () => {
   const [refereshPage, setRefereshPage] = useState(false);
   const [allEmployes, setAllEmployes] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState();
+  const [allTeams, setAllTeams] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState();
+
+  console.log('selectedTeam', selectedTeam);
+  
+  const [allDepartments, setAllDepartments] = useState([]);
+  const [selectedDepartment, setSelectedDepartment] = useState();
+
   const [showTable, setshowTable] = useState(false)
   const [userRole, setUserRole] = useState(null);
   const [avgRating, setAvgRating] = useState(0);
@@ -61,7 +69,45 @@ const AddKraKpi = () => {
   useEffect(() => {
     setEmployeeId(localStorage.getItem('userId'))
     setEmpDepartment(localStorage.getItem('department'))
+    getDepartments()
     setTitle('Fill KRA-KPI');
+  }, [refereshPage]);
+
+  useEffect(()=>{
+    if (!selectedDepartment) return;
+    getTeams()
+  }, [selectedDepartment])
+
+  useEffect(() => {
+    if (feedbackId && employeeId && empDepartment) {
+      getUpdateData()
+      setViewOnly(true)
+      setFieldsDisabled(true)
+    }
+  }, [feedbackId, employeeId, empDepartment])
+
+  useEffect(() => {
+    if (!feedbackId && selectedDepartment && selectedTeam && selectedEmployee && position) {
+      getKraKpiDetails()
+      setViewOnly(false)
+      setFieldsDisabled(true)
+    }
+  }, [employeeId, selectedDepartment, selectedTeam, selectedEmployee])
+
+  useEffect(() => {
+    if (userRole && selectedDepartment && selectedTeam && !isViewOnly) {
+      getEmployeeName();
+      setSelectedEmployee('')
+      setQuestions('')
+
+    }
+  }, [userRole, selectedDepartment, selectedTeam]);
+
+  
+
+  useEffect(() => {
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
   }, []);
 
   function getCategoryById(categoryId) {
@@ -78,47 +124,17 @@ const AddKraKpi = () => {
       return categoryName
     }
   }
-  console.log('feedbackId', feedbackId);
-
-  useEffect(() => {
-    if (feedbackId && employeeId && empDepartment) {
-      getUpdateData()
-      setViewOnly(true)
-      setFieldsDisabled(true)
-    }
-  }, [feedbackId, employeeId, empDepartment])
-
-  useEffect(() => {
-    if (!feedbackId && employeeId && empDepartment) {
-      getKraKpiDetails()
-      setViewOnly(false)
-      setFieldsDisabled(true)
-    }
-  }, [employeeId, empDepartment])
-
-  useEffect(() => {
-    if (userRole && departments && !isViewOnly) {
-      getEmployeeName();
-      setSelectedEmployee('')
-      setQuestions('')
-
-    }
-  }, [userRole, departments]);
-
-  useEffect(() => {
-    const uRole = customFunctions.getLocalStorage('group');
-    setUserRole(Number(uRole));
-  }, []);
 
   const getEmployeeName = async () => {
+    setQuestions(null)
     const uRole = customFunctions.getLocalStorage('group');
     console.log('isEmployee', uRole);
     let url = ''
     setShowLoader(true);
     if ([3, 4].includes(userRole)) {
-      url = `${Api.employeeListUrl}?for_kra_kpi=1&is_dropdown=true&department_id=${departments}`
+      url = `${Api.employeeListUrl}?for_kra_kpi=1&is_dropdown=true&department_id=${selectedDepartment?.value}&team_id=${selectedTeam?.value}`
     } else {
-      url = `${Api.employeeUrl}?type=all&status=active&hide_admin=1&department_id=${departments}`;
+      url = `${Api.employeeUrl}?type=all&status=active&hide_admin=1&department_id=${selectedDepartment?.value}&team_id=${selectedTeam?.value}`;
     }
 
     const { data, error } = await AuthApi.getDataFromServer(url);
@@ -136,6 +152,57 @@ const AddKraKpi = () => {
       swal(error || 'Something went wrong', '', 'error');
     }
   };
+
+
+  const getDepartments = async () =>{
+    setShowLoader(true);
+    setQuestions(null)
+    const endPoint = `${Api.InterviewRoundsUrl}`;
+    const params = {constant_type: 'department'};    
+
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, _ } = await AuthApi.getDataFromServer(url);
+        
+    if (data && data.success) {
+      setShowLoader(false);
+      const allDepartment = data?.data?.department.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
+
+      setAllDepartments([...allDepartment]);
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
+      setShowLoader(false);
+    }
+  }
+
+  const getTeams = async () =>{
+    setQuestions(null)
+    setAllTeams(null)
+    if (!isViewOnly){
+      setSelectedTeam(null)
+    }
+    setShowLoader(true);
+    const endPoint = `${Api.InterviewRoundsUrl}`;
+    const params = {department_id: selectedDepartment?.value};    
+
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, _ } = await AuthApi.getDataFromServer(url);
+        
+    if (data && data.success) {
+      setShowLoader(false);
+      const allTeams = data?.data?.team.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
+
+      setAllTeams([...allTeams]);
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
+      setShowLoader(false);
+    }
+  }
 
   const getUpdateData = async () => {
     console.log('inside update function');
@@ -159,6 +226,8 @@ const AddKraKpi = () => {
     let positionLevel = null
     let averageRating = 0
     let reviewedBy = ''
+    let team_name = null
+    let team = null
 
     console.log('data?.data[0]', data?.data);
 
@@ -167,7 +236,9 @@ const AddKraKpi = () => {
       data?.data[0]?.kra_kpi.length > 0 && data.data[0].kra_kpi.map((item) => {
         console.log('sssss', item);
         department = item?.departments[0]
+        team = item?.team
         department_name = item?.department_names[0]
+        team_name = item?.team_name
         positionLevel = item?.position_level
         reviewedBy = item?.reviewed_by
         oldData.push({
@@ -181,9 +252,13 @@ const AddKraKpi = () => {
         })
       })
     }
+    console.log('team', team);
+    console.log('team_name', team_name);
+    
     setFormData({ departments: department, position_level: positionLevel })
     setSelectedEmployee({ label: toUserName, value: toUserId })
-    setDepartments(department)
+    setSelectedDepartment({'label':department_name, 'value':department})
+    setSelectedTeam({'label':team_name, 'value':team})
     setAvgRating(averageRating)
     setReviewedByName(reviewedBy)
     setQuestions(oldData)
@@ -199,12 +274,16 @@ const AddKraKpi = () => {
     const endPoint = `${Api.kraKpiQuestionnaire}`;
     const params = { type: 'all' };
 
-    if (departments) {
-      params.departments = `[${departments}]`
+    if (selectedDepartment) {
+      params.departments = `[${selectedDepartment?.value}]`
+    }
+    if (selectedTeam) {
+      params.team = selectedTeam?.value
     }
     if (position) {
       params.position_level = position
     }
+    
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -256,7 +335,7 @@ const AddKraKpi = () => {
     if (!message) {
       message = response?.data?.message
     }
-    
+
     if (data) {
       swal(message[0], '', 'success').then(() => {
         if ([3, 4].includes(userRole)) {
@@ -315,6 +394,9 @@ const AddKraKpi = () => {
       departments: '',
       position_level: '',
     });
+    setSelectedDepartment(null)
+    setSelectedTeam(null)
+    setPosition(null)
     setSelectedEmployee(null)
     setSelectedEmployeeId(null)
     setQuestions(null)
@@ -357,49 +439,43 @@ const AddKraKpi = () => {
                     <Card.Body>
                       <Row>
                         <Col sm={2}>
-                          <Form.Group controlId='formDepartment'>
-                            <Form.Label>
-                              Department <span className="text-danger">*</span>
-                            </Form.Label>
-                            <Form.Control
-                              as='select'
-                              name='Department'
-                              value={formData?.departments}
-                              onChange={(e) => {
-                                const data = { ...formData };
-                                data.departments = e?.target?.value;
-                                console.log('e?.target?.value', e?.target?.value);
-
-                                setDepartments(Number(e?.target?.value));
-                                setFormData(data);
-                              }}
-                              disabled={isViewOnly ? true : false}
-                            >
-                              <option value='' hidden>Select Department</option>
-                              <option value='1'>Management</option>
-                              <option value='2'>Development</option>
-                              <option value='3'>Design</option>
-                              <option value='4'>Quality Analysis</option>
-                              <option value='5'>Other</option>
-                              <option value='6'>Marketing</option>
-                              <option value='7'>Support Team</option>
-                              <option value='8'>Account</option>
-                              <option value='9'>Project Management</option>
-
-
-
-                            </Form.Control>
-                            <p className='text-danger'>{validator.current.message(
+                          <DropdownInput
+                            label="Department"
+                            asterisk="*"
+                            options={allDepartments}
+                            defaultValue={selectedDepartment}
+                            onSelectHandler={(select) => {
+                              setSelectedDepartment(select);
+                            }}
+                            disabled={isViewOnly ? true : false}
+                            errorMessage={validator.current.message(
                               'Department',
-                              formData?.departments,
+                              selectedDepartment,
                               'required'
-                            )}</p>
-                          </Form.Group>
+                            )}
+                          />
                         </Col>
-
                         <Col sm={2}>
                           <DropdownInput
-                            label="Employees"
+                            label="Team"
+                            asterisk="*"
+                            options={allTeams}
+                            defaultValue={selectedTeam}
+                            onSelectHandler={(select) => {
+                              setSelectedTeam(select);
+                            }}
+                            disabled={isViewOnly ? true : false}
+                            errorMessage={validator.current.message(
+                              'Team',
+                              selectedTeam,
+                              'required'
+                            )}
+                          />
+                        </Col>
+                        
+                        <Col sm={2}>
+                          <DropdownInput
+                            label="Employee"
                             asterisk="*"
                             options={allEmployes}
                             defaultValue={selectedEmployee}
@@ -409,7 +485,7 @@ const AddKraKpi = () => {
                             }}
                             disabled={isViewOnly ? true : false}
                             errorMessage={validator.current.message(
-                              'Employees',
+                              'Employee',
                               selectedEmployee,
                               'required'
                             )}
@@ -496,7 +572,7 @@ const AddKraKpi = () => {
 
                         </Col>
                       </Row>
-                      {questions && questions.length != 0 && showTable && departments && (
+                      {questions && questions.length != 0 && showTable && selectedDepartment && (
                         <Row>
                           <div className="d-flex align-items-center justify-content-between">
                             <p className="text-muted">Note : If you do not have an answer to a question, please enter "N/A" as the response for that question.</p>
@@ -508,7 +584,7 @@ const AddKraKpi = () => {
                   </Card>
 
                   <Row>
-                    {questions && questions.length != 0 && showTable && departments ? (
+                    {questions && questions.length != 0 && showTable && selectedDepartment ? (
                       // Group questions by category ID and render each group in its own card
                       questions.reduce((acc, question) => {
                         // Group questions by category ID
@@ -616,7 +692,7 @@ const AddKraKpi = () => {
             </Card>
             <div className="d-flex justify-content-end p-2">
               <ButtonGroup className="gap-3 mt-6">
-                {questions && questions.length != 0 && showTable && !isViewOnly && departments && (
+                {questions && questions.length != 0 && showTable && !isViewOnly && selectedDepartment && (
                   <>
                     <Button
                       variant="secondary"

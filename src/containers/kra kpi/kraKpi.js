@@ -34,11 +34,11 @@ const KraKpi = () => {
   const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
 
-
   useEffect(() => {
     setTitle("Employees KRA-KPI");
     if (!apiCalled) {
-      getKraKpiDetails();
+      setRefereshPage(false)
+      getKraKpiDetails(1);
     }
   }, [currentPage, refereshPage]);
   
@@ -77,8 +77,8 @@ const KraKpi = () => {
     }
   };
 
-  const getKraKpiDetails = async (pageNo = currentPage) => {
-    if (apiCalled) return; // Prevent duplicate calls
+  const getKraKpiDetails = async (pageNo = currentPage) => {    
+    if (apiCalled) return; 
   
     setApiCalled(true);
     setShowLoader(true);
@@ -158,7 +158,6 @@ const KraKpi = () => {
       label: 'Action',
       render: ({ id, created_at, to_user_id, to_user }) => (
         <>
-          {console.log("Hello world ", id, created_at, to_user_id)}
           <a
             href="/"
             onClick={(e) => {
@@ -238,6 +237,7 @@ const KraKpi = () => {
                 setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
                 setSelectedEmployeeId('all_employess')
                 setJoiningDate(null)
+                setApiCalled(false)
                 setRefereshPage(true)
               }
 
