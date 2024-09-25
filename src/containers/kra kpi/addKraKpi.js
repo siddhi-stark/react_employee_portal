@@ -158,7 +158,7 @@ const AddKraKpi = () => {
     setShowLoader(true);
     setQuestions(null)
     const endPoint = `${Api.InterviewRoundsUrl}`;
-    const params = {constant_type: 'department'};    
+    const params = {constant_type: 'department', is_kra_kpi : true};    
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, _ } = await AuthApi.getDataFromServer(url);
