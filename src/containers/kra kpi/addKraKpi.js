@@ -342,7 +342,7 @@ const AddKraKpi = () => {
     }
 
     if (data) {
-      swal(message[0], '', 'success').then(() => {
+      swal('Kra-Kpi Created succesfully. ', '', 'success').then(() => {
         if ([3, 4].includes(userRole)) {
           history.push('/kra-kpi-employees');
         } else {
