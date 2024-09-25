@@ -604,7 +604,7 @@ function Dashboard() {
             </Jumbotron>
             {/* <NoticePeriodLastDay /> */}
             
-            {showClockIn && kraKpiNotification && (
+            {kraKpiNotification && (
               <UserRestrictions
                 permittedUsers={[1, 2, 3, 4, 5, 6, 7, 10]}
                 roleId={userRole}
