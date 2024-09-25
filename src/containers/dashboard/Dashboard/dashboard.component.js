@@ -60,7 +60,7 @@ function Dashboard() {
 
   const [events, setEvents] = useState([]);
   const dashboardKey = 'Dashboard';
-  const [kraKpiNotification, setKraKpiNotification] = useState(false);
+  const [kraKpiNotification, setKraKpiNotification] = useState(true);
 
   useEffect(() => {
     const today = new Date().getDay();
