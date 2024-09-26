@@ -262,7 +262,7 @@ const KraKpi = () => {
                 }}
                 className="btn-link"
               >
-                Add Feedback
+                Add Kra Kpi
               </a>
             )}
           </div>
