@@ -21,6 +21,8 @@ function AddEmployeeFeedback() {
   const quarter = state?.state?.state?.quarter;
   const year = state?.state?.state?.year;
   const teamEmpId = state?.state?.state?.empId;
+  const isAdmins = state?.state?.state?.isAdmins
+  const isHr = state?.state?.state?.isHr
   const [employeeId, setEmployeeId] = useState()
   const [empDepartment, setEmpDepartment] = useState()
   console.log('employeeId', employeeId);  
@@ -218,7 +220,14 @@ function AddEmployeeFeedback() {
     const { data, message } = response;
     if (data) {
       swal(data.message[0], '', 'success').then(() => {
-        history.push('/employee-feedback');
+        if (isAdmins){
+          history.push('/employee-feedback-review-admins');
+        }else if(isHr){
+          history.push('/employee-feedback-review');
+        }else{
+          history.push('/employee-feedback');
+        }
+
       });
       setShowLoader(false);
     } else {
@@ -253,7 +262,13 @@ function AddEmployeeFeedback() {
     // submitForm();
     // window.location.reload();
     validator.current.hideMessages();
-    history.push('/employee-feedback');
+    if (isAdmins){
+      history.push('/employee-feedback-review-admins');
+    }else if(isHr){
+      history.push('/employee-feedback-review');
+    }else{
+      history.push('/employee-feedback');
+    }
   };
 
   return (

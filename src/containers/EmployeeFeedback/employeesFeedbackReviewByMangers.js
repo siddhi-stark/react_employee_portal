@@ -10,7 +10,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
-import BootstapPaginationComponent from "../../components/Pagination/bootstrapPagination";
+import CustomTable from 'stark-custom-datatable';
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Employee Feedback' }];
 
@@ -33,7 +33,7 @@ function EmployeesFeedbackReviewByMangers() {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  
+
 
   useEffect(() => {
     setTitle('Employee Feedback');
@@ -69,12 +69,71 @@ function EmployeesFeedbackReviewByMangers() {
     }
   }
 
+  const columns = [
+    { id: 'no', label: 'Sr.No' },
+    { id: 'employee_name', label: 'Name' },
+    { id: 'quarter', label: 'Quarter' },
+    { id: 'year', label: 'Year' },
+    { id: 'submission_date', label: 'Submission Date' },
+    {
+      id: 'review_status',
+      label: 'Review Status',
+      render: (row) => {
+        const rowData = row;
+        return rowData?.review_status_name
+      }
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: (row) => (
+        <>
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const paramsData = getParamsData(row.id);
+              console.log('paramsData', paramsData);
+
+              if (!setTable) {
+                history.push(`/add-feedback/${row.id}`, { state: paramsData });
+              } else {
+                history.push(`/update-feedback/${row.id}`, { state: paramsData });
+              }
+            }}
+            className="pl-2 me-2"
+          >
+            {row.review_status === 2 ? (
+              <img src="/images/edit.svg" alt="edit icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+            ) : (
+              <img src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+            )}
+          </a>
+          <a
+            href="#"
+            className="text-decoration-none"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowDelete(true);
+              setTaskId(row.id);
+            }}
+          >
+            <img src="/images/delete.png" alt="delete icon" />
+          </a>
+        </>
+      ),
+    },
+  ];
+
   const getQuestionList = async (pageNo) => {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
     const params = {
       page: pageNo || currentPage,
-      limit,}
+      limit,
+    }
 
     let localVar = localStorage.getItem('isProjectManager')
     const manager = JSON.parse(localVar)
@@ -82,35 +141,58 @@ function EmployeesFeedbackReviewByMangers() {
     console.log('setTable', setTable);
 
     console.log('showPersonalDetails', manager, showPersonalDetails, setTable);
-    
+
     if (manager == true && !setTable && !showPersonalDetails) {
-        // setShowPersonalDetails(true)
-        // setTableToggle(true)
-        params.is_personal_feedback = true
-        // params.is_show_table = true
+      setShowPersonalDetails(true)
+      setTableToggle(true)
+      params.is_personal_feedback = true
+      params.is_show_table = true
     }
-    else if(manager == true && setTable && showPersonalDetails){
-        console.log('Hello second')
-        // setShowPersonalDetails(false)
-        // setTableToggle(true)
-        params.is_reviewers_feedback = true
-        // params.is_show_table = true
-      }
+    else if (manager == true && setTable && showPersonalDetails) {
+      console.log('Hello second')
+      setShowPersonalDetails(false)
+      setTableToggle(true)
+      params.is_reviewers_feedback = true
+      params.is_show_table = true
+    }
     else if (!setTableAll && manager == false) {
       setShowTeamDetails(true)
       params.is_reviewers_feedback = true
-      // params.is_show_table = true
+      params.is_show_table = true
     }
     else {
-      // params.is_show_table = true
+      params.is_show_table = true
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log('url', url);
-    
+
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
-      setEmpFeedbackdata(data?.data);
+      let finalData = []
+
+      if (data?.data && data.data.length > 0) {
+        data.data.map((item, index) => {
+          finalData.push({
+            no: (pagination.current_page - 1) * 10 + index + 1,
+            id: item?.id,
+            quarter: item?.quarter,
+            year: item?.year,
+            submission_date: item?.submission_date,
+            review_status: item?.review_status,
+            review_status_name: item?.review_status_name,
+            employee_id: item?.employee_id,
+            employee_name: item?.employee_name,
+            employee_department: item?.employee_department,
+            questionnaire_id: item?.questionnaire_id,
+            questionnaire: item?.questionnaire,
+            questionnaire_for: item?.questionnaire_for,
+            questionnaire_for_name: item?.questionnaire_for_name,
+          })
+
+        })
+
+      }
+      setEmpFeedbackdata(finalData);
       const { current_page, total_count, limit } = data.paginator;
       setPagination({
         current_page: parseInt(current_page, 10),
@@ -149,6 +231,7 @@ function EmployeesFeedbackReviewByMangers() {
       empId: empId,
       quarter: quarter,
       year: year,
+      isAdmins:true
     }
     return params
   }
@@ -190,6 +273,7 @@ function EmployeesFeedbackReviewByMangers() {
     }
   };
 
+
   return (
     <>
       <Helmet title={title} />
@@ -220,190 +304,103 @@ function EmployeesFeedbackReviewByMangers() {
       )}
 
       <section className="content-area">
-        <div className="table">
-          <div className="card p-2">
-            <div className="d-flex align-items-center justify-content-between">
-              <h5 className="mb-0 mt-2">{subTitle}</h5>
-              <div className="d-flex align-items-center justify-content-end">
+        {/* <div className="table"> */}
+        <div className="card p-2">
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="mb-0 mt-2">{subTitle}</h5>
+            <div className="d-flex align-items-center justify-content-end">
 
-                {isProjectManager == false && !setTableAll && !setTable ? (
-                  <a
-                    href="#"
-                    onClick={() => {
-                      setSubTitle('All Employees Feedback')
-                      setTableForAll(true)
-                      setTableToggle(false)
-                    }}
-                    className="btn-link"
-                  >
-                    All Employees Feedback
-                  </a>
-                ) : showTeamDetails ? (
-                  <a
-                    href="#"
-                    onClick={() => {
-                      setSubTitle('Team Feedback Details')
-                      setTableForAll(false)
-                      setTableToggle(false)
-                    }}
-                    className="btn-link ml-3"
-                  >
-                    Team Feedback Details
-                  </a>):''}
-
-                {isProjectManager == true && !setTableAll && !setTable ? (
-                  <a
-                    href="#"
-                    onClick={() => {
-                      setTableToggle(false)
-                      setTableForAll(false)
-                      history.push('/add-feedback');
-                    }}
-                    className="btn-link ml-3"
-                  >
-                    Add Feedback
-                  </a>
-                ):''}
-
-                {isProjectManager && !showPersonalDetails ? (<a
+              {isProjectManager == false && !setTableAll && !setTable ? (
+                <a
+                  href="#"
+                  onClick={() => {
+                    setSubTitle('All Employees Feedback')
+                    setTableForAll(true)
+                    setTableToggle(false)
+                  }}
+                  className="btn-link"
+                >
+                  All Employees Feedback
+                </a>
+              ) : showTeamDetails ? (
+                <a
                   href="#"
                   onClick={() => {
                     setSubTitle('Team Feedback Details')
-                    setShowPersonalDetails(true)
-                    setTableToggle(true)
+                    setTableForAll(false)
+                    setTableToggle(false)
                   }}
                   className="btn-link ml-3"
                 >
                   Team Feedback Details
-                </a>) : isProjectManager ? (
-                  <a
-                    href="#"
-                    onClick={() => {
-                      setSubTitle('Personal Feedback Details')
-                      setShowPersonalDetails(false)
-                      setTableToggle(false)
-                    }}
-                    className="btn-link ml-3"
-                  >
-                    Personal Feedback Details
-                  </a>
-                ) : ''}
+                </a>) : ''}
 
-                {/* <a
+              {isProjectManager == true && !setTableAll && !setTable ? (
+                <a
                   href="#"
                   onClick={() => {
-                    setTableToggle(true)
+                    setTableToggle(false)
+                    setTableForAll(false)
+                    history.push('/add-feedback',{state:{isAdmins : true}});
                   }}
                   className="btn-link ml-3"
                 >
-                  Team Feedback Details
-                </a> */}
+                  Add Feedback
+                </a>
+              ) : ''}
 
-              </div>
-            </div>
-            <div className="table-responsive">
-              <table className="table table-striped m-0">
-                <thead>
-                  <tr>
-                    <th scope="col">Sr.No</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Quater</th>
-                    <th scope="col">Year</th>
-                    <th scope="col">Submission Date</th>
-                    <th scope="col">Review Status</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {empFeedbackdata?.length
-                    ? empFeedbackdata.map((item, index) => (
-                      <tr key={index + 1}>
-                        <td>{index + 1}</td>
-                        <td>
-                          {item?.employee_name ? item?.employee_name : 'N/A'}
-                        </td>
-                        <td>{item?.quarter ? item?.quarter : 'N/A'}</td>
-                        <td>{item?.year ? item?.year : 'N/A'}</td>
-                        <td>
-                          {item?.submission_date
-                            ? item?.submission_date
-                            : 'N/A'}
-                        </td>
-                        <td>
-                          {item?.review_status_name
-                            ? item?.review_status_name
-                            : 'N/A'}
-                        </td>
-                        <td>
-                          {/* item?.review_status == 1 */}
-                          {item?.review_status && (
-                            <a
+              {isProjectManager && !showPersonalDetails ? (<a
+                href="#"
+                onClick={() => {
+                  setSubTitle('Team Feedback Details')
+                  setShowPersonalDetails(true)
+                  setTableToggle(true)
+                }}
+                className="btn-link ml-3"
+              >
+                Team Feedback Details
+              </a>) : isProjectManager ? (
+                <a
+                  href="#"
+                  onClick={() => {
+                    setSubTitle('Personal Feedback Details')
+                    setShowPersonalDetails(false)
+                    setTableToggle(false)
+                  }}
+                  className="btn-link ml-3"
+                >
+                  Personal Feedback Details
+                </a>
+              ) : ''}
 
-                              onClick={() => {
-                                if (!setTable && !setTableAll) {
-                                  console.log('Hello from personal')
-                                  let paramsData = getParamsData(item?.id)
-                                  history.push(`/add-feedback/${item?.id}`, { state: paramsData });
-
-                                } else {
-                                  console.log('Hello from Team')
-                                  let paramsData = getParamsData(item?.id)
-                                  history.push(`/update-feedback/${item?.id}`, { state: paramsData });
-                                }
-                              }}
-                              // href={`/add-feedback/${item?.id}`}
-                              className="pl-2 me-2"
-                            >
-                              {/* {item?.review_status == 2 ? ( */}
-                              <img
-                                src="/images/edit.svg"
-                                alt="edit icon"
-                                style={{
-                                  filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
-                                }}
-                              />
-                              {/* ) :
-                                <img
-                                  src="/images/view-eye.svg"
-                                  alt="view icon"
-                                  style={{
-                                    filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)",
-                                  }}
-                                /> */}
-                              {/* } */}
-                            </a>
-                          )}
-                          <a
-                            href='\'
-                            className="text-decoration-none"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              setShowDelete(true);
-                              setTaskId(item?.id);
-                            }}
-                          >
-                            <img src="/images/delete.png" alt="delete icon" />
-                          </a>
-                        </td>
-                      </tr>
-                    ))
-                    : null}
-                </tbody>
-              </table>
-              <BootstapPaginationComponent
-                activePage={pagination?.current_page}
-                itemsPerPage={pagination?.limit}
-                totalItems={pagination?.totalItems}
-                onPageChange={(page) => {
-                  setPagination({
-                    ...pagination,
-                    activePage: page
-                  });
-                  getQuestionList(page);
-                }} />
+              <a
+                href="#"
+                onClick={() => {
+                  setTableToggle(true)
+                }}
+                className="btn-link ml-3"
+              >
+                Team Feedback Details
+              </a>
             </div>
           </div>
+          <CustomTable
+            columns={columns}
+            rows={empFeedbackdata}
+            tableClass="table-striped"
+            showPagination={true}
+            paginationProps={{
+              totalItems: totalCount,
+              itemsPerPage: limit,
+              activePage: currentPage,
+              onPageChange: (pageNo) => {
+                setCurrentPage(pageNo);
+                getQuestionList(pageNo);
+              },
+            }}
+            showCheckbox={false}
+            emptyRender={() => <center>No record found.</center>}
+          />          
         </div>
       </section>
     </>

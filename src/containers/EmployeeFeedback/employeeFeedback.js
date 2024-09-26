@@ -66,7 +66,7 @@ function EmployeeFeedback() {
       limit,
       is_reviewers_feedback: setTable,
       is_personal_feedback: !setTable,
-      // is_show_table: true,
+      is_show_table: true,
     };
 
     const url = customFunctions.generateUrl(endPoint, params);
@@ -130,6 +130,7 @@ function EmployeeFeedback() {
         empId: feedbackItem.employee_id,
         quarter,
         year: feedbackItem.year,
+        isHr: true
       };
     }
     return {};
