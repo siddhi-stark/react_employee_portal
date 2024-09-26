@@ -73,6 +73,9 @@ const ResignationDetailsComponent = (props) => {
     setSelectedDate(date);
   };
 
+  console.log('relievingDate', relievingDate);
+  
+
   const getMaxDate = () => {
     if (selectedDate) {
       const maxDate = new Date(selectedDate);
@@ -431,6 +434,7 @@ const ResignationDetailsComponent = (props) => {
     };
     if (status == 1) {
       postData.resign_remark = approveReason;
+      postData.relieving_date = customFunctions.getDate(relievingDate);
     } else {
       postData.resignation_decline_note = approveReason;
     }
@@ -1041,24 +1045,7 @@ const ResignationDetailsComponent = (props) => {
                                   className="me-3"
                                   onClick={() => {
                                     if (approveReason !== '') {
-                                        // setShowModal(false);
-                                        setShowModal(true);
-                                      // swal({
-                                      //   title: 'You want to change relieving date',
-                                      //   icon: 'warning',
-                                      //   buttons: true,
-                                      //   dangerMode: true,
-                                      // }).then((willApprove) => {
-                                      //   if (willApprove) {
-                                      //     // Open your modal here
-                                      //     // setShowModal(true);
-                                      //     isValid('hr', 'approve_resign');
-                                      // // changeRelievingData();
-                                      //   } else {
-                                      //     // Handle approval logic here
-                                      //     isValid('admin', 'approve_resign');
-                                      //   }
-                                      // });
+                                        setShowModal(true);                                      
                                     } else {
                                       swal(
                                         'Error',
