@@ -12,7 +12,7 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 
-const items=[{ to: '/', label: 'Home' }, { label: 'Employees KRA-KPI' }];
+const items = [{ to: '/', label: 'Home' }, { label: 'Employees KRA-KPI' }];
 
 const KraKpi = () => {
   const history = useHistory();
@@ -33,6 +33,8 @@ const KraKpi = () => {
   const [refereshPage, setRefereshPage] = useState(false);
   const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
+  const [isProjectManager, setProjectManager] = useState(false)
+
 
   useEffect(() => {
     setTitle("Employees KRA-KPI");
@@ -41,7 +43,12 @@ const KraKpi = () => {
       getKraKpiDetails(1);
     }
   }, [currentPage, refereshPage]);
-  
+
+  useEffect(() => {
+    const isProjectManager =
+      customFunctions?.getLocalStorage('isProjectManager');
+    setProjectManager(JSON.parse(isProjectManager));
+  }, [localStorage.getItem('isProjectManager')]);
 
   useEffect(() => {
     setTitle("Employees KRA-KPI")
@@ -77,29 +84,29 @@ const KraKpi = () => {
     }
   };
 
-  const getKraKpiDetails = async (pageNo = currentPage) => {    
-    if (apiCalled) return; 
-  
+  const getKraKpiDetails = async (pageNo = currentPage) => {
+    if (apiCalled) return;
+
     setApiCalled(true);
     setShowLoader(true);
-  
+
     const params = {
       page: pageNo,
       limit,
     };
-  
+
     if (selectedEmployeeId !== 'all_employess') {
       params.user = selectedEmployeeId;
     }
     if (joiningDate) {
       params.start_date = customFunctions.getDate(joiningDate);
     }
-  
+
     const url = customFunctions.generateUrl(Api.kraKpiUrl, params);
     try {
       const { data } = await AuthApi.getDataFromServer(url);
       setShowLoader(false);
-  
+
       if (data && data.success) {
         const finalData = data.data.map((item, index) => ({
           no: (pagination.current_page - 1) * 10 + index + 1,
@@ -109,7 +116,7 @@ const KraKpi = () => {
           created_at: item.created_at,
           to_user_id: item.to_user_id,
         }));
-  
+
         const { current_page, total_count, limit } = data.paginator;
         setRowData(finalData);
         setPagination({
@@ -127,7 +134,7 @@ const KraKpi = () => {
       swal('Error fetching data', '', 'error');
     } finally {
       setShowLoader(false);
-      setApiCalled(false); 
+      setApiCalled(false);
     }
   };
 
@@ -158,8 +165,24 @@ const KraKpi = () => {
       label: 'Action',
       render: ({ id, created_at, to_user_id, to_user }) => (
         <>
+          {userRole && userRole == 1 && !isProjectManager && (
+            <>
+              <a
+                href="/"
+                
+                onClick={(e) => {
+                  e.preventDefault();
+                  history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isProjectManager:isProjectManager } });
+                }}
+              >
+                <Image src="/images/edit.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+
+              </a>
+            </>
+          )}
           <a
             href="/"
+            className="ml-1"
             onClick={(e) => {
               e.preventDefault();
               history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user } });

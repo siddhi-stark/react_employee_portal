@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Card, Form, Col, Row } from 'react-bootstrap';
 import { withRouter, useHistory, useParams, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
-import { Helmet, DropdownInput } from '../../components/FormInputs';
+import { Helmet, DropdownInput, RadioButton } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
@@ -23,6 +23,7 @@ const AddKraKpi = () => {
   const feddbackCreatedDate = state?.state?.state?.feddbackCreatedDate;
   const toUserId = state?.state?.state?.toUserId;
   const toUserName = state?.state?.state?.toUserName;
+  const isProjectManager = state?.state?.state?.isProjectManager;
   const [employeeId, setEmployeeId] = useState()
   const [selectedEmployeeId, setSelectedEmployeeId] = useState();
   const [empDepartment, setEmpDepartment] = useState()
@@ -39,7 +40,7 @@ const AddKraKpi = () => {
   const [selectedTeam, setSelectedTeam] = useState();
 
   console.log('selectedTeam', selectedTeam);
-  
+
   const [allDepartments, setAllDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState();
 
@@ -73,7 +74,7 @@ const AddKraKpi = () => {
     setTitle('Fill KRA-KPI');
   }, [refereshPage]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!selectedDepartment) return;
     getTeams()
   }, [selectedDepartment])
@@ -103,12 +104,19 @@ const AddKraKpi = () => {
     }
   }, [userRole, selectedDepartment, selectedTeam]);
 
-  
+
 
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
+    if (userRole == 1 && !isProjectManager){
+      setViewOnly(false)
+    } 
   }, []);
+
+  useEffect(()=>{if (userRole == 1 && !isProjectManager){
+      setViewOnly(false)
+    } },[userRole, isProjectManager])
 
   function getCategoryById(categoryId) {
     let categoryName = ''
@@ -154,15 +162,15 @@ const AddKraKpi = () => {
   };
 
 
-  const getDepartments = async () =>{
+  const getDepartments = async () => {
     setShowLoader(true);
     setQuestions(null)
     const endPoint = `${Api.InterviewRoundsUrl}`;
-    const params = {constant_type: 'department', is_kra_kpi : true};    
+    const params = { constant_type: 'department', is_kra_kpi: true };
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, _ } = await AuthApi.getDataFromServer(url);
-        
+
     if (data && data.success) {
       setShowLoader(false);
       const allDepartment = data?.data?.department.map((item) => ({
@@ -177,19 +185,19 @@ const AddKraKpi = () => {
     }
   }
 
-  const getTeams = async () =>{
+  const getTeams = async () => {
     setQuestions(null)
     setAllTeams(null)
-    if (!isViewOnly){
+    if (!isViewOnly) {
       setSelectedTeam(null)
     }
     setShowLoader(true);
     const endPoint = `${Api.InterviewRoundsUrl}`;
-    const params = {department_id: selectedDepartment?.value};    
+    const params = { department_id: selectedDepartment?.value };
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, _ } = await AuthApi.getDataFromServer(url);
-        
+
     if (data && data.success) {
       setShowLoader(false);
       const allTeams = data?.data?.team.map((item) => ({
@@ -254,11 +262,11 @@ const AddKraKpi = () => {
     }
     console.log('team', team);
     console.log('team_name', team_name);
-    
+
     setFormData({ departments: department, position_level: positionLevel })
     setSelectedEmployee({ label: toUserName, value: toUserId })
-    setSelectedDepartment({'label':department_name, 'value':department})
-    setSelectedTeam({'label':team_name, 'value':team})
+    setSelectedDepartment({ 'label': department_name, 'value': department })
+    setSelectedTeam({ 'label': team_name, 'value': team })
     setAvgRating(averageRating)
     setReviewedByName(reviewedBy)
     setQuestions(oldData)
@@ -283,7 +291,7 @@ const AddKraKpi = () => {
     if (position) {
       params.position_level = position
     }
-    
+
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -311,7 +319,7 @@ const AddKraKpi = () => {
 
     questions?.length &&
       questions.forEach((item) => {
-        if (!item?.rating){
+        if (!item?.rating) {
           item.rating = 0
         }
         const postData = {
@@ -326,14 +334,14 @@ const AddKraKpi = () => {
         questionData.push(postData);
 
       });
-    
+
     let obj = null;
     if (questionData)
       obj = {
         'to_user': selectedEmployeeId,
         'data': questionData,
       };
-      setShowLoader(false);
+    setShowLoader(false);
 
     const response = await AuthApi.postDataToServer(Api.kraKpiAdd, obj);
     let { data, message } = response;
@@ -420,281 +428,281 @@ const AddKraKpi = () => {
       <section className="content-area">
         <Card>
           <Card.Body>
-            <div className="d-flex align-items-center justify-content-between">
+            {/* <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 ">KRA-KPI Form</h5>
             </div>
+            <hr style={{ borderColor: "white" }} /> */}
+            {/* <Card> */}
+            {/* <Card.Body> */}
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              <Button
+                variant="secondary"
+                className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                type="submit"
+                onClick={handleClear}
+              >
+                Back
+              </Button>
+            </div>
             <hr style={{ borderColor: "white" }} />
-            <Card>
-              <Card.Body>
-                <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Select Quarter and Review Status</h5>
-                  <Button
-                    variant="secondary"
-                    className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
-                    type="submit"
-                    onClick={handleClear}
-                  >
-                    Back
-                  </Button>
-                </div>
-                <hr style={{ borderColor: "white" }} />
 
-                <Form >
-                  <Card>
-                    <Card.Body>
-                      <Row>
-                        <Col sm={2}>
-                          <DropdownInput
-                            label="Department"
-                            asterisk="*"
-                            options={allDepartments}
-                            defaultValue={selectedDepartment}
-                            onSelectHandler={(select) => {
-                              setSelectedDepartment(select);
-                            }}
-                            disabled={isViewOnly ? true : false}
-                            errorMessage={validator.current.message(
-                              'Department',
-                              selectedDepartment,
-                              'required'
-                            )}
-                          />
-                        </Col>
-                        <Col sm={2}>
-                          <DropdownInput
-                            label="Team"
-                            asterisk="*"
-                            options={allTeams}
-                            defaultValue={selectedTeam}
-                            onSelectHandler={(select) => {
-                              setSelectedTeam(select);
-                            }}
-                            disabled={isViewOnly ? true : false}
-                            errorMessage={validator.current.message(
-                              'Team',
-                              selectedTeam,
-                              'required'
-                            )}
-                          />
-                        </Col>
-                        
-                        <Col sm={2}>
-                          <DropdownInput
-                            label="Employee"
-                            asterisk="*"
-                            options={allEmployes}
-                            defaultValue={selectedEmployee}
-                            onSelectHandler={(select) => {
-                              setSelectedEmployee(select);
-                              setSelectedEmployeeId(select?.value);
-                            }}
-                            disabled={isViewOnly ? true : false}
-                            errorMessage={validator.current.message(
-                              'Employee',
-                              selectedEmployee,
-                              'required'
-                            )}
-                          />
-                        </Col>
+            <Form >
+              {/* <Card> */}
+              {/* <Card.Body> */}
+              <Row>
+                <Col sm={2}>
+                  <DropdownInput
+                    label="Department"
+                    asterisk="*"
+                    options={allDepartments}
+                    defaultValue={selectedDepartment}
+                    onSelectHandler={(select) => {
+                      setSelectedDepartment(select);
+                    }}
+                    disabled={isViewOnly ? true : false}
+                    errorMessage={validator.current.message(
+                      'Department',
+                      selectedDepartment,
+                      'required'
+                    )}
+                  />
+                </Col>
+                <Col sm={2}>
+                  <DropdownInput
+                    label="Team"
+                    asterisk="*"
+                    options={allTeams}
+                    defaultValue={selectedTeam}
+                    onSelectHandler={(select) => {
+                      setSelectedTeam(select);
+                    }}
+                    disabled={isViewOnly ? true : false}
+                    errorMessage={validator.current.message(
+                      'Team',
+                      selectedTeam,
+                      'required'
+                    )}
+                  />
+                </Col>
 
-                        <Col sm={2}>
-                          <Form.Group controlId='formPosition'>
-                            <Form.Label>
-                              Employee Position <span className="text-danger">*</span>
-                            </Form.Label>
-                            <Form.Control
-                              as='select'
-                              name='Position'
-                              value={formData?.position_level}
-                              onChange={(e) => {
-                                const data = { ...formData };
-                                data.position_level = e?.target?.value;
-                                setPosition(Number(e?.target?.value));
-                                setFormData(data);
-                              }}
-                              disabled={isViewOnly ? true : false}
-                            >
-                              <option value='' hidden>Select Position</option>
-                              <option value='1'>Senior</option>
-                              <option value='2'>Junior</option>
-                              <option value='3'>Senior & Junior</option>
-                            </Form.Control>
-                            <p className='text-danger'>{validator.current.message(
-                              'Position',
-                              formData?.position_level,
-                              'required'
-                            )}</p>
-                          </Form.Group>
-                        </Col>
-                        {isViewOnly && (<>
-                          <Col sm={2}>
-                            <Form.Label>
-                              Average Rating <span className="text-danger">*</span>
-                            </Form.Label>
-                            <Form.Control
-                              type='text'
-                              value={avgRating}
-                              disabled='true'
-                            />
-                          </Col>
-                          <Col sm={2}>
-                            <Form.Label>
-                              Reviewed By <span className="text-danger">*</span>
-                            </Form.Label>
-                            <Form.Control
-                              type='text'
-                              value={reviewedByName}
-                              disabled='true'
-                            />
-                          </Col>
-                        </>)}
-                        <Col>
-                          {!isViewOnly && (<>
-                            <Button className='mt-4' variant="primary" onClick={() => {
-                              console.log('validator.current.errorMessages', validator.current.errorMessages);
-                              validator.current.errorMessages.EmployeeRating = null
-                              validator.current.errorMessages.review = null
-                              validator.current.fields.EmployeeRating = true
-                              validator.current.fields.review = true
+                <Col sm={2}>
+                  <DropdownInput
+                    label="Employee"
+                    asterisk="*"
+                    options={allEmployes}
+                    defaultValue={selectedEmployee}
+                    onSelectHandler={(select) => {
+                      setSelectedEmployee(select);
+                      setSelectedEmployeeId(select?.value);
+                    }}
+                    disabled={isViewOnly ? true : false}
+                    errorMessage={validator.current.message(
+                      'Employee',
+                      selectedEmployee,
+                      'required'
+                    )}
+                  />
+                </Col>
 
-                              if (validator.current.allValid()) {
-                                console.log('inside valid');
-                                validator.current.hideMessages()
-                                applyFilters()
-                              } else {
-                                validator.current.showMessages()
-                                forceUpdate(count + 1)
-                              }
-                            }}>Apply</Button>
-                            <Button className='mt-4 ml-3' variant="secondary" onClick={() => {
-                              validator.current.hideMessages()
-                              clearFilter()
-                            }}>
-                              Clear
-                            </Button>
-                          </>
-                          )}
+                <Col sm={2}>
+                  <Form.Group controlId='formPosition'>
+                    <Form.Label>
+                      Employee Position <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      as='select'
+                      name='Position'
+                      value={formData?.position_level}
+                      onChange={(e) => {
+                        const data = { ...formData };
+                        data.position_level = e?.target?.value;
+                        setPosition(Number(e?.target?.value));
+                        setFormData(data);
+                      }}
+                      disabled={isViewOnly ? true : false}
+                    >
+                      <option value='' hidden>Select Position</option>
+                      <option value='1'>Senior</option>
+                      <option value='2'>Junior</option>
+                      <option value='3'>Senior & Junior</option>
+                    </Form.Control>
+                    <p className='text-danger'>{validator.current.message(
+                      'Position',
+                      formData?.position_level,
+                      'required'
+                    )}</p>
+                  </Form.Group>
+                </Col>
+                {isViewOnly && (<>
+                  <Col sm={2}>
+                    <Form.Label>
+                      Average Rating <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type='text'
+                      value={avgRating}
+                      disabled='true'
+                    />
+                  </Col>
+                  <Col sm={2}>
+                    <Form.Label>
+                      Reviewed By <span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      type='text'
+                      value={reviewedByName}
+                      disabled='true'
+                    />
+                  </Col>
+                </>)}
+                <Col>
+                  {!isViewOnly && (<>
+                    <Button className='mt-4' variant="primary" onClick={() => {
+                      console.log('validator.current.errorMessages', validator.current.errorMessages);
+                      validator.current.errorMessages.EmployeeRating = null
+                      validator.current.errorMessages.review = null
+                      validator.current.fields.EmployeeRating = true
+                      validator.current.fields.review = true
 
-                        </Col>
-                      </Row>
-                      {questions && questions.length != 0 && showTable && selectedDepartment && (
-                        <Row>
-                          <div className="d-flex align-items-center justify-content-between">
-                            <p className="text-muted">Note : If you do not have an answer to a question, please enter "N/A" as the response for that question.</p>
-                          </div>
-                        </Row>
-                      )}
+                      if (validator.current.allValid()) {
+                        console.log('inside valid');
+                        validator.current.hideMessages()
+                        applyFilters()
+                      } else {
+                        validator.current.showMessages()
+                        forceUpdate(count + 1)
+                      }
+                    }}>Apply</Button>
+                    <Button className='mt-4 ml-3' variant="secondary" onClick={() => {
+                      validator.current.hideMessages()
+                      clearFilter()
+                    }}>
+                      Clear
+                    </Button>
+                  </>
+                  )}
 
-                    </Card.Body>
-                  </Card>
+                </Col>
+              </Row>
+              {questions && questions.length != 0 && showTable && selectedDepartment && (
+                <Row>
+                  <div className="d-flex align-items-center justify-content-between">
+                    <p className="text-muted">Note : If you do not have an answer to a question, please enter "N/A" as the response for that question.</p>
+                  </div>
+                </Row>
+              )}
 
-                  <Row>
-                    {questions && questions.length != 0 && showTable && selectedDepartment ? (
-                      // Group questions by category ID and render each group in its own card
-                      questions.reduce((acc, question) => {
-                        // Group questions by category ID
-                        if (!acc[question.category]) acc[question.category] = [];
-                        acc[question.category].push(question);
-                        return acc;
-                      }, {})
-                      && Object.keys(questions.reduce((acc, question) => {
-                        if (!acc[question.category]) acc[question.category] = [];
-                        acc[question.category].push(question);
+              {/* </Card.Body> */}
+              {/* </Card> */}
 
-                        return acc;
-                      }, {})).map((category) => (
-                        <Col sm={12} key={category}>
-                          <Card>
-                            <Card.Body>
-                              <h5 className="card-title">Category : {category && getCategoryById(category) ? getCategoryById(category) : category} Feedback Form</h5>
-                              <hr />
-                              {questions.filter(q => q.category === Number(category)).map((item, index) => (
-                                <Form.Group controlId={`formItem${item.id}`} key={item.id}>
-                                  <Form.Label>
-                                    {index + 1}. {item?.metric} <span className="text-danger">*</span>
-                                  </Form.Label>
-                                  {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>}
-                                  <Form.Control
-                                    as='textarea'
-                                    style={{ height: '70px' }}
-                                    value={item?.review}
-                                    onChange={(e) => {
-                                      const data = [...questions];
-                                      data[questions.indexOf(item)].review = e?.target?.value;
-                                      setQuestions(data);
-                                    }}
-                                    disabled={isViewOnly ? true : false}
-                                  />
-                                  <p className='text-danger'>
-                                    {validator.current.message(
+              <Row>
+                {questions && questions.length != 0 && showTable && selectedDepartment ? (
+                  // Group questions by category ID and render each group in its own card
+                  questions.reduce((acc, question) => {
+                    // Group questions by category ID
+                    if (!acc[question.category]) acc[question.category] = [];
+                    acc[question.category].push(question);
+                    return acc;
+                  }, {})
+                  && Object.keys(questions.reduce((acc, question) => {
+                    if (!acc[question.category]) acc[question.category] = [];
+                    acc[question.category].push(question);
 
-                                      `review`,
-                                      item?.review,
-                                      'required'
-                                    )}</p>
-                                  <br />
-                                  <Form.Label>
-                                    Note
-                                    {/* <span className="text-danger">*</span> */}
-                                  </Form.Label>
-                                  <Form.Control
-                                    as='textarea'
-                                    style={{ height: '70px' }}
-                                    value={item?.note}
-                                    onChange={(e) => {
-                                      const data = [...questions];
-                                      data[questions.indexOf(item)].note = e?.target?.value;
-                                      setQuestions(data);
-                                    }}
-                                    disabled={isViewOnly ? true : false}
-                                  />
-
-                                  <br />
-                                  <Col sm={1}>
-
-                                    <Form.Label>Employee Rating <span className="text-danger">*</span></Form.Label>
-                                    <Form.Control
-                                      as='select'
-                                      value={item?.rating}
+                    return acc;
+                  }, {})).map((category) => (
+                    <Col sm={12} key={category}>
+                      <Card>
+                        <Card.Body>
+                          <h4><b>Category : {category && getCategoryById(category) ? getCategoryById(category) : category}</b></h4>
+                          <hr />
+                          {questions.filter(q => q.category === Number(category)).map((item, index) => (
+                            <Form.Group controlId={`formItem${item.id}`} key={item.id}>
+                              <Row>
+                              <Form.Label>
+                                {/* {index + 1}. {item?.metric} <span className="text-danger">*</span> */}
+                                <b>Q{index + 1}.</b> {item?.metric} 
+                              </Form.Label>
+                              {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>}
+                              <Col sm={5}>
+                              
+                                <Form.Label>
+                                  Rating : <span className="text-danger">*</span>
+                                </Form.Label>
+                                <div>
+                                  
+                                  {['Zero', '1', '2', '3', '4', '5'].map((ratingValue) => (
+                                    <Form.Check
+                                      inline
+                                      key={ratingValue}
+                                      type="radio"
+                                      label={ratingValue}
+                                      value={item?.rating ? item?.rating : ratingValue}
+                                      checked={item?.rating == ratingValue}
                                       onChange={(e) => {
                                         const data = [...questions];
                                         data[questions.indexOf(item)].rating = e?.target?.value;
                                         setQuestions(data);
                                       }}
                                       disabled={isViewOnly ? true : false}
-                                    >
-                                      <option value='' hidden>Select Rating</option>
-                                      <option value='0'>0</option>
-                                      <option value='1'>1</option>
-                                      <option value='2'>2</option>
-                                      <option value='3'>3</option>
-                                      <option value='4'>4</option>
-                                      <option value='5'>5</option>
-                                    </Form.Control>
-                                    <p className='text-danger'>{validator.current.message(
-                                      'EmployeeRating',
-                                      item?.rating,
-                                      'required|numeric|max:5|min:0'
-                                    )}</p>
-                                  </Col>
-                                </Form.Group>
-                              ))}
-                            </Card.Body>
-                          </Card>
-                        </Col>
-                      ))
-                    ) : <>
-                      {message && (
-                        <div className="d-flex justify-content-center p-2">
-                          <h4>No record found.</h4>
-                        </div>
-                      )}
-                    </>
-                    }
-                  </Row>
-                </Form>
-              </Card.Body>
-            </Card>
+                                    />
+                                  ))}
+                                </div>
+                                <p className='text-danger'>
+                                  {validator.current.message(
+                                    'EmployeeRating',
+                                    item?.rating,
+                                    'required|numeric|max:5|min:0'
+                                  )}
+                                </p>
+                              </Col>
+                              <Col>
+                              
+                              {/* <Form.Label>
+                                {index + 1}. {item?.metric} <span className="text-danger">*</span>
+                              </Form.Label> */}
+                              {/* {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>} */}
+                              <p className="">Comment : <span className="text-danger">*</span></p>
+                              <Form.Control
+                                as='textarea'
+                                style={{ height: '50px' }}
+                                value={item?.review}
+                                onChange={(e) => {
+                                  const data = [...questions];
+                                  data[questions.indexOf(item)].review = e?.target?.value;
+                                  setQuestions(data);
+                                }}
+                                disabled={isViewOnly ? true : false}
+                              />
+                              <p className='text-danger'>
+                                {validator.current.message(
+
+                                  `review`,
+                                  item?.review,
+                                  'required'
+                                )}</p>
+                              <br />
+                              </Col>
+                              </Row>
+                            </Form.Group>
+                          ))}
+
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))
+                ) : <>
+                  {message && (
+                    <div className="d-flex justify-content-center p-2">
+                      <h4>No record found.</h4>
+                    </div>
+                  )}
+                </>
+                }
+              </Row>
+            </Form>
+            {/* </Card.Body> */}
+            {/* </Card> */}
             <div className="d-flex justify-content-end p-2">
               <ButtonGroup className="gap-3 mt-6">
                 {questions && questions.length != 0 && showTable && !isViewOnly && selectedDepartment && (
