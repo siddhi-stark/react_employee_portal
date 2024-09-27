@@ -165,27 +165,27 @@ const KraKpi = () => {
       label: 'Action',
       render: ({ id, created_at, to_user_id, to_user }) => (
         <>
-          {userRole && userRole == 1 && !isProjectManager && (
+          {/* {userRole && userRole == 1 && !isProjectManager && (
             <>
               <a
                 href="/"
                 
                 onClick={(e) => {
                   e.preventDefault();
-                  history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isProjectManager:isProjectManager } });
+                  history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isProjectManager:isProjectManager, isFromView : false } });
                 }}
               >
                 <Image src="/images/edit.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
 
               </a>
             </>
-          )}
+          )} */}
           <a
             href="/"
             className="ml-1"
             onClick={(e) => {
               e.preventDefault();
-              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user } });
+              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isFromView : true } });
             }}
           >
             <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />

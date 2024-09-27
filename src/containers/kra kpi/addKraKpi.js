@@ -23,7 +23,11 @@ const AddKraKpi = () => {
   const feddbackCreatedDate = state?.state?.state?.feddbackCreatedDate;
   const toUserId = state?.state?.state?.toUserId;
   const toUserName = state?.state?.state?.toUserName;
-  const isProjectManager = state?.state?.state?.isProjectManager;
+  const isProjectManager = state?.state?.state?.isProjectManager
+  const isFromView = state?.state?.state?.isFromView
+  const isFromUpdate = state?.state?.state?.isProjectManager
+  console.log('state',state);
+  
   const [employeeId, setEmployeeId] = useState()
   const [selectedEmployeeId, setSelectedEmployeeId] = useState();
   const [empDepartment, setEmpDepartment] = useState()
@@ -38,21 +42,22 @@ const AddKraKpi = () => {
   const [selectedEmployee, setSelectedEmployee] = useState();
   const [allTeams, setAllTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState();
-
-  console.log('selectedTeam', selectedTeam);
-
+  // const [isProjectManager, setProjectManager] = useState(false)  
+  
   const [allDepartments, setAllDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState();
-
+  
   const [showTable, setshowTable] = useState(false)
   const [userRole, setUserRole] = useState(null);
   const [avgRating, setAvgRating] = useState(0);
   const [reviewedByName, setReviewedByName] = useState(0);
   const [isViewOnly, setViewOnly] = useState(false)
+  const [isUpdate, setIsUpdate] = useState(false)
+  
   const [showAddPopUp, setAddPopUp] = useState(false)
   const [count, forceUpdate] = useState(0)
   const [message, setMessage] = useState('')
-
+  
   const [questions, setQuestions] = useState([
     {
       rating: 0,
@@ -60,6 +65,8 @@ const AddKraKpi = () => {
       note: ''
     }
   ]);
+  console.log('isViewOnly', isViewOnly);
+  console.log('isUpdate', isUpdate);
   console.log('questions', questions);
 
   const [formData, setFormData] = useState({
@@ -82,7 +89,7 @@ const AddKraKpi = () => {
   useEffect(() => {
     if (feedbackId && employeeId && empDepartment) {
       getUpdateData()
-      setViewOnly(true)
+      // setViewOnly(true)
       setFieldsDisabled(true)
     }
   }, [feedbackId, employeeId, empDepartment])
@@ -98,24 +105,30 @@ const AddKraKpi = () => {
   useEffect(() => {
     if (userRole && selectedDepartment && selectedTeam && !isViewOnly) {
       getEmployeeName();
-      setSelectedEmployee('')
-      setQuestions('')
+      if (userRole != 1 && !isProjectManager){
+        setSelectedEmployee('')
+        setQuestions('')
+      }
 
     }
   }, [userRole, selectedDepartment, selectedTeam]);
 
 
-
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-    if (userRole == 1 && !isProjectManager){
-      setViewOnly(false)
-    } 
+    // const isProjectManager =
+    //   customFunctions?.getLocalStorage('isProjectManager');
+    // setProjectManager(JSON.parse(isProjectManager));
   }, []);
 
-  useEffect(()=>{if (userRole == 1 && !isProjectManager){
+  useEffect(()=>{
+    if (userRole == 1 && !isProjectManager && !isFromView){
       setViewOnly(false)
+    }else if (userRole != 1 && !isFromView){
+      setViewOnly(false)
+    }else{
+      setViewOnly(true)
     } },[userRole, isProjectManager])
 
   function getCategoryById(categoryId) {
@@ -136,7 +149,6 @@ const AddKraKpi = () => {
   const getEmployeeName = async () => {
     setQuestions(null)
     const uRole = customFunctions.getLocalStorage('group');
-    console.log('isEmployee', uRole);
     let url = ''
     setShowLoader(true);
     if ([3, 4].includes(userRole)) {
@@ -188,7 +200,7 @@ const AddKraKpi = () => {
   const getTeams = async () => {
     setQuestions(null)
     setAllTeams(null)
-    if (!isViewOnly) {
+    if (!isViewOnly && isUpdate) {
       setSelectedTeam(null)
     }
     setShowLoader(true);
@@ -366,16 +378,6 @@ const AddKraKpi = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validator.current.allValid()) {
-      submitForm();
-    } else {
-      setFormData({ ...formData });
-      validator.current.showMessages();
-    }
-  };
-
   const handleClear = () => {
     setFormData({
       employee_rating: '',
@@ -460,7 +462,7 @@ const AddKraKpi = () => {
                     onSelectHandler={(select) => {
                       setSelectedDepartment(select);
                     }}
-                    disabled={isViewOnly ? true : false}
+                    disabled={isViewOnly ?  true : false}
                     errorMessage={validator.current.message(
                       'Department',
                       selectedDepartment,
@@ -652,7 +654,7 @@ const AddKraKpi = () => {
                                   {validator.current.message(
                                     'EmployeeRating',
                                     item?.rating,
-                                    'required|numeric|max:5|min:0'
+                                    'required|numeric'
                                   )}
                                 </p>
                               </Col>
