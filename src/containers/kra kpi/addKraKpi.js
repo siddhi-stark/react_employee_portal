@@ -575,7 +575,7 @@ const AddKraKpi = () => {
                         validator.current.showMessages()
                         forceUpdate(count + 1)
                       }
-                    }}>Apply</Button>
+                    }}>Go</Button>
                     <Button className='mt-4 ml-3' variant="secondary" onClick={() => {
                       validator.current.hideMessages()
                       clearFilter()
@@ -590,7 +590,7 @@ const AddKraKpi = () => {
               {questions && questions.length != 0 && showTable && selectedDepartment && (
                 <Row>
                   <div className="d-flex align-items-center justify-content-between">
-                    <p className="text-muted">Note : If you do not have an answer to a question, please enter "N/A" as the response for that question.</p>
+                    <p className="text-muted">Note : If you do not have an answer to a question, please enter "N/A" as the response for that question and select 'Zero' for rating.</p>
                   </div>
                 </Row>
               )}
@@ -652,7 +652,7 @@ const AddKraKpi = () => {
                                 </div>
                                 <p className='text-danger'>
                                   {validator.current.message(
-                                    'EmployeeRating',
+                                    'Rating',
                                     item?.rating,
                                     'required|numeric'
                                   )}
@@ -679,7 +679,7 @@ const AddKraKpi = () => {
                               <p className='text-danger'>
                                 {validator.current.message(
 
-                                  `review`,
+                                  `Comment`,
                                   item?.review,
                                   'required'
                                 )}</p>
