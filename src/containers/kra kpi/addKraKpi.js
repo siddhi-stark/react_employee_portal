@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Card, Form, Col, Row } from 'react-bootstrap';
 import { withRouter, useHistory, useParams, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
-import { Helmet, DropdownInput, RadioButton } from '../../components/FormInputs';
+import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
@@ -26,8 +26,8 @@ const AddKraKpi = () => {
   const isProjectManager = state?.state?.state?.isProjectManager
   const isFromView = state?.state?.state?.isFromView
   const isFromUpdate = state?.state?.state?.isProjectManager
-  console.log('state',state);
-  
+  console.log('state', state);
+
   const [employeeId, setEmployeeId] = useState()
   const [selectedEmployeeId, setSelectedEmployeeId] = useState();
   const [empDepartment, setEmpDepartment] = useState()
@@ -40,24 +40,45 @@ const AddKraKpi = () => {
   const [refereshPage, setRefereshPage] = useState(false);
   const [allEmployes, setAllEmployes] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState();
+  // const [allEmployes, setAllEmployes] = useState([]);
+  const [selectedPostion, setSelectedPostion] = useState();
   const [allTeams, setAllTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState();
+  const currentDate = new Date();
+  const currentMonth = currentDate.toLocaleString('default', { month: 'long' }); // 'January', 'February', etc.
+  const currentYear = currentDate.getFullYear(); // 2024
+  const [selectedMonth, setSetSelectedMonth] = useState('');
+
+
   // const [isProjectManager, setProjectManager] = useState(false)  
-  
+
   const [allDepartments, setAllDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState();
-  
+
   const [showTable, setshowTable] = useState(false)
   const [userRole, setUserRole] = useState(null);
   const [avgRating, setAvgRating] = useState(0);
   const [reviewedByName, setReviewedByName] = useState(0);
   const [isViewOnly, setViewOnly] = useState(false)
   const [isUpdate, setIsUpdate] = useState(false)
-  
+
   const [showAddPopUp, setAddPopUp] = useState(false)
   const [count, forceUpdate] = useState(0)
   const [message, setMessage] = useState('')
-  
+  const [rating, setRatings] = useState()
+  const ratingOptions = [
+    { id: "zero", label: "zero", isCheck: false },
+    { id: "1", label: "1", isCheck: false },
+    { id: "2", label: "2", isCheck: false },
+    { id: "3", label: "3", isCheck: false },
+    { id: "4", label: "4", isCheck: false },
+    { id: "5", label: "5", isCheck: false },]
+
+  const allPosition = [
+    { label: "Senior", value: "1" },
+    { label: "Junior", value: "2" },
+    { label: "Senior & Junior", value: "3" },]
+
   const [questions, setQuestions] = useState([
     {
       rating: 0,
@@ -65,8 +86,8 @@ const AddKraKpi = () => {
       note: ''
     }
   ]);
-  console.log('isViewOnly', isViewOnly);
-  console.log('isUpdate', isUpdate);
+  // console.log('isViewOnly', isViewOnly);
+  // console.log('isUpdate', isUpdate);
   console.log('questions', questions);
 
   const [formData, setFormData] = useState({
@@ -74,12 +95,20 @@ const AddKraKpi = () => {
     position_level: '',
   });
 
+  const handleCheckboxChange = (event, item) => {
+    console.log('event', event);
+    const data = [...questions];
+    data[questions.indexOf(item)].rating = event;
+    setQuestions(data);
+  };
+
   useEffect(() => {
     setEmployeeId(localStorage.getItem('userId'))
     setEmpDepartment(localStorage.getItem('department'))
     getDepartments()
     setTitle('Fill KRA-KPI');
   }, [refereshPage]);
+
 
   useEffect(() => {
     if (!selectedDepartment) return;
@@ -105,7 +134,7 @@ const AddKraKpi = () => {
   useEffect(() => {
     if (userRole && selectedDepartment && selectedTeam && !isViewOnly) {
       getEmployeeName();
-      if (userRole != 1 && !isProjectManager){
+      if (userRole != 1 && !isProjectManager) {
         setSelectedEmployee('')
         setQuestions('')
       }
@@ -122,14 +151,15 @@ const AddKraKpi = () => {
     // setProjectManager(JSON.parse(isProjectManager));
   }, []);
 
-  useEffect(()=>{
-    if (userRole == 1 && !isProjectManager && !isFromView){
+  useEffect(() => {
+    if (userRole == 1 && !isProjectManager && !isFromView) {
       setViewOnly(false)
-    }else if (userRole != 1 && !isFromView){
+    } else if (userRole != 1 && !isFromView) {
       setViewOnly(false)
-    }else{
+    } else {
       setViewOnly(true)
-    } },[userRole, isProjectManager])
+    }
+  }, [userRole, isProjectManager])
 
   function getCategoryById(categoryId) {
     let categoryName = ''
@@ -224,6 +254,7 @@ const AddKraKpi = () => {
     }
   }
 
+
   const getUpdateData = async () => {
     console.log('inside update function');
 
@@ -248,11 +279,13 @@ const AddKraKpi = () => {
     let reviewedBy = ''
     let team_name = null
     let team = null
+    let created_at = null
 
     console.log('data?.data[0]', data?.data);
 
     if (data && data.success) {
       averageRating = data?.data[0]?.average_rating ? data?.data[0]?.average_rating : 0
+      created_at = data?.data[0]?.created_at
       data?.data[0]?.kra_kpi.length > 0 && data.data[0].kra_kpi.map((item) => {
         console.log('sssss', item);
         department = item?.departments[0]
@@ -275,6 +308,9 @@ const AddKraKpi = () => {
     console.log('team', team);
     console.log('team_name', team_name);
 
+    if (created_at) {
+      setSetSelectedMonth(new Date(created_at))
+    }
     setFormData({ departments: department, position_level: positionLevel })
     setSelectedEmployee({ label: toUserName, value: toUserId })
     setSelectedDepartment({ 'label': department_name, 'value': department })
@@ -300,8 +336,8 @@ const AddKraKpi = () => {
     if (selectedTeam) {
       params.team = selectedTeam?.value
     }
-    if (position) {
-      params.position_level = position
+    if (selectedPostion) {
+      params.position_level = selectedPostion?.value
     }
 
 
@@ -312,6 +348,10 @@ const AddKraKpi = () => {
       if (data?.data.length == 0) {
         setMessage('No Data found.')
       }
+
+      data?.data.forEach(obj => {
+        obj.rating = '';
+      });
 
       setQuestions(data?.data)
       setShowLoader(false);
@@ -332,6 +372,8 @@ const AddKraKpi = () => {
     questions?.length &&
       questions.forEach((item) => {
         if (!item?.rating) {
+          item.rating = 0
+        } else if (item?.rating === 'zero') {
           item.rating = 0
         }
         const postData = {
@@ -411,11 +453,12 @@ const AddKraKpi = () => {
     });
     setSelectedDepartment(null)
     setSelectedTeam(null)
-    setPosition(null)
+    setSelectedPostion(null)
     setSelectedEmployee(null)
     setSelectedEmployeeId(null)
     setQuestions(null)
     setRefereshPage(true)
+    setSetSelectedMonth(null)
   }
 
   return (
@@ -449,65 +492,83 @@ const AddKraKpi = () => {
             </div>
             <hr style={{ borderColor: "white" }} />
 
-            <Form >
-              {/* <Card> */}
-              {/* <Card.Body> */}
-              <Row>
-                <Col sm={2}>
-                  <DropdownInput
-                    label="Department"
-                    asterisk="*"
-                    options={allDepartments}
-                    defaultValue={selectedDepartment}
-                    onSelectHandler={(select) => {
-                      setSelectedDepartment(select);
-                    }}
-                    disabled={isViewOnly ?  true : false}
-                    errorMessage={validator.current.message(
-                      'Department',
-                      selectedDepartment,
-                      'required'
-                    )}
-                  />
-                </Col>
-                <Col sm={2}>
-                  <DropdownInput
-                    label="Team"
-                    asterisk="*"
-                    options={allTeams}
-                    defaultValue={selectedTeam}
-                    onSelectHandler={(select) => {
-                      setSelectedTeam(select);
-                    }}
-                    disabled={isViewOnly ? true : false}
-                    errorMessage={validator.current.message(
-                      'Team',
-                      selectedTeam,
-                      'required'
-                    )}
-                  />
-                </Col>
+            {/* <Card> */}
+            {/* <Card.Body> */}
+            <Row>
+              <Col sm={2}>
+                <DropdownInput
+                  label="Department"
+                  asterisk="*"
+                  options={allDepartments}
+                  defaultValue={selectedDepartment}
+                  onSelectHandler={(select) => {
+                    setSelectedDepartment(select);
+                  }}
+                  disabled={isViewOnly ? true : false}
+                  errorMessage={validator.current.message(
+                    'Department',
+                    selectedDepartment,
+                    'required'
+                  )}
+                />
+              </Col>
+              <Col sm={2}>
+                <DropdownInput
+                  label="Team"
+                  asterisk="*"
+                  options={allTeams}
+                  defaultValue={selectedTeam}
+                  onSelectHandler={(select) => {
+                    setSelectedTeam(select);
+                  }}
+                  disabled={isViewOnly ? true : false}
+                  errorMessage={validator.current.message(
+                    'Team',
+                    selectedTeam,
+                    'required'
+                  )}
+                />
+              </Col>
+              <Col sm={2}>
+                <DropdownInput
+                  label="Employee"
+                  asterisk="*"
+                  options={allEmployes}
+                  defaultValue={selectedEmployee}
+                  onSelectHandler={(select) => {
+                    setSelectedEmployee(select);
+                    setSelectedEmployeeId(select?.value);
+                  }}
+                  disabled={isViewOnly ? true : false}
+                  errorMessage={validator.current.message(
+                    'Employee',
+                    selectedEmployee,
+                    'required'
+                  )}
+                />
+              </Col>
 
-                <Col sm={2}>
-                  <DropdownInput
-                    label="Employee"
-                    asterisk="*"
-                    options={allEmployes}
-                    defaultValue={selectedEmployee}
-                    onSelectHandler={(select) => {
-                      setSelectedEmployee(select);
-                      setSelectedEmployeeId(select?.value);
-                    }}
-                    disabled={isViewOnly ? true : false}
-                    errorMessage={validator.current.message(
-                      'Employee',
-                      selectedEmployee,
-                      'required'
-                    )}
-                  />
-                </Col>
+              <Col sm={2}>
+                <DropdownInput
+                  label="Position"
+                  asterisk="*"
+                  options={allPosition}
+                  defaultValue={selectedPostion}
+                  onSelectHandler={(select) => {
+                    const data = { ...formData };
+                    data.position_level = select?.value;
+                    setSelectedPostion(select);
+                  }}
+                  disabled={isViewOnly ? true : false}
+                  errorMessage={validator.current.message(
+                    'Position',
+                    selectedPostion,
+                    'required'
+                  )}
+                />
+              </Col>
 
-                <Col sm={2}>
+              {/* <Col sm={2}>
                   <Form.Group controlId='formPosition'>
                     <Form.Label>
                       Employee Position <span className="text-danger">*</span>
@@ -535,61 +596,90 @@ const AddKraKpi = () => {
                       'required'
                     )}</p>
                   </Form.Group>
+                </Col> */}
+              <Col sm={2}>
+                <Datepicker
+                  label="Month"
+                  className="form-control w-100"
+                  name={"endDate"}
+                  placeholder={"Select month/year"}
+                  showMonthYearPicker={true}
+                  dateFormat={"MM/yyyy"}
+                  // minDate={element?.startDate}
+                  // defaultValue={new Date(selectedMonth)}
+                  maxDate={new Date()}
+                  selected={selectedMonth}
+                  disabled={isViewOnly ? true : false}
+                  onChange={(date) => {
+                    console.log('date', date.month);
+                    setSetSelectedMonth(date);
+                  }}
+                />
+              </Col>
+              {isViewOnly && (<>
+                <Col sm={2}>
+                  <Form.Label>
+                    Average Rating <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={avgRating}
+                    disabled='true'
+                  />
                 </Col>
-                {isViewOnly && (<>
-                  <Col sm={2}>
-                    <Form.Label>
-                      Average Rating <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      type='text'
-                      value={avgRating}
-                      disabled='true'
-                    />
-                  </Col>
-                  <Col sm={2}>
-                    <Form.Label>
-                      Reviewed By <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      type='text'
-                      value={reviewedByName}
-                      disabled='true'
-                    />
-                  </Col>
-                </>)}
-                <Col>
-                  {!isViewOnly && (<>
-                    <Button className='mt-4' variant="primary" onClick={() => {
-                      console.log('validator.current.errorMessages', validator.current.errorMessages);
-                      validator.current.errorMessages.EmployeeRating = null
-                      validator.current.errorMessages.review = null
-                      validator.current.fields.EmployeeRating = true
-                      validator.current.fields.review = true
+                <Col sm={2}>
+                  <Form.Label>
+                    Reviewed By <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    type='text'
+                    value={reviewedByName}
+                    disabled='true'
+                  />
+                </Col>
+              </>)}
+            </Row>
+            <Row>
+              <Col>
+                {!isViewOnly && (<>
+                  <Button className='mt-4' variant="primary" onClick={() => {
+                    console.log('validator.current.errorMessages', validator.current.errorMessages);
+                    validator.current.errorMessages.EmployeeRating = null
+                    validator.current.errorMessages.review = null
+                    validator.current.fields.EmployeeRating = true
+                    validator.current.fields.review = true
 
-                      if (validator.current.allValid()) {
-                        console.log('inside valid');
-                        validator.current.hideMessages()
-                        applyFilters()
-                      } else {
-                        validator.current.showMessages()
-                        forceUpdate(count + 1)
-                      }
-                    }}>Go</Button>
-                    <Button className='mt-4 ml-3' variant="secondary" onClick={() => {
+                    validator.current.errorMessages.Comment = null
+                    validator.current.fields.Comment = true
+
+                    validator.current.errorMessages.Rating = null
+                    validator.current.fields.Rating = true
+
+                    if (validator.current.allValid()) {
+                      console.log('inside valid');
                       validator.current.hideMessages()
-                      clearFilter()
-                    }}>
-                      Clear
-                    </Button>
-                  </>
-                  )}
+                      applyFilters()
+                    } else {
+                      validator.current.showMessages()
+                      forceUpdate(count + 1)
+                    }
+                  }}>Go</Button>
+                  <Button className='mt-4 ml-3' variant="secondary" onClick={() => {
+                    validator.current.hideMessages()
+                    clearFilter()
+                  }}>
+                    Clear
+                  </Button>
+                </>
+                )}
+              </Col>
+            </Row>
+            <Form >
 
-                </Col>
-              </Row>
+
               {questions && questions.length != 0 && showTable && selectedDepartment && (
                 <Row>
-                  <div className="d-flex align-items-center justify-content-between">
+                  <div className="d-flex align-items-center justify-content-between mt-2">
                     <p className="text-muted">Note : If you do not have an answer to a question, please enter "N/A" as the response for that question and select 'Zero' for rating.</p>
                   </div>
                 </Row>
@@ -621,70 +711,74 @@ const AddKraKpi = () => {
                           {questions.filter(q => q.category === Number(category)).map((item, index) => (
                             <Form.Group controlId={`formItem${item.id}`} key={item.id}>
                               <Row>
-                              <Form.Label>
-                                {/* {index + 1}. {item?.metric} <span className="text-danger">*</span> */}
-                                <b>Q{index + 1}.</b> {item?.metric} 
-                              </Form.Label>
-                              {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>}
-                              <Col sm={5}>
-                              
                                 <Form.Label>
-                                  Rating : <span className="text-danger">*</span>
+                                  {/* {index + 1}. {item?.metric} <span className="text-danger">*</span> */}
+                                  <b>Q{index + 1}.</b> {item?.metric}
                                 </Form.Label>
-                                <div>
-                                  
-                                  {['Zero', '1', '2', '3', '4', '5'].map((ratingValue) => (
-                                    <Form.Check
-                                      inline
-                                      key={ratingValue}
-                                      type="radio"
-                                      label={ratingValue}
-                                      value={item?.rating ? item?.rating : ratingValue}
-                                      checked={item?.rating == ratingValue}
-                                      onChange={(e) => {
-                                        const data = [...questions];
-                                        data[questions.indexOf(item)].rating = e?.target?.value;
-                                        setQuestions(data);
-                                      }}
-                                      disabled={isViewOnly ? true : false}
-                                    />
-                                  ))}
-                                </div>
-                                <p className='text-danger'>
-                                  {validator.current.message(
-                                    'Rating',
-                                    item?.rating,
-                                    'required|numeric'
-                                  )}
-                                </p>
-                              </Col>
-                              <Col>
-                              
-                              {/* <Form.Label>
+                                {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>}
+
+                                <Col md={5}>
+                                  <Form.Label>
+                                    Rating : <span className="text-danger">*</span>
+                                  </Form.Label>
+                                  <div className="ms-lg-8 mt-lg-2">
+                                    {ratingOptions?.length > 0 &&
+                                      ratingOptions.map((option) => (
+                                        <Form.Check
+                                          inline
+                                          key={option.value}
+                                          type="radio"
+                                          id={option.value}
+                                          // name={`backgroundJuryTrialOne_${index}_${item.id}`}
+                                          label={option.label}
+                                          value={option.value}
+                                          className="mb-2 form-radio"
+                                          checked={item?.rating === option.label}
+                                          onChange={(e) => {
+                                            console.log('Hello', option.value);
+                                            console.log('option.label', option.label);
+
+                                            handleCheckboxChange(option.label, item);
+                                          }}
+                                        // label={<span dangerouslySetInnerHTML={{ __html: option.label }} />}
+                                        />
+                                      ))}
+                                    <p className='text-danger'>
+                                      {validator.current.message(
+                                        'Rating',
+                                        item?.rating,
+                                        'required'
+                                      )}
+                                    </p>
+                                  </div>
+                                </Col>
+                                <Col>
+
+                                  {/* <Form.Label>
                                 {index + 1}. {item?.metric} <span className="text-danger">*</span>
                               </Form.Label> */}
-                              {/* {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>} */}
-                              <p className="">Comment : <span className="text-danger">*</span></p>
-                              <Form.Control
-                                as='textarea'
-                                style={{ height: '50px' }}
-                                value={item?.review}
-                                onChange={(e) => {
-                                  const data = [...questions];
-                                  data[questions.indexOf(item)].review = e?.target?.value;
-                                  setQuestions(data);
-                                }}
-                                disabled={isViewOnly ? true : false}
-                              />
-                              <p className='text-danger'>
-                                {validator.current.message(
+                                  {/* {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>} */}
+                                  <p className="">Comment : <span className="text-danger">*</span></p>
+                                  <Form.Control
+                                    as='textarea'
+                                    style={{ height: '50px' }}
+                                    value={item?.review}
+                                    onChange={(e) => {
+                                      const data = [...questions];
+                                      data[questions.indexOf(item)].review = e?.target?.value;
+                                      setQuestions(data);
+                                    }}
+                                    disabled={isViewOnly ? true : false}
+                                  />
+                                  <p className='text-danger'>
+                                    {validator.current.message(
 
-                                  `Comment`,
-                                  item?.review,
-                                  'required'
-                                )}</p>
-                              <br />
-                              </Col>
+                                      `Comment`,
+                                      item?.review,
+                                      'required'
+                                    )}</p>
+                                  <br />
+                                </Col>
                               </Row>
                             </Form.Group>
                           ))}

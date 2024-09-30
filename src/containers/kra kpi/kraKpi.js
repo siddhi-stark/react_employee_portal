@@ -26,6 +26,7 @@ const KraKpi = () => {
   const [showDelete, setShowDelete] = useState(false);
   const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
   const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
+  const [selectedMonth, setSetSelectedMonth] = useState('');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
   const [userRole, setUserRole] = useState(null);
   const [apiCalled, setApiCalled] = useState(false);
@@ -34,7 +35,26 @@ const KraKpi = () => {
   const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
   const [isProjectManager, setProjectManager] = useState(false)
+  const currentDate = new Date();
+  const currentMonth = currentDate.toLocaleString('default', { month: 'long' }); // 'January', 'February', etc.
+  const currentYear = currentDate.getFullYear(); // 2024
 
+  const [allMonths, setMonths] = useState([
+    { label: 'January', value: 1 },
+    { label: 'February', value: 2 },
+    { label: 'March', value: 3 },
+    { label: 'April', value: 4 },
+    { label: 'May', value: 5 },
+    { label: 'June', value: 6 },
+    { label: 'July', value: 7 },
+    { label: 'August', value: 8 },
+    { label: 'September', value: 9 },
+    { label: 'October', value: 10 },
+    { label: 'November', value: 11 },
+    { label: 'December', value: 12 }
+  ]);
+
+  console.log('selectedMonth', selectedMonth);
 
   useEffect(() => {
     setTitle("Employees KRA-KPI");
@@ -62,6 +82,14 @@ const KraKpi = () => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
   }, []);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${month}-${year}`;
+  };
+
 
   const getEmployeeName = async () => {
     setShowLoader(true);
@@ -100,6 +128,9 @@ const KraKpi = () => {
     }
     if (joiningDate) {
       params.start_date = customFunctions.getDate(joiningDate);
+    }
+    if (selectedMonth){
+      params.date = formatDate(selectedMonth)
     }
 
     const url = customFunctions.generateUrl(Api.kraKpiUrl, params);
@@ -185,7 +216,7 @@ const KraKpi = () => {
             className="ml-1"
             onClick={(e) => {
               e.preventDefault();
-              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isFromView : true } });
+              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isFromView: true } });
             }}
           >
             <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
@@ -245,6 +276,24 @@ const KraKpi = () => {
             </Col>
             <Col sm={2}>
               <Datepicker
+                className="form-control w-100"
+                name={"endDate"}
+                placeholder={"Select month/year"}
+                showMonthYearPicker={true}
+                dateFormat={"MM/yyyy"}
+                // minDate={element?.startDate}
+                // defaultValue={new Date(selectedMonth)}
+                maxDate={new Date()}
+                selected={selectedMonth}
+                onChange={(date) => {
+                  console.log('date', date.month);
+
+                  setSetSelectedMonth(date);
+                }}
+              />
+            </Col>
+            {/* <Col sm={2}>
+              <Datepicker
                 className="form-control"
                 selected={joiningDate}
                 placeholder="Created date"
@@ -253,13 +302,14 @@ const KraKpi = () => {
                   setJoiningDate(e);
                 }}
               />
-            </Col>
+            </Col> */}
             <Col>
               <Button variant="primary" onClick={applyFilters}>Apply</Button>
               <Button variant="secondary" onClick={() => {
                 setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
                 setSelectedEmployeeId('all_employess')
                 setJoiningDate(null)
+                setSetSelectedMonth(null)
                 setApiCalled(false)
                 setRefereshPage(true)
               }
