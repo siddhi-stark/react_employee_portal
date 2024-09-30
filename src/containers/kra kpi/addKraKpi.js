@@ -25,14 +25,9 @@ const AddKraKpi = () => {
   const toUserName = state?.state?.state?.toUserName;
   const isProjectManager = state?.state?.state?.isProjectManager
   const isFromView = state?.state?.state?.isFromView
-  const isFromUpdate = state?.state?.state?.isProjectManager
-  console.log('state', state);
-
   const [employeeId, setEmployeeId] = useState()
   const [selectedEmployeeId, setSelectedEmployeeId] = useState();
   const [empDepartment, setEmpDepartment] = useState()
-  const [departments, setDepartments] = useState()
-  const [position, setPosition] = useState()
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
@@ -40,18 +35,10 @@ const AddKraKpi = () => {
   const [refereshPage, setRefereshPage] = useState(false);
   const [allEmployes, setAllEmployes] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState();
-  // const [allEmployes, setAllEmployes] = useState([]);
   const [selectedPostion, setSelectedPostion] = useState();
   const [allTeams, setAllTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState();
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('default', { month: 'long' }); // 'January', 'February', etc.
-  const currentYear = currentDate.getFullYear(); // 2024
   const [selectedMonth, setSetSelectedMonth] = useState('');
-
-
-  // const [isProjectManager, setProjectManager] = useState(false)  
-
   const [allDepartments, setAllDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState();
 
@@ -60,12 +47,11 @@ const AddKraKpi = () => {
   const [avgRating, setAvgRating] = useState(0);
   const [reviewedByName, setReviewedByName] = useState(0);
   const [isViewOnly, setViewOnly] = useState(false)
-  const [isUpdate, setIsUpdate] = useState(false)
+  const [isReset, setReset] = useState(false)
 
   const [showAddPopUp, setAddPopUp] = useState(false)
   const [count, forceUpdate] = useState(0)
   const [message, setMessage] = useState('')
-  const [rating, setRatings] = useState()
   const ratingOptions = [
     { id: "zero", label: "zero", isCheck: false },
     { id: "1", label: "1", isCheck: false },
@@ -86,9 +72,7 @@ const AddKraKpi = () => {
       note: ''
     }
   ]);
-  // console.log('isViewOnly', isViewOnly);
-  // console.log('isUpdate', isUpdate);
-  console.log('questions', questions);
+  // console.log('questions', questions);
 
   const [formData, setFormData] = useState({
     departments: '',
@@ -96,7 +80,6 @@ const AddKraKpi = () => {
   });
 
   const handleCheckboxChange = (event, item) => {
-    console.log('event', event);
     const data = [...questions];
     data[questions.indexOf(item)].rating = event;
     setQuestions(data);
@@ -124,7 +107,9 @@ const AddKraKpi = () => {
   }, [feedbackId, employeeId, empDepartment])
 
   useEffect(() => {
-    if (!feedbackId && selectedDepartment && selectedTeam && selectedEmployee && position) {
+    
+    if (!feedbackId && selectedDepartment && selectedTeam && selectedEmployee && selectedPostion && !isReset) {
+      console.log('Hello world');
       getKraKpiDetails()
       setViewOnly(false)
       setFieldsDisabled(true)
@@ -178,6 +163,12 @@ const AddKraKpi = () => {
 
   const getEmployeeName = async () => {
     setQuestions(null)
+    if (!isViewOnly) {
+      setSelectedPostion(null)
+      setSelectedEmployee(null)
+      setSetSelectedMonth(null)
+      setReset(true)
+    }
     const uRole = customFunctions.getLocalStorage('group');
     let url = ''
     setShowLoader(true);
@@ -230,8 +221,14 @@ const AddKraKpi = () => {
   const getTeams = async () => {
     setQuestions(null)
     setAllTeams(null)
-    if (!isViewOnly && isUpdate) {
+    // if (!isViewOnly && isUpdate) {
+    if (!isViewOnly) {
       setSelectedTeam(null)
+      setSelectedPostion(null)
+      setSelectedEmployee(null)
+      setSetSelectedMonth(null)
+      setReset(true)
+
     }
     setShowLoader(true);
     const endPoint = `${Api.InterviewRoundsUrl}`;
@@ -256,8 +253,6 @@ const AddKraKpi = () => {
 
 
   const getUpdateData = async () => {
-    console.log('inside update function');
-
     setShowLoader(true);
     const endPoint = `${Api.kraKpiUrl}`;
     const params = {
@@ -267,14 +262,13 @@ const AddKraKpi = () => {
     };
 
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log("url", url);
-
     const { data, _ } = await AuthApi.getDataFromServer(url);
 
     let oldData = []
     let department = null
     let department_name = null
     let positionLevel = null
+    let positionLevelName = null
     let averageRating = 0
     let reviewedBy = ''
     let team_name = null
@@ -287,12 +281,13 @@ const AddKraKpi = () => {
       averageRating = data?.data[0]?.average_rating ? data?.data[0]?.average_rating : 0
       created_at = data?.data[0]?.created_at
       data?.data[0]?.kra_kpi.length > 0 && data.data[0].kra_kpi.map((item) => {
-        console.log('sssss', item);
+        // console.log('sssss', item);
         department = item?.departments[0]
         team = item?.team
         department_name = item?.department_names[0]
         team_name = item?.team_name
         positionLevel = item?.position_level
+        positionLevelName = item?.position_level_name
         reviewedBy = item?.reviewed_by
         oldData.push({
           id: item.id,
@@ -305,8 +300,6 @@ const AddKraKpi = () => {
         })
       })
     }
-    console.log('team', team);
-    console.log('team_name', team_name);
 
     if (created_at) {
       setSetSelectedMonth(new Date(created_at))
@@ -315,6 +308,7 @@ const AddKraKpi = () => {
     setSelectedEmployee({ label: toUserName, value: toUserId })
     setSelectedDepartment({ 'label': department_name, 'value': department })
     setSelectedTeam({ 'label': team_name, 'value': team })
+    setSelectedPostion({ 'label': positionLevelName, 'value': positionLevel })
     setAvgRating(averageRating)
     setReviewedByName(reviewedBy)
     setQuestions(oldData)
@@ -323,8 +317,6 @@ const AddKraKpi = () => {
   }
 
   const getKraKpiDetails = async () => {
-    console.log('inside get data function');
-
     setShowLoader(true);
 
     const endPoint = `${Api.kraKpiQuestionnaire}`;
@@ -442,11 +434,11 @@ const AddKraKpi = () => {
 
   const applyFilters = () => {
     setCurrentPage(1);
+    setReset(false)
     getKraKpiDetails(1);
   };
 
   const clearFilter = () => {
-    console.log('inside clear');
     setFormData({
       departments: '',
       position_level: '',
@@ -459,6 +451,7 @@ const AddKraKpi = () => {
     setQuestions(null)
     setRefereshPage(true)
     setSetSelectedMonth(null)
+    setReset(false)
   }
 
   return (
@@ -473,14 +466,8 @@ const AddKraKpi = () => {
       <section className="content-area">
         <Card>
           <Card.Body>
-            {/* <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">KRA-KPI Form</h5>
-            </div>
-            <hr style={{ borderColor: "white" }} /> */}
-            {/* <Card> */}
-            {/* <Card.Body> */}
             <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
+              <h5 className="card-title mb-0 mt-2 ">Get Forms details by Filters</h5>
               <Button
                 variant="secondary"
                 className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
@@ -492,8 +479,6 @@ const AddKraKpi = () => {
             </div>
             <hr style={{ borderColor: "white" }} />
 
-            {/* <Card> */}
-            {/* <Card.Body> */}
             <Row>
               <Col sm={2}>
                 <DropdownInput
@@ -567,55 +552,29 @@ const AddKraKpi = () => {
                   )}
                 />
               </Col>
-
-              {/* <Col sm={2}>
-                  <Form.Group controlId='formPosition'>
-                    <Form.Label>
-                      Employee Position <span className="text-danger">*</span>
-                    </Form.Label>
-                    <Form.Control
-                      as='select'
-                      name='Position'
-                      value={formData?.position_level}
-                      onChange={(e) => {
-                        const data = { ...formData };
-                        data.position_level = e?.target?.value;
-                        setPosition(Number(e?.target?.value));
-                        setFormData(data);
-                      }}
-                      disabled={isViewOnly ? true : false}
-                    >
-                      <option value='' hidden>Select Position</option>
-                      <option value='1'>Senior</option>
-                      <option value='2'>Junior</option>
-                      <option value='3'>Senior & Junior</option>
-                    </Form.Control>
-                    <p className='text-danger'>{validator.current.message(
-                      'Position',
-                      formData?.position_level,
-                      'required'
-                    )}</p>
-                  </Form.Group>
-                </Col> */}
               <Col sm={2}>
                 <Datepicker
                   label="Month"
+                  asterisk="*"
                   className="form-control w-100"
                   name={"endDate"}
                   placeholder={"Select month/year"}
                   showMonthYearPicker={true}
                   dateFormat={"MM/yyyy"}
-                  // minDate={element?.startDate}
-                  // defaultValue={new Date(selectedMonth)}
                   maxDate={new Date()}
                   selected={selectedMonth}
                   disabled={isViewOnly ? true : false}
                   onChange={(date) => {
-                    console.log('date', date.month);
                     setSetSelectedMonth(date);
                   }}
+                  errorMessage={validator.current.message(
+                    'Month',
+                    selectedMonth,
+                    'required'
+                  )}
                 />
               </Col>
+
               {isViewOnly && (<>
                 <Col sm={2}>
                   <Form.Label>
@@ -643,7 +602,6 @@ const AddKraKpi = () => {
               <Col>
                 {!isViewOnly && (<>
                   <Button className='mt-4' variant="primary" onClick={() => {
-                    console.log('validator.current.errorMessages', validator.current.errorMessages);
                     validator.current.errorMessages.EmployeeRating = null
                     validator.current.errorMessages.review = null
                     validator.current.fields.EmployeeRating = true
@@ -656,9 +614,9 @@ const AddKraKpi = () => {
                     validator.current.fields.Rating = true
 
                     if (validator.current.allValid()) {
-                      console.log('inside valid');
                       validator.current.hideMessages()
                       applyFilters()
+
                     } else {
                       validator.current.showMessages()
                       forceUpdate(count + 1)
@@ -729,18 +687,14 @@ const AddKraKpi = () => {
                                           key={option.value}
                                           type="radio"
                                           id={option.value}
-                                          // name={`backgroundJuryTrialOne_${index}_${item.id}`}
                                           label={option.label}
                                           value={option.value}
                                           className="mb-2 form-radio"
-                                          checked={item?.rating === option.label}
+                                          checked={item?.rating == option.label}
                                           onChange={(e) => {
-                                            console.log('Hello', option.value);
-                                            console.log('option.label', option.label);
-
                                             handleCheckboxChange(option.label, item);
                                           }}
-                                        // label={<span dangerouslySetInnerHTML={{ __html: option.label }} />}
+                                          disabled={isViewOnly ? true : false}
                                         />
                                       ))}
                                     <p className='text-danger'>

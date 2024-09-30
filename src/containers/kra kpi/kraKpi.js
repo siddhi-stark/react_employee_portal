@@ -213,7 +213,7 @@ const KraKpi = () => {
           )} */}
           <a
             href="/"
-            className="ml-1"
+            // className="ml-1"
             onClick={(e) => {
               e.preventDefault();
               history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isFromView: true } });
@@ -281,13 +281,10 @@ const KraKpi = () => {
                 placeholder={"Select month/year"}
                 showMonthYearPicker={true}
                 dateFormat={"MM/yyyy"}
-                // minDate={element?.startDate}
-                // defaultValue={new Date(selectedMonth)}
                 maxDate={new Date()}
                 selected={selectedMonth}
                 onChange={(date) => {
                   console.log('date', date.month);
-
                   setSetSelectedMonth(date);
                 }}
               />
