@@ -64,7 +64,7 @@ function Dashboard() {
 
   useEffect(() => {
     const today = new Date().getDate();
-    if (today === 1 || today === 30) {
+    if (today === 1 || today === 30 || today === 31) {
       setKraKpiNotification(true);
     }
   }, []);
