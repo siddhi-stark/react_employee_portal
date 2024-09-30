@@ -1448,8 +1448,7 @@ function EmployeeProfile(props) {
           {employeeDetails &&
             !employeeDetails.confirmation_date &&
             !employeeDetails.relieving_date &&
-            !employeeDetails?.on_notice_period &&
-            isProbationEndDateToday && (
+            !employeeDetails?.on_notice_period && (
               <Card.Body>
                 <div className="text-end">
                   <button
