@@ -53,7 +53,7 @@ const AddKraKpi = () => {
   const [count, forceUpdate] = useState(0)
   const [message, setMessage] = useState('')
   const ratingOptions = [
-    { id: "zero", label: "zero", isCheck: false },
+    { id: "zero", label: "0", isCheck: false },
     { id: "1", label: "1", isCheck: false },
     { id: "2", label: "2", isCheck: false },
     { id: "3", label: "3", isCheck: false },
