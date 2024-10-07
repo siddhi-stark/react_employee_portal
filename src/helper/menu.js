@@ -25,10 +25,10 @@ const menu = [
         roleaccess: [1, 2, 3, 4, 10],
       },
       {
-        title : 'Completed Project',
+        title: 'Completed Project',
         path: '/completed-project',
         icon: 'project.svg',
-        roleaccess : [1, 2, 3, 4, 10],
+        roleaccess: [1, 2, 3, 4, 10],
       }
     ],
     roleaccess: [1, 2, 3, 4, 10],
@@ -98,7 +98,7 @@ const menu = [
         roleaccess: [1, 2, 5, 6, 10],
       },
     ],
-    roleaccess: [1, 2, 5, 6 ,10],
+    roleaccess: [1, 2, 5, 6, 10],
   },
   // {
   //   title: 'Employees',
@@ -200,7 +200,7 @@ const menu = [
         roleaccess: [1, 6, 5],
       },
     ],
-    roleaccess: [1, 2, 3, 6, 5,10],
+    roleaccess: [1, 2, 3, 6, 5, 10],
   },
   {
     title: 'Event',
@@ -271,55 +271,49 @@ const menu = [
     submenu: [],
     roleaccess: [1, 3, 4, 10],
   },
-  // {
-  //   title: 'Employee Feedback',
-  //   path: '#',
-  //   redirect: false,
-  //   icon: 'template.svg',
-  //   submenu: [
-  //     {
-  //       title: 'Employee Feedback',
-  //       path: '/employee-feedback',
-  //       icon: 'template.svg',
-  //       roleaccess: [3, 4],
-  //     },
-  //     {
-  //       title: 'Questionnaire',
-  //       path: '/questionnaire',
-  //       icon: 'template.svg',
-  //       roleaccess: [1, 5, 6],
-  //     },
-  //     {
-  //       title: 'Employee Feedback Review',
-  //       path: '/employee-feedback-review',
-  //       icon: 'template.svg',
-  //       submenu: [],
-  //       roleaccess: [5, 6],
-  //     },
-  //     {
-  //       title: 'Employee Feedback Review',
-  //       path: '/employee-feedback-review-admins',
-  //       icon: 'template.svg',
-  //       submenu: [],
-  //       roleaccess: [1],
-  //     },
-  //   ],
-  //   roleaccess: [1, 3, 4, 5, 6],
-  // },
-  
   {
-    title: 'Employees KRA KPI',
-    path: '/kra-kpi',
-    icon: 'technology.svg',
-    submenu: [],
-    roleaccess: [1, 5, 6, 8],
-  },
-  {
-    title: 'Employees KRA KPI',
-    path: '/kra-kpi-employees',
-    icon: 'technology.svg',
-    submenu: [],
-    roleaccess: [3, 4],
+    title: 'Employee Review',
+    path: '#',
+    redirect: false,
+    icon: 'template.svg',
+    submenu: [
+
+      {
+        title: 'Employees KRA KPI',
+        path: '/kra-kpi',
+        icon: 'technology.svg',
+        submenu: [],
+        roleaccess: [1, 5, 6, 8],
+      },
+      {
+        title: 'Employees KRA KPI',
+        path: '/kra-kpi-employees',
+        icon: 'technology.svg',
+        submenu: [],
+        roleaccess: [3, 4],
+      },
+
+      {
+        title: 'Employees Quarters Reviews',
+        path: '/all-employees-reviews',
+        icon: 'template.svg',
+        roleaccess: [1, 5, 6],
+      },
+      
+      {
+        title: 'Employee Quarter Review',
+        path: '/employee-quarter-review',
+        icon: 'template.svg',
+        roleaccess: [3, 4],
+      },
+      {
+        title: 'Employees Quarters questionnaires',
+        path: '/questionnaire',
+        icon: 'template.svg',
+        roleaccess: [1, 5, 6],
+      },
+    ],
+    roleaccess: [1, 3, 4, 5, 6],
   },
 
   {

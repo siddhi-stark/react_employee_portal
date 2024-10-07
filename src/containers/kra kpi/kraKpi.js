@@ -94,7 +94,7 @@ const KraKpi = () => {
   const getEmployeeName = async () => {
     setShowLoader(true);
     const url = [1, 5, 6, 8].includes(userRole)
-      ? `${Api.employeeUrl}?type=all&status=active&hide_admin=1`
+      ? `${Api.employeeUrl}?type=all&status=active&is_dropdown=1`
       : '';
     const { data, error } = await AuthApi.getDataFromServer(url);
     setShowLoader(false);
@@ -289,17 +289,6 @@ const KraKpi = () => {
                 }}
               />
             </Col>
-            {/* <Col sm={2}>
-              <Datepicker
-                className="form-control"
-                selected={joiningDate}
-                placeholder="Created date"
-                dateFormat="dd/MM/yyyy"
-                onChange={(e) => {
-                  setJoiningDate(e);
-                }}
-              />
-            </Col> */}
             <Col>
               <Button variant="primary" onClick={applyFilters}>Apply</Button>
               <Button variant="secondary" onClick={() => {

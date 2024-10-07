@@ -92,11 +92,10 @@ import CompletedProject from './containers/Project/completedProject';
 import AddDocuments from './containers/Employees/AddDocuments';
 import AddEmployeeComponent from './containers/Employees/addEmpolyeeComponent';
 import EmployeeVerificationComponent from './containers/Employees/EmployeeVerification.component';
-import AddEmployeeFeedback from './containers/EmployeeFeedback/addEmployeeFeedback';
-import EmployeeFeedback from './containers/EmployeeFeedback/employeeFeedback';
-import EmployeesFeedbackReviewByHR from './containers/EmployeeFeedback/employeesFeedbackReviewByHR';
-import EmployeesFeedbackReviewByMangers from './containers/EmployeeFeedback/employeesFeedbackReviewByMangers';
-import UpdateTeamFeedback from './containers/EmployeeFeedback/updateTeamFeedback'
+import AllEmployeesReviews from './containers/EmployeeQuarterReview/allEmployeesReviews';
+import EmployeeQuarterReview from './containers/EmployeeQuarterReview/employeeQuarterReview';
+import AddFeedback from './containers/EmployeeQuarterReview/addFeedback';
+import AdminAndHrView from './containers/EmployeeQuarterReview/adminAndHrView';
 import Questionnaire from './containers/questionnaire/questionnaire'
 import AddQuestionnaire from './containers/questionnaire/addQuestionnaire'
 import KraKpi from './containers/kra kpi/kraKpi'
@@ -315,12 +314,16 @@ function Routes() {
         component={EmployeeCurrentReport}
       />
 
-      <Route path="/add-feedback" exact component={AddEmployeeFeedback} />
-      <Route path="/employee-feedback" exact component={EmployeeFeedback} />
+      {/* 
       <Route path="/employee-feedback-review" exact component={EmployeesFeedbackReviewByHR} />
       <Route path="/employee-feedback-review-admins" exact component={EmployeesFeedbackReviewByMangers} />
-      <Route path="/add-feedback/:id" exact component={AddEmployeeFeedback} />
-      <Route path="/update-feedback/:id" exact component={UpdateTeamFeedback} />
+      <Route path="/update-feedback/:id" exact component={UpdateTeamFeedback} /> */}
+      
+      <Route path="/all-employees-reviews" exact component={AllEmployeesReviews} />
+      <Route path="/employee-quarter-review" exact component={EmployeeQuarterReview} />
+      <Route path="/add-feedback" exact component={AddFeedback} />
+      <Route path="/add-feedback/:id" exact component={AddFeedback} />
+      <Route path="/admin-hr-view/:id" exact component={AdminAndHrView} />
       
       <Route path="/questionnaire" exact component={Questionnaire} />
       <Route path="/add-questionnaire" exact component={AddQuestionnaire} />

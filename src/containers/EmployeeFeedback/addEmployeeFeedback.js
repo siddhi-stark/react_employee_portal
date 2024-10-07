@@ -122,6 +122,8 @@ function AddEmployeeFeedback() {
         })
       })
     }
+    console.log('oldData', oldData);
+    
     setFormData(({
       ...formData,
       quarter: oldData?.length ? oldData[0]?.quarter : '',
@@ -219,7 +221,7 @@ function AddEmployeeFeedback() {
 
     const { data, message } = response;
     if (data) {
-      swal(data.message[0], '', 'success').then(() => {
+      swal(data.message[0], '', 'success').then(() => {        
         if (isAdmins){
           history.push('/employee-feedback-review-admins');
         }else if(isHr){
@@ -262,6 +264,8 @@ function AddEmployeeFeedback() {
     // submitForm();
     // window.location.reload();
     validator.current.hideMessages();
+    console.log('isAdmins', isAdmins, "isHr", isHr);
+
     if (isAdmins){
       history.push('/employee-feedback-review-admins');
     }else if(isHr){

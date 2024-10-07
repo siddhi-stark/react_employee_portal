@@ -130,7 +130,6 @@ function EmployeeFeedback() {
         empId: feedbackItem.employee_id,
         quarter,
         year: feedbackItem.year,
-        isHr: true
       };
     }
     return {};

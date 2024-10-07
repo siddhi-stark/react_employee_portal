@@ -22,13 +22,15 @@ const Questionnaire = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [questionId, setQuestionId] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
-  const [selectedDepartment, setDepartment] = useState({ label: "All Departments", value: 3 });
-  const [filterDepartment, setFilterDepartment] = useState({ label: "All Departments", value: 3 });
+  const [selectedDepartment, setDepartment] = useState({ label: "All Departments", value: 12 });
+  const [filterDepartment, setFilterDepartment] = useState({ label: "All Departments", value: 12 });
 
   const departmentList = [
-    { label: "All Departments", value: 3 },
+    { label: "All Departments", value: 12 },
     { label: "Development and Design Teams", value: 1 },
-    { label: "Marketing", value: 2 }
+    { label: "Marketing Team", value: 2 },
+    { label: "QA Team", value: 3 },
+    { label: "Project management team", value: 4 }
   ];
 
   useEffect(() => {
@@ -41,7 +43,7 @@ const Questionnaire = () => {
     const params = {
       page: pageNo || currentPage,
       limit,
-      questionnaire_type: selectedDepartment.value < 3 ? selectedDepartment.value : undefined,
+      questionnaire_type: selectedDepartment.value < 12 ? selectedDepartment.value : undefined,
     };
 
     const url = customFunctions.generateUrl(Api.questionUrl, params);
@@ -168,7 +170,7 @@ const Questionnaire = () => {
       <Card>
         <Card.Body>
           <Row>
-            <Col>
+            <Col sm={4}>
               <DropdownInput
                 options={departmentList}
                 defaultValue={filterDepartment}
@@ -177,7 +179,7 @@ const Questionnaire = () => {
             </Col>
             <Col>
               <Button variant="primary" onClick={() => setDepartment(filterDepartment)}>Apply</Button>
-              <Button variant="secondary" onClick={() => setDepartment({ label: "All Departments", value: 3 })} className='ml-3'>Cancel</Button>
+              <Button variant="secondary" onClick={() => setDepartment({ label: "All Departments", value: 12 })} className='ml-3'>Cancel</Button>
             </Col>
           </Row>
         </Card.Body>
