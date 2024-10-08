@@ -463,7 +463,7 @@ function AddFeedback() {
                     {avgRating ? (<>
                       <Col sm={2}>
                         <Form.Label>
-                          Reviewed By
+                          Average rating
                         </Form.Label>
                         <Form.Control
                           type='text'
