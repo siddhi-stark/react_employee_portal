@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, ButtonGroup, Card, Form, Col, Row } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, Form, Col, Row, Tabs, Tab } from 'react-bootstrap';
 import { withRouter, useHistory, useParams, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
@@ -30,6 +30,8 @@ function AdminAndHrView() {
   const [isShowLoader, setShowLoader] = useState(false);
   const [fieldsDisabled, setFieldsDisabled] = useState(false)
   const [avgRating, setAvgRating] = useState(0)
+  const [employeeDetails, setEmployeeDetails] = useState({});
+  const [totalLeaves, setTotalLeaveCount] = useState(0)
   const [questions, setQuestions] = useState([
     {
       questionnaire_id: '',
@@ -45,9 +47,11 @@ function AdminAndHrView() {
   const [selectedQuarter, setQuarter] = useState('');
   const [selectedStatus, setStatus] = useState('');
   const [reviewerName, setReviewerName] = useState('');
+  const [supervisonFeedback, setSupervisonFeedback] = useState('');
+  const [empSubmitDate, setEmpSubmitDate] = useState('');
 
   const ratingOptions = [
-    { id: "zero", label: "0", isCheck: false },
+    // { id: "zero", label: "0", isCheck: false },
     { id: "1", label: "1", isCheck: false },
     { id: "2", label: "2", isCheck: false },
     { id: "3", label: "3", isCheck: false },
@@ -65,6 +69,12 @@ function AdminAndHrView() {
       getUpdateData()
     }
   }, [id, employeeId, empDepartment])
+
+  useEffect(() => {
+    if (!teamEmpId) return;
+    getEmployeeDetails();
+    getLeavesdata();
+  }, [teamEmpId])
 
   function getQuarterByString(value) {
     if (value == 'April - June') {
@@ -92,14 +102,67 @@ function AdminAndHrView() {
     { label: 'Completed', value: 1 },
     { label: 'Peanding', value: 2 }]
 
-  console.log('selectedQuarter selectedStatus', selectedQuarter, selectedStatus);
 
+  const getLeavesdata = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.leavesUrl}`;
+    const params = {
+      // my_leaves: true,
+      employee: teamEmpId
+    };
+    const currentYear = new Date().getFullYear();
+
+    if (+selectedQuarter?.value == 1) {
+      params.start_date = `${currentYear}-04-01`
+      params.end_date = `${currentYear}-06-30`
+
+    } else if (+selectedQuarter?.value == 2) {
+      params.start_date = `${currentYear}-07-01`
+      params.end_date = `${currentYear}-09-30`
+    } else if (+selectedQuarter?.value == 3) {
+      params.start_date = `${currentYear}-10-01`
+      params.end_date = `${currentYear}-12-31`
+    } else if (+selectedQuarter?.value == 4) {
+      params.start_date = `${currentYear}-01-01`
+      params.end_date = `${currentYear}-03-31`
+    }
+
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+    let leaveCount = 0
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
+      data?.data && data.data.map((item) => {
+        leaveCount += item.leave_count
+      })
+      setTotalLeaveCount(leaveCount)
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
+  const getEmployeeDetails = async () => {
+    setShowLoader(true);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.employeeUrl}${teamEmpId}/`
+    );
+
+    if (data) {
+      setShowLoader(false);
+      setEmployeeDetails(data.data);
+
+      // getEmployeeDocument(data.data && data.data.full_name);
+    }
+  };
 
   const getUpdateData = async () => {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
     const params = {}
-    console.log("employeeId && quarter && year", teamEmpId, quarter, year);
 
     if (teamEmpId && quarter && year) {
       params.employee = teamEmpId
@@ -117,7 +180,6 @@ function AdminAndHrView() {
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log("url", url);
 
     const { data, _ } = await AuthApi.getDataFromServer(url);
 
@@ -127,7 +189,8 @@ function AdminAndHrView() {
     let quarter_name = null
     let reviewer_name = ''
     let avg_rating = 0
-    
+    let created_at = ''
+
     if (data && data.success) {
 
       review_status = data.data[0]?.review_status
@@ -135,6 +198,9 @@ function AdminAndHrView() {
       quarter_name = data.data[0]?.quarter
       reviewer_name = data.data[0]?.reviewer_name
       avg_rating = data.data[0]?.average_rating
+      created_at = data.data[0]?.submission_date
+      
+      setSupervisonFeedback(data.data[0]?.supervison_feedback)
 
       data?.data.length > 0 && data.data.map((item, index) => {
         oldData.push({
@@ -155,6 +221,7 @@ function AdminAndHrView() {
     setStatus({ label: review_status_name, value: review_status })
     setQuarter({ label: quarter_name, value: quarter })
     setReviewerName(reviewer_name)
+    setEmpSubmitDate(created_at)
     setQuestions(oldData)
     setShowLoader(false);
   }
@@ -165,7 +232,6 @@ function AdminAndHrView() {
     const params = {
       show_all: 'true'
     };
-    console.log("empDepartment", empDepartment);
 
     if (empDepartment) {
       if (empDepartment == 1 || empDepartment == 2) {
@@ -205,9 +271,10 @@ function AdminAndHrView() {
     questions?.length &&
       questions.forEach((item) => {
         const postData = {
-          review_status: +selectedStatus?.value,
+          review_status: 1,
           quarter: +selectedQuarter?.value,
           submission_date: customFunctions.getDate(new Date()),
+          supervison_feedback : supervisonFeedback
         };
 
         if (item?.empRating) {
@@ -284,6 +351,7 @@ function AdminAndHrView() {
     }
   };
 
+
   const handleClear = () => {
     setFormData({
       employee_rating: '',
@@ -339,7 +407,7 @@ function AdminAndHrView() {
                         disabled='true'
                       />
                     </Col>
-                    <Col sm={2}>
+                    {/* <Col sm={2}>
                       <DropdownInput
                         label='Review Status'
                         options={allStatus}
@@ -349,7 +417,7 @@ function AdminAndHrView() {
                         }}
                         disabled={isViewOnly ? true : false}
                       />
-                    </Col>
+                    </Col> */}
                     {isViewOnly && (<>
                       <Col sm={2}>
                         <Form.Label>
@@ -362,29 +430,126 @@ function AdminAndHrView() {
                         />
                       </Col>
                       {avgRating && (<>
-                      <Col sm={2}>
-                        <Form.Label>
-                          Reviewed By
-                        </Form.Label>
-                        <Form.Control
-                          type='text'
-                          value={avgRating}
-                          disabled='true'
-                        />
-                      </Col>
+                        <Col sm={2}>
+                          <Form.Label>
+                            Average Rating
+                          </Form.Label>
+                          <Form.Control
+                            type='text'
+                            value={avgRating}
+                            disabled='true'
+                          />
+                        </Col>
+                      </>)}
                     </>)}
-                    </>)}
+                  </Row>
+                  <Row>
+                    <div className="col-md-12">
+                      <ul className="list-unstyled d-flex w-100 flex-wrap employeeDetailsInner">
+                        <li className="p-0 border-bottom border-1 mx-2">
+                          <label>
+                            <strong>Rating scale:</strong>
+                          </label>
+                          <p>1.Unacceptable (fails to meet
+                            standards)</p>
+                          <p>2.Needs Improvement (Frequently fails to meet
+                            standards)</p>
+                          <p>3.Satisfactory (Generally meets standards)</p>
+                          <p>4.Outstanding (Frequently exceeds
+                            standards)</p>
+                          <p>5.Excellent (Consistently exceeds standards)</p>
+                        </li>
+                      </ul>
+                    </div>
                   </Row>
                 </Card.Body>
               </Card>
+              <h5 className="card-title">Employee information</h5>
+              <hr style={{ borderColor: "white" }} />
+              <Card className="mt-3 mb-3 rounded-1 shadow-none employeeDetails">
+                <Card.Body>
+                  <Tabs
+                    defaultActiveKey="personalInfo"
+                  >
+                    <Tab eventKey='personalInfo' title="Personal Details">
+                      {employeeDetails && (
+                        <div className="row mt-3">
+                          <div className="col-md-12">
+                            <ul className="list-unstyled d-flex w-100 flex-wrap employeeDetailsInner">
+                              <li className="p-0 border-bottom border-1 mx-2">
+                                <label>
+                                  <strong>Employee Name</strong>
+                                </label>
+                                <p>{employeeDetails?.full_name}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Email</strong>
+                                </label>
+                                <p>{employeeDetails?.email}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mx-2">
+                                <label>
+                                  <strong>Employee Code</strong>
+                                </label>
+                                <p>SDMS-{employeeDetails?.emp_code}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Employee Designation</strong>
+                                </label>
+                                <p>{employeeDetails?.designation_name}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Employee Department</strong>
+                                </label>
+                                <p>{employeeDetails.department_name}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Total Leaves in quarter</strong>
+                                </label>
+                                <p>{totalLeaves}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Date of self-assessment</strong>
+                                </label>
+                                <p>
+                                  {empSubmitDate ? customFunctions.getDate(empSubmitDate) : customFunctions.getDate(new Date())}
+                                </p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Supervisor Name</strong>
+                                </label>
+                                <p>
+                                  {Array.isArray(employeeDetails?.assigned_managers)
+                                    ? employeeDetails?.assigned_managers
+                                      .map((manger) => manger?.name)
+                                      .join(', ')
+                                    : ' '}
+                                </p>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+
+                    </Tab>
+                  </Tabs>
+                </Card.Body>
+              </Card>
+              <br />
               <Row>
                 {questions?.map((item, index) => {
                   return <>
-                      <Col sm={5}>
-                    {index == 0 && (<>
-                      <h5 className="card-title">Employee Feedback Form</h5>
-                    </>
-                    )}
+                    <Col sm={5}>
+                      {index == 0 && (<>
+                        <h5 className="card-title">Employee Feedback Form</h5>
+                      </>
+                      )}
 
                       <Card>
                         <Card.Body>
@@ -405,7 +570,7 @@ function AdminAndHrView() {
                                 setQuestions(data);
                               }}
                               disabled={isViewOnly ? true : false}
-                  
+
                             />
 
                           </Form.Group>
@@ -522,6 +687,36 @@ function AdminAndHrView() {
                 }
                 )}
               </Row>
+              <div>
+
+                <Form.Group controlId='formSupervision' key={10}>
+                  <Form.Label>
+                    Supervisor overall feedback<span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    as='textarea'
+                    style={{ height: '100px' }}
+                    type='text'
+                    placeholder='Enter answer'
+                    name='answer'
+                    value={supervisonFeedback}
+                    onChange={(e) => {
+                      setSupervisonFeedback(e?.target?.value)
+                    }}
+                    disabled={isViewOnly ? true : false}
+
+                  />
+
+                </Form.Group>
+                <Form.Group controlId={`formSupervision`}></Form.Group>
+                <p className='text-danger'>
+                  {validator.current.message(
+                    'Supervisor overall feedback',
+                    supervisonFeedback,
+                    'required'
+                  )}
+                </p>
+              </div>
             </Form>
             <div className="d-flex justify-content-end p-2">
               {!isViewOnly && (

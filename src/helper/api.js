@@ -36,6 +36,8 @@ export default class Api extends Component {
 
   static employeeUrl = `${Api.baseUrl}employee/`;
 
+  static personalDetails = `${Api.baseUrl}personal-details/`;
+
   static employeeListUrl = `${Api.baseUrl}employee-list/`;
 
   static employeePerformanceUrl = `${Api.baseUrl}employee-performance/`;

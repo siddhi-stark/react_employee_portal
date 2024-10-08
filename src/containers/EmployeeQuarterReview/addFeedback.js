@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, ButtonGroup, Card, Form, Col, Row } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, Form, Col, Row, Tabs, Tab } from 'react-bootstrap';
 import { withRouter, useHistory, useParams, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
@@ -11,6 +11,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader';
+
 
 const items = [{ to: '/employee-feedback', label: 'Employee Feedback' }, { label: 'Add Employee Feedback' }];
 
@@ -24,6 +25,7 @@ function AddFeedback() {
   const isViewOnly = state?.state?.state?.isViewOnly
   const isUpdateOnly = state?.state?.state?.isUpdateOnly
   const [employeeId, setEmployeeId] = useState()
+  const [employeeDetails, setEmployeeDetails] = useState({});
   const [empDepartment, setEmpDepartment] = useState()
   const history = useHistory();
   const [title, setTitle] = useState('');
@@ -31,6 +33,8 @@ function AddFeedback() {
   const [fieldsDisabled, setFieldsDisabled] = useState(false)
   const [count, forceUpdate] = useState(0)
   const [avgRating, setAvgRating] = useState(0)
+  const [totalLeaves, setTotalLeaveCount] = useState(0)
+  const [supervisonFeedback, setSupervisonFeedback] = useState('');
   const [questions, setQuestions] = useState([
   ]);
   const [formData, setFormData] = useState({
@@ -50,11 +54,6 @@ function AddFeedback() {
     setIsProjectManager(JSON.parse(isProjectManager));
   }, [localStorage.getItem('isProjectManager')]);
 
-  console.log("id", id)
-  console.log("isViewOnly", isViewOnly)
-  console.log("isUpdateOnly", isUpdateOnly)
-  console.log("average", avgRating)
-
   useEffect(() => {
     setEmployeeId(localStorage.getItem('userId'))
     setEmpDepartment(localStorage.getItem('department'))
@@ -64,6 +63,7 @@ function AddFeedback() {
   useEffect(() => {
     if (empDepartment) {
       getQuestionList();
+      getEmployeeDetails();
     }
   }, [empDepartment])
 
@@ -72,6 +72,11 @@ function AddFeedback() {
       getUpdateData()
     }
   }, [id, employeeId, empDepartment])
+
+  useEffect(() => {
+    if (!selectedQuarter) return;
+    getLeavesdata()
+  }, [selectedQuarter])
 
   function getQuarterByString(value) {
     if (value == 'April - June') {
@@ -89,7 +94,7 @@ function AddFeedback() {
   }
 
   const ratingOptions = [
-    { id: "zero", label: "0", isCheck: false },
+    // { id: "zero", label: "0", isCheck: false },
     { id: "1", label: "1", isCheck: false },
     { id: "2", label: "2", isCheck: false },
     { id: "3", label: "3", isCheck: false },
@@ -107,14 +112,24 @@ function AddFeedback() {
     { label: 'Completed', value: 1 },
     { label: 'Pending', value: 2 }]
 
+  const getEmployeeDetails = async () => {
+    setShowLoader(true);
+    const { data } = await AuthApi.getDataFromServer(
+      `${Api.personalDetails}`
+    );
+
+    if (data) {
+      setShowLoader(false);
+      setEmployeeDetails(data.data);
+    }
+  };
+
   const getUpdateData = async () => {
     setShowLoader(true);
     const endPoint = `${Api.empFeedbackUrl}`;
     const params = {
       is_personal_feedback: true,
     };
-    console.log("employeeId && quarter && year", teamEmpId, quarter, year);
-
     if (teamEmpId && quarter && year) {
       params.employee = teamEmpId
       params.quarter = quarter
@@ -131,7 +146,6 @@ function AddFeedback() {
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
-    console.log("url", url);
 
     const { data, _ } = await AuthApi.getDataFromServer(url);
 
@@ -147,6 +161,7 @@ function AddFeedback() {
       quarter_name = data.data[0]?.quarter
       reviewer_name = data.data[0]?.reviewer_name
       avg_rating = data.data[0]?.average_rating
+      setSupervisonFeedback(data.data[0]?.supervison_feedback)
 
       data?.data.length > 0 && data.data.map((item, index) => {
         oldData.push({
@@ -163,7 +178,6 @@ function AddFeedback() {
         })
       })
     }
-    console.log('oldData', oldData);
 
     setStatus({ label: review_status_name, value: review_status })
     setQuarter({ label: quarter_name, value: quarter })
@@ -221,7 +235,7 @@ function AddFeedback() {
     questions?.length &&
       questions.forEach((item) => {
         const postData = {
-          review_status: +selectedStatus?.value,
+          review_status: 1,
           quarter: +selectedQuarter?.value,
           submission_date: customFunctions.getDate(new Date()),
         };
@@ -265,9 +279,9 @@ function AddFeedback() {
     const { data, message } = response;
     if (data) {
       swal(data.message[0], '', 'success').then(() => {
-        if (isProjectManager){
+        if (isProjectManager) {
           history.push('/all-employees-reviews');
-        }else{
+        } else {
           history.push('/employee-quarter-review');
         }
 
@@ -305,6 +319,47 @@ function AddFeedback() {
     }
   };
 
+  const getLeavesdata = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.leavesUrl}`;
+    const params = {
+      my_leaves: true,
+    };
+    const currentYear = new Date().getFullYear();
+
+    if (+selectedQuarter?.value == 1) {
+      params.start_date = `${currentYear}-04-01`
+      params.end_date = `${currentYear}-06-30`
+
+    } else if (+selectedQuarter?.value == 2) {
+      params.start_date = `${currentYear}-07-01`
+      params.end_date = `${currentYear}-09-30`
+    } else if (+selectedQuarter?.value == 3) {
+      params.start_date = `${currentYear}-10-01`
+      params.end_date = `${currentYear}-12-31`
+    } else if (+selectedQuarter?.value == 4) {
+      params.start_date = `${currentYear}-01-01`
+      params.end_date = `${currentYear}-03-31`
+    }
+
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data, message } = await AuthApi.getDataFromServer(url);
+    let leaveCount = 0
+    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+      setShowLoader(false);
+      data?.data && data.data.map((item) => {
+        leaveCount += item.leave_count
+      })
+      setTotalLeaveCount(leaveCount)
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
   const handleClear = () => {
     setFormData({
       employee_rating: '',
@@ -317,9 +372,9 @@ function AddFeedback() {
     // submitForm();
     // window.location.reload();
     validator.current.hideMessages();
-    if (isProjectManager){
+    if (isProjectManager) {
       history.push('/all-employees-reviews');
-    }else{
+    } else {
       history.push('/employee-quarter-review');
     }
   };
@@ -358,7 +413,6 @@ function AddFeedback() {
               <Card>
                 <Card.Body>
                   <Row>
-
                     <Col sm={2}>
                       <DropdownInput
                         label='Quarter'
@@ -376,7 +430,7 @@ function AddFeedback() {
                         )}
                       />
                     </Col>
-                    <Col sm={2}>
+                    {/* <Col sm={2}>
                       <DropdownInput
                         label='Review Status'
                         asterisk="*"
@@ -392,7 +446,7 @@ function AddFeedback() {
                           'required'
                         )}
                       />
-                    </Col>
+                    </Col> */}
 
                     {isViewOnly && (<>
                       <Col sm={2}>
@@ -420,161 +474,288 @@ function AddFeedback() {
                     </>) : ''}
 
                   </Row>
+                  <Row>
+                    <div className="col-md-12">
+                      <ul className="list-unstyled d-flex w-100 flex-wrap employeeDetailsInner">
+                        <li className="p-0 border-bottom border-1 mx-2">
+                          <label>
+                            <strong>Rating scale:</strong>
+                          </label>
+                          <p>1.Unacceptable (fails to meet
+                            standards)</p>
+                          <p>2.Needs Improvement (Frequently fails to meet
+                            standards)</p>
+                          <p>3.Satisfactory (Generally meets standards)</p>
+                          <p>4.Outstanding (Frequently exceeds
+                            standards)</p>
+                          <p>5.Excellent (Consistently exceeds standards)</p>
+                        </li>
+                      </ul>
+                    </div>
+                  </Row>
                 </Card.Body>
               </Card>
-              <Row>
-                {console.log('questions', questions)}
-                {questions && questions.length > 0 ? 
-                questions?.map((item, index) => {
-                  return <>
-                    <Col sm={6}>
-                      {index == 0 && (<>
-                        <h5 className="card-title">Team Employee Feedback Form</h5>
-                      </>
+
+              <h5 className="card-title">Employee information</h5>
+              <hr style={{ borderColor: "white" }} />
+              <Card className="mt-3 mb-3 rounded-1 shadow-none employeeDetails">
+                <Card.Body>
+                  <Tabs
+                    defaultActiveKey="personalInfo"
+                  >
+                    <Tab eventKey='personalInfo' title="Personal Details">
+                      {employeeDetails && (
+                        <div className="row mt-3">
+                          <div className="col-md-12">
+                            <ul className="list-unstyled d-flex w-100 flex-wrap employeeDetailsInner">
+                              <li className="p-0 border-bottom border-1 mx-2">
+                                <label>
+                                  <strong>Employee Name</strong>
+                                </label>
+                                <p>{employeeDetails?.full_name}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Email</strong>
+                                </label>
+                                <p>{employeeDetails?.email}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mx-2">
+                                <label>
+                                  <strong>Employee Code</strong>
+                                </label>
+                                <p>SDMS-{employeeDetails?.emp_code}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Employee Designation</strong>
+                                </label>
+                                <p>{employeeDetails?.designation_name}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Employee Department</strong>
+                                </label>
+                                <p>{employeeDetails.department_name}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Total Leaves in quarter</strong>
+                                </label>
+                                <p>{totalLeaves}</p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Date of self-assessment</strong>
+                                </label>
+                                <p>
+                                  {customFunctions.getDate(new Date())}
+                                </p>
+                              </li>
+                              <li className="p-0 border-bottom border-1 mt-3 mx-2">
+                                <label>
+                                  <strong>Supervisor Name</strong>
+                                </label>
+                                <p>
+                                  {Array.isArray(employeeDetails?.assigned_managers)
+                                    ? employeeDetails?.assigned_managers
+                                      .map((manger) => manger?.name)
+                                      .join(', ')
+                                    : ' '}
+                                </p>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
                       )}
-                      <Card>
-                        <Card.Body>
 
-                          <Form.Group controlId='formFirstName' key={index + 1}>
-                            <Form.Label>
-                              <b>Q{index + 1}. {item?.name}<span className="text-danger">*</span></b>
-                            </Form.Label>
-                            <div className="ms-lg-8 mt-lg-2">
+                    </Tab>
+                  </Tabs>
+                </Card.Body>
+              </Card>
+              <br />
+              <Row>
+                {questions && questions.length > 0 ?
+                  questions?.map((item, index) => {
+                    return <>
+                      <Col sm={6}>
+                        {index == 0 && (<>
+                          <h5 className="card-title">Team Employee Feedback Form</h5>
+                        </>
+                        )}
+                        <Card>
+                          <Card.Body>
 
+                            <Form.Group controlId='formFirstName' key={index + 1}>
+                              <Form.Label>
+                                <b>Q{index + 1}. {item?.name}<span className="text-danger">*</span></b>
+                              </Form.Label>
+                              <div className="ms-lg-8 mt-lg-2">
+
+                                <Form.Control
+                                  as='textarea'
+                                  style={{ height: '200px' }}
+                                  type='text'
+                                  placeholder='Enter answer'
+                                  name='answer'
+                                  value={item?.answer}
+                                  onChange={(e) => {
+                                    const data = [...questions];
+                                    data[index].answer = e?.target?.value;
+                                    setQuestions(data);
+                                  }}
+                                  disabled={fieldsDisabled}
+                                />
+                                <p className='text-danger'>
+                                  {validator.current.message(
+                                    'Answer',
+                                    item?.answer,
+                                    'required'
+                                  )}
+                                </p>
+                              </div>
+
+                            </Form.Group>
+                            <Form.Group controlId={`formRating${index + 1}`}>
+
+                              <Form.Label>
+                                Rating : <span className="text-danger">*</span>
+                              </Form.Label>
+                              <div className="ms-lg-8 mt-lg-2">
+                                {ratingOptions?.length > 0 &&
+                                  ratingOptions.map((option) => (
+                                    <Form.Check
+                                      inline
+                                      key={option.value}
+                                      type="radio"
+                                      id={option.value}
+                                      label={option.label}
+                                      value={option.value}
+                                      className="mb-2 form-radio"
+                                      checked={item?.empRating == option.label}
+                                      onChange={(e) => {
+                                        handleCheckboxChange(option.label, item);
+                                      }}
+                                      disabled={isViewOnly ? true : false}
+                                    />
+                                  ))}
+                                <p className='text-danger'>
+                                  {validator.current.message(
+                                    'Rating',
+                                    item?.empRating,
+                                    'required'
+                                  )}
+                                </p>
+                              </div>
+                              {/* </Col> */}
+                            </Form.Group>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+
+                      <Col sm={6} >
+                        {index == 0 && (<>
+                          <h5 className="card-title">Reviewer Feedback Form</h5>
+                        </>
+                        )}
+                        <Card>
+                          <Card.Body>
+
+                            <Form.Group controlId='formFirstName' key={index + 1}>
+                              <Form.Label>
+                                <b>Q{index + 1}. {item?.name}<span className="text-danger">*</span></b>
+                              </Form.Label>
                               <Form.Control
                                 as='textarea'
                                 style={{ height: '200px' }}
                                 type='text'
                                 placeholder='Enter answer'
                                 name='answer'
-                                value={item?.answer}
+                                value={item?.reviewerAnswer}
                                 onChange={(e) => {
                                   const data = [...questions];
-                                  data[index].answer = e?.target?.value;
+                                  data[index].reviewerAnswer = e?.target?.value;
                                   setQuestions(data);
                                 }}
-                                disabled={fieldsDisabled}
+                                disabled='true'
                               />
-                              <p className='text-danger'>
-                                {validator.current.message(
-                                  'Answer',
-                                  item?.answer,
-                                  'required'
-                                )}
-                              </p>
-                            </div>
 
-                          </Form.Group>
-                          <Form.Group controlId={`formRating${index + 1}`}>
+                            </Form.Group>
+                            <Form.Group controlId={`formRating${index + 1}`}>
 
-                            <Form.Label>
-                              Rating : <span className="text-danger">*</span>
-                            </Form.Label>
-                            <div className="ms-lg-8 mt-lg-2">
-                              {ratingOptions?.length > 0 &&
-                                ratingOptions.map((option) => (
-                                  <Form.Check
-                                    inline
-                                    key={option.value}
-                                    type="radio"
-                                    id={option.value}
-                                    label={option.label}
-                                    value={option.value}
-                                    className="mb-2 form-radio"
-                                    checked={item?.empRating == option.label}
-                                    onChange={(e) => {
-                                      handleCheckboxChange(option.label, item);
-                                    }}
-                                    disabled={isViewOnly ? true : false}
-                                  />
-                                ))}
-                              <p className='text-danger'>
-                                {validator.current.message(
-                                  'Rating',
-                                  item?.empRating,
-                                  'required'
-                                )}
-                              </p>
-                            </div>
-                            {/* </Col> */}
-                          </Form.Group>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-
-                    <Col sm={6} >
-                      {index == 0 && (<>
-                        <h5 className="card-title">Reviewer Feedback Form</h5>
-                      </>
-                      )}
-                      <Card>
-                        <Card.Body>
-
-                          <Form.Group controlId='formFirstName' key={index + 1}>
-                            <Form.Label>
-                              <b>Q{index + 1}. {item?.name}<span className="text-danger">*</span></b>
-                            </Form.Label>
-                            <Form.Control
-                              as='textarea'
-                              style={{ height: '200px' }}
-                              type='text'
-                              placeholder='Enter answer'
-                              name='answer'
-                              value={item?.reviewerAnswer}
-                              onChange={(e) => {
-                                const data = [...questions];
-                                data[index].reviewerAnswer = e?.target?.value;
-                                setQuestions(data);
-                              }}
-                              disabled='true'
-                            />
-
-                          </Form.Group>
-                          <Form.Group controlId={`formRating${index + 1}`}>
-
-                            <Form.Label>
-                              Rating : <span className="text-danger">*</span>
-                            </Form.Label>
-                            <div className="ms-lg-8 mt-lg-2">
-                              {ratingOptions?.length > 0 &&
-                                ratingOptions.map((option) => (
-                                  <Form.Check
-                                    inline
-                                    key={option.value}
-                                    type="radio"
-                                    id={option.value}
-                                    label={option.label}
-                                    value={option.value}
-                                    className="mb-2 form-radio"
-                                    checked={item?.reviewerRating == option.label}
-                                    onChange={(e) => {
-                                      handleCheckboxChange(option.label, item, true);
-                                    }}
-                                    disabled='true'
-                                  />
-                                ))}
-                              {/* <p className='text-danger'>
+                              <Form.Label>
+                                Rating : <span className="text-danger">*</span>
+                              </Form.Label>
+                              <div className="ms-lg-8 mt-lg-2">
+                                {ratingOptions?.length > 0 &&
+                                  ratingOptions.map((option) => (
+                                    <Form.Check
+                                      inline
+                                      key={option.value}
+                                      type="radio"
+                                      id={option.value}
+                                      label={option.label}
+                                      value={option.value}
+                                      className="mb-2 form-radio"
+                                      checked={item?.reviewerRating == option.label}
+                                      onChange={(e) => {
+                                        handleCheckboxChange(option.label, item, true);
+                                      }}
+                                      disabled='true'
+                                    />
+                                  ))}
+                                {/* <p className='text-danger'>
                                 {validator.current.message(
                                   'Rating',
                                   item?.rating,
                                   'required'
                                 )}
                               </p> */}
-                            </div>
-                          </Form.Group>
-                        </Card.Body>
-                      </Card>
-                    </Col>
+                              </div>
+                            </Form.Group>
+                          </Card.Body>
+                        </Card>
+                      </Col>
 
-                  </>
+                    </>
+                  }
+                  ) : (
+                    <div style={{ textAlign: 'center' }}>
+                      Questionnaire not availble.
+                    </div>
+                  )
                 }
-                ) : (
-                  <div style={{ textAlign: 'center' }}>
-                  Questionnaire not availble.
-                  </div>
-                )
-              }
               </Row>
+              <div>
+
+                <Form.Group controlId='formSupervision' key={10}>
+                  <Form.Label>
+                    Supervisor overall feedback<span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    as='textarea'
+                    style={{ height: '100px' }}
+                    type='text'
+                    placeholder='Enter answer'
+                    name='answer'
+                    value={supervisonFeedback}
+                    onChange={(e) => {
+                      setSupervisonFeedback(e?.target?.value)
+                    }}
+                    disabled='true'
+
+                  />
+
+                </Form.Group>
+                <Form.Group controlId={`formSupervision`}></Form.Group>
+                <p className='text-danger'>
+                  {validator.current.message(
+                    'Supervisor overall feedback',
+                    supervisonFeedback,
+                    'required'
+                  )}
+                </p>
+              </div>
             </Form>
             <div className="d-flex justify-content-end p-2">
               {!fieldsDisabled && (
