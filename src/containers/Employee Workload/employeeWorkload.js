@@ -31,6 +31,8 @@ const EmployeeWorkload = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterErr, setFilterErr] = useState('');
 
+  console.log('rowData', rowData);
+  
   //breadcrumbs
   const items = [
     { to: '/', label: 'Dashboard' },
@@ -63,7 +65,6 @@ const EmployeeWorkload = () => {
         const name = rowData?.employee_name;
         return <span> {name} </span>;
       },
-      isDisplay: selectedEmployee?.value == 'all_employess' ? true : false,
     },
     {
       id: 'project',
