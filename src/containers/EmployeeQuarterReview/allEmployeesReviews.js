@@ -57,12 +57,12 @@ function AllEmployeesReviews() {
     setUserRole(Number(uRole));
   }, []);
 
-  // useEffect(() => {
-  //   setTitle('Employees Quarters Reviews');
-  //   getQuestionList();
-  //   const uRole = customFunctions.getLocalStorage('group');
-  //   setUserRole(Number(uRole));
-  // }, [pageReferesh]);
+  useEffect(() => {
+    setTitle('Employees Quarters Reviews');
+    getQuestionList();
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
+  }, [pageReferesh]);
 
   useEffect(() => {
     if (userRole) {
