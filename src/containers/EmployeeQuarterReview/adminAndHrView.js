@@ -71,10 +71,10 @@ function AdminAndHrView() {
   }, [id, employeeId, empDepartment])
 
   useEffect(() => {
-    if (!teamEmpId) return;
+    if (!teamEmpId && !selectedQuarter) return;
     getEmployeeDetails();
     getLeavesdata();
-  }, [teamEmpId])
+  }, [teamEmpId, selectedQuarter])
 
   function getQuarterByString(value) {
     if (value == 'April - June') {
@@ -111,7 +111,7 @@ function AdminAndHrView() {
       employee: teamEmpId
     };
     const currentYear = new Date().getFullYear();
-
+        
     if (+selectedQuarter?.value == 1) {
       params.start_date = `${currentYear}-04-01`
       params.end_date = `${currentYear}-06-30`
