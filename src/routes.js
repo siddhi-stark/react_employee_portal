@@ -87,6 +87,7 @@ import ResignationDetailsComponent from './containers/Exit process/resignationDe
 import AbscondTable from './containers/TerminationAndAbscoud/AbscondTable';
 import FormAbscondTermination from './containers/TerminationAndAbscoud/FormAbscondTermination';
 import EmployeeWorkload from './containers/Employee Workload/employeeWorkload';
+import EmployeeWorkloadGraph from './containers/Employee Workload/employeeWorkloadGraph';
 import CompletedProject from './containers/Project/completedProject';
 // import TemporayDocument from './containers/Employees/TemporayDocument';
 import AddDocuments from './containers/Employees/AddDocuments';
@@ -276,7 +277,6 @@ function Routes() {
         component={AddSupportTicket}
       />
       <Route path="/performance-report" exact component={PerformanceReport} />
-      <Route path="/employee-workload" exact component={EmployeeWorkload} />
       <Route
         path="/resignation-application"
         exact
@@ -332,6 +332,8 @@ function Routes() {
       <Route path="/kra-kpi-employees" exact component={KraKpiEmployees} />
       <Route path="/add-kra-kpi" exact component={AddKraKpi} />
       
+      <Route path="/employee-workload" exact component={EmployeeWorkload} />
+      <Route path="/employee-workload-graph" exact component={EmployeeWorkloadGraph} />
       
       <Route component={NotFound} />
       

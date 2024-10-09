@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import swal from 'sweetalert';
 import Loader from '../../components/Loader/index';
@@ -30,6 +31,7 @@ const EmployeeWorkload = () => {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterErr, setFilterErr] = useState('');
+  const history = useHistory();
 
   console.log('rowData', rowData);
   
@@ -536,8 +538,8 @@ const EmployeeWorkload = () => {
             </Col>
           </Row>
           <Row>
-            <Col sm={10}></Col>
-            <Col sm={2}>
+            <Col sm={8}></Col>
+            {/* <Col sm={2}> */}
               {rowData?.length > 0 && (
                 <a
                   className="d-flex justify-content-end"
@@ -551,7 +553,25 @@ const EmployeeWorkload = () => {
                   </u>
                 </a>
               )}
-            </Col>
+            {/* </Col> */}
+          {/* </Row>
+          <Row> */}
+            <Col sm={10}></Col>
+            {/* <Col sm={2}> */}
+              {rowData?.length > 0 && (
+                <a
+                  className="d-flex justify-content-end"
+                  href="javascript:void(0)"
+                  onClick={() => {
+                    history.push('/employee-workload-graph')
+                  }}
+                >
+                  <u>
+                    <b>Workload Graph</b>
+                  </u>
+                </a>
+              )}
+            {/* </Col> */}
           </Row>
         </Card.Body>
       </Card>
