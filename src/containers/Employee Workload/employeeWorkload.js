@@ -14,16 +14,16 @@ import CustomTable from 'stark-custom-datatable';
 
 const EmployeeWorkload = () => {
   const titleHeading = 'Employee Workload';
-  const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' },]);
+  const [allEmployes, setAllEmployes] = useState({ label: 'All Employess', value: 'all_employess' });
   const [projectList, setProjectList] = useState([]);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
-  const [selectedProject, setSelectedProject] = useState([{ label: "All Projects", value: "all_project", }]);
-  const [selectedTaskStatus, setSelectedStatus] = useState([{ label: 'All type', value: 3 },])
+  const [selectedProject, setSelectedProject] = useState({ label: "All Projects", value: "all_project", });
+  const [selectedTaskStatus, setSelectedStatus] = useState({ label: 'All type', value: 3 })
   console.log("selectedTaskStatus+++++", selectedTaskStatus)
   const [userRole, setUserRole] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
   const [employeeList, setEmployeeList] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState([{ label: 'All Employess', value: 'all_employess' },]);
+  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [rowData, setRowData] = useState('');
@@ -34,7 +34,7 @@ const EmployeeWorkload = () => {
   const history = useHistory();
 
   console.log('rowData', rowData);
-  
+
   //breadcrumbs
   const items = [
     { to: '/', label: 'Dashboard' },
@@ -260,9 +260,10 @@ const EmployeeWorkload = () => {
   //API integration for AllEmployee list
   const getEmployeeName = async () => {
     setShowLoader(true);
+    // https://portalsapi.starkdigital.in/api/v1/employee/?sort_by=full_name&limit=9&hide_admin=1&is_onboard=true
 
     const url = [1, 8].includes(userRole)
-      ? `${Api.employeeUrl}?is_employees=true&type=all&status=active`
+      ? `${Api.employeeUrl}?sort_by=full_name&hide_admin=1&is_onboard=true`
       : '';
     const { data, error } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {
@@ -274,6 +275,7 @@ const EmployeeWorkload = () => {
           label: item?.full_name,
           value: item?.id,
           joiningDate: item?.date_joined,
+          tw_id: item?.pms_id
         });
       });
       const all = [
@@ -420,6 +422,21 @@ const EmployeeWorkload = () => {
       <Card>
         <Card.Body>
           <h5 className="card-title mb-0">Filter</h5>
+          <a
+            className="d-flex justify-content-end"
+            href="javascript:void(0)"
+            onClick={() => {
+              history.push('/employee-workload-graph', {
+                state: {
+                  allEmployes: allEmployes
+                }
+              })
+            }}
+          >
+            <u>
+              <b>Workload detailed view</b>
+            </u>
+          </a>
           <hr />
           {filterErr && (
             <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
@@ -540,38 +557,23 @@ const EmployeeWorkload = () => {
           <Row>
             <Col sm={8}></Col>
             {/* <Col sm={2}> */}
-              {rowData?.length > 0 && (
-                <a
-                  className="d-flex justify-content-end"
-                  href="javascript:void(0)"
-                  onClick={() => {
-                    downloadCSVDoc();
-                  }}
-                >
-                  <u>
-                    <b>Download File</b>
-                  </u>
-                </a>
-              )}
+            {rowData?.length > 0 && (
+              <a
+                className="d-flex justify-content-end"
+                href="javascript:void(0)"
+                onClick={() => {
+                  downloadCSVDoc();
+                }}
+              >
+                <u>
+                  <b>Download File</b>
+                </u>
+              </a>
+            )}
             {/* </Col> */}
-          {/* </Row>
+            {/* </Row>
           <Row> */}
             <Col sm={10}></Col>
-            {/* <Col sm={2}> */}
-              {rowData?.length > 0 && (
-                <a
-                  className="d-flex justify-content-end"
-                  href="javascript:void(0)"
-                  onClick={() => {
-                    history.push('/employee-workload-graph')
-                  }}
-                >
-                  <u>
-                    <b>Workload Graph</b>
-                  </u>
-                </a>
-              )}
-            {/* </Col> */}
           </Row>
         </Card.Body>
       </Card>

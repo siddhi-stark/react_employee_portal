@@ -1,192 +1,389 @@
-import React, { useState, useEffect } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Gantt, ViewMode } from 'react-gantt-task';
+/* eslint-disable */
 
-const EmployeeWorkloadGraph = () => {
-  const [data, setData] = useState([]);
-  const [barData, setBarData] = useState(null);
-  const [ganttTasks, setGanttTasks] = useState([]);
+import React, { useEffect, useState } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+import { Table, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Datepicker, DropdownInput, Helmet } from '../../components/FormInputs';
+import swal from 'sweetalert';
+import Loader from '../../components/Loader/index';
+import customFunctions from '../../helper/customFunctions';
+import AuthApi from '../../helper/authApi';
+import Api from '../../helper/api';
+
+const EmployeeWorkloadTable = () => {
+  const state = useLocation();
+  const history = useHistory();
+
+  const titleHeading = 'Workload Detailed View';
+  const allEmployes = state?.state?.state?.allEmployes
+  const [isShowLoader, setShowLoader] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
+  const [fromDate, setFromDate] = useState(new Date());
+  const [toDate, setToDate] = useState(new Date());
+  const [rowData, setRowData] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const [dateRange, setDateRange] = useState([]);
+  const [filterErr, setFilterErr] = useState('');
 
   useEffect(() => {
-    // Fetch data from API
-    const fetchData = async () => {
-      const apiData = {
-        message: ["Ok"],
-        code: 200,
-        success: true,
-        data: [
-          {
-            id: 54872,
-            task_name: "Ward Office Services",
-            status: "Pending",
-            employee_name: "Akash Belokar",
-            start_date: "2024-10-09",
-            end_date: "2024-10-09",
-            project_name: "PMC Drupal 10",
-            estimation: 180,
-            time_log: 0,
-            total_task_time_log: 75988,
-            total_task_eta: 0,
-            progress: 0
-          },
-          {
-            id: 54877,
-            task_name: "Public Disclosure",
-            status: "Pending",
-            employee_name: "Akash Belokar",
-            start_date: "2024-10-08",
-            end_date: "2024-10-09",
-            project_name: "PMC Drupal 10",
-            estimation: 180,
-            time_log: 0,
-            total_task_time_log: 0,
-            total_task_eta: 0,
-            progress: 0
-          },
-          {
-            id: 55411,
-            task_name: "frontend - group post like/dislike",
-            status: "Pending",
-            employee_name: "Laxi Fernandis",
-            start_date: "2024-10-07",
-            end_date: "2024-10-09",
-            project_name: "ReferDesk",
-            estimation: 60,
-            time_log: 0,
-            total_task_time_log: 0,
-            total_task_eta: 0,
-            progress: 0
-          },
-          {
-            id: 55423,
-            task_name: "frontend - Post action (delete, turn off comment and pin post)",
-            status: "Pending",
-            employee_name: "Laxi Fernandis",
-            start_date: "2024-10-09",
-            end_date: "2024-10-09",
-            project_name: "ReferDesk",
-            estimation: 120,
-            time_log: 0,
-            total_task_time_log: 0,
-            total_task_eta: 0,
-            progress: 0
-          },
-          {
-            id: 55425,
-            task_name: "frontend - group notifications actions(accept or remove)",
-            status: "Pending",
-            employee_name: "Laxi Fernandis",
-            start_date: "2024-10-09",
-            end_date: "2024-10-09",
-            project_name: "ReferDesk",
-            estimation: 60,
-            time_log: 0,
-            total_task_time_log: 0,
-            total_task_eta: 0,
-            progress: 0
-          },
-        ],
-        paginator: {
-          total_count: 97,
-          total_pages: 10,
-          current_page: "1",
-          limit: "10"
-        }
-      };
+    if (rowData?.length) {
+      setTablesData();
+    }
+  }, [rowData]);
 
-      setData(apiData.data);
-      prepareBarChart(apiData.data);
-      prepareGanttData(apiData.data);
-    };
+  const generateDateRange = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const dateArray = [];
 
-    fetchData();
-  }, []);
-
-  // Prepare data for Bar Chart
-  const prepareBarChart = (data) => {
-    const taskCountByEmployee = {};
-    data.forEach((item) => {
-      if (taskCountByEmployee[item.employee_name]) {
-        taskCountByEmployee[item.employee_name]++;
-      } else {
-        taskCountByEmployee[item.employee_name] = 1;
+    while (startDate <= endDate) {
+      if (startDate.getDay() !== 0 && startDate.getDay() !== 6) {
+        dateArray.push(startDate.toISOString().split('T')[0]);
       }
-    });
+      startDate.setDate(startDate.getDate() + 1);
+    }
 
-    const barData = {
-      labels: Object.keys(taskCountByEmployee),
-      datasets: [
-        {
-          label: 'Task Count',
-          data: Object.values(taskCountByEmployee),
-          backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        },
-      ],
-    };
-    setBarData(barData);
+    return dateArray;
   };
 
-  // Prepare data for Gantt Chart
-  const prepareGanttData = (data) => {
-    const tasks = data.map((task) => ({
-      id: task.id,
-      name: task.task_name,
-      start: new Date(task.start_date),
-      end: new Date(task.end_date),
-      progress: task.progress,
-      dependencies: "",
-      type: "task",
-    }));
-    setGanttTasks(tasks);
+  const getTaskCountPerDay = (tasks, fromDate, toDate) => {
+    const dateRange = generateDateRange(fromDate, toDate);
+    const employeeTaskData = {};
+
+    console.log("selectedEmployee?.value", selectedEmployee?.value)
+    tasks.forEach((task) => {
+      const { employee_name, start_date, end_date, employee_tw_id } = task;
+      if (!employeeTaskData[employee_tw_id]) {
+        employeeTaskData[employee_tw_id] = {};
+        dateRange.forEach((date) => (employeeTaskData[employee_tw_id][date] = 0));
+        employeeTaskData[employee_tw_id]['employee_name'] = employee_name;
+
+      }
+      dateRange.forEach((date) => {
+        if (date >= start_date && date <= end_date) {
+          employeeTaskData[employee_tw_id][date] += 1;
+        }
+      });
+    });
+
+    if (selectedEmployee?.value === 'all_employess') {
+      allEmployes.forEach((employeeDetails, index) => {
+        const { label, tw_id } = employeeDetails;
+        if (label !== 'All Employess') {
+          if (!employeeTaskData[tw_id]) {
+            employeeTaskData[tw_id] = {};
+            dateRange.forEach((date) => (employeeTaskData[tw_id][date] = 0));
+            employeeTaskData[tw_id]['employee_name'] = label;
+          }
+        }
+      })
+    }
+
+
+    console.log("employeeTaskData.length", employeeTaskData.length);
+
+    return { employeeTaskData, dateRange };
+  };
+
+  const setTablesData = () => {
+    const { employeeTaskData, dateRange } = getTaskCountPerDay(rowData, fromDate, toDate);
+    const length = Object.keys(employeeTaskData).length;
+    console.log('employeeTaskData', length)
+    setTableData(employeeTaskData);
+    setDateRange(dateRange)
+  };
+
+  const getEmployeeById = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.workLoad}`;
+    const params = {
+      type: "all"
+    };
+
+    if (selectedEmployee?.value !== 'all_employees') {
+      params.user_id = +selectedEmployee?.value;
+    }
+    if (fromDate) {
+      params.start_date = customFunctions.getDate(fromDate)
+    }
+    if (fromDate) {
+      params.end_date = customFunctions.getDate(toDate)
+    }
+
+    const url = customFunctions.generateUrl(endPoint, params);
+
+    const { data, message } = await AuthApi.getDataFromServer(url);
+    if (data && data.success === true) {
+      setRowData(data?.data);
+      setShowLoader(false);
+    } else {
+      setShowLoader(false);
+      swal(message, '', 'error');
+    }
+  };
+
+
+  const getBorderColor = (taskCount) => {
+    if (taskCount === 0) {
+      return 'rgba(255, 0, 0, 0.5)';
+    } else if (taskCount >= 8) {
+      return 'rgba(0, 128, 0, 0.5)';
+    } else if (taskCount > 0 && taskCount < 8) {
+      return 'rgba(255, 165, 0, 0.5)';  // Orange for more than 5 tasks
+    }
+    return '#ddd'; // Default border color (light gray)
+  };
+
+  //FilterSearch function and validation
+  const filterSearch = (e) => {
+    let filterSearchErr = '';
+    let isValid = true;
+    if (customFunctions.checkIfEmpty(selectedEmployee)) {
+      filterSearchErr = 'Please select atleast one filter';
+      setFilterErr(filterSearchErr);
+      isValid = false;
+    } else if (
+      selectedEmployee &&
+      selectedEmployee?.value != 'all_employess' &&
+      customFunctions.checkIfEmpty(fromDate)
+    ) {
+      filterSearchErr = 'Please select From date';
+      setFilterErr(filterSearchErr);
+      isValid = false;
+    } else if (
+      selectedEmployee &&
+      selectedEmployee?.value != 'all_employess' &&
+      customFunctions.checkIfEmpty(toDate)
+    ) {
+      filterSearchErr = 'Please select To date';
+      setFilterErr(filterSearchErr);
+      isValid = false;
+    } else {
+      setFilterErr('');
+      setShowLoader('');
+      // getTaskData(1);
+      getEmployeeById();
+    }
+  };
+
+  const isClear = () => {
+    setFilterErr('');
+    setSelectedEmployee({ label: 'All Employess', value: 'all_employess' });
+    setFromDate(new Date());
+    setToDate(new Date());
+    setRowData('');
+    setTableData('');
+
   };
 
   return (
-    <div>
-      <h2>Employee Workload</h2>
+    <>
+      <Row className="d-flex justify-content-between">
+        <Col>
+          <Helmet title={titleHeading} />
+        </Col>
+        {/* <Col className="col-3 mt-3"> */}
+      </Row>
+      <Row>
+        <Col>
+          <div className="title-breadcrumb-section">
+            <h2 className="main-content-title tx-24 mg-b-5">
+              Workload Detailed View
+            </h2>
+            {/* <Breadcrumb items={items} /> */}
+          </div>
+          <Loader showLoader={isShowLoader} needFullPage={false} />
+        </Col>
+      </Row>
+      <Card>
+        <Card.Body>
+          <div className="d-flex justify-content-end">
+            <Button
+              variant="secondary"
+              className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+              type="submit"
+              onClick={() => {
+                history.push('/employee-workload')
+              }}
+            >
+              Back
+            </Button>
+          </div>
+          <h5 className="card-title mb-0">Filter</h5>
+          <hr />
+          {filterErr && (
+            <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+              <div className="img-text">
+                <img src="/images/fail.svg" alt="Success" /> {filterErr}
+              </div>
+            </div>
+          )}
+          <Row>
+            <Col sm={2}>
+              <DropdownInput
+                label="Select Employee"
+                // asterisk="*"
+                options={allEmployes}
+                defaultValue={selectedEmployee}
+                onSelectHandler={(select) => {
+                  setFilterErr('');
+                  setSelectedEmployee(select);
+                  // setFromDate("");
+                  // setToDate("");
+                  setRowData('');
+                  setFilterErr('');
+                }}
+              // isMulti
+              />
+            </Col>
 
-      {/* Table for Workload Data */}
-      <table>
-        <thead>
-          <tr>
-            <th>Employee Name</th>
-            <th>Project</th>
-            <th>Task Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>ETA</th>
-            <th>Log Time</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((task) => (
-            <tr key={task.id}>
-              <td>{task.employee_name}</td>
-              <td>{task.project_name}</td>
-              <td>{task.task_name}</td>
-              <td>{task.start_date}</td>
-              <td>{task.end_date}</td>
-              <td>{task.estimation} mins</td>
-              <td>{task.time_log} mins</td>
-              <td>{task.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <>
+              <Col sm={2}>
+                <Datepicker
+                  className="form-control"
+                  label="Select from date"
+                  asterisk="*"
+                  selected={fromDate}
+                  onChange={(e) => {
+                    setFromDate(e);
+                    setToDate(null);
+                  }}
+                  maxDate={new Date()}
+                  autoComplete="off"
+                  name="startDate"
+                  dateFormat="dd/MM/yyyy"
+                  placeholder="Select from date"
+                />
+              </Col>
+              <Col sm={2}>
+                <Datepicker
+                  className="form-control"
+                  label="Select to date"
+                  asterisk="*"
+                  selected={toDate}
+                  maxDate={fromDate ? new Date(fromDate.getTime() + 7 * 24 * 60 * 60 * 1000) : null}
+                  minDate={fromDate}
+                  onChange={(e) => {
+                    setToDate(e);
+                  }}
+                  autoComplete="off"
+                  name="startDate"
+                  dateFormat="dd/MM/yyyy"
+                  placeholder="Select to date"
+                />
+              </Col>
+            </>
+            <Col sm={6} className='mt-4 pt-2'>
+              <Button
+                onClick={() => {
+                  filterSearch();
+                }}
+              >
+                Submit
+              </Button>{' '}
+              &nbsp;
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  isClear();
+                }}
+              >
+                Clear
+              </Button>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
 
-      {/* Bar Chart for Task Count */}
-      <div style={{ width: '50%', margin: 'auto', paddingTop: '20px' }}>
-        <h3>Task Count by Employee</h3>
-        {barData && <Bar data={barData} />}
-      </div>
+      <Card>
+        <Card.Body>
+          <div>
+            <table className="table table-striped m-0">
+              <thead>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                  <th style={{
+                    textAlign: 'center',
+                  }}>Sr. No.</th>
+                  <th >Employee Name</th>
+                  {dateRange.map((date) => (
+                    <th key={date} style={{
+                      textAlign: 'center',
+                    }}>
+                      {date}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(tableData).map(([employee, tasksPerDay], index) => (
+                  <tr key={employee}>
+                    <td style={{
+                      textAlign: 'center',
+                    }}>
+                      {index + 1} {/* Sr. No */}
+                    </td>
+                    <td >{tasksPerDay['employee_name']}</td>
+                    {dateRange.map((date) => (
+                      <td
+                        key={date}
+                        style={{
+                          textAlign: 'center',
+                        }}
+                      >
+                        <div style={{ position: 'relative', display: 'inline-block' }}>
+                          <span
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              width: '30px',
+                              height: '30px',
+                              borderRadius: '50%',
+                              border: `4px solid ${getBorderColor(tasksPerDay[date])}`,
+                              color: '#000',
+                              lineHeight: '30px', // To vertically center the text inside the circle
+                              position: 'relative',
+                              zIndex: 2,
+                              backgroundColor: 'white', // To ensure the text is visible
+                            }}
+                          >
+                            {tasksPerDay[date]}
+                          </span>
+                          <div
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '30px',
+                              height: '30px',
+                              borderRadius: '50%',
+                              border: '4px solid transparent',
+                              borderTop: '4px solid blue',
+                              animation: 'spin 1s linear infinite', // Add spinning animation
+                              zIndex: 1,
+                            }}
+                          />
+                          <style>
+                            {`
+                          @keyframes spin {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                          }
+                        `}
+                          </style>
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      {/* Gantt Chart */}
-      <div style={{ marginTop: '40px' }}>
-        <h3>Employee Workload Gantt Chart</h3>
-        <Gantt tasks={ganttTasks} viewMode={ViewMode.Day} />
-      </div>
-    </div>
+        </Card.Body>
+      </Card>
+    </>
   );
 };
 
-export default EmployeeWorkloadGraph;
+export default EmployeeWorkloadTable;
