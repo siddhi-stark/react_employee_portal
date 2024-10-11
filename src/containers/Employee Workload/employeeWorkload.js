@@ -263,7 +263,7 @@ const EmployeeWorkload = () => {
     // https://portalsapi.starkdigital.in/api/v1/employee/?sort_by=full_name&limit=9&hide_admin=1&is_onboard=true
 
     const url = [1, 8].includes(userRole)
-      ? `${Api.employeeUrl}?sort_by=full_name&hide_admin=1&is_onboard=true`
+      ? `${Api.employeeUrl}?type=all&is_dropdown=1&status=active&hide_admin=1`
       : '';
     const { data, error } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {

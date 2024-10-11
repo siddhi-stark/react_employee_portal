@@ -248,7 +248,7 @@ const EmployeeWorkloadTable = () => {
                     setFromDate(e);
                     setToDate(null);
                   }}
-                  maxDate={new Date()}
+                  // maxDate={new Date()}
                   autoComplete="off"
                   name="startDate"
                   dateFormat="dd/MM/yyyy"
