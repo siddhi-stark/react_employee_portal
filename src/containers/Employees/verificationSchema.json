@@ -150,12 +150,12 @@
         "optionCallback": "getEmployee Status",
         "options": [
           {
-            "id": 1,
+            "id": 2,
             "label": "Resigned And Relieved",
             "value": "resigned_and_relieved"
           },
           {
-            "id": 2,
+            "id": 1,
             "label": "Absconding",
             "value": "absconding"
           },
