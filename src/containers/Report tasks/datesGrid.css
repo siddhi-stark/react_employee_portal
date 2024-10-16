@@ -1,0 +1,81 @@
+/* Container for dates */
+.dates-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    /* Off-white background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual date styling */
+.date-item {
+    position: relative;
+    background-color: #ffffff;
+    /* White for default */
+    color: #333;
+    /* Dark gray for text */
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    /* Light border */
+}
+
+/* Hover effect */
+.date-item:hover {
+    background-color: #7f7db8;
+    /* Light purple/blue */
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for selected date */
+.date-item.selected {
+    background-color: #5A55A1;
+    /* Sidebar purple */
+    color: white;
+    border: 1px solid #5A55A1;
+}
+
+/* Styling for highlighted/completed date */
+.date-item.highlighted {
+    background-color: #ffaf43; /* Soft orange for completed dates */
+    color: white;
+    font-weight: bold;
+    border: 1px solid #ffaf43;
+  }
+  
+  /* Arrow effect for completed date */
+  .completed-arrow {
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #28a745; /* Green arrow */
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+/* Focus state for accessibility */
+.date-item:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+/* Responsive grid layout */
+@media (max-width: 600px) {
+    .dates-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+}

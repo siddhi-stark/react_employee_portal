@@ -100,6 +100,9 @@ import AdminAndHrView from './containers/EmployeeQuarterReview/adminAndHrView';
 import Questionnaire from './containers/questionnaire/questionnaire'
 import AddQuestionnaire from './containers/questionnaire/addQuestionnaire'
 import KraKpi from './containers/kra kpi/kraKpi'
+import ProjectTaskForm from './containers/Report tasks/projectTaskForm'
+import ProjectReportList from './containers/Report tasks/projectReportList'
+import ProjectTaskList from './containers/Report tasks/projectTaskList'
 import KraKpiEmployees from './containers/kra kpi/kraKpiEmployees'
 import AddKraKpi from './containers/kra kpi/addKraKpi'
 
@@ -334,6 +337,10 @@ function Routes() {
       
       <Route path="/employee-workload" exact component={EmployeeWorkload} />
       <Route path="/employee-workload-graph" exact component={EmployeeWorkloadGraph} />
+
+      <Route path="/report-tasks/:id" exact component={ProjectTaskForm} />
+      <Route path="/report-list/:id" exact component={ProjectReportList} />
+      <Route path="/report-tasks-list/:id" exact component={ProjectTaskList} />
       
       <Route component={NotFound} />
       
