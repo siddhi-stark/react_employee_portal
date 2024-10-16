@@ -348,7 +348,7 @@ const FormAbscondTermination = () => {
                   name="effectiveDate"
                   dateFormat="dd/MM/yyyy"
                   placeholder="Select Effective date"
-                  minDate={new Date()}
+                  // minDate={new Date()}
                   errorMessage={validator.current.message(
                     'effectiveDate',
                     effectiveDate,
