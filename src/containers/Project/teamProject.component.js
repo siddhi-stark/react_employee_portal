@@ -15,12 +15,17 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 import ProjectRightContainer from '../../components/RightContainer/projectRightContainer.component';
 import EmployeeBugList from './employeeBugList.component';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+
 
 function TeamProject(props) {
   const teamid = props;
 
   const teamProjectId = teamid?.match?.params?.teamProjectId;
   // const teamProjectId = teamid && teamid.match && teamid.match.params && teamid.match.params.teamProjectId;
+  const state = useLocation()
+  const projectName = state?.state?.state?.projectName
 
   const archived = teamid.location.state ? teamid.location.state.archived : '';
   const completed = teamid.location.state
@@ -34,6 +39,8 @@ function TeamProject(props) {
   const [activityData, setActivityData] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [totalTask, setTotalTask] = useState(0);
+
+
   const items = [
     { to: '/', label: 'Home' },
     {
@@ -41,8 +48,8 @@ function TeamProject(props) {
       label: archived
         ? 'Archived Project'
         : completed
-        ? 'Completed Project'
-        : 'Current Project',
+          ? 'Completed Project'
+          : 'Current Project',
     },
   ];
 
@@ -80,6 +87,16 @@ function TeamProject(props) {
   const [activeMenu, setActiveMenu] = useState('Summary');
   const [managerName, setManagerName] = useState('');
   const [remarksData, setRemarksData] = useState([]);
+  const [isManager, setIsManager] = useState(null);
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    const isProjectManager =
+      customFunctions?.getLocalStorage('isProjectManager');
+    setIsManager(JSON.parse(isProjectManager));
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
+  }, [customFunctions?.getLocalStorage('isProjectManager')]);
 
   // Declare columns
   const columns = [
@@ -243,25 +260,25 @@ function TeamProject(props) {
             managementHrs =
               data.data.total_allocated_estimation &&
               Number(data.data.total_allocated_estimation) *
-                (Number(projectDept.value) / 100);
+              (Number(projectDept.value) / 100);
             break;
           case 'Development':
             developmentHrs =
               data.data.total_allocated_estimation &&
               Number(data.data.total_allocated_estimation) *
-                (Number(projectDept.value) / 100);
+              (Number(projectDept.value) / 100);
             break;
           case 'Design':
             designHrs =
               data.data.total_allocated_estimation &&
               Number(data.data.total_allocated_estimation) *
-                (Number(projectDept.value) / 100);
+              (Number(projectDept.value) / 100);
             break;
           case 'Quality Analysis':
             qaHrs =
               data.data.total_allocated_estimation &&
               Number(data.data.total_allocated_estimation) *
-                (Number(projectDept.value) / 100);
+              (Number(projectDept.value) / 100);
             break;
           default:
             return !projectDept.name;
@@ -300,11 +317,11 @@ function TeamProject(props) {
           {
             data: [
               data &&
-                data.data &&
-                data.data.task_status_details?.total_task_completed_count,
+              data.data &&
+              data.data.task_status_details?.total_task_completed_count,
               data &&
-                data.data &&
-                data.data.task_status_details?.total_task_incomplete_count,
+              data.data &&
+              data.data.task_status_details?.total_task_incomplete_count,
             ],
             backgroundColor: ['#8cc540', '#e3e3e3'],
           },
@@ -336,9 +353,9 @@ function TeamProject(props) {
             borderWidth: 1,
             data: [
               data &&
-                data?.data &&
-                data?.data?.hour_analysis_details
-                  ?.total_allocated_estimation_in_hours,
+              data?.data &&
+              data?.data?.hour_analysis_details
+                ?.total_allocated_estimation_in_hours,
             ],
           },
           {
@@ -347,9 +364,9 @@ function TeamProject(props) {
             borderWidth: 1,
             data: [
               data &&
-                data.data &&
-                data?.data?.hour_analysis_details
-                  ?.total_given_estimation_in_hours,
+              data.data &&
+              data?.data?.hour_analysis_details
+                ?.total_given_estimation_in_hours,
             ],
           },
           {
@@ -358,8 +375,8 @@ function TeamProject(props) {
             borderWidth: 1,
             data: [
               data &&
-                data.data &&
-                data?.data?.hour_analysis_details?.total_spent_time_in_hours,
+              data.data &&
+              data?.data?.hour_analysis_details?.total_spent_time_in_hours,
             ],
           },
         ],
@@ -462,7 +479,7 @@ function TeamProject(props) {
       remarksData.map((r) => {
         postData.push({
           progress: r.progress,
-          remark:  r.remark ? r.remark : null,
+          remark: r.remark ? r.remark : null,
           project_id: Number(teamProjectId),
         });
         return postData;
@@ -501,12 +518,52 @@ function TeamProject(props) {
             archived
               ? history.push('/archived-project')
               : completed
-              ? history.push('/completed-project')
-              : history.push('/current-project')
+                ? history.push('/completed-project')
+                : history.push('/current-project')
           }
         >
           Back
         </Button>
+        <UserRestrictions
+          permittedUsers={isManager ? [1] : [1]}
+          roleId={userRole}
+        >
+          <UserRestrictions
+            permittedUsers={isManager ? [1] : [2]}
+            roleId={userRole}
+          >
+            <Button
+              className="float-end mr-3"
+              onClick={() => {
+                history.push(`/report-tasks/${teamProjectId}`, {
+                  state: {
+                    projectName: projectName
+                  }
+                })
+              }
+              }
+            >
+              Generate Report
+            </Button>
+          </UserRestrictions>
+
+          <Button
+            className="float-end mr-3"
+            onClick={() => {
+              if (isManager) {
+                history.push(`/report-list/${teamProjectId}`)
+               
+              } else {
+                history.push(`/admin-report-list/${teamProjectId}`)
+              }
+            }
+            }
+          >
+            View Reports
+          </Button>
+
+        </UserRestrictions>
+
         <h2 className="main-content-title tx-24 mg-b-5">Project Dashboard</h2>
         <Breadcrumb items={items} />
       </div>
@@ -515,9 +572,8 @@ function TeamProject(props) {
         <nav className="nav border-0">
           <a
             href="#"
-            className={`nav-link mr-5 ${
-              activeMenu === 'Summary' ? 'active' : ''
-            }`}
+            className={`nav-link mr-5 ${activeMenu === 'Summary' ? 'active' : ''
+              }`}
             onClick={() => {
               setActiveMenu('Summary');
             }}
@@ -526,9 +582,8 @@ function TeamProject(props) {
           </a>
           <a
             href="#"
-            className={`nav-link mr-5 ${
-              activeMenu === 'Activity' ? 'active' : ''
-            }`}
+            className={`nav-link mr-5 ${activeMenu === 'Activity' ? 'active' : ''
+              }`}
             onClick={() => {
               setActiveMenu('Activity');
             }}
@@ -575,8 +630,8 @@ function TeamProject(props) {
                                 <td>{td.name}</td>
                                 <td>
                                   {td.name === 'Not Started(0%)' ||
-                                  td.name === 'Inprogress(1-99%)' ||
-                                  td.name === 'Completed(100%)' ? (
+                                    td.name === 'Inprogress(1-99%)' ||
+                                    td.name === 'Completed(100%)' ? (
                                     <b>{td.value}</b>
                                   ) : (
                                     <i>{td.value}</i>
@@ -767,10 +822,9 @@ function TeamProject(props) {
                                               task[1].progress}
                                             %
                                             {task[1].progress === 100
-                                              ? ` ( ${
-                                                  task[1].hours_sum &&
-                                                  task[1].hours_sum
-                                                }) `
+                                              ? ` ( ${task[1].hours_sum &&
+                                              task[1].hours_sum
+                                              }) `
                                               : ''}
                                           </h6>
                                         </div>
