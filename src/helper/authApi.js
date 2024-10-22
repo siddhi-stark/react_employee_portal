@@ -99,6 +99,7 @@ class AuthApi {
         (response) => {
           if (response.data.code === 200) {
             httpResponse.data = response.data;
+            httpResponse.success = true;
             return httpResponse;
           }
           httpResponse.success = false;

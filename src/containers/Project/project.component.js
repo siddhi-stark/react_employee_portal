@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { Card, Image } from 'react-bootstrap';
+import { Card, Image, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
@@ -11,6 +11,7 @@ import Api from '../../helper/api';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
+import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Current Project' }];
 
@@ -29,9 +30,16 @@ function Project() {
   const departmentId = customFunctions.getLocalStorage('department');
   const [allData, setAllData] = useState({});
   const [options, updateOptions] = useState({});
+  const [isManager, setIsManager] = useState(null);
 
   // Variable declarations Filter State
   const [currentUser, updateCurrentUser] = useState(0);
+
+  useEffect(() => {
+    const isProjectManager =
+      customFunctions?.getLocalStorage('isProjectManager');
+    setIsManager(JSON.parse(isProjectManager));
+  }, [customFunctions?.getLocalStorage('isProjectManager')]);
 
   const handleActionCallback = ({ id }) => {
     return (
@@ -88,7 +96,8 @@ function Project() {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                history.push(`/team-project/${id}`);
+                customFunctions.setLocalStorage('projectName', name);
+                history.push(`/team-project/${id}`, { state: { projectName: name } });
               }}
             >
               <strong> {name} </strong>
@@ -228,6 +237,7 @@ function Project() {
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('group');
     updateCurrentUser(Number(roleId));
+
   };
 
   useEffect(() => {
@@ -303,8 +313,29 @@ function Project() {
         <div className="mt-5">
           <Card>
             <Card.Body>
-              <h5 className="card-title mb-0 mt-2 ">Filter</h5>
+              <UserRestrictions
+                permittedUsers={isManager ? [1, 2, 3, 4, 7, 10] : [2, 3, 4, 7, 10]}
+                roleId={currentUser}
+              >
+
+                <div className="d-flex align-items-center justify-content-between">
+                  <h5 className="card-title mb-0 mt-2 ">Filter</h5>
+                  <Button
+                    variant="secondary"
+                    className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                    type="submit"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      history.push(`/project-report-list`)
+
+                    }}
+                  >
+                    Today's Projects Reports
+                  </Button>
+                </div>
+              </UserRestrictions>
               <hr />
+
               <div className="filter-box-main">
                 <StarkFormBuilder
                   containerClass=""

@@ -11,138 +11,263 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import { useHistory, useParams } from 'react-router-dom';
+import './projectReport.css';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
+const items = [{ to: '/', label: 'Home' }, { label: 'Project task Report' }];
 
 
 // DateCard Component
 const ProjectTaskList = () => {
-  const [reportDetails, setReportDetails] = useState([
-    {
-      id: 10,
-      project_id: 1,
-      user_id: 9,
-      report_date: '2024-10-14',
-      current_status: 1,
-      current_status_name: 'Progress',
-      issues_risks: 'https://docs.google.com/',
-      next_steps: 'Ask team to speed up the work.',
-      created_at: '2024-10-14T09:09:29.982407Z',
-      report_tasks_details: [
-        { id: 1, section: 1, section_name: 'Key Tasks Completed Today', status: 1, status_name: 'Completed', task_id: 15767, task_name: 'Update the API' },
-        { id: 2, section: 1, section_name: 'Key Tasks Completed Today', status: 1, status_name: 'Completed', task_id: 15148, task_name: 'Check Log' },
-        { id: 3, section: 1, section_name: 'Key Tasks Completed Today', status: 2, status_name: 'WIP', task_id: 14343, task_name: 'Create ticket' },
-        { id: 4, section: 2, section_name: 'Upcoming Deliverables', status: 2, status_name: 'WIP', task_id: 13570, task_name: 'R&D on API' },
-        { id: 5, section: 2, section_name: 'Upcoming Deliverables', status: 3, status_name: 'Not Started', task_id: 13568, task_name: 'Daily monitoring' },
-      ],
-    },
-  ])
-  const [currentStatus, setCurrentStatus] = useState(reportDetails[0].current_status_name || '');
+  const history = useHistory();
+  const state = useLocation()
+  const { id } = useParams();
+  const [projectId, setProjectId] = useState(id);
+  const fromDate = state?.state?.state?.formattedDate
+  const fromSentReport = state?.state?.state?.fromSentReport
+  const [title, setTitle] = useState('Report generations');
+  const [isShowLoader, setShowLoader] = useState(false);
+  const [reportDetails, setReportDetails] = useState([])
+  const [currentStatus, setCurrentStatus] = useState(reportDetails[0]?.current_status_name || '');
   const [selectedTasksCompleted, setSelectedTasksCompleted] = useState([]);
   const [selectedDeliverables, setSelectedDeliverables] = useState([]);
-  const [issuesRisks, setIssuesRisks] = useState(reportDetails[0].issues_risks || '');
-  const [nextSteps, setNextSteps] = useState(reportDetails[0].next_steps || '');
+  const [issuesRisks, setIssuesRisks] = useState(reportDetails[0]?.issues_risks || '');
+  const [nextSteps, setNextSteps] = useState(reportDetails[0]?.next_steps || '');
+  const UserID = customFunctions.getLocalStorage('userId');
 
 
-  // Handle multi-select for "Key Tasks Completed Today"
-  const handleSelectTasksCompleted = (taskId) => {
-    setSelectedTasksCompleted(prev =>
-      prev.includes(taskId) ? prev.filter(id => id !== taskId) : [...prev, taskId]
-    );
-  };
+  useEffect(() => {
+    getReportsDetails()
+  }, [])
 
-  // Handle multi-select for "Upcoming Deliverables"
-  const handleSelectDeliverables = (taskId) => {
-    setSelectedDeliverables(prev =>
-      prev.includes(taskId) ? prev.filter(id => id !== taskId) : [...prev, taskId]
-    );
-  };
+  const getReportsDetails = async () => {
+    setShowLoader(true);
 
-  const handleSubmit = () => {
-    const data = {
-      current_status: currentStatus,
-      selectedTasksCompleted,
-      selectedDeliverables,
-      issuesRisks,
-      nextSteps,
+    const params = {
+      project: projectId,
+      user: UserID,
+      type: 'all',
+      start_date: fromDate,
+      end_date: fromDate
     };
-    console.log('Submitted Data:', data);
-    // Submit the form data to your backend
+
+    // if (filterDate.getDate() !== today.getDate()) {
+    //   params.end_date = start_date
+    // }
+
+    const url = customFunctions.generateUrl(Api.generateTaskList, params);
+    const { data } = await AuthApi.getDataFromServer(url);
+
+    if (data && data.success) {
+      const { current_page, total_count, limit } = data.paginator;
+      setReportDetails(data?.data);
+      setShowLoader(false);
+
+    } else {
+      setShowLoader(false);
+
+      swal(data.message || 'Error fetching data', '', 'error');
+    }
+  }
+
+
+  const getTasksBySection = (sectionName) => {
+    return reportDetails[0]?.report_tasks_details.filter(task => task.section_name === sectionName);
   };
-  
-  console.log('reportDetails.report_tasks_details', reportDetails[0].current_status_name);
-  
-  const getTasksBySection = (sectionName) => {    
-    return reportDetails[0].report_tasks_details.filter(task => task.section_name === sectionName);
+
+  const getTasksBySectionEvening = (sectionName) => {
+    return reportDetails[1]?.report_tasks_details.filter(task => task.section_name === sectionName);
   };
 
   return (
-    <div>
-      <h2>Project Report</h2>
-
-      {/* 1. Current Project Status */}
-      <div>
-        <h3>Current Project Status</h3>
-        <select value={currentStatus} onChange={(e) => setCurrentStatus(e.target.value)}>
-          <option value="Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-          <option value="On Hold">On Hold</option>
-        </select>
+    <>
+      <Helmet title={title} />
+      <div className="title-breadcrumb-section">
+        <h2 className="main-content-title tx-24 mg-b-5">Project Tasks Report</h2>
+        <Breadcrumb items={items} />
       </div>
+      <Loader showLoader={isShowLoader} needFullPage={false} />
 
-      {/* 2. Key Tasks Completed Today */}
-      <div>
-        <h3>Key Tasks Completed Today</h3>
-        {getTasksBySection('Key Tasks Completed Today')?.map(task => (
-          <div key={task.id}>
-            <input
-              type="checkbox"
-              value={task.task_id}
-              onChange={() => handleSelectTasksCompleted(task.task_id)}
-              checked={selectedTasksCompleted.includes(task.task_id)}
-            />
-            <label>{task.task_name} ({task.status_name})</label>
-          </div>
-        ))}
-      </div>
+      <Card>
+        <Card.Body>
+          <section className="content-area">
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Submited Details for {reportDetails[0]?.project_name} on date {reportDetails[0]?.report_date}</h5>
+              <Button
+                variant="secondary"
+                className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (!fromSentReport){
+                    history.push(`/report-list/${projectId}`) 
 
-      {/* 3. Upcoming Deliverables */}
-      <div>
-        <h3>Upcoming Deliverables</h3>
-        {getTasksBySection('Upcoming Deliverables')?.map(task => (
-          <div key={task.id}>
-            <input
-              type="checkbox"
-              value={task.task_id}
-              onChange={() => handleSelectDeliverables(task.task_id)}
-              checked={selectedDeliverables.includes(task.task_id)}
-            />
-            <label>{task.task_name} ({task.status_name})</label>
-          </div>
-        ))}
-      </div>
+                  }else{ 
+                    history.push(`/project-report-list`) 
+                  }
 
-      {/* 4. Issues/Risks */}
-      <div>
-        <h3>Issues/Risks</h3>
-        <textarea
-          value={issuesRisks}
-          onChange={(e) => setIssuesRisks(e.target.value)}
-          placeholder="Mention delays, blockers"
-        />
-      </div>
+                }}
+              >
+                Back
+              </Button>
+            </div>
+            <hr style={{ borderColor: "white" }} />
 
-      {/* 5. Next Steps */}
-      <div>
-        <h3>Next Steps</h3>
-        <textarea
-          value={nextSteps}
-          onChange={(e) => setNextSteps(e.target.value)}
-          placeholder="Planned activities for tomorrow"
-        />
-      </div>
+            {reportDetails && reportDetails.length > 0 ? (
+              <Row>
+                <Col sm={6}>
+                  <h5 className="card-title mb-0 mt-2 ">{reportDetails[0].report_type == 1 ? "Morning Report :" : "Evening Report :"} </h5>
+                  <br />
 
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
+                  <div className="card">
+                    <div className="card-header">
+                      <h3>Current Project Status</h3>
+                    </div>
+                    <div className="card-content">
+                      <span className={`status-pill ${reportDetails[0]?.current_status_name.toLowerCase()}`}>
+                        {reportDetails[0]?.current_status_name}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="card">
+                    <div className="card-header">
+                      <h3>Key Tasks Completed Today</h3>
+                    </div>
+                    <div className="card-content">
+                      {getTasksBySection('Key Tasks Completed Today')?.length > 0 ? (
+                        <ul className="task-list">
+                          {getTasksBySection('Key Tasks Completed Today')?.map((task, index) => (
+                            <li key={task.id} className={`task-item ${task.status_name.toLowerCase()}`}>
+                              <strong>{index + 1}.{task.task_name}</strong> - {task.status_name}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>No tasks completed today.</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="card">
+                    <div className="card-header">
+                      <h3>Upcoming Deliverables</h3>
+                    </div>
+                    <div className="card-content">
+                      {getTasksBySection('Upcoming Deliverables')?.length > 0 ? (
+                        <ul className="task-list">
+                          {getTasksBySection('Upcoming Deliverables')?.map((task, index) => (
+                            <li key={task.id} className={`task-item ${task.status_name.toLowerCase()}`}>
+                              <strong>{index + 1}.{task.task_name}</strong> - {task.status_name}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>No upcoming deliverables.</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="card">
+                    <div className="card-header">
+                      <h3>Issues/Risks</h3>
+                    </div>
+                    <div className="card-content">
+                      <p>{reportDetails[0]?.issues_risks || 'No issues or risks reported.'}</p>
+                    </div>
+                  </div>
+
+                  <div className="card">
+                    <div className="card-header">
+                      <h3>Next Steps</h3>
+                    </div>
+                    <div className="card-content">
+                      <p>{reportDetails[0]?.next_steps || 'No next steps provided.'}</p>
+                    </div>
+                  </div>
+                </Col>
+                {reportDetails.length > 1 && (
+                  <>
+                    <Col sm={6}>
+                      <h5 className="card-title mb-0 mt-2 ">Evening Report : </h5>
+                      <br />
+
+                      <div className="card">
+                        <div className="card-header">
+                          <h3>Current Project Status</h3>
+                        </div>
+                        <div className="card-content">
+                          <span className={`status-pill ${reportDetails[1]?.current_status_name.toLowerCase()}`}>
+                            {reportDetails[1]?.current_status_name}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="card">
+                        <div className="card-header">
+                          <h3>Key Tasks Completed Today</h3>
+                        </div>
+                        <div className="card-content">
+                          {getTasksBySectionEvening('Key Tasks Completed Today')?.length > 0 ? (
+                            <ul className="task-list">
+                              {getTasksBySectionEvening('Key Tasks Completed Today')?.map((task, index) => (
+                                <li key={task.id} className={`task-item ${task.status_name.toLowerCase()}`}>
+                                  <strong>{index + 1}.{task.task_name}</strong> - {task.status_name}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p>No tasks completed today.</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="card">
+                        <div className="card-header">
+                          <h3>Upcoming Deliverables</h3>
+                        </div>
+                        <div className="card-content">
+                          {getTasksBySectionEvening('Upcoming Deliverables')?.length > 0 ? (
+                            <ul className="task-list">
+                              {getTasksBySectionEvening('Upcoming Deliverables')?.map((task, index) => (
+                                <li key={task.id} className={`task-item ${task.status_name.toLowerCase()}`}>
+                                  <strong>{index + 1}.{task.task_name}</strong> - {task.status_name}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p>No upcoming deliverables.</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="card">
+                        <div className="card-header">
+                          <h3>Issues/Risks</h3>
+                        </div>
+                        <div className="card-content">
+                          <p>{reportDetails[1]?.issues_risks || 'No issues or risks reported.'}</p>
+                        </div>
+                      </div>
+
+                      <div className="card">
+                        <div className="card-header">
+                          <h3>Next Steps</h3>
+                        </div>
+                        <div className="card-content">
+                          <p>{reportDetails[1]?.next_steps || 'No next steps provided.'}</p>
+                        </div>
+                      </div>
+                      {/* </div> */}
+                    </Col>
+                  </>
+                )}
+              </Row>
+            ) : 'Report not present.'}
+          </section >
+        </Card.Body>
+      </Card>
+    </>
   );
 };
 

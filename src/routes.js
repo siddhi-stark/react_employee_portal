@@ -102,7 +102,10 @@ import AddQuestionnaire from './containers/questionnaire/addQuestionnaire'
 import KraKpi from './containers/kra kpi/kraKpi'
 import ProjectTaskForm from './containers/Report tasks/projectTaskForm'
 import ProjectReportList from './containers/Report tasks/projectReportList'
+import ProjectReportListAdmin from './containers/Report tasks/projectReportListAdmin'
 import ProjectTaskList from './containers/Report tasks/projectTaskList'
+import ProjectTaskListAdmin from './containers/Report tasks/projectTaskListAdmin'
+import SentProjectsReport from './containers/Report tasks/sentProjectsReport'
 import KraKpiEmployees from './containers/kra kpi/kraKpiEmployees'
 import AddKraKpi from './containers/kra kpi/addKraKpi'
 
@@ -340,7 +343,12 @@ function Routes() {
 
       <Route path="/report-tasks/:id" exact component={ProjectTaskForm} />
       <Route path="/report-list/:id" exact component={ProjectReportList} />
+      <Route path="/admin-report-list/:id" exact component={ProjectReportListAdmin} />
       <Route path="/report-tasks-list/:id" exact component={ProjectTaskList} />
+      <Route path="/admin-report-tasks-list/:id" exact component={ProjectTaskListAdmin} />
+      <Route path="/project-report-list" exact component={SentProjectsReport} />
+      
+
       
       <Route component={NotFound} />
       

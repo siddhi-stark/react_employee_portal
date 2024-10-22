@@ -251,10 +251,13 @@ export default class Api extends Component {
 
   static kraKpiAdd = `${Api.baseUrl}kra-kpi/`
 
-  static projectTaskList = `${Api.baseUrl}project-reports/`
+  static projectTaskList = `${Api.baseUrl}report-task-lists/`
+
+  static generateTaskList = `${Api.baseUrl}project-reports/`
   
   static reportTaskList = `${Api.baseUrl}days-task-lists/`
 
+  static generateTaskTeports = `${Api.baseUrl}generate-report/`
 
   
   // Get base URL of APIs
@@ -264,8 +267,8 @@ export default class Api extends Component {
     let url = '';
     switch (env) {
       case 'production':
-        // url = 'https://portalsapi.starkdigital.in/api/v1/';
-        url = 'https://stage-portalsapi.starkdigital.in/api/v1/';
+        url = 'https://portalsapi.starkdigital.in/api/v1/';
+        // url = 'https://stage-portalsapi.starkdigital.in/api/v1/';
         // url = 'https://liveapi.starkdigital.in/api/v1/'; // for emp Production
         // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/'; // for emp Production
         // url = 'https://portalsapi.reviewtestlink.com/api/v1/';

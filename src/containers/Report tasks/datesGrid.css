@@ -14,10 +14,10 @@
 /* Individual date styling */
 .date-item {
     position: relative;
-    background-color: #ffffff;
-    /* White for default */
-    color: #333;
-    /* Dark gray for text */
+    background-color: #f3f4f6;
+    /* Light gray for default */
+    color: #383f8c;
+    /* Dark purple for text */
     padding: 15px;
     border-radius: 10px;
     cursor: pointer;
@@ -31,8 +31,8 @@
 
 /* Hover effect */
 .date-item:hover {
-    background-color: #7f7db8;
-    /* Light purple/blue */
+    background-color: #4c91da;
+    /* Light blue to match the theme */
     color: white;
     transform: translateY(-3px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
@@ -40,42 +40,71 @@
 
 /* Styling for selected date */
 .date-item.selected {
-    background-color: #5A55A1;
-    /* Sidebar purple */
+    background-color: #4d4a97;
+    /* Darker purple for selected */
     color: white;
-    border: 1px solid #5A55A1;
+    border: 1px solid #4d4a97;
 }
 
-/* Styling for highlighted/completed date */
-.date-item.highlighted {
-    background-color: #ffaf43; /* Soft orange for completed dates */
-    color: white;
+.date-item.two-objects {
+    background-color: #f9f9f9; /* Soft orange for completed dates */
+    color: #ffaf43;
     font-weight: bold;
     border: 1px solid #ffaf43;
-  }
-  
-  /* Arrow effect for completed date */
-  .completed-arrow {
+    font-size: 0.9rem; /* Reduce font size */
+}
+
+/* Styling for highlighted/completed date with single object */
+.date-item.single-object {
+    background-color: #f9f9f9; /* Soft orange for completed dates */
+    color: #bfa06f;
+    font-weight: bold;
+    border: 1px solid #bfa06f;
+    font-size: 0.9rem; /* Reduce font size */
+}
+
+/* Styling for dates with zero objects (no reports sent) */
+.date-item.zero-object {
+    background-color: #f9f9f9; /* Light gray background */
+    color: #888888; /* Medium gray text */
+    font-weight: bold;
+    border: 1px solid #4f4c48; /* Subtle brown border */
+    font-size: 0.9rem; /* Slightly reduced font size */
+}
+
+/* Styling for dates with zero objects (no reports sent) */
+.date-item.week-ends {
+    background-color: #f9f9f9; /* Light gray background */
+    color: #d65858; /* Medium gray text */
+    font-weight: bold;
+    border: 1px solid #de4343; /* Subtle brown border */
+    font-size: 0.9rem; /* Slightly reduced font size */
+}
+
+.date-item.upcoming-day {
+    background-color: #f9f9f9; /* Light gray background */
+    color: #588ae8; /* Medium gray text */
+    font-weight: bold;
+    border: 1px solid #588ae8; /* Subtle brown border */
+    font-size: 0.9rem; /* Slightly reduced font size */
+}
+
+
+/* Arrow effect for completed date */
+.completed-arrow {
     position: absolute;
     right: -10px;
     top: 50%;
     transform: translateY(-50%);
-    color: #28a745; /* Green arrow */
+    color: #28a745;
+    /* Green arrow */
     font-size: 18px;
     font-weight: bold;
     transition: all 0.3s ease;
-  }
+}
 
 /* Focus state for accessibility */
 .date-item:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
-}
-
-/* Responsive grid layout */
-@media (max-width: 600px) {
-    .dates-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-    }
 }

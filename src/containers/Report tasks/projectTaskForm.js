@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from 'react';
-import { Helmet, Datepicker } from '../../components/FormInputs';
+import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
-import { Card, Row, Col, Button, Image, Form } from 'react-bootstrap';
+import { Card, Row, Col, Button, Image, Form, Tabs, Tab } from 'react-bootstrap';
 import Select from 'react-select';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
@@ -11,12 +11,21 @@ import Api from '../../helper/api';
 import swal from 'sweetalert';
 import { useHistory, useParams } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+import SweetAlert from 'react-bootstrap-sweetalert';
 
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Project Report' }];
 
 const ProjectTaskForm = () => {
   const validator = useRef(new SimpleReactValidator());
+  const state = useLocation()
+  const [projectName, setProjectName] = useState()
+  useEffect(() => {
+    const projectName =
+      customFunctions?.getLocalStorage('projectName');
+      setProjectName(projectName)
+  }, [localStorage.getItem('projectName')]);
 
   const history = useHistory();
   const [title, setTitle] = useState('Report generations');
@@ -38,11 +47,21 @@ const ProjectTaskForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [fromDate, setFromDate] = useState('');
   const [limit, setLimit] = useState(10);
+  const [showAddPopUp, setAddPopUp] = useState(false)
+
+  // const [projectName, setProjectName] = useState('');
   const [statusOptions] = useState([
     { value: '1', label: 'In Progress' },
     { value: '2', label: 'Completed' },
     { value: '3', label: 'On Hold' }
   ]);
+
+  const [selectedReportType, setReportType] = useState({ "label": 'Morning', "value": 1 })
+
+  const reportTypes = [
+    { "label": 'Morning', "value": 1 },
+    { "label": 'Evening', "value": 2 },
+  ]
 
   const today = new Date();
 
@@ -58,28 +77,22 @@ const ProjectTaskForm = () => {
     setShowLoader(true);
 
     const params = {
-      start_date: "2024-07-10",
+      // start_date: "2024-07-10",
+      start_date: customFunctions.getDate(filterDate),
       sort_by: 'id',
       project_id: projectId,
       // page:page,
       type: 'all'
     };
 
-    // if (filterDate.getDate() !== today.getDate()) {
-    //   params.end_date = start_date
-    // }
+    if (filterDate.getDate() !== today.getDate()) {
+      params.end_date = start_date
+    }
 
-    const url = customFunctions.generateUrl(Api.reportTaskList, params);
+    const url = customFunctions.generateUrl(Api.projectTaskList, params);
     const { data } = await AuthApi.getDataFromServer(url);
 
     if (data && data.success) {
-      const { current_page, total_count, limit } = data.paginator;
-      // setPagination({
-      //   current_page: parseInt(current_page, 10),
-      //   totalItems: parseInt(total_count, 10),
-      //   itemsPerPage: parseInt(limit, 10),
-      // });
-
       setSectionOneTaskList(() => {
         return data.data;
       });
@@ -96,33 +109,23 @@ const ProjectTaskForm = () => {
   const fetchSectionTwoTasks = async (page = 1) => {
     setShowLoader(true);
     const params = {
-      start_date: "2024-09-10",
-      // start_date: customFunctions.getDate(filterDate),
+      // start_date: "2024-07-10",
+      start_date: customFunctions.getDate(filterDate),
       sort_by: 'id',
       project_id: projectId,
       is_section_two: true,
-      // page: page, // Add pagination parameter
       type: 'all'
 
     };
 
-    // if (filterDate.getDate() !== today.getDate()) {
-    //   params.end_date = start_date
-    // }
+    if (filterDate.getDate() !== today.getDate()) {
+      params.end_date = start_date
+    }
 
-    const url = customFunctions.generateUrl(Api.reportTaskList, params);
+    const url = customFunctions.generateUrl(Api.projectTaskList, params);
     const { data } = await AuthApi.getDataFromServer(url);
 
     if (data && data.success) {
-      const { current_page, total_count, limit } = data.paginator;
-
-      // setPagination({
-      //   current_page: parseInt(current_page, 10),
-      //   totalItems: parseInt(total_count, 10),
-      //   itemsPerPage: parseInt(limit, 10),
-      // });
-
-      // Merge with the existing list if loading more
       setSectionTwoTaskList(() => {
         return data.data
       }
@@ -136,17 +139,14 @@ const ProjectTaskForm = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("sectionOnetaskList", sectionOnetaskList)
-    console.log("sectionTwotaskList", sectionTwotaskList)
-    console.log("selectedTasks", selectedTasks)
-    console.log("upcomingDeliverables", upcomingDeliverables)
 
     let final_obj = {
       project: +projectId,
       report_date: customFunctions.getDate(filterDate),
       current_status: +projectStatus?.value,
       issues_risks: issues,
-      next_steps: nextSteps
+      next_steps: nextSteps,
+      report_type: +selectedReportType?.value
     }
 
     let prepareReportDetails = []
@@ -169,7 +169,7 @@ const ProjectTaskForm = () => {
 
     final_obj.report_tasks_details = prepareReportDetails
 
-    const response = await AuthApi.postDataToServer(Api.projectTaskList, final_obj);
+    const response = await AuthApi.postDataToServer(Api.generateTaskList, final_obj);
 
     const { data, message } = response;
     if (data) {
@@ -209,8 +209,24 @@ const ProjectTaskForm = () => {
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
 
-      <Card>
+      <Card className='overflow-visible' >
         <Card.Body>
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">Project report generation for {projectName}</h5>
+            <Button
+              variant="secondary"
+              className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault()
+                { history.push(`/team-project/${projectId}`) }
+
+              }}
+            >
+              Back
+            </Button>
+          </div>
+          <hr style={{ borderColor: "white" }} />
           <Row>
             <Col sm={2}>
               <Datepicker
@@ -238,41 +254,50 @@ const ProjectTaskForm = () => {
                 Cancel
               </Button>
             </Col>
+            <Col>
+            </Col>
           </Row>
-        </Card.Body>
-      </Card>
-      {filterDate && (
-        <>
-          <Card>
-            <Card.Body>
+
+          {filterDate && (
+            <>
               <Form>
-                <div>
+                <Row>
+                  <Col>
+                    <DropdownInput
+                      label="Current Project Status"
+                      asterisk="*"
+                      options={statusOptions}
+                      defaultValue={projectStatus}
+                      onSelectHandler={(select) => {
+                        setProjectStatus(select);
+                      }}
+                      // disabled={isViewOnly ? true : false}
+                      errorMessage={validator.current.message(
+                        'Current Project Status',
+                        selectedReportType,
+                        'required'
+                      )}
+                    />
+                  </Col>
 
-                  <Form.Group>
-                    <Form.Label>Current Project Status<span className="text-danger">*</span>
-
-                    </Form.Label>
-                    <Form.Control
-                      as="select"
-                      value={projectStatus}
-                      onChange={(e) => setProjectStatus(e.target.value)}
-                    >
-                      {statusOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </Form.Control>
-                  </Form.Group>
-                  <p className='text-danger'>
-                    {validator.current.message(
-                      'Current Project Status',
-                      projectStatus,
-                      'required'
-                    )}
-                  </p>
-                </div>
-
+                  <Col>
+                    <DropdownInput
+                      label="Report Type"
+                      asterisk="*"
+                      options={reportTypes}
+                      defaultValue={selectedReportType}
+                      onSelectHandler={(select) => {
+                        setReportType(select);
+                      }}
+                      // disabled={isViewOnly ? true : false}
+                      errorMessage={validator.current.message(
+                        'Report Type',
+                        selectedReportType,
+                        'required'
+                      )}
+                    />
+                  </Col>
+                </Row>
                 <div>
                   <Form.Group>
                     <Form.Label>Key Tasks Completed Today<span className="text-danger">*</span>
@@ -355,20 +380,40 @@ const ProjectTaskForm = () => {
                     e.preventDefault();
                     e.stopPropagation();
                     if (validator.current.allValid()) {
-                      handleSubmit()
+                      setAddPopUp(true);
                     } else {
                       validator.current.showMessages()
                       forceUpdate(count + 1)
                     }
                   }}>
-                  Submit Report
+                  Save Report
                 </Button>
               </Form>
-            </Card.Body>
-          </Card>
-        </>
-      )}
+            </>
+          )}
+        </Card.Body>
+      </Card>
+      {showAddPopUp && (
+          <SweetAlert
+            warning
+            showCancel
+            title="Are you sure you want to submit? Once you submit, you can't change it."
+            confirmBtnText="Submit"
+            // confirmBtnBsStyle="blue"
+            cancelBtnBsStyle="light"
+            onConfirm={() => {
+              handleSubmit()
+              setAddPopUp(false)
+
+            }}
+            onCancel={() => {
+              setAddPopUp(false)
+            }}
+          />
+        )
+        }
     </>
+
   );
 };
 

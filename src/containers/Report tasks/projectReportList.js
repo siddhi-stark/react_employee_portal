@@ -11,9 +11,8 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import { useHistory, useParams } from 'react-router-dom';
-import ProjectTaskList from './projectTaskList';
 
-
+const items = [{ to: '/', label: 'Home' }, { label: 'Project Reports' }];
 
 // DateCard Component
 const ProjectReportList = () => {
@@ -27,8 +26,6 @@ const ProjectReportList = () => {
   const UserID = customFunctions.getLocalStorage('userId');
   const [isShowLoader, setShowLoader] = useState(false);
 
-
-  // Generate all dates of the selected month
   useEffect(() => {
     const daysInMonth = getDaysInMonth(selectedMonth);
     const allDates = Array.from({ length: daysInMonth }, (_, i) =>
@@ -44,11 +41,9 @@ const ProjectReportList = () => {
   }, [selectedMonth])
 
   const handleDateClick = (date) => {
-    setSelectedDate(date);  // Highlight the selected date
-
-    // Navigate to another component/page, passing the date in the URL
+    setSelectedDate(date);  
     const formattedDate = format(date, 'yyyy-MM-dd');
-    history.push(`/report-tasks-list/${projectId}`);  // Example: /report/2024-10-15
+    history.push(`/report-tasks-list/${projectId}`, { state: { formattedDate: formattedDate } });  // Example: /report/2024-10-15
   };
 
   const getEachDayDetails = async () => {
@@ -70,15 +65,9 @@ const ProjectReportList = () => {
     if (data && data.success) {
       const { current_page, total_count, limit } = data.paginator;
       console.log("hello", data?.data);
-
-      // setPagination({
-      //   current_page: parseInt(current_page, 10),
-      //   totalItems: parseInt(total_count, 10),
-      //   itemsPerPage: parseInt(limit, 10),
-      // });
       let allPresentDate = []
       data?.data && data.data.length > 0 && data.data.map((item) => {
-        allPresentDate.push(item?.report_date)
+        allPresentDate.push({ "date": item?.report_date, "reportType": item?.report_type, "morningMail": item?.morning_mail, "eveningMail": item?.evening_mail })
       })
       setDaydetails(allPresentDate);
       setShowLoader(false);
@@ -92,46 +81,78 @@ const ProjectReportList = () => {
 
   console.log('dayDetails', dayDetails);
 
+  const getReportsForDate = (dateItem) => {
+    const formattedDate = format(dateItem, 'yyyy-MM-dd');
+    const reportsForDate = dayDetails.filter(detail => detail.date === formattedDate);
+    return reportsForDate;
+  };
+
+
   return (
     <>
       <Helmet title={''} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Project Report</h2>
-        <Breadcrumb items={''} />
+        <h2 className="main-content-title tx-24 mg-b-5">Project Reports</h2>
+        <Breadcrumb items={items} />
       </div>
       <Loader showLoader={false} needFullPage={false} />
       <Card>
         <Card.Body>
-          <div className="date-card">
-            <h5>Select a Month</h5>
-            <DatePicker
-              selected={selectedMonth}
-              onChange={(date) => {
-                setSelectedMonth(date);
-                setSelectedDate(null); // reset selected date when month changes
-              }}
-              maxDate={selectedMonth}
-              dateFormat="MMMM yyyy"
-              showMonthYearPicker
-              inline
-            />
-          </div>
+          <section className="content-area">
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Report Submitted Daywise.</h5>
+              <Button
+                variant="secondary"
+                className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault()
+                  { history.push(`/team-project/${projectId}`) }
+
+                }}
+              >
+                Back
+              </Button>
+            </div>
+            <hr style={{ borderColor: "white" }} />
+            <div className="date-card">
+              <h5>Select a Month</h5>
+              <DatePicker
+                selected={selectedMonth}
+                onChange={(date) => {
+                  setSelectedMonth(date);
+                  setSelectedDate(null); // reset selected date when month changes
+                }}
+                maxDate={new Date()}
+                dateFormat="MMMM yyyy"
+                showMonthYearPicker
+                inline
+              />
+            </div>
+          </section>
         </Card.Body>
       </Card>
 
       <Card>
         <Card.Body>
+          {/* <section className="content-area"> */}
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">Calendar</h5>
+          </div>
+          <hr style={{ borderColor: "white" }} />
           {/* <Row> */}
           <div className="dates-grid">
             {dates.map((dateItem) => {
-              const isHighlighted = dayDetails.includes(format(dateItem, 'yyyy-MM-dd')); // Check if date is in dayDetails
+
+              // const isHighlighted = dayDetails.includes(format(dateItem, 'yyyy-MM-dd')); // Check if date is in dayDetails
+              const reportsForDate = getReportsForDate(dateItem);
 
               return (
                 <div
                   key={dateItem}
                   role="button"
                   tabIndex={0}
-                  className={`date-item ${selectedDate === dateItem ? 'selected' : ''} ${isHighlighted ? 'highlighted' : ''}`}
+                  className={`date-item ${reportsForDate.length === 1 ? 'single-object' : ''} ${reportsForDate.length === 2 ? 'two-objects' : 'zero-object'}`}
                   onClick={() => handleDateClick(dateItem)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -141,30 +162,66 @@ const ProjectReportList = () => {
                   aria-pressed={selectedDate === dateItem}
                 >
                   {format(dateItem, 'd')}
-                  {isHighlighted && (
-                    // <span className="completed-arrow">
-                    //   &#x2192; {/* Unicode arrow character or use an image/icon */}
-                    // </span>
+                  {reportsForDate.length === 2 && (
+            
                     <span className="completed-arrow">
-                      &#x2713; {/* Unicode checkmark character */}
+                      &#x2713; 
+                    </span>
+                  )}
+                  {reportsForDate.length === 2 && (
+                    <span className="completed-arrow">
+                      &#x2713; 
                     </span>
                   )}
 
-                  {selectedDate && (
-                    history.push('report-task-list',{state:{
-                      selectedDate:selectedDate,
-                      projectId : projectId
-                    }})
-                    // <div className="report-section">
-                    //   <ProjectTaskList selectedDate={selectedDate} projectId={projectId} />
-                    // </div>
+                  {reportsForDate.length === 0 && (format(dateItem, 'yyyy-MM-dd')) <= (format(new Date(), 'yyyy-MM-dd')) && (dateItem.getDay() !== 0) && (dateItem.getDay() !== 6) && (
+                    <>
+                      <div class="date-item zero-object">
+                        <span> Reports Are Peanding.<br />😟</span>
+                      </div>
+                    </>
+                  )}
+
+                  {reportsForDate.length === 0 && (format(dateItem, 'yyyy-MM-dd')) > (format(new Date(), 'yyyy-MM-dd')) && (dateItem.getDay() !== 0) && (dateItem.getDay() !== 6) && (
+                    <>
+                      <div class="date-item upcoming-day">
+                        <span> Up-Coming Day.<br />🔜 </span>
+                      </div>
+                    </>
+                  )}
+
+                  {reportsForDate.length === 0 && ((dateItem.getDay() === 0) || (dateItem.getDay() === 6)) && (
+                    <div class="date-item week-ends">
+                      <span> It's Weekends.🗒️</span>
+                    </div>
                   )}
                   
+                  {reportsForDate.length === 1 && (
+                    <div class="date-item single-object">
+                      <span>Morning Report Sent.😊</span>
+                    </div>
+                  )}
+
+                  {reportsForDate.length === 2 && (
+                    <div class="date-item two-objects">
+                      <span>Both Reports Sent.😌</span>
+                    </div>
+                  )}
+
+
+                  {selectedDate && (
+                    history.push('report-task-list', {
+                      state: {
+                        selectedDate: selectedDate,
+                        projectId: projectId
+                      }
+                    })
+                  )}
+
                 </div>
               );
             })}
           </div>
-          {/* </Row> */}
         </Card.Body>
       </Card>
 

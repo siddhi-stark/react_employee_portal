@@ -16,6 +16,7 @@ import Loader from '../../components/Loader/index';
 import ProjectRightContainer from '../../components/RightContainer/projectRightContainer.component';
 import EmployeeBugList from './employeeBugList.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 
 function TeamProject(props) {
@@ -23,6 +24,8 @@ function TeamProject(props) {
 
   const teamProjectId = teamid?.match?.params?.teamProjectId;
   // const teamProjectId = teamid && teamid.match && teamid.match.params && teamid.match.params.teamProjectId;
+  const state = useLocation()
+  const projectName = state?.state?.state?.projectName
 
   const archived = teamid.location.state ? teamid.location.state.archived : '';
   const completed = teamid.location.state
@@ -525,20 +528,34 @@ function TeamProject(props) {
           permittedUsers={isManager ? [1] : [1]}
           roleId={userRole}
         >
-          <Button
-            className="float-end mr-3"
-            onClick={() => {
-              history.push(`/report-tasks/${teamProjectId}`)
-            }
-            }
+          <UserRestrictions
+            permittedUsers={isManager ? [1] : [2]}
+            roleId={userRole}
           >
-            Generate Report
-          </Button>
-          
+            <Button
+              className="float-end mr-3"
+              onClick={() => {
+                history.push(`/report-tasks/${teamProjectId}`, {
+                  state: {
+                    projectName: projectName
+                  }
+                })
+              }
+              }
+            >
+              Generate Report
+            </Button>
+          </UserRestrictions>
+
           <Button
             className="float-end mr-3"
             onClick={() => {
-              history.push(`/report-list/${teamProjectId}`)
+              if (isManager) {
+                history.push(`/report-list/${teamProjectId}`)
+               
+              } else {
+                history.push(`/admin-report-list/${teamProjectId}`)
+              }
             }
             }
           >
