@@ -17,7 +17,7 @@ const EmployeeWorkloadTable = () => {
   const titleHeading = 'Workload Detailed View';
   const allEmployes = state?.state?.state?.allEmployes
   const [isShowLoader, setShowLoader] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
+  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employees', value: 'all_employees' });
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [rowData, setRowData] = useState([]);
@@ -30,6 +30,14 @@ const EmployeeWorkloadTable = () => {
       setTablesData();
     }
   }, [rowData]);
+
+  useEffect(()=>{
+    if(selectedEmployee){
+      setTableData([])
+      setFromDate(new Date())
+      setToDate(new Date())
+    }
+  },[selectedEmployee])
 
   const generateDateRange = (start, end) => {
     const startDate = new Date(start);
@@ -46,6 +54,9 @@ const EmployeeWorkloadTable = () => {
     return dateArray;
   };
 
+  console.log("tableData", tableData);
+  
+
   const getTaskCountPerDay = (tasks, fromDate, toDate) => {
     const dateRange = generateDateRange(fromDate, toDate);
     const employeeTaskData = {};
@@ -53,6 +64,8 @@ const EmployeeWorkloadTable = () => {
     console.log("selectedEmployee?.value", selectedEmployee?.value)
     tasks.forEach((task) => {
       const { employee_name, start_date, end_date, employee_tw_id } = task;
+      console.log
+      ("employee_name, start_date, end_date, employee_tw_id",employee_name, start_date, end_date, employee_tw_id)
       if (!employeeTaskData[employee_tw_id]) {
         employeeTaskData[employee_tw_id] = {};
         dateRange.forEach((date) => (employeeTaskData[employee_tw_id][date] = 0));
@@ -66,10 +79,10 @@ const EmployeeWorkloadTable = () => {
       });
     });
 
-    if (selectedEmployee?.value === 'all_employess') {
+    if (selectedEmployee?.value === 'all_employees') {
       allEmployes.forEach((employeeDetails, index) => {
         const { label, tw_id } = employeeDetails;
-        if (label !== 'All Employess') {
+        if (label !== 'All Employees') {
           if (!employeeTaskData[tw_id]) {
             employeeTaskData[tw_id] = {};
             dateRange.forEach((date) => (employeeTaskData[tw_id][date] = 0));
@@ -79,6 +92,9 @@ const EmployeeWorkloadTable = () => {
       })
     }
 
+    if (employeeTaskData.hasOwnProperty('undefined')) {
+      delete employeeTaskData['undefined'];
+    }
 
     console.log("employeeTaskData.length", employeeTaskData.length);
 
@@ -144,7 +160,7 @@ const EmployeeWorkloadTable = () => {
       isValid = false;
     } else if (
       selectedEmployee &&
-      selectedEmployee?.value != 'all_employess' &&
+      selectedEmployee?.value != 'all_employees' &&
       customFunctions.checkIfEmpty(fromDate)
     ) {
       filterSearchErr = 'Please select From date';
@@ -152,7 +168,7 @@ const EmployeeWorkloadTable = () => {
       isValid = false;
     } else if (
       selectedEmployee &&
-      selectedEmployee?.value != 'all_employess' &&
+      selectedEmployee?.value != 'all_employees' &&
       customFunctions.checkIfEmpty(toDate)
     ) {
       filterSearchErr = 'Please select To date';
@@ -168,7 +184,7 @@ const EmployeeWorkloadTable = () => {
 
   const isClear = () => {
     setFilterErr('');
-    setSelectedEmployee({ label: 'All Employess', value: 'all_employess' });
+    setSelectedEmployee({ label: 'All Employees', value: 'all_employees' });
     setFromDate(new Date());
     setToDate(new Date());
     setRowData('');

@@ -235,7 +235,7 @@ function AddFeedback() {
     questions?.length &&
       questions.forEach((item) => {
         const postData = {
-          review_status: 1,
+          review_status: 2,
           quarter: +selectedQuarter?.value,
           submission_date: customFunctions.getDate(new Date()),
         };
@@ -629,7 +629,13 @@ function AddFeedback() {
                                       key={option.value}
                                       type="radio"
                                       id={option.value}
-                                      label={option.label}
+                                      label={
+                                        <span
+                                          onClick={(e) => e.preventDefault()} // Prevent label click from changing state
+                                        >
+                                          {option.label}
+                                        </span>
+                                      }
                                       value={option.value}
                                       className="mb-2 form-radio"
                                       checked={item?.empRating == option.label}
@@ -694,7 +700,13 @@ function AddFeedback() {
                                       key={option.value}
                                       type="radio"
                                       id={option.value}
-                                      label={option.label}
+                                      label={
+                                        <span
+                                          onClick={(e) => e.preventDefault()} // Prevent label click from changing state
+                                        >
+                                          {option.label}
+                                        </span>
+                                      }
                                       value={option.value}
                                       className="mb-2 form-radio"
                                       checked={item?.reviewerRating == option.label}
@@ -749,11 +761,11 @@ function AddFeedback() {
                 </Form.Group>
                 <Form.Group controlId={`formSupervision`}></Form.Group>
                 <p className='text-danger'>
-                  {validator.current.message(
+                  {/* {validator.current.message(
                     'Supervisor overall feedback',
                     supervisonFeedback,
                     'required'
-                  )}
+                  )} */}
                 </p>
               </div>
             </Form>

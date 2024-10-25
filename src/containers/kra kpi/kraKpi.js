@@ -93,9 +93,7 @@ const KraKpi = () => {
 
   const getEmployeeName = async () => {
     setShowLoader(true);
-    const url = [1, 5, 6, 8].includes(userRole)
-      ? `${Api.employeeUrl}?type=all&status=active&is_dropdown=1`
-      : '';
+    const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
     const { data, error } = await AuthApi.getDataFromServer(url);
     setShowLoader(false);
 
@@ -297,7 +295,8 @@ const KraKpi = () => {
                 setJoiningDate(null)
                 setSetSelectedMonth(null)
                 setApiCalled(false)
-                setRefereshPage(true)
+                setRowData([])
+                // setRefereshPage(true)
               }
 
               } className='ml-3'>

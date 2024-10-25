@@ -334,8 +334,8 @@ function TeamProject(props) {
         datasets: [
           {
             data: [
-              data.data.all_bugs_details?.total_bug_count,
-              data.data.all_bugs_details?.total_bug_incomplete_count,
+              data?.data?.all_bugs_details?.total_bug_count,
+              data?.data?.all_bugs_details?.total_bug_incomplete_count,
             ],
             backgroundColor: ['#449c2c', '#e3e3e3'],
           },

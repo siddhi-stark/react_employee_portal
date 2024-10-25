@@ -1005,3 +1005,9 @@ p:empty {
     margin-left: 304px;
   }
 }/*# sourceMappingURL=style.css.map */
+
+
+/* Hover effect for Bootstrap's bg-light class */
+.hoverable:hover {
+  background-color: #e9ecef; /* Bootstrap's 'bg-light' class alternative for hover */
+}

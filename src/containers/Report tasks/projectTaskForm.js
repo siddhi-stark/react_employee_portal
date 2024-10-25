@@ -76,9 +76,10 @@ const ProjectTaskForm = () => {
   const fetchSectionOneTasks = async (page = 1) => {
     setShowLoader(true);
 
+    const startDate = customFunctions.getDate(filterDate)
     const params = {
       // start_date: "2024-07-10",
-      start_date: customFunctions.getDate(filterDate),
+      start_date : startDate,
       sort_by: 'id',
       project_id: projectId,
       // page:page,
@@ -86,7 +87,7 @@ const ProjectTaskForm = () => {
     };
 
     if (filterDate.getDate() !== today.getDate()) {
-      params.end_date = start_date
+      params.end_date = startDate
     }
 
     const url = customFunctions.generateUrl(Api.projectTaskList, params);
@@ -108,9 +109,11 @@ const ProjectTaskForm = () => {
 
   const fetchSectionTwoTasks = async (page = 1) => {
     setShowLoader(true);
+    const startDate = customFunctions.getDate(filterDate)
+
     const params = {
       // start_date: "2024-07-10",
-      start_date: customFunctions.getDate(filterDate),
+      start_date: startDate,
       sort_by: 'id',
       project_id: projectId,
       is_section_two: true,
@@ -119,7 +122,7 @@ const ProjectTaskForm = () => {
     };
 
     if (filterDate.getDate() !== today.getDate()) {
-      params.end_date = start_date
+      params.end_date = startDate
     }
 
     const url = customFunctions.generateUrl(Api.projectTaskList, params);

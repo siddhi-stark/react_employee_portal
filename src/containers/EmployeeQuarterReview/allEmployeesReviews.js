@@ -73,7 +73,7 @@ function AllEmployeesReviews() {
   const allStatus = [
     { label: 'All Reviews', value: 'all_status' },
     { label: 'Completed', value: 1 },
-    { label: 'Peanding', value: 2 }]
+    { label: 'Pending', value: 2 }]
 
   const allQuarters = [
     { label: 'All Quarters', value: 'all_quarters' },
@@ -100,9 +100,7 @@ function AllEmployeesReviews() {
 
   const getEmployeeName = async () => {
     setShowLoader(true);
-    const url = [1, 5, 6, 8].includes(userRole)
-      ? `${Api.employeeUrl}?type=all&status=active&is_dropdown=1`
-      : '';
+    const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
     const { data, error } = await AuthApi.getDataFromServer(url);
     setShowLoader(false);
 

@@ -129,7 +129,7 @@ const KraKpiEmployees = () => {
       swal('Error fetching data', '', 'error');
     } finally {
       setShowLoader(false);
-      setApiCalled(false); 
+      setApiCalled(false);
     }
   };
 
@@ -164,7 +164,7 @@ const KraKpiEmployees = () => {
             href="/"
             onClick={(e) => {
               e.preventDefault();
-              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isFromView:true } });
+              history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isFromView: true } });
             }}
           >
             <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
@@ -224,15 +224,20 @@ const KraKpiEmployees = () => {
             </Col>
             <Col sm={2}>
               <Datepicker
-                className="form-control"
+                className="form-control w-100"
+                name={"endDate"}
+                placeholder={"Select month/year"}
+                showMonthYearPicker={true}
+                dateFormat={"MM/yyyy"}
+                maxDate={new Date()}
                 selected={joiningDate}
-                placeholder="Created date"
-                dateFormat="dd/MM/yyyy"
-                onChange={(e) => {
-                  setJoiningDate(e);
+                onChange={(date) => {
+                  console.log('date', date.month);
+                  setJoiningDate(date);
                 }}
               />
             </Col>
+
             <Col>
               <Button variant="primary" onClick={applyFilters}>Apply</Button>
               <Button variant="secondary" onClick={() => {

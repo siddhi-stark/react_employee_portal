@@ -259,6 +259,10 @@ export default class Api extends Component {
 
   static generateTaskTeports = `${Api.baseUrl}generate-report/`
 
+  static getProjectsEmployee = `${Api.baseUrl}get-projects-employee/`
+
+  static getEmployees = `${Api.baseUrl}get-employees/`
+
   
   // Get base URL of APIs
   static getBaseUrl() {

@@ -80,6 +80,8 @@ const AddKraKpi = () => {
   });
 
   const handleCheckboxChange = (event, item) => {
+    console.log("event, item", event, item);
+
     const data = [...questions];
     data[questions.indexOf(item)].rating = event;
     setQuestions(data);
@@ -107,7 +109,7 @@ const AddKraKpi = () => {
   }, [feedbackId, employeeId, empDepartment])
 
   useEffect(() => {
-    
+
     if (!feedbackId && selectedDepartment && selectedTeam && selectedEmployee && selectedPostion && !isReset) {
       console.log('Hello world');
       getKraKpiDetails()
@@ -318,7 +320,13 @@ const AddKraKpi = () => {
 
   const getKraKpiDetails = async () => {
     setShowLoader(true);
-
+    setQuestions([
+      {
+        rating: 0,
+        review: '',
+        note: ''
+      }
+    ])
     const endPoint = `${Api.kraKpiQuestionnaire}`;
     const params = { type: 'all' };
 
@@ -682,12 +690,20 @@ const AddKraKpi = () => {
                                   <div className="ms-lg-8 mt-lg-2">
                                     {ratingOptions?.length > 0 &&
                                       ratingOptions.map((option) => (
+                                        console.log("option", option),
+
                                         <Form.Check
                                           inline
                                           key={option.value}
                                           type="radio"
                                           id={option.value}
-                                          label={option.label}
+                                          label={
+                                            <span
+                                              onClick={(e) => e.preventDefault()} // Prevent label click from changing state
+                                            >
+                                              {option.label}
+                                            </span>
+                                          }
                                           value={option.value}
                                           className="mb-2 form-radio"
                                           checked={item?.rating == option.label}

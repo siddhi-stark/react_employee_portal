@@ -11,10 +11,11 @@ import Api from '../../helper/api';
 import { Datepicker, DropdownInput, Helmet } from '../../components/FormInputs';
 // import CustomTable from 'stark-custom-datatable';
 import CustomTable from 'stark-custom-datatable';
+import { render } from '@testing-library/react';
 
 const EmployeeWorkload = () => {
   const titleHeading = 'Employee Workload';
-  const [allEmployes, setAllEmployes] = useState({ label: 'All Employess', value: 'all_employess' });
+  const [allEmployes, setAllEmployes] = useState({ label: 'All Employees', value: 'all_employees' });
   const [projectList, setProjectList] = useState([]);
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
   const [selectedProject, setSelectedProject] = useState({ label: "All Projects", value: "all_project", });
@@ -23,7 +24,7 @@ const EmployeeWorkload = () => {
   const [userRole, setUserRole] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
   const [employeeList, setEmployeeList] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
+  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employees', value: 'all_employees' });
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [rowData, setRowData] = useState('');
@@ -56,6 +57,11 @@ const EmployeeWorkload = () => {
     },
 
   ];
+
+  // useEffect(()=>{    
+  //   if(selectedProject?.value === "all_project") return
+  //     getProjectEmployees()
+  // },[selectedProject])
 
   //Column for table
   const columns = [
@@ -151,7 +157,13 @@ const EmployeeWorkload = () => {
         return <span> {add} </span>;
       },
     },
-    { id: 'status', label: 'Status' },
+    { id: 'status', label: 'Status', 
+
+      render: (row) => {
+        const rowData = row;
+        return rowData?.status === "completed" ? "Completed" : rowData?.status
+      }
+    },
   ];
 
   //FilterSearch function and validation
@@ -164,7 +176,7 @@ const EmployeeWorkload = () => {
       isValid = false;
     } else if (
       selectedEmployee &&
-      selectedEmployee?.value != 'all_employess' &&
+      selectedEmployee?.value != 'all_employees' &&
       customFunctions.checkIfEmpty(fromDate)
     ) {
       filterSearchErr = 'Please select From date';
@@ -172,7 +184,7 @@ const EmployeeWorkload = () => {
       isValid = false;
     } else if (
       selectedEmployee &&
-      selectedEmployee?.value != 'all_employess' &&
+      selectedEmployee?.value != 'all_employees' &&
       customFunctions.checkIfEmpty(toDate)
     ) {
       filterSearchErr = 'Please select To date';
@@ -262,9 +274,7 @@ const EmployeeWorkload = () => {
     setShowLoader(true);
     // https://portalsapi.starkdigital.in/api/v1/employee/?sort_by=full_name&limit=9&hide_admin=1&is_onboard=true
 
-    const url = [1, 8].includes(userRole)
-      ? `${Api.employeeUrl}?type=all&is_dropdown=1&status=active&hide_admin=1`
-      : '';
+    const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
     const { data, error } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {
       setShowLoader(false);
@@ -280,8 +290,44 @@ const EmployeeWorkload = () => {
       });
       const all = [
         {
-          label: 'All Employess',
-          value: 'all_employess',
+          label: 'All Employees',
+          value: 'all_employees',
+        },
+      ];
+      if ([1, 8].includes(userRole)) {
+        setAllEmployes([...all, ...allemp]);
+      } else {
+        setAllEmployes(allemp);
+      }
+    } else {
+      setShowLoader(false);
+      swal(error || 'Something went wrong', '', 'error');
+    }
+  };
+
+  //API integration for AllEmployee list
+  const getProjectEmployees = async () => {
+    setShowLoader(true);
+    // https://portalsapi.starkdigital.in/api/v1/employee/?sort_by=full_name&limit=9&hide_admin=1&is_onboard=true
+
+    const url = `${Api.getProjectsEmployee}?type=all&project_id=${+selectedProject?.value}`
+    const { data, error } = await AuthApi.getDataFromServer(url);
+    if (data && data?.success) {
+      setShowLoader(false);
+
+      const allemp = [];
+      data?.data?.map((item) => {
+        return allemp.push({
+          label: item?.full_name,
+          value: item?.id,
+          joiningDate: item?.date_joined,
+          tw_id: item?.pms_id
+        });
+      });
+      const all = [
+        {
+          label: 'All Employees',
+          value: 'all_employees',
         },
       ];
       if ([1, 8].includes(userRole)) {
@@ -313,10 +359,10 @@ const EmployeeWorkload = () => {
     if (selectedProject?.value != 'all_project') {
       params.project_id = +selectedProject?.value;
     }
-    if (selectedEmployee?.value != 'all_employess') {
+    if (selectedEmployee?.value != 'all_employees') {
       params.user_id = +selectedEmployee?.value;
     }
-    if (selectedEmployee?.value == 'all_employess') {
+    if (selectedEmployee?.value == 'all_employees') {
       params.page = page;
       params.limit = limit;
     }
@@ -327,7 +373,7 @@ const EmployeeWorkload = () => {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success == true) {
-      if (selectedEmployee?.value == 'all_employess') {
+      if (selectedEmployee?.value == 'all_employees') {
         setRowData(data?.data);
         setTotalCount(data?.paginator?.total_count);
         setLimit(data?.paginator?.limit);
@@ -360,7 +406,7 @@ const EmployeeWorkload = () => {
     if (selectedProject?.value != 'all_project') {
       params.project_id = +selectedProject?.value;
     }
-    if (selectedEmployee?.value != 'all_employess') {
+    if (selectedEmployee?.value != 'all_employees') {
       params.user_id = +selectedEmployee?.value;
     }
     const url = customFunctions.generateUrl(endPoint, params);
@@ -393,7 +439,8 @@ const EmployeeWorkload = () => {
 
   const isClear = () => {
     setFilterErr('');
-    setSelectedEmployee('');
+    setSelectedProject({ label: "All Projects", value: "all_project", })
+    setSelectedEmployee({ label: 'All Employees', value: 'all_employees' });
     setFromDate(new Date());
     setToDate(new Date());
     setRowData('');
@@ -421,22 +468,25 @@ const EmployeeWorkload = () => {
 
       <Card>
         <Card.Body>
+
           <h5 className="card-title mb-0">Filter</h5>
-          <a
-            className="d-flex justify-content-end"
-            href="javascript:void(0)"
-            onClick={() => {
-              history.push('/employee-workload-graph', {
-                state: {
-                  allEmployes: allEmployes
-                }
-              })
-            }}
-          >
-            <u>
-              <b>Workload detailed view</b>
-            </u>
-          </a>
+          <div className='d-flex justify-content-end'>
+            <a
+              className="d-flex justify-content-end"
+              href="javascript:void(0)"
+              onClick={() => {
+                history.push('/employee-workload-graph', {
+                  state: {
+                    allEmployes: allEmployes
+                  }
+                })
+              }}
+            >
+              <u>
+                <b>Workload detailed view</b>
+              </u>
+            </a>
+          </div>
           <hr />
           {filterErr && (
             <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
@@ -446,8 +496,9 @@ const EmployeeWorkload = () => {
             </div>
           )}
           <Row>
-            <Col sm={3}>
+            <Col sm={3} className='project-list dropdown-hover'>
               <DropdownInput
+              
                 label="Select Project"
                 options={projectList}
                 defaultValue={selectedProject}
@@ -558,17 +609,19 @@ const EmployeeWorkload = () => {
             <Col sm={8}></Col>
             {/* <Col sm={2}> */}
             {rowData?.length > 0 && (
-              <a
-                className="d-flex justify-content-end"
-                href="javascript:void(0)"
-                onClick={() => {
-                  downloadCSVDoc();
-                }}
-              >
-                <u>
-                  <b>Download File</b>
-                </u>
-              </a>
+              <div className='d-flex justify-content-end'>
+                <a
+                  className="d-flex justify-content-end"
+                  href="javascript:void(0)"
+                  onClick={() => {
+                    downloadCSVDoc();
+                  }}
+                >
+                  <u>
+                    <b>Download File</b>
+                  </u>
+                </a>
+              </div>
             )}
             {/* </Col> */}
             {/* </Row>

@@ -32,6 +32,7 @@ function AdminAndHrView() {
   const [avgRating, setAvgRating] = useState(0)
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [totalLeaves, setTotalLeaveCount] = useState(0)
+  const [count, forceUpdate] = useState(0)
   const [questions, setQuestions] = useState([
     {
       questionnaire_id: '',
@@ -100,7 +101,7 @@ function AdminAndHrView() {
 
   const allStatus = [
     { label: 'Completed', value: 1 },
-    { label: 'Peanding', value: 2 }]
+    { label: 'Pending', value: 2 }]
 
 
   const getLeavesdata = async () => {
@@ -111,7 +112,7 @@ function AdminAndHrView() {
       employee: teamEmpId
     };
     const currentYear = new Date().getFullYear();
-        
+
     if (+selectedQuarter?.value == 1) {
       params.start_date = `${currentYear}-04-01`
       params.end_date = `${currentYear}-06-30`
@@ -199,7 +200,7 @@ function AdminAndHrView() {
       reviewer_name = data.data[0]?.reviewer_name
       avg_rating = data.data[0]?.average_rating
       created_at = data.data[0]?.submission_date
-      
+
       setSupervisonFeedback(data.data[0]?.supervison_feedback)
 
       data?.data.length > 0 && data.data.map((item, index) => {
@@ -274,7 +275,7 @@ function AdminAndHrView() {
           review_status: 1,
           quarter: +selectedQuarter?.value,
           submission_date: customFunctions.getDate(new Date()),
-          supervison_feedback : supervisonFeedback
+          supervison_feedback: supervisonFeedback
         };
 
         if (item?.empRating) {
@@ -589,7 +590,13 @@ function AdminAndHrView() {
                                     key={option.value}
                                     type="radio"
                                     id={option.value}
-                                    label={option.label}
+                                    label={
+                                      <span
+                                        onClick={(e) => e.preventDefault()} // Prevent label click from changing state
+                                      >
+                                        {option.label}
+                                      </span>
+                                    }
                                     value={option.value}
                                     className="mb-2 form-radio"
                                     checked={item?.empRating == option.label}
@@ -624,28 +631,36 @@ function AdminAndHrView() {
                       )}
                       <Card>
                         <Card.Body>
+                          <div>
+                            <Form.Group controlId='formFirstName' key={index + 1}>
+                              <Form.Label>
+                                {index + 1}. {item?.name}<span className="text-danger">*</span>
+                              </Form.Label>
+                              <Form.Control
+                                as='textarea'
+                                style={{ height: '100px' }}
+                                type='text'
+                                placeholder='Enter answer'
+                                name='answer'
+                                value={item?.reviewerAnswer}
+                                onChange={(e) => {
+                                  const data = [...questions];
+                                  data[index].reviewerAnswer = e?.target?.value;
+                                  setQuestions(data);
+                                }}
+                                disabled={isViewOnly ? true : false}
 
-                          <Form.Group controlId='formFirstName' key={index + 1}>
-                            <Form.Label>
-                              {index + 1}. {item?.name}<span className="text-danger">*</span>
-                            </Form.Label>
-                            <Form.Control
-                              as='textarea'
-                              style={{ height: '100px' }}
-                              type='text'
-                              placeholder='Enter answer'
-                              name='answer'
-                              value={item?.reviewerAnswer}
-                              onChange={(e) => {
-                                const data = [...questions];
-                                data[index].reviewerAnswer = e?.target?.value;
-                                setQuestions(data);
-                              }}
-                              disabled={isViewOnly ? true : false}
+                              />
 
-                            />
-
-                          </Form.Group>
+                            </Form.Group>
+                            <p className='text-danger'>
+                                  {validator.current.message(
+                                    'Review Answer',
+                                    item?.reviewerAnswer,
+                                    'required'
+                                  )}
+                                </p>
+                          </div>
                           <Form.Group controlId={`formRating${index + 1}`}>
 
                             <Form.Label>
@@ -659,7 +674,13 @@ function AdminAndHrView() {
                                     key={option.value}
                                     type="radio"
                                     id={option.value}
-                                    label={option.label}
+                                    label={
+                                      <span
+                                        onClick={(e) => e.preventDefault()} // Prevent label click from changing state
+                                      >
+                                        {option.label}
+                                      </span>
+                                    }
                                     value={option.value}
                                     className="mb-2 form-radio"
                                     checked={item?.reviewerRating == option.label}
@@ -672,7 +693,7 @@ function AdminAndHrView() {
                               <p className='text-danger'>
                                 {validator.current.message(
                                   'Rating',
-                                  item?.rating,
+                                  item?.reviewerRating,
                                   'required'
                                 )}
                               </p>
@@ -726,7 +747,16 @@ function AdminAndHrView() {
                     className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
                     type="submit"
                     onClick={() => {
-                      submitForm();
+                      console.log("validator.current", validator.current);
+                      if (validator.current.allValid()) {
+
+                        validator.current.hideMessages()
+                        submitForm();
+
+                      } else {
+                        validator.current.showMessages()
+                        forceUpdate(count + 1)
+                      }
                     }}
 
                   >
