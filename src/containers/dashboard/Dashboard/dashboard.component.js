@@ -7,7 +7,7 @@ import { Helmet, ModalInput, TextInput } from '../../../components/FormInputs';
 import Breadcrumb from '../../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../../helper/authApi';
 import Api from '../../../helper/api';
-import '../../../helper/employeePortal.css';
+// import '../../../helper/employeePortal.css';
 import ToDoList from '../../ToDoList/toDoList.component';
 import customFunctions from '../../../helper/customFunctions';
 import Table from '../../../components/ReactTable/simpletable.component';
@@ -64,7 +64,7 @@ function Dashboard() {
 
   useEffect(() => {
     const today = new Date().getDate();
-    if (today === 1 || today === 30 || today === 31) {
+    if ((today >= 1 && today <= 5) || today === 30 || today === 31) {
       setKraKpiNotification(true);
     }
   }, []);

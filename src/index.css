@@ -106,3 +106,250 @@
   .card.roundedCard .accordion .card .card-header > .d-flex {
     min-height: 30px;
   }
+
+  .notification-message {
+    background-color: #E0E4FF;
+    color: #1e1e1e;
+    padding: 8px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content; /* Makes the notification fit its content */
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    animation: subtle-heartbeat 1.5s ease-in-out infinite;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    cursor: pointer; /* Makes it look clickable */
+    position: relative; /* Allows for pseudo-element positioning */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+  }
+  
+  /* Arrow on hover */
+  .notification-message:hover::after {
+    content: ' →'; /* Adds a right arrow on hover */
+    font-weight: bold;
+    margin-left: 8px; /* Adds space between text and arrow */
+    transition: margin-left 0.3s ease; /* Smooth animation */
+  }
+  
+  @keyframes subtle-heartbeat {
+    0%, 100% {
+        transform: scale(1); /* Original size */
+    }
+    50% {
+        transform: scale(1.05); /* Slight increase to avoid overlap */
+    }
+  }
+  
+/* Container for dates */
+.dates-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  /* Off-white background */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Individual date styling */
+.date-item {
+  position: relative;
+  background-color: #f3f4f6;
+  /* Light gray for default */
+  color: #383f8c;
+  /* Dark purple for text */
+  padding: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  /* Light border */
+}
+
+/* Hover effect */
+.date-item:hover {
+  background-color: #4c91da;
+  /* Light blue to match the theme */
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for selected date */
+.date-item.selected {
+  background-color: #4d4a97;
+  /* Darker purple for selected */
+  color: white;
+  border: 1px solid #4d4a97;
+}
+
+.date-item.two-objects {
+  background-color: #f9f9f9; /* Soft orange for completed dates */
+  color: #ffaf43;
+  font-weight: bold;
+  border: 1px solid #ffaf43;
+  font-size: 0.9rem; /* Reduce font size */
+}
+
+/* Styling for highlighted/completed date with single object */
+.date-item.single-object {
+  background-color: #f9f9f9; /* Soft orange for completed dates */
+  color: #bfa06f;
+  font-weight: bold;
+  border: 1px solid #bfa06f;
+  font-size: 0.9rem; /* Reduce font size */
+}
+
+/* Styling for dates with zero objects (no reports sent) */
+.date-item.zero-object {
+  background-color: #f9f9f9; /* Light gray background */
+  color: #888888; /* Medium gray text */
+  font-weight: bold;
+  border: 1px solid #4f4c48; /* Subtle brown border */
+  font-size: 0.9rem; /* Slightly reduced font size */
+}
+
+/* Styling for dates with zero objects (no reports sent) */
+.date-item.week-ends {
+  background-color: #f9f9f9; /* Light gray background */
+  color: #d65858; /* Medium gray text */
+  font-weight: bold;
+  border: 1px solid #de4343; /* Subtle brown border */
+  font-size: 0.9rem; /* Slightly reduced font size */
+}
+
+.date-item.upcoming-day {
+  background-color: #f9f9f9; /* Light gray background */
+  color: #588ae8; /* Medium gray text */
+  font-weight: bold;
+  border: 1px solid #588ae8; /* Subtle brown border */
+  font-size: 0.9rem; /* Slightly reduced font size */
+}
+
+
+/* Arrow effect for completed date */
+.completed-arrow {
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #28a745;
+  /* Green arrow */
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+/* Focus state for accessibility */
+.date-item:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+
+body {
+  background-color: #f0f0f5;
+  font-family: 'Arial', sans-serif;
+}
+
+/* .project-report-container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+} */
+
+h1 {
+  text-align: left;
+  color: #333;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.cardss {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: visible;
+}
+
+.cardss-header {
+  background-color: #f5f5f5; /* Faint background */
+  color: #555;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-bottom: 1px solid #ddd;
+}
+
+.cardss-content {
+  padding: 15px 20px;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.5; /* Ensure vertical centering */
+  white-space: nowrap; /* Prevent text from wrapping */
+  min-width: 100px;
+  height: auto; /* Allow pill to grow vertically */
+}
+
+.status-pill.progress {
+  background-color: #ffefa0; /* Soft yellow for progress */
+  color: #856404;
+}
+
+.status-pill.completed {
+  background-color: #d4edda; /* Soft green for completed */
+  color: #155724;
+}
+
+.status-pill.on-hold {
+  background-color: #f8d7da; /* Soft red for on-hold */
+  color: #721c24;
+}
+
+.task-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.task-item:last-child {
+  border-bottom: none;
+}
+
+.task-item.completed {
+  color: #155724; /* Green for completed */
+}
+
+.task-item.wip {
+  color: #856404; /* Dark yellow for WIP */
+}
+
+.task-item.not-started {
+  color: #721c24; /* Red for Not Started */
+}
+
+p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}

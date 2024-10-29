@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Button, Image, Form } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { Helmet } from '../../components/FormInputs';
-import './datesGrid.css';
+// import './datesGrid.css';
 import { format, getDaysInMonth } from 'date-fns';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
@@ -11,7 +11,7 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import { useHistory, useParams } from 'react-router-dom';
-import './projectReport.css';
+// import './projectReport.css';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Project task Report' }];
@@ -119,22 +119,22 @@ const ProjectTaskListAdmin = () => {
                   <h5 className="card-title mb-0 mt-2 ">{reportDetails[0].report_type == 1 ? "Morning Report :" : "Evening Report :"} </h5>
                   <br />
 
-                  <div className="card">
-                    <div className="card-header">
+                  <div className="cardss">
+                    <div className="cardss-header">
                       <h3>Current Project Status</h3>
                     </div>
-                    <div className="card-content">
+                    <div className="cardss-content">
                       <span className={`status-pill ${reportDetails[0]?.current_status_name.toLowerCase()}`}>
                         {reportDetails[0]?.current_status_name}
                       </span>
                     </div>
                   </div>
 
-                  <div className="card">
-                    <div className="card-header">
+                  <div className="cardss">
+                    <div className="cardss-header">
                       <h3>Key Tasks Completed Today</h3>
                     </div>
-                    <div className="card-content">
+                    <div className="cardss-content">
                       {getTasksBySection('Key Tasks Completed Today')?.length > 0 ? (
                         <ul className="task-list">
                           {getTasksBySection('Key Tasks Completed Today')?.map((task, index) => (
@@ -149,11 +149,11 @@ const ProjectTaskListAdmin = () => {
                     </div>
                   </div>
 
-                  <div className="card">
-                    <div className="card-header">
+                  <div className="cardss">
+                    <div className="cardss-header">
                       <h3>Upcoming Deliverables</h3>
                     </div>
-                    <div className="card-content">
+                    <div className="cardss-content">
                       {getTasksBySection('Upcoming Deliverables')?.length > 0 ? (
                         <ul className="task-list">
                           {getTasksBySection('Upcoming Deliverables')?.map((task, index) => (
@@ -168,20 +168,20 @@ const ProjectTaskListAdmin = () => {
                     </div>
                   </div>
 
-                  <div className="card">
-                    <div className="card-header">
+                  <div className="cardss">
+                    <div className="cardss-header">
                       <h3>Issues/Risks</h3>
                     </div>
-                    <div className="card-content">
+                    <div className="cardss-content">
                       <p>{reportDetails[0]?.issues_risks || 'No issues or risks reported.'}</p>
                     </div>
                   </div>
 
-                  <div className="card">
-                    <div className="card-header">
+                  <div className="cardss">
+                    <div className="cardss-header">
                       <h3>Next Steps</h3>
                     </div>
-                    <div className="card-content">
+                    <div className="cardss-content">
                       <p>{reportDetails[0]?.next_steps || 'No next steps provided.'}</p>
                     </div>
                   </div>
@@ -192,22 +192,22 @@ const ProjectTaskListAdmin = () => {
                       <h5 className="card-title mb-0 mt-2 ">Evening Report : </h5>
                       <br />
 
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="cardss">
+                        <div className="cardss-header">
                           <h3>Current Project Status</h3>
                         </div>
-                        <div className="card-content">
+                        <div className="cardss-content">
                           <span className={`status-pill ${reportDetails[1]?.current_status_name.toLowerCase()}`}>
                             {reportDetails[1]?.current_status_name}
                           </span>
                         </div>
                       </div>
 
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="cardss">
+                        <div className="cardss-header">
                           <h3>Key Tasks Completed Today</h3>
                         </div>
-                        <div className="card-content">
+                        <div className="cardss-content">
                           {getTasksBySectionEvening('Key Tasks Completed Today')?.length > 0 ? (
                             <ul className="task-list">
                               {getTasksBySectionEvening('Key Tasks Completed Today')?.map((task, index) => (
@@ -222,11 +222,11 @@ const ProjectTaskListAdmin = () => {
                         </div>
                       </div>
 
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="cardss">
+                        <div className="cardss-header">
                           <h3>Upcoming Deliverables</h3>
                         </div>
-                        <div className="card-content">
+                        <div className="cardss-content">
                           {getTasksBySectionEvening('Upcoming Deliverables')?.length > 0 ? (
                             <ul className="task-list">
                               {getTasksBySectionEvening('Upcoming Deliverables')?.map((task, index) => (
@@ -241,20 +241,20 @@ const ProjectTaskListAdmin = () => {
                         </div>
                       </div>
 
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="cardss">
+                        <div className="cardss-header">
                           <h3>Issues/Risks</h3>
                         </div>
-                        <div className="card-content">
+                        <div className="cardss-content">
                           <p>{reportDetails[1]?.issues_risks || 'No issues or risks reported.'}</p>
                         </div>
                       </div>
 
-                      <div className="card">
-                        <div className="card-header">
+                      <div className="cardss">
+                        <div className="cardss-header">
                           <h3>Next Steps</h3>
                         </div>
-                        <div className="card-content">
+                        <div className="cardss-content">
                           <p>{reportDetails[1]?.next_steps || 'No next steps provided.'}</p>
                         </div>
                       </div>

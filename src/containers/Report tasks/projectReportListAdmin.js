@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Button, Image, Form } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { Helmet } from '../../components/FormInputs';
-import './datesGrid.css';
+// import './datesGrid.css';
 import { format, getDaysInMonth } from 'date-fns';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
