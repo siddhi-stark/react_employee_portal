@@ -236,6 +236,7 @@ const AddReview = (props) => {
               disabled={pageType == 'view'}
               placeholder="dd-mm-yyyy"
               dateFormat="dd-MM-yyyy"
+              scrollableYearDropdown={true}
               // minDate={new Date()}
               onChange={(e) => {
                 setReviewDate(e);
