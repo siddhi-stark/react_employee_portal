@@ -64,7 +64,7 @@ function Dashboard() {
 
   useEffect(() => {
     const today = new Date().getDate();
-    if ((today >= 1 && today <= 5) || today === 30 || today === 31) {
+    if ((today >= 1 && today <= 5)) {
       setKraKpiNotification(true);
     }
   }, []);
@@ -617,7 +617,7 @@ function Dashboard() {
                     history.push('/kra-kpi')
                   }
                 }}>
-                📋 Reminder: Don't forget to complete your KRA and KPI forms for this month!
+                📋 Reminder: Don't forget to complete your KRA and KPI forms for previous month!
                 </div>
               </UserRestrictions>
             )}
