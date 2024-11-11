@@ -109,6 +109,11 @@ import SentProjectsReport from './containers/Report tasks/sentProjectsReport'
 import KraKpiEmployees from './containers/kra kpi/kraKpiEmployees'
 import AddKraKpi from './containers/kra kpi/addKraKpi'
 
+import ProjectList from './containers/weekly_reports/projectList'
+import ProjectWeeklyTask from './containers/weekly_reports/projectWeeklyTasks'
+
+
+
 
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
@@ -348,7 +353,8 @@ function Routes() {
       <Route path="/admin-report-tasks-list/:id" exact component={ProjectTaskListAdmin} />
       <Route path="/project-report-list" exact component={SentProjectsReport} />
       
-
+      <Route path="/project-list" exact component={ProjectList} />
+      <Route path="/project-weekly-tasks/:id" exact component={ProjectWeeklyTask} />
       
       <Route component={NotFound} />
       

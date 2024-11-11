@@ -34,12 +34,14 @@ const KraKpiEmployees = () => {
   const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
 
+  console.log("apiCalled", apiCalled);
 
-
+  console.log("currentPage", currentPage);
+  
   useEffect(() => {
     setTitle("Employees KRA-KPI");
     if (!apiCalled) {
-      getKraKpiDetails();
+      getKraKpiDetails(currentPage);
     }
   }, [currentPage, refereshPage]);
 
@@ -279,8 +281,11 @@ const KraKpiEmployees = () => {
             paginationProps={{
               totalItems: totalCount,
               itemsPerPage: limit,
-              currentPage: pagination.current_page,
-              handlePageChange: (page) => setCurrentPage(page),
+              activePage: pagination.current_page,
+              onPageChange: (page) => {
+                console.log("Page", page);
+                
+                setCurrentPage(page), setApiCalled(false)},
             }}
           />
         </Card.Body>

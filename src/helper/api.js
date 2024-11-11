@@ -263,6 +263,11 @@ export default class Api extends Component {
 
   static getEmployees = `${Api.baseUrl}get-employees/`
 
+  static taskDetails = `${Api.baseUrl}tasks-details/`
+
+  static milestonesDetails = `${Api.baseUrl}milestones-details/`
+
+
   
   // Get base URL of APIs
   static getBaseUrl() {

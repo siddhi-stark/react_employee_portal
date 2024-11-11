@@ -39,6 +39,9 @@ const KraKpi = () => {
   const currentMonth = currentDate.toLocaleString('default', { month: 'long' }); // 'January', 'February', etc.
   const currentYear = currentDate.getFullYear(); // 2024
 
+  console.log("api", apiCalled);
+  console.log("current", currentPage);
+  
   const [allMonths, setMonths] = useState([
     { label: 'January', value: 1 },
     { label: 'February', value: 2 },
@@ -60,7 +63,7 @@ const KraKpi = () => {
     setTitle("Employees KRA-KPI");
     if (!apiCalled) {
       setRefereshPage(false)
-      getKraKpiDetails(1);
+      getKraKpiDetails(currentPage);
     }
   }, [currentPage, refereshPage]);
 
@@ -110,6 +113,8 @@ const KraKpi = () => {
     }
   };
 
+  console.log("pagination", pagination);
+  
   const getKraKpiDetails = async (pageNo = currentPage) => {
     if (apiCalled) return;
 
@@ -138,6 +143,7 @@ const KraKpi = () => {
 
       if (data && data.success) {
         const finalData = data.data.map((item, index) => ({
+          // no: (pagination.current_page - 1) * 10 + index + 1,
           no: (pagination.current_page - 1) * 10 + index + 1,
           id: item.id,
           to_user: item.to_user,
@@ -154,7 +160,7 @@ const KraKpi = () => {
           itemsPerPage: parseInt(limit, 10),
         });
         setTotalCount(total_count);
-        setLimit(limit);
+        setLimit(Number(limit));
         setCurrentPage(current_page);
       } else {
         swal(data.message || 'Error fetching data', '', 'error');
@@ -331,8 +337,11 @@ const KraKpi = () => {
             paginationProps={{
               totalItems: totalCount,
               itemsPerPage: limit,
-              currentPage: pagination.current_page,
-              handlePageChange: (page) => setCurrentPage(page),
+              activePage: pagination.current_page,
+              onPageChange: (page) => {
+                console.log("Page", page);
+                
+                setCurrentPage(page), setApiCalled(false)},
             }}
           />
         </Card.Body>
