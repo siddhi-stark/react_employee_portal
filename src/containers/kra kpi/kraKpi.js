@@ -115,7 +115,7 @@ const KraKpi = () => {
 
   console.log("pagination", pagination);
   
-  const getKraKpiDetails = async (pageNo = currentPage) => {
+  const getKraKpiDetails = async (pageNo=1) => {
     if (apiCalled) return;
 
     setApiCalled(true);
@@ -144,7 +144,7 @@ const KraKpi = () => {
       if (data && data.success) {
         const finalData = data.data.map((item, index) => ({
           // no: (pagination.current_page - 1) * 10 + index + 1,
-          no: (pagination.current_page - 1) * 10 + index + 1,
+          no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
           id: item.id,
           to_user: item.to_user,
           average_rating: item.average_rating,
