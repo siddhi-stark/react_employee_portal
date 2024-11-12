@@ -435,6 +435,10 @@ function EmployeeProfile(props) {
       label: 'Status',
     },
     {
+      id: 'review_type_name',
+      label: 'Review Type',
+    },
+    {
       id: 'comments',
       label: 'Comments',
       render: (rowData) => {

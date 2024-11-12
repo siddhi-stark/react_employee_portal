@@ -34,6 +34,7 @@ const AddReview = (props) => {
   const [feedback, setFeedback] = useState('');
   const [currentUserId, setCurrentUserId] = useState('');
   const [reviewStatus, setReviewStatus] = useState('');
+  const [selectReviewTypes, setReviewTypes] = useState('');
   const [reviewComments, setReviewComments] = useState(null);
   const [reviewTime, setReviewTime] = useState('');
   const [disableButton, setDisableButton] = useState(false);
@@ -73,6 +74,25 @@ const AddReview = (props) => {
     //   label: '',
     //   value: '',
     // },
+  ];
+
+  const reviewTypes = [
+    {
+      label: 'Training Review',
+      value: 1,
+    },
+    {
+      label: '1st month probation',
+      value: 2,
+    },
+    {
+      label: '2nd Month probation',
+      value: 3,
+    },
+    {
+      label: 'Confirmation Review',
+      value: 4,
+    },
   ];
 
   useEffect(() => {
@@ -158,6 +178,11 @@ const AddReview = (props) => {
       setReviewStatus({
         label: data.data.status_name,
       });
+
+      setReviewTypes({
+        "label": data.data.review_type_name, "value":data.data.review_type
+      });
+
     } else {
       setShowLoader(false);
       setReviewComments('');
@@ -173,6 +198,7 @@ const AddReview = (props) => {
       reviewer: selectedEmployee?.value,
       review_date: customFunctions.getDate(reviewDate),
       status: reviewStatus?.value,
+      review_type: selectReviewTypes?.value,
       comments: reviewComments,
       description: feedback,
       review_time: customFunctions.getTimeAndSec(reviewTime),
@@ -287,6 +313,23 @@ const AddReview = (props) => {
               )}
             />
           </Col>
+          <Col sm={4}>
+            <DropdownInput
+              asterisk="*"
+              label=" Review Types"
+              defaultValue={selectReviewTypes}
+              options={reviewTypes}
+              disabled={pageType == 'view'}
+              onSelectHandler={(select) => {
+                setReviewTypes(select);
+              }}
+              errorMessage={validator.current.message(
+                `Review Types`,
+                selectReviewTypes,
+                'required'
+              )}
+            />
+          </Col>
         </Row>
         <Row>
           {pageType === 'edit' || pageType == 'view' ? (
@@ -312,7 +355,7 @@ const AddReview = (props) => {
                   />
                 </Col>
               )}
-              <Col sm={6}>
+              <Col sm={4}>
                 <DropdownInput
                   asterisk="*"
                   label=" Review Status"
@@ -329,6 +372,24 @@ const AddReview = (props) => {
                   )}
                 />
               </Col>
+              <Col sm={4}>
+                <DropdownInput
+                  asterisk="*"
+                  label=" Review Types"
+                  defaultValue={selectReviewTypes}
+                  options={reviewTypes}
+                  disabled={pageType == 'view'}
+                  onSelectHandler={(select) => {
+                    setReviewTypes(select);
+                  }}
+                  errorMessage={validator.current.message(
+                    `Review Types`,
+                    selectReviewTypes,
+                    'required'
+                  )}
+                />
+              </Col>
+
               {pageType == 'view' && (
                 <div className="d-flex justify-content-end mb-3">
                   <Button
