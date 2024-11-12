@@ -55,13 +55,13 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 10],
   },
-  // {
-  //   title: 'Weekly Project Reports',
-  //   path: '/project-list',
-  //   icon: 'report.svg',
-  //   submenu: [],
-  //   roleaccess: [1, 2, 3, 4, 10],
-  // },
+  {
+    title: 'Weekly Project Reports',
+    path: '/project-list',
+    icon: 'report.svg',
+    submenu: [],
+    roleaccess: [1, 2, 3, 4, 10],
+  },
   {
     title: 'Quotes',
     path: '/quotes',

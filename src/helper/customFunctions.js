@@ -3,6 +3,12 @@ import { AES } from 'crypto-js';
 import AuthApi from './authApi';
 
 class CustomFunctions extends Component {
+
+  capitalizeFirstLetter = (string) => {
+    if (!string) return string;
+    return string.trim().charAt(0).toUpperCase() + string.trim().slice(1);
+  };
+  
   getDate = (dateTime) => {
     const newdate = new Date(dateTime);
     const d = newdate.getDate();

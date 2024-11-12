@@ -39,6 +39,7 @@ const ProjectWeeklyTask = () => {
   const [selectTaskFrom, setTaskFrom] = useState('')
   const [milestoneFilter, setMilestoneFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  const [sentButton, setSentButton] = useState(false)
 
   const milestoneStatus = [
     { "label": "All", "value": "all" },
@@ -52,12 +53,13 @@ const ProjectWeeklyTask = () => {
 
   const groupTasksByMilestone = (tasks) => {
     return tasks.reduce((acc, task) => {
-      const { milestone_id, milestone_name } = task;
+      const { milestone_id, milestone_name, milestone_status } = task;
       const key = milestone_id && milestone_name ? `${milestone_id}-${milestone_name}` : 'No Milestones';
       if (!acc[key]) {
         acc[key] = {
           milestone_id: milestone_id || null,
           milestone_name: milestone_name || 'No Milestones',
+          milestone_status: milestone_status || 'No Milestones',
           tasks: [],
         };
       }
@@ -173,7 +175,7 @@ const ProjectWeeklyTask = () => {
         })
         params.milestone_id = multiIds
       }else{
-        params.milestone_id = milestones?.value
+        params.milestone_id = milestones?.value                              
       }
     }
     else {
@@ -217,23 +219,56 @@ const ProjectWeeklyTask = () => {
     setTaskFrom('');
     setStatusFilter('');
     setMilestones('')
-
+    setSentButton(false)
   };
+
+  // const handleSend = () => {
+  //   let message = 'Task Summary:\n\n';
+  //   let totalTasks = 0;
+
+  //   Object.values(groupedTasks).forEach((group) => {
+  //     const taskCount = group.tasks.length;
+  //     totalTasks += taskCount;
+  //     message += `Milestone: ${group.milestone_name} (${group.milestone_id || 'No ID'})\n`;
+  //     message += `Tasks Count: ${taskCount}\n\n`;
+  //   });
+
+  //   message += `Total Tasks: ${totalTasks}\n`;
+  //   setPromptMessage(message);
+  // };
 
   const handleSend = () => {
-    let message = 'Task Summary:\n\n';
+    let message = 'Project Task Summary:\n\n';
     let totalTasks = 0;
+    const currentDate = new Date();
 
-    Object.values(groupedTasks).forEach((group) => {
-      const taskCount = group.tasks.length;
-      totalTasks += taskCount;
-      message += `Milestone: ${group.milestone_name} (${group.milestone_id || 'No ID'})\n`;
-      message += `Tasks Count: ${taskCount}\n\n`;
-    });
+    if (Object.keys(groupedTasks).length === 0) {
+        message += 'No milestones or tasks are currently available.\n';
+    } else {
+        Object.values(groupedTasks).forEach((group) => {
+            const taskCount = group.tasks.length;
+            const delayedTasks = group.tasks.filter(task => (new Date(task.end_date) < currentDate && task.status === 'new')).length;
+            const completedTasks = group.tasks.filter(task => task.status === 'completed').length;
+            const pendingTasks = group.tasks.filter(task => task.status === 'new').length;
 
-    message += `Total Tasks: ${totalTasks}\n`;
+            totalTasks += taskCount;
+            message += `Milestone: ${group.milestone_name}\n`
+            message += `Status: ${customFunctions.capitalizeFirstLetter(group.milestone_status === "new" ? "pending" : group.milestone_status )}\n`; // Could be 'Delayed', 'On Time', 'Completed'
+            message += `Tasks Count: ${taskCount}\n`;
+            message += ` - Completed Tasks: ${completedTasks}\n`;
+            message += ` - Delayed Tasks: ${delayedTasks}\n`;
+            message += ` - Pending Tasks: ${pendingTasks}\n\n`;
+        });
+
+        message += `Total Tasks across all milestones: ${totalTasks}\n\n`;
+        message += "Analyze the milestone status based on delayed tasks, pending tasks, and completed tasks. \n";
+        message += "Predict new milestone dates if needed, based on previous delays and reasons for delays. \n";
+        message += "Provide insights into why certain milestones might be delayed and suggestions for improving task completion rates.\n";
+    }
+
     setPromptMessage(message);
-  };
+};
+
 
   return (
     <>
@@ -250,6 +285,7 @@ const ProjectWeeklyTask = () => {
             <Col sm={2}>
               <Datepicker
                 label="From Report Date"
+                asterisk="*"
                 className="form-control"
                 selected={fromDate}
                 onChange={(e) => setFromDate(e)}
@@ -267,6 +303,7 @@ const ProjectWeeklyTask = () => {
             <Col sm={2}>
               <Datepicker
                 label="To Report Date"
+                asterisk="*"
                 className="form-control"
                 selected={toDate}
                 onChange={(e) => setToDate(e)}
@@ -286,6 +323,7 @@ const ProjectWeeklyTask = () => {
             <Col sm={3}>
               <DropdownInput
                 label="Task From"
+                asterisk="*"
                 options={tasksFrom}
                 defaultValue={selectTaskFrom}
                 disabled={fromDate && toDate ? false : true}
@@ -303,6 +341,7 @@ const ProjectWeeklyTask = () => {
             <Col sm={2}>
               <DropdownInput
                 label="Status"
+                asterisk="*"
                 defaultValue={statusFilter}
                 options={milestoneStatus}
                 disabled={fromDate && toDate && selectTaskFrom?.value === 'milestone' ? false : true}
@@ -317,6 +356,7 @@ const ProjectWeeklyTask = () => {
             <Col sm={2}>
               <DropdownInput
                 label="Milestones"
+                asterisk="*"
                 options={milestoneFilter}
                 defaultValue={milestones}
                 disabled={fromDate && toDate && fromDate && toDate && selectTaskFrom?.value === 'milestone' && statusFilter ? false : true}
@@ -361,10 +401,11 @@ const ProjectWeeklyTask = () => {
                 if (validator.current.allValid()) {
                   validator.current.hideMessages()
                   handleFilter(e)
-
+                  setSentButton(true)
                 } else {
                   validator.current.showMessages()
                   forceUpdate(count + 1)
+                  setSentButton(true)
                 }
 
               }}>Get task list</Button>
@@ -404,13 +445,14 @@ const ProjectWeeklyTask = () => {
                   </div>
                 ))}
               </div>
-              <button
+              {sentButton && statusFilter && (
+                <button
                 className="task-organizer-button"
                 type="submit"
                 onClick={handleSend}
               >
                 Sent
-              </button>
+              </button>)}
               {promptMessage && (
                 <div className="task-organizer-prompt">
                   <h3>Prompt Message</h3>

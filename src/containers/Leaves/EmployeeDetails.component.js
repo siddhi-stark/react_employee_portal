@@ -114,7 +114,7 @@ function EmployeeDetails(props) {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      window.open(`https://developmentapi.starkdigital.in/${data.data.csv_path}`, '_blank');
+      window.open(`https://portalsapi.starkdigital.in/${data.data.csv_path}`, '_blank');
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {
