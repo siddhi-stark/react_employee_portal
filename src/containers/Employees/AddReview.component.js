@@ -334,7 +334,7 @@ const AddReview = (props) => {
         <Row>
           {pageType === 'edit' || pageType == 'view' ? (
             <>
-              {reviewStatus?.label == 'Completed' && (
+              {reviewStatus?.label == 'Completed' || reviewStatus?.label == 'Pending' && (
                 <Col>
                   <TextInput
                     label="Review Comments"
@@ -372,7 +372,7 @@ const AddReview = (props) => {
                   )}
                 />
               </Col>
-              <Col sm={4}>
+              {/* <Col sm={4}>
                 <DropdownInput
                   asterisk="*"
                   label=" Review Types"
@@ -388,7 +388,7 @@ const AddReview = (props) => {
                     'required'
                   )}
                 />
-              </Col>
+              </Col> */}
 
               {pageType == 'view' && (
                 <div className="d-flex justify-content-end mb-3">
