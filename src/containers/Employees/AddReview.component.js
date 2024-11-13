@@ -191,6 +191,8 @@ const AddReview = (props) => {
   };
 
   const addReviewOfEmp = async () => {
+    console.log("Hello inside update");
+    
     setShowLoader(true);
     let review_id = reviewId;
     const postData = {
@@ -232,8 +234,12 @@ const AddReview = (props) => {
   };
 
   const validateForm = (e) => {
+    console.log("from .model.wfh import Wfh", e);
+    
     e.preventDefault();
     if (disableButton) return;
+    console.log("Hello Hello");
+    
     setDisableButton(true);
     if (validator.current.allValid()) {
       addReviewOfEmp();
@@ -334,7 +340,7 @@ const AddReview = (props) => {
         <Row>
           {pageType === 'edit' || pageType == 'view' ? (
             <>
-              {reviewStatus?.label == 'Completed' || reviewStatus?.label == 'Pending' && (
+              {/* {reviewStatus?.value === 1 || reviewStatus?.value === 2 && ( */}
                 <Col>
                   <TextInput
                     label="Review Comments"
@@ -348,13 +354,13 @@ const AddReview = (props) => {
                       setReviewComments(e.target.value);
                     }}
                     errorMessage={validator.current.message(
-                      `Review comments`,
+                      `reviewComments`,
                       reviewComments,
                       'required'
                     )}
                   />
                 </Col>
-              )}
+              {/* ) */}
               <Col sm={4}>
                 <DropdownInput
                   asterisk="*"
@@ -406,11 +412,16 @@ const AddReview = (props) => {
             </>
           ) : null}
         </Row>
-
+{console.log("pageType", pageType)}
         {pageType != 'view' && (
           <div className="mb-3 mt-3">
             <Button
               onClick={(e) => {
+                // if(reviewStatus?.value === 2){
+                //   validator.current.errorMessages.reviewComments = null
+                //   validator.current.fields.reviewComments = true
+                 
+                // }
                 validateForm(e);
               }}
             >
