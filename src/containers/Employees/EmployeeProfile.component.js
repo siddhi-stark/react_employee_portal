@@ -2051,7 +2051,7 @@ function EmployeeProfile(props) {
           </Card.Body>
         </Card>
 
-        <Card className="mt-3 mb-3 rounded-1 shadow-none">
+        {/* <Card className="mt-3 mb-3 rounded-1 shadow-none">
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
               <h4 className="mb-0 mt-2 text-primary">Documents</h4>
@@ -2077,7 +2077,7 @@ function EmployeeProfile(props) {
               <Col md={6}></Col>
             </Row>
           </Card.Body>
-        </Card>
+        </Card> */}
 
         {/* <div className="employee-new-profile">
           <div className="profile-details">
