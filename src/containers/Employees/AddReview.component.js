@@ -255,7 +255,7 @@ const AddReview = (props) => {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <div className="mt-4 ml-3 mr-3">
         <Row>
-          <Col>
+          {/* <Col> */}
             <Datepicker
               peekNextMonth={true}
               showMonthDropdown={true}
@@ -279,8 +279,8 @@ const AddReview = (props) => {
                 'required'
               )}
             />
-          </Col>
-          <Col>
+          {/* </Col> */}
+          {/* <Col> */}
             <Datepicker
               className="form-control"
               label="Start Time"
@@ -301,8 +301,8 @@ const AddReview = (props) => {
                 'required'
               )}
             />
-          </Col>
-          <Col>
+          {/* </Col> */}
+          {/* <Col> */}
             <DropdownInput
               asterisk="*"
               label="Reviewer Name"
@@ -318,8 +318,8 @@ const AddReview = (props) => {
                 'required'
               )}
             />
-          </Col>
-          <Col sm={4}>
+          {/* </Col> */}
+          {/* <Col sm={4}> */}
             <DropdownInput
               asterisk="*"
               label=" Review Types"
@@ -335,7 +335,7 @@ const AddReview = (props) => {
                 'required'
               )}
             />
-          </Col>
+          {/* </Col> */}
         </Row>
         <Row>
           {pageType === 'edit' || pageType == 'view' ? (

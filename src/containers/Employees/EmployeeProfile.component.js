@@ -26,6 +26,7 @@ function EmployeeProfile(props) {
   const [dataa, setData] = useState({});
   const [totalCount, setTotalCount] = useState(10);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  // const [pageType, setPageType] = useState('add');
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [employeeDetails, setEmployeeDetails] = useState({});
@@ -614,8 +615,8 @@ function EmployeeProfile(props) {
     const endPoint = applicatId
       ? `${Api.applicantInfoUrl}?employee_id=${empId}`
       : empId
-      ? `${Api.employeeInfo}?employee_id=${empId}`
-      : `${Api.employeeInfo}`;
+        ? `${Api.employeeInfo}?employee_id=${empId}`
+        : `${Api.employeeInfo}`;
 
     const postData = {
       // email_hash: tokenProps,
@@ -1203,8 +1204,8 @@ function EmployeeProfile(props) {
                           <p>
                             {Array.isArray(employeeDetails?.assigned_team_leads)
                               ? employeeDetails?.assigned_team_leads
-                                  .map((mentor) => mentor?.name)
-                                  .join(', ')
+                                .map((mentor) => mentor?.name)
+                                .join(', ')
                               : ' '}
                           </p>
                         </li>
@@ -1221,8 +1222,8 @@ function EmployeeProfile(props) {
                           <p>
                             {employeeDetails.date_joined
                               ? customFunctions.getDMYDate(
-                                  employeeDetails.date_joined
-                                )
+                                employeeDetails.date_joined
+                              )
                               : ''}
                           </p>
                         </li>
@@ -1233,8 +1234,8 @@ function EmployeeProfile(props) {
                           <p>
                             {Array.isArray(employeeDetails?.assigned_mentors)
                               ? employeeDetails?.assigned_mentors
-                                  .map((mentor) => mentor?.name)
-                                  .join(', ')
+                                .map((mentor) => mentor?.name)
+                                .join(', ')
                               : ' '}
                           </p>
                         </li>
@@ -1246,8 +1247,8 @@ function EmployeeProfile(props) {
                             <p>
                               {employeeDetails?.relieving_date
                                 ? customFunctions.getDMYDate(
-                                    employeeDetails?.relieving_date
-                                  )
+                                  employeeDetails?.relieving_date
+                                )
                                 : ''}
                             </p>
                           </li>
@@ -1289,8 +1290,8 @@ function EmployeeProfile(props) {
                             <p>
                               {employeeDetails?.date_joined
                                 ? customFunctions.getDMYDate(
-                                    employeeDetails?.date_joined
-                                  )
+                                  employeeDetails?.date_joined
+                                )
                                 : ''}
                             </p>
                           </li>
@@ -1333,7 +1334,7 @@ function EmployeeProfile(props) {
                   {detailsKeys === 'empVerificationInfo' && (
                     <div className="row mt-3 mx-5">
                       <div className="col-md-12 d-flex">
-                       
+
                         <ul className="list-unstyled d-flex w-100 flex-wrap employeeDetailsInner">
                           <li className="p-0 border-bottom border-1 mx-2">
                             <label>
@@ -1387,61 +1388,61 @@ function EmployeeProfile(props) {
                           </li>
                         </ul>
                         <div>
-                        {employeeBGVDetails ? (
-                          <Button
-                          variant='link'
-                          onClick={() =>{
-                            history.push(`/employee-verification/${empId}`,{
-                              state: {
-                                employeeId: Number(empId),
-                                  applicantId: applicatId,
-                                  employeeName: fullName,
-                                  employeeDesignation: designation,
-                                  edit: 'edit',
-                              }
-                            });
-                          }}
-                          >
-                            <Image
-                            src="/images/edit-button.svg"
-                            alt="Edit Profile"
-                            onClick={() => {
-                              // history.push(`/employee-verification/${empId}`, {
-                              //   state: {
-                              //     employeeId: Number(empId),
-                              //     applicantId: applicatId,
-                              //     employeeName: fullName,
-                              //     employeeDesignation: designation,
-                              //     edit: 'edit',
-                              //   },
-                              // });
-                            }}
-                          />
-                          </Button>
-                        ) : (
-                          <div>
+                          {employeeBGVDetails ? (
                             <Button
-                              className="px-2 text center"
-                              variant="primary"
+                              variant='link'
                               onClick={() => {
-                                history.push(
-                                  `/employee-verification/${empId}`,
-                                  {
-                                    state: {
-                                      employeeId: Number(empId),
-                                      applicantId: applicatId,
-                                      employeeName: fullName,
-                                      employeeDesignation: designation,
-                                    },
+                                history.push(`/employee-verification/${empId}`, {
+                                  state: {
+                                    employeeId: Number(empId),
+                                    applicantId: applicatId,
+                                    employeeName: fullName,
+                                    employeeDesignation: designation,
+                                    edit: 'edit',
                                   }
-                                );
+                                });
                               }}
                             >
-                              Add Employee verification
+                              <Image
+                                src="/images/edit-button.svg"
+                                alt="Edit Profile"
+                                onClick={() => {
+                                  // history.push(`/employee-verification/${empId}`, {
+                                  //   state: {
+                                  //     employeeId: Number(empId),
+                                  //     applicantId: applicatId,
+                                  //     employeeName: fullName,
+                                  //     employeeDesignation: designation,
+                                  //     edit: 'edit',
+                                  //   },
+                                  // });
+                                }}
+                              />
                             </Button>
-                          </div>
-                        )}
-                      </div>
+                          ) : (
+                            <div>
+                              <Button
+                                className="px-2 text center"
+                                variant="primary"
+                                onClick={() => {
+                                  history.push(
+                                    `/employee-verification/${empId}`,
+                                    {
+                                      state: {
+                                        employeeId: Number(empId),
+                                        applicantId: applicatId,
+                                        employeeName: fullName,
+                                        employeeDesignation: designation,
+                                      },
+                                    }
+                                  );
+                                }}
+                              >
+                                Add Employee verification
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -1549,7 +1550,7 @@ function EmployeeProfile(props) {
 
         <Card className="mt-3 mb-3 rounded-1 shadow-none reviewHistory">
           <Card.Body>
-            <div className="d-flex justify-content-between align-items-center">
+            {/* <div className="d-flex justify-content-between align-items-center">
               <h4 className="mb-3 mt-2 text-primary">Review</h4>
               {showReview && (
                 <div className="mt-3">
@@ -1586,7 +1587,67 @@ function EmployeeProfile(props) {
                   callbackBtn={(e) => {}}
                 />
               </div>
-            )}
+            )} */}
+
+            <div className="d-flex justify-content-between align-items-center">
+              <h4 className="mb-3 mt-2 text-primary">Review</h4>
+
+              {!showReview && (
+                <button
+                  onClick={() => {
+                    setShowReview(true);
+                    setPageType('add');
+                  }}
+                  type="button"
+                  className="btn btn-primary"
+                >
+                  Add Review
+                </button>
+              )}
+
+              {/* Modal */}
+              {showReview && (
+                <div className="modal show d-block" tabIndex="-1" role="dialog">
+                  <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title">{pagetype === 'edit' ? 'Edit Review' : 'Add Review'}</h5>
+                        <button
+                          type="button"
+                          className="close"
+                          onClick={() => setShowReview(false)}
+                          aria-label="Close"
+                        >
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div className="modal-body">
+                        <AddReview
+                          handleModalCLose={(e) => {
+                            setShowReview(e);
+                            getRowData();
+                            setPageType('');
+                            setReviewId('');
+                            setRefreshData(true);
+                          }}
+                          reviewEdit={editReview}
+                          pageType={pagetype}
+                          reviewId={reviewId}
+                          empId={empId}
+                          callbackBtn={() => setShowReview(false)}
+                        />
+                      </div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={() => setShowReview(false)}>
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="table-responsive employeeTable mt-3">
               <CustomTable
                 columns={tableColumn}
@@ -1602,9 +1663,9 @@ function EmployeeProfile(props) {
                     getRowData(pageNo);
                   },
                 }}
-                // emptyRender={() => {
-                //   return 'No record found.';
-                // }}
+              // emptyRender={() => {
+              //   return 'No record found.';
+              // }}
               />
               {/* <Table bordered hover>
                 <thead>
@@ -2658,7 +2719,7 @@ function EmployeeProfile(props) {
                 name="startDate"
                 dateFormat="dd/MM/yyyy"
                 placeholder="Select Date"
-                // maxDate={new Date()}
+              // maxDate={new Date()}
               />
             </div>
           </Row>
