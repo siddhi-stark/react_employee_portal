@@ -266,7 +266,8 @@ export default class Api extends Component {
   static taskDetails = `${Api.baseUrl}tasks-details/`
 
   static milestonesDetails = `${Api.baseUrl}milestones-details/`
-
+  
+  static wfh = `${Api.baseUrl}wfh/`
 
   
   // Get base URL of APIs
@@ -276,8 +277,8 @@ export default class Api extends Component {
     let url = '';
     switch (env) {
       case 'production':
-        url = 'https://portalsapi.starkdigital.in/api/v1/';
-        // url = 'https://stage-portalsapi.starkdigital.in/api/v1/';
+        // url = 'https://portalsapi.starkdigital.in/api/v1/';
+        url = 'https://stage-portalsapi.starkdigital.in/api/v1/';
         // url = 'https://liveapi.starkdigital.in/api/v1/'; // for emp Production
         // url = 'https://api.pms-portal.reviewtestlink.com/api/v1/'; // for emp Production
         // url = 'https://portalsapi.reviewtestlink.com/api/v1/';

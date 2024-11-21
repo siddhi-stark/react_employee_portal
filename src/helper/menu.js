@@ -78,6 +78,20 @@ const menu = [
     // roleaccess: [1, 5, 4, 6],
   },
   {
+    title:'Work From Home',
+    path:'/wfh',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [1, 2, 3, 10],
+  },
+  {
+    title:'Work From Home',
+    path:'/wfh-employees',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [4],
+  },
+  {
     title: 'Employees',
     path: '#',
     icon: 'Employee.svg',

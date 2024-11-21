@@ -111,9 +111,9 @@ import AddKraKpi from './containers/kra kpi/addKraKpi'
 
 import ProjectList from './containers/weekly_reports/projectList'
 import ProjectWeeklyTask from './containers/weekly_reports/projectWeeklyTasks'
-
-
-
+import Wfh from './containers/wfh/wfh'
+import AddWfh from './containers/wfh/addWfh'
+import WfhEmployee from './containers/wfh/wfhEmployee'
 
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
@@ -355,7 +355,11 @@ function Routes() {
       
       <Route path="/project-list" exact component={ProjectList} />
       <Route path="/project-weekly-tasks/:id" exact component={ProjectWeeklyTask} />
+      <Route path="/wfh" exact component={Wfh} />
+      <Route path="/add-wfh" exact component={AddWfh} />
+      <Route path="/wfh-employees" exact component={WfhEmployee} />
       
+
       <Route component={NotFound} />
       
     </Switch>
