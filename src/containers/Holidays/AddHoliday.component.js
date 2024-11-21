@@ -73,10 +73,12 @@ function AddHoliday(props) {
   }, []);
 
   const submitForm = async (formValues) => {
+    console.log('formValues: ', formValues);
     setShowLoader(true);
     const postData = {
       occasion: formValues.occasion,
       date: formValues.date ? customFunctions.getDate(formValues.date) : '',
+      holiday_type: formValues?.holiday_type?.value
     };
 
     if (holidayId) {

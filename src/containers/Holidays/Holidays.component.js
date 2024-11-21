@@ -72,6 +72,10 @@ function Holidays() {
       },
     },
     {
+      id: 'holiday_type_name',
+      label: 'Holiday Type',
+    },
+    {
       id: 'date',
       label: 'Date',
       render: ({ date }) => {
