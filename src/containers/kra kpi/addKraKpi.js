@@ -276,12 +276,16 @@ const AddKraKpi = () => {
     let team_name = null
     let team = null
     let created_at = null
+    let submited_date = null
 
     console.log('data?.data[0]', data?.data);
 
     if (data && data.success) {
+      console.log("data====", data.data);
+      
       averageRating = data?.data[0]?.average_rating ? data?.data[0]?.average_rating : 0
       created_at = data?.data[0]?.created_at
+      submited_date = data?.data[0]?.submited_date
       data?.data[0]?.kra_kpi.length > 0 && data.data[0].kra_kpi.map((item) => {
         // console.log('sssss', item);
         department = item?.departments[0]
@@ -298,13 +302,14 @@ const AddKraKpi = () => {
           note: item?.note,
           metric: item?.questionnaire,
           category: item?.category,
-          category_name: item?.category_name
+          category_name: item?.category_name,
+          submited_date:item?.submited_date
         })
       })
     }
 
-    if (created_at) {
-      setSetSelectedMonth(new Date(created_at))
+    if (submited_date) {
+      setSetSelectedMonth(new Date(submited_date))
     }
     setFormData({ departments: department, position_level: positionLevel })
     setSelectedEmployee({ label: toUserName, value: toUserId })

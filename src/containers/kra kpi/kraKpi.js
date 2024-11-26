@@ -158,6 +158,7 @@ const KraKpi = () => {
           average_rating: item.average_rating,
           created_at: item.created_at,
           to_user_id: item.to_user_id,
+          submited_date:item.submited_date
         }));
 
         const { current_page, total_count, limit } = data.paginator;
@@ -199,9 +200,9 @@ const KraKpi = () => {
       render: (row) => row.average_rating || 'N/A',
     },
     {
-      id: 'created_at',
-      label: 'Submited date',
-      render: (row) => row.created_at ? formatMonthDate(row.created_at) : 'N/A',
+      id: 'submited_date',
+      label: 'Submitted For Date',
+      render: (row) => row.created_at ? formatMonthDate(row.submited_date) : 'N/A',
     },
     {
       id: 'action',
