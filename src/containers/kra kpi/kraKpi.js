@@ -11,6 +11,8 @@ import Api from '../../helper/api';
 import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
+import moment from 'moment';
+
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Employees KRA-KPI' }];
 
@@ -41,6 +43,10 @@ const KraKpi = () => {
 
   console.log("api", apiCalled);
   console.log("current", currentPage);
+
+  const formatMonthDate = (dateString) => {
+    return moment(dateString).format('MMMM-YYYY'); // Format as Monthname-Year
+  };
   
   const [allMonths, setMonths] = useState([
     { label: 'January', value: 1 },
@@ -124,6 +130,8 @@ const KraKpi = () => {
     const params = {
       page: pageNo,
       limit,
+      sort_direction: 'descending',
+
     };
 
     if (selectedEmployeeId !== 'all_employess') {
@@ -192,8 +200,8 @@ const KraKpi = () => {
     },
     {
       id: 'created_at',
-      label: 'Created date',
-      render: (row) => row.created_at ? customFunctions.getDate(row.created_at) : 'N/A',
+      label: 'Submited date',
+      render: (row) => row.created_at ? formatMonthDate(row.created_at) : 'N/A',
     },
     {
       id: 'action',

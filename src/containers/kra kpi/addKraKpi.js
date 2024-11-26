@@ -393,6 +393,7 @@ const AddKraKpi = () => {
     if (questionData)
       obj = {
         'to_user': selectedEmployeeId,
+        'reviewed_date' : customFunctions.getDate(selectedMonth),
         'data': questionData,
       };
     setShowLoader(false);
@@ -569,7 +570,7 @@ const AddKraKpi = () => {
                   placeholder={"Select month/year"}
                   showMonthYearPicker={true}
                   dateFormat={"MM/yyyy"}
-                  maxDate={new Date()}
+                  maxDate={new Date(new Date().setMonth(new Date().getMonth() - 1))}
                   selected={selectedMonth}
                   disabled={isViewOnly ? true : false}
                   onChange={(date) => {
