@@ -48,11 +48,11 @@ const AccountAddleaveComponent = () => {
   const [duration, setDuration] = useState([
     {
       label: 'Half Day',
-      value: '1',
+      value: 1,
     },
     {
       label: 'Full  Day',
-      value: '2',
+      value: 2,
     },
   ]);
 
@@ -61,7 +61,7 @@ const AccountAddleaveComponent = () => {
   }, []);
   const getEmployee = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
+      `${Api.employeeUrl}?type=all&is_only_dev=1&status=active&hide_admin=1`
     );
     if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
       const employess = [];
@@ -78,14 +78,19 @@ const AccountAddleaveComponent = () => {
 
   const ApplyLeave = async () => {
     setShowLoader(true);
+    console.log("selectedEmployee?.value", selectedEmployee?.value);
+    console.log("deurationType", deurationType);
+    
+    
     const postData = {
       user_id: selectedEmployee?.value,
       leave_type: leaveType.label,
       reason: leaveReason,
       leave_from_date: customFunctions.getDate(formDate),
-      leave_from_type: deurationType.value,
-      leave_to_type: leaveType.value,
+      leave_from_type: deurationType?.value,
+      leave_to_type: deurationType?.value,
       leave_to_date: customFunctions.getDate(toDate),
+      is_employees_leaves: true
     };
 
     const callback = AuthApi.postDataToServer;

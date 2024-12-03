@@ -437,16 +437,28 @@ function AddLeave(props) {
       });
       return;
     }
+    console.log('data.data', data.data);
     if (data && data.data && data.data[0]) {
+
       setLeavesCount({
+        BalancedLeavesCount:
+          data.data[0].leaves_balance && data.data[0].leaves_balance,
+        takenLeavesCount:
+          data.data[0].total_taken_leaves && data.data[0].total_taken_leaves,
         pendingLeavesCount:
           data.data[0].pending_leave && data.data[0].pending_leave,
-        takenLeavesCount:
-          data.data[0].total_leave_taken && data.data[0].total_leave_taken,
         totalLeavesCount:
           data.data[0].total_leaves && data.data[0].total_leaves,
         unpaidLeavesCount:
           data.data[0].unpaid_leave && data.data[0].unpaid_leave,
+        CasualLeavesCount:
+          data.data[0].casual_leave && data.data[0].casual_leave,
+        SickLeavesCount:
+          data.data[0].sick_leave && data.data[0].sick_leave,
+        OptionalLeavesCount:
+          data.data[0].optional_leave && data.data[0].optional_leave,
+        SandwichLeavesCount:
+          data.data[0].sandwich_leaves && data.data[0].sandwich_leaves,
         noticeMessage:
           data.data[0].on_notice_period && data.data[0].on_notice_period,
         confirmedMessage: data.data[0].confirmed && data.data[0].confirmed,
@@ -524,37 +536,81 @@ function AddLeave(props) {
                   </p>
                 )}
 
-                {leavesCount.totalLeavesCount >= 0 && (
-                  <span>
-                    {`Total Leaves: ${leavesCount.totalLeavesCount}`}
-                    &nbsp;&nbsp;
-                  </span>
-                )}
-                {leavesCount.pendingLeavesCount >= 0 && (
-                  <span>
-                    {`Pending Leaves: ${leavesCount.pendingLeavesCount}`}
-                    &nbsp;&nbsp;
-                  </span>
-                )}
-                {leavesCount.takenLeavesCount >= 0 && (
-                  <span>
-                    {`Taken Leaves: ${leavesCount.takenLeavesCount}`}
-                    &nbsp;&nbsp;
-                  </span>
-                )}
-                {leavesCount.unpaidLeavesCount >= 0 && (
-                  <span>
-                    {`Unpaid Leaves: ${leavesCount.unpaidLeavesCount}`}
-                    &nbsp;&nbsp;
-                  </span>
-                )}
-                <br />
-                {((!leavesCount.confirmedMessage && !leavesCount.noticeMessage && !viewLeaveOptions) || (isProbation && !isNotice)) && (
-                  <span className="text-danger">
-                    {' '}
-                    Leaves are unpaid as you are under probation period.{' '}
-                  </span>
-                )}
+                <div className="leave-info-container">
+                  <div className="leave-info-title">Leave Summary</div>
+                  {leavesCount.BalancedLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-check-circle" />
+                      {`Leaves Balance: ${leavesCount.BalancedLeavesCount}`}
+                    </span>
+                  )}
+
+                  {leavesCount.takenLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-plane-departure" />
+                      {`Total Taken Leaves: ${leavesCount.takenLeavesCount}`}
+                    </span>
+                  )}
+
+                  {leavesCount.totalLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-calendar-alt" />
+                      {`Total Leaves: ${leavesCount.totalLeavesCount}`}
+                    </span>
+                  )}
+
+                  {leavesCount.pendingLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-clock" />
+                      {`Pending Leaves: ${leavesCount.pendingLeavesCount}`}
+                    </span>
+                  )}
+
+                  {leavesCount.unpaidLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-exclamation-circle" />
+                      {`Unpaid Leaves: ${leavesCount.unpaidLeavesCount}`}
+                    </span>
+                  )}
+
+                  
+
+                  {leavesCount.CasualLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-exclamation-circle" />
+                      {`Taken Casual Leaves: ${leavesCount.CasualLeavesCount}`}
+                    </span>
+                  )}
+
+                  {leavesCount.SickLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-exclamation-circle" />
+                      {`Taken Sick Leaves: ${leavesCount.SickLeavesCount}`}
+                    </span>
+                  )}
+
+                  {leavesCount.OptionalLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-exclamation-circle" />
+                      {`Taken Optional Leaves: ${leavesCount.OptionalLeavesCount}`}
+                    </span>
+                  )}
+                  {leavesCount.SandwichLeavesCount >= 0 && (
+                    <span>
+                      <i className="fas fa-exclamation-circle" />
+                      {`Total Sandwich Leaves: ${leavesCount.SandwichLeavesCount}`}
+                    </span>
+                  )}
+
+                  {((!leavesCount.confirmedMessage &&
+                    !leavesCount.noticeMessage &&
+                    !viewLeaveOptions) ||
+                    (isProbation && !isNotice)) && (
+                      <span className="leave-text-danger">
+                        Leaves are unpaid as you are under probation period.
+                      </span>
+                    )}
+                </div>
               </div>
             </div>
 

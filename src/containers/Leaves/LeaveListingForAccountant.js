@@ -89,6 +89,16 @@ const LeaveListingForAccountant = () => {
       roleAccess: [8],
     },
     {
+      id: 'leave_from_date',
+      label: 'Leave From',
+      roleAccess: [8],
+    },
+    {
+      id: 'leave_to_date',
+      label: 'Leave To',
+      roleAccess: [8],
+    },
+    {
       id: 'leave_count',
       label: 'Days',
       roleAccess: [8],
@@ -98,6 +108,7 @@ const LeaveListingForAccountant = () => {
       label: 'Status',
       roleAccess: [8],
     },
+    
     // {
     //   id: 'action',
     //   label: 'Action',
@@ -162,7 +173,7 @@ const LeaveListingForAccountant = () => {
                   <a
                     href="#"
                     onClick={() => {
-                      history.push('/accountant-add-leaves', { isViewLeave: false });
+                      history.push('/employees-add-leaves', { isViewLeave: false });
                     }}
                     className="btn-link"
                   >
