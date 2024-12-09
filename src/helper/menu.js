@@ -403,6 +403,14 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
+  {
+    title: 'Predictions',
+    path: '/predictions',
+    icon: 'ticket.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  
   // {
   //   title: 'FAQs',
   //   path: '/faq-listing',

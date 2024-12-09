@@ -113,6 +113,7 @@ import ProjectList from './containers/weekly_reports/projectList'
 import ProjectWeeklyTask from './containers/weekly_reports/projectWeeklyTasks'
 import Wfh from './containers/wfh/wfh'
 import AddWfh from './containers/wfh/addWfh'
+import Predictions from './containers/Predictions/predictions'
 import WfhEmployee from './containers/wfh/wfhEmployee'
 
 // import AddHistory from './containers/Employees/AddHistory.component';
@@ -358,6 +359,8 @@ function Routes() {
       <Route path="/wfh" exact component={Wfh} />
       <Route path="/add-wfh" exact component={AddWfh} />
       <Route path="/wfh-employees" exact component={WfhEmployee} />
+      <Route path="/predictions" exact component={Predictions} />
+      
       
 
       <Route component={NotFound} />
