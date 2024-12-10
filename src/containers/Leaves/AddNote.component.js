@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
@@ -9,7 +10,7 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './note.json';
 
 function AddNote(props) {
-  const { show, leaveId, statusId, note, onStatusUpdate, handleModalCLose } =
+  const { show, leaveId, statusId, isRevert, note, onStatusUpdate, handleModalCLose } =
     props;
 
   const value = customFunctions.getLocalStorage('isClicked');
@@ -30,11 +31,20 @@ function AddNote(props) {
 
   const submitForm = async (formValues) => {
     const reasonLabel = statusIds === 2 ? 'approve' : 'decline';
+    
     const postData = {
       id: leaveIds,
-      status: Number(statusIds),
-      declined_reason: formValues ? formValues.notes : '',
+      // declined_reason: formValues ? formValues.notes : '',
     };
+    
+    if (!isRevert){
+      postData.status = Number(statusIds),
+      postData.declined_reason = formValues ? formValues.notes : ''
+    }else{
+      postData.revert_declined_reason = formValues ? formValues.notes : ''
+      postData.revert_status = Number(statusIds)
+      postData.is_revert_after_approved = true
+    }
 
     onCancelButton();
 

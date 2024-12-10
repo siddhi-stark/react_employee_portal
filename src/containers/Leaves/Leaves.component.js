@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -11,7 +12,13 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 
 function Leaves() {
-  const handleActionCallback = ({ id, status_name, leave_from_date }) => {
+  const handleActionCallback = ({ id, status_name, status, leave_from_date }) => {
+
+    const parsedDate1 = new Date(leave_from_date);
+    const parsedDate2 = new Date();
+    const onlyDate1 = new Date(parsedDate1.getFullYear(), parsedDate1.getMonth(), parsedDate1.getDate());
+    const onlyDate2 = new Date(parsedDate2.getFullYear(), parsedDate2.getMonth(), parsedDate2.getDate());
+
     return (
       <>
         <a
@@ -41,7 +48,7 @@ function Leaves() {
             <Image alt="view" src="/images/edit-button.svg" />
           )}
         </a>
-        {new Date(leave_from_date).getTime() >= new Date().getTime() && (
+        {new Date(leave_from_date) <= new Date() && status === 1 && (
           <a
             href="/"
             className="ms-2 pl-2"
@@ -52,11 +59,28 @@ function Leaves() {
               changeStatus(id);
             }}
           >
-            {(status_name === 'Approved' || status_name === 'Pending') && (
+            {(status === 2 || status === 1) && (
               <Image src="/images/fail.svg" />
             )}
           </a>
         )}
+
+        {/* {onlyDate1.getTime() <= onlyDate2.getTime() && status === 2 && (
+          <a
+            href="/"
+            className="ms-2 pl-2"
+            title="Revert Leave"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              changeStatus(id);
+            }}
+          >
+            <Image src="/images/caret-down.svg" />
+
+          </a>
+        )} */}
+
       </>
     );
   };
@@ -98,6 +122,45 @@ function Leaves() {
     {
       id: 'status_name',
       label: 'Status',
+    },
+    {
+      id: 'revert_status_name',
+      label: 'Revert Status',
+      render: ({ id, leave_from_date, status, revert_status_name }) => {
+        const parsedDate1 = new Date(leave_from_date);
+        const parsedDate2 = new Date();
+        const onlyDate1 = new Date(parsedDate1.getFullYear(), parsedDate1.getMonth(), parsedDate1.getDate());
+        const onlyDate2 = new Date(parsedDate2.getFullYear(), parsedDate2.getMonth(), parsedDate2.getDate());
+
+        return (
+          <>
+            {onlyDate1.getTime() <= onlyDate2.getTime() && status === 2 ? (
+              <a
+                href="/"
+                className="ms-2 pl-2"
+                title="Revert Leave"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  changeStatus(id);
+                }}
+              >
+                <Image src="/images/caret-down.svg" />
+
+              </a>
+            ) : (<>
+              <span>
+                {
+                  revert_status_name
+                }
+              </span>
+            </>)
+            }
+          </>
+        );
+      },
+
+      // isDisplay:true
     },
     {
       id: 'action',

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
@@ -86,6 +87,11 @@ function EmployeeTeamLeaves(props) {
       label: 'Days',
       roleAccess: [4],
     },
+    // {
+    //   id: 'revert_status_name',
+    //   label: 'Revert Status',
+    //   roleAccess: [4],
+    // },
     {
       id: 'status_name',
       label: 'Status',
@@ -124,6 +130,48 @@ function EmployeeTeamLeaves(props) {
         );
       },
     },
+    {
+      id: 'revert_status_name',
+      label: 'Revert Status',
+      render: ({ id, revert_status_name }) => {
+        return (
+          <>
+            {/* customFunctions.getDate(new Date()) <= leave_from_date ?  */}
+            {revert_status_name === 'Pending' ? (
+              <>
+                <Image
+                  title="Accept"
+                  onClick={() => {
+                    setLeaveId(id);
+                    setStatusId(2);
+                    setRevertStatusId(2);
+                    setIsRevert(true)
+                    setModalShow(true);
+                  }}
+                  alt="Accept"
+                  src="/images/success.svg"
+                />
+                <Image
+                  title="Declined"
+                  onClick={() => {
+                    setLeaveId(id);
+                    setStatusId(3);
+                    setRevertStatusId(2);
+                    setIsRevert(true)
+                    setModalShow(true);
+                  }}
+                  alt="Declined"
+                  src="/images/fail.svg"
+                  className="ms-2"
+                />
+              </>
+            ) : (
+              <span> {revert_status_name} </span>
+            )}
+          </>
+        );
+      },
+    },
   ];
 
   const [rowData, setRowData] = useState([]);
@@ -136,6 +184,9 @@ function EmployeeTeamLeaves(props) {
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
   const [modalShow, setModalShow] = useState(false);
   const [statusId, setStatusId] = useState('');
+  const [revertStatusId, setRevertStatusId] = useState('');
+  const [revertDeclinedReason, setRevertDeclinedReason] = useState(null)
+  const [isRevert, setIsRevert] = useState(false);
   const [leaveId, setLeaveId] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
@@ -146,6 +197,8 @@ function EmployeeTeamLeaves(props) {
   const [filters, setFilters] = useState({});
   let filterOptions = {};
 
+  console.log('revertStatusId', revertStatusId);
+  
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -410,6 +463,7 @@ function EmployeeTeamLeaves(props) {
               show={modalShow}
               statusId={statusId}
               leaveId={leaveId}
+              isRevert={isRevert}
               handleModalCLose={(e) => setModalShow(e)}
               onStatusUpdate={() => {
                 getRowData(1);
