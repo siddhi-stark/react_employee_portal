@@ -199,6 +199,15 @@ const menu = [
     submenu: [],
     roleaccess: [1, 6],
   },
+  // {
+  //   title: 'Employees Leaves Calculation',
+  //   // path: '/add-leaves-count',
+  //   path : '/accountant-leaves',
+  //   icon: 'template.svg',
+  //   submenu: [],
+  //   roleaccess: [1, 4, 5,  6],
+  // },
+
   {
     title: 'Leaves',
     path: '#',
@@ -219,6 +228,11 @@ const menu = [
         title: 'Employee Leaves',
         path: '/employee-leaves',
         roleaccess: [1, 6, 5],
+      },
+      {
+        title: 'Employees Leaves Calculation',
+        path : '/accountant-leaves',
+        roleaccess: [1, 5,  6],
       },
     ],
     roleaccess: [1, 2, 3, 6, 5, 10],

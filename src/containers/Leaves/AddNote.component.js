@@ -62,6 +62,9 @@ function AddNote(props) {
           Api.leavesUrl,
           postData
         );
+        console.log("data.message[0]", data.message[0]);
+        console.log("data.message[0]", data);
+
 
         if (!data) {
           swal(message, '', 'error', {

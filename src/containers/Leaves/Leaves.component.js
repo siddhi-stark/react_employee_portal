@@ -126,7 +126,7 @@ function Leaves() {
     {
       id: 'revert_status_name',
       label: 'Revert Status',
-      render: ({ id, leave_from_date, status, revert_status_name }) => {
+      render: ({ id, leave_from_date, status, revert_status_name, revert_status, revert_declined_reason }) => {
         const parsedDate1 = new Date(leave_from_date);
         const parsedDate2 = new Date();
         const onlyDate1 = new Date(parsedDate1.getFullYear(), parsedDate1.getMonth(), parsedDate1.getDate());
@@ -134,26 +134,70 @@ function Leaves() {
 
         return (
           <>
-            {onlyDate1.getTime() <= onlyDate2.getTime() && status === 2 ? (
+            {onlyDate1.getTime() >= onlyDate2.getTime() && status === 2 && revert_status === 4 ? (
               <a
                 href="/"
                 className="ms-2 pl-2"
                 title="Revert Leave"
+                style={{
+                  display: "inline-block",
+                  padding: "5px 10px",
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  textAlign: "center",
+                  textDecoration: "none",
+                  borderRadius: "4px",
+                  border: "1px solid #007bff",
+                  cursor: "pointer",
+                  fontSize: "10px",
+                  fontWeight: "bold",
+                }}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  changeStatus(id);
+                  // changeStatus(id);
+                  submitForm(id)
                 }}
-              >
-                <Image src="/images/caret-down.svg" />
 
+              >
+                Apply Revert
               </a>
             ) : (<>
-              <span>
-                {
-                  revert_status_name
-                }
-              </span>
+
+              <a
+                style={{
+                  position: "relative",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  const tooltip = document.createElement("div");
+                  tooltip.innerText = revert_declined_reason
+                    ? revert_declined_reason
+                    : "Note not present."; // Replace with your dynamic value
+                  tooltip.style.position = "absolute";
+                  tooltip.style.top = "100%";
+                  tooltip.style.left = "50%";
+                  tooltip.style.transform = "translateX(-50%)";
+                  tooltip.style.backgroundColor = "#333";
+                  tooltip.style.color = "#fff";
+                  tooltip.style.padding = "4px 8px";
+                  tooltip.style.borderRadius = "4px";
+                  tooltip.style.whiteSpace = "nowrap";
+                  tooltip.style.fontSize = "12px";
+                  tooltip.style.boxShadow = "0px 2px 4px rgba(0, 0, 0, 0.2)";
+                  tooltip.style.zIndex = "1000";
+                  tooltip.classList.add("custom-tooltip"); // Use a class instead of an ID
+                  e.currentTarget.appendChild(tooltip); // Attach tooltip to the current element
+                }}
+                onMouseLeave={(e) => {
+                  const tooltip = e.currentTarget.querySelector(".custom-tooltip");
+                  if (tooltip) {
+                    tooltip.remove();
+                  }
+                }}
+              >
+                {revert_status_name}
+              </a>
             </>)
             }
           </>
@@ -217,6 +261,58 @@ function Leaves() {
       });
     }
   };
+
+  const submitForm = async (id) => {
+    const reasonLabel = id === 2 ? 'approve' : 'decline';
+
+    const postData = {
+      id: id,
+      is_revert_after_approved: true,
+      revert_status: 1
+      // declined_reason: formValues ? formValues.notes : '',
+    };
+
+    swal({
+      title: 'Are you sure?',
+      text: `You want to apply for revert the leaves ?`,
+      icon: 'warning',
+      dangerMode: true,
+      buttons: true,
+      closeOnClickOutside: false,
+      allowOutsideClick: false,
+    }).then(async (result) => {
+      if (result) {
+        const { data, message } = await AuthApi.putDataToServer(
+          Api.leavesUrl,
+          postData
+        );
+
+        console.log("data.message[0]", data.message[0]);
+        
+        if (!data) {
+          swal(message, '', 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+            buttons: false,
+            timer: 2000,
+          }).then(() => {
+            swal.close();
+          });
+        } else {
+          swal(data && data.message[0], '', 'success', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          }).then(() => {
+            // onCancelButton();
+            // onStatusUpdate();
+            getRowData(1);
+            swal.close();
+          });
+        }
+      }
+    });
+
+  }
 
   const changeStatus = async (id) => {
     setShowLoader(true);

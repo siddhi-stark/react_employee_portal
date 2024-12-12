@@ -305,7 +305,8 @@ function EmployeeTeamLeaves(props) {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      window.open(`https://portalsapi.starkdigital.in/${data.data.csv_path}`, '_blank');
+      // window.open(`https://portalsapi.starkdigital.in/${data.data.csv_path}`, '_blank');
+      window.open(`https://stage-portalsapi.starkdigital.in/${data.data.csv_path}`, '_blank');
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {

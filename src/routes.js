@@ -83,6 +83,7 @@ import EmployeeResignationList from './containers/Exit process/employeeResignati
 import ResignationDetails from './containers/Exit process/resignationDetails';
 import LeaveListingForAccountant from './containers/Leaves/LeaveListingForAccountant';
 import AccountAddleaveComponent from './containers/Leaves/AccountAddleave.component';
+import AddEmployeesLeavesCount from './containers/Leaves/AddEmployeesLeavesCount';
 import ResignationDetailsComponent from './containers/Exit process/resignationDetailsComponent';
 import AbscondTable from './containers/TerminationAndAbscoud/AbscondTable';
 import FormAbscondTermination from './containers/TerminationAndAbscoud/FormAbscondTermination';
@@ -310,10 +311,17 @@ function Routes() {
         component={LeaveListingForAccountant}
       />
       <Route
-        path="/accountant-add-leaves"
+        path="/employees-add-leaves"
         exact
         component={AccountAddleaveComponent}
       />
+
+      <Route
+        path="/add-leaves-count"
+        exact
+        component={AddEmployeesLeavesCount}
+      />
+
       <Route
         path="/resignation-detail/:id"
         exact
@@ -330,20 +338,20 @@ function Routes() {
       <Route path="/employee-feedback-review" exact component={EmployeesFeedbackReviewByHR} />
       <Route path="/employee-feedback-review-admins" exact component={EmployeesFeedbackReviewByMangers} />
       <Route path="/update-feedback/:id" exact component={UpdateTeamFeedback} /> */}
-      
+
       <Route path="/all-employees-reviews" exact component={AllEmployeesReviews} />
       <Route path="/employee-quarter-review" exact component={EmployeeQuarterReview} />
       <Route path="/add-feedback" exact component={AddFeedback} />
       <Route path="/add-feedback/:id" exact component={AddFeedback} />
       <Route path="/admin-hr-view/:id" exact component={AdminAndHrView} />
-      
+
       <Route path="/questionnaire" exact component={Questionnaire} />
       <Route path="/add-questionnaire" exact component={AddQuestionnaire} />
 
       <Route path="/kra-kpi" exact component={KraKpi} />
       <Route path="/kra-kpi-employees" exact component={KraKpiEmployees} />
       <Route path="/add-kra-kpi" exact component={AddKraKpi} />
-      
+
       <Route path="/employee-workload" exact component={EmployeeWorkload} />
       <Route path="/employee-workload-graph" exact component={EmployeeWorkloadGraph} />
 
@@ -353,7 +361,7 @@ function Routes() {
       <Route path="/report-tasks-list/:id" exact component={ProjectTaskList} />
       <Route path="/admin-report-tasks-list/:id" exact component={ProjectTaskListAdmin} />
       <Route path="/project-report-list" exact component={SentProjectsReport} />
-      
+
       <Route path="/project-list" exact component={ProjectList} />
       <Route path="/project-weekly-tasks/:id" exact component={ProjectWeeklyTask} />
       <Route path="/wfh" exact component={Wfh} />
@@ -361,10 +369,9 @@ function Routes() {
       <Route path="/wfh-employees" exact component={WfhEmployee} />
       <Route path="/predictions" exact component={Predictions} />
       
-      
 
       <Route component={NotFound} />
-      
+
     </Switch>
   );
 }

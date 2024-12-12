@@ -22,20 +22,20 @@ function EmployeeLeavesDetails(props) {
       label: 'Name',
     },
     {
-      id: 'total_leaves',
-      label: 'Allocated',
-      render: ({ total_leaves }) => {
+      id: 'leaves_balance',
+      label: 'Leaves Balance',
+      render: ({ leaves_balance }) => {
         return (
-        <span>{total_leaves ? `${total_leaves}` : '0'}</span>
+        <span>{leaves_balance ? `${leaves_balance}` : '0'}</span>
         );
       },
     },
     {
-      id: 'total_leave_taken',
+      id: 'total_taken_leaves',
       label: 'Taken',
-      render: ({ total_leave_taken }) => {
+      render: ({ total_taken_leaves }) => {
         return (
-        <span>{total_leave_taken ? `${total_leave_taken}` : '0'}</span>
+        <span>{total_taken_leaves ? `${total_taken_leaves}` : '0'}</span>
         );
       },
     },
