@@ -352,7 +352,7 @@ const menu = [
         path: '/employee-reviews',
         icon: 'report.svg',
         submenu: [],
-        roleaccess: [3, 4, 5, 6, 7, 8, 10],
+        roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
       },
     ],
     roleaccess: [1, 3, 4, 5, 6],
