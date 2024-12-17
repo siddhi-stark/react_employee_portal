@@ -913,7 +913,7 @@ function CurrentEmployee() {
                           {emp.bond_details_list &&
                             emp.bond_details_list[0] &&
                             emp.bond_details_list[0].start_date &&
-                            `Bond start date- ${customFunctions.getDMYDate(
+                            `Agreement start date- ${customFunctions.getDMYDate(
                               emp.bond_details_list[0].start_date
                             )}`}
                         </p>
@@ -921,7 +921,7 @@ function CurrentEmployee() {
                           {emp.bond_details_list &&
                             emp.bond_details_list[0] &&
                             emp.bond_details_list[0].end_date &&
-                            `Bond end date- ${customFunctions.getDMYDate(
+                            `Agreement end date- ${customFunctions.getDMYDate(
                               emp.bond_details_list[0].end_date
                             )}`}
                         </p>

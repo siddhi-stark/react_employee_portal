@@ -13,7 +13,7 @@
       {
         "name": "bond_start_date",
         "type": "date",
-        "label": "Bond Start Date",
+        "label": "Agreement  Start Date",
         "id": "",
         "placeholder": "",
         "inputClass": "",
@@ -49,7 +49,7 @@
       {
         "name": "bond_end_date",
         "type": "date",
-        "label": "Bond End Date",
+        "label": "Agreement  End Date",
         "id": "",
         "placeholder": "",
         "inputClass": "",

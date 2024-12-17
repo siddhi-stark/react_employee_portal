@@ -918,7 +918,7 @@ function EmployeeProfile(props) {
     if (id) {
       swal({
         title: 'Are you sure?',
-        text: 'Are you sure that you want to delete the bond history?',
+        text: 'Are you sure that you want to delete the Agreement history?',
         icon: 'warning',
         dangerMode: true,
         buttons: true,
@@ -1715,11 +1715,11 @@ function EmployeeProfile(props) {
             <div className="d-flex align-items-start justify-content-between">
               {/* {!bondList.length < 1 && ( */}
               {/* <h4 className="mt-2 text-primary">Training Argument</h4> */}
-              <h4 className="mt-2 text-primary">Bond History</h4>
+              <h4 className="mt-2 text-primary">Agreement History</h4>
               {/* )} */}
 
               {bondType == 'editBond' ? (
-                <h5 className="me-3">Edit Bond</h5>
+                <h5 className="me-3">Edit Agreement</h5>
               ) : (
                 <button
                   onClick={() => {
