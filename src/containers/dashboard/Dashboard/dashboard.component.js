@@ -346,7 +346,7 @@ function Dashboard() {
     if (Number(uRole) !== 4) {
       getLeavesUpdate();
     }
-    // getInterviewsUpdate();
+    getInterviewsUpdate();
   }, []);
 
   const onViewButtonClick = () => {
