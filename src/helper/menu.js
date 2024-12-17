@@ -347,6 +347,13 @@ const menu = [
         icon: 'template.svg',
         roleaccess: [1, 5, 6],
       },
+      {
+        title: 'Review Forms',
+        path: '/employee-reviews',
+        icon: 'report.svg',
+        submenu: [],
+        roleaccess: [3, 4, 5, 6, 7, 8, 10],
+      },
     ],
     roleaccess: [1, 3, 4, 5, 6],
   },
@@ -409,7 +416,14 @@ const menu = [
     submenu: [],
     roleaccess: [3, 4, 5, 6, 7, 8, 10],
   },
-
+  // {
+  //   title: 'Reviews',
+  //   path: '/employee-reviews',
+  //   icon: 'report.svg',
+  //   submenu: [],
+  //   roleaccess: [3, 4, 5, 6, 7, 8, 10],
+  // },
+  
   {
     title: 'Support Ticket',
     path: '/support-ticket',

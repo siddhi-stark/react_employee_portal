@@ -197,6 +197,8 @@ export default class Api extends Component {
 
   static employeeReviewUrl = `${Api.baseUrl}employee_review/`;
 
+  static employeeSpeificReviewUrl = `${Api.baseUrl}specific-review-list/`;
+
   static employeeReportUrl = `${Api.baseUrl}dashboard-report/`;
 
   static employeeResignationUrl = `${Api.baseUrl}employee-resignation/`;
@@ -268,6 +270,11 @@ export default class Api extends Component {
   static milestonesDetails = `${Api.baseUrl}milestones-details/`
   
   static wfh = `${Api.baseUrl}wfh/`
+
+  static selfEvaluationForm = `${Api.baseUrl}self-evaluation-form/`
+
+  static trainingReviewerForm = `${Api.baseUrl}training-reviewer-form/`
+
 
   
   // Get base URL of APIs
