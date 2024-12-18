@@ -347,13 +347,13 @@ const menu = [
         icon: 'template.svg',
         roleaccess: [1, 5, 6],
       },
-      // {
-      //   title: 'Review Forms',
-      //   path: '/employee-reviews',
-      //   icon: 'report.svg',
-      //   submenu: [],
-      //   roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
-      // },
+      {
+        title: 'Review Forms',
+        path: '/employee-reviews',
+        icon: 'report.svg',
+        submenu: [],
+        roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
+      },
     ],
     roleaccess: [1, 3, 4, 5, 6],
   },
@@ -431,6 +431,15 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
+
+   {
+    title: 'Employee Review Forms Details',
+    path: '/employee-reviews-details',
+    icon: 'ticket.svg',
+    submenu: [],
+    roleaccess: [5, 6],
+  },
+
   // {
   //   title: 'Predictions',
   //   path: '/predictions',

@@ -430,8 +430,9 @@ const EmployeeReviews = () => {
                 paginationProps={{
                   totalItems: totalCount,
                   itemsPerPage: limit,
-                  activePage: pagination.current_page,
+                  activePage: Number(currentPage),
                   onPageChange: (page) => {
+                    setCurrentPage(page)
                     getRowData(page)
                   },
                 }}
@@ -485,9 +486,10 @@ const EmployeeReviews = () => {
                   paginationProps={{
                     totalItems: totalCount,
                     itemsPerPage: limit,
-                    activePage: currentPage,
+                    activePage: Number(currentPage),
                     onPageChange: (page) => {
                       setCurrentPage(page)
+                      getRowData(page)
                     },
                   }}
                 />

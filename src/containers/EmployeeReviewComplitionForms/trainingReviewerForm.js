@@ -26,6 +26,7 @@ const TrainingReviewerForm = () => {
   const employeeData = state?.state?.state?.employeeData;
   const revieweDate = state?.state?.state?.revieweDate;
   const trainingReviewerForm = state?.state.state?.trainingReviewerForm
+  const isDisabled = state?.state.state?.isDisabled ? state?.state.state?.isDisabled : false
   const [title, setTitle] = useState('Fill Training Reviewer Form');
   const [isShowLoader, setShowLoader] = useState(false);
   const [comments, setComments] = useState('')
@@ -35,7 +36,7 @@ const TrainingReviewerForm = () => {
   const [selectedOnBasis, setOnBasis] = useState()
   const [selectTrainingExtended, setTrainingExtended] = useState()
   const [probationStart, setProbationStart] = useState()
-  
+
   const [trainingPerformance, setTrainingPerformance] = useState('')
   const [technicalImprovements, setTechnicalImprovements] = useState('')
   const [focusArea, setFocusArea] = useState([])
@@ -53,7 +54,7 @@ const TrainingReviewerForm = () => {
     training_period_extended: '',
     start_probation_period: '',
     employee_review: reviewId,
-    review_period:''    
+    review_period: ''
   })
 
   const yesOrNo = [
@@ -99,9 +100,9 @@ const TrainingReviewerForm = () => {
       setFocusArea(newData?.question_third)
       setNeededImprovements(newData?.question_four)
       setOverallFeedback(newData?.overall_feedback)
-      setTrainingExtended({label:Number(newData?.training_period_extended) === 1 ? "Yes" : "No" ,value:Number(newData?.training_period_extended)})
-      setProbationStart({label:Number(newData?.start_probation_period) === 1 ? "Yes" : "No" ,value:Number(newData?.start_probation_period)})
-      
+      setTrainingExtended({ label: Number(newData?.training_period_extended) === 1 ? "Yes" : "No", value: Number(newData?.training_period_extended) })
+      setProbationStart({ label: Number(newData?.start_probation_period) === 1 ? "Yes" : "No", value: Number(newData?.start_probation_period) })
+
       setShowLoader(false);
     } else {
       setShowLoader(false);
@@ -117,7 +118,7 @@ const TrainingReviewerForm = () => {
     setShowLoader(true)
     preparedData["overall_rating"] = selectedRatings?.value
     preparedData["overall_feedback"] = overallFeedback
-    preparedData["question_first"] =   trainingPerformance
+    preparedData["question_first"] = trainingPerformance
     preparedData["question_second"] = technicalImprovements
     preparedData["question_third"] = neededImprovements
     preparedData["question_four"] = neededImprovements
@@ -126,7 +127,7 @@ const TrainingReviewerForm = () => {
     preparedData["review_period"] = selectedOnBasis?.value
 
     console.log("preparedData", preparedData);
-    
+
     let response = null
     if (trainingReviewerForm) {
       let id = trainingReviewerForm?.id
@@ -161,7 +162,6 @@ const TrainingReviewerForm = () => {
     }
   }
 
-
   return (
     <>
       <Helmet title={title} />
@@ -176,7 +176,11 @@ const TrainingReviewerForm = () => {
           className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
           type="submit"
           onClick={() => {
-            history.push('/employee-reviews');
+            if (!isDisabled) {
+              history.push('/employee-reviews');
+            } else {
+              history.push('/employee-reviews-details');
+            }
           }}
         >
           Back
@@ -272,7 +276,7 @@ const TrainingReviewerForm = () => {
                   onSelectHandler={(select) => {
                     setRatings(select)
                   }}
-                  disabled={false}
+                  disabled={isDisabled}
                   errorMessage={validator.current.message(
                     'Overall Ratings',
                     selectedRatings,
@@ -289,7 +293,7 @@ const TrainingReviewerForm = () => {
                   onSelectHandler={(select) => {
                     setOnBasis(select)
                   }}
-                  disabled={false}
+                  disabled={isDisabled}
                   errorMessage={validator.current.message(
                     'Review done on the basis of the',
                     selectedOnBasis,
@@ -306,7 +310,7 @@ const TrainingReviewerForm = () => {
                   onSelectHandler={(select) => {
                     setTrainingExtended(select)
                   }}
-                  disabled={false}
+                  disabled={isDisabled}
                   errorMessage={validator.current.message(
                     'Is the training period extended?',
                     selectTrainingExtended,
@@ -323,7 +327,7 @@ const TrainingReviewerForm = () => {
                   onSelectHandler={(select) => {
                     setProbationStart(select)
                   }}
-                  disabled={false}
+                  disabled={isDisabled}
                   errorMessage={validator.current.message(
                     'Should the probation period begin for three months?',
                     probationStart,
@@ -441,36 +445,45 @@ const TrainingReviewerForm = () => {
               </Col>
             </Row>
           </Row>
-          <Button
-            variant="secondary"
-            className="bg-primary border-0 border-primary h4 m-2 text-white rounded-3"
-            type="submit"
-            // onClick={setAddPopUp(true)}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (validator.current.allValid()) {
-                setAddPopUp(true);
-              } else {
-                validator.current.showMessages()
-                forceUpdate(count + 1)
-              }
-            }}
-          >
-            Submit
-          </Button>
-          <Button
-            variant="secondary"
-            className="h4 m-0 text-black rounded-3"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setAddPopUp(false);
-              history.push('/employee-reviews');
-            }}
-          >
-            Cancel
-          </Button>
+          {!isDisabled && (
+            <>
+
+              <Button
+                variant="secondary"
+                className="bg-primary border-0 border-primary h4 m-2 text-white rounded-3"
+                type="submit"
+                // onClick={setAddPopUp(true)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (validator.current.allValid()) {
+                    setAddPopUp(true);
+                  } else {
+                    validator.current.showMessages()
+                    forceUpdate(count + 1)
+                  }
+                }}
+              >
+                Submit
+              </Button>
+              <Button
+                variant="secondary"
+                className="h4 m-0 text-black rounded-3"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setAddPopUp(false);
+                  if (!isDisabled) {
+                    history.push('/employee-reviews');
+                  } else {
+                    history.push('/employee-reviews-details');
+                  }
+                }}
+              >
+                Cancel
+              </Button>
+            </>
+          )}
         </Card.Body>
       </Card>
       {showAddPopUp && (

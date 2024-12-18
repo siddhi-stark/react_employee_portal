@@ -119,7 +119,7 @@ import WfhEmployee from './containers/wfh/wfhEmployee'
 import EmployeeReviews from './containers/EmployeeReviewComplitionForms/EmployeesReviews'
 import EvaluationForm from './containers/EmployeeReviewComplitionForms/evaluationForm'
 import TrainingReviewerForm from './containers/EmployeeReviewComplitionForms/trainingReviewerForm'
-
+import EmployeeReviewsDetails from './containers/EmployeeReviewComplitionForms/EmployeesReviewsDetails'
 
 
 
@@ -378,6 +378,8 @@ function Routes() {
       <Route path="/employee-reviews" exact component={EmployeeReviews} />
       <Route path="/evaluation-form" exact component={EvaluationForm} />
       <Route path="/training-reviewer-form" exact component={TrainingReviewerForm} />
+      <Route path="/employee-reviews-details" exact component={EmployeeReviewsDetails} />
+      
       
       
 

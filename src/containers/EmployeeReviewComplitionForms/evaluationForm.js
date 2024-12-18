@@ -27,6 +27,7 @@ const EvaluationForm = () => {
     const employeeData = state?.state?.state?.employeeData;
     const revieweDate = state?.state?.state?.revieweDate;
     const selfEvaluationForm = state?.state.state?.selfEvaluationForm
+    const isDisabled = state?.state.state?.isDisabled ? state?.state.state?.isDisabled : false
     const [title, setTitle] = useState('Evaluation Form');
     const [isShowLoader, setShowLoader] = useState(false);
     const [targetsAchieved, setTargetsAchieved] = useState('')
@@ -285,7 +286,11 @@ const EvaluationForm = () => {
                     className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
                     type="submit"
                     onClick={() => {
-                        history.push('/employee-reviews');
+                        if (!isDisabled){
+                            history.push('/employee-reviews');
+                        }else{
+                            history.push('/employee-reviews-details');
+                        }
                     }}
                 >
                     Back
@@ -380,7 +385,7 @@ const EvaluationForm = () => {
                                 onSelectHandler={(select) => {
                                     setEvaluation(select)
                                 }}
-                                disabled={false}
+                                disabled={isDisabled}
                                 errorMessage={validator.current.message(
                                     'Evaluation Criteria',
                                     selectedEvaluation,
@@ -396,7 +401,7 @@ const EvaluationForm = () => {
                                     onSelectHandler={(select) => {
                                         setOnBasis(select)
                                     }}
-                                    disabled={false}
+                                    disabled={isDisabled}
                                     errorMessage={validator.current.message(
                                         'Review done on the basis of the',
                                         selectedOnBasis,
@@ -416,6 +421,8 @@ const EvaluationForm = () => {
                                     onInputChange={(e) => {
                                         setTargetsAchieved(e.target.value);
                                     }}
+                                    disabled={isDisabled}
+
                                     errorMessage={validator.current.message(
                                         'Targets achieved',
                                         targetsAchieved,
@@ -435,6 +442,8 @@ const EvaluationForm = () => {
                                     onInputChange={(e) => {
                                         setTargetsAchieved(e.target.value);
                                     }}
+                                    disabled={isDisabled}
+
                                     errorMessage={validator.current.message(
                                         'Target failed to achieve',
                                         targetFailed,
@@ -454,6 +463,7 @@ const EvaluationForm = () => {
                                     onInputChange={(e) => {
                                         setComments(e.target.value);
                                     }}
+                                    disabled={isDisabled}
                                     errorMessage={validator.current.message(
                                         'Additional comments or suggestions',
                                         targetFailed,
@@ -492,7 +502,7 @@ const EvaluationForm = () => {
                                                             handleCheckboxChange(option.label, item);
 
                                                         }}
-                                                        disabled={false}
+                                                        disabled={isDisabled}
                                                     />
                                                 ))}
                                             <p className='text-danger'>
@@ -508,36 +518,46 @@ const EvaluationForm = () => {
                             </Col>
                         </Row>
                     </Row>
-                    <Button
-                        variant="secondary"
-                        className="bg-primary border-0 border-primary h4 m-2 text-white rounded-3"
-                        type="submit"
-                        // onClick={setAddPopUp(true)}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (validator.current.allValid()) {
-                                setAddPopUp(true);
-                            } else {
-                                validator.current.showMessages()
-                                forceUpdate(count + 1)
-                            }
-                        }}
-                    >
-                        Submit
-                    </Button>
-                    <Button
-                        variant="secondary"
-                        className="h4 m-0 text-black rounded-3"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setAddPopUp(false);
-                            history.push('/employee-reviews');
-                        }}
-                    >
-                        Cancel
-                    </Button>
+                    {
+                        !isDisabled && (
+                            <>
+                                <Button
+                                    variant="secondary"
+                                    className="bg-primary border-0 border-primary h4 m-2 text-white rounded-3"
+                                    type="submit"
+                                    // onClick={setAddPopUp(true)}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        if (validator.current.allValid()) {
+                                            setAddPopUp(true);
+                                        } else {
+                                            validator.current.showMessages()
+                                            forceUpdate(count + 1)
+                                        }
+                                    }}
+                                >
+                                    Submit
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    className="h4 m-0 text-black rounded-3"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setAddPopUp(false);
+                                        if (!isDisabled){
+                                            history.push('/employee-reviews');
+                                        }else{
+                                            history.push('/employee-reviews-details');
+                                        }
+                                    }}
+                                >
+                                    Cancel
+                                </Button>
+                            </>
+                        )
+                    }
                 </Card.Body>
             </Card>
             {showAddPopUp && (
