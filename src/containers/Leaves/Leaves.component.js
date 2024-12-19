@@ -48,7 +48,7 @@ function Leaves() {
             <Image alt="view" src="/images/edit-button.svg" />
           )}
         </a>
-        {new Date(leave_from_date) <= new Date() && status === 1 && (
+        { new Date() <= new Date(leave_from_date) && status === 1 && (
           <a
             href="/"
             className="ms-2 pl-2"
