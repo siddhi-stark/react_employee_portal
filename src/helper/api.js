@@ -275,6 +275,9 @@ export default class Api extends Component {
 
   static trainingReviewerForm = `${Api.baseUrl}training-reviewer-form/`
 
+  static sentFormsReminder = `${Api.baseUrl}sent-forms-reminder/`
+
+
 
   
   // Get base URL of APIs

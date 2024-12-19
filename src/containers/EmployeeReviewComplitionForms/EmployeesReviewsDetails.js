@@ -139,7 +139,27 @@ const EmployeeReviewsDetails = () => {
                 View
               </a>
             ) : (
-              <>Not Sumbmited</>
+              <>
+              {!self_evaluation_form && (
+              <a
+                href="/"
+                className="ms-2 pl-2"
+                title="Update Form "
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  // changeStatus(id);
+                  // submitForm(id)
+                  sentReminder(id, 1)
+
+                }}
+
+              >
+                Send Reminder <img src="/images/arrow-post.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+              </a>
+            )
+            }
+              </>
             )
             }
           </>)
@@ -226,7 +246,27 @@ const EmployeeReviewsDetails = () => {
                   View
                 </a>
               ) : (
-                <>Not Sumbmited</>
+                <>
+                  {!training_review_form && (
+                    <a
+                      href="/"
+                      className="ms-2 pl-2"
+                      title="Update Form "
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // changeStatus(id);
+                        // submitForm(id)
+                        sentReminder(id, 2)
+
+                      }}
+
+                    >
+                      Send Reminder <img src="/images/arrow-post.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+                    </a>
+                  )
+                  }
+                </>
               )
             }
           </>
@@ -236,6 +276,34 @@ const EmployeeReviewsDetails = () => {
     },
   ];
 
+  const sentReminder = async (id, formType) => {
+    setShowLoader(true);
+    const params = {
+      form_type: formType
+    }
+    const url = `${Api.sentFormsReminder}${id}/`;
+    const { data, error } = await AuthApi.putDataToServer(url, params);
+    setShowLoader(false);
+    if (data) {
+      if (formType === 1) {
+        swal('Self Evalueation Form reminder sent successfully.', '', 'success').then(() => {
+          // history.push('/employee-reviews');
+        });
+      }
+      else {
+        swal('Training Reviewer Form reminder sent successfully.', '', 'success').then(() => {
+          // history.push('/employee-reviews');
+        });
+      }
+
+    } else {
+      setShowLoader(false);
+      swal(data?.message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  }
 
   const getEmployeeName = async () => {
     setShowLoader(true);
@@ -326,7 +394,7 @@ const EmployeeReviewsDetails = () => {
   const generatereReviewReports = async (reportType) => {
     // is_download_evaluation_forms
     let params = {
-      type:'all'
+      type: 'all'
     }
     if (reportType === 'personalInfo') {
       params.is_download_evaluation_forms = true
