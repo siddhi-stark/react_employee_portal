@@ -229,9 +229,14 @@ const menu = [
         path: '/employee-leaves',
         roleaccess: [1, 6, 5],
       },
+      // {
+      //   title: 'Employees Leaves Calculation',
+      //   path : '/accountant-leaves',
+      //   roleaccess: [1, 5,  6],
+      // },
       {
-        title: 'Employees Leaves Calculation',
-        path : '/accountant-leaves',
+        title: 'Employees Late Marks',
+        path : '/late-marks',
         roleaccess: [1, 5,  6],
       },
     ],

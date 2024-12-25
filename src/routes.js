@@ -120,7 +120,8 @@ import EmployeeReviews from './containers/EmployeeReviewComplitionForms/Employee
 import EvaluationForm from './containers/EmployeeReviewComplitionForms/evaluationForm'
 import TrainingReviewerForm from './containers/EmployeeReviewComplitionForms/trainingReviewerForm'
 import EmployeeReviewsDetails from './containers/EmployeeReviewComplitionForms/EmployeesReviewsDetails'
-
+import AddLateMarks from './containers/Leaves/addLateMarks';
+import LateMarks from './containers/Leaves/lateMarks';
 
 
 // import AddHistory from './containers/Employees/AddHistory.component';
@@ -380,7 +381,8 @@ function Routes() {
       <Route path="/training-reviewer-form" exact component={TrainingReviewerForm} />
       <Route path="/employee-reviews-details" exact component={EmployeeReviewsDetails} />
       
-      
+      <Route path="/add-late-marks" exact component={AddLateMarks}/>
+      <Route path="/late-marks" exact component={LateMarks}/>
       
 
       <Route component={NotFound} />

@@ -805,8 +805,10 @@ function TeamProject(props) {
                                       <li
                                         className={`d-flex align-items-center justify-content-between task task-${task[1].status}`}
                                       >
+                                        {console.log("task", task)}
+                                        
                                         <h6
-                                          title={`${task[1].content}`}
+                                          title={`${task && task[1].content}`}
                                           className="mb-0 task-name"
                                         >
                                           {task[1].content.substring(0, 40)}

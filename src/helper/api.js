@@ -277,6 +277,9 @@ export default class Api extends Component {
 
   static sentFormsReminder = `${Api.baseUrl}sent-forms-reminder/`
 
+  static lateMarks = `${Api.baseUrl}late-marks/`
+
+
 
 
   

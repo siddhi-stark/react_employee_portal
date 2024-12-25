@@ -70,7 +70,13 @@
         "placeholder": "",
         "inputClass": "",
         "containerClass": "",
-        "validations": [],
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [],
+            "applyWhenRelation": "OR"
+          }
+        ],
         "displayWhen": {},
         "haveValidations": "true",
         "haveDisplayOptions": "false",

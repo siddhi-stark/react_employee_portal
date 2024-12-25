@@ -592,7 +592,7 @@ function AddLeave(props) {
                   {leavesCount.OptionalLeavesCount >= 0 && (
                     <span>
                       <i className="fas fa-exclamation-circle" />
-                      {`Taken Optional Leaves: ${leavesCount.OptionalLeavesCount}`}
+                      {`Taken Optional Holiday: ${leavesCount.OptionalLeavesCount}`}
                     </span>
                   )}
                   {leavesCount.SandwichLeavesCount >= 0 && (
