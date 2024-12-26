@@ -741,6 +741,7 @@ function AddLeave(props) {
                   )}
               </div>
             </div>
+            {console.log('status', status)}
             {viewOptions && status === 'Pending' && (
               <>
                 <Button
