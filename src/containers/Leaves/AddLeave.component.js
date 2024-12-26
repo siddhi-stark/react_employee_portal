@@ -742,7 +742,7 @@ function AddLeave(props) {
               </div>
             </div>
             {console.log('status', status)}
-            {viewOptions && status === 'Pending' && (
+            {currentUser === 1 && status === 'Pending' && (
               <>
                 <Button
                   onClick={() => {
