@@ -11,6 +11,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
+import AddNote from './AddNote.component';
 
 function AddLeave(props) {
   const idProps = props;
@@ -61,6 +62,19 @@ function AddLeave(props) {
   const [leavesCount, setLeavesCount] = useState(initialState);
   const [sandwichMsg, setSandwichMsg] = useState('');
   const [leavesMsg, setLeavesMsg] = useState(true);
+  const [statusId, setStatusId] = useState('')
+  const [modalShow, setModalShow] = useState(false);
+
+
+  // Get today's date
+  const today = new Date();
+
+  // Get current year and month
+  const year = today.getFullYear();
+  const month = today.getMonth(); // 0 = January, 11 = December
+
+  // Determine the financial year
+  const financialYear = month >= 3 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
 
   const columns = [
     {
@@ -537,7 +551,7 @@ function AddLeave(props) {
                 )}
 
                 <div className="leave-info-container">
-                  <div className="leave-info-title">Leave Summary</div>
+                  <div className="leave-info-title">{`Leave Summary(${financialYear})`}</div>
                   {leavesCount.BalancedLeavesCount >= 0 && (
                     <span>
                       <i className="fas fa-check-circle" />
@@ -573,7 +587,7 @@ function AddLeave(props) {
                     </span>
                   )}
 
-                  
+
 
                   {leavesCount.CasualLeavesCount >= 0 && (
                     <span>
@@ -710,6 +724,8 @@ function AddLeave(props) {
                     associated task are taken care.{' '}
                   </p>
                 )}
+
+
                 {totalCount === 0 &&
                   flag &&
                   changeDate &&
@@ -725,6 +741,45 @@ function AddLeave(props) {
                   )}
               </div>
             </div>
+            {viewOptions && status === 'Pending' && (
+              <>
+                <Button
+                  onClick={() => {
+                    setStatusId(2)
+                    setModalShow(true)
+                    
+                  }}
+                // className="ml-3"
+                >
+                  Approve
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    setStatusId(2)
+                    setModalShow(true)
+                  }}
+                  className="ml-3"
+
+                >
+                  Decline
+                </Button>
+              </>
+
+            )}
+            {modalShow && (
+            <AddNote
+              show={modalShow}
+              statusId={statusId}
+              leaveId={leaveId}
+              isRevert={false}
+              isSub={true}
+              handleModalCLose={(e) => setModalShow(e)}
+              onStatusUpdate={() => {
+                getRowData(1);
+              }}
+            />
+          )}
           </Card>
         </div>
       </section>

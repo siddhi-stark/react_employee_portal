@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
 import { ModalInput } from '../../components/FormInputs';
@@ -10,15 +10,17 @@ import customFunctions from '../../helper/customFunctions';
 import FormSections from './note.json';
 
 function AddNote(props) {
-  const { show, leaveId, statusId, isRevert, note, onStatusUpdate, handleModalCLose } =
+  const { show, leaveId, statusId, isRevert, isSub, note, onStatusUpdate, handleModalCLose } =
     props;
 
+  const history = useHistory();
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote, setShowNote] = useState(false);
   const [leaveIds, setLeaveId] = useState(null);
   const [statusIds, setStatusId] = useState(null);
+
 
   const getUserRole = async () => {
     const roleId = await localStorage.getItem('role');
@@ -31,16 +33,16 @@ function AddNote(props) {
 
   const submitForm = async (formValues) => {
     const reasonLabel = statusIds === 2 ? 'approve' : 'decline';
-    
+
     const postData = {
       id: leaveIds,
       // declined_reason: formValues ? formValues.notes : '',
     };
-    
-    if (!isRevert){
+
+    if (!isRevert) {
       postData.status = Number(statusIds),
-      postData.declined_reason = formValues ? formValues.notes : ''
-    }else{
+        postData.declined_reason = formValues ? formValues.notes : ''
+    } else {
       postData.revert_declined_reason = formValues ? formValues.notes : ''
       postData.revert_status = Number(statusIds)
       postData.is_revert_after_approved = true
@@ -73,16 +75,24 @@ function AddNote(props) {
             buttons: false,
             timer: 2000,
           }).then(() => {
-            swal.close();
+            if (isSub) {
+              history.push("/employee-leaves", {})
+            } else {
+              swal.close();
+            }
           });
         } else {
-          swal(data && data.message[0], '', 'success', {
+          swal("Leave status change successfully.", '', 'success', {
             closeOnClickOutside: false,
             allowOutsideClick: false,
           }).then(() => {
             onCancelButton();
             onStatusUpdate();
-            swal.close();
+            if (isSub) {
+              history.push("/employee-leaves", {})
+            } else {
+              swal.close();
+            }
           });
         }
       }
@@ -138,7 +148,7 @@ function AddNote(props) {
               resetBtnText="Cancel"
               btnContainerClass={!value ? 'form-submit-buttons' : 'd-none'}
               isStepForm={false}
-              onFormReset={() => {}}
+              onFormReset={() => { }}
             />
           </>
         }
