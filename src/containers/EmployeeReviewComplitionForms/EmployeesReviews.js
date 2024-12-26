@@ -156,7 +156,7 @@ const EmployeeReviews = () => {
                       reviewData: reviewer,
                       employeeData: employee,
                       revieweDate: review_date,
-                      selfEvaluationForm:false
+                      selfEvaluationForm: false
                     }
                   })
                 }}
@@ -201,87 +201,87 @@ const EmployeeReviews = () => {
       label: 'Action',
       render: ({ id, reviewer, employee, review_date, training_review_form }) => {
         console.log("training_review_form", training_review_form);
-        
+
         return (
           <>
-          {
-            training_review_form ? (
-              <a
-            href="/"
-            className="ms-2 pl-2"
-            title="Revert Leave"
-            style={{
-              display: "inline-block",
-              padding: "5px 10px",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              textAlign: "center",
-              textDecoration: "none",
-              borderRadius: "4px",
-              border: "1px solid #007bff",
-              cursor: "pointer",
-              fontSize: "10px",
-              fontWeight: "bold",
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              // changeStatus(id);
-              // submitForm(id)
-              history.push('/training-reviewer-form', {
-                state: {
-                  reviewId: id,
-                  reviewData: reviewer,
-                  employeeData: employee,
-                  revieweDate: review_date,
-                  trainingReviewerForm: training_review_form
+            {
+              training_review_form ? (
+                <a
+                  href="/"
+                  className="ms-2 pl-2"
+                  title="Revert Leave"
+                  style={{
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    textAlign: "center",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    border: "1px solid #007bff",
+                    cursor: "pointer",
+                    fontSize: "10px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // changeStatus(id);
+                    // submitForm(id)
+                    history.push('/training-reviewer-form', {
+                      state: {
+                        reviewId: id,
+                        reviewData: reviewer,
+                        employeeData: employee,
+                        revieweDate: review_date,
+                        trainingReviewerForm: training_review_form
 
-                }
-              })
-            }}
-          >
-            Update Training Reviewer Form
-          </a>
-            ):(
-              <a
-            href="/"
-            className="ms-2 pl-2"
-            title="Revert Leave"
-            style={{
-              display: "inline-block",
-              padding: "5px 10px",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              textAlign: "center",
-              textDecoration: "none",
-              borderRadius: "4px",
-              border: "1px solid #007bff",
-              cursor: "pointer",
-              fontSize: "10px",
-              fontWeight: "bold",
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              // changeStatus(id);
-              // submitForm(id)
-              history.push('/training-reviewer-form', {
-                state: {
-                  reviewId: id,
-                  reviewData: reviewer,
-                  employeeData: employee,
-                  revieweDate: review_date,
-                  traningReviewForm: false
+                      }
+                    })
+                  }}
+                >
+                  Update Training Reviewer Form
+                </a>
+              ) : (
+                <a
+                  href="/"
+                  className="ms-2 pl-2"
+                  title="Revert Leave"
+                  style={{
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    textAlign: "center",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    border: "1px solid #007bff",
+                    cursor: "pointer",
+                    fontSize: "10px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // changeStatus(id);
+                    // submitForm(id)
+                    history.push('/training-reviewer-form', {
+                      state: {
+                        reviewId: id,
+                        reviewData: reviewer,
+                        employeeData: employee,
+                        revieweDate: review_date,
+                        traningReviewForm: false
 
-                }
-              })
-            }}
+                      }
+                    })
+                  }}
 
-          >
-            Submit Training Reviewer Form
-          </a>
-            )
-          }
+                >
+                  Submit Training Reviewer Form
+                </a>
+              )
+            }
           </>
 
         )
@@ -292,16 +292,22 @@ const EmployeeReviews = () => {
 
   const getEmployeeName = async () => {
     setShowLoader(true);
-    const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
+    const url = `${Api.employeeUrl}?type=all&is_onboard=true`;
     const { data, error } = await AuthApi.getDataFromServer(url);
     setShowLoader(false);
 
     if (data && data.success) {
-      const allemp = data.data.map((item) => ({
-        label: item.full_name,
-        value: item.id,
-        joiningDate: item.date_joined,
-      }));
+      let allemp = []
+      data.data.map((item) => {
+        if ([1].includes(item.role_id) && !item.is_project_manager) return;
+
+        allemp.push({
+          label: item.full_name,
+          value: item.id,
+          joiningDate: item.date_joined,
+        })
+      }
+      );
 
       setAllEmployes([{ label: 'All Employess', value: 'all_employess' }, ...allemp]);
     } else {
@@ -357,7 +363,7 @@ const EmployeeReviews = () => {
         review_type: item?.review_type,
         review_type_name: item?.review_type_name,
         self_evaluation_form: item?.self_evaluation_form,
-        training_review_form:item?.training_review_form
+        training_review_form: item?.training_review_form
       }));
 
       setRowData(review_data);

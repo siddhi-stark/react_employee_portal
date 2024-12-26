@@ -80,16 +80,22 @@ const WfhEmployee = () => {
 
   const getEmployeeName = async () => {
     setShowLoader(true);
-    const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
+    const url = `${Api.employeeUrl}?type=all&is_onboard=true`;
     const { data, error } = await AuthApi.getDataFromServer(url);
     setShowLoader(false);
 
     if (data && data.success) {
-      const allemp = data.data.map((item) => ({
-        label: item.full_name,
-        value: item.id,
-        joiningDate: item.date_joined,
-      }));
+      let allemp = []
+      data.data.map((item) => {
+        if ([1].includes(item.role_id) && !item.is_project_manager) return;
+
+        allemp.push({
+          label: item.full_name,
+          value: item.id,
+          joiningDate: item.date_joined,
+        })
+      }
+      );
 
       setAllEmployes([{ label: 'All Employess', value: 'all_employess' }, ...allemp]);
     } else {
@@ -98,8 +104,8 @@ const WfhEmployee = () => {
   };
 
   console.log("pagination", pagination);
-  
-  const getWfhDetails = async (pageNo=1) => {
+
+  const getWfhDetails = async (pageNo = 1) => {
     if (apiCalled) return;
 
     setApiCalled(true);
@@ -108,16 +114,16 @@ const WfhEmployee = () => {
     const params = {
       page: pageNo,
       limit,
-      employee : userId,
-      sort_direction:'descending'
+      employee: userId,
+      sort_direction: 'descending'
     };
 
-    
-    
+
+
     // if (joiningDate) {
     //   params.start_date = customFunctions.getDate(joiningDate);
     // }
-    if (selectedDate){
+    if (selectedDate) {
       params.start_date = customFunctions.getDate(selectedDate)
     }
 
@@ -130,16 +136,16 @@ const WfhEmployee = () => {
         const finalData = data.data.map((item, index) => ({
           // no: (pagination.current_page - 1) * 10 + index + 1,
           no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
-          id:             item.id,
-          start_date:        item.start_date,
+          id: item.id,
+          start_date: item.start_date,
           end_date: item.end_date,
-          status:     item.status,
-          status_name:     item.status_name,
-          reason:     item.reason,
-          note:     item.note,
-          employee_id:item.employee_id,
-          employee_name:item.employee_name,
-          duration_type:item.duration_type
+          status: item.status,
+          status_name: item.status_name,
+          reason: item.reason,
+          note: item.note,
+          employee_id: item.employee_id,
+          employee_name: item.employee_name,
+          duration_type: item.duration_type
         }));
 
         const { current_page, total_count, limit } = data.paginator;
@@ -190,30 +196,30 @@ const WfhEmployee = () => {
       label: 'Status',
       render: (row) => row.status_name,
     },
-        {
+    {
       id: 'reason',
       label: 'Reason',
       render: (row) => row.reason,
     },
-    
+
     {
       id: 'action',
       label: 'Action',
       render: ({ id }) => (
         <>
-            <>
-              <a
-                href="/"
-                
-                onClick={(e) => {
-                  e.preventDefault();
-                  history.push("/add-wfh", { state: { wfhId: id} });
-                }}
-              >
-                <Image src="/images/edit.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+          <>
+            <a
+              href="/"
 
-              </a>
-            </>
+              onClick={(e) => {
+                e.preventDefault();
+                history.push("/add-wfh", { state: { wfhId: id } });
+              }}
+            >
+              <Image src="/images/edit.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+
+            </a>
+          </>
           <a
             href="/"
             className="ml-1"
@@ -323,8 +329,9 @@ const WfhEmployee = () => {
               activePage: pagination.current_page,
               onPageChange: (page) => {
                 console.log("Page", page);
-                
-                setCurrentPage(page), setApiCalled(false)},
+
+                setCurrentPage(page), setApiCalled(false)
+              },
             }}
           />
         </Card.Body>

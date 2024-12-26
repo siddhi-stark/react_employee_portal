@@ -212,14 +212,41 @@ function AllReports() {
     }
   };
 
-  const getEmployee = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
-    );
-    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-      setEmployeeList(data.data);
+  // const getEmployee = async () => {
+  //   const { data } = await AuthApi.getDataFromServer(
+  //     `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
+  //   );
+  //   if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+  //     setEmployeeList(data.data);
+  //   }
+  // };
+  
+const [options, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
+
+const getEmployee = async () => {
+    setShowLoader(true);
+    const url = `${Api.employeeUrl}?type=all&is_onboard=true`;
+    const { data, error } = await AuthApi.getDataFromServer(url);
+    setShowLoader(false);
+
+    if (data && data.success) {
+      let allemp = []
+      data.data.map((item) => {
+        if ([1].includes(item.role_id) && !item.is_project_manager) return;
+        allemp.push({
+          label: item.full_name,
+          value: item.id,
+          joiningDate: item.date_joined,
+        })
+      }
+      );
+
+      setAllEmployes([{ label: 'All Employess', value: 'all_employess' }, ...allemp]);
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
     }
   };
+  
 
   useEffect(() => {
     async function getData() {
@@ -243,6 +270,8 @@ function AllReports() {
     });
     return options;
   };
+
+  
 
   const onClear = () => {
     setFilterErr('');
@@ -333,7 +362,7 @@ function AllReports() {
                           <Col sm={3}>
                             <div className="search-bar-input">
                               <DropdownInput
-                                options={getEmployeeList()}
+                                options={options}
                                 placeholder="Select employee"
                                 defaultValue={selectedEmployee}
                                 onSelectHandler={(select) => {

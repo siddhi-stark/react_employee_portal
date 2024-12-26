@@ -141,6 +141,7 @@ function CurrentEmployee() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
     if (data) {
+      console.log('data: ', data);
       setShowLoader(false);
       let newEmp = [];
       data &&
@@ -208,6 +209,9 @@ function CurrentEmployee() {
     const allOptions = options;
     await updateOptions({ ...allOptions });
   };
+
+  console.log("options", options)
+
 
   const getEmployeeById = async (id) => {
     // eslint-disable-line
@@ -765,7 +769,7 @@ function CurrentEmployee() {
                       setSelectedTeamLead('');
                     }}
                   >
-                    Add Employee
+                    Add Employee 
                   </Button>
                 )}
               </div>
@@ -777,6 +781,7 @@ function CurrentEmployee() {
                   formSections={FormSections}
                   formHeading="filter form"
                   onFormSubmit={(formValues) => {
+                    
                     if (!formValues.employee && !formValues.position) return;
                     submitForm(formValues);
                   }}

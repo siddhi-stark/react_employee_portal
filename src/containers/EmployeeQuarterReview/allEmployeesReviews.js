@@ -100,16 +100,21 @@ function AllEmployeesReviews() {
 
   const getEmployeeName = async () => {
     setShowLoader(true);
-    const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
+    const url = `${Api.employeeUrl}?type=all&is_onboard=true`;
     const { data, error } = await AuthApi.getDataFromServer(url);
     setShowLoader(false);
 
     if (data && data.success) {
-      const allemp = data.data.map((item) => ({
-        label: item.full_name,
-        value: item.id,
-        joiningDate: item.date_joined,
-      }));
+      let allemp = []
+      data.data.map((item) => {
+        if ([1].includes(item.role_id) && !item.is_project_manager) return;
+        allemp.push({
+          label: item.full_name,
+          value: item.id,
+          joiningDate: item.date_joined,
+        })
+      }
+      );
 
       setAllEmployes([{ label: 'All Employess', value: 'all_employess' }, ...allemp]);
     } else {
@@ -220,10 +225,10 @@ function AllEmployeesReviews() {
       const { current_page, total_count, limit } = data.paginator;
 
       if (data?.data && data.data.length > 0) {
-        
+
         data.data.map((item, index) => {
-        console.log('pagination222222222', pagination);
-        
+          console.log('pagination222222222', pagination);
+
           finalData.push({
             no: (current_page - 1) * limit + (index + 1),
             id: item?.id,

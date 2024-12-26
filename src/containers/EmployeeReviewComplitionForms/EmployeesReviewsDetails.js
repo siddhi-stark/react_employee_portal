@@ -140,25 +140,25 @@ const EmployeeReviewsDetails = () => {
               </a>
             ) : (
               <>
-              {!self_evaluation_form && (
-              <a
-                href="/"
-                className="ms-2 pl-2"
-                title="Update Form "
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  // changeStatus(id);
-                  // submitForm(id)
-                  sentReminder(id, 1)
+                {!self_evaluation_form && (
+                  <a
+                    href="/"
+                    className="ms-2 pl-2"
+                    title="Update Form "
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      // changeStatus(id);
+                      // submitForm(id)
+                      sentReminder(id, 1)
 
-                }}
+                    }}
 
-              >
-                Send Reminder <img src="/images/arrow-post.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
-              </a>
-            )
-            }
+                  >
+                    Send Reminder <img src="/images/arrow-post.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
+                  </a>
+                )
+                }
               </>
             )
             }
@@ -307,13 +307,15 @@ const EmployeeReviewsDetails = () => {
 
   const getEmployeeName = async () => {
     setShowLoader(true);
-    const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
+    const url = `${Api.employeeUrl}?type=all&is_onboard=true`;
+
     const { data, error } = await AuthApi.getDataFromServer(url);
     setShowLoader(false);
     let employeesIds = []
     let allemp = []
     if (data && data.success) {
       data.data.map((item) => {
+        if ([1].includes(item.role_id) && !item.is_project_manager ) return;
         let obj = {
           label: item.full_name,
           value: item.id,
