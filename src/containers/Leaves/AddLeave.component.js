@@ -612,7 +612,7 @@ function AddLeave(props) {
                   {leavesCount.SandwichLeavesCount >= 0 && (
                     <span>
                       <i className="fas fa-exclamation-circle" />
-                      {`Total Sandwich Leaves: ${leavesCount.SandwichLeavesCount}`}
+                      {`Leaves comes under sandwich leave Policy: ${leavesCount.SandwichLeavesCount}`}
                     </span>
                   )}
 
