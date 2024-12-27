@@ -48,7 +48,7 @@ function Leaves() {
             <Image alt="view" src="/images/edit-button.svg" />
           )}
         </a>
-        { new Date() <= new Date(leave_from_date) && status === 1 && (
+        {new Date() <= new Date(leave_from_date) && status === 1 && (
           <a
             href="/"
             className="ms-2 pl-2"
@@ -115,10 +115,21 @@ function Leaves() {
       label: 'Type',
     },
     {
+      id: 'leave_payment_type',
+      label: 'Leave Payment Type',
+      roleAccess: [8],
+      render: ({ leave_payment_type }) => {
+        return (<>
+          {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
+        </>)
+      },
+    },
+    {
       id: 'leave_count',
       label: 'Days',
       roleAccess: [4],
     },
+
     {
       id: 'status_name',
       label: 'Status',
@@ -288,7 +299,7 @@ function Leaves() {
         );
 
         console.log("data.message[0]", data.message[0]);
-        
+
         if (!data) {
           swal(message, '', 'error', {
             closeOnClickOutside: false,

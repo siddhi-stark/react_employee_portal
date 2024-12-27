@@ -89,6 +89,16 @@ function EmployeeDetails(props) {
 
     },
     {
+      id: 'leave_payment_type',
+      label: 'Leave Payment Type',
+      roleAccess: [8],
+      render: ({ leave_payment_type }) => {
+        return (<>
+          {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
+        </>)
+      },
+    },
+    {
       id: 'leave_type',
       label: 'Leave Type',
       render: ({ leave_type }) => {
@@ -157,7 +167,8 @@ function EmployeeDetails(props) {
           leave_type: item.leave_type,
           leave_count: item.leave_count,
           leave_from_date: item.leave_from_date,
-          leave_to_date: item.leave_to_date
+          leave_to_date: item.leave_to_date,
+          leave_payment_type:item.leave_payment_type
         })
       })
       const { current_page, total_count, limit } = data.paginator;

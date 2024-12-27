@@ -87,6 +87,16 @@ function EmployeeTeamLeaves(props) {
       label: 'Days',
       roleAccess: [4],
     },
+    {
+      id: 'leave_payment_type',
+      label: 'Leave Payment Type',
+      roleAccess: [4],
+      render: ({ leave_payment_type }) => {
+        return (<>
+          {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
+        </>)
+      },
+    },
     // {
     //   id: 'revert_status_name',
     //   label: 'Revert Status',
@@ -198,7 +208,7 @@ function EmployeeTeamLeaves(props) {
   let filterOptions = {};
 
   console.log('revertStatusId', revertStatusId);
-  
+
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -242,14 +252,14 @@ function EmployeeTeamLeaves(props) {
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-    if(!reportTable){
+    if (!reportTable) {
       getRowData(1);
     }
     setTitle('Leaves');
-  }, [filterData]); 
+  }, [filterData]);
 
   useEffect(() => {
-    if(location && location.reportTable){
+    if (location && location.reportTable) {
       setReportTable(location && location.reportTable);
     }
   }, [location]);
@@ -267,7 +277,7 @@ function EmployeeTeamLeaves(props) {
     setFilters(filterValues);
     setFilterData(filterValues);
   };
-  
+
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
       `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
@@ -330,7 +340,7 @@ function EmployeeTeamLeaves(props) {
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               <div className="d-flex align-items-center justify-content-end">
-                <UserRestrictions permittedUsers={isManager ? [1,4] : [4]} roleId={userRole}>
+                <UserRestrictions permittedUsers={isManager ? [1, 4] : [4]} roleId={userRole}>
                   <a
                     href="#"
                     onClick={() => {
@@ -352,7 +362,7 @@ function EmployeeTeamLeaves(props) {
                 formHeading=""
                 options={options}
                 onFormSubmit={(formValues) => {
-                  if(!formValues.full_name && !formValues.start_date) return;
+                  if (!formValues.full_name && !formValues.start_date) return;
                   submitForm(formValues);
                 }}
                 callbacks={{}}
@@ -364,7 +374,7 @@ function EmployeeTeamLeaves(props) {
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {
-                  if(filterData && !Object.keys(filterData).length) return;
+                  if (filterData && !Object.keys(filterData).length) return;
                   setReportTable(false);
                   setFilterData();
                   setYear(null);
@@ -399,7 +409,7 @@ function EmployeeTeamLeaves(props) {
                       variant="primary"
                       title="Show Report"
                       onClick={() => {
-                        if(!year){
+                        if (!year) {
                           swal({
                             title: 'Please select Year',
                             icon: 'warning',
@@ -408,7 +418,7 @@ function EmployeeTeamLeaves(props) {
                             closeOnClickOutside: false,
                             allowOutsideClick: false,
                           });
-                        } else{
+                        } else {
                           setFilters();
                           setReportTable(true);
                         }
@@ -420,17 +430,17 @@ function EmployeeTeamLeaves(props) {
                     </Button>
 
                     {reportTable && (
-                     <Button
-                      variant="primary"
-                      title="Download Report"
-                      onClick={() => {
-                        getExportCSV();
-                      }}
-                      type="button"
-                      className="float-right ms-3"
-                    >
-                      Download Report
-                    </Button>
+                      <Button
+                        variant="primary"
+                        title="Download Report"
+                        onClick={() => {
+                          getExportCSV();
+                        }}
+                        type="button"
+                        className="float-right ms-3"
+                      >
+                        Download Report
+                      </Button>
                     )}
                   </Col>
                 </Row>
@@ -438,25 +448,25 @@ function EmployeeTeamLeaves(props) {
             </div>
             <hr />
             {
-              reportTable ? ( <EmployeeLeavesDetails filters={filters} year={year}/> ) : ( 
-              <CustomTable
-                columns={columns}
-                rows={rowData}
-                showPagination={true}
-                tableClass="table-striped"
-                paginationProps={{
-                  totalItems: totalCount,
-                  itemsPerPage: limit,
-                  activePage: currentPage,
-                  onPageChange: (pageNo) => {
-                    getRowData(pageNo);
-                  },
-                }}
-                emptyRender={() => {
-                  return 'No record found.';
-                }}
-              />
-            )}
+              reportTable ? (<EmployeeLeavesDetails filters={filters} year={year} />) : (
+                <CustomTable
+                  columns={columns}
+                  rows={rowData}
+                  showPagination={true}
+                  tableClass="table-striped"
+                  paginationProps={{
+                    totalItems: totalCount,
+                    itemsPerPage: limit,
+                    activePage: currentPage,
+                    onPageChange: (pageNo) => {
+                      getRowData(pageNo);
+                    },
+                  }}
+                  emptyRender={() => {
+                    return 'No record found.';
+                  }}
+                />
+              )}
           </Card.Body>
 
           {modalShow && (

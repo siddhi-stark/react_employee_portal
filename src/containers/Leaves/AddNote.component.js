@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import StarkFormBuilder from 'stark-form-builder';
 import swal from 'sweetalert';
@@ -8,18 +8,28 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import FormSections from './note.json';
+import { Row, Col, Form, Button } from 'react-bootstrap';
+import { DropdownInput } from '../../components/FormInputs';
+import SimpleReactValidator from 'simple-react-validator';
+
+
 
 function AddNote(props) {
-  const { show, leaveId, statusId, isRevert, isSub, note, onStatusUpdate, handleModalCLose } =
+  const { show, leaveId, statusId, isRevert, isSub, leavePaymentType, note, onStatusUpdate, handleModalCLose } =
     props;
 
   const history = useHistory();
+  const validator = useRef(new SimpleReactValidator());
   const value = customFunctions.getLocalStorage('isClicked');
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
   const [showNote, setShowNote] = useState(false);
   const [leaveIds, setLeaveId] = useState(null);
   const [statusIds, setStatusId] = useState(null);
+  const [leavesPaymentType, setLeavesPaymentType] = useState('')
+  const [reasonNote, setReasonNote] = useState('');
+  const [count, forceUpdate] = useState(0)
+
 
 
   const getUserRole = async () => {
@@ -31,7 +41,12 @@ function AddNote(props) {
     getUserRole();
   }, []);
 
-  const submitForm = async (formValues) => {
+  const leavesPaymentStatus = [
+    { label: "Paid", value: 1 },
+    { label: "Unpaid", value: 2 },
+    {}
+  ]
+  const submitForm = async () => {
     const reasonLabel = statusIds === 2 ? 'approve' : 'decline';
 
     const postData = {
@@ -41,12 +56,16 @@ function AddNote(props) {
 
     if (!isRevert) {
       postData.status = Number(statusIds),
-        postData.declined_reason = formValues ? formValues.notes : ''
+        postData.declined_reason = reasonNote ? reasonNote : ''
+      postData.leave_payment_type = leavesPaymentType?.value
     } else {
-      postData.revert_declined_reason = formValues ? formValues.notes : ''
+      postData.revert_declined_reason = reasonNote ? reasonNote : ''
       postData.revert_status = Number(statusIds)
       postData.is_revert_after_approved = true
+      // postData.leave_payment_type= leavePaymentType?.value
     }
+
+    console.log("postData", postData);
 
     onCancelButton();
 
@@ -113,6 +132,7 @@ function AddNote(props) {
     setShowNote(show);
     setLeaveId(leaveId);
     setStatusId(statusId);
+    setLeavesPaymentType(leavePaymentType)
   }, []);
 
   const onCancelButton = () => {
@@ -132,7 +152,7 @@ function AddNote(props) {
         label="Reason"
         modalBody={
           <>
-            <StarkFormBuilder
+            {/* <StarkFormBuilder
               containerClass=""
               formHeaderClass=""
               formSections={FormSections}
@@ -149,7 +169,73 @@ function AddNote(props) {
               btnContainerClass={!value ? 'form-submit-buttons' : 'd-none'}
               isStepForm={false}
               onFormReset={() => { }}
-            />
+            /> */}
+            <Row>
+              <Col >
+                <Form>
+                  <Form.Group controlId='formSupervision' key={10}>
+                    <Form.Label>
+                      Note<span className="text-danger">*</span>
+                    </Form.Label>
+                    <Form.Control
+                      as='textarea'
+                      style={{ height: '100px' }}
+                      type='text'
+                      placeholder='Type'
+                      name='reason'
+                      value={reasonNote}
+                      onChange={(e) => {
+                        setReasonNote(e?.target?.value)
+                      }}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId={`formSupervision`}></Form.Group>
+                  <p className='text-danger'>
+                    {validator.current.message(
+                      'Note',
+                      reasonNote,
+                      'required'
+                    )}
+                  </p>
+                </Form>
+              </Col >
+            </Row>
+
+            <Row>
+              <Col >
+                <DropdownInput
+                  label="Leave Type"
+                  asterisk="*"
+                  options={leavesPaymentStatus}
+                  defaultValue={leavesPaymentType}
+                  onSelectHandler={(select) => {
+                    setLeavesPaymentType(select);
+                    // setSelectedEmployeeId(select?.value);
+                  }}
+                  errorMessage={validator.current.message(
+                    'Leave Type',
+                    leavesPaymentType,
+                    'required'
+                  )}
+                />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                <Button variant="primary" onClick={(w) => {
+                  if (validator.current.allValid()) {
+                    validator.current.hideMessages()
+                    submitForm()
+
+                  } else {
+                    validator.current.showMessages()
+                    forceUpdate(count + 1)
+                  }
+                }}>Submit</Button>
+              </Col>
+            </Row>
+
           </>
         }
       />
