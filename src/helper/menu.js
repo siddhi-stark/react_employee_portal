@@ -82,14 +82,14 @@ const menu = [
     path:'/wfh',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 10],
+    roleaccess: [1, 2, 3, 10, 5, 6],
   },
   {
     title:'Work From Home',
     path:'/wfh-employees',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [4],
+    roleaccess: [4, 5, 6, 3],
   },
   {
     title: 'Employees',

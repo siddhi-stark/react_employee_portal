@@ -159,6 +159,58 @@
           }
         ]
       },
+
+      {
+        "name": "half_day_status",
+        "type": "select",
+        "label": "Half Day Duration Type",
+        "id": "",
+        "placeholder": "Select Half Day Duration Type",
+        "inputClass": "",
+        "containerClass": "",
+        "validations": "",
+        "displayWhen": {
+          "conditions": [
+            {
+              "name": "leave_from_type",
+              "value": "Half Day",
+              "condition": "=="
+            }
+          ],
+          "displayWhenRelation": "OR"
+        },
+        "haveValidations": "false",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": {
+          "label": "1 Column",
+          "value": "1column"
+        },
+        "fields": [],
+        "optionCallback": "",
+        "optionsCallbackUrl": "",
+        "options": [
+          {
+            "id": "1",
+            "label": "First Half",
+            "value": 1
+          },
+          {
+            "id": "2",
+            "label": "Second Half",
+            "value": 2
+          }
+        ]
+      },
+      
       {
         "name": "leave_from_date",
         "type": "date",

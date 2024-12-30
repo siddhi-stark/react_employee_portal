@@ -239,6 +239,11 @@ function AddLeave(props) {
           formValues.leave_from_type.value === 'Half Day'
           ? customFunctions.getDate(formValues.leave_from_date)
           : customFunctions.getDate(formValues.leave_to_date),
+      half_day_status:
+        formValues.leave_from_type &&
+          formValues.leave_from_type.value === 'Half Day'
+          ? formValues.half_day_status.value
+          : null,
     };
 
     if (leaveId) postData.id = Number(leaveId);
@@ -316,7 +321,7 @@ function AddLeave(props) {
       setIsNotice(data.data.is_notice_period);
       setIsProbation(data.data.is_probation);
       setIsSandwich(data.data.is_sandwich);
-
+      
     }
 
     updateDefaultValues({
@@ -347,6 +352,10 @@ function AddLeave(props) {
         label: data.data.leave_to_type_name,
         value: data.data.leave_to_type_name,
       },
+      half_day_status: data.data.half_day_status && data.data.half_day_status_name && {
+        label: data.data.half_day_status_name,
+        value: data.data.half_day_status,
+      }
     });
   };
 
@@ -748,7 +757,7 @@ function AddLeave(props) {
                   onClick={() => {
                     setStatusId(2)
                     setModalShow(true)
-                    
+
                   }}
                 // className="ml-3"
                 >
@@ -769,18 +778,18 @@ function AddLeave(props) {
 
             )}
             {modalShow && (
-            <AddNote
-              show={modalShow}
-              statusId={statusId}
-              leaveId={leaveId}
-              isRevert={false}
-              isSub={true}
-              handleModalCLose={(e) => setModalShow(e)}
-              onStatusUpdate={() => {
-                getRowData(1);
-              }}
-            />
-          )}
+              <AddNote
+                show={modalShow}
+                statusId={statusId}
+                leaveId={leaveId}
+                isRevert={false}
+                isSub={true}
+                handleModalCLose={(e) => setModalShow(e)}
+                onStatusUpdate={() => {
+                  getRowData(1);
+                }}
+              />
+            )}
           </Card>
         </div>
       </section>

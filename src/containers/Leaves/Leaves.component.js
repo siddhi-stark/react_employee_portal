@@ -115,6 +115,16 @@ function Leaves() {
       label: 'Type',
     },
     {
+      id: 'half_day_status',
+      label: 'Leave Durations',
+      roleAccess: [8],
+      render: ({ half_day_status }) => {
+        return (<>
+          {half_day_status ? (half_day_status === 1 ? "Half Day in First Half" : "Half Day in Second Half") : "Full Day"}
+        </>)
+      },
+    },
+    {
       id: 'leave_payment_type',
       label: 'Leave Payment Type',
       roleAccess: [8],

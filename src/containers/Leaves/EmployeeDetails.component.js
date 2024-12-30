@@ -110,6 +110,16 @@ function EmployeeDetails(props) {
       isDisplay: true,
 
     },
+    {
+      id: 'half_day_status',
+      label: 'Leave Durations',
+      roleAccess: [8],
+      render: ({ half_day_status }) => {
+        return (<>
+          {half_day_status ? (half_day_status === 1 ? "Half Day in First Half" : "Half Day in Second Half") : "Full Day"}
+        </>)
+      },
+    },
 
     {
       id: 'status_name',
@@ -168,7 +178,8 @@ function EmployeeDetails(props) {
           leave_count: item.leave_count,
           leave_from_date: item.leave_from_date,
           leave_to_date: item.leave_to_date,
-          leave_payment_type:item.leave_payment_type
+          leave_payment_type: item.leave_payment_type,
+          half_day_status: item.half_day_status
         })
       })
       const { current_page, total_count, limit } = data.paginator;
@@ -205,8 +216,8 @@ function EmployeeDetails(props) {
     const params = {
       employee: match.params.viewId,
       year,
-      type:'all',
-      is_export_details:true
+      type: 'all',
+      is_export_details: true
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
