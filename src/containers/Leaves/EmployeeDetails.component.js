@@ -166,7 +166,7 @@ function EmployeeDetails(props) {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       if (data && data.data) {
-        setName(data.data[0].user_name);
+        setName(data?.data[0]?.user_name);
       }
       let finalData = []
       data && data?.data.length > 0 && data.data.map((item, index) => {
@@ -222,7 +222,7 @@ function EmployeeDetails(props) {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
-    if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
+    if (data?.data?.length > 0 && data && data.success) {
       setShowLoader(false);
       window.open(`${data.data.file_name}`, '_blank');
     } else {
