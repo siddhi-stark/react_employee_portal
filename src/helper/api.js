@@ -280,8 +280,6 @@ export default class Api extends Component {
   static lateMarks = `${Api.baseUrl}late-marks/`
 
 
-
-
   
   // Get base URL of APIs
   static getBaseUrl() {
