@@ -13,7 +13,7 @@ import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader';
 
 
-const items = [{ to: '/employee-feedback', label: 'Employee Feedback' }, { label: 'Add Employee Feedback' }];
+const items = [{ to: '/employee-feedback', label: 'Employee Feedback' }, { label: 'Quarterly Evaluation Review' }];
 
 function AddFeedback() {
   const validator = useRef(new SimpleReactValidator({}));
@@ -57,7 +57,7 @@ function AddFeedback() {
   useEffect(() => {
     setEmployeeId(localStorage.getItem('userId'))
     setEmpDepartment(localStorage.getItem('department'))
-    setTitle('Add Employee Feedback');
+    setTitle('Quarterly Evaluation Review');
   }, []);
 
   useEffect(() => {
@@ -141,7 +141,8 @@ function AddFeedback() {
         params.questionnaire_type = 1
       }
       else if (empDepartment == 6) {
-        params.questionnaire_type = 2
+
+        params.questionnaire_type = 3
       }
     }
 
@@ -201,7 +202,7 @@ function AddFeedback() {
         params.questionnaire_type = 1
       }
       else if (empDepartment == 6) {
-        params.questionnaire_type = 2
+        params.questionnaire_type = 3
       }
       else if (empDepartment == 3) {
         params.questionnaire_type = 3
@@ -383,7 +384,7 @@ function AddFeedback() {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Add Employee Feedback</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Quarterly Evaluation Review</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
