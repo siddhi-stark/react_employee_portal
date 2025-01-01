@@ -236,7 +236,7 @@ const EvaluationForm = () => {
         preparedData['review_period'] = selectedOnBasis?.value
         preparedData['target_failed_to_achieve'] = targetFailed
         preparedData['targets_achieved'] = targetsAchieved
-
+        
         let response = null
         if (selfEvaluationForm) {
             let id = selfEvaluationForm?.id
@@ -440,7 +440,7 @@ const EvaluationForm = () => {
                                     value={targetFailed}
                                     maxlength={255}
                                     onInputChange={(e) => {
-                                        setTargetsAchieved(e.target.value);
+                                        setTargetFailed(e.target.value);
                                     }}
                                     disabled={isDisabled}
 
