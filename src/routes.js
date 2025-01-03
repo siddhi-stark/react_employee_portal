@@ -123,6 +123,7 @@ import EmployeeReviewsDetails from './containers/EmployeeReviewComplitionForms/E
 import AddLateMarks from './containers/Leaves/addLateMarks';
 import LateMarks from './containers/Leaves/lateMarks';
 import ProjectReportForm from './containers/Projects Report/projectReportForm';
+import TodaysProjectReports from './containers/Projects Report/todaysProjectReports';
 
 
 // import AddHistory from './containers/Employees/AddHistory.component';
@@ -386,6 +387,7 @@ function Routes() {
       <Route path="/late-marks" exact component={LateMarks}/>
 
       <Route path="/project-report-generation" exact component={ProjectReportForm}/>
+      <Route path="/todays-project-reports" exact component={TodaysProjectReports}/>
 
       <Route component={NotFound} />
 
