@@ -48,7 +48,8 @@ const Predictions = () => {
 
     // if (data?.data) {
     if (data?.data) {
-      setPredictions(data.data.milestone_details || []);
+      swal(data && data.message[0], '', 'success');
+      // setPredictions(data.data.milestone_details || []);
       setShowLoader(false);
       // setPredictions([
       //   {

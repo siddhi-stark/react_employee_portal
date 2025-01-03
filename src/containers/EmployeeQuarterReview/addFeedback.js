@@ -197,7 +197,7 @@ function AddFeedback() {
       show_all: 'true'
     };
     if (empDepartment) {
-      if (empDepartment == 1 || empDepartment == 2) {
+      if (empDepartment == 1 || empDepartment == 2 || empDepartment == 9) {
         params.questionnaire_type = 1
       }
       else if (empDepartment == 6) {
