@@ -26,7 +26,7 @@ function AddNote(props) {
   const [showNote, setShowNote] = useState(false);
   const [leaveIds, setLeaveId] = useState(null);
   const [statusIds, setStatusId] = useState(null);
-  const [leavesPaymentType, setLeavesPaymentType] = useState('')
+  // const [leavesPaymentType, setLeavesPaymentType] = useState('')
   const [reasonNote, setReasonNote] = useState('');
   const [count, forceUpdate] = useState(0)
 
@@ -41,11 +41,11 @@ function AddNote(props) {
     getUserRole();
   }, []);
 
-  const leavesPaymentStatus = [
-    { label: "Paid", value: 1 },
-    { label: "Unpaid", value: 2 },
-    {}
-  ]
+  // const leavesPaymentStatus = [
+  //   { label: "Paid", value: 1 },
+  //   { label: "Unpaid", value: 2 },
+  //   {}
+  // ]
   const submitForm = async () => {
     const reasonLabel = statusIds === 2 ? 'approve' : 'decline';
 
@@ -57,7 +57,7 @@ function AddNote(props) {
     if (!isRevert) {
       postData.status = Number(statusIds),
         postData.declined_reason = reasonNote ? reasonNote : ''
-      postData.leave_payment_type = leavesPaymentType?.value
+      // postData.leave_payment_type = leavesPaymentType?.value
     } else {
       postData.revert_declined_reason = reasonNote ? reasonNote : ''
       postData.revert_status = Number(statusIds)
@@ -132,7 +132,7 @@ function AddNote(props) {
     setShowNote(show);
     setLeaveId(leaveId);
     setStatusId(statusId);
-    setLeavesPaymentType(leavePaymentType)
+    // setLeavesPaymentType(leavePaymentType)
   }, []);
 
   const onCancelButton = () => {
@@ -201,7 +201,7 @@ function AddNote(props) {
               </Col >
             </Row>
 
-            <Row>
+            {/* <Row>
               <Col >
                 <DropdownInput
                   label="Leave Type"
@@ -219,7 +219,7 @@ function AddNote(props) {
                   )}
                 />
               </Col>
-            </Row>
+            </Row> */}
 
             <Row>
               <Col>

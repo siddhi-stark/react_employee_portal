@@ -124,16 +124,16 @@ function Leaves() {
         </>)
       },
     },
-    {
-      id: 'leave_payment_type',
-      label: 'Leave Payment Type',
-      roleAccess: [8],
-      render: ({ leave_payment_type }) => {
-        return (<>
-          {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
-        </>)
-      },
-    },
+    // {
+    //   id: 'leave_payment_type',
+    //   label: 'Leave Payment Type',
+    //   roleAccess: [8],
+    //   render: ({ leave_payment_type }) => {
+    //     return (<>
+    //       {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
+    //     </>)
+    //   },
+    // },
     {
       id: 'leave_count',
       label: 'Days',

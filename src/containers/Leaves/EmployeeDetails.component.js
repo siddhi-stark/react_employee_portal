@@ -88,16 +88,16 @@ function EmployeeDetails(props) {
       isDisplay: true,
 
     },
-    {
-      id: 'leave_payment_type',
-      label: 'Leave Payment Type',
-      roleAccess: [8],
-      render: ({ leave_payment_type }) => {
-        return (<>
-          {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
-        </>)
-      },
-    },
+    // {
+    //   id: 'leave_payment_type',
+    //   label: 'Leave Payment Type',
+    //   roleAccess: [8],
+    //   render: ({ leave_payment_type }) => {
+    //     return (<>
+    //       {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
+    //     </>)
+    //   },
+    // },
     {
       id: 'leave_type',
       label: 'Leave Type',

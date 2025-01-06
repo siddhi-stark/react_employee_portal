@@ -97,16 +97,16 @@ function EmployeeTeamLeaves(props) {
       label: 'Days',
       roleAccess: [4],
     },
-    {
-      id: 'leave_payment_type',
-      label: 'Leave Payment Type',
-      roleAccess: [4],
-      render: ({ leave_payment_type }) => {
-        return (<>
-          {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
-        </>)
-      },
-    },
+    // {
+    //   id: 'leave_payment_type',
+    //   label: 'Leave Payment Type',
+    //   roleAccess: [4],
+    //   render: ({ leave_payment_type }) => {
+    //     return (<>
+    //       {leave_payment_type ? (leave_payment_type === 1 ? "Paid" : "Unpaid") : "-"}
+    //     </>)
+    //   },
+    // },
     // {
     //   id: 'revert_status_name',
     //   label: 'Revert Status',
