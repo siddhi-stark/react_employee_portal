@@ -115,6 +115,7 @@ import ProjectWeeklyTask from './containers/weekly_reports/projectWeeklyTasks'
 import Wfh from './containers/wfh/wfh'
 import AddWfh from './containers/wfh/addWfh'
 import Predictions from './containers/Predictions/predictions'
+import PredictionsDetails from './containers/Predictions/predictionsDetails';
 import WfhEmployee from './containers/wfh/wfhEmployee'
 import EmployeeReviews from './containers/EmployeeReviewComplitionForms/EmployeesReviews'
 import EvaluationForm from './containers/EmployeeReviewComplitionForms/evaluationForm'
@@ -377,6 +378,8 @@ function Routes() {
       <Route path="/add-wfh" exact component={AddWfh} />
       <Route path="/wfh-employees" exact component={WfhEmployee} />
       <Route path="/predictions" exact component={Predictions} />
+      <Route path="/predictions-details" exact component={PredictionsDetails} />
+      
 
       <Route path="/employee-reviews" exact component={EmployeeReviews} />
       <Route path="/evaluation-form" exact component={EvaluationForm} />

@@ -474,13 +474,21 @@ const menu = [
     roleaccess: [5, 6],
   },
 
+  // {
+  //   title: 'Predictions',
+  //   path: '/predictions',
+  //   icon: 'ticket.svg',
+  //   submenu: [],
+  //   roleaccess: [1],
+  // },
   {
     title: 'Predictions',
-    path: '/predictions',
+    path: '/predictions-details',
     icon: 'ticket.svg',
     submenu: [],
     roleaccess: [1],
   },
+  
   
   // {
   //   title: 'FAQs',

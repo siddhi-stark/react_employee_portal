@@ -10,6 +10,8 @@ import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
+import CustomTable from 'stark-custom-datatable';
+
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Milestone Predictions' }];
 
@@ -20,6 +22,11 @@ const PredictionsDetails = () => {
   const [userRole, setUserRole] = useState(null);
   const [title, setTitle] = useState('');
   const [isProjectManager, setProjectManager] = useState(false);
+  const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
+  const [totalCount, setTotalCount] = useState(10);
+  const [limit, setLimit] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowData, setRowData] = useState([])
 
   useEffect(() => {
     const isProjectManager =
@@ -30,8 +37,7 @@ const PredictionsDetails = () => {
   useEffect(() => {
     setTitle('Milestone Predictions');
     if (userRole) {
-      // getPredictions();
-      
+      getPredictions();
     }
   }, [userRole]);
 
@@ -42,18 +48,89 @@ const PredictionsDetails = () => {
   }, []);
 
   const columns = [
-    
-  ]
+    {
+      id: 'no',
+      label: 'Sr. No',
+      roleAccess: [1],
+    },
+    {
+      id: 'generated_by',
+      label: 'Report Generated At',
+      roleAccess: [1],
+      render: ({ milestone_details }) => {
+        return (
+          <>
+          {milestone_details?.map((item)=>{
+            item
+          })}
+          </>)}
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      roleAccess: [1],
+      render: ({ id }) => {
+        return (
+          <>
+            <a
+              href="/"
+              className="pl-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
 
-  const getPredictions = async () => {
+              }}
+            >
+              <Image src="/images/edit-button.svg" />
+            </a>
+            <a
+              href="/"
+              className="ml-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+              }}
+            >
+              <Image src="/images/delete.png" />
+            </a>
+          </>
+        );
+      },
+    },
+  ];
+
+  const getPredictions = async (pageNo=1) => {
     setShowLoader(true);
-    const url = `${Api.prediction}?use_ai=true`;
+    const params = {
+      page: pageNo,
+      limit,
+      sort_direction: 'descending',
+
+    };
+    const url = `${Api.predictionDetails}`;
     const { data, error } = await AuthApi.getDataFromServer(url);
 
     // if (data?.data) {
     if (data?.data) {
-      swal(data && data.message[0], '', 'success');
-      // setPredictions(data.data.milestone_details || []);
+      const finalData = data.data.map((item, index) => ({
+        // no: (pagination.current_page - 1) * 10 + index + 1,
+        no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
+        id: item.id,
+        generated_by: customFunctions.getDate(item?.generated_by),
+      }));
+
+      const { current_page, total_count, limit } = data.paginator;
+      setRowData(finalData);
+      setPagination({
+        current_page: parseInt(current_page, 10),
+        totalItems: parseInt(total_count, 10),
+        itemsPerPage: parseInt(limit, 10),
+      });
+      setTotalCount(total_count);
+      setLimit(Number(limit));
+      setCurrentPage(current_page);
+
       setShowLoader(false);
     } else {
       swal(error || 'Something went wrong', '', 'error');
@@ -81,121 +158,22 @@ const PredictionsDetails = () => {
           </Row>
           <hr />
           <Row>
-            {predictions.length > 0 ? (
-              predictions.map((milestone, index) => (
-                <>
-                  <Col sm={6}>
-                    <Card className="prediction-card" key={index}>
-                      <div className="milestone-header">
-                        <h3 className="milestone-title">{index + 1}.{milestone.milestone_name}</h3>
-                        <span className="status-badge">
-                          {milestone.milestone_analysis.deadline_predictions.is_at_risk
-                            ? 'At Risk'
-                            : 'On Track'}
-                        </span>
-                      </div>
-                      <div className="milestone-details">
-                        <p>
-                          <strong>Deadline:</strong>{' '}
-                          <span className="deadline-text">
-                            {milestone.deadline}
-                          </span>
-                        </p>
-                        <p>
-                          <strong>Completed Tasks:</strong> {milestone.completed_tasks}
-                        </p>
-                        <p>
-                          <strong>Pending Tasks:</strong> {milestone.pending_tasks}
-                        </p>
-                        <p>
-                          <strong>Total Logged Time:</strong>{' '}
-                          {milestone.total_logged_time}
-                        </p>
-                        <p>
-                          <strong>Total Tasks Logged Time:</strong>{' '}
-                          {milestone.total_tasks_logged_time}
-                        </p>
-                        <p>
-                          <strong>Total Bugs Logged Time:</strong>{' '}
-                          {milestone.total_bugs_logged_time}
-                        </p>
-                      </div>
-                      <div className="milestone-analysis">
-                        <h5>Analysis:</h5>
-                        <p>
-                          <strong>Suggested New Deadline:</strong>{' '}
-                          {milestone?.milestone_analysis?.deadline_predictions?.suggested_new_deadline}
-                        </p>
-                        <p>
-                          <strong>Reasoning:</strong>{' '}
-                          {milestone?.milestone_analysis?.deadline_predictions?.reasoning}
-                        </p>
 
-                        <h5>Strategies for Pending Work:</h5>
-                        <ul>
-                          <strong>Risks:</strong>{' '}
-                          {milestone.milestone_analysis.strategies_for_pending_work.risks.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                          <br />
+            <CustomTable
+              columns={columns}
+              rows={rowData}
+              showPagination={true}
+              paginationProps={{
+                totalItems: totalCount,
+                itemsPerPage: limit,
+                activePage: pagination.current_page,
+                onPageChange: (page) => {
 
-                          <strong>Methods:</strong>{' '}
-                          {milestone.milestone_analysis.strategies_for_pending_work.methods.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                          <br />
-                          <strong>Prioritization:</strong>{' '}
-                          {milestone.milestone_analysis.strategies_for_pending_work.prioritization}
-                        </ul>
+                  setCurrentPage(page)
+                },
+              }}
+            />
 
-                        <br />
-
-                        <h5>Performance Insights:</h5>
-                        <ul>
-                          <strong>Total Effort Analysis:</strong>{' '}
-                          <li>Logged Time Ratio: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.logged_time_ratio}</li>
-                          <li>Time Efficiency: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.time_efficiency}</li>
-                          <br />
-
-                          <strong>Suggestions:</strong>{' '}
-                          {milestone?.milestone_analysis?.performance_insights?.suggestions.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                        </ul>
-
-                        <h5>Optimization And Risk Mitigation:</h5>
-                        <ul>
-                          <strong>Bottlenecks:</strong>{' '}
-                          {milestone.milestone_analysis.optimization_and_risk_mitigation.bottlenecks.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                          <br />
-
-                          <strong>Solutions:</strong>{' '}
-                          {milestone.milestone_analysis.optimization_and_risk_mitigation.solutions.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                          <br />
-
-                        </ul>
-                      </div>
-                    </Card>
-                  </Col>
-                </>
-              ))
-            ) : (
-              <p>No Data available for predictions.</p>
-            )}
           </Row>
         </Card>
       </div>
