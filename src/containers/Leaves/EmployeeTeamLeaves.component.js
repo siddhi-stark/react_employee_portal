@@ -290,23 +290,25 @@ function EmployeeTeamLeaves(props) {
 
   const getEmployeeName = async () => {
     const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
+      `${Api.employeeUrl}?type=all&is_onboard=true`
     );
     if (!data) {
       return;
     }
 
     const dpOptions = [];
-    data.data.map((op) => {
-      dpOptions.push({ label: op.full_name, value: op.id });
-      return op;
-    });
+    data.data.length > 0 &&
+      data.data.map((op) => {
+        if ([1].includes(op.role_id)) return;
+        dpOptions.push({ label: op.full_name, value: op.id });
+      });
     const allOptions = {
-      ...filterOptions,
       ...options,
       full_name: dpOptions,
     };
-    filterOptions = { ...allOptions };
+    console.log("allOptions", allOptions);
+    
+    // filterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
 
