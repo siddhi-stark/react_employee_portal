@@ -55,13 +55,6 @@ function AllEmployeesReviews() {
     getQuestionList();
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-  }, []);
-
-  useEffect(() => {
-    setTitle('Employees Quarters Reviews');
-    getQuestionList();
-    const uRole = customFunctions.getLocalStorage('group');
-    setUserRole(Number(uRole));
   }, [pageReferesh]);
 
   useEffect(() => {
@@ -442,9 +435,9 @@ function AllEmployeesReviews() {
             tableClass="table-striped"
             showPagination={true}
             paginationProps={{
-              totalItems: pagination.totalItems,
-              itemsPerPage: pagination.itemsPerPage,
-              current_page: pagination.current_page,
+              totalItems: totalCount,
+              itemsPerPage: limit,
+              activePage: pagination.current_page,
               onPageChange: (pageNo) => {
                 // setPagination({...pagination,current_page:+pageNo});
                 getQuestionList(pageNo);

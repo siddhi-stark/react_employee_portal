@@ -142,6 +142,8 @@ export default class Api extends Component {
 
   static leavesUrl = `${Api.baseUrl}leave/`;
 
+  static leavesDetailsUrl = `${Api.baseUrl}get-leaves-details/`;
+
   static birthdayUrl = `${Api.baseUrl}upcoming-birthday/`;
 
   static greetingsUrl = `${Api.baseUrl}greetings/`;
@@ -283,7 +285,7 @@ export default class Api extends Component {
 
   static predictionDetails = `${Api.baseUrl}get-reports-details/`
 
-
+  static deletePredictionReports = `${Api.baseUrl}delete-reports/`
 
   
   // Get base URL of APIs

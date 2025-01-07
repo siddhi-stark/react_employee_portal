@@ -27,6 +27,7 @@ const PredictionsDetails = () => {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowData, setRowData] = useState([])
+  const [id, setId] = useState('')
 
   useEffect(() => {
     const isProjectManager =
@@ -37,7 +38,7 @@ const PredictionsDetails = () => {
   useEffect(() => {
     setTitle('Milestone Predictions');
     if (userRole) {
-      getPredictions();
+      getPredictionsDetails();
     }
   }, [userRole]);
 
@@ -54,16 +55,32 @@ const PredictionsDetails = () => {
       roleAccess: [1],
     },
     {
-      id: 'generated_by',
+      id: 'created_at',
       label: 'Report Generated At',
+      roleAccess: [1],
+      render: ({ created_at }) => {
+        return (
+          <>{created_at}</>)
+      }
+    }, {
+      id: 'milestone_details',
+      label: 'Milestone Details',
       roleAccess: [1],
       render: ({ milestone_details }) => {
         return (
           <>
-          {milestone_details?.map((item)=>{
-            item
-          })}
-          </>)}
+            {milestone_details.length > 0 ? (
+              <ul>
+                {milestone_details.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No milestones available</p>
+            )}
+          </>
+        );
+      }
     },
     {
       id: 'action',
@@ -78,10 +95,12 @@ const PredictionsDetails = () => {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                setId(id)
+                history.push("/predictions", { state: { id: id } })
 
               }}
             >
-              <Image src="/images/edit-button.svg" />
+              <Image src="/images/view-eye.svg" />
             </a>
             <a
               href="/"
@@ -89,7 +108,8 @@ const PredictionsDetails = () => {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-
+                setId(id)
+                deleteReport(id)
               }}
             >
               <Image src="/images/delete.png" />
@@ -100,7 +120,25 @@ const PredictionsDetails = () => {
     },
   ];
 
-  const getPredictions = async (pageNo=1) => {
+  const deleteReport = async (id) =>{
+    setShowLoader(true);
+    const url = `${Api.deletePredictionReports}${id}/`;
+    const { data, error } = await AuthApi.deleteDataFromServer(url);
+
+    // if (data?.data) {
+    if (data?.data) {
+      swal(data && data.message[0], '', 'success');
+      getPredictionsDetails(1)
+      // setPredictions(data.data.milestone_details || []);
+      setShowLoader(false);
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
+      setShowLoader(false);
+
+    }
+  }
+
+  const getPredictionsDetails = async (pageNo = 1) => {
     setShowLoader(true);
     const params = {
       page: pageNo,
@@ -109,7 +147,7 @@ const PredictionsDetails = () => {
 
     };
     const url = `${Api.predictionDetails}`;
-    const { data, error } = await AuthApi.getDataFromServer(url);
+    const { data, error } = await AuthApi.getDataFromServer(url, params);
 
     // if (data?.data) {
     if (data?.data) {
@@ -117,7 +155,8 @@ const PredictionsDetails = () => {
         // no: (pagination.current_page - 1) * 10 + index + 1,
         no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
         id: item.id,
-        generated_by: customFunctions.getDate(item?.generated_by),
+        created_at: customFunctions.getDate(item?.generated_by),
+        milestone_details: item.milestone_details
       }));
 
       const { current_page, total_count, limit } = data.paginator;
@@ -131,6 +170,23 @@ const PredictionsDetails = () => {
       setLimit(Number(limit));
       setCurrentPage(current_page);
 
+      setShowLoader(false);
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
+      setShowLoader(false);
+
+    }
+  };
+
+  const getPredictions = async () => {
+    setShowLoader(true);
+    const url = `${Api.prediction}?use_ai=true`;
+    const { data, error } = await AuthApi.getDataFromServer(url);
+
+    // if (data?.data) {
+    if (data?.data) {
+      swal(data && data.message[0], '', 'success');
+      // setPredictions(data.data.milestone_details || []);
       setShowLoader(false);
     } else {
       swal(error || 'Something went wrong', '', 'error');
