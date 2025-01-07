@@ -74,8 +74,9 @@ function AddFeedback() {
   }, [id, employeeId, empDepartment])
 
   useEffect(() => {
-    if (!selectedQuarter) return;
-    getLeavesdata()
+    if (!selectedQuarter) {
+      getLeavesdata()
+    }
   }, [selectedQuarter])
 
   function getQuarterByString(value) {
@@ -137,12 +138,17 @@ function AddFeedback() {
     }
 
     if (empDepartment) {
-      if (empDepartment == 1 || empDepartment == 2 || empDepartment == 3) {
+      if (empDepartment == 1 || empDepartment == 2 || empDepartment == 9) {
         params.questionnaire_type = 1
       }
       else if (empDepartment == 6) {
-
         params.questionnaire_type = 3
+      }
+      else if (empDepartment == 3) {
+        params.questionnaire_type = 3
+      }
+      else if (empDepartment == 4) {
+        params.questionnaire_type = 4
       }
     }
 
@@ -322,36 +328,45 @@ function AddFeedback() {
 
   const getLeavesdata = async () => {
     setShowLoader(true);
-    const endPoint = `${Api.leavesUrl}`;
+    const endPoint = `${Api.leavesDetailsUrl}`;
     const params = {
       my_leaves: true,
     };
-    const currentYear = new Date().getFullYear();
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1; // Months are 0-indexed, so add 1
+
+    let fyStart, fyEnd;
+
+    if (month >= 4) { // April or later
+      fyStart = year;
+      fyEnd = year + 1;
+    } else { // January to March
+      fyStart = year - 1;
+      fyEnd = year;
+    }
 
     if (+selectedQuarter?.value == 1) {
-      params.start_date = `${currentYear}-04-01`
-      params.end_date = `${currentYear}-06-30`
+      params.start_date = `${fyStart}-04-01`
+      params.end_date = `${fyStart}-06-30`
 
     } else if (+selectedQuarter?.value == 2) {
-      params.start_date = `${currentYear}-07-01`
-      params.end_date = `${currentYear}-09-30`
+      params.start_date = `${fyStart}-07-01`
+      params.end_date = `${fyStart}-09-30`
     } else if (+selectedQuarter?.value == 3) {
-      params.start_date = `${currentYear}-10-01`
-      params.end_date = `${currentYear}-12-31`
+      params.start_date = `${fyStart}-10-01`
+      params.end_date = `${fyStart}-12-31`
     } else if (+selectedQuarter?.value == 4) {
-      params.start_date = `${currentYear}-01-01`
-      params.end_date = `${currentYear}-03-31`
+      params.start_date = `${fyEnd}-01-01`
+      params.end_date = `${fyEnd}-03-31`
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    let leaveCount = 0
+
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      setShowLoader(false);
-      data?.data && data.data.map((item) => {
-        leaveCount += item.leave_count
-      })
-      setTotalLeaveCount(leaveCount)
+      setShowLoader(false);      
+      setTotalLeaveCount(data?.data?.leave_count?.leaves_count)
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {

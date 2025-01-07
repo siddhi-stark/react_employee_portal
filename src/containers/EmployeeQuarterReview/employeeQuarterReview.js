@@ -33,18 +33,9 @@ function EmployeeQuarterReview() {
   useEffect(() => {
     setTitle('Employee Quarter Review');
     getQuestionList();
-  }, []);
+  }, [pageReferesh, currentPage, setTable]);
 
-  useEffect(() => {
-    setTitle('Employee Quarter Review');
-    getQuestionList();
-  }, [pageReferesh]);
-
-  useEffect(() => {
-    setTitle('Employee Quarter Review');
-    getQuestionList();
-  }, [setTable, currentPage]);
-
+  
   function getQuarterByString(value) {
     switch (value) {
       case 'April - June':
@@ -299,7 +290,7 @@ function EmployeeQuarterReview() {
             paginationProps={{
               totalItems: totalCount,
               itemsPerPage: limit,
-              activePage: currentPage,
+              activePage: pagination.current_page,
               onPageChange: (pageNo) => {
                 setCurrentPage(pageNo);
                 getQuestionList(pageNo);

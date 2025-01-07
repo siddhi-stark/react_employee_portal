@@ -9,48 +9,24 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Milestone Predictions' }];
 
 const Predictions = () => {
   const history = useHistory();
+  const { state } = useLocation();
+
+  const id = state?.state?.id
   const [isShowLoader, setShowLoader] = useState(false);
-  const [rowData, setRowData] = useState([]);
-  const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
-  const [totalCount, setTotalCount] = useState(10);
-  const [limit, setLimit] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [wfhId, setWfhId] = useState(null);
-  const [showDelete, setShowDelete] = useState(false);
-  const [predictions, setPredictions] = useState()
-  const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
-  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
+  const [predictions, setPredictions] = useState([]);
   const [userRole, setUserRole] = useState(null);
-  const [apiCalled, setApiCalled] = useState(false);
-  const [joiningDate, setJoiningDate] = useState(null);
-  const [refereshPage, setRefereshPage] = useState(false);
-  const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
-  const [isProjectManager, setProjectManager] = useState(false)
-  const [modalShow, setModalShow] = useState(false);
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('default', { month: 'long' }); // 'January', 'February', etc.
-  const currentYear = currentDate.getFullYear(); // 2024
-  const [statusId, setStatusId] = useState(null);
-  const [prevData, setPrevData] = useState({})
-  const [userId, setUserId] = useState(null)
+  const [isProjectManager, setProjectManager] = useState(false);
 
+  console.log("state", state);
+  console.log("id", id);
 
-  useEffect(() => {
-    setTitle("Milestone Predictions");
-    if (!apiCalled) {
-      setRefereshPage(false)
-      getWfhDetails(currentPage);
-    }
-  }, [currentPage, refereshPage]);
 
   useEffect(() => {
     const isProjectManager =
@@ -59,453 +35,425 @@ const Predictions = () => {
   }, [localStorage.getItem('isProjectManager')]);
 
   useEffect(() => {
-    setTitle("Milestone Predictions")
-    if (userRole) {
-      getPredictions();
+    setTitle('Milestone Predictions');
+    if (id) {
+      getPredictionsDetails(id);
     }
-  }, [userRole]);
+  }, [id]);
 
   useEffect(() => {
-    setTitle("Milestone Predictions")
+    setTitle('Milestone Predictions');
     const uRole = customFunctions.getLocalStorage('group');
-    const userId = customFunctions.getLocalStorage('userId');
     setUserRole(Number(uRole));
-    setUserId(Number(userId));
-
   }, []);
-
 
   const getPredictions = async () => {
     setShowLoader(true);
-    // const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
-    // const { data, error } = await AuthApi.getDataFromServer(url);
-    // setShowLoader(false);
+    const url = `${Api.prediction}?use_ai=true`;
+    const { data, error } = await AuthApi.getDataFromServer(url);
 
-    if (userRole) {
-      // setPredictions(data.data.reports);
-      // setPredictions(data.data.reports);
+    // if (data?.data) {
+    if (data?.data) {
+      swal(data && data.message[0], '', 'success');
+      // setPredictions(data.data.milestone_details || []);
+      setShowLoader(false);
+      // setPredictions([
+      //   {
+      //     "milestone_name": "ca-erp prediction ONE",
+      //     "deadline": "2025-01-03",
+      //     "completed_tasks": 9,
+      //     "pending_tasks": 9,
+      //     "completed_bugs": 4,
+      //     "pending_bugs": 4,
+      //     "total_logged_time": "33 Hrs 45 Mins",
+      //     "total_tasks_logged_time": "22 Hrs 15 Mins",
+      //     "total_bugs_logged_time": "11 Hrs 30 Mins",
+      //     "milestone_analysis": {
+      //       "milestone_name": "ca-erp prediction ONE",
+      //       "deadline": "2025-01-03",
+      //       "deadline_predictions": {
+      //         "is_at_risk": true,
+      //         "suggested_new_deadline": "2025-01-17",
+      //         "reasoning": "With 9 pending tasks and 4 pending bugs, the team has a heavy workload. Current logged time against total logged time indicates a potential shortfall in capacity to meet the original deadline."
+      //       },
+      //       "strategies_for_pending_work": {
+      //         "risks": [
+      //           "Task delays due to unresolved bugs",
+      //           "Overestimated team capacity",
+      //           "Resource allocation issues"
+      //         ],
+      //         "prioritization": "Focus on critical bugs first to enable smooth progression of pending tasks.",
+      //         "methods": [
+      //           "Implement a daily stand-up for progress updates",
+      //           "Increase resource allocation temporarily",
+      //           "Break down tasks into smaller components to facilitate quicker wins"
+      //         ]
+      //       },
+      //       "performance_insights": {
+      //         "total_effort_analysis": {
+      //           "logged_time_ratio": "22.15/33.75",
+      //           "time_efficiency": "65.7%"
+      //         },
+      //         "suggestions": [
+      //           "Encourage more efficient time tracking practices",
+      //           "Hold a retrospective to identify and address productivity barriers"
+      //         ]
+      //       },
+      //       "optimization_and_risk_mitigation": {
+      //         "bottlenecks": [
+      //           "High number of pending tasks and bugs",
+      //           "Insufficient allocation of logged hours per task"
+      //         ],
+      //         "solutions": [
+      //           "Reassess team allocations and redistribute tasks based on individual strengths",
+      //           "Introduce automation tools for testing to reduce bug resolution times"
+      //         ]
+      //       }
+      //     }
+      //   },
+      //   {
+      //     "milestone_name": "ca-erp prediction TWO",
+      //     "deadline": "2025-01-03",
+      //     "completed_tasks": 8,
+      //     "pending_tasks": 8,
+      //     "completed_bugs": 4,
+      //     "pending_bugs": 4,
+      //     "total_logged_time": "29 Hrs 15 Mins",
+      //     "total_tasks_logged_time": "20 Hrs 0 Mins",
+      //     "total_bugs_logged_time": "9 Hrs 15 Mins",
+      //     "milestone_analysis": {
+      //       "milestone_name": "ca-erp prediction TWO",
+      //       "deadline": "2025-01-03",
+      //       "deadline_predictions": {
+      //         "is_at_risk": true,
+      //         "suggested_new_deadline": "2025-01-17",
+      //         "reasoning": "The status mirrors that of 'ca-erp prediction ONE' with multiple pending items. The team needs additional time to address similar risks."
+      //       },
+      //       "strategies_for_pending_work": {
+      //         "risks": [
+      //           "Similar risk factors as the previous milestone",
+      //           "Potential burnout from resource strain",
+      //           "Interdependencies with other milestones"
+      //         ],
+      //         "prioritization": "Address the most critical bugs first to facilitate task completion.",
+      //         "methods": [
+      //           "Perform resource reallocation to more strategic areas",
+      //           "Enhance collaboration between teams to mitigate bottleneck risks",
+      //           "Set clear, short-term goals to maintain motivation"
+      //         ]
+      //       },
+      //       "performance_insights": {
+      //         "total_effort_analysis": {
+      //           "logged_time_ratio": "20.00/29.25",
+      //           "time_efficiency": "68.3%"
+      //         },
+      //         "suggestions": [
+      //           "Develop a more rigorous tracking mechanism for time spent on tasks and bugs",
+      //           "Increase support on complex tasks where bottlenecks occur"
+      //         ]
+      //       },
+      //       "optimization_and_risk_mitigation": {
+      //         "bottlenecks": [
+      //           "Similar complex dependency on bug resolution",
+      //           "Strained team capacity"
+      //         ],
+      //         "solutions": [
+      //           "Establish a bug-fix sprint with dedicated resources",
+      //           "Consider outsourcing non-critical bugs for efficiency"
+      //         ]
+      //       }
+      //     }
+      //   },
+      //   {
+      //     "milestone_name": "Employee Portal Prediction ONE",
+      //     "deadline": "2025-01-04",
+      //     "completed_tasks": 9,
+      //     "pending_tasks": 9,
+      //     "completed_bugs": 4,
+      //     "pending_bugs": 4,
+      //     "total_logged_time": "36 Hrs 45 Mins",
+      //     "total_tasks_logged_time": "20 Hrs 0 Mins",
+      //     "total_bugs_logged_time": "16 Hrs 45 Mins",
+      //     "milestone_analysis": {
+      //       "milestone_name": "Employee Portal Prediction ONE",
+      //       "deadline": "2025-01-04",
+      //       "deadline_predictions": {
+      //         "is_at_risk": true,
+      //         "suggested_new_deadline": "2025-01-18",
+      //         "reasoning": "Pending tasks and bugs are still high, and the overall logged effort does not align with the original schedule."
+      //       },
+      //       "strategies_for_pending_work": {
+      //         "risks": [
+      //           "High number of unresolved issues leading to project creep",
+      //           "Potential misalignment of team focus",
+      //           "Resource misallocation"
+      //         ],
+      //         "prioritization": "Address critical bugs that affect user experience as a priority, followed by high-impact tasks.",
+      //         "methods": [
+      //           "Enhance focus sessions for team members on critical tasks",
+      //           "Implement pair programming for difficult tasks",
+      //           "Regularly revisit progress to adjust work patterns"
+      //         ]
+      //       },
+      //       "performance_insights": {
+      //         "total_effort_analysis": {
+      //           "logged_time_ratio": "20.00/36.75",
+      //           "time_efficiency": "54.4%"
+      //         },
+      //         "suggestions": [
+      //           "Introduce a more structured daily check-in to funnel communication",
+      //           "Create a knowledge-sharing session for insights on bug resolution"
+      //         ]
+      //       },
+      //       "optimization_and_risk_mitigation": {
+      //         "bottlenecks": [
+      //           "Overloaded pipelines for task completion",
+      //           "Inadequate focus on high-risk areas"
+      //         ],
+      //         "solutions": [
+      //           "Create dedicated task forces for high-risk areas",
+      //           "Adjust timelines based on real-time feedback to better allocate resources"
+      //         ]
+      //       }
+      //     }
+      //   },
+      //   {
+      //     "milestone_name": "Employee Portal Prediction TWO",
+      //     "deadline": "2025-01-04",
+      //     "completed_tasks": 8,
+      //     "pending_tasks": 8,
+      //     "completed_bugs": 4,
+      //     "pending_bugs": 4,
+      //     "total_logged_time": "36 Hrs 0 Mins",
+      //     "total_tasks_logged_time": "23 Hrs 30 Mins",
+      //     "total_bugs_logged_time": "13 Hrs 30 Mins",
+      //     "milestone_analysis": {
+      //       "milestone_name": "Employee Portal Prediction TWO",
+      //       "deadline": "2025-01-04",
+      //       "deadline_predictions": {
+      //         "is_at_risk": true,
+      //         "suggested_new_deadline": "2025-01-18",
+      //         "reasoning": "Similar challenges as the previous milestone make it necessary to extend the deadline to accommodate the pending workload."
+      //       },
+      //       "strategies_for_pending_work": {
+      //         "risks": [
+      //           "Similar to the first Employee Portal milestone",
+      //           "Possible communication breakdowns",
+      //           "Unclear team roles exacerbating confusion"
+      //         ],
+      //         "prioritization": "Focus on finishing the most impactful bugs first, then tackling the larger set of tasks.",
+      //         "methods": [
+      //           "Regular updates in team meetings to keep all aligned",
+      //           "Using project management tools for clear visibility on progress",
+      //           "Establish clear roles and responsibilities for better accountability"
+      //         ]
+      //       },
+      //       "performance_insights": {
+      //         "total_effort_analysis": {
+      //           "logged_time_ratio": "23.50/36.00",
+      //           "time_efficiency": "65.3%"
+      //         },
+      //         "suggestions": [
+      //           "Review time spent on lower-impact items to minimize time sinks",
+      //           "Encourage open feedback channels to quickly identify process improvements"
+      //         ]
+      //       },
+      //       "optimization_and_risk_mitigation": {
+      //         "bottlenecks": [
+      //           "Pending bugs with unresolved dependencies",
+      //           "Delays from past milestones affecting progressive work"
+      //         ],
+      //         "solutions": [
+      //           "Implement agile methodologies to allow for iterative focus on deliverables",
+      //           "Utilize Kanban for better visualization of work in progress"
+      //         ]
+      //       }
+      //     }
+      //   }
+      // ]);
     } else {
       swal(error || 'Something went wrong', '', 'error');
+      setShowLoader(false);
+
     }
   };
 
-  console.log("pagination", pagination);
-
-  const getWfhDetails = async (pageNo = 1) => {
-    setApiCalled(true);
+  const getPredictionsDetails = async (id) => {
     setShowLoader(true);
+    const url = `${Api.predictionDetails}?id=${id}`;
+    const { data, error } = await AuthApi.getDataFromServer(url);
 
-    const params = {
-      page: pageNo,
-      limit,
-      sort_direction: 'descending'
-    };
+    // if (data?.data) {
+    console.log("data", data.data[0]);
 
-    if (selectedEmployeeId !== 'all_employess') {
-      params.employee = selectedEmployeeId;
-    }
-    if (selectedDate) {
-      params.start_date = customFunctions.getDate(selectedDate)
-    }
-
-    const url = customFunctions.generateUrl(Api.wfh, params);
-    try {
-      const { data } = await AuthApi.getDataFromServer(url);
+    if (data?.data) {
+      // swal(data && data.message[0], '', 'success');
+      console.log("data?.data?.reports", data?.data?.reports);
+      setPredictions(data?.data[0]?.reports || []);
       setShowLoader(false);
 
-      if (data && data.success) {
-        const finalData = data.data.map((item, index) => ({
-          // no: (pagination.current_page - 1) * 10 + index + 1,
-          no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
-          id: item.id,
-          start_date: item.start_date,
-          end_date: item.end_date,
-          status: item.status,
-          status_name: item.status_name,
-          reason: item.reason,
-          note: item.note,
-          employee_id: item.employee_id,
-          employee_name: item.employee_name,
-          duration_type: item.duration_type
-
-        }));
-
-        const { current_page, total_count, limit } = data.paginator;
-        setRowData(finalData);
-        setPagination({
-          current_page: parseInt(current_page, 10),
-          totalItems: parseInt(total_count, 10),
-          itemsPerPage: parseInt(limit, 10),
-        });
-        setTotalCount(total_count);
-        setLimit(Number(limit));
-        setCurrentPage(current_page);
-      } else {
-        swal(data.message || 'Error fetching data', '', 'error');
-      }
-    } catch (error) {
-      swal('Error fetching data', '', 'error');
-    } finally {
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
       setShowLoader(false);
-      setApiCalled(false);
-    }
-  };
 
-  const applyFilters = () => {
-    setCurrentPage(1);
-    getWfhDetails(1);
-  };
-
-  const columns = [
-    { id: 'no', label: 'SR No' },
-    {
-      id: 'employee_name',
-      label: 'Name',
-      render: (row) => row.employee_name || 'N/A',
-    },
-    {
-      id: 'start_date',
-      label: 'Start Date',
-      render: (row) => row.start_date || 'N/A',
-    },
-    {
-      id: 'end_date',
-      label: 'End Date',
-      render: (row) => row.end_date,
-    },
-    // {
-    //   id: 'status_name',
-    //   label: 'Status',
-    //   render: (row) => row.status_name,
-    // },
-    {
-      id: 'reason',
-      label: 'Reason',
-      render: (row) => row.reason,
-    },
-    {
-      id: 'note',
-      label: 'Note',
-      render: (row) => row.note ? row.note : '-',
-    },
-    {
-      id: 'status_name',
-      label: 'Status',
-      render: ({ id, status_name, reason, start_date, end_date, employee_id, status, duration_type }) => {
-        return (
-          <>
-            {/* customFunctions.getDate(new Date()) <= leave_from_date ?  */}
-
-            {status_name === 'Pending' && isProjectManager == false ? (
-              <>
-                <Image
-                  title="Accept"
-                  onClick={() => {
-                    setWfhId(id);
-                    setStatusId(1);
-                    setPrevData({
-                      "duration_type": duration_type,
-                      "reason": reason,
-                      "start_date": start_date,
-                      "end_date": end_date,
-                      "employee_id": employee_id,
-                      // "status" : status
-                    })
-                    setModalShow(true);
-                  }}
-                  alt="Accept"
-                  src="/images/success.svg"
-                />
-                <Image
-                  title="Declined"
-                  onClick={() => {
-                    setWfhId(id);
-                    setStatusId(3);
-                    setPrevData({
-                      "duration_type": duration_type,
-                      "reason": reason,
-                      "start_date": start_date,
-                      "end_date": end_date,
-                      "employee_id": employee_id,
-                      // "status" : status
-                    })
-                    setModalShow(true);
-                  }}
-                  alt="Declined"
-                  src="/images/fail.svg"
-                  className="ms-2"
-                />
-              </>
-            ) : (
-              <span> {status_name} </span>
-            )}
-          </>
-        );
-      },
-    },
-    {
-      id: 'action',
-      label: 'Action',
-      render: ({ id, employee_id, status }) => (
-        <>
-          {isProjectManager == false && (<>
-            <a
-              href="/"
-              className="ml-1"
-              onClick={(e) => {
-                e.preventDefault();
-                setShowDelete(true);
-                setWfhId(id);
-              }}
-            >
-              <Image src="/images/delete.png" alt="Delete" />
-            </a>
-          </>)
-          }
-
-          {
-            isProjectManager == true && userId == employee_id && status == 2 && (<>
-              <a
-                href="/"
-
-                onClick={(e) => {
-                  e.preventDefault();
-                  history.push("/add-wfh", { state: { wfhId: id } });
-                }}
-              >
-                <Image src="/images/edit.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
-
-              </a>
-
-              <a
-                href="/"
-                className="ml-1"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setShowDelete(true);
-                  setWfhId(id);
-                }}
-              >
-                <Image src="/images/delete.png" alt="Delete" />
-              </a>
-            </>
-            )
-          }
-
-        </>
-      ),
-    },
-  ];
-
-  const deleteTask = async () => {
-    const url = customFunctions.generateUrl(`${Api.wfh}${wfhId}`);
-    const { data } = await AuthApi.deleteDataFromServer(url);
-    if (data.success) {
-      swal('Deleted successfully', '', 'success').then(() => {
-        setShowDelete(false);
-        setSelectedEmployee()
-        setJoiningDate(null)
-        setRefereshPage(true)
-
-      });
     }
   };
 
   return (
     <>
       <Helmet title={title} />
-      <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Milestone Predictions</h2>
-        <Breadcrumb items={items} />
+      <div className="predictions-container">
+        <div className="title-breadcrumb-section">
+          <h2 className="main-content-title">Milestone Predictions</h2>
+          <Breadcrumb items={items} />
+        </div>
+        <Loader showLoader={isShowLoader} needFullPage={false} />
+        <Card className="prediction-card">
+          {!id && (
+            <Row>
+              <Col>
+                <Button onClick={(e) => {
+                  getPredictions()
+                }}>Predict</Button>
+              </Col>
+            </Row>
+          )}
+
+          <div className="d-flex align-items-center justify-content-between">
+            <h5 className="card-title mb-0 mt-2 ">Get Forms details by Filters</h5>
+            <Button
+              variant="secondary"
+              className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+              type="submit"
+              onClick={(e) => {
+                history.push('/predictions-details')
+              }}
+            >
+              Back
+            </Button>
+          </div>
+          <hr style={{ borderColor: "white" }} />
+          <Row>
+            {predictions.length > 0 ? (
+              predictions.map((milestone, index) => (
+                <>
+                  <Col sm={6}>
+                    <Card className="prediction-card" key={index}>
+                      <div className="milestone-header">
+                        <h3 className="milestone-title">{index + 1}.{milestone?.milestone_name}</h3>
+                        <span className="status-badge">
+                          {milestone?.milestone_analysis.deadline_predictions.is_at_risk
+                            ? 'At Risk'
+                            : 'On Track'}
+                        </span>
+                      </div>
+                      <div className="milestone-details">
+                        <p>
+                          <strong>Deadline:</strong>{' '}
+                          <span className="deadline-text">
+                            {milestone?.deadline}
+                          </span>
+                        </p>
+                        <p>
+                          <strong>Completed Tasks:</strong> {milestone?.completed_tasks}
+                        </p>
+                        <p>
+                          <strong>Pending Tasks:</strong> {milestone?.pending_tasks}
+                        </p>
+                        <p>
+                          <strong>Total Logged Time:</strong>{' '}
+                          {milestone?.total_logged_time}
+                        </p>
+                        <p>
+                          <strong>Total Tasks Logged Time:</strong>{' '}
+                          {milestone?.total_tasks_logged_time}
+                        </p>
+                        <p>
+                          <strong>Total Bugs Logged Time:</strong>{' '}
+                          {milestone?.total_bugs_logged_time}
+                        </p>
+                      </div>
+                      <div className="milestone-analysis">
+                        <h5>Analysis:</h5>
+                        <p>
+                          <strong>Suggested New Deadline:</strong>{' '}
+                          {milestone?.milestone_analysis?.deadline_predictions?.suggested_new_deadline}
+                        </p>
+                        <p>
+                          <strong>Reasoning:</strong>{' '}
+                          {milestone?.milestone_analysis?.deadline_predictions?.reasoning}
+                        </p>
+
+                        <h5>Strategies for Pending Work:</h5>
+                        <ul>
+                          <strong>Risks:</strong>{' '}
+                          {milestone?.milestone_analysis?.strategies_for_pending_work?.risks?.map(
+                            (method, idx) => (
+                              <li key={idx}>{method}</li>
+                            )
+                          )}
+                          <br />
+
+                          <strong>Methods:</strong>{' '}
+                          {milestone?.milestone_analysis?.strategies_for_pending_work?.methods?.map(
+                            (method, idx) => (
+                              <li key={idx}>{method}</li>
+                            )
+                          )}
+                          <br />
+                          <strong>Prioritization:</strong>{' '}
+                          {milestone?.milestone_analysis?.strategies_for_pending_work?.prioritization}
+                        </ul>
+
+                        <br />
+
+                        <h5>Performance Insights:</h5>
+                        <ul>
+                          <strong>Total Effort Analysis:</strong>{' '}
+                          <li>Logged Time Ratio: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.logged_time_ratio}</li>
+                          <li>Time Efficiency: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.time_efficiency}</li>
+                          <br />
+
+                          <strong>Suggestions:</strong>{' '}
+                          {milestone?.milestone_analysis?.performance_insights?.suggestions?.map(
+                            (method, idx) => (
+                              <li key={idx}>{method}</li>
+                            )
+                          )}
+                        </ul>
+
+                        <h5>Optimization And Risk Mitigation:</h5>
+                        <ul>
+                          <strong>Bottlenecks:</strong>{' '}
+                          {milestone?.milestone_analysis?.optimization_and_risk_mitigation?.bottlenecks?.map(
+                            (method, idx) => (
+                              <li key={idx}>{method}</li>
+                            )
+                          )}
+                          <br />
+
+                          <strong>Solutions:</strong>{' '}
+                          {milestone?.milestone_analysis?.optimization_and_risk_mitigation?.solutions?.map(
+                            (method, idx) => (
+                              <li key={idx}>{method}</li>
+                            )
+                          )}
+                          <br />
+
+                        </ul>
+                      </div>
+                    </Card>
+                  </Col>
+                </>
+              ))
+            ) : (
+              <p>No Data available for predictions.</p>
+            )}
+          </Row>
+        </Card>
       </div>
-      <Loader showLoader={isShowLoader} needFullPage={false} />
-
-      <Card>
-        <Card.Body>
-          <>
-            <style>
-              {`
-      .report-container {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-      }
-      .report-title {
-        text-align: center;
-        font-size: 24px;
-        color: #333;
-        margin-bottom: 20px;
-      }
-      .milestone-section {
-        margin-bottom: 30px;
-      }
-      .milestone-title {
-        font-size: 20px;
-        color: #2c3e50;
-        margin-bottom: 10px;
-      }
-      .milestone-details {
-        font-size: 16px;
-        color: #34495e;
-        line-height: 1.6;
-      }
-      .suggestions, .recommendations {
-        margin-top: 15px;
-      }
-      .section-title {
-        font-size: 18px;
-        color: #2980b9;
-        margin-bottom: 8px;
-      }
-      .list {
-        margin: 0;
-        padding-left: 20px;
-      }
-      .list-item {
-        list-style-type: disc;
-        margin-bottom: 5px;
-      }
-    `}
-            </style>
-            <div className="report-container">
-              <h1 className="report-title">Milestone Analysis Report</h1>
-
-              {/* Milestone 1 */}
-              <div className="milestone-section">
-                <h2 className="milestone-title">ca-erp prediction ONE</h2>
-                <div className="milestone-details">
-                  <p><strong>Deadline:</strong> 2024-12-06</p>
-                  <p><strong>Completed Tasks:</strong> 9</p>
-                  <p><strong>Pending Tasks:</strong> 9</p>
-                  <p><strong>Completed Bugs:</strong> 4</p>
-                  <p><strong>Pending Bugs:</strong> 4</p>
-                  <p><strong>Total Logged Time:</strong> 33 Hrs 45 Mins</p>
-                </div>
-                <div className="suggestions">
-                  <h3 className="section-title">Suggestions</h3>
-                  <ul className="list">
-                    <li className="list-item">Allocate additional resources to pending tasks to ensure timely completion.</li>
-                    <li className="list-item">Conduct a bug-fix session to resolve pending issues faster.</li>
-                  </ul>
-                </div>
-                <div className="recommendations">
-                  <h3 className="section-title">Recommendations</h3>
-                  <ul className="list">
-                    <li className="list-item">Streamline task priorities to focus on high-impact items.</li>
-                    <li className="list-item">Introduce daily progress reviews to monitor team efficiency.</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Milestone 2 */}
-              <div className="milestone-section">
-                <h2 className="milestone-title">ca-erp prediction TWO</h2>
-                <div className="milestone-details">
-                  <p><strong>Deadline:</strong> 2024-12-09</p>
-                  <p><strong>Completed Tasks:</strong> 8</p>
-                  <p><strong>Pending Tasks:</strong> 8</p>
-                  <p><strong>Completed Bugs:</strong> 4</p>
-                  <p><strong>Pending Bugs:</strong> 4</p>
-                  <p><strong>Total Logged Time:</strong> 29 Hrs 15 Mins</p>
-                </div>
-                <div className="suggestions">
-                  <h3 className="section-title">Suggestions</h3>
-                  <ul className="list">
-                    <li className="list-item">Introduce a sprint for rapid bug fixes to meet deadlines.</li>
-                    <li className="list-item">Reduce multitasking to enhance task focus and completion rate.</li>
-                  </ul>
-                </div>
-                <div className="recommendations">
-                  <h3 className="section-title">Recommendations</h3>
-                  <ul className="list">
-                    <li className="list-item">Leverage time management tools to optimize team hours.</li>
-                    <li className="list-item">Encourage team collaboration through daily standups.</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Milestone 3 */}
-              <div className="milestone-section">
-                <h2 className="milestone-title">Employee Portal Prediction ONE</h2>
-                <div className="milestone-details">
-                  <p><strong>Deadline:</strong> 2024-12-06</p>
-                  <p><strong>Completed Tasks:</strong> 9</p>
-                  <p><strong>Pending Tasks:</strong> 9</p>
-                  <p><strong>Completed Bugs:</strong> 4</p>
-                  <p><strong>Pending Bugs:</strong> 4</p>
-                  <p><strong>Total Logged Time:</strong> 36 Hrs 45 Mins</p>
-                </div>
-                <div className="suggestions">
-                  <h3 className="section-title">Suggestions</h3>
-                  <ul className="list">
-                    <li className="list-item">Assign dedicated resources to accelerate pending task resolution.</li>
-                    <li className="list-item">Increase the frequency of progress reviews to identify blockers early.</li>
-                  </ul>
-                </div>
-                <div className="recommendations">
-                  <h3 className="section-title">Recommendations</h3>
-                  <ul className="list">
-                    <li className="list-item">Adopt agile methodologies for quicker milestone achievements.</li>
-                    <li className="list-item">Encourage cross-team collaboration to reduce delays.</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Milestone 4 */}
-              <div className="milestone-section">
-                <h2 className="milestone-title">Employee Portal Prediction TWO</h2>
-                <div className="milestone-details">
-                  <p><strong>Deadline:</strong> 2024-12-09</p>
-                  <p><strong>Completed Tasks:</strong> 8</p>
-                  <p><strong>Pending Tasks:</strong> 8</p>
-                  <p><strong>Completed Bugs:</strong> 4</p>
-                  <p><strong>Pending Bugs:</strong> 4</p>
-                  <p><strong>Total Logged Time:</strong> 36 Hrs 0 Mins</p>
-                </div>
-                <div className="suggestions">
-                  <h3 className="section-title">Suggestions</h3>
-                  <ul className="list">
-                    <li className="list-item">Plan parallel task completion for critical dependencies.</li>
-                    <li className="list-item">Conduct a team-wide bug triage to address critical issues.</li>
-                  </ul>
-                </div>
-                <div className="recommendations">
-                  <h3 className="section-title">Recommendations</h3>
-                  <ul className="list">
-                    <li className="list-item">Reallocate resources to high-priority areas for faster execution.</li>
-                    <li className="list-item">Set up a rewards system to boost team morale and productivity.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </>
-
-        </Card.Body>
-      </Card>
-
-      {showDelete && (
-        <SweetAlert
-          warning
-          showCancel
-          title="Are you sure you want to delete?"
-          confirmBtnText="Yes, Delete"
-          confirmBtnBsStyle="danger"
-          cancelBtnBsStyle="light"
-          onConfirm={() => {
-            deleteTask();
-            setShowDelete(false);
-          }}
-          onCancel={() => {
-            setShowDelete(false);
-          }}
-        />
-      )}
     </>
   );
 };
-
 
 export default Predictions;
