@@ -497,7 +497,6 @@ const menu = [
   //   roleaccess: [1],
   // },
   
-  
   // {
   //   title: 'FAQs',
   //   path: '/faq-listing',
