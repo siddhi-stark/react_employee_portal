@@ -270,7 +270,7 @@ const ProjectReportForm = () => {
               type="submit"
               onClick={(e) => {
                 e.preventDefault()
-                { history.push(`/team-project/${projectId}`) }
+                { history.push(`/todays-project-reports`) }
 
               }}
             >

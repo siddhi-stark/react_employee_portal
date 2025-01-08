@@ -42,6 +42,8 @@ const TodaysProjectReports = () => {
   const fromDate = customFunctions.getDate(new Date())
   const [reportType, setReportType] = useState({ "label": 'Morning', "value": 1 },)
   const [selectedId, setSelectedId] = useState([]);
+  const [projectsList, setProjectsList] = useState('')
+  const [selectedProject, setProject] = useState('')
 
   useEffect(() => {
     if (UserID) {
@@ -61,10 +63,31 @@ const TodaysProjectReports = () => {
   useEffect(() => {
     setTitle(`Today's Reports`)
     const uRole = customFunctions.getLocalStorage('group');
+    getProjectList();
     setUserRole(Number(uRole));
   }, []);
 
 
+  const getProjectList = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.projectListUrl}?sort_by=name&status=active&type=all`
+    );
+
+    if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    const dpOptions =
+      (data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
+
+    setProjectsList(dpOptions);
+  };
 
   const getTodaysReport = async (pageNo = currentPage) => {
     setShowLoader(true);
@@ -77,6 +100,10 @@ const TodaysProjectReports = () => {
       start_date: fromDate,
       end_date: fromDate
     };
+
+    if(selectedProject){
+      params.project = +selectedProject?.value
+    }
 
     const url = customFunctions.generateUrl(Api.generateTaskList, params);
     try {
@@ -239,6 +266,16 @@ const TodaysProjectReports = () => {
     }
   }
 
+  const handleFilter = (e) => {
+    getTodaysReport()
+  }
+
+  const handleClear = (e) => {
+    setProject('')
+  }
+
+
+
   console.log('selectedId', selectedId);
 
   return (
@@ -259,15 +296,15 @@ const TodaysProjectReports = () => {
               type="submit"
               onClick={(e) => {
                 e.preventDefault()
-                history.push(`/current-project`)
+                history.push(`/project-report-generation`)
               }}
             >
-              Back
+              Generate Report
             </Button>
           </div>
           <hr style={{ borderColor: "white" }} />
           <Row>
-            <Col sm={2}>
+            {/* <Col sm={2}>
               <Datepicker
                 className="form-control"
                 label="Select from date"
@@ -287,7 +324,7 @@ const TodaysProjectReports = () => {
                   'required'
                 )}
               />
-            </Col>
+            </Col> */}
             {/* <Col sm={2}>
               <Datepicker
                 label="Select to date"
@@ -311,7 +348,7 @@ const TodaysProjectReports = () => {
             <Col sm={2}>
               <DropdownInput
                 label="Project"
-                asterisk="*"
+                // asterisk="*"
                 options={projectsList}
                 defaultValue={selectedProject}
                 onSelectHandler={(select) => {
@@ -327,7 +364,7 @@ const TodaysProjectReports = () => {
             </Col>
 
             <Col sm={4} className='mt-4'>
-              <Button variant="primary" onClick={(e) => { handleFilter(e) }}>Get task list</Button>
+              <Button variant="primary" onClick={(e) => { handleFilter(e) }}> Filter </Button>
               <Button variant="secondary" onClick={() => {
                 handleClear()
               }
