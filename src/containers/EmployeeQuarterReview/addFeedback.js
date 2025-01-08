@@ -74,7 +74,7 @@ function AddFeedback() {
   }, [id, employeeId, empDepartment])
 
   useEffect(() => {
-    if (!selectedQuarter) {
+    if (selectedQuarter) {
       getLeavesdata()
     }
   }, [selectedQuarter])
