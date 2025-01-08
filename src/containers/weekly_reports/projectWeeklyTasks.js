@@ -433,7 +433,7 @@ const ProjectWeeklyTask = () => {
                           <div className="task-organizer-field">
                             <strong>Status:</strong>
                             <span className={`task-organizer-status ${task.status.toLowerCase()}`}>
-                              {task.status === "new" ? "Peanding" : task.status}
+                              {task.status === "new" ? "Pending" : task.status}
                             </span>
                           </div>
                           <div className="task-organizer-field">

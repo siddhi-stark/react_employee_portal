@@ -177,7 +177,7 @@ const ProjectReportList = () => {
                   {reportsForDate.length === 0 && (format(dateItem, 'yyyy-MM-dd')) <= (format(new Date(), 'yyyy-MM-dd')) && (dateItem.getDay() !== 0) && (dateItem.getDay() !== 6) && (
                     <>
                       <div class="date-item zero-object">
-                        <span> Reports Are Peanding.<br />😟</span>
+                        <span> Reports Are Pending.<br />😟</span>
                       </div>
                     </>
                   )}
