@@ -189,7 +189,7 @@ function AdminAndHrView() {
     }
 
     if (empDepartment) {
-      if (empDepartment == 1 || empDepartment == 2 || empDepartment == 9) {
+      if (empDepartment == 1 || empDepartment == 2 || empDepartment == 9 || empDepartment == 8 || empDepartment == 7) {
         params.questionnaire_type = 1
       }
       else if (empDepartment == 6) {
