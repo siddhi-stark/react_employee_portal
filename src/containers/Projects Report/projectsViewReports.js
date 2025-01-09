@@ -99,7 +99,7 @@ const ProjectsViewReports = () => {
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault()
-                  history.push(`/project-report-list`) 
+                  history.push(`/todays-project-reports`) 
                   
                 }}
               >
@@ -110,8 +110,8 @@ const ProjectsViewReports = () => {
 
             {reportDetails && reportDetails.length > 0 ? (
               <Row>
-                <Col sm={6}>
-                  <h5 className="card-title mb-0 mt-2 ">{reportDetails[0].report_type == 1 ? "Morning Report :" : "Evening Report :"} </h5>
+                <Col>
+                  <h5 className="card-title mb-0 mt-2 ">{reportDetails[0].report_type == 1 ? "Weekly Report :" : "Evening Report :"} </h5>
                   <br />
 
                   <div className="cardss">

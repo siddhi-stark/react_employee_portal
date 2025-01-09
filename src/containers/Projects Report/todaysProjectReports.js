@@ -24,7 +24,6 @@ const TodaysProjectReports = () => {
   const validator = useRef(new SimpleReactValidator());
   const [key, setKey] = useState('morningReports');
   const projectId = state?.state?.state?.projectId
-  console.log('projectId', projectId);
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
   const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
@@ -49,19 +48,16 @@ const TodaysProjectReports = () => {
     if (UserID) {
       getTodaysReport(1);
     }
-  }, [currentPage, UserID]);
+  }, [UserID]);
 
   const [morningRowData, setMorningRowData] = useState([])
   const [eveningRowData, setEveningRowData] = useState([])
 
   useEffect(() => {
+    setTitle(`Today's Reports`)
     const isProjectManager =
       customFunctions?.getLocalStorage('isProjectManager');
     setProjectManager(JSON.parse(isProjectManager));
-  }, [localStorage.getItem('isProjectManager')]);
-
-  useEffect(() => {
-    setTitle(`Today's Reports`)
     const uRole = customFunctions.getLocalStorage('group');
     getProjectList();
     setUserRole(Number(uRole));
@@ -91,9 +87,6 @@ const TodaysProjectReports = () => {
 
   const getTodaysReport = async (pageNo = currentPage) => {
     setShowLoader(true);
-    console.log("currentPage", currentPage);
-
-
     const params = {
       user: UserID,
       type: 'all',
@@ -101,15 +94,13 @@ const TodaysProjectReports = () => {
       end_date: fromDate
     };
 
-    if(selectedProject){
+    if (selectedProject) {
       params.project = +selectedProject?.value
     }
 
     const url = customFunctions.generateUrl(Api.generateTaskList, params);
     try {
       const { data } = await AuthApi.getDataFromServer(url);
-      console.log('data', data.data);
-
       setShowLoader(false);
 
       let morningReportData = []
@@ -190,7 +181,7 @@ const TodaysProjectReports = () => {
             // className="ml-1"
             onClick={(e) => {
               e.preventDefault();
-              history.push(`/report-tasks-list/${projectsId}`, { state: { formattedDate: fromDate, fromSentReport: true } });
+              history.push(`/view-reports-projects/${projectsId}`, { state: { formattedDate: fromDate, fromSentReport: true } });
             }}
           >
             <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
@@ -232,9 +223,6 @@ const TodaysProjectReports = () => {
     const url = customFunctions.generateUrl(`${Api.generateTaskList}${projectReportId}/`, params);
     const { data, message } = await AuthApi.deleteDataFromServer(url);
 
-    console.log("data, message", data, message);
-
-
     if (data?.success) {
       swal('Deleted successfully', '', 'success').then(() => {
         setShowDelete(false);
@@ -273,10 +261,6 @@ const TodaysProjectReports = () => {
   const handleClear = (e) => {
     setProject('')
   }
-
-
-
-  console.log('selectedId', selectedId);
 
   return (
     <>
@@ -375,9 +359,21 @@ const TodaysProjectReports = () => {
             </Col>
             <Col>
             </Col>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 "></h5>
+              <a
+                href="#"
+                onClick={() => {
+                  history.push(`/project-reports-details`)
+                }}
+                className="btn-link"
+              >
+                Previous Reports Details
+              </a>
+            </div>
           </Row>
-
           {
+
             (rowData &&
               <Table
                 columns={columnsMorning}

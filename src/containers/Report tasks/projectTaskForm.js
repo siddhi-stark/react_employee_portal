@@ -145,7 +145,7 @@ const ProjectTaskForm = () => {
 
     let final_obj = {
       project: +projectId,
-      report_date: customFunctions.getDate(filterDate),
+      report_date: customFunctions.getDate(new Date()),
       current_status: +projectStatus?.value,
       issues_risks: issues,
       next_steps: nextSteps,
