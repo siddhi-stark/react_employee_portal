@@ -68,30 +68,9 @@ const menu = [
         submenu: [],
         roleaccess: [1, 2, 3, 4, 10],
       },
-      {
-        title: 'Weekly Generated Reports',
-        path: '/todays-project-reports',
-        icon: 'Employee.svg',
-        submenu: [],
-        roleaccess: [1, 2, 3, 4, 5, 6, 10],
-      },
-      {
-        title: 'Project Reports Details',
-        path: '/project-reports-details',
-        icon: 'recruitement.svg',
-        submenu: [],
-        roleaccess: [1, 2, 3, 4, 10],
-      },
-
-
     ],
     roleaccess: [1, 2, 3, 4, 10],
   },
-
-
-
-
-
 
   {
     title: 'Quotes',
