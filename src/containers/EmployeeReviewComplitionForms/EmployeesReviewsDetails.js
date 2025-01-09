@@ -315,11 +315,15 @@ const EmployeeReviewsDetails = () => {
     let allemp = []
     if (data && data.success) {
       data.data.map((item) => {
-        if ([1].includes(item.role_id) && !item.is_project_manager ) return;
-        let obj = {
-          label: item.full_name,
-          value: item.id,
-          joiningDate: item.date_joined,
+        if ([1].includes(item.role_id) && !item.is_project_manager) {
+          return
+        } else {
+
+          let obj = {
+            label: item.full_name,
+            value: item.id,
+            joiningDate: item.date_joined,
+          }
         }
         console.log("item.id", item.id);
         employeesIds.push(item.id)
