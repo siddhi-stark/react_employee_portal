@@ -515,7 +515,7 @@ const menu = [
   {
     title: 'Predictions',
     path: '/predictions-details',
-    icon: 'ticket.svg',
+    icon: 'technology.svg',
     submenu: [],
     roleaccess: [1],
   },
