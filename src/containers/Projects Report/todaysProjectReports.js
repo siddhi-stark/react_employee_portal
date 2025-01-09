@@ -24,7 +24,6 @@ const TodaysProjectReports = () => {
   const validator = useRef(new SimpleReactValidator());
   const [key, setKey] = useState('morningReports');
   const projectId = state?.state?.state?.projectId
-  console.log('projectId', projectId);
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
   const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
@@ -42,35 +41,52 @@ const TodaysProjectReports = () => {
   const fromDate = customFunctions.getDate(new Date())
   const [reportType, setReportType] = useState({ "label": 'Morning', "value": 1 },)
   const [selectedId, setSelectedId] = useState([]);
+  const [projectsList, setProjectsList] = useState('')
+  const [selectedProject, setProject] = useState('')
 
   useEffect(() => {
     if (UserID) {
       getTodaysReport(1);
     }
-  }, [currentPage, UserID]);
+  }, [UserID]);
 
   const [morningRowData, setMorningRowData] = useState([])
   const [eveningRowData, setEveningRowData] = useState([])
 
   useEffect(() => {
+    setTitle(`Today's Reports`)
     const isProjectManager =
       customFunctions?.getLocalStorage('isProjectManager');
     setProjectManager(JSON.parse(isProjectManager));
-  }, [localStorage.getItem('isProjectManager')]);
-
-  useEffect(() => {
-    setTitle(`Today's Reports`)
     const uRole = customFunctions.getLocalStorage('group');
+    getProjectList();
     setUserRole(Number(uRole));
   }, []);
 
 
+  const getProjectList = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.projectListUrl}?sort_by=name&status=active&type=all`
+    );
+
+    if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    const dpOptions =
+      (data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
+
+    setProjectsList(dpOptions);
+  };
 
   const getTodaysReport = async (pageNo = currentPage) => {
     setShowLoader(true);
-    console.log("currentPage", currentPage);
-
-
     const params = {
       user: UserID,
       type: 'all',
@@ -78,11 +94,13 @@ const TodaysProjectReports = () => {
       end_date: fromDate
     };
 
+    if (selectedProject) {
+      params.project = +selectedProject?.value
+    }
+
     const url = customFunctions.generateUrl(Api.generateTaskList, params);
     try {
       const { data } = await AuthApi.getDataFromServer(url);
-      console.log('data', data.data);
-
       setShowLoader(false);
 
       let morningReportData = []
@@ -163,7 +181,7 @@ const TodaysProjectReports = () => {
             // className="ml-1"
             onClick={(e) => {
               e.preventDefault();
-              history.push(`/report-tasks-list/${projectsId}`, { state: { formattedDate: fromDate, fromSentReport: true } });
+              history.push(`/view-reports-projects/${projectsId}`, { state: { formattedDate: fromDate, fromSentReport: true } });
             }}
           >
             <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
@@ -205,9 +223,6 @@ const TodaysProjectReports = () => {
     const url = customFunctions.generateUrl(`${Api.generateTaskList}${projectReportId}/`, params);
     const { data, message } = await AuthApi.deleteDataFromServer(url);
 
-    console.log("data, message", data, message);
-
-
     if (data?.success) {
       swal('Deleted successfully', '', 'success').then(() => {
         setShowDelete(false);
@@ -239,7 +254,13 @@ const TodaysProjectReports = () => {
     }
   }
 
-  console.log('selectedId', selectedId);
+  const handleFilter = (e) => {
+    getTodaysReport()
+  }
+
+  const handleClear = (e) => {
+    setProject('')
+  }
 
   return (
     <>
@@ -259,15 +280,15 @@ const TodaysProjectReports = () => {
               type="submit"
               onClick={(e) => {
                 e.preventDefault()
-                history.push(`/current-project`)
+                history.push(`/project-report-generation`)
               }}
             >
-              Back
+              Generate Report
             </Button>
           </div>
           <hr style={{ borderColor: "white" }} />
           <Row>
-            <Col sm={2}>
+            {/* <Col sm={2}>
               <Datepicker
                 className="form-control"
                 label="Select from date"
@@ -287,7 +308,7 @@ const TodaysProjectReports = () => {
                   'required'
                 )}
               />
-            </Col>
+            </Col> */}
             {/* <Col sm={2}>
               <Datepicker
                 label="Select to date"
@@ -311,7 +332,7 @@ const TodaysProjectReports = () => {
             <Col sm={2}>
               <DropdownInput
                 label="Project"
-                asterisk="*"
+                // asterisk="*"
                 options={projectsList}
                 defaultValue={selectedProject}
                 onSelectHandler={(select) => {
@@ -327,7 +348,7 @@ const TodaysProjectReports = () => {
             </Col>
 
             <Col sm={4} className='mt-4'>
-              <Button variant="primary" onClick={(e) => { handleFilter(e) }}>Get task list</Button>
+              <Button variant="primary" onClick={(e) => { handleFilter(e) }}> Filter </Button>
               <Button variant="secondary" onClick={() => {
                 handleClear()
               }
@@ -338,9 +359,21 @@ const TodaysProjectReports = () => {
             </Col>
             <Col>
             </Col>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 "></h5>
+              <a
+                href="#"
+                onClick={() => {
+                  history.push(`/project-reports-details`)
+                }}
+                className="btn-link"
+              >
+                Previous Reports Details
+              </a>
+            </div>
           </Row>
-
           {
+
             (rowData &&
               <Table
                 columns={columnsMorning}

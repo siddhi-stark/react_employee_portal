@@ -186,11 +186,11 @@ const ProjectReportForm = () => {
 
     let final_obj = {
       project: +projectId,
-      report_date: customFunctions.getDate(filterDate),
+      report_date: customFunctions.getDate(new Date()),
       current_status: +projectStatus?.value,
       issues_risks: issues,
       next_steps: nextSteps,
-      report_type: +selectedReportType?.value
+      report_type: 1
     }
 
     let prepareReportDetails = []
@@ -218,7 +218,7 @@ const ProjectReportForm = () => {
     const { data, message } = response;
     if (data) {
       swal(data.message[0], '', 'success').then(() => {
-        history.push(`/team-project/${projectId}`);
+        history.push(`/todays-project-reports`);
       });
       setShowLoader(false);
     } else {
@@ -270,7 +270,7 @@ const ProjectReportForm = () => {
               type="submit"
               onClick={(e) => {
                 e.preventDefault()
-                { history.push(`/team-project/${projectId}`) }
+                { history.push(`/todays-project-reports`) }
 
               }}
             >
@@ -356,7 +356,7 @@ const ProjectReportForm = () => {
             <>
               <Form>
                 <Row>
-                  <Col>
+                  <Col sm={2}>
                     <DropdownInput
                       label="Current Project Status"
                       asterisk="*"
@@ -368,24 +368,6 @@ const ProjectReportForm = () => {
                       // disabled={isViewOnly ? true : false}
                       errorMessage={validator.current.message(
                         'Current Project Status',
-                        selectedReportType,
-                        'required'
-                      )}
-                    />
-                  </Col>
-
-                  <Col>
-                    <DropdownInput
-                      label="Report Type"
-                      asterisk="*"
-                      options={reportTypes}
-                      defaultValue={selectedReportType}
-                      onSelectHandler={(select) => {
-                        setReportType(select);
-                      }}
-                      // disabled={isViewOnly ? true : false}
-                      errorMessage={validator.current.message(
-                        'Report Type',
                         selectedReportType,
                         'required'
                       )}

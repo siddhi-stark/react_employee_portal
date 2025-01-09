@@ -125,7 +125,8 @@ import AddLateMarks from './containers/Leaves/addLateMarks';
 import LateMarks from './containers/Leaves/lateMarks';
 import ProjectReportForm from './containers/Projects Report/projectReportForm';
 import TodaysProjectReports from './containers/Projects Report/todaysProjectReports';
-
+import ProjectsViewReports from './containers/Projects Report/projectsViewReports';
+import ProjectReportsDetails from './containers/Projects Report/projectReportsDetails';
 
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
@@ -391,6 +392,9 @@ function Routes() {
 
       <Route path="/project-report-generation" exact component={ProjectReportForm}/>
       <Route path="/todays-project-reports" exact component={TodaysProjectReports}/>
+      <Route path="/view-reports-projects/:id" exact component={ProjectsViewReports}/>
+      <Route path="/project-reports-details" exact component={ProjectReportsDetails}/>
+      
 
       <Route component={NotFound} />
 

@@ -55,13 +55,44 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 10],
   },
+
   {
     title: 'Weekly Project Reports',
-    path: '/project-list',
-    icon: 'report.svg',
-    submenu: [],
+    path: '#',
+    icon: 'Employee.svg',
+    submenu: [
+      {
+        title: 'Project Reports',
+        path: '/project-list',
+        icon: 'report.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 4, 10],
+      },
+      {
+        title: 'Weekly Generated Reports',
+        path: '/todays-project-reports',
+        icon: 'Employee.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 4, 5, 6, 10],
+      },
+      {
+        title: 'Project Reports Details',
+        path: '/project-reports-details',
+        icon: 'recruitement.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 4, 10],
+      },
+
+
+    ],
     roleaccess: [1, 2, 3, 4, 10],
   },
+
+
+
+
+
+
   {
     title: 'Quotes',
     path: '/quotes',
@@ -78,15 +109,15 @@ const menu = [
     // roleaccess: [1, 5, 4, 6],
   },
   {
-    title:'Work From Home Details',
-    path:'/wfh',
+    title: 'Work From Home Details',
+    path: '/wfh',
     icon: 'timesheet.svg',
     submenu: [],
     roleaccess: [1, 2, 3, 10, 5, 6],
   },
   {
-    title:'Work From Home',
-    path:'/wfh-employees',
+    title: 'Work From Home',
+    path: '/wfh-employees',
     icon: 'timesheet.svg',
     submenu: [],
     roleaccess: [4, 5, 6, 3],
@@ -135,28 +166,28 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6, 10],
   },
-  // {
-  //   title: 'Weekly Project Reports',
-  //   path: '#',
-  //   icon: 'Employee.svg',
-  //   submenu: [
-  //     {
-  //       title: 'Weekly Generated Reports',
-  //       path: '/todays-project-reports',
-  //       icon: 'Employee.svg',
-  //       submenu: [],
-  //       roleaccess: [1, 2, 3, 4, 5, 6, 10],
-  //     },
-  //     {
-  //       title: 'Generate Project Reports',
-  //       path: '/project-report-generation',
-  //       icon: 'recruitement.svg',
-  //       submenu: [],
-  //       roleaccess: [1, 2, 3, 4, 5, 6, 10],
-  //     },
-  //   ],
-  //   roleaccess: [1, 2, 3, 4, 5, 6, 10],
-  // },
+  {
+    title: 'Weekly Project Reports',
+    path: '#',
+    icon: 'Employee.svg',
+    submenu: [
+      {
+        title: 'Weekly Generated Reports',
+        path: '/todays-project-reports',
+        icon: 'Employee.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 4, 5, 6, 10],
+      },
+      {
+        title: 'Generate Project Reports',
+        path: '/project-report-generation',
+        icon: 'recruitement.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 4, 5, 6, 10],
+      },
+    ],
+    roleaccess: [1, 2, 3, 4, 5, 6, 10],
+  },
   // {
   //   title: 'Project Reports',
   //   path: '/project-report-generation',
@@ -164,7 +195,7 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1, 2, 3, 4, 5, 6, 10],
   // },
-  
+
   {
     title: 'Recruitment',
     path: '/recruitment',
@@ -265,8 +296,8 @@ const menu = [
       // },
       {
         title: 'Employees Late Marks',
-        path : '/late-marks',
-        roleaccess: [1, 5,  6],
+        path: '/late-marks',
+        roleaccess: [1, 5, 6],
       },
     ],
     roleaccess: [1, 2, 3, 6, 5, 10],
@@ -368,7 +399,7 @@ const menu = [
         icon: 'template.svg',
         roleaccess: [1, 5, 6],
       },
-      
+
       {
         title: 'Employee Quarter Review',
         path: '/employee-quarter-review',
@@ -457,7 +488,7 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [3, 4, 5, 6, 7, 8, 10],
   // },
-  
+
   {
     title: 'Support Ticket',
     path: '/support-ticket',
@@ -466,7 +497,7 @@ const menu = [
     roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
 
-   {
+  {
     title: 'Employee Review Forms Details',
     path: '/employee-reviews-details',
     icon: 'ticket.svg',
@@ -481,13 +512,13 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1],
   // },
-  // {
-  //   title: 'Predictions',
-  //   path: '/predictions-details',
-  //   icon: 'ticket.svg',
-  //   submenu: [],
-  //   roleaccess: [1],
-  // },
+  {
+    title: 'Predictions',
+    path: '/predictions-details',
+    icon: 'ticket.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
 
   // {
   //   title: 'Predictions',
@@ -496,6 +527,7 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1],
   // },
+  
   
   // {
   //   title: 'FAQs',

@@ -148,7 +148,7 @@ const PredictionsDetails = () => {
     };
     const url = `${Api.predictionDetails}`;
     const { data, error } = await AuthApi.getDataFromServer(url, params);
-
+    
     // if (data?.data) {
     if (data?.data) {
       const finalData = data.data.map((item, index) => ({
@@ -172,7 +172,7 @@ const PredictionsDetails = () => {
 
       setShowLoader(false);
     } else {
-      swal(error || 'Something went wrong', '', 'error');
+      swal('Data not present.', '', 'error');
       setShowLoader(false);
 
     }
@@ -183,13 +183,15 @@ const PredictionsDetails = () => {
     const url = `${Api.prediction}?use_ai=true`;
     const { data, error } = await AuthApi.getDataFromServer(url);
 
+    console.log("data", data);
+    
     // if (data?.data) {
     if (data?.data) {
       swal(data && data.message[0], '', 'success');
       // setPredictions(data.data.milestone_details || []);
       setShowLoader(false);
     } else {
-      swal(error || 'Something went wrong', '', 'error');
+      swal(data && data.message[0] || 'Data not present for predictions.', '', 'error');
       setShowLoader(false);
 
     }
