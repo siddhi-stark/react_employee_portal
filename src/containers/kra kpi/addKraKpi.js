@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, ButtonGroup, Card, Form, Col, Row } from 'react-bootstrap';
-import { withRouter, useHistory, useParams, useLocation } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
@@ -18,7 +18,6 @@ const items = [{ to: '/employee-feedback', label: 'Employee KRA-KPI' }, { label:
 const AddKraKpi = () => {
   const validator = useRef(new SimpleReactValidator());
   const state = useLocation();
-  const { id } = useParams();
   const feedbackId = state?.state?.state?.feedbackId;
   const feddbackCreatedDate = state?.state?.state?.feddbackCreatedDate;
   const toUserId = state?.state?.state?.toUserId;
@@ -31,7 +30,6 @@ const AddKraKpi = () => {
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-  const [fieldsDisabled, setFieldsDisabled] = useState(false)
   const [refereshPage, setRefereshPage] = useState(false);
   const [allEmployes, setAllEmployes] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState();
@@ -72,7 +70,6 @@ const AddKraKpi = () => {
       note: ''
     }
   ]);
-  // console.log('questions', questions);
 
   const [formData, setFormData] = useState({
     departments: '',
@@ -80,8 +77,6 @@ const AddKraKpi = () => {
   });
 
   const handleCheckboxChange = (event, item) => {
-    console.log("event, item", event, item);
-
     const data = [...questions];
     data[questions.indexOf(item)].rating = event;
     setQuestions(data);
@@ -103,18 +98,14 @@ const AddKraKpi = () => {
   useEffect(() => {
     if (feedbackId && employeeId && empDepartment) {
       getUpdateData()
-      // setViewOnly(true)
-      setFieldsDisabled(true)
     }
   }, [feedbackId, employeeId, empDepartment])
 
   useEffect(() => {
 
     if (!feedbackId && selectedDepartment && selectedTeam && selectedEmployee && selectedPostion && !isReset) {
-      console.log('Hello world');
       getKraKpiDetails()
       setViewOnly(false)
-      setFieldsDisabled(true)
     }
   }, [employeeId, selectedDepartment, selectedTeam, selectedEmployee])
 
@@ -129,13 +120,9 @@ const AddKraKpi = () => {
     }
   }, [userRole, selectedDepartment, selectedTeam]);
 
-
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-    // const isProjectManager =
-    //   customFunctions?.getLocalStorage('isProjectManager');
-    // setProjectManager(JSON.parse(isProjectManager));
   }, []);
 
   useEffect(() => {
@@ -223,7 +210,6 @@ const AddKraKpi = () => {
   const getTeams = async () => {
     setQuestions(null)
     setAllTeams(null)
-    // if (!isViewOnly && isUpdate) {
     if (!isViewOnly) {
       setSelectedTeam(null)
       setSelectedPostion(null)
@@ -237,7 +223,7 @@ const AddKraKpi = () => {
     const params = { department_id: selectedDepartment?.value };
 
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data, _ } = await AuthApi.getDataFromServer(url);
+    const { data } = await AuthApi.getDataFromServer(url);
 
     if (data && data.success) {
       setShowLoader(false);
@@ -278,16 +264,11 @@ const AddKraKpi = () => {
     let created_at = null
     let submited_date = null
 
-    console.log('data?.data[0]', data?.data);
-
     if (data && data.success) {
-      console.log("data====", data.data);
-      
       averageRating = data?.data[0]?.average_rating ? data?.data[0]?.average_rating : 0
       created_at = data?.data[0]?.created_at
       submited_date = data?.data[0]?.submited_date
       data?.data[0]?.kra_kpi.length > 0 && data.data[0].kra_kpi.map((item) => {
-        // console.log('sssss', item);
         department = item?.departments[0]
         team = item?.team
         department_name = item?.department_names[0]
@@ -303,7 +284,7 @@ const AddKraKpi = () => {
           metric: item?.questionnaire,
           category: item?.category,
           category_name: item?.category_name,
-          submited_date:item?.submited_date
+          submited_date: item?.submited_date
         })
       })
     }
@@ -398,7 +379,7 @@ const AddKraKpi = () => {
     if (questionData)
       obj = {
         'to_user': selectedEmployeeId,
-        'reviewed_date' : customFunctions.getDate(selectedMonth),
+        'reviewed_date': customFunctions.getDate(selectedMonth),
         'data': questionData,
       };
     setShowLoader(false);
@@ -435,8 +416,6 @@ const AddKraKpi = () => {
       review_status: '',
       quarter: ''
     });
-    // submitForm();
-    // window.location.reload();
     validator.current.hideMessages();
     if ([3, 4].includes(userRole)) {
       history.push('/kra-kpi-employees');
@@ -444,10 +423,8 @@ const AddKraKpi = () => {
       history.push('/kra-kpi');
     }
   };
-  const [currentPage, setCurrentPage] = useState(1);
 
   const applyFilters = () => {
-    setCurrentPage(1);
     setReset(false)
     getKraKpiDetails(1);
   };
@@ -656,15 +633,9 @@ const AddKraKpi = () => {
                   </div>
                 </Row>
               )}
-
-              {/* </Card.Body> */}
-              {/* </Card> */}
-
               <Row>
                 {questions && questions.length != 0 && showTable && selectedDepartment ? (
-                  // Group questions by category ID and render each group in its own card
                   questions.reduce((acc, question) => {
-                    // Group questions by category ID
                     if (!acc[question.category]) acc[question.category] = [];
                     acc[question.category].push(question);
                     return acc;
@@ -684,7 +655,6 @@ const AddKraKpi = () => {
                             <Form.Group controlId={`formItem${item.id}`} key={item.id}>
                               <Row>
                                 <Form.Label>
-                                  {/* {index + 1}. {item?.metric} <span className="text-danger">*</span> */}
                                   <b>Q{index + 1}.</b> {item?.metric}
                                 </Form.Label>
                                 {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>}
@@ -729,11 +699,6 @@ const AddKraKpi = () => {
                                   </div>
                                 </Col>
                                 <Col>
-
-                                  {/* <Form.Label>
-                                {index + 1}. {item?.metric} <span className="text-danger">*</span>
-                              </Form.Label> */}
-                                  {/* {item?.questionnaire_note && <p className="text-muted">Note: {item?.questionnaire_note}</p>} */}
                                   <p className="">Comment : <span className="text-danger">*</span></p>
                                   <Form.Control
                                     as='textarea'
@@ -773,8 +738,6 @@ const AddKraKpi = () => {
                 }
               </Row>
             </Form>
-            {/* </Card.Body> */}
-            {/* </Card> */}
             <div className="d-flex justify-content-end p-2">
               <ButtonGroup className="gap-3 mt-6">
                 {questions && questions.length != 0 && showTable && !isViewOnly && selectedDepartment && (
@@ -783,7 +746,6 @@ const AddKraKpi = () => {
                       variant="secondary"
                       className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
                       type="submit"
-                      // onClick={setAddPopUp(true)}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -794,10 +756,6 @@ const AddKraKpi = () => {
                           forceUpdate(count + 1)
                         }
                       }}
-                    // onConfirm={() => {
-                    //   setAddPopUp(true)
-                    // }}
-
                     >
                       Submit
                     </Button>
@@ -826,7 +784,6 @@ const AddKraKpi = () => {
             showCancel
             title="Are you sure you want to submit?"
             confirmBtnText="Submit"
-            // confirmBtnBsStyle="blue"
             cancelBtnBsStyle="light"
             onConfirm={() => {
               submitForm();

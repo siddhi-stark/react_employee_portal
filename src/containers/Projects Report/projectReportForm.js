@@ -3,15 +3,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
-import { Card, Row, Col, Button, Image, Form, Tabs, Tab } from 'react-bootstrap';
+import { Card, Row, Col, Button, Form } from 'react-bootstrap';
 import Select from 'react-select';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
-import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
 
@@ -50,13 +49,6 @@ const ProjectReportForm = () => {
   console.log("selectedTasks", selectedTasks);
 
   const [selectedReportType, setReportType] = useState({ "label": 'Morning', "value": 1 })
-
-  const reportTypes = [
-    { "label": 'Morning', "value": 1 },
-    { "label": 'Evening', "value": 2 },
-  ]
-
-  const today = new Date();
 
   useEffect(() => {
     if (filterDate && projectId) {
@@ -98,8 +90,6 @@ const ProjectReportForm = () => {
     const startDate = customFunctions.getDate(filterDate)
     const endDate = customFunctions.getDate(toDate)
     const params = {
-      // start_date: "2024-07-10",
-      // end_date: "2024-16-10",
       start_date: startDate,
       end_date: endDate,
       sort_by: 'id',
@@ -123,20 +113,15 @@ const ProjectReportForm = () => {
         }
 
       })
-
       setSelectedTasks(arr)
-
       setSectionOneTaskList(() => {
         return data.data;
       });
       setShowLoader(false);
-
     } else {
       setShowLoader(false);
-
       swal(data.message || 'Error fetching data', '', 'error');
     }
-
   };
 
   const fetchSectionTwoTasks = async (page = 1) => {
@@ -144,7 +129,6 @@ const ProjectReportForm = () => {
     const endDate = customFunctions.getDate(toDate)
 
     const params = {
-      // start_date: "2024-16-10",
       start_date: endDate,
       sort_by: 'id',
       project_id: projectId,
@@ -168,14 +152,11 @@ const ProjectReportForm = () => {
         arr.push(obj)
       })
       setUpcomingDeliverables(arr)
-
-
       setSectionTwoTaskList(() => {
         return data.data
       }
       );
       setShowLoader(false);
-
     } else {
       setShowLoader(false);
       swal(data.message || 'Error fetching data', '', 'error');
@@ -288,7 +269,6 @@ const ProjectReportForm = () => {
                 onChange={(e) => {
                   setFromDate(e);
                 }}
-                // maxDate={new Date()}
                 autoComplete="off"
                 name="startDate"
                 dateFormat="dd/MM/yyyy"
@@ -365,7 +345,6 @@ const ProjectReportForm = () => {
                       onSelectHandler={(select) => {
                         setProjectStatus(select);
                       }}
-                      // disabled={isViewOnly ? true : false}
                       errorMessage={validator.current.message(
                         'Current Project Status',
                         selectedReportType,
@@ -377,7 +356,6 @@ const ProjectReportForm = () => {
                 <div>
                   <Form.Group>
                     <Form.Label>Key Tasks Completed Today<span className="text-danger">*</span>
-
                     </Form.Label>
                     <Select
                       isMulti
@@ -386,7 +364,6 @@ const ProjectReportForm = () => {
                         value: task.id,
                         label: `${task.content} - ${task.status === "new" ? "Pending" : "Completed"}`,
                         taskStatus: task.status
-
                       }))}
                       onChange={(selected) => setSelectedTasks(selected)}
                       placeholder="Select tasks completed today"
@@ -425,7 +402,6 @@ const ProjectReportForm = () => {
                     )}
                   </p>
                 </div>
-
                 <Form.Group>
                   <Form.Label>Issues/Risks</Form.Label>
                   <Form.Control
@@ -436,7 +412,6 @@ const ProjectReportForm = () => {
                     placeholder="Mention any delays or blockers"
                   />
                 </Form.Group>
-
                 <Form.Group>
                   <Form.Label>Next Steps</Form.Label>
                   <Form.Control
@@ -475,12 +450,10 @@ const ProjectReportForm = () => {
           showCancel
           title="Are you sure you want to submit? Once you submit, you can't change it."
           confirmBtnText="Submit"
-          // confirmBtnBsStyle="blue"
           cancelBtnBsStyle="light"
           onConfirm={() => {
             handleSubmit()
             setAddPopUp(false)
-
           }}
           onCancel={() => {
             setAddPopUp(false)

@@ -31,15 +31,11 @@ const Wfh = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
   const [userRole, setUserRole] = useState(null);
   const [apiCalled, setApiCalled] = useState(false);
-  const [joiningDate, setJoiningDate] = useState(null);
   const [refereshPage, setRefereshPage] = useState(false);
   const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
   const [isProjectManager, setProjectManager] = useState(false)
   const [modalShow, setModalShow] = useState(false);
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('default', { month: 'long' }); // 'January', 'February', etc.
-  const currentYear = currentDate.getFullYear(); // 2024
   const [statusId, setStatusId] = useState(null);
   const [prevData, setPrevData] = useState({})
   const [userId, setUserId] = useState(null)
@@ -126,7 +122,6 @@ const Wfh = () => {
 
       if (data && data.success) {
         const finalData = data.data.map((item, index) => ({
-          // no: (pagination.current_page - 1) * 10 + index + 1,
           no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
           id: item.id,
           start_date: item.start_date,
@@ -184,11 +179,6 @@ const Wfh = () => {
       label: 'End Date',
       render: (row) => row.end_date,
     },
-    // {
-    //   id: 'status_name',
-    //   label: 'Status',
-    //   render: (row) => row.status_name,
-    // },
     {
       id: 'reason',
       label: 'Reason',
@@ -205,8 +195,6 @@ const Wfh = () => {
       render: ({ id, status_name, reason, start_date, end_date, employee_id, status, duration_type }) => {
         return (
           <>
-            {/* customFunctions.getDate(new Date()) <= leave_from_date ?  */}
-
             {status_name === 'Pending' && isProjectManager == false ? (
               <>
                 <Image
@@ -220,7 +208,6 @@ const Wfh = () => {
                       "start_date": start_date,
                       "end_date": end_date,
                       "employee_id": employee_id,
-                      // "status" : status
                     })
                     setModalShow(true);
                   }}
@@ -238,7 +225,6 @@ const Wfh = () => {
                       "start_date": start_date,
                       "end_date": end_date,
                       "employee_id": employee_id,
-                      // "status" : status
                     })
                     setModalShow(true);
                   }}
@@ -315,7 +301,6 @@ const Wfh = () => {
       swal('Deleted successfully', '', 'success').then(() => {
         setShowDelete(false);
         setSelectedEmployee()
-        setJoiningDate(null)
         setRefereshPage(true)
 
       });
@@ -360,11 +345,9 @@ const Wfh = () => {
               <Button variant="secondary" onClick={() => {
                 setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
                 setSelectedEmployeeId('all_employess')
-                setJoiningDate(null)
                 setSelectedDate(null)
                 setApiCalled(false)
                 setRowData([])
-                // setRefereshPage(true)
               }
 
               } className='ml-3'>
@@ -378,7 +361,6 @@ const Wfh = () => {
       <Card>
         <Card.Body>
           <div className="d-flex align-items-center justify-content-end">
-
             {!setTable && [1, 4].includes(userRole) && isProjectManager == true && (
               <a
                 href="#"
@@ -414,7 +396,6 @@ const Wfh = () => {
             prevData={prevData}
             handleModalCLose={(e) => setModalShow(e)}
             callBack={() => {
-              console.log("Hello Hello Hello");
               getWfhDetails(1)
             }}
           />

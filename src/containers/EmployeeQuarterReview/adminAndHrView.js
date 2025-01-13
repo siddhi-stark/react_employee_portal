@@ -22,13 +22,10 @@ function AdminAndHrView() {
   const year = state?.state?.state?.year;
   const teamEmpId = state?.state?.state?.empId;
   const isViewOnly = state?.state?.state?.isViewOnly
-  const isHr = state?.state?.state?.isHr
-  const [employeeId, setEmployeeId] = useState()
   const [empDepartment, setEmpDepartment] = useState(state?.state?.state?.departmentId)
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
-  const [fieldsDisabled, setFieldsDisabled] = useState(false)
   const [avgRating, setAvgRating] = useState(0)
   const [employeeDetails, setEmployeeDetails] = useState({});
   const [totalLeaves, setTotalLeaveCount] = useState(0)
@@ -46,13 +43,11 @@ function AdminAndHrView() {
     quarter: ''
   });
   const [selectedQuarter, setQuarter] = useState('');
-  const [selectedStatus, setStatus] = useState('');
   const [reviewerName, setReviewerName] = useState('');
   const [supervisonFeedback, setSupervisonFeedback] = useState('');
   const [empSubmitDate, setEmpSubmitDate] = useState('');
 
   const ratingOptions = [
-    // { id: "zero", label: "0", isCheck: false },
     { id: "1", label: "1", isCheck: false },
     { id: "2", label: "2", isCheck: false },
     { id: "3", label: "3", isCheck: false },
@@ -69,7 +64,7 @@ function AdminAndHrView() {
     if (id && teamEmpId && empDepartment) {
       getUpdateData()
     }
-  }, [id, employeeId, empDepartment])
+  }, [id, empDepartment])
 
   useEffect(() => {
     if (teamEmpId && selectedQuarter) {
@@ -109,7 +104,6 @@ function AdminAndHrView() {
     setShowLoader(true);
     const endPoint = `${Api.leavesDetailsUrl}`;
     const params = {
-      // my_leaves: true,
       employee: teamEmpId
     };
 
@@ -148,11 +142,7 @@ function AdminAndHrView() {
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    let leaveCount = 0
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      // data.data.leave_count
-      console.log("data?.data?.leave_count", data?.data?.leave_count);
-
       setTotalLeaveCount(data?.data?.leave_count?.leaves_count)
     } else {
       setShowLoader(false);
@@ -172,8 +162,6 @@ function AdminAndHrView() {
     if (data) {
       setShowLoader(false);
       setEmployeeDetails(data.data);
-
-      // getEmployeeDocument(data.data && data.data.full_name);
     }
   };
 
@@ -205,7 +193,7 @@ function AdminAndHrView() {
 
     const url = customFunctions.generateUrl(endPoint, params);
 
-    const { data, _ } = await AuthApi.getDataFromServer(url);
+    const { data } = await AuthApi.getDataFromServer(url);
 
     let oldData = []
     let review_status = null
@@ -242,7 +230,6 @@ function AdminAndHrView() {
       })
     }
     setAvgRating(avg_rating)
-    setStatus({ label: review_status_name, value: review_status })
     setQuarter({ label: quarter_name, value: quarter })
     setReviewerName(reviewer_name)
     setEmpSubmitDate(created_at)
@@ -350,7 +337,6 @@ function AdminAndHrView() {
         allowOutsideClick: false,
       });
     }
-
   };
 
   const handleSubmit = (e) => {
@@ -385,8 +371,6 @@ function AdminAndHrView() {
       review_status: '',
       quarter: ''
     });
-    // submitForm();
-    // window.location.reload();
     validator.current.hideMessages();
     history.push('/all-employees-reviews');
   };
@@ -431,17 +415,7 @@ function AdminAndHrView() {
                         disabled='true'
                       />
                     </Col>
-                    {/* <Col sm={2}>
-                      <DropdownInput
-                        label='Review Status'
-                        options={allStatus}
-                        defaultValue={selectedStatus}
-                        onSelectHandler={(select) => {
-                          setStatus(select);
-                        }}
-                        disabled={isViewOnly ? true : false}
-                      />
-                    </Col> */}
+
                     {isViewOnly && (<>
                       <Col sm={2}>
                         <Form.Label>
@@ -598,10 +572,7 @@ function AdminAndHrView() {
                             />
 
                           </Form.Group>
-
-                          {/* <Col md={5}> */}
                           <Form.Group controlId={`formRating${index + 1}`}>
-
                             <Form.Label>
                               Rating : <span className="text-danger">*</span>
                             </Form.Label>
@@ -629,27 +600,14 @@ function AdminAndHrView() {
                                     disabled={isViewOnly ? true : false}
                                   />
                                 ))}
-                              {/* <p className='text-danger'>
-                                {validator.current.message(
-                                  'Rating',
-                                  item?.rating,
-                                  'required'
-                                )}
-                              </p> */}
                             </div>
-                            {/* </Col> */}
                           </Form.Group>
-
                         </Card.Body>
                       </Card>
                     </Col>
-
-
                     <Col sm={5} >
                       {index == 0 && (<>
-
                         <h5 className="card-title">Reviewer Feedback Form</h5>
-
                       </>
                       )}
                       <Card>
@@ -674,7 +632,6 @@ function AdminAndHrView() {
                                 disabled={isViewOnly ? true : false}
 
                               />
-
                             </Form.Group>
                             <p className='text-danger'>
                               {validator.current.message(
@@ -721,7 +678,6 @@ function AdminAndHrView() {
                                 )}
                               </p>
                             </div>
-                            {/* </Col> */}
                           </Form.Group>
                         </Card.Body>
                       </Card>

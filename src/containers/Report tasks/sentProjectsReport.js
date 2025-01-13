@@ -1,9 +1,9 @@
 /* eslint-disable */
-import React, { useState, useRef, useEffect } from 'react';
-import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
+import React, { useState, useEffect } from 'react';
+import { Helmet } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
-import { Card, Row, Col, Button, Image, Tabs, Tab } from 'react-bootstrap';
+import { Card, Button, Image, Tabs, Tab } from 'react-bootstrap';
 import Table from '../../components/ReactTable/simpletable.component';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import AuthApi from '../../helper/authApi';
@@ -11,20 +11,12 @@ import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
-import CustomTable from 'stark-custom-datatable';
-import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
-import SimpleReactValidator from 'simple-react-validator';
-
 
 const items = [{ to: '/', label: 'Home' }, { label: `Today's Reports` }];
 
 const SentProjectReport = () => {
   const history = useHistory();
-  const state = useLocation();
-  const validator = useRef(new SimpleReactValidator());
   const [key, setKey] = useState('morningReports');
-  const projectId = state?.state?.state?.projectId
-  console.log('projectId', projectId);
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
   const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
@@ -34,10 +26,6 @@ const SentProjectReport = () => {
   const [projectReportId, setReportId] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
   const [showSubmit, setShowSubmit] = useState(false);
-  const [userRole, setUserRole] = useState(null);
-  const [apiCalled, setApiCalled] = useState(false);
-  const [title, setTitle] = useState('');
-  const [isProjectManager, setProjectManager] = useState(false)
   const UserID = customFunctions.getLocalStorage('userId');
   const fromDate = customFunctions.getDate(new Date())
   const [reportType, setReportType] = useState({ "label": 'Morning', "value": 1 },)
@@ -52,24 +40,8 @@ const SentProjectReport = () => {
   const [morningRowData, setMorningRowData] = useState([])
   const [eveningRowData, setEveningRowData] = useState([])
 
-  useEffect(() => {
-    const isProjectManager =
-      customFunctions?.getLocalStorage('isProjectManager');
-    setProjectManager(JSON.parse(isProjectManager));
-  }, [localStorage.getItem('isProjectManager')]);
-
-  useEffect(() => {
-    setTitle(`Today's Reports`)
-    const uRole = customFunctions.getLocalStorage('group');
-    setUserRole(Number(uRole));
-  }, []);
-
-
-
   const getTodaysReport = async (pageNo = currentPage) => {
     setShowLoader(true);
-    console.log("currentPage", currentPage);
-
 
     const params = {
       user: UserID,
@@ -81,10 +53,8 @@ const SentProjectReport = () => {
     const url = customFunctions.generateUrl(Api.generateTaskList, params);
     try {
       const { data } = await AuthApi.getDataFromServer(url);
-      console.log('data', data.data);
 
       setShowLoader(false);
-
       let morningReportData = []
       let eveningReportData = []
 
@@ -129,7 +99,6 @@ const SentProjectReport = () => {
       swal('Error fetching data', '', 'error');
     } finally {
       setShowLoader(false);
-      setApiCalled(false);
     }
   };
 
@@ -160,7 +129,6 @@ const SentProjectReport = () => {
         <>
           <a
             href="/"
-            // className="ml-1"
             onClick={(e) => {
               e.preventDefault();
               history.push(`/report-tasks-list/${projectsId}`, { state: { formattedDate: fromDate, fromSentReport: true } });
@@ -222,7 +190,6 @@ const SentProjectReport = () => {
         <>
           <a
             href="/"
-            // className="ml-1"
             onClick={(e) => {
               e.preventDefault();
               history.push(`/report-tasks-list/${projectsId}`, { state: { formattedDate: fromDate, fromSentReport: true } });
@@ -305,7 +272,7 @@ const SentProjectReport = () => {
 
   return (
     <>
-      <Helmet title={title} />
+      <Helmet title={''} />
       <div className="title-breadcrumb-section">
         <h2 className="main-content-title tx-24 mg-b-5">Today's Projects Report</h2>
         <Breadcrumb items={items} />

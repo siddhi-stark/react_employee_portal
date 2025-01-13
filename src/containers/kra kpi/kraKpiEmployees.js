@@ -34,10 +34,6 @@ const KraKpiEmployees = () => {
   const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
 
-  console.log("apiCalled", apiCalled);
-
-  console.log("currentPage", currentPage);
-  
   useEffect(() => {
     setTitle("Employees KRA-KPI");
     if (!apiCalled) {
@@ -66,7 +62,6 @@ const KraKpiEmployees = () => {
     const url = `${Api.employeeListUrl}?for_kra_kpi=1&is_dropdown=true`;
     const { data, error } = await AuthApi.getDataFromServer(url);
     setShowLoader(false);
-    console.log("data.data", data.data);
 
     if (data && data.success) {
       const allemp = data.data.map((item) => ({
@@ -112,7 +107,7 @@ const KraKpiEmployees = () => {
           average_rating: item.average_rating,
           created_at: item.created_at,
           to_user_id: item.to_user_id,
-          submited_date:item.submited_date
+          submited_date: item.submited_date
 
         }));
 
@@ -172,19 +167,7 @@ const KraKpiEmployees = () => {
             }}
           >
             <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
-
           </a>
-          {/* <a
-            href="/"
-            className="ml-2"
-            onClick={(e) => {
-              e.preventDefault();
-              setShowDelete(true);
-              setFeedbackId(id);
-            }}
-          >
-            <Image src="/images/delete.png" alt="Delete" />
-          </a> */}
         </>
       ),
     },
@@ -236,7 +219,6 @@ const KraKpiEmployees = () => {
                 maxDate={new Date()}
                 selected={joiningDate}
                 onChange={(date) => {
-                  console.log('date', date.month);
                   setJoiningDate(date);
                 }}
               />
@@ -285,9 +267,8 @@ const KraKpiEmployees = () => {
               itemsPerPage: limit,
               activePage: pagination.current_page,
               onPageChange: (page) => {
-                console.log("Page", page);
-                
-                setCurrentPage(page), setApiCalled(false)},
+                setCurrentPage(page), setApiCalled(false)
+              },
             }}
           />
         </Card.Body>

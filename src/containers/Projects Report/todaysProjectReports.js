@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from 'react';
-import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
+import { Helmet, DropdownInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
-import { Card, Row, Col, Button, Image, Tabs, Tab } from 'react-bootstrap';
+import { Card, Row, Col, Button, Image } from 'react-bootstrap';
 import Table from '../../components/ReactTable/simpletable.component';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import AuthApi from '../../helper/authApi';
@@ -11,32 +11,22 @@ import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
-import CustomTable from 'stark-custom-datatable';
-import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import SimpleReactValidator from 'simple-react-validator';
-
 
 const items = [{ to: '/', label: 'Home' }, { label: `Weekly Generated Reports` }];
 
 const TodaysProjectReports = () => {
   const history = useHistory();
-  const state = useLocation();
   const validator = useRef(new SimpleReactValidator());
-  const [key, setKey] = useState('morningReports');
-  const projectId = state?.state?.state?.projectId
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
   const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
   const [projectReportId, setReportId] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
   const [showSubmit, setShowSubmit] = useState(false);
-  const [userRole, setUserRole] = useState(null);
-  const [apiCalled, setApiCalled] = useState(false);
   const [title, setTitle] = useState('');
-  const [isProjectManager, setProjectManager] = useState(false)
   const UserID = customFunctions.getLocalStorage('userId');
   const fromDate = customFunctions.getDate(new Date())
   const [reportType, setReportType] = useState({ "label": 'Morning', "value": 1 },)
@@ -46,23 +36,14 @@ const TodaysProjectReports = () => {
 
   useEffect(() => {
     if (UserID) {
-      getTodaysReport(1);
+      getTodaysReport();
     }
   }, [UserID]);
 
-  const [morningRowData, setMorningRowData] = useState([])
-  const [eveningRowData, setEveningRowData] = useState([])
-
   useEffect(() => {
     setTitle(`Today's Reports`)
-    const isProjectManager =
-      customFunctions?.getLocalStorage('isProjectManager');
-    setProjectManager(JSON.parse(isProjectManager));
-    const uRole = customFunctions.getLocalStorage('group');
     getProjectList();
-    setUserRole(Number(uRole));
   }, []);
-
 
   const getProjectList = async () => {
     const { data, message } = await AuthApi.getDataFromServer(
@@ -85,7 +66,7 @@ const TodaysProjectReports = () => {
     setProjectsList(dpOptions);
   };
 
-  const getTodaysReport = async (pageNo = currentPage) => {
+  const getTodaysReport = async () => {
     setShowLoader(true);
     const params = {
       user: UserID,
@@ -128,8 +109,6 @@ const TodaysProjectReports = () => {
           }
         })
 
-        setMorningRowData(morningReportData)
-        setEveningRowData(eveningReportData)
         setRowData(morningReportData)
         const { current_page, total_count, limit } = data.paginator;
         setPagination({
@@ -139,7 +118,6 @@ const TodaysProjectReports = () => {
         });
         setTotalCount(total_count);
         setLimit(limit);
-        setCurrentPage(current_page);
       } else {
         swal(data.message || 'Error fetching data', '', 'error');
       }
@@ -147,7 +125,6 @@ const TodaysProjectReports = () => {
       swal('Error fetching data', '', 'error');
     } finally {
       setShowLoader(false);
-      setApiCalled(false);
     }
   };
 
@@ -178,7 +155,6 @@ const TodaysProjectReports = () => {
         <>
           <a
             href="/"
-            // className="ml-1"
             onClick={(e) => {
               e.preventDefault();
               history.push(`/view-reports-projects/${projectsId}`, { state: { formattedDate: fromDate, fromSentReport: true } });
@@ -226,7 +202,7 @@ const TodaysProjectReports = () => {
     if (data?.success) {
       swal('Deleted successfully', '', 'success').then(() => {
         setShowDelete(false);
-        getTodaysReport(1);
+        getTodaysReport();
       });
     } else {
       swal(data && data.message, '', 'error');
@@ -245,8 +221,6 @@ const TodaysProjectReports = () => {
     const { data } = await AuthApi.postDataToServer(url, obj);
     if (data.success) {
       swal('Report sent successfully', '', 'success').then(() => {
-        setMorningRowData([])
-        setEveningRowData([])
         setRowData([])
         history.push('/current-project', {})
         setShowDelete(false);
@@ -288,47 +262,6 @@ const TodaysProjectReports = () => {
           </div>
           <hr style={{ borderColor: "white" }} />
           <Row>
-            {/* <Col sm={2}>
-              <Datepicker
-                className="form-control"
-                label="Select from date"
-                asterisk="*"
-                selected={fromDate}
-                onChange={(e) => {
-                  setFromDate(e);
-                }}
-                // maxDate={new Date()}
-                autoComplete="off"
-                name="startDate"
-                dateFormat="dd/MM/yyyy"
-                placeholder="Select date"
-                errorMessage={validator.current.message(
-                  'From date',
-                  fromDate,
-                  'required'
-                )}
-              />
-            </Col> */}
-            {/* <Col sm={2}>
-              <Datepicker
-                label="Select to date"
-                asterisk="*"
-                className="form-control"
-                selected={toDate}
-                onChange={(e) => setToDate(e)}
-                autoComplete="off"
-                name="endDate"
-                maxDate={fromDate ? new Date(fromDate.getTime() + 7 * 24 * 60 * 60 * 1000) : null}
-                minDate={fromDate}
-                dateFormat="dd/MM/yyyy"
-                placeholder="Select date"
-                errorMessage={validator.current.message(
-                  'To date ',
-                  toDate,
-                  'required'
-                )}
-              />
-            </Col> */}
             <Col sm={2}>
               <DropdownInput
                 label="Project"
@@ -373,7 +306,6 @@ const TodaysProjectReports = () => {
             </div>
           </Row>
           {
-
             (rowData &&
               <Table
                 columns={columnsMorning}
@@ -384,7 +316,7 @@ const TodaysProjectReports = () => {
                   totalItems: totalCount,
                   itemsPerPage: limit,
                   currentPage: pagination.current_page,
-                  handlePageChange: (page) => setCurrentPage(page),
+                  handlePageChange: () => '',
                 }}
                 dropdownContainerClass="mb-3"
                 selectedRowItems={selectedId}

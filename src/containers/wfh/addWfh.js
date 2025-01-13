@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, ButtonGroup, Card, Form, Col, Row } from 'react-bootstrap';
-import { withRouter, useHistory, useParams, useLocation } from 'react-router-dom';
+import { Button, Card, Form, Col, Row } from 'react-bootstrap';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
@@ -10,7 +10,6 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader';
-import SweetAlert from 'react-bootstrap-sweetalert';
 
 
 const items = [{ to: '/employee-feedback', label: 'Employee WFH' }, { label: 'Add WFH' }];
@@ -30,8 +29,6 @@ const AddWfh = () => {
   const [count, forceUpdate] = useState(0)
   const [isProjectManager, setProjectManager] = useState(false)
 
-
-
   const durationType = [
     { label: "Half Day", value: 1 },
     { label: "Full Day", value: 2 }
@@ -40,7 +37,6 @@ const AddWfh = () => {
   useEffect(() => {
     setTitle("Add WFH");
   }, []);
-
 
   useEffect(() => {
     if (wfhId) {
@@ -60,23 +56,13 @@ const AddWfh = () => {
     const url = customFunctions.generateUrl(endPoint);
     const { data, _ } = await AuthApi.getDataFromServer(url);
 
-
-    console.log("data", data);
     if (data && data?.data && data.success) {
       let obj = data.data
-
-      console.log("obj.start_date", obj?.start_date);
-      console.log("obj.end_date", obj?.end_date);
-      // console.log("==========", customFunctions.getDate(obj?.start_date));
-
-
       setType({ label: obj.duration_type_name, value: obj.duration_type })
       setReason(obj.reason)
       setFromDate(new Date(obj?.start_date))
       setToDate(new Date(obj?.end_date))
       setShowLoader(false)
-
-
     }
     else {
       swal('Error fetching data', '', 'error');

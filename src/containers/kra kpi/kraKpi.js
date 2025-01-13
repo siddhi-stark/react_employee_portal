@@ -36,34 +36,10 @@ const KraKpi = () => {
   const [refereshPage, setRefereshPage] = useState(false);
   const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
-  const [isProjectManager, setProjectManager] = useState(false)
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('default', { month: 'long' }); // 'January', 'February', etc.
-  const currentYear = currentDate.getFullYear(); // 2024
-
-  console.log("api", apiCalled);
-  console.log("current", currentPage);
 
   const formatMonthDate = (dateString) => {
     return moment(dateString).format('MMMM-YYYY'); // Format as Monthname-Year
   };
-  
-  const [allMonths, setMonths] = useState([
-    { label: 'January', value: 1 },
-    { label: 'February', value: 2 },
-    { label: 'March', value: 3 },
-    { label: 'April', value: 4 },
-    { label: 'May', value: 5 },
-    { label: 'June', value: 6 },
-    { label: 'July', value: 7 },
-    { label: 'August', value: 8 },
-    { label: 'September', value: 9 },
-    { label: 'October', value: 10 },
-    { label: 'November', value: 11 },
-    { label: 'December', value: 12 }
-  ]);
-
-  console.log('selectedMonth', selectedMonth);
 
   useEffect(() => {
     setTitle("Employees KRA-KPI");
@@ -72,12 +48,6 @@ const KraKpi = () => {
       getKraKpiDetails(currentPage);
     }
   }, [currentPage, refereshPage]);
-
-  useEffect(() => {
-    const isProjectManager =
-      customFunctions?.getLocalStorage('isProjectManager');
-    setProjectManager(JSON.parse(isProjectManager));
-  }, [localStorage.getItem('isProjectManager')]);
 
   useEffect(() => {
     setTitle("Employees KRA-KPI")
@@ -99,7 +69,6 @@ const KraKpi = () => {
     return `${month}-${year}`;
   };
 
-
   const getEmployeeName = async () => {
     setShowLoader(true);
     const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
@@ -119,8 +88,6 @@ const KraKpi = () => {
     }
   };
 
-  console.log("pagination", pagination);
-  
   const getKraKpiDetails = async (pageNo=1) => {
     if (apiCalled) return;
 
@@ -151,7 +118,6 @@ const KraKpi = () => {
 
       if (data && data.success) {
         const finalData = data.data.map((item, index) => ({
-          // no: (pagination.current_page - 1) * 10 + index + 1,
           no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
           id: item.id,
           to_user: item.to_user,
@@ -209,24 +175,8 @@ const KraKpi = () => {
       label: 'Action',
       render: ({ id, created_at, to_user_id, to_user }) => (
         <>
-          {/* {userRole && userRole == 1 && !isProjectManager && (
-            <>
-              <a
-                href="/"
-                
-                onClick={(e) => {
-                  e.preventDefault();
-                  history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isProjectManager:isProjectManager, isFromView : false } });
-                }}
-              >
-                <Image src="/images/edit.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />
-
-              </a>
-            </>
-          )} */}
           <a
             href="/"
-            // className="ml-1"
             onClick={(e) => {
               e.preventDefault();
               history.push("/add-kra-kpi", { state: { feedbackId: id, feddbackCreatedDate: created_at, toUserId: to_user_id, toUserName: to_user, isFromView: true } });
@@ -311,7 +261,6 @@ const KraKpi = () => {
                 setSetSelectedMonth(null)
                 setApiCalled(false)
                 setRowData([])
-                // setRefereshPage(true)
               }
 
               } className='ml-3'>

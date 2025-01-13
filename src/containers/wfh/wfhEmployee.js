@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
+import { Helmet, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import { Card, Row, Col, Button, Image } from 'react-bootstrap';
@@ -24,22 +24,13 @@ const WfhEmployee = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [whfId, setWfhId] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
-  const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
-  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
   const [selectedDate, setSelecteddate] = useState('');
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
   const [userRole, setUserRole] = useState(null);
   const [userId, setUserId] = useState(null);
   const [apiCalled, setApiCalled] = useState(false);
-  const [joiningDate, setJoiningDate] = useState(null);
   const [refereshPage, setRefereshPage] = useState(false);
   const [setTable, setTableToggle] = useState(false);
   const [title, setTitle] = useState('');
-  const [isProjectManager, setProjectManager] = useState(false)
-  const currentDate = new Date();
-  const currentMonth = currentDate.toLocaleString('default', { month: 'long' }); // 'January', 'February', etc.
-  const currentYear = currentDate.getFullYear(); // 2024
-
 
   useEffect(() => {
     setTitle("Employees WFH");
@@ -48,12 +39,6 @@ const WfhEmployee = () => {
       getWfhDetails(currentPage);
     }
   }, [currentPage, refereshPage, userId]);
-
-  useEffect(() => {
-    const isProjectManager =
-      customFunctions?.getLocalStorage('isProjectManager');
-    setProjectManager(JSON.parse(isProjectManager));
-  }, [localStorage.getItem('isProjectManager')]);
 
   useEffect(() => {
     setTitle("Employees WFH")
@@ -69,14 +54,6 @@ const WfhEmployee = () => {
     setUserRole(Number(uRole));
     setUserId(Number(userId))
   }, []);
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return `${month}-${year}`;
-  };
-
 
   const getEmployeeName = async () => {
     setShowLoader(true);
@@ -96,14 +73,10 @@ const WfhEmployee = () => {
         })
       }
       );
-
-      setAllEmployes([{ label: 'All Employess', value: 'all_employess' }, ...allemp]);
     } else {
       swal(error || 'Something went wrong', '', 'error');
     }
   };
-
-  console.log("pagination", pagination);
 
   const getWfhDetails = async (pageNo = 1) => {
     if (apiCalled) return;
@@ -118,11 +91,6 @@ const WfhEmployee = () => {
       sort_direction: 'descending'
     };
 
-
-
-    // if (joiningDate) {
-    //   params.start_date = customFunctions.getDate(joiningDate);
-    // }
     if (selectedDate) {
       params.start_date = customFunctions.getDate(selectedDate)
     }
@@ -134,7 +102,6 @@ const WfhEmployee = () => {
 
       if (data && data.success) {
         const finalData = data.data.map((item, index) => ({
-          // no: (pagination.current_page - 1) * 10 + index + 1,
           no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
           id: item.id,
           start_date: item.start_date,
@@ -176,11 +143,6 @@ const WfhEmployee = () => {
 
   const columns = [
     { id: 'no', label: 'SR No' },
-    // {
-    //   id: 'employee_name',
-    //   label: 'Name',
-    //   render: (row) => row.employee_name || 'N/A',
-    // },
     {
       id: 'start_date',
       label: 'Start Date',
@@ -242,7 +204,6 @@ const WfhEmployee = () => {
     if (data.success) {
       swal('Deleted successfully', '', 'success').then(() => {
         setShowDelete(false);
-        setJoiningDate(null)
         setRefereshPage(true)
 
       });
@@ -261,16 +222,6 @@ const WfhEmployee = () => {
       <Card>
         <Card.Body>
           <Row>
-            {/* <Col sm={2}>
-              <DropdownInput
-                options={allEmployes}
-                defaultValue={selectedEmployee}
-                onSelectHandler={(select) => {
-                  setSelectedEmployee(select);
-                  setSelectedEmployeeId(select?.value);
-                }}
-              />
-            </Col> */}
             <Col sm={2}>
               <Datepicker
                 className="form-control"
@@ -285,13 +236,9 @@ const WfhEmployee = () => {
             <Col>
               <Button variant="primary" onClick={applyFilters}>Submit</Button>
               <Button variant="secondary" onClick={() => {
-                setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
-                setSelectedEmployeeId('all_employess')
-                setJoiningDate(null)
                 setSelecteddate(null)
                 setApiCalled(false)
                 setRowData([])
-                // setRefereshPage(true)
               }
 
               } className='ml-3'>
@@ -328,8 +275,6 @@ const WfhEmployee = () => {
               itemsPerPage: limit,
               activePage: pagination.current_page,
               onPageChange: (page) => {
-                console.log("Page", page);
-
                 setCurrentPage(page), setApiCalled(false)
               },
             }}

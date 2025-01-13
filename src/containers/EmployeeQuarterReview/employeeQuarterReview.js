@@ -19,7 +19,6 @@ function EmployeeQuarterReview() {
   const [title, setTitle] = useState('');
   const [empFeedbackdata, setEmpFeedbackdata] = useState([]);
   const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
-  const [employeeId, setEmployeeId] = useState(0);
   const [isShowLoader, setShowLoader] = useState(false);
   const [taskId, setTaskId] = useState(null);
   const [ShowDelete, setShowDelete] = useState(false);
@@ -29,13 +28,12 @@ function EmployeeQuarterReview() {
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-
   useEffect(() => {
     setTitle('Employee Quarter Review');
     getQuestionList();
   }, [pageReferesh, currentPage, setTable]);
 
-  
+
   function getQuarterByString(value) {
     switch (value) {
       case 'April - June':
@@ -108,8 +106,6 @@ function EmployeeQuarterReview() {
     }
   };
 
-  console.log('final', empFeedbackdata);
-
   function getParamsData(id) {
     const feedbackItem = empFeedbackdata.find(item => item.id === id);
     if (feedbackItem) {
@@ -149,7 +145,6 @@ function EmployeeQuarterReview() {
 
   const columns = [
     { id: 'no', label: 'Sr.No' },
-    // { id: 'employee_name', label: 'Name' },
     { id: 'quarter', label: 'Quarter' },
     { id: 'year', label: 'Year' },
     { id: 'submission_date', label: 'Submission Date' },
@@ -263,23 +258,6 @@ function EmployeeQuarterReview() {
                   Add Quarterly Evaluation Review
                 </a>
               )}
-              {/* {!setTable ? (
-                <a
-                  href="#"
-                  onClick={() => setTableToggle(true)}
-                  className="btn-link ml-3"
-                >
-                  Team Feedback Details
-                </a>
-              ) : (
-                <a
-                  href="#"
-                  onClick={() => setTableToggle(false)}
-                  className="btn-link ml-3"
-                >
-                  Personal Feedback Details
-                </a>
-              )} */}
             </div>
           </div>
           <CustomTable

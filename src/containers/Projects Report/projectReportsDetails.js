@@ -3,8 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
-import { Card, Row, Col, Button, Image, Tabs, Tab } from 'react-bootstrap';
-import Table from '../../components/ReactTable/simpletable.component';
+import { Card, Row, Col, Button, Image } from 'react-bootstrap';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
@@ -12,15 +11,12 @@ import Api from '../../helper/api';
 import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
-import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import SimpleReactValidator from 'simple-react-validator';
-
 
 const items = [{ to: '/', label: 'Home' }, { label: `Weekly Generated Reports` }];
 
 const ProjectReportsDetails = () => {
   const history = useHistory();
-  const state = useLocation();
   const validator = useRef(new SimpleReactValidator());
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
@@ -31,8 +27,6 @@ const ProjectReportsDetails = () => {
   const [projectReportId, setReportId] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
   const [showSubmit, setShowSubmit] = useState(false);
-  const [userRole, setUserRole] = useState(null);
-  const [apiCalled, setApiCalled] = useState(false);
   const [title, setTitle] = useState('');
   const [isProjectManager, setProjectManager] = useState(false)
   const UserID = customFunctions.getLocalStorage('userId');
@@ -44,7 +38,7 @@ const ProjectReportsDetails = () => {
   const [reportDate, setReportDate] = useState('')
 
   console.log("Hello World");
-  
+
 
   useEffect(() => {
     console.log("Hello Three", isProjectManager);
@@ -62,11 +56,9 @@ const ProjectReportsDetails = () => {
     console.log("Hello Two");
     setTitle(`Today's Reports`)
     const isProjectManager =
-    customFunctions?.getLocalStorage('isProjectManager');
+      customFunctions?.getLocalStorage('isProjectManager');
     setProjectManager(JSON.parse(isProjectManager));
-    const uRole = customFunctions.getLocalStorage('group');
     getProjectList();
-    setUserRole(Number(uRole));
   }, []);
 
 
@@ -90,11 +82,11 @@ const ProjectReportsDetails = () => {
 
     setProjectsList(dpOptions);
   };
-  
+
 
   const getTodaysReport = async (pageNo = 1) => {
     console.log("Hello hello");
-    
+
     setShowLoader(true);
     const params = {
       page: pageNo,
@@ -150,7 +142,6 @@ const ProjectReportsDetails = () => {
       swal('Error fetching data', '', 'error');
     } finally {
       setShowLoader(false);
-      setApiCalled(false);
     }
   };
 
@@ -318,7 +309,6 @@ const ProjectReportsDetails = () => {
                 onChange={(e) => {
                   setReportDate(e);
                 }}
-                // maxDate={new Date()}
                 autoComplete="off"
                 name="startDate"
                 dateFormat="dd/MM/yyyy"
@@ -330,30 +320,9 @@ const ProjectReportsDetails = () => {
                 )}
               />
             </Col>
-            {/* <Col sm={2}>
-              <Datepicker
-                label="Select to date"
-                asterisk="*"
-                className="form-control"
-                selected={toDate}
-                onChange={(e) => setToDate(e)}
-                autoComplete="off"
-                name="endDate"
-                maxDate={fromDate ? new Date(fromDate.getTime() + 7 * 24 * 60 * 60 * 1000) : null}
-                minDate={fromDate}
-                dateFormat="dd/MM/yyyy"
-                placeholder="Select date"
-                errorMessage={validator.current.message(
-                  'To date ',
-                  toDate,
-                  'required'
-                )}
-              />
-            </Col> */}
             <Col sm={2}>
               <DropdownInput
                 label="Project"
-                // asterisk="*"
                 options={projectsList}
                 defaultValue={selectedProject}
                 onSelectHandler={(select) => {
@@ -367,13 +336,11 @@ const ProjectReportsDetails = () => {
                 )}
               />
             </Col>
-
             <Col sm={4} className='mt-4'>
               <Button variant="primary" onClick={(e) => { handleFilter(e) }}> Filter </Button>
               <Button variant="secondary" onClick={() => {
                 handleClear()
               }
-
               } className='ml-3'>
                 Cancel
               </Button>
@@ -392,9 +359,7 @@ const ProjectReportsDetails = () => {
                 Today's Reports Details
               </a>
             </div>
-
           </Row>
-
           <Row>
             {
               (rowData && (<>

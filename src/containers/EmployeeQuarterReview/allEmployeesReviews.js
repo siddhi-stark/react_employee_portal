@@ -23,12 +23,10 @@ function AllEmployeesReviews() {
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [empFeedbackdata, setEmpFeedbackdata] = useState([]);
-  const [employeeId, setEmployeeId] = useState(0)
   const [isShowLoader, setShowLoader] = useState(false);
   const [taskId, setTaskId] = useState(null);
   const [ShowDelete, setShowDelete] = useState(false);
   const [setTable, setTableToggle] = useState(false);
-  const [setTableAll, setTableForAll] = useState(false)
   const [pageReferesh, setPageReferesh] = useState(false)
   const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
   const [totalCount, setTotalCount] = useState(10);
@@ -214,14 +212,11 @@ function AllEmployeesReviews() {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
       let finalData = []
-      console.log('data?.data', data?.data);
       const { current_page, total_count, limit } = data.paginator;
 
       if (data?.data && data.data.length > 0) {
 
         data.data.map((item, index) => {
-          console.log('pagination222222222', pagination);
-
           finalData.push({
             no: (current_page - 1) * limit + (index + 1),
             id: item?.id,
@@ -243,8 +238,6 @@ function AllEmployeesReviews() {
 
       }
       setEmpFeedbackdata(finalData);
-      console.log('current_page', current_page);
-
       setPagination({
         current_page: +current_page,
         totalItems: total_count,
@@ -271,7 +264,6 @@ function AllEmployeesReviews() {
     if (empFeedbackdata) {
       empFeedbackdata?.length && empFeedbackdata.map((item, index) => {
         if (item.id == id) {
-          console.log('item.employee_id', item.employee_id);
           empId = item.employee_id
           quarter = item.quarter
           year = item.year
@@ -439,7 +431,6 @@ function AllEmployeesReviews() {
               itemsPerPage: limit,
               activePage: pagination.current_page,
               onPageChange: (pageNo) => {
-                // setPagination({...pagination,current_page:+pageNo});
                 getQuestionList(pageNo);
               },
             }}

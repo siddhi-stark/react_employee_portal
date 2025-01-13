@@ -12,7 +12,6 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader';
 
-
 const items = [{ to: '/employee-feedback', label: 'Employee Feedback' }, { label: 'Quarterly Evaluation Review' }];
 
 function AddFeedback() {
@@ -44,7 +43,6 @@ function AddFeedback() {
   });
 
   const [selectedQuarter, setQuarter] = useState('');
-  const [selectedStatus, setStatus] = useState({ label: 'Pending', value: 2 });
   const [reviewerName, setReviewerName] = useState('');
   const [isProjectManager, setIsProjectManager] = useState(false);
   useEffect(() => {
@@ -95,7 +93,6 @@ function AddFeedback() {
   }
 
   const ratingOptions = [
-    // { id: "zero", label: "0", isCheck: false },
     { id: "1", label: "1", isCheck: false },
     { id: "2", label: "2", isCheck: false },
     { id: "3", label: "3", isCheck: false },
@@ -157,8 +154,6 @@ function AddFeedback() {
     const { data, _ } = await AuthApi.getDataFromServer(url);
 
     let oldData = []
-    let review_status = null
-    let review_status_name = null
     let quarter_name = null
     let reviewer_name = ''
     let avg_rating = 0
@@ -186,7 +181,6 @@ function AddFeedback() {
       })
     }
 
-    setStatus({ label: review_status_name, value: review_status })
     setQuarter({ label: quarter_name, value: quarter })
     setAvgRating(avg_rating)
     setReviewerName(reviewer_name)
@@ -385,8 +379,6 @@ function AddFeedback() {
       review_status: '',
       quarter: ''
     });
-    // submitForm();
-    // window.location.reload();
     validator.current.hideMessages();
     if (isProjectManager) {
       history.push('/all-employees-reviews');
@@ -446,24 +438,6 @@ function AddFeedback() {
                         )}
                       />
                     </Col>
-                    {/* <Col sm={2}>
-                      <DropdownInput
-                        label='Review Status'
-                        asterisk="*"
-                        options={allStatus}
-                        defaultValue={selectedStatus}
-                        onSelectHandler={(select) => {
-                          setStatus(select);
-                        }}
-                        disabled='true'
-                        errorMessage={validator.current.message(
-                          'Review Status',
-                          selectedStatus,
-                          'required'
-                        )}
-                      />
-                    </Col> */}
-
                     {isViewOnly && (<>
                       <Col sm={2}>
                         <Form.Label>
@@ -732,13 +706,6 @@ function AddFeedback() {
                                       disabled='true'
                                     />
                                   ))}
-                                {/* <p className='text-danger'>
-                                {validator.current.message(
-                                  'Rating',
-                                  item?.rating,
-                                  'required'
-                                )}
-                              </p> */}
                               </div>
                             </Form.Group>
                           </Card.Body>
@@ -777,11 +744,6 @@ function AddFeedback() {
                 </Form.Group>
                 <Form.Group controlId={`formSupervision`}></Form.Group>
                 <p className='text-danger'>
-                  {/* {validator.current.message(
-                    'Supervisor overall feedback',
-                    supervisonFeedback,
-                    'required'
-                  )} */}
                 </p>
               </div>
             </Form>
@@ -801,10 +763,7 @@ function AddFeedback() {
                         validator.current.showMessages()
                         forceUpdate(count + 1)
                       }
-                      // submitForm();
                     }}
-                  // disabled={fieldsDisabled}
-
                   >
                     Submit
                   </Button>
@@ -812,7 +771,6 @@ function AddFeedback() {
                     variant="secondary"
                     className="h4 m-0 text-black rounded-3"
                     onClick={handleClear}
-                  // disabled={fieldsDisabled}
                   >
                     Cancel
                   </Button>

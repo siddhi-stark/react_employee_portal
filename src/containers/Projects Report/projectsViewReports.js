@@ -1,17 +1,13 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Card, Row, Col, Button, Image, Form } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import { Helmet } from '../../components/FormInputs';
-// import './datesGrid.css';
-import { format, getDaysInMonth } from 'date-fns';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import { useHistory, useParams } from 'react-router-dom';
-// import './projectReport.css';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Project task Report' }];
@@ -24,15 +20,9 @@ const ProjectsViewReports = () => {
   const { id } = useParams();
   const [projectId, setProjectId] = useState(id);
   const fromDate = state?.state?.state?.formattedDate
-  const fromSentReport = state?.state?.state?.fromSentReport
   const [title, setTitle] = useState('Report generations');
   const [isShowLoader, setShowLoader] = useState(false);
   const [reportDetails, setReportDetails] = useState([])
-  const [currentStatus, setCurrentStatus] = useState(reportDetails[0]?.current_status_name || '');
-  const [selectedTasksCompleted, setSelectedTasksCompleted] = useState([]);
-  const [selectedDeliverables, setSelectedDeliverables] = useState([]);
-  const [issuesRisks, setIssuesRisks] = useState(reportDetails[0]?.issues_risks || '');
-  const [nextSteps, setNextSteps] = useState(reportDetails[0]?.next_steps || '');
   const UserID = customFunctions.getLocalStorage('userId');
 
 
@@ -51,25 +41,17 @@ const ProjectsViewReports = () => {
       end_date: fromDate
     };
 
-    // if (filterDate.getDate() !== today.getDate()) {
-    //   params.end_date = start_date
-    // }
-
     const url = customFunctions.generateUrl(Api.generateTaskList, params);
     const { data } = await AuthApi.getDataFromServer(url);
 
     if (data && data.success) {
-      const { current_page, total_count, limit } = data.paginator;
       setReportDetails(data?.data);
       setShowLoader(false);
-
     } else {
       setShowLoader(false);
-
       swal(data.message || 'Error fetching data', '', 'error');
     }
   }
-
 
   const getTasksBySection = (sectionName) => {
     return reportDetails[0]?.report_tasks_details.filter(task => task.section_name === sectionName);

@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Button, ButtonGroup, Card, Form, Col, Row } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import swal from 'sweetalert';
 import { ModalInput } from '../../components/FormInputs';
@@ -12,14 +11,11 @@ import SimpleReactValidator from 'simple-react-validator';
 
 
 function AddWfhNote(props) {
-    const history = useHistory();
     const validator = useRef(new SimpleReactValidator());
     const { show, leaveId, statusId, prevData, note, handleModalCLose, callBack } =
         props;
 
     const value = customFunctions.getLocalStorage('isClicked');
-    const [defaultValues, updateDefaultValues] = useState({});
-    const [currentUser, updateCurrentUser] = useState(0);
     const [showNote, setShowNote] = useState(false);
     const [leaveIds, setLeaveId] = useState(null);
     const [statusIds, setStatusId] = useState(null);
@@ -27,17 +23,11 @@ function AddWfhNote(props) {
     const [oldData, setOldData] = useState(null)
     const [count, forceUpdate] = useState(0)
 
-    const getUserRole = async () => {
-        const roleId = await localStorage.getItem('role');
-        updateCurrentUser(Number(roleId));
-    };
-
     useEffect(() => {
         getUserRole();
     }, []);
     
-    console.log("postData", oldData)
-    const submitForm = async (formValues) => {
+    const submitForm = async () => {
         const reasonLabel = statusIds === 1 ? 'approve' : 'decline';
         let postData = oldData
         
@@ -46,7 +36,6 @@ function AddWfhNote(props) {
 
         onCancelButton();
         
-        console.log("==========", postData)
         swal({
             title: 'Are you sure?',
             text: `You want to ${reasonLabel} the leave ?`,
@@ -58,8 +47,6 @@ function AddWfhNote(props) {
         }).then(async (result) => {
             if (result) {
 
-                console.log();
-                
                 const { data, message } = await AuthApi.putDataToServer(
                     `${Api.wfh}${leaveIds}/`,
                     postData
@@ -79,29 +66,16 @@ function AddWfhNote(props) {
                     swal(data && data.message[0], '', 'success', {
                         closeOnClickOutside: false,
                         allowOutsideClick: false,
-                    }).then(() => {
-                        console.log("Hello Hello ");
-                        
+                    }).then(() => {                        
                         callBack()
                         onCancelButton();
-                        // swal.close();
                     });
                 }
             }
         });
     };
 
-    const getData = async () => {
-        const NotesData = {
-            notes: note && note,
-        };
-        updateDefaultValues(NotesData);
-    };
-
     useEffect(() => {
-        if (value === 'true') {
-            getData();
-        }
         setShowNote(show);
         setLeaveId(leaveId);
         setStatusId(statusId);
