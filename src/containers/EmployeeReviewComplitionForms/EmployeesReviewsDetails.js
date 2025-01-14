@@ -317,7 +317,7 @@ const EmployeeReviewsDetails = () => {
     let allemp = []
     if (data && data.success) {
       data.data.map((item) => {
-        if ([1].includes(item.role_id) && !item.is_project_manager) return
+        // if ([1].includes(item.role_id) && !item.is_project_manager) return
           let obj = {
             label: item.full_name,
             value: item.id,
