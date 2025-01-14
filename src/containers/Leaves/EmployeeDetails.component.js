@@ -55,9 +55,27 @@ function EmployeeDetails(props) {
     {
       id: 'leave_count',
       label: 'Leave Days',
-      render: ({ leave_count }) => {
+      render: ({ leave_count, is_sandwich }) => {
         return (
-          <span>{leave_count ? `${leave_count}` : '0'}</span>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '30px',
+              height: '30px',
+              borderRadius: '50%',
+              backgroundColor: is_sandwich ? 'red' : 'transparent',
+              color: is_sandwich ? 'white' : 'black',
+              fontWeight: 'bold',
+              fontSize: '14px',
+              border: '1px solid #ccc',
+              cursor: 'pointer', 
+            }}
+            title={is_sandwich ? 'This is a sandwich leave count' : 'Leave count'} 
+          >
+            {leave_count ? `${leave_count}` : '0'}
+          </span>
         );
       },
       roleAccess: [1, 4, 5, 6],
@@ -179,7 +197,8 @@ function EmployeeDetails(props) {
           leave_from_date: item.leave_from_date,
           leave_to_date: item.leave_to_date,
           leave_payment_type: item.leave_payment_type,
-          half_day_status: item.half_day_status
+          half_day_status: item.half_day_status,
+          is_sandwich: item?.is_sandwich
         })
       })
       const { current_page, total_count, limit } = data.paginator;

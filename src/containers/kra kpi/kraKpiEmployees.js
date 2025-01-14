@@ -87,6 +87,9 @@ const KraKpiEmployees = () => {
       limit,
     };
 
+    console.log("Hello World");
+    
+
     if (selectedEmployeeId !== 'all_employess') {
       params.user = selectedEmployeeId;
     }

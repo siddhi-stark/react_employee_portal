@@ -96,6 +96,29 @@ function EmployeeTeamLeaves(props) {
       id: 'leave_count',
       label: 'Days',
       roleAccess: [4],
+      render: ({ leave_count, is_sandwich }) => {
+        return (
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '30px',
+              height: '30px',
+              borderRadius: '50%',
+              backgroundColor: is_sandwich ? 'red' : 'transparent',
+              color: is_sandwich ? 'white' : 'black',
+              fontWeight: 'bold',
+              fontSize: '14px',
+              border: '1px solid #ccc',
+              cursor: 'pointer', 
+            }}
+            title={is_sandwich ? 'This is a sandwich leave count' : 'Leave count'} 
+          >
+            {leave_count ? `${leave_count}` : '0'}
+          </span>
+        );
+      },
     },
     // {
     //   id: 'leave_payment_type',
@@ -307,7 +330,7 @@ function EmployeeTeamLeaves(props) {
       full_name: dpOptions,
     };
     console.log("allOptions", allOptions);
-    
+
     // filterOptions = { ...allOptions };
     updateOptions(allOptions);
   };
