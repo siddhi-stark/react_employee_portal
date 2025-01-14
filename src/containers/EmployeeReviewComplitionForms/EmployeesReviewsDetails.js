@@ -48,6 +48,8 @@ const EmployeeReviewsDetails = () => {
 
   }, []);
 
+  console.log("userId && detailsKeys && allEmployeeIds.length > 1", userId, detailsKeys, allEmployeeIds.length);
+  
   useEffect(() => {
     if (userId && detailsKeys && allEmployeeIds.length > 1) {
       getRowData();
@@ -315,17 +317,13 @@ const EmployeeReviewsDetails = () => {
     let allemp = []
     if (data && data.success) {
       data.data.map((item) => {
-        if ([1].includes(item.role_id) && !item.is_project_manager) {
-          return
-        } else {
-
+        if ([1].includes(item.role_id) && !item.is_project_manager) return
           let obj = {
             label: item.full_name,
             value: item.id,
             joiningDate: item.date_joined,
           }
-        }
-        console.log("item.id", item.id);
+        
         employeesIds.push(item.id)
         allemp.push(obj)
       }
