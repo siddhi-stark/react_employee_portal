@@ -222,7 +222,7 @@ const TodaysProjectReports = () => {
     if (data.success) {
       swal('Report sent successfully', '', 'success').then(() => {
         setRowData([])
-        history.push('/current-project', {})
+        history.push('/todays-project-reports', {})
         setShowDelete(false);
       });
     }
