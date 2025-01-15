@@ -85,8 +85,6 @@ const ProjectReportForm = () => {
 
   const fetchSectionOneTasks = async (page = 1) => {
     setShowLoader(true);
-    setProjectId(selectedProject?.value)
-
     const startDate = customFunctions.getDate(filterDate)
     const endDate = customFunctions.getDate(toDate)
     const params = {
@@ -308,6 +306,8 @@ const ProjectReportForm = () => {
                 defaultValue={selectedProject}
                 onSelectHandler={(select) => {
                   setProject(select);
+                  setProjectId(select?.value)
+
                 }}
                 disabled={false}
                 errorMessage={validator.current.message(
