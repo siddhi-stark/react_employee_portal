@@ -86,7 +86,7 @@ function AddFeedback() {
     { id: 4, questions: "Verify Deadline achievement (Yes/No)" },
     { id: 5, questions: "rating for employees achievement (1-5)" },
     { id: 6, questions: "rating for employees Attendance/punctuality (1-5)" },
-    { id: 7, questions: "Verify Is employee able to perform in his/her last quarter? (Yes/No)" },
+    { id: 7, questions: "Is employee able to perform in his/her last quarter? (Yes/No)" },
     { id: 8, questions: "Mention Average Rating for Employee (1-5)" },
   ]
 
