@@ -42,6 +42,8 @@ function AddFeedback() {
     quarter: ''
   });
 
+
+
   const [selectedQuarter, setQuarter] = useState('');
   const [reviewerName, setReviewerName] = useState('');
   const [isProjectManager, setIsProjectManager] = useState(false);
@@ -76,6 +78,17 @@ function AddFeedback() {
       getLeavesdata()
     }
   }, [selectedQuarter])
+
+  const reviewerQuestions = [
+    { id: 1, questions: "Verify Mention number of projects with names." },
+    { id: 2, questions: "Verify  Milestone along with the deadlines given by project Manager (Yes/No)" },
+    { id: 3, questions: "Verify Milestone completed date. (Yes/No)" },
+    { id: 4, questions: "Verify Deadline achievement (Yes/No)" },
+    { id: 5, questions: "rating for employees achievement (Yes/No)" },
+    { id: 6, questions: "rating for employees Attendance/punctuality (Yes/No)" },
+    { id: 7, questions: "Verify Last Quarter Goal Replace-Is employee able to perform in his/her last quarter?" },
+    { id: 8, questions: "Mention Average Rating for Employee (1-5)" },
+  ]
 
   function getQuarterByString(value) {
     if (value == 'April - June') {
@@ -258,7 +271,7 @@ function AddFeedback() {
           postData.reviewer_feedback = item?.reviewerAnswer
         }
         if (item?.reviewerRating) {
-          postData.reviewer_rating = +item?.reviewerRating
+          postData.reviewer_rating = item?.reviewerRating
         }
 
         questionData.push(postData);
@@ -359,7 +372,7 @@ function AddFeedback() {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
-      setShowLoader(false);      
+      setShowLoader(false);
       setTotalLeaveCount(data?.data?.leave_count?.leaves_count)
     } else {
       setShowLoader(false);
@@ -450,7 +463,8 @@ function AddFeedback() {
                         />
                       </Col>
                     </>)}
-                    {avgRating ? (<>
+
+                    {/* {avgRating ? (<>
                       <Col sm={2}>
                         <Form.Label>
                           Average Rating
@@ -461,7 +475,7 @@ function AddFeedback() {
                           disabled='true'
                         />
                       </Col>
-                    </>) : ''}
+                    </>) : ''} */}
 
                   </Row>
                   <Row>
@@ -584,7 +598,7 @@ function AddFeedback() {
 
                                 <Form.Control
                                   as='textarea'
-                                  style={{ height: '200px' }}
+                                  style={{ height: '130px' }}
                                   type='text'
                                   placeholder='Enter answer'
                                   name='answer'
@@ -606,7 +620,7 @@ function AddFeedback() {
                               </div>
 
                             </Form.Group>
-                            <Form.Group controlId={`formRating${index + 1}`}>
+                            {/* <Form.Group controlId={`formRating${index + 1}`}>
 
                               <Form.Label>
                                 Rating : <span className="text-danger">*</span>
@@ -621,7 +635,7 @@ function AddFeedback() {
                                       id={option.value}
                                       label={
                                         <span
-                                          onClick={(e) => e.preventDefault()} // Prevent label click from changing state
+                                          onClick={(e) => e.preventDefault()} 
                                         >
                                           {option.label}
                                         </span>
@@ -643,73 +657,120 @@ function AddFeedback() {
                                   )}
                                 </p>
                               </div>
-                              {/* </Col> */}
-                            </Form.Group>
+                            </Form.Group> */}
                           </Card.Body>
                         </Card>
                       </Col>
 
-                      <Col sm={6} >
+                      <Col sm={5} >
                         {index == 0 && (<>
                           <h5 className="card-title">Reviewer Feedback Form</h5>
                         </>
                         )}
-                        <Card>
-                          <Card.Body>
-
-                            <Form.Group controlId='formFirstName' key={index + 1}>
-                              <Form.Label>
-                                <b>Q{index + 1}. {item?.name}<span className="text-danger">*</span></b>
-                              </Form.Label>
-                              <Form.Control
-                                as='textarea'
-                                style={{ height: '200px' }}
-                                type='text'
-                                placeholder='Enter answer'
-                                name='answer'
-                                value={item?.reviewerAnswer}
-                                onChange={(e) => {
-                                  const data = [...questions];
-                                  data[index].reviewerAnswer = e?.target?.value;
-                                  setQuestions(data);
-                                }}
-                                disabled='true'
-                              />
-
-                            </Form.Group>
-                            <Form.Group controlId={`formRating${index + 1}`}>
-
-                              <Form.Label>
-                                Rating : <span className="text-danger">*</span>
-                              </Form.Label>
-                              <div className="ms-lg-8 mt-lg-2">
-                                {ratingOptions?.length > 0 &&
-                                  ratingOptions.map((option) => (
-                                    <Form.Check
-                                      inline
-                                      key={option.value}
-                                      type="radio"
-                                      id={option.value}
-                                      label={
-                                        <span
-                                          onClick={(e) => e.preventDefault()} // Prevent label click from changing state
-                                        >
-                                          {option.label}
-                                        </span>
-                                      }
-                                      value={option.value}
-                                      className="mb-2 form-radio"
-                                      checked={item?.reviewerRating == option.label}
+                        {index != 8 && (
+                          <>
+                            <Card>
+                              <Card.Body>
+                                <div>
+                                  <Form.Group controlId='formFirstName' key={index + 1}>
+                                    <Form.Label>
+                                      <b>Q{index + 1}. {reviewerQuestions[index]?.questions}<span className="text-danger">*</span></b>
+                                    </Form.Label>
+                                    <Form.Control
+                                      as='textarea'
+                                      style={{ height: '20px' }}
+                                      type='text'
+                                      placeholder='Enter answer'
+                                      name='answer'
+                                      value={item?.reviewerAnswer}
                                       onChange={(e) => {
-                                        handleCheckboxChange(option.label, item, true);
+                                        const data = [...questions];
+                                        data[index].reviewerAnswer = e?.target?.value;
+                                        setQuestions(data);
                                       }}
-                                      disabled='true'
+                                      disabled={isViewOnly ? true : false}
                                     />
-                                  ))}
-                              </div>
-                            </Form.Group>
-                          </Card.Body>
-                        </Card>
+                                  </Form.Group>
+                                  <p className='text-danger'>
+                                    {validator.current.message(
+                                      'Review Answer',
+                                      item?.reviewerAnswer,
+                                      'required'
+                                    )}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <Form.Group controlId='formFirstName' key={index + 1}>
+                                    <Form.Label>
+                                      <b>Comments<span className="text-danger">*</span></b>
+                                    </Form.Label>
+                                    <Form.Control
+                                      as='textarea'
+                                      style={{ height: '60px' }}
+                                      type='text'
+                                      placeholder='Enter answer'
+                                      name='answer'
+                                      value={item?.reviewerRating}
+                                      onChange={(e) => {
+                                        const data = [...questions];
+                                        data[index].reviewerRating = e?.target?.value;
+                                        setQuestions(data);
+                                      }}
+                                      disabled={isViewOnly ? true : false}
+                                    />
+                                  </Form.Group>
+                                  <p className='text-danger'>
+                                    {validator.current.message(
+                                      'Rating',
+                                      item?.reviewerRating,
+                                      'required'
+                                    )}
+                                  </p>
+                                </div>
+                                {/* <Form.Group controlId={`formRating${index + 1}`}>
+
+                                  <Form.Label>
+                                    Rating : <span className="text-danger">*</span>
+                                  </Form.Label>
+                                  <div className="ms-lg-8 mt-lg-2">
+                                    {ratingOptions?.length > 0 &&
+                                      ratingOptions.map((option) => (
+                                        <Form.Check
+                                          inline
+                                          key={option.value}
+                                          type="radio"
+                                          id={option.value}
+                                          label={
+                                            <span
+                                              onClick={(e) => e.preventDefault()} // Prevent label click from changing state
+                                            >
+                                              {option.label}
+                                            </span>
+                                          }
+                                          value={option.value}
+                                          className="mb-2 form-radio"
+                                          checked={item?.reviewerRating == option.label}
+                                          onChange={(e) => {
+                                            handleCheckboxChange(option.label, item, true);
+                                          }}
+                                          disabled={isViewOnly ? true : false}
+                                        />
+                                      ))}
+                                    <p className='text-danger'>
+                                      {validator.current.message(
+                                        'Rating',
+                                        item?.reviewerRating,
+                                        'required'
+                                      )}
+                                    </p>
+                                  </div>
+                                </Form.Group> */}
+                              </Card.Body>
+                            </Card>
+                          </>
+                        )}
+
                       </Col>
 
                     </>
