@@ -688,7 +688,7 @@ function AddFeedback() {
                                         data[index].reviewerAnswer = e?.target?.value;
                                         setQuestions(data);
                                       }}
-                                      disabled={isViewOnly ? true : false}
+                                      disabled='true'
                                     />
                                   </Form.Group>
                                   <p className='text-danger'>
@@ -703,7 +703,7 @@ function AddFeedback() {
                                 <div>
                                   <Form.Group controlId='formFirstName' key={index + 1}>
                                     <Form.Label>
-                                      <b>Comments<span className="text-danger">*</span></b>
+                                      <b>Comments</b>
                                     </Form.Label>
                                     <Form.Control
                                       as='textarea'
@@ -717,16 +717,16 @@ function AddFeedback() {
                                         data[index].reviewerRating = e?.target?.value;
                                         setQuestions(data);
                                       }}
-                                      disabled={isViewOnly ? true : false}
+                                      disabled='true'
                                     />
                                   </Form.Group>
-                                  <p className='text-danger'>
+                                  {/* <p className='text-danger'>
                                     {validator.current.message(
                                       'Rating',
                                       item?.reviewerRating,
                                       'required'
                                     )}
-                                  </p>
+                                  </p> */}
                                 </div>
                                 {/* <Form.Group controlId={`formRating${index + 1}`}>
 
