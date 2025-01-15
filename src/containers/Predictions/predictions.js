@@ -46,10 +46,8 @@ const Predictions = () => {
     const url = `${Api.predictionDetails}?id=${id}`;
     const { data, error } = await AuthApi.getDataFromServer(url);
 
-    console.log("data", data.data[0]);
 
     if (data?.data) {
-      console.log("data?.data?.reports", data?.data?.reports);
       setPredictions(data?.data[0]?.reports || []);
       setShowLoader(false);
 

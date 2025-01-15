@@ -132,9 +132,6 @@ function AdminAndHrView() {
       fyEnd = year;
     }
 
-    console.log("fyStart", fyStart);
-    console.log("fyEnd", fyEnd);
-
 
     if (+selectedQuarter?.value == 1) {
       params.start_date = `${fyStart}-04-01`
@@ -291,7 +288,6 @@ function AdminAndHrView() {
     setShowLoader(true);
 
     const questionData = [];
-    console.log("questions", questions);
     
     questions?.length &&
       questions.forEach((item) => {
@@ -773,7 +769,6 @@ function AdminAndHrView() {
                     className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
                     type="submit"
                     onClick={() => {
-                      console.log("validator.current", validator.current);
                       if (validator.current.allValid()) {
 
                         validator.current.hideMessages()

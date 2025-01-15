@@ -60,7 +60,6 @@ function EmployeeQuarterReview() {
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log('data', data);
 
     if (data && data.success) {
       let finalData = []

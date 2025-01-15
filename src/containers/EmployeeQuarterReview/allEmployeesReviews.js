@@ -183,7 +183,6 @@ function AllEmployeesReviews() {
     setCurrentPage(1);
     getQuestionList(1);
   };
-  console.log('pagination', pagination);
 
   const getQuestionList = async (pageNo) => {
     setShowLoader(true);
@@ -202,7 +201,6 @@ function AllEmployeesReviews() {
     if (selectedStatus && selectedStatus?.value !== 'all_status') {
       params.review_status = selectedStatus?.value
     }
-    console.log('selectedYear', selectedYear?.year);
 
     if (selectedYear) {
       params.year = selectedYear.getFullYear();
@@ -370,7 +368,6 @@ function AllEmployeesReviews() {
                 maxDate={new Date()}
                 selected={selectedYear}
                 onChange={(date) => {
-                  console.log('date', date);
                   setReviewYear(date);
                 }}
               />

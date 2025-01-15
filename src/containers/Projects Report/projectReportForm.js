@@ -23,7 +23,7 @@ const ProjectReportForm = () => {
   const [title, setTitle] = useState('Report generations');
   const [isShowLoader, setShowLoader] = useState(false);
 
-  const [projectId, setProjectId] = useState(22);
+  const [projectId, setProjectId] = useState();
   const [count, forceUpdate] = useState(0)
   const [projectStatus, setProjectStatus] = useState({ value: '1', label: 'In Progress' });
   const [selectedTasks, setSelectedTasks] = useState([]);
