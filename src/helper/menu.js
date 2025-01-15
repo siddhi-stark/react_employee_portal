@@ -398,6 +398,13 @@ const menu = [
         submenu: [],
         roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
       },
+      {
+        title: 'Employee Review Forms Details',
+        path: '/employee-reviews-details',
+        icon: 'ticket.svg',
+        submenu: [],
+        roleaccess: [5, 6],
+      },
     ],
     roleaccess: [1, 3, 4, 5, 6],
   },
@@ -474,14 +481,6 @@ const menu = [
     icon: 'ticket.svg',
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
-  },
-
-  {
-    title: 'Employee Review Forms Details',
-    path: '/employee-reviews-details',
-    icon: 'ticket.svg',
-    submenu: [],
-    roleaccess: [5, 6],
   },
 
   // {

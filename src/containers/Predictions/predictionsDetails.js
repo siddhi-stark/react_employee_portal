@@ -162,13 +162,12 @@ const PredictionsDetails = () => {
   const getPredictions = async () => {
     setShowLoader(true);
     const url = `${Api.prediction}?use_ai=true`;
-    const { data } = await AuthApi.getDataFromServer(url);
-
+    const {data, message} = await AuthApi.getDataFromServer(url);    
     if (data?.data) {
-      swal(data && data.message[0], '', 'success');
+      swal(data?.data && data?.message[0], '', 'success');
       setShowLoader(false);
     } else {
-      swal(data && data.message[0] || 'Data not present for predictions.', '', 'error');
+      swal(message || 'Data not present for predictions.', '', 'error');
       setShowLoader(false);
 
     }

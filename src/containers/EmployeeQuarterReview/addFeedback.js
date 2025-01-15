@@ -170,6 +170,8 @@ function AddFeedback() {
     let quarter_name = null
     let reviewer_name = ''
     let avg_rating = 0
+    let review_status = null
+    let review_status_name = null
     if (data && data.success) {
       review_status = data.data[0]?.review_status
       review_status_name = data.data[0]?.review_status_name
@@ -691,13 +693,13 @@ function AddFeedback() {
                                       disabled='true'
                                     />
                                   </Form.Group>
-                                  <p className='text-danger'>
+                                  {/* <p className='text-danger'>
                                     {validator.current.message(
                                       'Review Answer',
                                       item?.reviewerAnswer,
                                       'required'
                                     )}
-                                  </p>
+                                  </p> */}
                                 </div>
 
                                 <div>
