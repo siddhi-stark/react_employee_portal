@@ -80,13 +80,13 @@ function AddFeedback() {
   }, [selectedQuarter])
 
   const reviewerQuestions = [
-    { id: 1, questions: "Verify Mention number of projects with names." },
+    { id: 1, questions: "Verify Mention number of projects with names. (Yes/No)" },
     { id: 2, questions: "Verify  Milestone along with the deadlines given by project Manager (Yes/No)" },
     { id: 3, questions: "Verify Milestone completed date. (Yes/No)" },
     { id: 4, questions: "Verify Deadline achievement (Yes/No)" },
-    { id: 5, questions: "rating for employees achievement (Yes/No)" },
-    { id: 6, questions: "rating for employees Attendance/punctuality (Yes/No)" },
-    { id: 7, questions: "Verify Last Quarter Goal Replace-Is employee able to perform in his/her last quarter?" },
+    { id: 5, questions: "rating for employees achievement (1-5)" },
+    { id: 6, questions: "rating for employees Attendance/punctuality (1-5)" },
+    { id: 7, questions: "Verify Is employee able to perform in his/her last quarter? (Yes/No)" },
     { id: 8, questions: "Mention Average Rating for Employee (1-5)" },
   ]
 
@@ -705,7 +705,7 @@ function AddFeedback() {
                                 <div>
                                   <Form.Group controlId='formFirstName' key={index + 1}>
                                     <Form.Label>
-                                      <b>Comments</b>
+                                      <b>Comments (If any)</b>
                                     </Form.Label>
                                     <Form.Control
                                       as='textarea'
