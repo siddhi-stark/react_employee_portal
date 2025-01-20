@@ -12,7 +12,7 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 
-const items = [{ to: '/', label: 'Home' }, { label: 'Employees Reviews Details' }];
+const items = [{ to: '/', label: 'Home' }, { label: 'Employees Reviews Form Response' }];
 
 const EmployeeReviewsDetails = () => {
   const history = useHistory();
@@ -29,7 +29,7 @@ const EmployeeReviewsDetails = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
   const [userRole, setUserRole] = useState(null);
-  const [title, setTitle] = useState('Employees Reviews Details');
+  const [title, setTitle] = useState('Employees Reviews Form Response');
   const [isProjectManager, setProjectManager] = useState(false)
   const currentDate = new Date();
   const [userId, setUserId] = useState(null)
@@ -40,7 +40,7 @@ const EmployeeReviewsDetails = () => {
 
 
   useEffect(() => {
-    setTitle("Employees Reviews Details")
+    setTitle("Employees Reviews Form Response")
     const uRole = customFunctions.getLocalStorage('group');
     const userId = customFunctions.getLocalStorage('userId');
     setUserRole(Number(uRole));
@@ -463,7 +463,7 @@ const EmployeeReviewsDetails = () => {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Employees Reviews Details</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Employees Reviews Form Response</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />

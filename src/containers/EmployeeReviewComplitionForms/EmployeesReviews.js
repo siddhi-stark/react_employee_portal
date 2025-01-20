@@ -12,7 +12,7 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 
-const items = [{ to: '/', label: 'Home' }, { label: 'Employees Reviews Details' }];
+const items = [{ to: '/', label: 'Home' }, { label: 'Employees Reviews Form Response' }];
 
 const EmployeeReviews = () => {
   const history = useHistory();
@@ -28,7 +28,7 @@ const EmployeeReviews = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
   const [userRole, setUserRole] = useState(null);
-  const [title, setTitle] = useState('Employees Reviews Details');
+  const [title, setTitle] = useState('Employees Reviews Form Response');
   const [isProjectManager, setProjectManager] = useState(false)
   const currentDate = new Date();
   const [userId, setUserId] = useState(null)
@@ -36,7 +36,7 @@ const EmployeeReviews = () => {
 
 
   useEffect(() => {
-    setTitle("Employees Reviews Details")
+    setTitle("Employees Reviews Form Response")
     const uRole = customFunctions.getLocalStorage('group');
     const userId = customFunctions.getLocalStorage('userId');
     setUserRole(Number(uRole));
@@ -387,7 +387,7 @@ const EmployeeReviews = () => {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Employees Reviews Details</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Employees Reviews Form Response</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -397,7 +397,7 @@ const EmployeeReviews = () => {
             defaultActiveKey="personalInfo"
             onSelect={(e) => handleSelectDetails(e)}
           >
-            <Tab eventKey='personalInfo' title="Personal Review Details">
+            <Tab eventKey='personalInfo' title="My review Details">
               <br />
               <Row>
                 <Col sm={2}>
@@ -444,7 +444,7 @@ const EmployeeReviews = () => {
                 }}
               />
             </Tab>
-            <Tab eventKey="empReviewsInfo" title="Review Taken Details">
+            <Tab eventKey="empReviewsInfo" title="Employee Review Details (Taken by Me)">
               {detailsKeys === 'empReviewsInfo' && (<>
                 <br />
                 <Row>

@@ -87,20 +87,32 @@ const menu = [
     roleaccess: [1, 3, 4, 5, 6],
     // roleaccess: [1, 5, 4, 6],
   },
+  
+
   {
-    title: 'Work From Home Details',
-    path: '/wfh',
+    title: 'WFH',
+    path: '#',
     icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [1, 2, 3, 10, 5, 6],
+    submenu: [
+      {
+        title: 'Employees WFH',
+        path: '/wfh',
+        icon: '',
+        submenu: [],
+        roleaccess: [1, 2, 3, 10, 5, 6],
+      },
+      {
+        title: 'My WFH',
+        path: '/wfh-employees',
+        icon: '',
+        submenu: [],
+        roleaccess: [1, 4, 5, 6, 3],
+      },
+    ],
+    roleaccess: [1, 2, 3, 10, 4, 5, 6],
   },
-  {
-    title: 'Work From Home',
-    path: '/wfh-employees',
-    icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [4, 5, 6, 3],
-  },
+
+
   {
     title: 'Employees',
     path: '#',
@@ -358,7 +370,7 @@ const menu = [
     submenu: [
 
       {
-        title: 'Employees KRA KPI',
+        title: 'Employees KRA &KPI',
         path: '/kra-kpi',
         icon: 'technology.svg',
         submenu: [],
@@ -385,12 +397,12 @@ const menu = [
         icon: 'template.svg',
         roleaccess: [3, 4],
       },
-      {
-        title: 'Employees Quarters questionnaires',
-        path: '/questionnaire',
-        icon: 'template.svg',
-        roleaccess: [1, 5, 6],
-      },
+      // {
+      //   title: 'Employees Quarters questionnaires',
+      //   path: '/questionnaire',
+      //   icon: 'template.svg',
+      //   roleaccess: [1, 5, 6],
+      // },
       {
         title: 'Review Forms',
         path: '/employee-reviews',
@@ -399,7 +411,7 @@ const menu = [
         roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
       },
       {
-        title: 'Employee Review Forms Details',
+        title: 'Employees Reviews Form Response',
         path: '/employee-reviews-details',
         icon: 'ticket.svg',
         submenu: [],

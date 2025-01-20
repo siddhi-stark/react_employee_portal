@@ -75,21 +75,32 @@ const PredictionsDetails = () => {
       id: 'action',
       label: 'Action',
       roleAccess: [1],
-      render: ({ id }) => {
+      render: ({id, reports}) => {
         return (
           <>
-            <a
-              href="/"
-              className="pl-2"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                history.push("/predictions", { state: { id: id } })
+            {
+              reports.length > 0 ? (
+                <>
+                  <a
+                    href="/"
+                    className="pl-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      history.push("/predictions", { state: { id: id } })
 
-              }}
-            >
-              <Image src="/images/view-eye.svg" />
-            </a>
+                    }}
+                  >
+                    <Image src="/images/view-eye.svg" />
+                  </a>
+                </>
+              ) : (
+                <>
+                  Processing.
+                </>
+              )
+            }
+
             <a
               href="/"
               className="ml-2"
@@ -107,7 +118,7 @@ const PredictionsDetails = () => {
     },
   ];
 
-  const deleteReport = async (id) =>{
+  const deleteReport = async (id) => {
     setShowLoader(true);
     const url = `${Api.deletePredictionReports}${id}/`;
     const { data, error } = await AuthApi.deleteDataFromServer(url);
@@ -133,13 +144,15 @@ const PredictionsDetails = () => {
     };
     const url = `${Api.predictionDetails}`;
     const { data } = await AuthApi.getDataFromServer(url, params);
-    
+
     if (data?.data) {
       const finalData = data.data.map((item, index) => ({
         no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
         id: item.id,
         created_at: customFunctions.getDate(item?.generated_by),
-        milestone_details: item.milestone_details
+        milestone_details: item.milestone_details,
+        reports: item.reports
+
       }));
 
       const { current_page, total_count, limit } = data.paginator;
@@ -162,9 +175,10 @@ const PredictionsDetails = () => {
   const getPredictions = async () => {
     setShowLoader(true);
     const url = `${Api.prediction}?use_ai=true`;
-    const {data, message} = await AuthApi.getDataFromServer(url);    
+    const { data, message } = await AuthApi.getDataFromServer(url);
     if (data?.data) {
       swal(data?.data && data?.message[0], '', 'success');
+      getPredictionsDetails(1)
       setShowLoader(false);
     } else {
       swal(message || 'Data not present for predictions.', '', 'error');
@@ -201,7 +215,7 @@ const PredictionsDetails = () => {
                 totalItems: totalCount,
                 itemsPerPage: limit,
                 activePage: pagination.current_page,
-                onPageChange: () => {},
+                onPageChange: () => { },
               }}
             />
           </Row>
