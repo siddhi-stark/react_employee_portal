@@ -12,7 +12,7 @@ import SimpleReactValidator from 'simple-react-validator';
 
 
 function RevokeOffer(props) {
-  const { show, applicantId, handleModalCLose } =
+  const { show, applicantId, handleModalCLose, onStatusUpdate } =
     props;
 
   const history = useHistory();
