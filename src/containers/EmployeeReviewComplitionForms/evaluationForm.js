@@ -236,7 +236,7 @@ const EvaluationForm = () => {
         preparedData['review_period'] = selectedOnBasis?.value
         preparedData['target_failed_to_achieve'] = targetFailed
         preparedData['targets_achieved'] = targetsAchieved
-        
+
         let response = null
         if (selfEvaluationForm) {
             let id = selfEvaluationForm?.id
@@ -286,9 +286,9 @@ const EvaluationForm = () => {
                     className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
                     type="submit"
                     onClick={() => {
-                        if (!isDisabled){
+                        if (!isDisabled) {
                             history.push('/employee-reviews');
-                        }else{
+                        } else {
                             history.push('/employee-reviews-details');
                         }
                     }}
@@ -375,9 +375,31 @@ const EvaluationForm = () => {
                                 }}
                             />
                         </Col>
-                        <hr style={{ borderColor: "white" }} />
                         <Row>
-                            <DropdownInput
+                            <Col>
+                                <div className="col-md-12">
+                                    <ul className="list-unstyled d-flex w-100 flex-wrap employeeDetailsInner">
+                                        <li className="p-0 border-bottom border-1 mx-2">
+                                            <label>
+                                                <strong>Evaluation Criteria:</strong>
+                                            </label>
+                                            <p>1.Unacceptable, I haven't seen enough from you in this category. Refer to the performance improvement plan.</p>
+                                            <p>2.Acceptable, You're meeting expectations. lets figure it out how can we improve even more.</p>
+                                            <p>3.Good, Your performance in this category is more than expected. Keep up the good work.</p>
+                                            <p>4.Outstanding, I have been more than impressed by your performance in this category.</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </Col>
+                        </Row>
+
+                        <br/>
+
+                        <hr style={{ borderColor: "white" }} />
+
+                        <Row>
+
+                            {/* <DropdownInput
                                 label="1. Evaluation Criteria"
                                 asterisk="*"
                                 options={evaluationCriteria}
@@ -391,7 +413,8 @@ const EvaluationForm = () => {
                                     selectedEvaluation,
                                     'required'
                                 )}
-                            />
+                            /> */}
+
                             <Col>
                                 <DropdownInput
                                     label="2. Review done on the basis of the"
@@ -546,9 +569,9 @@ const EvaluationForm = () => {
                                         e.preventDefault();
                                         e.stopPropagation();
                                         setAddPopUp(false);
-                                        if (!isDisabled){
+                                        if (!isDisabled) {
                                             history.push('/employee-reviews');
-                                        }else{
+                                        } else {
                                             history.push('/employee-reviews-details');
                                         }
                                     }}

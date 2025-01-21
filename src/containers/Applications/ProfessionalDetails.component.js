@@ -146,7 +146,7 @@ function ProfessionalDetails(props) {
     let expFlag = true;
     if (
       formValues &&
-      Number(formValues?.total_exp) < Number(formValues?.rel_exp)
+      formValues?.total_exp < formValues?.rel_exp
     ) {
       expFlag = false;
     }
@@ -162,8 +162,9 @@ function ProfessionalDetails(props) {
     const localApplicantId = customFunctions.getLocalStorage('applicantId');
 
     let postData = {
-      total_exp: Number(formValues?.total_exp),
-      rel_exp: Number(formValues?.rel_exp),
+      
+      total_exp: parseFloat(formValues?.total_exp).toFixed(2),
+      rel_exp: parseFloat(formValues?.rel_exp).toFixed(2),
       notice_period: formValues?.notice_period,
       current_ctc: formValues?.current_ctc,
       expected_ctc: formValues?.expected_ctc,
