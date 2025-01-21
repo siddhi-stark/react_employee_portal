@@ -7,8 +7,10 @@ import {
   Container,
   Row,
   Image,
+  Col, Button, Form, Accordion
 } from 'react-bootstrap';
 import Table from '../../components/ReactTable/simpletable.component';
+import { DropdownInput } from '../../components/FormInputs';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import AuthApi from '../../helper/authApi';
@@ -171,12 +173,12 @@ const AbscondTable = () => {
         return rowdata.resignation_status == '3'
           ? 'Pending'
           : rowdata.resignation_status == '2'
-          ? 'Declined'
-          : rowdata.resignation_status == '4'
-          ? 'Cancelled'
-          : rowdata?.user?.relieved == true
-          ? 'Relieved'
-          : 'Completed';
+            ? 'Declined'
+            : rowdata.resignation_status == '4'
+              ? 'Cancelled'
+              : rowdata?.user?.relieved == true
+                ? 'Relieved'
+                : 'Completed';
       },
     },
     // {
@@ -193,7 +195,38 @@ const AbscondTable = () => {
 
   useEffect(() => {
     getRowData(1);
+    getEmployeeName()
   }, []);
+
+  const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
+  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
+
+
+  const getEmployeeName = async () => {
+    setShowLoader(true);
+    const url = `${Api.employeeUrl}?type=all&old_employee=${1}`;
+    const { data, error } = await AuthApi.getDataFromServer(url);
+    setShowLoader(false);
+
+    if (data && data.success) {
+      let allemp = []
+      data.data.map((item) => {
+        if ([1].includes(item.role_id) && !item.is_project_manager) return;
+
+        allemp.push({
+          label: item.full_name,
+          value: item.id,
+          joiningDate: item.date_joined,
+        })
+      }
+      );
+
+      setAllEmployes([{ label: 'All Employess', value: 'all_employess' }, ...allemp]);
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
+    }
+  };
 
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
@@ -204,6 +237,11 @@ const AbscondTable = () => {
       page,
       sort_direction: 'descending',
     };
+
+    if (selectedEmployeeId != "all_employess"){
+      params.employee = selectedEmployeeId
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -269,7 +307,12 @@ const AbscondTable = () => {
     }
   };
 
- 
+  const handleCancelFilter = () => {
+    setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
+    setSelectedEmployeeId('')
+  };
+
+
 
   return (
     <>
@@ -280,6 +323,20 @@ const AbscondTable = () => {
           </h2>
           <Breadcrumb items={items} />
         </div>
+
+        {/* <Accordion defaultActiveKey="0" className='mt-4'>
+          <Card>
+            <Accordion.Toggle as={Card.Header} eventKey="0">
+              Filter
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey="0">
+              <Card.Body>
+                
+              </Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        </Accordion> */}
+
         <Card className="mt-5">
           <Card.Header>
             {['1', '2', '3', '5', '6'].includes(roleId) && (
@@ -296,7 +353,33 @@ const AbscondTable = () => {
               </div>
             )}
           </Card.Header>
+
           <Card.Body>
+            <Row>
+              <Col sm={2}>
+                <DropdownInput
+                  label="Select Employee"
+                  options={allEmployes}
+                  defaultValue={selectedEmployee}
+                  onSelectHandler={(select) => {
+                    setSelectedEmployee(select)
+                    setSelectedEmployeeId(select?.value)
+                  }}
+                />
+              </Col>
+              <Col>
+                <Button variant="primary" onClick={() => {
+                  getRowData()
+                }} className='mt-4'>
+                  Apply
+                </Button>{' '}
+                <Button variant="secondary" onClick={() => {
+                  handleCancelFilter()
+                }} className='mt-4'>
+                  Cancel
+                </Button>
+              </Col>
+            </Row>
             <Row>
               <Table
                 columns={columns}
@@ -306,7 +389,7 @@ const AbscondTable = () => {
                   ...pagination,
                   activePage: pagination.current_page,
                   onPageChange: (pageNo) => {
-                   getRowData(pageNo);
+                    getRowData(pageNo);
                   },
                 }}
                 tableClass="table-striped"

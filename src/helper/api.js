@@ -110,6 +110,8 @@ export default class Api extends Component {
 
   static offerStatusUrl = `${Api.baseUrl}offer-status/`;
 
+  static offerUpdateUrl = `${Api.baseUrl}offer-update/`;
+
   static temporaryAccountUrl = `${Api.baseUrl}verify/account/`;
 
   static applicantDocumentUrl = `${Api.baseUrl}applicant-document/`;

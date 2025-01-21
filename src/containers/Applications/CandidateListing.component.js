@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { ProgressBar, Card, Image } from 'react-bootstrap';
@@ -11,6 +13,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import Loader from '../../components/Loader/index';
+import RevokeOffer from './revokeOffer';
 
 function CandidateListing() {
   const [rowData, setRowData] = useState([]);
@@ -19,31 +22,36 @@ function CandidateListing() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterData, setFilterData] = useState({});
   const [isShowLoader, setShowLoader] = useState(false);
+  const [revokeStatus, setRevokeStatus] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [applicantId, setApplicantId] = useState();
+
+
 
   const title = 'Candidates';
   const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
   const history = useHistory();
 
   const actionCallBack = (row) => {
-   
+
     return (
       <span className="d-flex">
-        {row.offer_status_name !== 'Pending' && !row.is_onboard && (
-        <a
-          href="/"
-          title="Edit Candidate"
-          className="pl-2 ms-2"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/candidates/${row.emp_id}`);
-          }}
-        >
-          <Image src="/images/edit-button.svg" />
-        </a>
-         )} 
+        {row.offer_status_name !== 'Pending' && !row.is_onboard && row.offer_status !== 4 && (
+          <a
+            href="/"
+            title="Edit Candidate"
+            className="pl-2 ms-2"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              history.push(`/candidates/${row.emp_id}`);
+            }}
+          >
+            <Image src="/images/edit-button.svg" />
+          </a>
+        )}
         {new Date(row.joining_date).getTime() <= new Date().getTime() &&
-          row.offer_status_name !== 'Declined' &&
+          row.offer_status_name !== 'Declined' && row.offer_status !== 4 &&
           !row.is_onboard && (
             <a
               href="/"
@@ -58,6 +66,26 @@ function CandidateListing() {
               <Image src="/images/onboard.svg" />
             </a>
           )}
+
+        {
+          new Date().getTime() >= new Date(row.joining_date).getTime()  &&
+          row.offer_status !== 4 &&
+          (
+            <a
+              href="/"
+              title="Revoke Offer Letter"
+              className="pl-2 ms-1"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // history.push(`/onboard/${row.emp_id}`);
+                setApplicantId(row.id)
+                setModalShow(true)
+              }}
+            >
+              <Image src="/images/logout-profile.svg" />
+            </a>
+          )}
       </span>
     );
   };
@@ -70,9 +98,8 @@ function CandidateListing() {
             bsPrefix="progress pbar"
             variant="success pe-2"
             now={completion.completion ? completion.completion : 0}
-            label={`${
-              completion.completion ? completion.completion : 0
-            }% completed`}
+            label={`${completion.completion ? completion.completion : 0
+              }% completed`}
           />
         )}
       </>
@@ -93,12 +120,36 @@ function CandidateListing() {
       label: 'Mobile',
     },
     {
-      id: 'tech_stack_name',
+      id: 'tech_stack',
       label: 'Technology',
+      render: ({ tech_stack }) => {
+        return (
+          <>
+            <span>
+              {tech_stack && tech_stack.length > 0
+                ? tech_stack.map((tech) => tech.tech_name).join(', ')
+                : '-'}
+            </span>
+          </>
+        );
+      },
     },
     {
       id: 'offer_status_name',
       label: 'Offer Status',
+      render: ({ offer_status_name, offer_status, revoke_reason }) => {
+        return (
+          <>
+            <a
+              // href="/"
+              className="ms-2 pl-2"
+              title={offer_status === 4 ? revoke_reason : `Offer ${offer_status_name}`}
+            >
+              {offer_status_name}
+            </a>
+          </>
+        );
+      },
     },
     {
       id: 'joining_date',
@@ -232,6 +283,16 @@ function CandidateListing() {
               }}
             />
           </Card.Body>
+          {modalShow && (
+            <RevokeOffer
+              show={modalShow}
+              applicantId={applicantId}
+              handleModalCLose={(e) => setModalShow(e)}
+              onStatusUpdate={() => {
+                getRowData(1);
+              }}
+            />
+          )}
         </Card>
       </section>
     </>

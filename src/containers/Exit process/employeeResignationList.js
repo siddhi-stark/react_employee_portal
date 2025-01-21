@@ -4,7 +4,7 @@ import { Helmet, DropdownInput, TextInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import swal from 'sweetalert';
-import { Card, Row, Col, Button,Form,Accordion } from 'react-bootstrap';
+import { Card, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
 import Table from '../../components/ReactTable/simpletable.component';
 import SimpleReactValidator from 'simple-react-validator';
 import customFunctions from '../../helper/customFunctions';
@@ -34,16 +34,17 @@ const EmployeeResignationList = (props) => {
     setResignationType(e.target.value);
   };
 
-  const handleApplyFilter = () => {
-    const filtered = rowData.filter((row) => row.resignation_Type === resignationType);
-    setFilteredData(filtered);
-    setIsFilterOpen(false);
-  };
+  // const handleApplyFilter = () => {
+  //   const filtered = rowData.filter((row) => row.resignation_Type === resignationType);
+  //   setFilteredData(filtered);
+  //   setIsFilterOpen(false);
+  // };
 
   const handleCancelFilter = () => {
     setResignationType('');
     setFilteredData([]);
     setIsFilterOpen(false);
+    setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
   };
   // useEffect(() => {
   //   if (roleId == '4') {
@@ -54,6 +55,7 @@ const EmployeeResignationList = (props) => {
 
   useEffect(() => {
     setRoleId(localStorage.getItem('group'));
+    getEmployeeName()
   }, []);
 
   const items = props.data
@@ -96,7 +98,7 @@ const EmployeeResignationList = (props) => {
     {
       id: 'employeeId',
       label: 'Employee Id',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: (row) => {
         const rowdata = row;
         return `SDMS - ${rowdata?.user?.emp_code}`;
@@ -105,7 +107,7 @@ const EmployeeResignationList = (props) => {
     {
       id: 'full_name',
       label: 'Name',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: (row) => {
         const rowdata = row;
         return rowdata?.user?.full_name ? rowdata?.user?.full_name : '-';
@@ -114,7 +116,7 @@ const EmployeeResignationList = (props) => {
     {
       id: 'designation',
       label: 'Designation',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: (row) => {
         const rowdata = row;
         return rowdata?.user?.designation_name
@@ -130,7 +132,7 @@ const EmployeeResignationList = (props) => {
     {
       id: 'joiningDate',
       label: 'Joining Date',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: (row) => {
         const rowdata = row;
         return customFunctions.getDMYDate(rowdata?.user?.date_joined);
@@ -139,7 +141,7 @@ const EmployeeResignationList = (props) => {
     {
       id: 'created_at',
       label: 'Resignation Date',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: (row) => {
         const rowdata = row;
         return customFunctions.getDMYDate(rowdata?.created_at);
@@ -148,7 +150,7 @@ const EmployeeResignationList = (props) => {
     {
       id: 'resignationReason',
       label: 'Resignation Reason',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: (row) => {
         const rowdata = row;
         return rowdata?.resignation_reason.length > 15 ? (
@@ -166,18 +168,18 @@ const EmployeeResignationList = (props) => {
     {
       id: 'status',
       label: 'Status',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: (row) => {
         const rowdata = row;
-        return rowdata.resignation_status =='3'
+        return rowdata.resignation_status == '3'
           ? 'Pending'
           : rowdata.resignation_status == '2'
-          ? 'Declined'
-          : rowdata.resignation_status =='4'
-          ? 'Cancelled'
-          : rowdata?.user?.relieved == true
-          ? 'Relieved'
-          : 'Approved';
+            ? 'Declined'
+            : rowdata.resignation_status == '4'
+              ? 'Cancelled'
+              : rowdata?.user?.relieved == true
+                ? 'Relieved'
+                : 'Approved';
       },
     },
     // {
@@ -223,19 +225,19 @@ const EmployeeResignationList = (props) => {
         }
       },
     },
-    
+
 
     {
       id: 'relievingDate',
       label: 'Relieving Date',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: (row) => {
         const rowdata = row;
         return [2, 4].includes(rowdata?.resignation_status)
           ? '-'
           : rowdata?.user?.relieving_date
-          ? customFunctions.getDMYDate(rowdata?.user?.relieving_date)
-          : '-';
+            ? customFunctions.getDMYDate(rowdata?.user?.relieving_date)
+            : '-';
       },
     },
     // {
@@ -267,10 +269,40 @@ const EmployeeResignationList = (props) => {
     {
       id: 'action',
       label: 'Action',
-      roleAccess: [1, 2, 3, 4, 5, 6, 7,10],
+      roleAccess: [1, 2, 3, 4, 5, 6, 7, 10],
       render: handleActionCallback,
     },
   ];
+
+  const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
+  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
+
+
+  const getEmployeeName = async () => {
+    setShowLoader(true);
+    const url = `${Api.getEmployees}?type=all&is_all=${1}`;
+    const { data, error } = await AuthApi.getDataFromServer(url);
+    setShowLoader(false);
+
+    if (data && data.success) {
+      let allemp = []
+      data.data.map((item) => {
+        if ([1].includes(item.role_id) && !item.is_project_manager) return;
+
+        allemp.push({
+          label: item.full_name,
+          value: item.id,
+          joiningDate: item.date_joined,
+        })
+      }
+      );
+
+      setAllEmployes([{ label: 'All Employess', value: 'all_employess' }, ...allemp]);
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
+    }
+  };
 
   const employeeResignationList = async (pageNo) => {
     setShowLoader(true);
@@ -278,11 +310,21 @@ const EmployeeResignationList = (props) => {
     const params = {
       sort_direction: 'descending',
       page: pageNo,
-      show_all: true,
     };
-    if (roleId == '5') {
+    if (roleId == '5' && selectedEmployeeId === "all_employess" && !resignationType) {
       params.show_all = true;
     }
+
+    if (resignationType){
+      params.resignation_status = resignationType
+      params.show_all = true
+    }
+    
+    if (selectedEmployeeId && selectedEmployeeId != "all_employess"){
+      params.get_by_id = selectedEmployeeId
+      params.show_all = true
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -316,34 +358,50 @@ const EmployeeResignationList = (props) => {
           <div className="d-flex justify-content-end mb-3"></div>
         </div>
       </div>
-     
       <Accordion defaultActiveKey="0" className='mt-4'>
         <Card>
-        <Accordion.Toggle as={Card.Header} eventKey="0">
+          <Accordion.Toggle as={Card.Header} eventKey="0">
             Filter
           </Accordion.Toggle>
           <Accordion.Collapse eventKey="0">
             <Card.Body>
               <Row>
                 <Col>
-              <Form.Group controlId="resignationType">
-                <Form.Label>Resignation Type</Form.Label>
-                <Form.Control as="select" value={resignationType} onChange={handleDropdownChange}>
-                  <option value=""hidden>Select Resignation Type</option>
-                  <option value="completed">Completed</option>
-                  <option value="pending">Pending</option>
-                  <option value="cancelled">Cancelled</option>
-                </Form.Control>
-              </Form.Group>
-              </Col>
-              <Col>
-             <Button variant="primary" onClick={handleApplyFilter}className='mt-4'>
-                Apply
-              </Button>{' '}
-              <Button variant="secondary" onClick={handleCancelFilter}className='mt-4'>
-                Cancel
-              </Button>
-              </Col>
+                  <Form.Group controlId="resignationType">
+                    <Form.Label>Resignation Type</Form.Label>
+                    <Form.Control as="select" value={resignationType} onChange={handleDropdownChange}>
+                      <option value="" hidden>Select Resignation Status</option>
+                      <option value="1">Approved</option>
+                      <option value="2">Declined</option>
+                      <option value="3">Pending</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Col sm={6}>
+                    <DropdownInput
+                      label="Select Employee"
+                      options={allEmployes}
+                      defaultValue={selectedEmployee}
+                      onSelectHandler={(select) => {
+                        setSelectedEmployee(select)
+                        setSelectedEmployeeId(select?.value)
+                      }}
+                    />
+                  </Col>
+                </Col>
+                <Col>
+                  <Button variant="primary" onClick={()=>{
+                    employeeResignationList()
+                  }} className='mt-4'>
+                    Apply
+                  </Button>{' '}
+                  <Button variant="secondary" onClick={()=>{
+                    handleCancelFilter()
+                  }} className='mt-4'>
+                    Cancel
+                  </Button>
+                </Col>
               </Row>
             </Card.Body>
           </Accordion.Collapse>
