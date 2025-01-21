@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
-import { ProgressBar, Card, Image } from 'react-bootstrap';
+import { ProgressBar, Card, Image, Col, Row, Button } from 'react-bootstrap';
+
 import swal from 'sweetalert';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import SearchFormSections from './searchFormschema.json';
 import customFunctions from '../../helper/customFunctions';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, DropdownInput, } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -25,8 +26,23 @@ function CandidateListing() {
   const [revokeStatus, setRevokeStatus] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [applicantId, setApplicantId] = useState();
+  const [offerStatus, setOfferStatus] = useState();
 
 
+  const allOfferStatus = [
+    {
+      label: "Accepted", value: 1,
+    },
+    {
+      label: "Declined", value: 2,
+    },
+    {
+      label: "Pending", value: 3,
+    },
+    {
+      label: "Revoked", value: 4,
+    }
+  ]
 
   const title = 'Candidates';
   const items = [{ to: '/', label: 'Home' }, { label: 'Candidates' }];
@@ -68,7 +84,7 @@ function CandidateListing() {
           )}
 
         {
-          new Date().getTime() >= new Date(row.joining_date).getTime()  &&
+          new Date().getTime() >= new Date(row.joining_date).getTime() &&
           row.offer_status !== 4 &&
           (
             <a
@@ -179,12 +195,13 @@ function CandidateListing() {
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
-    const endPoint = `${Api.applicantsUrl}`;
+    let endPoint = `${Api.applicantsUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
         ? customFunctions.jsonParse(filterData)
         : {};
-    const params = {
+
+    let params = {
       page,
       limit,
       sort_direction: 'descending',
@@ -192,6 +209,15 @@ function CandidateListing() {
       is_candidate_details: true,
       ...filterList,
     };
+
+    if (selectedEmployeeId && selectedEmployeeId != "all_applicants") {
+      endPoint = `${Api.applicantsUrl}`
+      params.get_by_id = +selectedEmployeeId
+    }
+    if (offerStatus){
+      params.offer_status = +offerStatus.value
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -210,7 +236,48 @@ function CandidateListing() {
     }
   };
 
+  const [allEmployes, setAllEmployes] = useState([{ label: 'All Applicants', value: 'all_applicants' }]);
+  const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Applicants', value: 'all_applicants' });
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_applicants');
+
+  const getEmployeeName = async () => {
+    setShowLoader(true);
+
+    const params = {
+      type: "all",
+      sort_direction: 'descending',
+      is_candidate_details: true,
+      status: 4
+    };
+
+    console.log("sdfsdfdsf");
+
+    let url = `${Api.applicantsUrl}`;
+    url = customFunctions.generateUrl(url, params);
+
+    const { data, error } = await AuthApi.getDataFromServer(url, params);
+    setShowLoader(false);
+
+    if (data && data.success) {
+      let allemp = []
+      data.data.map((item) => {
+        // if (item.status !== 4) return;
+        allemp.push({
+          label: item.name,
+          value: item.id,
+          // joiningDate: item.date_joined,
+        })
+      }
+      );
+
+      setAllEmployes([{ label: 'All Applicants', value: 'all_applicants' }, ...allemp]);
+    } else {
+      swal(error || 'Something went wrong', '', 'error');
+    }
+  };
+
   useEffect(() => {
+    getEmployeeName()
     getRowData(1);
   }, [filterData]);
 
@@ -233,31 +300,52 @@ function CandidateListing() {
               <h5 className="card-title mb-0 mt-2 ">Filters</h5>
             </div>
             <hr />
-            <div className="filter-box-main">
-              <StarkFormBuilder
-                containerClass=""
-                formHeaderClass=""
-                formSections={SearchFormSections}
-                formHeading=""
-                onFormSubmit={(formValues) => {
-                  if (!formValues.keyword) return;
-                  submitForm(formValues);
-                }}
-                callbacks={{}}
-                submitBtnText="Apply"
-                showResetBtn={true}
-                showBtnClass={false}
-                btnContainerClass="col-md-4 filter-apply-btns"
-                formClass="row"
-                resetBtnText="Clear"
-                isStepForm={false}
-                onFormReset={() => {
-                  if (filterData && !Object.keys(filterData).length) return;
-                  setFilterData();
-                }}
-              />
-            </div>
+            {/* <div className="filter-box-main"> */}
+
+
+            {/* </div> */}
+            <Row>
+              <Col sm={4}>
+                <DropdownInput
+                  label="Select Employee"
+                  options={allEmployes}
+                  defaultValue={selectedEmployee}
+                  onSelectHandler={(select) => {
+                    setSelectedEmployee(select)
+                    setSelectedEmployeeId(select?.value)
+                  }}
+                />
+              </Col>
+
+              <Col sm={4}>
+                <DropdownInput
+                  label="Select Offer"
+                  options={allOfferStatus}
+                  defaultValue={offerStatus}
+                  onSelectHandler={(select) => {
+                    setOfferStatus(select)
+                  }}
+                />
+              </Col>
+              <Col>
+                <Button variant="primary" onClick={() => {
+                  getRowData()
+                }} className='mt-4'>
+                  Apply
+                </Button>{' '}
+                <Button variant="secondary" onClick={() => {
+                  setSelectedEmployee({ label: 'All Applicants', value: 'all_applicants' })
+                  setSelectedEmployeeId('')
+                  setOfferStatus('')
+
+                }} className='mt-4'>
+                  Cancel
+                </Button>
+              </Col>
+            </Row>
+
           </Card.Body>
+
         </Card>
         <Card>
           <Card.Body>
