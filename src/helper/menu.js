@@ -79,6 +79,15 @@ const menu = [
     submenu: [],
     roleaccess: [1, 3, 5, 6, 10],
   },
+
+  {
+    title: 'Employee Daily Report',
+    path: '/emp-timesheet',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [1, 3, 4],
+    // roleaccess: [1, 5, 4, 6],
+  },
   
   {
     title: 'WFH',
@@ -231,7 +240,6 @@ const menu = [
         icon: 'recruitement.svg',
         roleaccess: [1, 6],
       },
-      
     ],
     roleaccess: [1, 6],
   },
@@ -342,11 +350,11 @@ const menu = [
         path: '/emp-timesheet',
         icon: 'timesheet.svg',
         submenu: [],
-        roleaccess: [1, 3, 4, 5, 6],
+        roleaccess: [5, 6],
         // roleaccess: [1, 5, 4, 6],
       },
     ],
-    roleaccess: [1, 2, 3, 4, 6, 5, 10],
+    roleaccess: [2, 3, 6, 5, 6, 10],
   },
   {
     title: 'Employee Timesheet',
