@@ -321,7 +321,7 @@ function AddLeave(props) {
       setIsNotice(data.data.is_notice_period);
       setIsProbation(data.data.is_probation);
       setIsSandwich(data.data.is_sandwich);
-      
+
     }
 
     updateDefaultValues({
@@ -748,35 +748,36 @@ function AddLeave(props) {
                       Apply Leave
                     </Button>
                   )}
+                {currentUser === 1 && status === 'Pending' && (
+                  <>
+                    <Button
+                      onClick={() => {
+                        setStatusId(2)
+                        setModalShow(true)
+
+                      }}
+                    // className="ml-3"
+                    >
+                      Approve
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        setStatusId(2)
+                        setModalShow(true)
+                      }}
+                      className="ml-3"
+
+                    >
+                      Decline
+                    </Button>
+                  </>
+
+                )}
               </div>
             </div>
             {console.log('status', status)}
-            {currentUser === 1 && status === 'Pending' && (
-              <>
-                <Button
-                  onClick={() => {
-                    setStatusId(2)
-                    setModalShow(true)
 
-                  }}
-                // className="ml-3"
-                >
-                  Approve
-                </Button>
-
-                <Button
-                  onClick={() => {
-                    setStatusId(2)
-                    setModalShow(true)
-                  }}
-                  className="ml-3"
-
-                >
-                  Decline
-                </Button>
-              </>
-
-            )}
             {modalShow && (
               <AddNote
                 show={modalShow}

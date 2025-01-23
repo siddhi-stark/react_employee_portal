@@ -136,7 +136,7 @@ function Applications(props) {
                     {Number(group) === 4 ||
                     Number(group) === 3 ||
                     (Number(group) === 7 && isProfessionalInfoId) ||
-                    ((Number(group) === 5 || Number(group) === 1) && pageType === 'My_Interview') ? (
+                    ((Number(group) === 5) && pageType === 'My_Interview') ? (
                       <InterviewerRoundsStatus
                         isProfessionalInfoId={isProfessionalInfoId}
                       />

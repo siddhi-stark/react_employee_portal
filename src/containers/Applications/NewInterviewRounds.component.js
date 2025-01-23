@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import StarkFormBuilder from 'stark-form-builder';
 import FormSections from './NewInterviewRounds.json';
@@ -177,7 +178,7 @@ function NewInterviewRounds(props) {
     const params = {
       // is_hr_personal:
       is_interview_round: true,
-      
+
     };
     const url = customFunctions.generateUrl(endpoint, params);
     const { data } = await AuthApi.getDataFromServer(url);
@@ -230,16 +231,16 @@ function NewInterviewRounds(props) {
               data?.data == []
                 ? 'Pending'
                 : dt.status_name === 'pending'
-                ? 'Pending'
-                : dt.status_name === 'selected'
-                ? 'Selected'
-                : dt.status_name === 'rejected'
-                ? 'Rejected'
-                : dt.status_name === 'offered'
-                ? 'Offered'
-                : dt.status_name === 'declined'
-                ? 'Declined'
-                : dt.status_name,
+                  ? 'Pending'
+                  : dt.status_name === 'selected'
+                    ? 'Selected'
+                    : dt.status_name === 'rejected'
+                      ? 'Rejected'
+                      : dt.status_name === 'offered'
+                        ? 'Offered'
+                        : dt.status_name === 'declined'
+                          ? 'Declined'
+                          : dt.status_name,
 
             value: data?.data == [] ? 4 : dt?.status,
           },
@@ -253,13 +254,17 @@ function NewInterviewRounds(props) {
             ? dt.description
             : 'Please attend the interview',
           id: dt.applicant_round_id,
-          meet_link:dt.meet_link,
+          meet_link: dt.meet_link,
         });
       });
 
+      if (interviewData?.[0]?.meet_link) {
+        setGoogleLink(interviewData?.[0]?.meet_link)
+      }
+
       if (interviewData) {
         updateDefaultValues({ addmore: [...interviewData] });
-      } 
+      }
       forceUpdate(count + 1);
     }
   };
@@ -352,17 +357,39 @@ function NewInterviewRounds(props) {
   return (
     <>
       <Loader showLoader={isShowLoader} needFullPage={false} />
+
       <div className="mt-3">
+        {/* {googleLink && (
+          <>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 "></h5>
+
+              <Button
+                variant="secondary"
+                className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                type="submit"
+                onClick={() => {
+                  window.open(googleLink)
+                }}
+              >
+                Go to meeting
+              </Button>
+
+            </div>
+            <br />
+          </>
+        )} */}
+
         {/* {notes == 'undefined' || notes == 'null' ? (
           '-'
         ) : ( */}
         <p>
           <strong className="mr-2">Notes : </strong>
           {notes == 'undefined' || notes == 'null' ? '-' : notes}
-         
+
         </p>
         {/* <a href=''className='ml-5'>Join Google Meet</a> */}
-       
+
         {/* )} */}
         <div>
           <StarkFormBuilder
@@ -383,11 +410,11 @@ function NewInterviewRounds(props) {
             resetBtnText="Clear"
             btnContainerClass="form-submit-buttons mb-4 pb-4"
             isStepForm={false}
-            onFormReset={() => {}}
+            onFormReset={() => { }}
           />
-          
+
         </div>
-       
+
       </div>
     </>
   );
