@@ -278,7 +278,7 @@ const EmployeeReviews = () => {
                   }}
 
                 >
-                  Submit Training Reviewer Form
+                  Submit Review Feedback
                 </a>
               )
             }

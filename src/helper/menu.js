@@ -4,7 +4,7 @@ const menu = [
     path: '/',
     icon: 'dashboard.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7, 8, 10],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 8],
   },
   {
     title: 'Project',
@@ -385,7 +385,7 @@ const menu = [
         roleaccess: [1, 5, 6, 8],
       },
       {
-        title: 'Employees KRA KPI',
+        title: 'Employees KRA &KPI',
         path: '/kra-kpi-employees',
         icon: 'technology.svg',
         submenu: [],

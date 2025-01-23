@@ -1,10 +1,11 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
 import swal from 'sweetalert';
 import moment from 'moment';
-import StarkFormBuilder from 'stark-form-builder';
-import FormSections from './workloadFormschema.json';
+// import StarkFormBuilder from 'stark-form-builder';
+// import FormSections from './workloadFormschema.json';
 import { Helmet } from '../../components/FormInputs';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -84,13 +85,13 @@ function EmployeeActivity(props) {
   }, []);
 
   // Submit Form
-  const submitForm = async (formValues) => {
-    const payload = {
-      start_date: formValues.start_date && customFunctions.getDate(formValues.start_date),
-      end_date: formValues.end_date && customFunctions.getDate(formValues.end_date),
-    };
-    setFilterData(payload);
-  };
+  // const submitForm = async (formValues) => {
+  //   const payload = {
+  //     start_date: formValues.start_date && customFunctions.getDate(formValues.start_date),
+  //     end_date: formValues.end_date && customFunctions.getDate(formValues.end_date),
+  //   };
+  //   setFilterData(payload);
+  // };
 
   return (
     <>
@@ -111,9 +112,9 @@ function EmployeeActivity(props) {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <div className="mt-5">
-          <Card>
-            <Card.Body>
-              <div className="d-flex align-items-center justify-content-between">
+          {/* <Card> */}
+            {/* <Card.Body> */}
+              {/* <div className="d-flex align-items-center justify-content-between">
                 <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               </div>
               <hr />
@@ -140,9 +141,9 @@ function EmployeeActivity(props) {
                     setFilterData({});
                   }}
                 />
-              </div>
-            </Card.Body>
-          </Card>
+              </div> */}
+            {/* </Card.Body> */}
+          {/* </Card> */}
               
           <section className="content-area">
           <div className="row">
