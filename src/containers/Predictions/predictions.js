@@ -48,8 +48,13 @@ const Predictions = () => {
 
 
     if (data?.data) {
-      setPredictions(data?.data[0]?.reports || []);
       setShowLoader(false);
+      if (data?.data[0]?.reports) {
+        // const sortedData = data?.data[0]?.reports.sort((a, b) => a.project_id - b.project_id);
+        const groupedMilestones = groupByProject(data?.data[0]?.reports);
+
+        setPredictions(groupedMilestones || []);
+      }
 
     } else {
       swal(error || 'Something went wrong', '', 'error');
@@ -57,6 +62,27 @@ const Predictions = () => {
 
     }
   };
+
+  const groupByProject = (milestones) => {
+    return milestones.reduce((acc, milestone) => {
+      // Check if the project_id already exists in the accumulator
+      if (!acc[milestone.project_id]) {
+        acc[milestone.project_id] = [];
+      }
+      // Push the milestone to the corresponding project_id group
+      acc[milestone.project_id].push(milestone);
+      return acc;
+    }, {});
+  };
+
+  const chunkArray = (array, size) => {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+  };
+
 
   return (
     <>
@@ -79,7 +105,7 @@ const Predictions = () => {
           )}
 
           <div className="d-flex align-items-center justify-content-between">
-            <h5 className="card-title mb-0 mt-2 ">Get Forms details by Filters</h5>
+            <h5 className="card-title mb-0 mt-2 ">All milestone analysis for date </h5>
             <Button
               variant="secondary"
               className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
@@ -93,119 +119,164 @@ const Predictions = () => {
           </div>
           <hr style={{ borderColor: "white" }} />
           <Row>
-            {predictions.length > 0 ? (
-              predictions.map((milestone, index) => (
-                <>
-                  <Col sm={6}>
-                    <Card className="prediction-card" key={index}>
-                      <div className="milestone-header">
-                        <h3 className="milestone-title">{index + 1}.{milestone?.milestone_name}</h3>
-                        <span className="status-badge">
-                          {milestone?.milestone_analysis.deadline_predictions.is_at_risk
-                            ? 'At Risk'
-                            : 'On Track'}
-                        </span>
-                      </div>
-                      <div className="milestone-details">
-                        <p>
-                          <strong>Deadline:</strong>{' '}
-                          <span className="deadline-text">
-                            {milestone?.deadline}
-                          </span>
-                        </p>
-                        <p>
-                          <strong>Completed Tasks:</strong> {milestone?.completed_tasks}
-                        </p>
-                        <p>
-                          <strong>Pending Tasks:</strong> {milestone?.pending_tasks}
-                        </p>
-                        <p>
-                          <strong>Total Logged Time:</strong>{' '}
-                          {milestone?.total_logged_time}
-                        </p>
-                        <p>
-                          <strong>Total Tasks Logged Time:</strong>{' '}
-                          {milestone?.total_tasks_logged_time}
-                        </p>
-                        <p>
-                          <strong>Total Bugs Logged Time:</strong>{' '}
-                          {milestone?.total_bugs_logged_time}
-                        </p>
-                      </div>
-                      <div className="milestone-analysis">
-                        <h5>Analysis:</h5>
-                        <p>
-                          <strong>Suggested New Deadline:</strong>{' '}
-                          {milestone?.milestone_analysis?.deadline_predictions?.suggested_new_deadline}
-                        </p>
-                        <p>
-                          <strong>Reasoning:</strong>{' '}
-                          {milestone?.milestone_analysis?.deadline_predictions?.reasoning}
-                        </p>
+            {Object.keys(predictions).length > 0 ? (
+              Object.keys(predictions).map((projectId) => {
+                const projectMilestones = predictions[projectId];
+                const projectName = projectMilestones[0]?.project_name; // Assume all milestones in the group have the same project name
+                // Split milestones into pairs (for rows with two columns)
+                const milestonePairs = chunkArray(projectMilestones, 2);
 
-                        <h5>Strategies for Pending Work:</h5>
-                        <ul>
-                          <strong>Risks:</strong>{' '}
-                          {milestone?.milestone_analysis?.strategies_for_pending_work?.risks?.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                          <br />
-                          <strong>Methods:</strong>{' '}
-                          {milestone?.milestone_analysis?.strategies_for_pending_work?.methods?.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                          <br />
-                          <strong>Prioritization:</strong>{' '}
-                          {milestone?.milestone_analysis?.strategies_for_pending_work?.prioritization}
-                        </ul>
-                        <br />
-                        <h5>Performance Insights:</h5>
-                        <ul>
-                          <strong>Total Effort Analysis:</strong>{' '}
-                          <li>Logged Time Ratio: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.logged_time_ratio}</li>
-                          <li>Time Efficiency: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.time_efficiency}</li>
-                          <br />
+                return (
+                  <div key={projectId}>
+                    <h3 className="milestone-project-name">{projectName}</h3>
+                    {milestonePairs.map((pair, rowIndex) => (
+                      <Row key={rowIndex} className="mb-4">
+                        {pair.map((milestone, colIndex) => (
+                          <Col sm={6} key={colIndex}>
+                            <Card className="prediction-card">
+                              <div className="milestone-header">
+                                <h3 className="milestone-title">
+                                  {milestone?.milestone_name}
+                                </h3>
+                                <span
+                                  className="status-badge"
+                                  data-status={
+                                    milestone?.milestone_analysis.deadline_predictions.is_at_risk
+                                      ? "at-risk"
+                                      : "on-track"
+                                  }
+                                >
+                                  {milestone?.milestone_analysis.deadline_predictions.is_at_risk
+                                    ? "At Risk"
+                                    : "On Track"}
+                                </span>
+                              </div>
+                              <div className="prediction-milestone-details">
+                                <p>
+                                  <strong>Deadline:</strong>{' '}
+                                  <span className="prediction-deadline-text">{milestone?.deadline}</span>
+                                </p>
 
-                          <strong>Suggestions:</strong>{' '}
-                          {milestone?.milestone_analysis?.performance_insights?.suggestions?.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                        </ul>
-                        <h5>Optimization And Risk Mitigation:</h5>
-                        <ul>
-                          <strong>Bottlenecks:</strong>{' '}
-                          {milestone?.milestone_analysis?.optimization_and_risk_mitigation?.bottlenecks?.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                          <br />
+                                <hr />
+                                <p>
+                                  <strong>Tasks:</strong>
+                                  <ul>
+                                    <li>Completed Tasks: {milestone?.completed_tasks}</li>
+                                    <li>Pending Tasks: {milestone?.pending_tasks}</li>
+                                  </ul>
+                                </p>
+                                <hr />
 
-                          <strong>Solutions:</strong>{' '}
-                          {milestone?.milestone_analysis?.optimization_and_risk_mitigation?.solutions?.map(
-                            (method, idx) => (
-                              <li key={idx}>{method}</li>
-                            )
-                          )}
-                          <br />
-                        </ul>
-                      </div>
-                    </Card>
-                  </Col>
-                </>
-              ))
+                                <p>
+                                  <strong>Time:</strong>
+                                  <ul>
+                                    <li>Total Logged: {milestone?.total_logged_time}</li>
+                                    <li>Total Tasks Logged: {milestone?.total_tasks_logged_time}</li>
+                                    <li>Total Bugs Logged: {milestone?.total_bugs_logged_time}</li>
+                                  </ul>
+                                </p>
+                              </div>
+
+                              <div className="milestone-analysis">
+                                <div className="highlighted-section">
+
+                                  <h5>Analysis:</h5>
+                                  <p>
+                                    <strong>Suggested New Deadline:</strong>{' '}
+                                    {milestone?.milestone_analysis?.deadline_predictions?.suggested_new_deadline}
+                                  </p>
+                                  <p>
+                                    <strong>Reasoning:</strong>{' '}
+                                    {milestone?.milestone_analysis?.deadline_predictions?.reasoning}
+                                  </p>
+                                </div>
+                                <div className="highlighted-section">
+
+
+                                  <h5>Strategies for Pending Work:</h5>
+                                  <ul>
+                                    <strong>Risks:</strong>{' '}
+                                    {milestone?.milestone_analysis?.strategies_for_pending_work?.risks?.map(
+                                      (method, idx) => (
+                                        <li key={idx}>{method}</li>
+                                      )
+                                    )}
+                                    <br />
+                                    <strong>Methods:</strong>{' '}
+                                    {milestone?.milestone_analysis?.strategies_for_pending_work?.methods?.map(
+                                      (method, idx) => (
+                                        <li key={idx}>{method}</li>
+                                      )
+                                    )}
+                                    <br />
+                                    <strong>Prioritization:</strong>{' '}
+                                    {milestone?.milestone_analysis?.strategies_for_pending_work?.prioritization}
+                                  </ul>
+                                  <br />
+                                </div>
+
+                                <div className="highlighted-section">
+
+                                  <h5>Performance Insights:</h5>
+                                  <ul>
+                                    <strong>Total Effort Analysis:</strong>{' '}
+                                    <li>Logged Time Ratio: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.logged_time_ratio}</li>
+                                    <li>Time Efficiency: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.time_efficiency}</li>
+                                    <br />
+
+                                    {/* <strong>Suggestions:</strong>{' '}
+                                  {milestone?.milestone_analysis?.performance_insights?.suggestions?.map(
+                                    (method, idx) => (
+                                      <li key={idx}>{method}</li>
+                                    )
+                                  )} */}
+                                  </ul>
+                                </div>
+
+                                <div className="milestone-analysis">
+                                  <div className="highlighted-section">
+                                    <h5>Suggestions:</h5>
+                                    <ul>
+                                      {milestone?.milestone_analysis?.performance_insights?.suggestions?.map(
+                                        (method, idx) => (
+                                          <li key={idx}>{method}</li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+                                  <div className="highlighted-section">
+                                    <h5>Optimization And Risk Mitigation:</h5>
+                                    <ul>
+                                      <strong>Bottlenecks:</strong>
+                                      {milestone?.milestone_analysis?.optimization_and_risk_mitigation?.bottlenecks?.map(
+                                        (method, idx) => (
+                                          <li key={idx}>{method}</li>
+                                        )
+                                      )}
+                                      <strong>Solutions:</strong>
+                                      {milestone?.milestone_analysis?.optimization_and_risk_mitigation?.solutions?.map(
+                                        (method, idx) => (
+                                          <li key={idx}>{method}</li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </Card>
+                          </Col>
+                        ))}
+                      </Row>
+                    ))}
+                  </div>
+                );
+              })
             ) : (
               <p>No Data available for predictions.</p>
             )}
           </Row>
         </Card>
-      </div>
+      </div >
     </>
   );
 };

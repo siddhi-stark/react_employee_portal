@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Helmet } from '../../components/FormInputs';
+import { Helmet, DropdownInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import { Card, Row, Col, Button, Image } from 'react-bootstrap';
@@ -10,6 +10,8 @@ import Api from '../../helper/api';
 import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
+import SweetAlert from 'react-bootstrap-sweetalert';
+
 
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Milestone Predictions' }];
@@ -23,11 +25,16 @@ const PredictionsDetails = () => {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [rowData, setRowData] = useState([])
+  const [showAddPopUp, setAddPopUp] = useState(false)
+  const [options, updateOptions] = useState({});
+  const [selectedProject, setProject] = useState({label: 'All Projects', value: "all_projects"});
+
 
   useEffect(() => {
     setTitle('Milestone Predictions');
     if (userRole) {
       getPredictionsDetails();
+      getProjectList()
     }
   }, [userRole]);
 
@@ -75,7 +82,7 @@ const PredictionsDetails = () => {
       id: 'action',
       label: 'Action',
       roleAccess: [1],
-      render: ({id, reports}) => {
+      render: ({ id, reports }) => {
         return (
           <>
             {
@@ -142,7 +149,12 @@ const PredictionsDetails = () => {
       sort_direction: 'descending',
 
     };
-    const url = `${Api.predictionDetails}`;
+
+    // if(selectedProject && selectedProject.value !== "all_porjects"){
+    //   params.project_id = +selectedProject?.value
+    // }
+
+    const url = customFunctions.generateUrl(Api.predictionDetails, params);    
     const { data } = await AuthApi.getDataFromServer(url, params);
 
     if (data?.data) {
@@ -174,8 +186,15 @@ const PredictionsDetails = () => {
 
   const getPredictions = async () => {
     setShowLoader(true);
-    const url = `${Api.prediction}?use_ai=true`;
-    const { data, message } = await AuthApi.getDataFromServer(url);
+    
+    let params = {"use_ai":true,}
+
+    if(selectedProject && selectedProject.value !== "all_porjects"){
+      params.project_id = +selectedProject?.value
+    }
+
+    const url = customFunctions.generateUrl(Api.prediction, params);  
+    const { data, message } = await AuthApi.getDataFromServer(url, params);
     if (data?.data) {
       swal(data?.data && data?.message[0], '', 'success');
       getPredictionsDetails(1)
@@ -186,6 +205,31 @@ const PredictionsDetails = () => {
 
     }
   };
+
+  const getProjectList = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(
+      `${Api.projectListUrl}?sort_by=name&status=active&type=all`
+    );
+
+    if (!data) {
+      swal(message, '', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+    const dpOptions =
+      (await data) &&
+      data.data.length > 0 &&
+      data.data.map((op) => {
+        return { label: op.name, value: op.id };
+      });
+
+    options.project_id = dpOptions;
+    await updateOptions(dpOptions);
+  };
+
+  console.log("options", options);
+
 
   return (
     <>
@@ -198,13 +242,26 @@ const PredictionsDetails = () => {
         <Loader showLoader={isShowLoader} needFullPage={false} />
         <Card className="prediction-card">
           <Row>
+            <Col sm={2}>
+              <DropdownInput
+                // label="Team"
+                placeholder ="Select Project"
+                asterisk="*"
+                options={options}
+                defaultValue={selectedProject}
+                onSelectHandler={(select) => {
+                  setProject(select);
+                }}
+              />
+            </Col>
             <Col>
               <Button onClick={(e) => {
-                getPredictions()
+                setAddPopUp(true)
               }}>Predict</Button>
             </Col>
           </Row>
           <hr />
+
           <Row>
 
             <CustomTable
@@ -220,6 +277,24 @@ const PredictionsDetails = () => {
             />
           </Row>
         </Card>
+        {showAddPopUp && (
+          <SweetAlert
+            warning
+            showCancel
+            title="Are you sure you want to predict?"
+            confirmBtnText="Submit"
+            cancelBtnBsStyle="light"
+            onConfirm={() => {
+              getPredictions()
+              setAddPopUp(false)
+
+            }}
+            onCancel={() => {
+              setAddPopUp(false)
+            }}
+          />
+        )
+        }
       </div>
     </>
   );

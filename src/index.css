@@ -864,3 +864,188 @@ hr {
 .primary-button:hover {
   background-color: #24CBD3;
 }
+
+
+/* Prediction module */
+
+.prediction-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.milestone-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.milestone-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.status-badge {
+  font-size: 0.875rem;
+  padding: 4px 8px;
+  color: #fff;
+  border-radius: 4px;
+  background-color: #28a745; /* Default: On Track */
+}
+
+.status-badge[data-status="at-risk"] {
+  background-color: #dc3545; /* At Risk */
+}
+
+.milestone-details p {
+  margin: 6px 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.milestone-details strong {
+  color: #333;
+}
+
+.deadline-text {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.milestone-analysis h5 {
+  font-size: 1.25rem;
+  margin: 16px 0 8px;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+}
+
+.milestone-analysis p,
+.milestone-analysis ul {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.milestone-analysis ul {
+  padding-left: 20px;
+}
+
+.milestone-analysis ul strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.milestone-analysis ul li {
+  margin-bottom: 6px;
+}
+
+.milestone-analysis ul li::marker {
+  color: #007bff;
+}
+
+/* Highlight Specific Sections */
+.milestone-analysis .highlighted-section {
+  background-color: #fff8e1;
+  border-left: 4px solid #ffc107;
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 6px;
+}
+
+.milestone-analysis .highlighted-section h5 {
+  color: #856404;
+}
+
+.milestone-analysis .highlighted-section ul li {
+  color: #856404;
+}
+
+.milestone-project-name {
+  font-size: 2rem; /* Larger font for prominence */
+  font-weight: bold; /* Emphasize the text */
+  color: #1b5e20; /* Rich green for vibrancy */
+  text-align: center; /* Center-align the project name */
+  margin-bottom: 16px; /* Add space below the project name */
+  text-transform: uppercase; /* Make the project name uppercase for emphasis */
+  letter-spacing: 1.2px; /* Slight spacing between letters for better readability */
+  border-bottom: 2px solid #81c784; /* Soft complementary green underline */
+  padding-bottom: 8px; /* Add space between text and underline */
+  background-color: #e8f5e9; /* Light green background for subtle emphasis */
+  border-radius: 8px; /* Slightly rounded corners for modern styling */
+  padding: 12px; /* Add internal spacing for a balanced look */
+}
+
+
+/* Overall card container */
+.prediction-milestone-details {
+  background-color: #ffffff; /* Clean white background for better contrast */
+  border: 1px solid #e0e0e0; /* Subtle gray border */
+  border-radius: 10px; /* Slightly rounded corners */
+  padding: 16px;
+  margin-top: 16px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+/* Heading and strong emphasis text */
+.prediction-milestone-details strong {
+  color: #1565c0; /* A deep, calming blue for emphasis */
+  font-weight: 600;
+}
+
+/* Deadline section */
+.prediction-deadline-text {
+  font-weight: bold;
+  color: #100707; /* Rich red for urgent deadlines */
+}
+
+/* List styling */
+.prediction-milestone-details ul {
+  list-style-type: none; /* Remove default bullet points */
+  padding-left: 0;
+  margin-top: 8px;
+}
+
+.prediction-milestone-details li {
+  font-size: 0.95rem;
+  color: #37474f; /* Neutral dark gray */
+  margin-bottom: 8px;
+  padding-left: 16px; /* Indent for structure */
+  position: relative;
+}
+
+.prediction-milestone-details li:before {
+  content: "•"; /* Custom bullet */
+  color: #42a5f5; /* Light blue bullet point */
+  position: absolute;
+  left: 0;
+}
+
+/* Analysis section */
+.prediction-analysis {
+  background-color: #fff8e1; /* Soft pastel yellow background */
+  border: 1px solid #ffe082; /* Yellow border */
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  color: #5d4037; /* Warm brown text */
+  font-size: 0.95rem;
+  font-family: 'Arial', sans-serif;
+}
+
+.prediction-analysis strong {
+  color: #ef6c00; /* Strong orange for emphasis */
+  font-weight: bold;
+}
+
+
