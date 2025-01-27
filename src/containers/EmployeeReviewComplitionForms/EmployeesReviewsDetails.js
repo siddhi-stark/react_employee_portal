@@ -208,7 +208,6 @@ const EmployeeReviewsDetails = () => {
       id: 'action',
       label: 'Action',
       render: ({ id, reviewer, employee, review_date, probation_review_form }) => {
-        console.log("training_review_form", probation_review_form);
 
         return (
           <>
@@ -242,13 +241,14 @@ const EmployeeReviewsDetails = () => {
                         reviewData: reviewer,
                         employeeData: employee,
                         revieweDate: review_date,
-                        trainingReviewerForm: probation_review_form
+                        trainingReviewerForm: probation_review_form,
+                        isDisabled: true
 
                       }
                     })
                   }}
                 >
-                  Update Probation Reviewer Form
+                  View
                 </a>
               ) : (
                 <a

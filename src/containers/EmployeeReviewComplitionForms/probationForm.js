@@ -25,7 +25,7 @@ const ProbationForm = () => {
   const reviewData = state?.state?.state?.reviewData;
   const employeeData = state?.state?.state?.employeeData;
   const revieweDate = state?.state?.state?.revieweDate;
-  const trainingReviewerForm = state?.state.state?.trainingReviewerForm
+  const trainingReviewerForm = state?.state.state?.probationReviewForm
   const isDisabled = state?.state.state?.isDisabled ? state?.state.state?.isDisabled : false
   const [title, setTitle] = useState('Fill Probation Reviewer Form');
   const [isShowLoader, setShowLoader] = useState(false);
@@ -81,6 +81,11 @@ const ProbationForm = () => {
     { value: 3, label: "2 Month", },
     { value: 4, label: "Confirmation(3 Month)", },
     { value: 5, label: "Training Session", },]
+
+    console.log("employeeData", employeeData);
+    console.log("reviewData", reviewData);
+    console.log("trainingReviewerForm", trainingReviewerForm);
+    
 
   useEffect(() => {
     if (employeeData && reviewData && trainingReviewerForm) {
