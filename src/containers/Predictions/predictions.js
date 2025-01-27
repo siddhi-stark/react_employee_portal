@@ -8,6 +8,7 @@ import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
 import { useHistory, useLocation } from 'react-router-dom';
+import customFunctions from '../../helper/customFunctions';
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Milestone Predictions' }];
 
@@ -19,6 +20,8 @@ const Predictions = () => {
   const [isShowLoader, setShowLoader] = useState(false);
   const [predictions, setPredictions] = useState([]);
   const [title, setTitle] = useState('');
+
+  const [generatedDate, setGeneratedDate] = useState()
 
   useEffect(() => {
     setTitle('Milestone Predictions');
@@ -51,7 +54,48 @@ const Predictions = () => {
       setShowLoader(false);
       if (data?.data[0]?.reports) {
         // const sortedData = data?.data[0]?.reports.sort((a, b) => a.project_id - b.project_id);
+        console.log("data?.data[0]", data?.data[0].generated_by);
+        let reportDate = data?.data[0].generated_by
+        console.log("reportDate", reportDate);
+
         const groupedMilestones = groupByProject(data?.data[0]?.reports);
+        if (reportDate) {
+
+          // Convert to a Date object
+          const originalDate = new Date(reportDate);
+
+          // Function to add days to a date
+          function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+          }
+
+          // Add desired number of days
+          const daysToAdd = 4; // Change this value as needed
+          let newDate = addDays(originalDate, daysToAdd);
+          reportDate = customFunctions.getDate(reportDate)
+          newDate = customFunctions.getDate(newDate)
+
+          let date = new Date(newDate);
+          let orignalDate = new Date(reportDate);
+
+          // Format the date
+          const formattedDate = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
+
+          // Format the date
+          orignalDate = orignalDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
+
+          setGeneratedDate(`${orignalDate} to ${formattedDate}`)
+        }
 
         setPredictions(groupedMilestones || []);
       }
@@ -105,7 +149,7 @@ const Predictions = () => {
           )}
 
           <div className="d-flex align-items-center justify-content-between">
-            <h5 className="card-title mb-0 mt-2 ">All milestone analysis for date </h5>
+            <h5 className="card-title mb-0 mt-2 ">Analysis of all milestones from {generatedDate}</h5>
             <Button
               variant="secondary"
               className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
