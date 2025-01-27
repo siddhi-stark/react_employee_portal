@@ -143,22 +143,23 @@ function ProfessionalDetails(props) {
   const submitForm = async (formValues) => {
     setShowLoader(true);
 
-    let expFlag = true;
-    if (
-      formValues &&
-      formValues?.total_exp < formValues?.rel_exp
-    ) {
-      expFlag = false;
-    }
+    // let expFlag = true;
+    // if (
+    //   formValues &&
+    //   formValues?.total_exp < formValues?.rel_exp
+    // ) {
+    //   expFlag = false;
+    // }
 
-    if (!expFlag) {
-      setShowLoader(false);
-      return swal(
-        'Total experience should not be greater than relevent experience',
-        '',
-        'error'
-      );
-    }
+    // if (!expFlag) {
+    //   setShowLoader(false);
+    //   return swal(
+    //     'Total experience should not be greater than relevent experience',
+    //     '',
+    //     'error'
+    //   );
+    // }
+    
     const localApplicantId = customFunctions.getLocalStorage('applicantId');
 
     let postData = {

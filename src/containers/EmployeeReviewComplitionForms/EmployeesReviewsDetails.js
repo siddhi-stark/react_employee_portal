@@ -18,6 +18,9 @@ const EmployeeReviewsDetails = () => {
   const history = useHistory();
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
+  const [traineeData, setTraineeData] = useState([]);
+  const [probationData, setProbationData] = useState([]);
+
   const [pagination, setPagination] = useState({ current_page: 1, itemsPerPage: 10, totalItems: 10 });
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
@@ -49,10 +52,15 @@ const EmployeeReviewsDetails = () => {
   }, []);
 
   console.log("userId && detailsKeys && allEmployeeIds.length > 1", userId, detailsKeys, allEmployeeIds.length);
-  
+
   useEffect(() => {
-    if (userId && detailsKeys && allEmployeeIds.length > 1) {
+
+    if (userId && detailsKeys === "personalInfo" && allEmployeeIds.length > 1) {
       getRowData();
+    } else if (userId && detailsKeys === "empReviewsInfo" && allEmployeeIds.length > 1) {
+      getTraineeData(1)
+    } else if (userId && detailsKeys === "empProbationReviewsInfo" && allEmployeeIds.length > 1) {
+      getProbationData(1)
     }
   }, [userId, detailsKeys, allEmployeeIds]);
 
@@ -164,7 +172,126 @@ const EmployeeReviewsDetails = () => {
               </>
             )
             }
-          </>)
+
+          </>
+        )
+      },
+    },
+  ];
+
+  const probationReviewsColumns = [
+    { id: 'no', label: 'SR No' },
+    {
+      id: 'full_name',
+      label: 'Employee Name',
+      render: (rowData) => {
+        return <>{rowData?.employee?.full_name}</>;
+      },
+    },
+    {
+      id: 'review_date',
+      label: 'Review Date',
+    },
+    {
+      id: 'review_time',
+      label: 'Review Time',
+    },
+    {
+      id: 'status_name',
+      label: 'Status',
+    },
+    {
+      id: 'review_type_name',
+      label: 'Review Type',
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: ({ id, reviewer, employee, review_date, probation_review_form }) => {
+        console.log("training_review_form", probation_review_form);
+
+        return (
+          <>
+            {
+              probation_review_form ? (
+                <a
+                  href="/"
+                  className="ms-2 pl-2"
+                  title="Revert Leave"
+                  style={{
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    textAlign: "center",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    border: "1px solid #007bff",
+                    cursor: "pointer",
+                    fontSize: "10px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // changeStatus(id);
+                    // submitForm(id)
+                    history.push('/probation-reviewer-form', {
+                      state: {
+                        reviewId: id,
+                        reviewData: reviewer,
+                        employeeData: employee,
+                        revieweDate: review_date,
+                        trainingReviewerForm: probation_review_form
+
+                      }
+                    })
+                  }}
+                >
+                  Update Probation Reviewer Form
+                </a>
+              ) : (
+                <a
+                  href="/"
+                  className="ms-2 pl-2"
+                  title="Revert Leave"
+                  style={{
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    textAlign: "center",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    border: "1px solid #007bff",
+                    cursor: "pointer",
+                    fontSize: "10px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // changeStatus(id);
+                    // submitForm(id)
+                    history.push('/probation-reviewer-form', {
+                      state: {
+                        reviewId: id,
+                        reviewData: reviewer,
+                        employeeData: employee,
+                        revieweDate: review_date,
+                        traningReviewForm: false
+
+                      }
+                    })
+                  }}
+
+                >
+                  Submit Probation Review
+                </a>
+              )
+            }
+          </>
+        )
       },
     },
   ];
@@ -318,12 +445,12 @@ const EmployeeReviewsDetails = () => {
     if (data && data.success) {
       data.data.map((item) => {
         // if ([1].includes(item.role_id) && !item.is_project_manager) return
-          let obj = {
-            label: item.full_name,
-            value: item.id,
-            joiningDate: item.date_joined,
-          }
-        
+        let obj = {
+          label: item.full_name,
+          value: item.id,
+          joiningDate: item.date_joined,
+        }
+
         employeesIds.push(item.id)
         allemp.push(obj)
       }
@@ -335,7 +462,6 @@ const EmployeeReviewsDetails = () => {
     }
   };
 
-  console.log("ssssss", currentPage);
 
 
   const getRowData = async (pageNo = 1) => {
@@ -395,6 +521,127 @@ const EmployeeReviewsDetails = () => {
     }
   };
 
+  const getTraineeData = async (pageNo = 1) => {
+    setShowLoader(true);
+    const page = pageNo || currentPage;
+
+    const endPoint = `${Api.employeeSpeificReviewUrl}`;
+    const params = {
+      page: page,
+      limit: 10,
+      sort_direction: 'descending',
+      is_only_trainee_data: true
+    };
+
+    if (detailsKeys === "personalInfo") {
+      params.employee_ids = `[${allEmployeeIds}]`
+    } else {
+      params.reviewer_ids = `[${allEmployeeIds}]`
+    }
+
+    if (selectedDate) {
+      params.review_date = customFunctions.getDate(selectedDate)
+    }
+
+    if (selectedEmployeeId && detailsKeys !== "personalInfo") {
+      params.employee = Number(selectedEmployeeId)
+    }
+
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
+    if (data) {
+      setTotalCount(data.paginator.total_count);
+      setLimit(data.paginator.limit);
+      setCurrentPage(Number(data.paginator.current_page));
+    }
+    if (data && data.success) {
+      setShowLoader(false);
+
+      console.log('getRowData data.data: ', data.data);
+
+      /* traineReview */
+
+      const traineReviewData =
+        data.data.filter((ele) => ele?.review_type === 1).map((innerElement, innerIndex) => {
+          return {
+            no: (pageNo - 1) * pagination.itemsPerPage + (innerIndex + 1),
+            id: innerElement.id,
+            employee: innerElement?.employee,
+            reviewer: innerElement?.reviewer,
+            review_date: innerElement?.review_date,
+            review_time: innerElement?.review_time,
+            status: innerElement?.status,
+            status_name: innerElement?.status_name,
+            review_type: innerElement?.review_type,
+            review_type_name: innerElement?.review_type_name,
+            self_evaluation_form: innerElement?.self_evaluation_form,
+            training_review_form: innerElement?.training_review_form,
+            probation_review_form: innerElement?.probation_review_form,
+          }
+        })
+
+      setTraineeData(traineReviewData)
+    }
+  };
+
+  const getProbationData = async (pageNo = 1) => {
+    setShowLoader(true);
+    const page = pageNo || currentPage;
+
+    const endPoint = `${Api.employeeSpeificReviewUrl}`;
+    const params = {
+      page: page,
+      limit: 10,
+      sort_direction: 'descending',
+      is_only_probation_data: true
+
+    };
+    console.log("detailsKeys", detailsKeys);
+
+    if (detailsKeys === "personalInfo") {
+      params.employee_ids = `[${allEmployeeIds}]`
+    } else {
+      params.reviewer_ids = `[${allEmployeeIds}]`
+    }
+
+    if (selectedDate) {
+      params.review_date = customFunctions.getDate(selectedDate)
+    }
+
+    if (selectedEmployeeId && detailsKeys !== "personalInfo") {
+      params.employee = Number(selectedEmployeeId)
+    }
+
+    const url = customFunctions.generateUrl(endPoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
+    if (data) {
+      setTotalCount(data.paginator.total_count);
+      setLimit(data.paginator.limit);
+      setCurrentPage(Number(data.paginator.current_page));
+    }
+    if (data && data.success) {
+      setShowLoader(false);
+      const probationReviewData = data.data.filter((ele) => [2, 3, 4].includes(ele?.review_type)).map((innerElement, innerIndex) => {
+        return {
+          no: (pageNo - 1) * pagination.itemsPerPage + (innerIndex + 1),
+          id: innerElement.id,
+          employee: innerElement?.employee,
+          reviewer: innerElement?.reviewer,
+          review_date: innerElement?.review_date,
+          review_time: innerElement?.review_time,
+          status: innerElement?.status,
+          status_name: innerElement?.status_name,
+          review_type: innerElement?.review_type,
+          review_type_name: innerElement?.review_type_name,
+          self_evaluation_form: innerElement?.self_evaluation_form,
+          training_review_form: innerElement?.training_review_form,
+          probation_review_form: innerElement?.probation_review_form,
+        }
+      })
+      setProbationData(probationReviewData)
+    }
+  };
+
   const generatereReviewReports = async (reportType) => {
     // is_download_evaluation_forms
     let params = {
@@ -451,6 +698,15 @@ const EmployeeReviewsDetails = () => {
       setLimit(10)
       setCurrentPage(1)
       setDetailsKeys('empReviewsInfo');
+    }else if (det === "empProbationReviewsInfo") {
+      setEmployeeIds([])
+      setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
+      setSelectedEmployeeId(null)
+      setPagination({ current_page: 1, itemsPerPage: 10, totalItems: 10 })
+      setTotalCount(10)
+      setLimit(10)
+      setCurrentPage(1)
+      setDetailsKeys('empProbationReviewsInfo');
     }
   };
 
@@ -552,7 +808,7 @@ const EmployeeReviewsDetails = () => {
                 }}
               />
             </Tab>
-            <Tab eventKey="empReviewsInfo" title="Reviewers Forms Details">
+            <Tab eventKey="empReviewsInfo" title="Reviewers Tranining Forms Details">
               {detailsKeys === 'empReviewsInfo' && (<>
                 <br />
                 <Row>
@@ -613,7 +869,7 @@ const EmployeeReviewsDetails = () => {
 
                 <CustomTable
                   columns={takenReviewsColumns}
-                  rows={rowData}
+                  rows={traineeData}
                   showPagination={true}
                   paginationProps={{
                     totalItems: totalCount,
@@ -621,7 +877,7 @@ const EmployeeReviewsDetails = () => {
                     activePage: Number(currentPage),
                     onPageChange: (page) => {
                       setCurrentPage(page)
-                      getRowData(page)
+                      getTraineeData(page)
                     },
                   }}
                 />
@@ -629,6 +885,63 @@ const EmployeeReviewsDetails = () => {
               </>)}
             </Tab>
 
+            <Tab eventKey="empProbationReviewsInfo" title="Reviewers Probation Review Details">
+              {detailsKeys === 'empProbationReviewsInfo' && (<>
+                <br />
+                <Row>
+                  <Col sm={2}>
+                    <DropdownInput
+                      options={allEmployes}
+                      defaultValue={selectedEmployee}
+                      onSelectHandler={(select) => {
+                        setSelectedEmployee(select)
+                        setSelectedEmployeeId(select?.value)
+                      }}
+                    />
+                  </Col>
+                  <Col sm={2}>
+                    <Datepicker
+                      className="form-control"
+                      selected={selectedDate}
+                      onChange={(e) => setSelectedDate(e)}
+                      autoComplete="off"
+                      name="endDate"
+                      dateFormat="dd/MM/yyyy"
+                      placeholder="Select Review Date"
+                    />
+                  </Col>
+                  <Col>
+                    <Button variant="primary" onClick={applyFilters}>Apply</Button>
+                    <Button variant="secondary" onClick={() => {
+                      setSelectedEmployee({ label: 'All Employess', value: 'all_employess' })
+                      setSelectedEmployeeId('all_employess')
+                      setSelectedDate(null)
+                      setRowData([])
+                      // setRefereshPage(true)
+                    }
+
+                    } className='ml-3'>
+                      Cancel
+                    </Button>
+                  </Col>
+                </Row>
+
+                <CustomTable
+                  columns={probationReviewsColumns}
+                  rows={probationData}
+                  showPagination={true}
+                  paginationProps={{
+                    totalItems: totalCount,
+                    itemsPerPage: limit,
+                    activePage: Number(currentPage),
+                    onPageChange: (page) => {
+                      setCurrentPage(page)
+                      getProbationData(page)
+                    },
+                  }}
+                />
+              </>)}
+            </Tab>
           </Tabs>
         </Card.Body>
       </Card>

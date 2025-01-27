@@ -127,6 +127,7 @@ import ProjectReportForm from './containers/Projects Report/projectReportForm';
 import TodaysProjectReports from './containers/Projects Report/todaysProjectReports';
 import ProjectsViewReports from './containers/Projects Report/projectsViewReports';
 import ProjectReportsDetails from './containers/Projects Report/projectReportsDetails';
+import ProbationForm from './containers/EmployeeReviewComplitionForms/probationForm';
 
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
@@ -385,6 +386,8 @@ function Routes() {
       <Route path="/employee-reviews" exact component={EmployeeReviews} />
       <Route path="/evaluation-form" exact component={EvaluationForm} />
       <Route path="/training-reviewer-form" exact component={TrainingReviewerForm} />
+      <Route path="/probation-reviewer-form" exact component={ProbationForm} />
+      
       <Route path="/employee-reviews-details" exact component={EmployeeReviewsDetails} />
       
       <Route path="/add-late-marks" exact component={AddLateMarks}/>

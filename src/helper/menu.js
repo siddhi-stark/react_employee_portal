@@ -503,13 +503,14 @@ const menu = [
     roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
 
-  // {
-  //   title: 'Predictions',
-  //   path: '/predictions',
-  //   icon: 'ticket.svg',
-  //   submenu: [],
-  //   roleaccess: [1],
-  // },
+  {
+    title: 'Probation reviewer form',
+    path: '/probation-reviewer-form',
+    icon: 'ticket.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+  
   {
     title: 'Predictions',
     path: '/predictions-details',
