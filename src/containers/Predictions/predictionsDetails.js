@@ -26,6 +26,9 @@ const PredictionsDetails = () => {
   const [limit, setLimit] = useState(10);
   const [rowData, setRowData] = useState([])
   const [showAddPopUp, setAddPopUp] = useState(false)
+  const [showDeletePopUp, setDeletePopUp] = useState(false)
+  const [reportId, setReportId] = useState()
+  
   const [options, updateOptions] = useState({});
   const [selectedProject, setProject] = useState({label: 'All Projects', value: "all_projects"});
 
@@ -114,7 +117,8 @@ const PredictionsDetails = () => {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                deleteReport(id)
+                setReportId(id)
+                setDeletePopUp(true)
               }}
             >
               <Image src="/images/delete.png" />
@@ -228,9 +232,6 @@ const PredictionsDetails = () => {
     await updateOptions(dpOptions);
   };
 
-  console.log("options", options);
-
-
   return (
     <>
       <Helmet title={title} />
@@ -291,6 +292,24 @@ const PredictionsDetails = () => {
             }}
             onCancel={() => {
               setAddPopUp(false)
+            }}
+          />
+        )
+        }
+         {showDeletePopUp && (
+          <SweetAlert
+            warning
+            showCancel
+            title="Are you sure you want to delete?"
+            confirmBtnText="Delete"
+            cancelBtnBsStyle="light"
+            onConfirm={() => {
+              deleteReport(reportId)
+              setDeletePopUp(false)
+
+            }}
+            onCancel={() => {
+              setDeletePopUp(false)
             }}
           />
         )
