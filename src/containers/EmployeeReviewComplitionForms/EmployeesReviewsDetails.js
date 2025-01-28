@@ -241,7 +241,7 @@ const EmployeeReviewsDetails = () => {
                         reviewData: reviewer,
                         employeeData: employee,
                         revieweDate: review_date,
-                        trainingReviewerForm: probation_review_form,
+                        probationReviewForm: probation_review_form,
                         isDisabled: true
 
                       }

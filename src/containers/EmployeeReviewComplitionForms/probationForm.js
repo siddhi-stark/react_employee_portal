@@ -53,7 +53,6 @@ const ProbationForm = () => {
     question_first: '',
     question_second: '',
     question_third: '',
-    question_four: '',
     training_period_extended: '',
     start_probation_period: '',
     employee_review: reviewId,
@@ -82,10 +81,10 @@ const ProbationForm = () => {
     { value: 4, label: "Confirmation(3 Month)", },
     { value: 5, label: "Training Session", },]
 
-    console.log("employeeData", employeeData);
-    console.log("reviewData", reviewData);
-    console.log("trainingReviewerForm", trainingReviewerForm);
-    
+  console.log("employeeData", employeeData);
+  console.log("reviewData", reviewData);
+  console.log("trainingReviewerForm", trainingReviewerForm);
+
 
   useEffect(() => {
     if (employeeData && reviewData && trainingReviewerForm) {
@@ -95,22 +94,32 @@ const ProbationForm = () => {
 
   const getUpdateData = async () => {
     const id = trainingReviewerForm?.id
-    const endPoint = `${Api.trainingReviewerForm}${id}`;
+    const endPoint = `${Api.probationReviewerForm}${id}`;
 
     const url = customFunctions.generateUrl(endPoint);
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data.success) {
       setPreparedData(data?.data)
       const newData = data?.data;
+
+      setFocusArea(newData?.question_first)
+      setPerformanceRating(newData?.question_second)
+      setTechnicalImprovements(newData?.question_third)
+      setOverallFeedback(newData?.overall_feedback)
+      setEmpConfirmed({ label: Number(newData?.is_employee_confirmed) === 1 ? "Yes" : "No", value: Number(newData?.is_employee_confirmed) })
+      setTrainingExtended({ label: Number(newData?.training_period_extended) === 1 ? "Yes" : "No", value: Number(newData?.training_period_extended) })
+      setProbationStart({ label: Number(newData?.start_probation_period) === 1 ? "Yes" : "No", value: Number(newData?.start_probation_period) })
+
+
       setOnBasis({ label: newData?.review_period_name, value: newData?.review_period })
       setRatings({ label: newData?.overall_rating_name, value: newData?.overall_rating })
       setTrainingPerformance(newData?.question_first)
-      setTechnicalImprovements(newData?.question_second)
-      setFocusArea(newData?.question_third)
+      // setTechnicalImprovements(newData?.question_second)
+      // setFocusArea(newData?.question_third)
       setNeededImprovements(newData?.question_four)
-      setOverallFeedback(newData?.overall_feedback)
-      setTrainingExtended({ label: Number(newData?.training_period_extended) === 1 ? "Yes" : "No", value: Number(newData?.training_period_extended) })
-      setProbationStart({ label: Number(newData?.start_probation_period) === 1 ? "Yes" : "No", value: Number(newData?.start_probation_period) })
+      // setOverallFeedback(newData?.overall_feedback)
+      // setPerformanceRating(newData?.question_second)
+
 
       setShowLoader(false);
     } else {
@@ -125,14 +134,20 @@ const ProbationForm = () => {
 
   const submitForm = async () => {
     setShowLoader(true)
+
+    // focusArea 
+    // performanceRating 
+    // technicalImprovements
+
+
     preparedData["overall_rating"] = selectedRatings?.value
+    preparedData["question_first"] = focusArea
+    preparedData["question_second"] = performanceRating
+    preparedData["question_third"] = technicalImprovements
     preparedData["overall_feedback"] = overallFeedback
-    preparedData["question_first"] = trainingPerformance
-    preparedData["question_second"] = technicalImprovements
-    preparedData["question_third"] = neededImprovements
-    preparedData["question_four"] = neededImprovements
     preparedData["training_period_extended"] = selectTrainingExtended?.value
     preparedData["start_probation_period"] = probationStart?.value
+    preparedData["is_employee_confirmed"] = empConfirmed?.value
     preparedData["review_period"] = selectedOnBasis?.value
 
     console.log("preparedData", preparedData);
@@ -141,10 +156,10 @@ const ProbationForm = () => {
     if (trainingReviewerForm) {
       let id = trainingReviewerForm?.id
       delete preparedData["id"];
-      let url = `${Api.trainingReviewerForm}${id}/`
+      let url = `${Api.probationReviewerForm}${id}/`
       response = await AuthApi.putDataToServer(url, preparedData);
     } else {
-      response = await AuthApi.postDataToServer(Api.trainingReviewerForm, preparedData);
+      response = await AuthApi.postDataToServer(Api.probationReviewerForm, preparedData);
     }
     let { data, message } = response;
     if (!message) {
@@ -276,9 +291,9 @@ const ProbationForm = () => {
             </Col>
             <hr style={{ borderColor: "white" }} />
             <Row>
-              <Col sm={2}>
+              <Col sm={4}>
                 <DropdownInput
-                  label="2. Review done on the basis of the"
+                  label="1. Review done on the basis of the"
                   asterisk="*"
                   options={reviewOnBasis}
                   defaultValue={selectedOnBasis}
@@ -294,9 +309,9 @@ const ProbationForm = () => {
                 />
               </Col>
 
-              <Col sm={3}>
+              <Col sm={6}>
                 <DropdownInput
-                  label="Is the employee able to perform well in his/her probation?"
+                  label="2. Is the employee able to perform well in his/her probation?"
                   asterisk="*"
                   options={yesOrNo}
                   defaultValue={probationStart}
@@ -316,13 +331,14 @@ const ProbationForm = () => {
               <Col sm={6}>
                 <TextInput
                   placeholder="Key skills and knowledge gained by him/her..."
-                  label="Please share the key skills and knowledge the employee has gained during this period?"
+                  label="3. Please share the key skills and knowledge the employee has gained during this period?"
                   asterisk="*"
                   type="text"
                   as="textarea"
                   rows="5"
                   value={focusArea}
                   maxlength={255}
+                  disabled={isDisabled}
                   onInputChange={(e) => {
                     setFocusArea(e.target.value);
                   }}
@@ -336,13 +352,14 @@ const ProbationForm = () => {
               <Col sm={6}>
                 <TextInput
                   placeholder="Rate the employee's performance on a scale of 1 to 5..."
-                  label="On a scale of 1 to 5, how would you rate the Employee's performance"
+                  label="4. On a scale of 1 to 5, how would you rate the Employee's performance"
                   asterisk="*"
                   type="text"
                   as="textarea"
                   rows="5"
                   value={performanceRating}
                   maxlength={255}
+                  disabled={isDisabled}
                   onInputChange={(e) => {
                     setPerformanceRating(e.target.value);
                   }}
@@ -356,13 +373,15 @@ const ProbationForm = () => {
               <Col sm={6}>
                 <TextInput
                   placeholder="Mention the areas where the employee can improve."
-                  label="What are the areas of improvement?"
+                  label="5. What are the areas of improvement?"
                   asterisk="*"
                   type="text"
                   as="textarea"
                   rows="5"
                   value={technicalImprovements}
                   maxlength={255}
+                  disabled={isDisabled}
+
                   onInputChange={(e) => {
                     setTechnicalImprovements(e.target.value);
                   }}
@@ -376,13 +395,15 @@ const ProbationForm = () => {
               <Col sm={6}>
                 <TextInput
                   placeholder="Overall Feedback for him/her..."
-                  label="Overall Feedback from Reviewer"
+                  label="6. Overall Feedback from Reviewer"
                   asterisk="*"
                   type="text"
                   as="textarea"
                   rows="5"
                   value={overallFeedback}
                   maxlength={255}
+                  disabled={isDisabled}
+
                   onInputChange={(e) => {
                     setOverallFeedback(e.target.value);
                   }}
@@ -395,9 +416,9 @@ const ProbationForm = () => {
               </Col>
             </Row>
             <Row>
-              <Col sm={3}>
+              <Col sm={4}>
                 <DropdownInput
-                  label="Is the probationary period extended?"
+                  label="7. Is the probationary period extended?"
                   asterisk="*"
                   options={yesOrNo}
                   defaultValue={selectTrainingExtended}
@@ -414,7 +435,7 @@ const ProbationForm = () => {
               </Col>
               <Col sm={3}>
                 <DropdownInput
-                  label="Is the employee confirmed?"
+                  label="8. Is the employee confirmed?"
                   asterisk="*"
                   options={yesOrNo}
                   defaultValue={empConfirmed}

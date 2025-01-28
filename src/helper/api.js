@@ -279,6 +279,8 @@ export default class Api extends Component {
 
   static trainingReviewerForm = `${Api.baseUrl}training-reviewer-form/`
 
+  static probationReviewerForm = `${Api.baseUrl}probation-reviewer-form/`
+  
   static sentFormsReminder = `${Api.baseUrl}sent-forms-reminder/`
 
   static lateMarks = `${Api.baseUrl}late-marks/`
@@ -288,6 +290,7 @@ export default class Api extends Component {
   static predictionDetails = `${Api.baseUrl}get-reports-details/`
 
   static deletePredictionReports = `${Api.baseUrl}delete-reports/`
+  
 
   
   // Get base URL of APIs

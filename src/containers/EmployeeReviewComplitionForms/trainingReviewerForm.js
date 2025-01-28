@@ -121,7 +121,7 @@ const TrainingReviewerForm = () => {
     preparedData["question_first"] = trainingPerformance
     preparedData["question_second"] = technicalImprovements
     preparedData["question_third"] = neededImprovements
-    preparedData["question_four"] = neededImprovements
+    preparedData["question_four"] = focusArea
     preparedData["training_period_extended"] = selectTrainingExtended?.value
     preparedData["start_probation_period"] = probationStart?.value
     preparedData["review_period"] = selectedOnBasis?.value
