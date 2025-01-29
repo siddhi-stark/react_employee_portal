@@ -43,19 +43,20 @@ const ProjectReportForm = () => {
   const [statusOptions] = useState([
     { value: '1', label: 'In Progress' },
     { value: '2', label: 'Completed' },
-    { value: '3', label: 'On Hold' }
+    { value: '3', label: 'On Hold' },
+    { value: '4', label: 'Maintenance' }
   ]);
 
   console.log("selectedTasks", selectedTasks);
 
   const [selectedReportType, setReportType] = useState({ "label": 'Morning', "value": 1 })
 
-  useEffect(() => {
-    if (filterDate && projectId) {
-      fetchSectionOneTasks(1);
-      fetchSectionTwoTasks(1);
-    }
-  }, [filterDate]);
+  // useEffect(() => {
+  //   if (filterDate && projectId) {
+  //     fetchSectionOneTasks(1);
+  //     fetchSectionTwoTasks(1);
+  //   }
+  // }, [filterDate]);
 
   useEffect(() => {
     getProjectList();
@@ -85,7 +86,7 @@ const ProjectReportForm = () => {
 
   const fetchSectionOneTasks = async (page = 1) => {
     setShowLoader(true);
-    const startDate = customFunctions.getDate(filterDate)
+    const startDate = customFunctions.getDate(fromDate)
     const endDate = customFunctions.getDate(toDate)
     const params = {
       start_date: startDate,
@@ -211,8 +212,13 @@ const ProjectReportForm = () => {
 
   const handleFilter = async (e) => {
     e.preventDefault();
+    console.log("Hello world");
+
     if (validator.current.allValid()) {
+      console.log("Hello world");
       setFilterDate(fromDate)
+      fetchSectionOneTasks(1);
+      fetchSectionTwoTasks(1);
     } else {
       validator.current.showMessages()
       forceUpdate(count + 1)
@@ -355,7 +361,7 @@ const ProjectReportForm = () => {
                 </Row>
                 <div>
                   <Form.Group>
-                    <Form.Label>Key Tasks Completed Today<span className="text-danger">*</span>
+                    <Form.Label>Key Tasks Completed This Week<span className="text-danger">*</span>
                     </Form.Label>
                     <Select
                       isMulti
@@ -371,7 +377,7 @@ const ProjectReportForm = () => {
                   </Form.Group>
                   <p className='text-danger'>
                     {validator.current.message(
-                      'Key Tasks Completed Today',
+                      'Key Tasks Completed This Week',
                       selectedTasks,
                       'required'
                     )}

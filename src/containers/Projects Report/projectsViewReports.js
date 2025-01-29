@@ -20,6 +20,7 @@ const ProjectsViewReports = () => {
   const { id } = useParams();
   const [projectId, setProjectId] = useState(id);
   const fromDate = state?.state?.state?.formattedDate
+  const isTodaysReport = state?.state?.state?.isTodaysReport
   const [title, setTitle] = useState('Report generations');
   const [isShowLoader, setShowLoader] = useState(false);
   const [reportDetails, setReportDetails] = useState([])
@@ -81,8 +82,11 @@ const ProjectsViewReports = () => {
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault()
-                  history.push(`/todays-project-reports`) 
-                  
+                  if (isTodaysReport){
+                    history.push(`/todays-project-reports`) 
+                  }else{
+                    history.push(`/project-reports-details`) 
+                  }                  
                 }}
               >
                 Back
@@ -109,7 +113,7 @@ const ProjectsViewReports = () => {
 
                   <div className="cardss">
                     <div className="cardss-header">
-                      <h3>Key Tasks Completed Today</h3>
+                      <h3>Key Tasks Completed This Week</h3>
                     </div>
                     <div className="cardss-content">
                       {getTasksBySection('Key Tasks Completed Today')?.length > 0 ? (
@@ -182,7 +186,7 @@ const ProjectsViewReports = () => {
 
                       <div className="cardss">
                         <div className="cardss-header">
-                          <h3>Key Tasks Completed Today</h3>
+                          <h3>Key Tasks Completed This Week</h3>
                         </div>
                         <div className="cardss-content">
                           {getTasksBySectionEvening('Key Tasks Completed Today')?.length > 0 ? (

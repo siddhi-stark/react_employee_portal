@@ -91,7 +91,10 @@ const ProjectReportsDetails = () => {
     const params = {
       page: pageNo,
       sort_direction: 'descending',
-
+      user: UserID,
+      // type: 'all',
+      // start_date: fromDate,
+      // end_date: fromDate
     };
     if (isProjectManager) {
       params.user = UserID
@@ -183,14 +186,14 @@ const ProjectReportsDetails = () => {
       roleAccess: [1],
       isDisplay: true,
 
-      render: ({ projectsId, morningMail }) => (
+      render: ({ projectsId, morningMail, reportDate }) => (
         <>
           <a
             href="/"
             // className="ml-1"
             onClick={(e) => {
               e.preventDefault();
-              history.push(`/view-reports-projects/${projectsId}`, { state: { formattedDate: fromDate, fromSentReport: true } });
+              history.push(`/view-reports-projects/${projectsId}`, { state: { formattedDate: reportDate, fromSentReport: true } });
             }}
           >
             <Image src="/images/view-eye.svg" alt="view icon" style={{ filter: "invert(64%) sepia(24%) saturate(639%) hue-rotate(164deg) brightness(97%) contrast(95%)" }} />

@@ -128,6 +128,8 @@ import TodaysProjectReports from './containers/Projects Report/todaysProjectRepo
 import ProjectsViewReports from './containers/Projects Report/projectsViewReports';
 import ProjectReportsDetails from './containers/Projects Report/projectReportsDetails';
 import ProbationForm from './containers/EmployeeReviewComplitionForms/probationForm';
+import ConfigureSettings from './containers/configure setting/configureSettings';
+import AddSettings from './containers/configure setting/addSettings';
 
 // import AddHistory from './containers/Employees/AddHistory.component';
 // import FormAbscond from './containers/TerminationAndAbscoud/FormAbscond';
@@ -397,6 +399,10 @@ function Routes() {
       <Route path="/todays-project-reports" exact component={TodaysProjectReports}/>
       <Route path="/view-reports-projects/:id" exact component={ProjectsViewReports}/>
       <Route path="/project-reports-details" exact component={ProjectReportsDetails}/>
+      
+      <Route path="/settings" exact component={ConfigureSettings}/>
+      <Route path="/configure-settings" exact component={AddSettings}/>
+
       
 
       <Route component={NotFound} />

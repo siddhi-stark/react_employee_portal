@@ -290,6 +290,11 @@ export default class Api extends Component {
   static predictionDetails = `${Api.baseUrl}get-reports-details/`
 
   static deletePredictionReports = `${Api.baseUrl}delete-reports/`
+
+  static configureSetting = `${Api.baseUrl}configure-setting/`
+
+
+  
   
 
   

@@ -7,113 +7,6 @@ const menu = [
     roleaccess: [1, 2, 3, 4, 5, 6, 7, 8],
   },
   {
-    title: 'Project',
-    path: '#',
-    redirect: false,
-    icon: 'project.svg',
-    submenu: [
-      {
-        title: 'Current Project',
-        path: '/current-project',
-        icon: 'project.svg',
-        roleaccess: [1, 2, 3, 4, 10],
-      },
-      {
-        title: 'Archived Project',
-        path: '/archived-project',
-        icon: 'project.svg',
-        roleaccess: [1, 2, 3, 4, 10],
-      },
-      {
-        title: 'Completed Project',
-        path: '/completed-project',
-        icon: 'project.svg',
-        roleaccess: [1, 2, 3, 4, 10],
-      }
-    ],
-    roleaccess: [1, 2, 3, 4, 10],
-  },
-
-  // {
-  //   title: 'Leave',
-  //   path: '/accountant-leaves',
-  //   icon: 'leaves.svg',
-  //   roleaccess: [8],
-  // },
-
-  // {
-  //   title: 'Project',
-  //   path: '/project',
-  //   icon: 'project.svg',
-  //   submenu: [],
-  //   roleaccess: [1,2,3,4],
-  // },
-  {
-    title: 'Team Project Scheduler',
-    path: '/team-scheduler',
-    icon: 'leaves.svg',
-    submenu: [],
-    roleaccess: [1, 2, 3, 4, 10],
-  },
-
-  // {
-  //   title: 'Weekly Project Reports',
-  //   path: '#',
-  //   icon: 'Employee.svg',
-  //   submenu: [
-  //     {
-  //       title: 'Project Reports',
-  //       path: '/project-list',
-  //       icon: 'report.svg',
-  //       submenu: [],
-  //       roleaccess: [1, 2, 3, 4, 10],
-  //     },
-  //   ],
-  //   roleaccess: [1, 2, 3, 4, 10],
-  // },
-
-  {
-    title: 'Quotes',
-    path: '/quotes',
-    icon: 'quote.svg',
-    submenu: [],
-    roleaccess: [1, 3, 5, 6, 10],
-  },
-
-  {
-    title: 'Employee Daily Report',
-    path: '/emp-timesheet',
-    icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [1, 3, 4],
-    // roleaccess: [1, 5, 4, 6],
-  },
-  
-  {
-    title: 'WFH',
-    path: '#',
-    icon: 'timesheet.svg',
-    submenu: [
-      {
-        title: 'Employees WFH',
-        path: '/wfh',
-        icon: '',
-        submenu: [],
-        roleaccess: [1, 2, 3, 10, 5, 6],
-      },
-      {
-        title: 'My WFH',
-        path: '/wfh-employees',
-        icon: '',
-        submenu: [],
-        roleaccess: [1, 4, 5, 6, 3],
-      },
-    ],
-    roleaccess: [1, 2, 3, 10, 4, 5, 6],
-  },
-
-
-  {
     title: 'Employees',
     path: '#',
     icon: 'Employee.svg',
@@ -140,23 +33,90 @@ const menu = [
         submenu: [],
         roleaccess: [1, 2, 5, 6, 10],
       },
+      {
+        title: 'Daily Report',
+        path: '/emp-timesheet',
+        icon: 'timesheet.svg',
+        submenu: [],
+        roleaccess: [1, 3],
+        // roleaccess: [1, 5, 4, 6],
+      },
+      {
+        title: 'Performance Report',
+        path: '/performance-report',
+        icon: 'timesheet.svg',
+        submenu: [],
+        roleaccess: [1],
+      },
+      {
+        title: 'WFH',
+        path: '/wfh',
+        icon: '',
+        submenu: [],
+        roleaccess: [1, 2, 3, 5, 6],
+      },
+      {
+        title: 'Timesheet',
+        path: '/reports',
+        icon: 'timesheet.svg',
+        submenu: [],
+        roleaccess: [1, 7],
+      },
+      {
+        title: 'Workload',
+        path: '/employee-workload',
+        icon: 'timesheet.svg',
+        submenu: [],
+        roleaccess: [1, 8],
+      },
+
     ],
-    roleaccess: [1, 2, 5, 6, 10],
+    roleaccess: [1, 2, 3, 5, 7, 6, 8, 10],
   },
-  // {
-  //   title: 'Employees',
-  //   path: '/employee',
-  //   icon: 'Employee.svg',
-  //   submenu: [],
-  //   roleaccess: [1],
-  // },
   {
-    title: 'My Interviews',
-    path: '/interview-listing',
-    icon: 'recruitement.svg',
-    submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 10],
+    title: 'Project',
+    path: '#',
+    redirect: false,
+    icon: 'project.svg',
+    submenu: [
+      {
+        title: 'Current Project',
+        path: '/current-project',
+        icon: 'project.svg',
+        roleaccess: [1, 2, 3, 4, 10],
+      },
+      {
+        title: 'Archived Project',
+        path: '/archived-project',
+        icon: 'project.svg',
+        roleaccess: [1, 2, 3, 4, 10],
+      },
+      {
+        title: 'Completed Project',
+        path: '/completed-project',
+        icon: 'project.svg',
+        roleaccess: [1, 2, 3, 4, 10],
+      },
+      {
+        title: 'Team Project Scheduler',
+        path: '/team-scheduler',
+        icon: 'leaves.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3, 4, 10],
+      },
+    ],
+    roleaccess: [1, 2, 3, 4, 10],
   },
+
+  {
+    title: 'Employees Daily Report',
+    path: '/emp-timesheet',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [3, 4],
+    // roleaccess: [1, 5, 4, 6],
+  },
+
   {
     title: 'Weekly Project Reports',
     path: '#',
@@ -179,6 +139,82 @@ const menu = [
     ],
     roleaccess: [1],
   },
+
+  // {
+  //   title: 'Leave',
+  //   path: '/accountant-leaves',
+  //   icon: 'leaves.svg',
+  //   roleaccess: [8],
+  // },
+
+  // {
+  //   title: 'Project',
+  //   path: '/project',
+  //   icon: 'project.svg',
+  //   submenu: [],
+  //   roleaccess: [1,2,3,4],
+  // },
+
+
+  // {
+  //   title: 'Weekly Project Reports',
+  //   path: '#',
+  //   icon: 'Employee.svg',
+  //   submenu: [
+  //     {
+  //       title: 'Project Reports',
+  //       path: '/project-list',
+  //       icon: 'report.svg',
+  //       submenu: [],
+  //       roleaccess: [1, 2, 3, 4, 10],
+  //     },
+  //   ],
+  //   roleaccess: [1, 2, 3, 4, 10],
+  // },
+
+
+
+
+  {
+    title: 'WFH',
+    path: '#',
+    icon: 'timesheet.svg',
+    submenu: [
+      // {
+      //   title: 'Employees WFH',
+      //   path: '/wfh',
+      //   icon: '',
+      //   submenu: [],
+      //   roleaccess: [1, 2, 3, 5, 6],
+      // },
+      {
+        title: 'My WFH',
+        path: '/wfh-employees',
+        icon: '',
+        submenu: [],
+        roleaccess: [4, 5, 6, 3],
+      },
+    ],
+    roleaccess: [2, 3, 4, 5, 6],
+  },
+
+
+
+  // {
+  //   title: 'Employees',
+  //   path: '/employee',
+  //   icon: 'Employee.svg',
+  //   submenu: [],
+  //   roleaccess: [1],
+  // },
+  {
+    title: 'My Interviews',
+    path: '/interview-listing',
+    icon: 'recruitement.svg',
+    submenu: [],
+    roleaccess: [1, 2, 3, 4, 5, 6, 10],
+  },
+
   // {
   //   title: 'Project Reports',
   //   path: '/project-report-generation',
@@ -188,68 +224,13 @@ const menu = [
   // },
 
   {
-    title: 'Recruitment',
-    path: '/recruitment',
-    icon: 'recruitement.svg',
-    roleaccess: [5],
-  },
-
-  {
-    title: 'Candidates',
-    path: '/candidates',
-    icon: 'candidate.svg',
-    submenu: [],
-    roleaccess: [5, 1, 6],
-  },
-  {
     title: 'Leaves',
     path: '/leaves',
     icon: 'leaves.svg',
     roleaccess: [4, 7],
   },
-  {
-    title: 'Designation',
-    path: '/designation',
-    icon: 'Designation.svg',
-    submenu: [],
-    roleaccess: [1],
-  },
 
-  {
-    title: 'Technology',
-    path: '/technology',
-    icon: 'technology.svg',
-    submenu: [],
-    roleaccess: [1],
-  },
-  {
-    title: 'HR Activity',
-    path: '#',
-    redirect: false,
-    icon: 'hr activity.svg',
-    submenu: [
-      {
-        title: 'HR Timesheet',
-        path: '/hr-reports',
-        icon: 'timesheet.svg',
-        roleaccess: [1, 6],
-      },
-      {
-        title: 'Recruitment',
-        path: '/recruitments',
-        icon: 'recruitement.svg',
-        roleaccess: [1, 6],
-      },
-    ],
-    roleaccess: [1, 6],
-  },
-  {
-    title: 'Email Templates',
-    path: '/email-templates',
-    icon: 'template.svg',
-    submenu: [],
-    roleaccess: [1, 6],
-  },
+
   // {
   //   title: 'Employees Leaves Calculation',
   //   // path: '/add-leaves-count',
@@ -293,33 +274,57 @@ const menu = [
     ],
     roleaccess: [1, 2, 3, 6, 5, 10],
   },
+
   {
-    title: 'Event',
-    path: '/event',
-    icon: 'timesheet.svg',
+    title: 'Predictions',
+    path: '/predictions-details',
+    icon: 'technology.svg',
     submenu: [],
-    roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
+    roleaccess: [1],
   },
+
   {
-    title: 'Holidays',
-    path: '/holidays',
-    icon: 'holiday.svg',
-    submenu: [],
-    roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
+    title: 'Recruitment',
+    path: '/recruitment',
+    icon: 'recruitement.svg',
+    roleaccess: [5],
   },
+
   {
-    title: 'Greetings',
-    path: '/greetings',
-    icon: 'greetings.svg',
+    title: 'Candidates',
+    path: '/candidates',
+    icon: 'candidate.svg',
     submenu: [],
-    roleaccess: [1, 2, 3, 5, 6, 10],
+    roleaccess: [5, 1, 6],
   },
+
   {
     title: 'My Timesheet',
     path: '/report',
     icon: 'timesheet.svg',
     submenu: [],
     roleaccess: [4, 7],
+  },
+  {
+    title: 'HR Activity',
+    path: '#',
+    redirect: false,
+    icon: 'hr activity.svg',
+    submenu: [
+      {
+        title: 'HR Timesheet',
+        path: '/hr-reports',
+        icon: 'timesheet.svg',
+        roleaccess: [1, 6],
+      },
+      {
+        title: 'Recruitment',
+        path: '/recruitments',
+        icon: 'recruitement.svg',
+        roleaccess: [1, 6],
+      },
+    ],
+    roleaccess: [1, 6],
   },
   {
     title: 'Timesheet',
@@ -356,19 +361,13 @@ const menu = [
     ],
     roleaccess: [2, 3, 6, 5, 6, 10],
   },
-  {
-    title: 'Employee Timesheet',
-    path: '/reports',
-    icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [1, 7],
-  },
+
   {
     title: 'Performance Report',
     path: '/performance-report',
     icon: 'timesheet.svg',
     submenu: [],
-    roleaccess: [1, 3, 4, 10],
+    roleaccess: [3, 4, 10],
   },
   {
     title: 'Employee Review',
@@ -418,7 +417,7 @@ const menu = [
         submenu: [],
         roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
       },
-      
+
       {
         title: 'Employees Reviews Form Response',
         path: '/employee-reviews-details',
@@ -430,13 +429,6 @@ const menu = [
     roleaccess: [1, 3, 4, 5, 6],
   },
 
-  {
-    title: 'Employee Workload',
-    path: '/employee-workload',
-    icon: 'timesheet.svg',
-    submenu: [],
-    roleaccess: [1, 8],
-  },
   {
     title: 'Policy',
     path: '/policy',
@@ -451,6 +443,7 @@ const menu = [
     submenu: [],
     roleaccess: [1, 5, 6],
   },
+
   // {
   //   title: 'Projects',
   //   path: '/projects',
@@ -503,6 +496,50 @@ const menu = [
     submenu: [],
     roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
   },
+  {
+    title: 'Event',
+    path: '/event',
+    icon: 'timesheet.svg',
+    submenu: [],
+    roleaccess: [5, 6, 1, 2, 3, 4, 7, 10],
+  },
+  {
+    title: 'Holidays',
+    path: '/holidays',
+    icon: 'holiday.svg',
+    submenu: [],
+    roleaccess: [1, 2, 3, 4, 5, 6, 7, 10],
+  },
+  {
+    title: 'Greetings',
+    path: '/greetings',
+    icon: 'greetings.svg',
+    submenu: [],
+    roleaccess: [1, 2, 3, 5, 6, 10],
+  },
+  {
+    title: 'Designation',
+    path: '/designation',
+    icon: 'Designation.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+
+  {
+    title: 'Technology',
+    path: '/technology',
+    icon: 'technology.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+
+  {
+    title: 'Configure Settings',
+    path: '/settings',
+    icon: 'broadcast.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
 
   // {
   //   title: 'Probation reviewer form',
@@ -513,11 +550,21 @@ const menu = [
   // },
 
   {
-    title: 'Predictions',
-    path: '/predictions-details',
-    icon: 'technology.svg',
+    title: 'Email Templates',
+    path: '/email-templates',
+    icon: 'template.svg',
     submenu: [],
-    roleaccess: [1],
+    roleaccess: [1, 6],
+  },
+
+
+
+  {
+    title: 'Quotes',
+    path: '/quotes',
+    icon: 'quote.svg',
+    submenu: [],
+    roleaccess: [1, 3, 5, 6, 10],
   },
 
   // {
@@ -527,8 +574,8 @@ const menu = [
   //   submenu: [],
   //   roleaccess: [1],
   // },
-  
-  
+
+
   // {
   //   title: 'FAQs',
   //   path: '/faq-listing',
