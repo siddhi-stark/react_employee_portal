@@ -70,7 +70,7 @@ const TodaysProjectReports = () => {
     setShowLoader(true);
     const params = {
       user: UserID,
-      type: 'all',
+      // type: 'all',
       start_date: fromDate,
       end_date: fromDate
     };
@@ -306,6 +306,11 @@ const TodaysProjectReports = () => {
             </div>
           </Row>
           {
+          console.log("pagination.current_page", pagination)
+          }  
+            
+          
+          {            
             (rowData &&
               <Table
                 columns={columnsMorning}
@@ -315,7 +320,7 @@ const TodaysProjectReports = () => {
                 paginationProps={{
                   totalItems: totalCount,
                   itemsPerPage: limit,
-                  currentPage: pagination.current_page,
+                  currentPage: pagination?.current_page,
                   handlePageChange: () => '',
                 }}
                 dropdownContainerClass="mb-3"
