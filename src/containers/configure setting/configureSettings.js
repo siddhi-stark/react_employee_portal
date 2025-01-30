@@ -39,9 +39,9 @@ const ConfigureSettings = () => {
 
   const allType = [
     { label: "Incomplete Estimations Cron", value: 1 },
-    { label: "Test One", value: 2 },
-    { label: "Test Three", value: 3 },
-    { label: "Test Four", value: 4 },
+    // { label: "Test One", value: 2 },
+    // { label: "Test Three", value: 3 },
+    // { label: "Test Four", value: 4 },
   ]
 
   useEffect(() => {
