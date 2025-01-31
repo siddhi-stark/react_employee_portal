@@ -26,9 +26,7 @@ const ConfigureSettings = () => {
   const [settingId, setSettingId] = useState(null);
   const [showDelete, setShowDelete] = useState(false);
   const [selectedType, setType] = useState({ label: 'All Type', value: 'all_type' });
-  const [selectedMonth, setSetSelectedMonth] = useState('');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
-  const [userRole, setUserRole] = useState(null);
   const [apiCalled, setApiCalled] = useState(false);
   const [joiningDate, setJoiningDate] = useState(null);
   const [refereshPage, setRefereshPage] = useState(false);

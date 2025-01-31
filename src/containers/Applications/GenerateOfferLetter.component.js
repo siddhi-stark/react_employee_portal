@@ -458,8 +458,8 @@ function GenerateOfferLetter() {
                   dateFormat="dd/MM/yyyy"
                   minDate={new Date()}
                   maxDate={
-                    new Date(new Date().getTime() + 90 * 24 * 60 * 60 * 1000)
-                  } // 90 days ahead
+                    new Date(new Date().getTime() + 120 * 24 * 60 * 60 * 1000)
+                  } // 120 days ahead
                   onChange={(e) => {
                     setJoiningDate(e);
                   }}
