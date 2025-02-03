@@ -138,7 +138,7 @@ function InterviewerRoundsStatus(props) {
       }).then(() => {
         swal.close();
       });
-      if (Interview) {
+      if (Interview || userRole !== 3 || userRole !== 4) {
         history.push('/interview-listing');
       } else {
         history.push('/recruitment');
