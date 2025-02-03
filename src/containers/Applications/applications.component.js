@@ -31,9 +31,14 @@ function Applications(props) {
   const [isBI, setIsBI] = useState(true);
   const [isPD, setIsPD] = useState(true);
   const [key, setKey] = useState('currentEmployee');
+  const [userRole, setUserRole] = useState(false);
+  
   const history = useHistory();
 
+
   const group = customFunctions.getLocalStorage('group');
+
+  
 
   useEffect(() => {
     if (isProfessionalInfoId) {
@@ -43,6 +48,12 @@ function Applications(props) {
       setIsPD(true);
     }
   }, [isProfessionalInfoId]);
+
+  useEffect(()=>{
+    const uRole = customFunctions.getLocalStorage('group');
+    setUserRole(Number(uRole));
+  },[])
+  
 
   const handleSelect = (emp) => {
     if (emp === 'currentEmployee') {
@@ -66,7 +77,7 @@ function Applications(props) {
         <Button
           className="float-end"
           onClick={() => {
-            if (Interview) {
+            if (Interview || userRole !== 3 || userRole !== 4) {
               history.push('/interview-listing');
             } else {
               history.push('/recruitment');
