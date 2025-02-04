@@ -143,6 +143,7 @@ const Predictions = () => {
               <Col>
                 <Button onClick={(e) => {
                   getPredictions()
+                  
                 }}>Predict</Button>
               </Col>
             </Row>

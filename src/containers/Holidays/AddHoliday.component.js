@@ -15,6 +15,7 @@ function AddHoliday(props) {
   const { match } = props;
   const viewObj = props;
   const viewOptions = viewObj.location.state
+  
     ? viewObj.location.state.isView
     : '';
 

@@ -1,49 +1,33 @@
 /* eslint-disable */
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Helmet, DropdownInput, TextInput } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
-import { ButtonGroup, Card, Row, Col, Button, Form, Accordion } from 'react-bootstrap';
-import Table from '../../components/ReactTable/simpletable.component';
-import SimpleReactValidator from 'simple-react-validator';
+import { ButtonGroup, Card, Row, Col, Button } from 'react-bootstrap';
 import customFunctions from '../../helper/customFunctions';
-import { withRouter, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
-import CustomTable from 'stark-custom-datatable';
 import swal from 'sweetalert';
-import SweetAlert from 'react-bootstrap-sweetalert';
 const items = [{ to: '/', label: 'Home' }, { label: 'Employee Feedback / Questionnaire' }];
 
 
 const AddQuestionnaire = () => {
   const state = useLocation();
   const questionId = state?.state?.state?.questionId
+
   
-  const [pageTitle, setPageTitle] = useState('Resignation');
   const history = useHistory();
   const [isShowLoader, setShowLoader] = useState(false);
-  const [rowData, setRowData] = useState([]);
-  const [pagination, setPagination] = useState({
-    current_page: 1,
-    itemsPerPage: 10,
-    totalItems: 10,
-  });
-
-  const [ShowDelete, setShowDelete] = useState(false);
-  // const [questionId, setQuestionId] = useState(null);
+  
   const [selectedDepartment, setDepartment] = useState()
   const [filterDepartment, setFilterDepartment] = useState('')
   const [pageReferesh, setPageReferesh] = useState(false)
-  const [questionnaire, setQuestionnaire] = useState([]);
   const [question, setQuestion] = useState();
 
-  const [fieldsDisabled, setFieldsDisabled] = useState(false)
   const [title, setTitle] = useState('');
 
-  console.log("=======", selectedDepartment, question);
-  
 
   const departmentList = [
     {

@@ -37,23 +37,13 @@ const ProjectReportsDetails = () => {
   const [selectedProject, setProject] = useState('')
   const [reportDate, setReportDate] = useState('')
 
-  console.log("Hello World");
-
-
   useEffect(() => {
-    console.log("Hello Three", isProjectManager);
     if (UserID) {
-      console.log("inside", isProjectManager);
       getTodaysReport();
     }
   }, [isProjectManager]);
 
-  const [morningRowData, setMorningRowData] = useState([])
-  const [eveningRowData, setEveningRowData] = useState([])
-
-
   useEffect(() => {
-    console.log("Hello Two");
     setTitle(`Today's Reports`)
     const isProjectManager =
       customFunctions?.getLocalStorage('isProjectManager');
@@ -85,16 +75,13 @@ const ProjectReportsDetails = () => {
 
 
   const getTodaysReport = async (pageNo = 1) => {
-    console.log("Hello hello");
 
     setShowLoader(true);
     const params = {
       page: pageNo,
       sort_direction: 'descending',
       user: UserID,
-      // type: 'all',
-      // start_date: fromDate,
-      // end_date: fromDate
+
     };
     if (isProjectManager) {
       params.user = UserID
@@ -130,10 +117,6 @@ const ProjectReportsDetails = () => {
             })
           }
         })
-
-        setMorningRowData(morningReportData)
-        setRowData(morningReportData)
-
 
         setTotalCount(data.paginator.total_count);
         setLimit(data.paginator.limit);
@@ -259,8 +242,6 @@ const ProjectReportsDetails = () => {
     const { data } = await AuthApi.postDataToServer(url, obj);
     if (data.success) {
       swal('Report sent successfully', '', 'success').then(() => {
-        setMorningRowData([])
-        setEveningRowData([])
         setRowData([])
         history.push('/current-project', {})
         setShowDelete(false);

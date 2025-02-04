@@ -18,6 +18,7 @@ function AddEvent(props) {
     : '';
   const [defaultValues, updateDefaultValues] = useState({});
   const [currentUser, updateCurrentUser] = useState(0);
+  
   const [jsonSchema, updateJsonSchema] = useState(FormSections);
   const [imageUrl, setImageUrl] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);

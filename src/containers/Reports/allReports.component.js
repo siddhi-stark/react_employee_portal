@@ -32,8 +32,6 @@ function AllReports() {
   const history = useHistory();
   const [searchKeyword, setSearchKeyword] = useState('');
   const { state } = useLocation();
-  const [currentPage, setCurrentPage] = useState();
-  // setSelectedEmployee(state?.state?.reporterName);
 
 
   const [pagination, setPagination] = useState({
@@ -45,24 +43,11 @@ function AllReports() {
   useEffect(() => {
     if (!state) return;
     if (state) {
-      // setSelectedEmployee([{
-      //   label: state?.state?.reporterName,
-      //   id: state?.state?.EmpId,
-      //   value: state?.state?.EmpId,
-      // }]);
+      
     }
   }, [state]);
 
-  // useEffect(()=>{
-  //   const currentpage = customFunctions.getLocalStorage('currentpage');
-  //   // setCurrentPage(currentpage);
-  //   // getReports(currentpage);
-  //   setPagination({
-  //     current_page: currentpage,
-  //     itemsPerPage: 10,
-  //     totalItems: 10,
-  //   })
-  // },[state])
+  
 
   const handleActionCallback = ({ id, createdDate, name,clockin,clockout }) => {
     const newDate = customFunctions.getDate(createdDate);
@@ -211,15 +196,6 @@ function AllReports() {
       setRows(row);
     }
   };
-
-  // const getEmployee = async () => {
-  //   const { data } = await AuthApi.getDataFromServer(
-  //     `${Api.employeeUrl}?type=all&is_dropdown=1&status=active`
-  //   );
-  //   if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
-  //     setEmployeeList(data.data);
-  //   }
-  // };
   
 const [options, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
 

@@ -100,6 +100,7 @@ const KraKpi = () => {
       sort_direction: 'descending',
 
     };
+    
 
     if (selectedEmployeeId !== 'all_employess') {
       params.user = selectedEmployeeId;

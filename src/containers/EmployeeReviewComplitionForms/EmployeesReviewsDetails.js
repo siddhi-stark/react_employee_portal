@@ -230,6 +230,7 @@ const EmployeeReviewsDetails = () => {
                     fontSize: "10px",
                     fontWeight: "bold",
                   }}
+                  
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();

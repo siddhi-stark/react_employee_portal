@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import SweetAlert from 'react-bootstrap-sweetalert';
-import { Card, Row, Col, Button, Image } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Loader from '../../components/Loader/index';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -12,7 +12,6 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import CustomTable from 'stark-custom-datatable';
-import { setYear } from 'date-fns';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 
 

@@ -170,8 +170,6 @@ function AddFeedback() {
     let quarter_name = null
     let reviewer_name = ''
     let avg_rating = 0
-    let review_status = null
-    let review_status_name = null
     if (data && data.success) {
       review_status = data.data[0]?.review_status
       review_status_name = data.data[0]?.review_status_name
@@ -323,17 +321,6 @@ function AddFeedback() {
     }
   };
 
-  const handleCheckboxChange = (event, item, isReviewer = false) => {
-    if (isReviewer) {
-      const data = [...questions];
-      data[questions.indexOf(item)].reviewerRating = event;
-      setQuestions(data);
-    } else {
-      const data = [...questions];
-      data[questions.indexOf(item)].empRating = event;
-      setQuestions(data);
-    }
-  };
 
   const getLeavesdata = async () => {
     setShowLoader(true);
@@ -465,19 +452,6 @@ function AddFeedback() {
                         />
                       </Col>
                     </>)}
-
-                    {/* {avgRating ? (<>
-                      <Col sm={2}>
-                        <Form.Label>
-                          Average Rating
-                        </Form.Label>
-                        <Form.Control
-                          type='text'
-                          value={avgRating}
-                          disabled='true'
-                        />
-                      </Col>
-                    </>) : ''} */}
 
                   </Row>
                   <Row>
@@ -622,44 +596,6 @@ function AddFeedback() {
                               </div>
 
                             </Form.Group>
-                            {/* <Form.Group controlId={`formRating${index + 1}`}>
-
-                              <Form.Label>
-                                Rating : <span className="text-danger">*</span>
-                              </Form.Label>
-                              <div className="ms-lg-8 mt-lg-2">
-                                {ratingOptions?.length > 0 &&
-                                  ratingOptions.map((option) => (
-                                    <Form.Check
-                                      inline
-                                      key={option.value}
-                                      type="radio"
-                                      id={option.value}
-                                      label={
-                                        <span
-                                          onClick={(e) => e.preventDefault()} 
-                                        >
-                                          {option.label}
-                                        </span>
-                                      }
-                                      value={option.value}
-                                      className="mb-2 form-radio"
-                                      checked={item?.empRating == option.label}
-                                      onChange={(e) => {
-                                        handleCheckboxChange(option.label, item);
-                                      }}
-                                      disabled={isViewOnly ? true : false}
-                                    />
-                                  ))}
-                                <p className='text-danger'>
-                                  {validator.current.message(
-                                    'Rating',
-                                    item?.empRating,
-                                    'required'
-                                  )}
-                                </p>
-                              </div>
-                            </Form.Group> */}
                           </Card.Body>
                         </Card>
                       </Col>
@@ -722,52 +658,7 @@ function AddFeedback() {
                                       disabled='true'
                                     />
                                   </Form.Group>
-                                  {/* <p className='text-danger'>
-                                    {validator.current.message(
-                                      'Rating',
-                                      item?.reviewerRating,
-                                      'required'
-                                    )}
-                                  </p> */}
                                 </div>
-                                {/* <Form.Group controlId={`formRating${index + 1}`}>
-
-                                  <Form.Label>
-                                    Rating : <span className="text-danger">*</span>
-                                  </Form.Label>
-                                  <div className="ms-lg-8 mt-lg-2">
-                                    {ratingOptions?.length > 0 &&
-                                      ratingOptions.map((option) => (
-                                        <Form.Check
-                                          inline
-                                          key={option.value}
-                                          type="radio"
-                                          id={option.value}
-                                          label={
-                                            <span
-                                              onClick={(e) => e.preventDefault()} // Prevent label click from changing state
-                                            >
-                                              {option.label}
-                                            </span>
-                                          }
-                                          value={option.value}
-                                          className="mb-2 form-radio"
-                                          checked={item?.reviewerRating == option.label}
-                                          onChange={(e) => {
-                                            handleCheckboxChange(option.label, item, true);
-                                          }}
-                                          disabled={isViewOnly ? true : false}
-                                        />
-                                      ))}
-                                    <p className='text-danger'>
-                                      {validator.current.message(
-                                        'Rating',
-                                        item?.reviewerRating,
-                                        'required'
-                                      )}
-                                    </p>
-                                  </div>
-                                </Form.Group> */}
                               </Card.Body>
                             </Card>
                           </>
