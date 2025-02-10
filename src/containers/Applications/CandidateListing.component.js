@@ -66,8 +66,10 @@ function CandidateListing() {
             <Image src="/images/edit-button.svg" />
           </a>
         )}
-        {new Date(row.joining_date).getTime() <= new Date().getTime() &&
-          row.offer_status_name !== 'Declined' && row.offer_status !== 4 &&
+        {
+        // new Date(row.joining_date).getTime() <= new Date().getTime() &&
+          row.offer_status_name !== 'Declined' && 
+          row.offer_status !== 4 &&
           !row.is_onboard && (
             <a
               href="/"
