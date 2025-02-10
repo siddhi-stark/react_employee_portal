@@ -110,7 +110,7 @@ function ProfessionalDetails(props) {
       ) {
         obj.resume_source = {
           label: 'Referal',
-          value: data.data.resume_source,
+          value: data.data?.reference,
         };
       } else if (
         data.data.resume_source === 'other' ||
@@ -170,6 +170,7 @@ function ProfessionalDetails(props) {
       current_ctc: formValues?.current_ctc,
       expected_ctc: formValues?.expected_ctc,
       resume_source: formValues?.resume_source,
+      reference: formValues?.reference,
       resume: formValues?.resume,
       is_professional_details: true,
       is_interview_round: false,
