@@ -53,7 +53,6 @@ const Predictions = () => {
     if (data?.data) {
       setShowLoader(false);
       if (data?.data[0]?.reports) {
-        // const sortedData = data?.data[0]?.reports.sort((a, b) => a.project_id - b.project_id);
         console.log("data?.data[0]", data?.data[0].generated_by);
         let reportDate = data?.data[0].generated_by
         console.log("reportDate", reportDate);
@@ -168,7 +167,6 @@ const Predictions = () => {
               Object.keys(predictions).map((projectId) => {
                 const projectMilestones = predictions[projectId];
                 const projectName = projectMilestones[0]?.project_name; // Assume all milestones in the group have the same project name
-                // Split milestones into pairs (for rows with two columns)
                 const milestonePairs = chunkArray(projectMilestones, 2);
 
                 return (
@@ -268,13 +266,6 @@ const Predictions = () => {
                                     <li>Logged Time Ratio: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.logged_time_ratio}</li>
                                     <li>Time Efficiency: {milestone?.milestone_analysis?.performance_insights?.total_effort_analysis?.time_efficiency}</li>
                                     <br />
-
-                                    {/* <strong>Suggestions:</strong>{' '}
-                                  {milestone?.milestone_analysis?.performance_insights?.suggestions?.map(
-                                    (method, idx) => (
-                                      <li key={idx}>{method}</li>
-                                    )
-                                  )} */}
                                   </ul>
                                 </div>
 

@@ -25,7 +25,6 @@ const EmployeeReviewsDetails = () => {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showDelete, setShowDelete] = useState(false);
   const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
   const [allEmployeeIds, setEmployeeIds] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
@@ -33,14 +32,8 @@ const EmployeeReviewsDetails = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
   const [userRole, setUserRole] = useState(null);
   const [title, setTitle] = useState('Employees Reviews Form Response');
-  const [isProjectManager, setProjectManager] = useState(false)
-  const currentDate = new Date();
   const [userId, setUserId] = useState(null)
   const [detailsKeys, setDetailsKeys] = useState('personalInfo');
-
-  console.log("allEmployeeIds", allEmployeeIds);
-  console.log("pagination", pagination);
-
 
   useEffect(() => {
     setTitle("Employees Reviews Form Response")
@@ -50,8 +43,6 @@ const EmployeeReviewsDetails = () => {
     setUserId(Number(userId));
 
   }, []);
-
-  console.log("userId && detailsKeys && allEmployeeIds.length > 1", userId, detailsKeys, allEmployeeIds.length);
 
   useEffect(() => {
 
@@ -230,12 +221,10 @@ const EmployeeReviewsDetails = () => {
                     fontSize: "10px",
                     fontWeight: "bold",
                   }}
-                  
+
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // changeStatus(id);
-                    // submitForm(id)
                     history.push('/probation-reviewer-form', {
                       state: {
                         reviewId: id,
@@ -272,8 +261,6 @@ const EmployeeReviewsDetails = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // changeStatus(id);
-                    // submitForm(id)
                     history.push('/probation-reviewer-form', {
                       state: {
                         reviewId: id,
@@ -358,8 +345,6 @@ const EmployeeReviewsDetails = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // changeStatus(id);
-                    // submitForm(id)
                     history.push('/training-reviewer-form', {
                       state: {
                         reviewId: id,
@@ -385,8 +370,6 @@ const EmployeeReviewsDetails = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        // changeStatus(id);
-                        // submitForm(id)
                         sentReminder(id, 2)
 
                       }}
@@ -417,12 +400,10 @@ const EmployeeReviewsDetails = () => {
     if (data) {
       if (formType === 1) {
         swal('Self Evalueation Form reminder sent successfully.', '', 'success').then(() => {
-          // history.push('/employee-reviews');
         });
       }
       else {
         swal('Training Reviewer Form reminder sent successfully.', '', 'success').then(() => {
-          // history.push('/employee-reviews');
         });
       }
 
@@ -445,7 +426,6 @@ const EmployeeReviewsDetails = () => {
     let allemp = []
     if (data && data.success) {
       data.data.map((item) => {
-        // if ([1].includes(item.role_id) && !item.is_project_manager) return
         let obj = {
           label: item.full_name,
           value: item.id,
@@ -503,7 +483,6 @@ const EmployeeReviewsDetails = () => {
       setShowLoader(false);
 
       const review_data = data.data.map((item, index) => ({
-        // no: (pagination.current_page - 1) * 10 + index + 1,
         no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
         id: item.id,
         employee: item?.employee,
@@ -557,10 +536,6 @@ const EmployeeReviewsDetails = () => {
     }
     if (data && data.success) {
       setShowLoader(false);
-
-      console.log('getRowData data.data: ', data.data);
-
-      /* traineReview */
 
       const traineReviewData =
         data.data.filter((ele) => ele?.review_type === 1).map((innerElement, innerIndex) => {
@@ -644,7 +619,6 @@ const EmployeeReviewsDetails = () => {
   };
 
   const generatereReviewReports = async (reportType) => {
-    // is_download_evaluation_forms
     let params = {
       type: 'all'
     }
@@ -667,12 +641,10 @@ const EmployeeReviewsDetails = () => {
   }
 
   const downloadFile = (fileUrl, fileName) => {
-    // const url = window.URL.createObjectURL(new Blob([fileUrl]));
     const link = document.createElement('a');
 
     link.href = fileUrl;
     link.setAttribute('download', fileName);
-    // link.rel = 'noreferrer';
     link.target = '_self';
     document.body.appendChild(link);
     link.click();
@@ -741,8 +713,6 @@ const EmployeeReviewsDetails = () => {
                     type="submit"
                     href="#"
                     onClick={() => {
-                      // setTableToggle(false);
-                      // history.push('/add-kra-kpi');
                       generatereReviewReports(detailsKeys)
                     }}
                   >
@@ -784,7 +754,6 @@ const EmployeeReviewsDetails = () => {
                       setSelectedDate(null)
                       setRowData([])
                     }
-                    // setRefereshPage(true)
                   }
 
                   } className='ml-3'>
@@ -820,8 +789,6 @@ const EmployeeReviewsDetails = () => {
                       type="submit"
                       href="#"
                       onClick={() => {
-                        // setTableToggle(false);
-                        // history.push('/add-kra-kpi');
                         generatereReviewReports(detailsKeys)
                       }}
                     >
@@ -859,7 +826,6 @@ const EmployeeReviewsDetails = () => {
                       setSelectedEmployeeId('all_employess')
                       setSelectedDate(null)
                       setRowData([])
-                      // setRefereshPage(true)
                     }
 
                     } className='ml-3'>
@@ -918,7 +884,6 @@ const EmployeeReviewsDetails = () => {
                       setSelectedEmployeeId('all_employess')
                       setSelectedDate(null)
                       setRowData([])
-                      // setRefereshPage(true)
                     }
 
                     } className='ml-3'>

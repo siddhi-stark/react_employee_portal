@@ -38,7 +38,7 @@ const KraKpi = () => {
   const [title, setTitle] = useState('');
 
   const formatMonthDate = (dateString) => {
-    return moment(dateString).format('MMMM-YYYY'); // Format as Monthname-Year
+    return moment(dateString).format('MMMM-YYYY'); 
   };
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const KraKpi = () => {
       sort_direction: 'descending',
 
     };
-    
+
 
     if (selectedEmployeeId !== 'all_employess') {
       params.user = selectedEmployeeId;

@@ -102,8 +102,6 @@ const EvaluationForm = () => {
         if (data && data.success) {
             setPreparedData(data?.data)
             const newData = data?.data;
-            // console.log("Hello WOrld",newData);
-
             setEvaluation({ label: newData?.evaluation_criteria_name, value: newData?.evaluation_criteria })
             setOnBasis({ label: newData?.review_period_name, value: newData?.review_period })
             setTargetFailed(newData?.target_failed_to_achieve)
@@ -163,13 +161,9 @@ const EvaluationForm = () => {
         finalData.forEach((question) => {
             const { question_type, rating } = question;
             if (question_type in preparedData) {
-                console.log("question_type", question_type);
-                console.log("preparedData.question_type", preparedData[question_type]);
                 question.rating = parseInt(preparedData[question_type], 10); // Convert rating to a number
             }
         });
-
-        console.log("finalData", finalData);
 
         setQuestions(finalData)
     }
@@ -367,12 +361,8 @@ const EvaluationForm = () => {
                                 placeholder={"Select month/year"}
                                 showMonthYearPicker={true}
                                 dateFormat={"dd/MM/yyyy"}
-                                // maxDate={new Date(new Date().setMonth(new Date().getMonth() - 1))}
                                 selected={new Date(revieweDate)}
                                 disabled={true}
-                                onChange={(date) => {
-                                    // setSetSelectedMonth(date);
-                                }}
                             />
                         </Col>
                         <Row>
@@ -398,23 +388,6 @@ const EvaluationForm = () => {
                         <hr style={{ borderColor: "white" }} />
 
                         <Row>
-
-                            {/* <DropdownInput
-                                label="1. Evaluation Criteria"
-                                asterisk="*"
-                                options={evaluationCriteria}
-                                defaultValue={selectedEvaluation}
-                                onSelectHandler={(select) => {
-                                    setEvaluation(select)
-                                }}
-                                disabled={isDisabled}
-                                errorMessage={validator.current.message(
-                                    'Evaluation Criteria',
-                                    selectedEvaluation,
-                                    'required'
-                                )}
-                            /> */}
-
                             <Col>
                                 <DropdownInput
                                     label="2. Review done on the basis of the"
@@ -548,7 +521,6 @@ const EvaluationForm = () => {
                                     variant="secondary"
                                     className="bg-primary border-0 border-primary h4 m-2 text-white rounded-3"
                                     type="submit"
-                                    // onClick={setAddPopUp(true)}
                                     onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
@@ -589,7 +561,6 @@ const EvaluationForm = () => {
                     showCancel
                     title="Are you sure you want to submit?"
                     confirmBtnText="Submit"
-                    // confirmBtnBsStyle="blue"
                     cancelBtnBsStyle="light"
                     onConfirm={() => {
                         submitForm();

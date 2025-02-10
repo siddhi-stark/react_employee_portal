@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
-import { Card, Row, Col, Button, Image, Tabs, Tab } from 'react-bootstrap';
-import SweetAlert from 'react-bootstrap-sweetalert';
+import { Card, Row, Col, Button, Tabs, Tab } from 'react-bootstrap';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
@@ -25,15 +24,12 @@ const EmployeeReviews = () => {
   const [totalCount, setTotalCount] = useState(10);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [showDelete, setShowDelete] = useState(false);
   const [allEmployes, setAllEmployes] = useState([{ label: 'All Employess', value: 'all_employess' }]);
   const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employess', value: 'all_employess' });
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('all_employess');
   const [userRole, setUserRole] = useState(null);
   const [title, setTitle] = useState('Employees Reviews Form Response');
-  const [isProjectManager, setProjectManager] = useState(false)
-  const currentDate = new Date();
   const [userId, setUserId] = useState(null)
   const [detailsKeys, setDetailsKeys] = useState('personalInfo');
 
@@ -118,8 +114,6 @@ const EmployeeReviews = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  // changeStatus(id);
-                  // submitForm(id)
                   history.push('/evaluation-form', {
                     state: {
                       reviewId: id,
@@ -156,8 +150,6 @@ const EmployeeReviews = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  // changeStatus(id);
-                  // submitForm(id)
                   history.push('/evaluation-form', {
                     state: {
                       reviewId: id,
@@ -234,8 +226,6 @@ const EmployeeReviews = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // changeStatus(id);
-                    // submitForm(id)
                     history.push('/training-reviewer-form', {
                       state: {
                         reviewId: id,
@@ -271,8 +261,6 @@ const EmployeeReviews = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // changeStatus(id);
-                    // submitForm(id)
                     history.push('/training-reviewer-form', {
                       state: {
                         reviewId: id,
@@ -351,8 +339,6 @@ const EmployeeReviews = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // changeStatus(id);
-                    // submitForm(id)
                     history.push('/probation-reviewer-form', {
                       state: {
                         reviewId: id,
@@ -388,8 +374,6 @@ const EmployeeReviews = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // changeStatus(id);
-                    // submitForm(id)
                     history.push('/probation-reviewer-form', {
                       state: {
                         reviewId: id,
@@ -530,8 +514,6 @@ const EmployeeReviews = () => {
 
       console.log('getRowData data.data: ', data.data);
 
-      /* traineReview */
-
       const traineReviewData =
         data.data.filter((ele) => ele?.review_type === 1).map((innerElement, innerIndex) => {
           return {
@@ -665,7 +647,6 @@ const EmployeeReviews = () => {
                       setSelectedDate(null)
                       setRowData([])
                     }
-                    // setRefereshPage(true)
                   }
 
                   } className='ml-3'>
@@ -720,7 +701,6 @@ const EmployeeReviews = () => {
                       setSelectedEmployeeId('all_employess')
                       setSelectedDate(null)
                       setRowData([])
-                      // setRefereshPage(true)
                     }
 
                     } className='ml-3'>
@@ -779,7 +759,6 @@ const EmployeeReviews = () => {
                       setSelectedEmployeeId('all_employess')
                       setSelectedDate(null)
                       setRowData([])
-                      // setRefereshPage(true)
                     }
 
                     } className='ml-3'>
@@ -810,6 +789,5 @@ const EmployeeReviews = () => {
     </>
   );
 };
-
 
 export default EmployeeReviews;

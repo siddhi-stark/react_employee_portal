@@ -77,7 +77,7 @@ const KraKpiEmployees = () => {
   };
 
   const getKraKpiDetails = async (pageNo = currentPage) => {
-    if (apiCalled) return; // Prevent duplicate calls
+    if (apiCalled) return; 
 
     setApiCalled(true);
     setShowLoader(true);
@@ -87,8 +87,6 @@ const KraKpiEmployees = () => {
       limit,
     };
 
-    console.log("Hello World");
-    
 
     if (selectedEmployeeId !== 'all_employess') {
       params.user = selectedEmployeeId;

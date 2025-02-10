@@ -17,7 +17,6 @@ const items = [{ to: '/', label: 'Home' }, { label: 'Project Weekly Report' }];
 
 function ProjectList() {
   const history = useHistory();
-  // Declare variable
   const [title, setTitle] = useState('');
   const [rowData, setRowData] = useState([]);
   const [totalCount, setTotalCount] = useState(1);
@@ -28,45 +27,9 @@ function ProjectList() {
   const departmentId = customFunctions.getLocalStorage('department');
   const [allData, setAllData] = useState({});
   const [options, updateOptions] = useState({});
-  // const [isManager, setIsManager] = useState(null);
 
-  // Variable declarations Filter State
   const [currentUser, updateCurrentUser] = useState(0);
 
-  // useEffect(() => {
-  //   const isProjectManager =
-  //     customFunctions?.getLocalStorage('isProjectManager');
-  //   setIsManager(JSON.parse(isProjectManager));
-  // }, [customFunctions?.getLocalStorage('isProjectManager')]);
-
-  const handleActionCallback = ({ id }) => {
-    return (
-      <span className="d-flex">
-        <a
-          href="/"
-          className="pl-2"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/view-project/${id}`, { isView: true });
-          }}
-        >
-          <Image alt="view" src="/images/eye.svg" />
-        </a>
-        <a
-          href="/"
-          className="pl-2 ms-1"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            history.push(`/edit-project/${id}`, { isView: false });
-          }}
-        >
-          <Image src="/images/edit-button.svg" />
-        </a>
-      </span>
-    );
-  };
 
   // Declare columns
   const columns = [
@@ -172,17 +135,6 @@ function ProjectList() {
         'Project Cost',
       roleAccess: [1],
     },
-    // {
-    //   id: 'Action',
-    //   label:
-    //     ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
-    //       Number(currentUser) === 1) &&
-    //     'Action',
-    //   render:
-    //     ((Number(currentUser) === 4 && Number(departmentId) === 8) ||
-    //       Number(currentUser) === 1) &&
-    //     handleActionCallback,
-    // },
   ];
 
   const getRowData = async (pageNo = 1) => {
@@ -303,28 +255,6 @@ function ProjectList() {
           <Card>
             <Card.Body>
             <h5 className="card-title mb-0 mt-2 ">Filter</h5>
-
-              {/* <UserRestrictions
-                permittedUsers={isManager ? [1, 2, 3, 4, 7, 10] : [2, 3, 4, 7, 10]}
-                roleId={currentUser}
-              >
-
-                <div className="d-flex align-items-center justify-content-between">
-                  <h5 className="card-title mb-0 mt-2 ">Filter</h5>
-                  <Button
-                    variant="secondary"
-                    className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
-                    type="submit"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      history.push(`/project-report-list`)
-
-                    }}
-                  >
-                    Today's Projects Reports
-                  </Button>
-                </div>
-              </UserRestrictions> */}
               <hr />
 
               <div className="filter-box-main">

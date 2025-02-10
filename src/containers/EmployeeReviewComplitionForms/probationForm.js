@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, ButtonGroup, Card, Form, Col, Row, FormGroup } from 'react-bootstrap';
-import { withRouter, useHistory, useParams, useLocation } from 'react-router-dom';
+import { Button, Card, Form, Col, Row } from 'react-bootstrap';
+import { useHistory, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import { Helmet, DropdownInput, Datepicker, TextInput } from '../../components/FormInputs';
@@ -20,7 +20,7 @@ const ProbationForm = () => {
   const validator = useRef(new SimpleReactValidator());
   const state = useLocation();
   const history = useHistory();
-  
+
 
   const reviewId = state?.state?.state?.reviewId;
   const reviewData = state?.state?.state?.reviewData;
@@ -30,13 +30,11 @@ const ProbationForm = () => {
   const isDisabled = state?.state.state?.isDisabled ? state?.state.state?.isDisabled : false
   const [title, setTitle] = useState('Fill Probation Reviewer Form');
   const [isShowLoader, setShowLoader] = useState(false);
-  const [comments, setComments] = useState('')
   const [showAddPopUp, setAddPopUp] = useState(false)
   const [count, forceUpdate] = useState(0)
   const [selectedRatings, setRatings] = useState()
   const [selectedOnBasis, setOnBasis] = useState()
   const [selectTrainingExtended, setTrainingExtended] = useState()
-  const [probationDetails, setProbationDetails] = useState()
   const [probationStart, setProbationStart] = useState()
   const [performanceRating, setPerformanceRating] = useState()
   const [empConfirmed, setEmpConfirmed] = useState()
@@ -63,16 +61,6 @@ const ProbationForm = () => {
   const yesOrNo = [
     { value: 1, label: "Yes", },
     { value: 0, label: "No", },
-    // { value: 2, label: "Not Applicable", },
-  ]
-
-  const overallRatings = [
-    { value: 1, label: "No scope of improvement", },
-    { value: 2, label: "Scope of improvement", },
-    { value: 3, label: "Good", },
-    { value: 4, label: "Meet Expectations", },
-    { value: 5, label: "Outstanding", },
-
   ]
 
   const reviewOnBasis = [
@@ -81,11 +69,6 @@ const ProbationForm = () => {
     { value: 3, label: "2 Month", },
     { value: 4, label: "Confirmation(3 Month)", },
     { value: 5, label: "Training Session", },]
-
-  console.log("employeeData", employeeData);
-  console.log("reviewData", reviewData);
-  console.log("trainingReviewerForm", trainingReviewerForm);
-
 
   useEffect(() => {
     if (employeeData && reviewData && trainingReviewerForm) {
@@ -115,13 +98,7 @@ const ProbationForm = () => {
       setOnBasis({ label: newData?.review_period_name, value: newData?.review_period })
       setRatings({ label: newData?.overall_rating_name, value: newData?.overall_rating })
       setTrainingPerformance(newData?.question_first)
-      // setTechnicalImprovements(newData?.question_second)
-      // setFocusArea(newData?.question_third)
       setNeededImprovements(newData?.question_four)
-      // setOverallFeedback(newData?.overall_feedback)
-      // setPerformanceRating(newData?.question_second)
-
-
       setShowLoader(false);
     } else {
       setShowLoader(false);
@@ -136,11 +113,6 @@ const ProbationForm = () => {
   const submitForm = async () => {
     setShowLoader(true)
 
-    // focusArea 
-    // performanceRating 
-    // technicalImprovements
-
-
     preparedData["overall_rating"] = selectedRatings?.value
     preparedData["question_first"] = focusArea
     preparedData["question_second"] = performanceRating
@@ -150,8 +122,6 @@ const ProbationForm = () => {
     preparedData["start_probation_period"] = probationStart?.value
     preparedData["is_employee_confirmed"] = empConfirmed?.value
     preparedData["review_period"] = selectedOnBasis?.value
-
-    console.log("preparedData", preparedData);
 
     let response = null
     if (trainingReviewerForm) {
@@ -282,12 +252,8 @@ const ProbationForm = () => {
                 placeholder={"Select month/year"}
                 showMonthYearPicker={true}
                 dateFormat={"dd/MM/yyyy"}
-                // maxDate={new Date(new Date().setMonth(new Date().getMonth() - 1))}
                 selected={new Date(revieweDate)}
                 disabled={true}
-                onChange={(date) => {
-                  // setSetSelectedMonth(date);
-                }}
               />
             </Col>
             <hr style={{ borderColor: "white" }} />
@@ -460,7 +426,6 @@ const ProbationForm = () => {
                 variant="secondary"
                 className="bg-primary border-0 border-primary h4 m-2 text-white rounded-3"
                 type="submit"
-                // onClick={setAddPopUp(true)}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -500,7 +465,6 @@ const ProbationForm = () => {
           showCancel
           title="Are you sure you want to submit?"
           confirmBtnText="Submit"
-          // confirmBtnBsStyle="blue"
           cancelBtnBsStyle="light"
           onConfirm={() => {
             submitForm();

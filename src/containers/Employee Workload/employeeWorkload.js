@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import swal from 'sweetalert';
 import Loader from '../../components/Loader/index';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
@@ -9,9 +9,7 @@ import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
 import { Datepicker, DropdownInput, Helmet } from '../../components/FormInputs';
-// import CustomTable from 'stark-custom-datatable';
 import CustomTable from 'stark-custom-datatable';
-import { render } from '@testing-library/react';
 
 const EmployeeWorkload = () => {
   
@@ -21,10 +19,8 @@ const EmployeeWorkload = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
   const [selectedProject, setSelectedProject] = useState({ label: "All Projects", value: "all_project", });
   const [selectedTaskStatus, setSelectedStatus] = useState({ label: 'All type', value: 3 })
-  console.log("selectedTaskStatus+++++", selectedTaskStatus)
   const [userRole, setUserRole] = useState(null);
   const [isShowLoader, setShowLoader] = useState(false);
-  const [employeeList, setEmployeeList] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState({ label: 'All Employees', value: 'all_employees' });
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
@@ -34,8 +30,6 @@ const EmployeeWorkload = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterErr, setFilterErr] = useState('');
   const history = useHistory();
-
-  console.log('rowData', rowData);
 
   //breadcrumbs
   const items = [
@@ -59,10 +53,6 @@ const EmployeeWorkload = () => {
 
   ];
 
-  // useEffect(()=>{    
-  //   if(selectedProject?.value === "all_project") return
-  //     getProjectEmployees()
-  // },[selectedProject])
 
   //Column for table
   const columns = [
@@ -170,7 +160,6 @@ const EmployeeWorkload = () => {
   //FilterSearch function and validation
   const filterSearch = (e) => {
     let filterSearchErr = '';
-    let isValid = true;
     if (customFunctions.checkIfEmpty(selectedEmployee)) {
       filterSearchErr = 'Please select atleast one filter';
       setFilterErr(filterSearchErr);
@@ -194,7 +183,6 @@ const EmployeeWorkload = () => {
     } else {
       setFilterErr('');
       setShowLoader('');
-      // getTaskData(1);
       getEmployeeById(1);
     }
   };
@@ -207,28 +195,22 @@ const EmployeeWorkload = () => {
 
   //Clear function
   const onClear = () => {
-    // setFilterErr('');
     setFromDate('');
     setToDate('');
     setSelectedEmployee('');
-    // setSelectedEmployeeData('');
     setCntClearFilter(cntClearFilter + 1);
   };
 
   //Role access
   useEffect(() => {
     if (!userRole) return;
-    // if ([1, 8].includes(userRole)) {
     getEmployeeName();
-    // }
   }, [userRole]);
 
   useEffect(() => {
     getprojectList();
-    // getTaskData();
   }, []);
 
-  //API integration for Allproject list
   const getprojectList = async () => {
     setShowLoader(true);
     const endPoint = `${Api.projectListUrl}`;
@@ -239,14 +221,11 @@ const EmployeeWorkload = () => {
     };
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
-    console.log("data=========", data);
     if (data && data.success) {
       const Tempprojects = [];
       data.data &&
         data.data.map((item) => {
           console.log('item-----', item)
-          //only added standard user and who is not admin
-          // if(item?.roleId ==3  && item?.is_admin == 0){
           Tempprojects.push({
             label: `${item?.name}`,
             value: item?.id,
@@ -273,45 +252,7 @@ const EmployeeWorkload = () => {
   //API integration for AllEmployee list
   const getEmployeeName = async () => {
     setShowLoader(true);
-    // https://portalsapi.starkdigital.in/api/v1/employee/?sort_by=full_name&limit=9&hide_admin=1&is_onboard=true
-
     const url = `${Api.getEmployees}?type=all&is_only_dev=1&status=active&hide_admin=1`;
-    const { data, error } = await AuthApi.getDataFromServer(url);
-    if (data && data?.success) {
-      setShowLoader(false);
-
-      const allemp = [];
-      data?.data?.map((item) => {
-        return allemp.push({
-          label: item?.full_name,
-          value: item?.id,
-          joiningDate: item?.date_joined,
-          tw_id: item?.pms_id
-        });
-      });
-      const all = [
-        {
-          label: 'All Employees',
-          value: 'all_employees',
-        },
-      ];
-      if ([1, 8].includes(userRole)) {
-        setAllEmployes([...all, ...allemp]);
-      } else {
-        setAllEmployes(allemp);
-      }
-    } else {
-      setShowLoader(false);
-      swal(error || 'Something went wrong', '', 'error');
-    }
-  };
-
-  //API integration for AllEmployee list
-  const getProjectEmployees = async () => {
-    setShowLoader(true);
-    // https://portalsapi.starkdigital.in/api/v1/employee/?sort_by=full_name&limit=9&hide_admin=1&is_onboard=true
-
-    const url = `${Api.getProjectsEmployee}?type=all&project_id=${+selectedProject?.value}`
     const { data, error } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {
       setShowLoader(false);
@@ -414,8 +355,6 @@ const EmployeeWorkload = () => {
     const { data, message } = await AuthApi.getDataFromServer(url);
     if (data && data?.success) {
       setShowLoader(false);
-      // if (data?.data?.response) {
-      //   window.open(data?.data?.response);
       downloadFile(data?.data?.file_name);
     } else {
       setShowLoader(false);
@@ -424,12 +363,10 @@ const EmployeeWorkload = () => {
   };
 
   const downloadFile = (fileUrl, fileName) => {
-    // const url = window.URL.createObjectURL(new Blob([fileUrl]));
     const link = document.createElement('a');
 
     link.href = fileUrl;
     link.setAttribute('download', fileName);
-    // link.rel = 'noreferrer';
     link.target = '_self';
     document.body.appendChild(link);
     link.click();
@@ -453,7 +390,6 @@ const EmployeeWorkload = () => {
         <Col>
           <Helmet title={titleHeading} />
         </Col>
-        {/* <Col className="col-3 mt-3"> */}
       </Row>
       <Row>
         <Col>
@@ -506,35 +442,27 @@ const EmployeeWorkload = () => {
                 onSelectHandler={(select) => {
                   setFilterErr("");
                   setSelectedProject(select);
-                  // setFromDate("");
-                  // setToDate("");
                   setRowData("");
                 }}
-              // isMulti
               />
             </Col>
             <Col sm={2}>
               <DropdownInput
                 label="Select Employee"
-                // asterisk="*"
                 options={allEmployes}
                 defaultValue={selectedEmployee}
                 onSelectHandler={(select) => {
                   setFilterErr('');
                   setSelectedEmployee(select);
                   setSelectedEmployeeId(select?.value);
-                  // setFromDate("");
-                  // setToDate("");
                   setRowData('');
                   setFilterErr('');
                 }}
-              // isMulti
               />
             </Col>
             <Col sm={2}>
               <DropdownInput
                 label="Task Status"
-                // asterisk="*"
                 options={taskStatus}
                 defaultValue={selectedTaskStatus}
                 onSelectHandler={(select) => {
@@ -543,11 +471,8 @@ const EmployeeWorkload = () => {
                   setRowData('');
                   setFilterErr('');
                 }}
-              // isMulti
               />
             </Col>
-
-            {/* {selectedEmployee?.value != "all_employess" && ( */}
             <>
               <Col sm={2}>
                 <Datepicker
@@ -559,7 +484,6 @@ const EmployeeWorkload = () => {
                     setFromDate(e);
                     setToDate(null);
                   }}
-                  // maxDate={new Date()}
                   autoComplete="off"
                   name="startDate"
                   dateFormat="dd/MM/yyyy"
@@ -572,7 +496,6 @@ const EmployeeWorkload = () => {
                   label="Select to date"
                   asterisk="*"
                   selected={toDate}
-                  // maxDate={new Date()}
                   minDate={fromDate}
                   onChange={(e) => {
                     setToDate(e);
@@ -584,7 +507,6 @@ const EmployeeWorkload = () => {
                 />
               </Col>
             </>
-            {/* )} */}
           </Row>
           <Row>
             <Col sm={8}>
@@ -608,7 +530,6 @@ const EmployeeWorkload = () => {
           </Row>
           <Row>
             <Col sm={8}></Col>
-            {/* <Col sm={2}> */}
             {rowData?.length > 0 && (
               <div className='d-flex justify-content-end'>
                 <a
@@ -624,9 +545,6 @@ const EmployeeWorkload = () => {
                 </a>
               </div>
             )}
-            {/* </Col> */}
-            {/* </Row>
-          <Row> */}
             <Col sm={10}></Col>
           </Row>
         </Card.Body>

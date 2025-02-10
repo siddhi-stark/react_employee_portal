@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, ButtonGroup, Card, Form, Col, Row, FormGroup } from 'react-bootstrap';
-import { withRouter, useHistory, useParams, useLocation } from 'react-router-dom';
+import { Button, Card, Form, Col, Row } from 'react-bootstrap';
+import { useHistory, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import { Helmet, DropdownInput, Datepicker, TextInput } from '../../components/FormInputs';
@@ -29,7 +29,6 @@ const TrainingReviewerForm = () => {
   const isDisabled = state?.state.state?.isDisabled ? state?.state.state?.isDisabled : false
   const [title, setTitle] = useState('Fill Training Reviewer Form');
   const [isShowLoader, setShowLoader] = useState(false);
-  const [comments, setComments] = useState('')
   const [showAddPopUp, setAddPopUp] = useState(false)
   const [count, forceUpdate] = useState(0)
   const [selectedRatings, setRatings] = useState()
@@ -125,8 +124,6 @@ const TrainingReviewerForm = () => {
     preparedData["training_period_extended"] = selectTrainingExtended?.value
     preparedData["start_probation_period"] = probationStart?.value
     preparedData["review_period"] = selectedOnBasis?.value
-
-    console.log("preparedData", preparedData);
 
     let response = null
     if (trainingReviewerForm) {
@@ -257,12 +254,8 @@ const TrainingReviewerForm = () => {
                 placeholder={"Select month/year"}
                 showMonthYearPicker={true}
                 dateFormat={"dd/MM/yyyy"}
-                // maxDate={new Date(new Date().setMonth(new Date().getMonth() - 1))}
                 selected={new Date(revieweDate)}
                 disabled={true}
-                onChange={(date) => {
-                  // setSetSelectedMonth(date);
-                }}
               />
             </Col>
             <hr style={{ borderColor: "white" }} />
@@ -452,7 +445,6 @@ const TrainingReviewerForm = () => {
                 variant="secondary"
                 className="bg-primary border-0 border-primary h4 m-2 text-white rounded-3"
                 type="submit"
-                // onClick={setAddPopUp(true)}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -492,7 +484,6 @@ const TrainingReviewerForm = () => {
           showCancel
           title="Are you sure you want to submit?"
           confirmBtnText="Submit"
-          // confirmBtnBsStyle="blue"
           cancelBtnBsStyle="light"
           onConfirm={() => {
             submitForm();

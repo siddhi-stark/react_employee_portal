@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
-import { Table, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Datepicker, DropdownInput, Helmet } from '../../components/FormInputs';
 import swal from 'sweetalert';
 import Loader from '../../components/Loader/index';
@@ -54,14 +54,10 @@ const EmployeeWorkloadTable = () => {
     return dateArray;
   };
 
-  console.log("tableData", tableData);
-  
-
   const getTaskCountPerDay = (tasks, fromDate, toDate) => {
     const dateRange = generateDateRange(fromDate, toDate);
     const employeeTaskData = {};
 
-    console.log("selectedEmployee?.value", selectedEmployee?.value)
     tasks.forEach((task) => {
       const { employee_name, start_date, end_date, employee_tw_id } = task;
       console.log
@@ -96,15 +92,12 @@ const EmployeeWorkloadTable = () => {
       delete employeeTaskData['undefined'];
     }
 
-    console.log("employeeTaskData.length", employeeTaskData.length);
-
     return { employeeTaskData, dateRange };
   };
 
   const setTablesData = () => {
     const { employeeTaskData, dateRange } = getTaskCountPerDay(rowData, fromDate, toDate);
     const length = Object.keys(employeeTaskData).length;
-    console.log('employeeTaskData', length)
     setTableData(employeeTaskData);
     setDateRange(dateRange)
   };
@@ -177,7 +170,6 @@ const EmployeeWorkloadTable = () => {
     } else {
       setFilterErr('');
       setShowLoader('');
-      // getTaskData(1);
       getEmployeeById();
     }
   };
@@ -198,7 +190,6 @@ const EmployeeWorkloadTable = () => {
         <Col>
           <Helmet title={titleHeading} />
         </Col>
-        {/* <Col className="col-3 mt-3"> */}
       </Row>
       <Row>
         <Col>
@@ -206,7 +197,6 @@ const EmployeeWorkloadTable = () => {
             <h2 className="main-content-title tx-24 mg-b-5">
               Workload Detailed View
             </h2>
-            {/* <Breadcrumb items={items} /> */}
           </div>
           <Loader showLoader={isShowLoader} needFullPage={false} />
         </Col>
@@ -238,18 +228,14 @@ const EmployeeWorkloadTable = () => {
             <Col sm={2}>
               <DropdownInput
                 label="Select Employee"
-                // asterisk="*"
                 options={allEmployes}
                 defaultValue={selectedEmployee}
                 onSelectHandler={(select) => {
                   setFilterErr('');
                   setSelectedEmployee(select);
-                  // setFromDate("");
-                  // setToDate("");
                   setRowData('');
                   setFilterErr('');
                 }}
-              // isMulti
               />
             </Col>
 
@@ -264,7 +250,6 @@ const EmployeeWorkloadTable = () => {
                     setFromDate(e);
                     setToDate(null);
                   }}
-                  // maxDate={new Date()}
                   autoComplete="off"
                   name="startDate"
                   dateFormat="dd/MM/yyyy"
@@ -336,7 +321,7 @@ const EmployeeWorkloadTable = () => {
                     <td style={{
                       textAlign: 'center',
                     }}>
-                      {index + 1} {/* Sr. No */}
+                      {index + 1} 
                     </td>
                     <td >{tasksPerDay['employee_name']}</td>
                     {dateRange.map((date) => (

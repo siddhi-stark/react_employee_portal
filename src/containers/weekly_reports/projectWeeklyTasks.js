@@ -3,12 +3,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
-import { Card, Row, Col, Button, Image, Form, Tabs, Tab } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
 
 const items = [{ to: '/', label: 'Home' }, { label: 'Project Report' }];
@@ -22,7 +22,6 @@ const ProjectWeeklyTask = () => {
 
 
   const [count, forceUpdate] = useState(0)
-  const history = useHistory();
   const [title, setTitle] = useState('Report generations');
   const [isShowLoader, setShowLoader] = useState(false);
   const { id } = useParams();
@@ -32,7 +31,6 @@ const ProjectWeeklyTask = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
-  const [limit, setLimit] = useState(10);
   const [groupedTasks, setGroupedTasks] = useState([]);
   const [promptMessage, setPromptMessage] = useState('');
   const [milestones, setMilestones] = useState('')
@@ -85,16 +83,12 @@ const ProjectWeeklyTask = () => {
     const startDate = customFunctions.getDate(filterStartDate);
     const endDate = customFunctions.getDate(filterEndDate);
     const params = {
-      // start_date: startDate,
-      // end_date: endDate,
       start_date: "2024-11-01",
       end_date: "2024-11-10",
 
       sort_by: 'id',
       project_id: projectId,
       type: 'all',
-      // page: page,
-      // limit: limit,
     };
 
     if (statusFilter?.value !== "all") {
@@ -107,8 +101,6 @@ const ProjectWeeklyTask = () => {
     if (data && data.success) {
       let filterMilestones = []
       data?.data?.length > 0 && data.data.map((item) => {
-        // { 'lable': "All Milestones", "value": 1 }
-
         filterMilestones.push(
           { 'label': item?.name, "value": item?.tw_id },
         )
@@ -136,16 +128,12 @@ const ProjectWeeklyTask = () => {
     const startDate = customFunctions.getDate(filterStartDate);
     const endDate = customFunctions.getDate(filterEndDate);
     const params = {
-      // start_date: startDate,
-      // end_date: endDate,
       start_date: "2024-02-10",
       end_date: "2024-02-20",
 
       sort_by: 'id',
       project_id: projectId,
       type: 'all',
-      // page: page,
-      // limit: limit,
     };
 
     console.log("milestones", milestones);
@@ -192,7 +180,7 @@ const ProjectWeeklyTask = () => {
     const { data } = await AuthApi.getDataFromServer(url);
 
     if (data && data.success) {
-      const groupedData = groupTasksByMilestone(data.data); // assuming tasks is the list of tasks returned
+      const groupedData = groupTasksByMilestone(data.data); 
       setGroupedTasks(groupedData);
       setShowLoader(false);
     } else {
@@ -205,11 +193,8 @@ const ProjectWeeklyTask = () => {
     e.preventDefault();
     setFilterStartDate(fromDate);
     setFilterEndDate(toDate);
-    setCurrentPage(1); // Reset to first page when filters change
+    setCurrentPage(1); 
   };
-
-  console.log("selectTaskFrom", selectTaskFrom);
-
 
   const handleClear = async () => {
     setFilterStartDate('');
@@ -221,21 +206,6 @@ const ProjectWeeklyTask = () => {
     setMilestones('')
     setSentButton(false)
   };
-
-  // const handleSend = () => {
-  //   let message = 'Task Summary:\n\n';
-  //   let totalTasks = 0;
-
-  //   Object.values(groupedTasks).forEach((group) => {
-  //     const taskCount = group.tasks.length;
-  //     totalTasks += taskCount;
-  //     message += `Milestone: ${group.milestone_name} (${group.milestone_id || 'No ID'})\n`;
-  //     message += `Tasks Count: ${taskCount}\n\n`;
-  //   });
-
-  //   message += `Total Tasks: ${totalTasks}\n`;
-  //   setPromptMessage(message);
-  // };
 
   const handleSend = () => {
     let message = 'Project Task Summary:\n\n';
@@ -361,7 +331,6 @@ const ProjectWeeklyTask = () => {
                 defaultValue={milestones}
                 disabled={fromDate && toDate && fromDate && toDate && selectTaskFrom?.value === 'milestone' && statusFilter ? false : true}
                 onSelectHandler={(e) => {
-                  console.log("================", e);
                   setMilestones(e)
 
                 }}
@@ -372,15 +341,6 @@ const ProjectWeeklyTask = () => {
                 )}
               />
             </Col>
-            {/* <Col sm={2}>
-              <DropdownInput
-                label="Responsible"
-                options={responsibles}
-                selected={responsibleFilter}
-                onChange={(e) => setResponsibleFilter(e.target.value)}
-              />
-            </Col> */}
-
             <Col className='mt-4'>
               <Button variant="primary" onClick={(e) => {
 

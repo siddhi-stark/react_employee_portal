@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, ButtonGroup, Card, Form, Col, Row } from 'react-bootstrap';
-import { useHistory, useParams, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import swal from 'sweetalert';
 import SimpleReactValidator from 'simple-react-validator';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
@@ -158,7 +158,6 @@ const AddKraKpi = () => {
       setSetSelectedMonth(null)
       setReset(true)
     }
-    const uRole = customFunctions.getLocalStorage('group');
     let url = ''
     setShowLoader(true);
     if ([3, 4].includes(userRole)) {

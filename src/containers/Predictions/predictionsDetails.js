@@ -12,8 +12,6 @@ import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import SweetAlert from 'react-bootstrap-sweetalert';
 
-
-
 const items = [{ to: '/', label: 'Home' }, { label: 'Milestone Predictions' }];
 
 const PredictionsDetails = () => {
@@ -154,10 +152,6 @@ const PredictionsDetails = () => {
 
     };
 
-    // if(selectedProject && selectedProject.value !== "all_porjects"){
-    //   params.project_id = +selectedProject?.value
-    // }
-
     const url = customFunctions.generateUrl(Api.predictionDetails, params);    
     const { data } = await AuthApi.getDataFromServer(url, params);
 
@@ -245,7 +239,6 @@ const PredictionsDetails = () => {
           <Row>
             <Col sm={2}>
               <DropdownInput
-                // label="Team"
                 placeholder ="Select Project"
                 asterisk="*"
                 options={options}

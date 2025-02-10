@@ -84,7 +84,7 @@ function CandidateListing() {
           )}
 
         {
-          new Date().getTime() >= new Date(row.joining_date).getTime() &&
+          // new Date().getTime() >= new Date(row.joining_date).getTime() &&
           row.offer_status !== 4 &&
           (
             <a
