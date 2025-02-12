@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  react-app:
+  employee_portal_frontend-app:
     build: .
-    container_name: react-app
+    container_name: employee_portal_frontend-app
     restart: unless-stopped
