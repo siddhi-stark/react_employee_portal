@@ -4,4 +4,3 @@ services:
   employee_portal_frontend-app:
     build: .
     container_name: employee_portal_frontend-app
-    restart: unless-stopped
