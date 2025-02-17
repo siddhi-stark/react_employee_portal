@@ -384,7 +384,7 @@ function OnBoard(props) {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Add Employee ================</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Add Employee</h2>
         <Breadcrumb items={items} />
       </div>
       <div className="mt-5">
