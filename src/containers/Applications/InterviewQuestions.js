@@ -12,7 +12,6 @@ import customFunctions from '../../helper/customFunctions';
 const items = [{ to: '/', label: 'Home' }, { label: 'Interview Questions' }];
 
 const InterviewQuestions = ({ applicant_id: propApplicantId }) => {
-  console.log("propApplicantId", propApplicantId);;
   const location = useLocation();
   const { state } = location;
 
@@ -70,11 +69,9 @@ const InterviewQuestions = ({ applicant_id: propApplicantId }) => {
   const fetchInterviewQuestions = async () => {
       setShowLoader(true);
       const url = `${Api.interviewQuestionsUrl}1/?applicant_id=${applicantId}`;
-      console.log("url", url);
       
       const { data, error } = await AuthApi.getDataFromServer(url);
 
-    console.log("data", data?.data?.response);
     if (data?.success) {
       setShowLoader(false);
       setInterviewData(data.data.response);
@@ -94,10 +91,8 @@ const InterviewQuestions = ({ applicant_id: propApplicantId }) => {
       input_file_url: resumeLink
     }
     
-    console.log("params", params);
     
     const data = await AuthApi.postDataToServer(url, params);
-    console.log("data", data);
 
     if (data?.data?.success === true) {
       setShowLoader(false);
@@ -110,7 +105,6 @@ const InterviewQuestions = ({ applicant_id: propApplicantId }) => {
     }
   }
 
-  console.log("allData?.applicant_id && !checkTimeExceeds7Minutes(allData?.report_date_time)", allData?.applicant_id, checkTimeExceeds7Minutes(allData?.report_date_time));
   
 
   return (
@@ -122,10 +116,7 @@ const InterviewQuestions = ({ applicant_id: propApplicantId }) => {
         
         <Container fluid className="px-0">
           <br />
-          {console.log("======",checkTimeExceeds7Minutes(allData?.report_date_time))
-          }
-          {console.log("======",!allData?.response)
-          }
+
           { ((checkTimeExceeds7Minutes(allData?.report_date_time) && !allData?.response) || (!allData?.applicant_id))  && (
             
             <Row>
