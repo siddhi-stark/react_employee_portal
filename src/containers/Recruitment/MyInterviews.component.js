@@ -54,6 +54,7 @@ function MyInterviews() {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              customFunctions.setLocalStorage('applicantId', id);
               history.push(`/applications/${id}`, {
                 statusObj: status_name,
                 isInterview: true,

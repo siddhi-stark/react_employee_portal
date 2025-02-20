@@ -9,6 +9,7 @@ import ProfessonalDetails from './ProfessionalDetails.component';
 import NewInterviewRounds from './NewInterviewRounds.component';
 import InterviewerRoundsStatus from './InterviewerRoundsStatus.component';
 import customFunctions from '../../helper/customFunctions';
+import InterviewQuestions from './InterviewQuestions';
 // import NewInterviewRounds7 from './NewInterviewRound7';
 
 function Applications(props) {
@@ -32,7 +33,9 @@ function Applications(props) {
   const [isPD, setIsPD] = useState(true);
   const [key, setKey] = useState('currentEmployee');
   const [userRole, setUserRole] = useState(false);
-  
+  const [applicantId, setApplicantId] = useState()
+
+
   const history = useHistory();
 
 
@@ -51,6 +54,7 @@ function Applications(props) {
 
   useEffect(()=>{
     const uRole = customFunctions.getLocalStorage('group');
+    setApplicantId(customFunctions.getLocalStorage('applicantId'));
     setUserRole(Number(uRole));
   },[])
   
@@ -62,8 +66,11 @@ function Applications(props) {
       setKey('professional_details');
     } else if (emp === 'oldPeriod') {
       setKey('oldPeriod');
+    }else if(emp === 'interviewQuestions'){
+      setKey('interviewQuestions');
     }
   };
+console.log("key", key);
 
   useEffect(() => {
     if (id) setIsPD(false);
@@ -92,6 +99,7 @@ function Applications(props) {
           <div>
             <Tabs
               activeKey={key}
+              
               onSelect={(e) => handleSelect(e)}
               // id="uncontrolled-tab-example"
             >
@@ -159,16 +167,19 @@ function Applications(props) {
                     )}
                   </div>
                 )}
-                {/* {key === 'oldPeriod' &&  && (
-                  <div className="row ml-2">
-                    <NewInterviewRounds7
-                      isProfessionalInfoId={isProfessionalInfoId}
-                    />
-                  </div>
-                )
-
-                } */}
               </Tab>
+              {pageType === 'My_Interview' && (
+                <Tab eventKey="interviewQuestions" title="Interview Questions" disabled={isPD}>
+                {key === "interviewQuestions" && (
+                  <div className="row ml-2">
+                    {(( pageType === "My_Interview")) && (
+                      <InterviewQuestions applicant_id={applicantId} />
+                    )}
+                  </div>
+                )}
+              </Tab>
+              )}
+              
             </Tabs>
           </div>
         </section>

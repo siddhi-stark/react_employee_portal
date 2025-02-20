@@ -24,8 +24,42 @@ function NewInterviewRounds(props) {
   const { isProfessionalInfoId } = props;
   const history = useHistory();
 
+
+  const [resumeLink, setResumeLink] = useState();
+  const [applicantId, setApplicantId] = useState()
+
+  console.log("defaultValues", defaultValues);
+
+  useEffect(() => {
+    if (applicantId) {
+      getResumeData(applicantId);
+    }
+  }, [applicantId])
+
+  const getResumeData = async (profId) => {
+    setShowLoader(true);
+    let params = {
+      is_professional_details: true,
+    };
+    const endpoint = `${Api.applicantsUrl}${profId}`;
+    const url = customFunctions.generateUrl(endpoint, params);
+    const { data } = await AuthApi.getDataFromServer(url);
+
+    if (data) {
+      setShowLoader(false);
+      setResumeLink(data?.data?.resume)
+    } else {
+      setShowLoader(false);
+    }
+  };
+  
+  console.log("resumeLink", resumeLink);
+  
+
   useEffect(() => {
     const formSchema = [...FormSections];
+    setApplicantId(customFunctions.getLocalStorage('applicantId'));
+     
     const updatedSchema = formSchema.map((section) => {
       const s = { ...section };
       s.fields = section.fields.map((item) => {
@@ -86,9 +120,30 @@ function NewInterviewRounds(props) {
         break;
       }
     }
+    let interviweRound   = null
+    let interviewStatus = null
+    let employee_id = null
     if (flag) {
       for (const more of formsAddmoreValue) {
         // eslint-disable-line
+        console.log('more', more);
+        interviweRound = more?.interviewerRounds?.value;
+        interviewStatus = more?.status_name?.value;
+        employee_id =
+          more?.interviewer && more?.interviewer.length > 0
+            ? more?.interviewer[0].value
+            : null;
+        // const applicant_id = id;
+        setApplicantId(id);
+        // console.log('applicant_id', applicant_id);
+        console.log('employee_id', employee_id);
+        console.log('interviweRound', interviweRound);
+        console.log('interviewStatus', interviewStatus);
+        console.log('resumeLink', resumeLink);
+
+        // setShowLoader(false);
+        // return;
+
         const interviwerData = [];
         more.interviewer.map((e) => interviwerData.push(e.value));
         const round = {
@@ -153,8 +208,11 @@ function NewInterviewRounds(props) {
           timer: 2000,
         }
       ).then(() => {
+        console.log(applicantId, employee_id, resumeLink, interviweRound);
+        generateQuestions(applicantId, employee_id, resumeLink, interviweRound);
         history.push('/recruitment');
         getData(isProfessionalInfoId);
+      
       });
     } else {
       setShowLoader(false);
@@ -168,7 +226,7 @@ function NewInterviewRounds(props) {
       });
     }
   };
-
+  
   const getData = async (interviewerId) => {
     setShowLoader(true);
     // const { data } = await AuthApi.getDataFromServer(
@@ -268,6 +326,19 @@ function NewInterviewRounds(props) {
       forceUpdate(count + 1);
     }
   };
+
+  const generateQuestions = async (applicantId, employee_id, resumeLink, interviweRound) => {
+    if (applicantId && employee_id && resumeLink && interviweRound === 3) {
+      const params = {
+        "applicant": +applicantId,
+        "employee": +employee_id,
+        "input_file_url": resumeLink
+      }
+
+      // const url = customFunctions.generateUrl(Api.prediction, params);  
+      const { data, message } = await AuthApi.postDataToServer(Api.interviewQuestionsUrl, params);
+    }
+  }
 
   useEffect(() => {
     if (isProfessionalInfoId) {

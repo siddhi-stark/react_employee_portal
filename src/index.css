@@ -1049,3 +1049,202 @@ hr {
 }
 
 
+/* Interview Quesitions */
+
+/*
+.interview-questions-card {
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 25px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 900px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.interview-questions-card:hover {
+  transform: scale(1.02);
+}
+
+.section-container {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease-in-out;
+}
+
+.section-container:hover {
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  border-left: 5px solid #3498db;
+  padding-left: 12px;
+}
+
+.question-box, .info-box {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 10px;
+  transition: 0.3s ease-in-out;
+}
+
+.question-box:hover, .info-box:hover {
+  background: #eef1f5;
+}
+
+.question-text, .info-key {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.answer-text, .info-value {
+  font-size: 16px;
+  color: #555;
+  margin-top: 5px;
+}
+
+.notes-text {
+  font-size: 14px;
+  font-style: italic;
+  color: #777;
+  margin-top: 5px;
+}
+
+.badge {
+  background: #3498db;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.candidate-summary, .extracted-info {
+  padding: 15px;
+  background: #eef7ff;
+  border-left: 5px solid #2980b9;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+*/
+
+/*Hwllo world*/
+
+/* General Styles */
+/* General Styles */
+.interview-report-container {
+  /* max-width: 1000px; */
+  margin: auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5fa;
+  border-radius: 10px;
+}
+
+/* Title */
+.interview-report-title {
+  text-align: center;
+  color: #303160;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Candidate Summary Card */
+.candidate-summary-card {
+  background-color: #e9e8ff;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-style: italic;
+  font-size: 18px;
+  color: #303160;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  border-left: 5px solid #605ca8;
+}
+
+.candidate-summary-text {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Candidate Info Card */
+.candidate-card {
+  width: 100%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
+  border-left: 5px solid #605ca8;
+}
+
+/* Sections Container (Two-Column Layout) */
+.interview-report-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+/* Section Card (Half Width) */
+.section-card {
+  width: calc(50% - 10px);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  border-left: 5px solid #605ca8;
+}
+
+/* Question Card */
+.interview-report-question-card {
+  background-color: #f5f5fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 10px 0;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  border-left: 3px solid #a29bfe;
+}
+
+.interview-report-card-title {
+  background-color: #605ca8;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.interview-report-question-text {
+  font-weight: bold;
+  color: #303160;
+}
+
+.interview-report-answer-text {
+  color: #605ca8;
+  font-weight: bold;
+}
+
+.interview-report-notes-text {
+  font-size: 14px;
+  color: #757575;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .section-card {
+    width: 100%;
+  }
+}
