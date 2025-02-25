@@ -156,9 +156,10 @@ function AllReports() {
 
     let postData = {};
     const employee = [];
+
     if (selectedEmployee && selectedEmployee.length > 0) {
-      selectedEmployee.map((emp) => {
-        employee.push(emp.id);
+      selectedEmployee.map((emp) => {        
+        employee.push(emp.value);
         return emp;
       });
     }

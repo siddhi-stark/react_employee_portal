@@ -92,6 +92,8 @@ function TeamReport() {
 
     let postData = {};
     const employeeList = [];
+    console.log('selectedEmployee', selectedEmployee);
+    
     if (selectedEmployee && selectedEmployee.length > 0) {
       selectedEmployee.map((emp) => {
         team.map((tem) => {
