@@ -225,6 +225,7 @@ const InterviewQuestions = ({ applicant_id: propApplicantId }) => {
                                 ) : null}
                               </ListGroup>
                             </Card.Body>
+                            
                           </Accordion.Collapse>
                         </Card>
                       ))}
