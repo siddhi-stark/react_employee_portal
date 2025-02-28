@@ -22,10 +22,16 @@ function AddWfhNote(props) {
     const [reason, setReason] = useState(null)
     const [oldData, setOldData] = useState(null)
     const [count, forceUpdate] = useState(0)
+    const [currentUser, updateCurrentUser] = useState(0);
 
     useEffect(() => {
         getUserRole();
     }, []);
+
+    const getUserRole = async () => {
+        const roleId = await localStorage.getItem('group');
+        updateCurrentUser(Number(roleId));
+      };
     
     const submitForm = async () => {
         const reasonLabel = statusIds === 1 ? 'approve' : 'decline';
