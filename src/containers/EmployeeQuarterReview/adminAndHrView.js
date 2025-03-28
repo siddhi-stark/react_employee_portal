@@ -37,6 +37,7 @@ function AdminAndHrView() {
       employee_feedback: '',
     }
   ]);
+  console.log("🚀 ~ AdminAndHrView ~ questions:", questions)
   const [formData, setFormData] = useState({
     submission_date: '',
     review_status: 2,
