@@ -812,7 +812,6 @@ function AddFeedback() {
                     variant="secondary"
                     className="h4 m-0 text-black rounded-3"
                     onClick={handleClear}
-                  // disabled={fieldsDisabled}
                   >
                     Cancel
                   </Button>
