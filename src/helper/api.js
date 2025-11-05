@@ -303,10 +303,14 @@ export default class Api extends Component {
   
   // Get base URL of APIs
   static getBaseUrl() {
+    // const env = 'local';
     const env = 'production';
 
     let url = '';
     switch (env) {
+      case 'local':
+        url = 'http://localhost:8000/api/v1/';
+        break;
       case 'production':
         url = 'https://portalsapi.starkdigital.in/api/v1/';
         // url = 'https://stage-portalsapi.starkdigital.in/api/v1/';

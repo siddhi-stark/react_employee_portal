@@ -195,7 +195,7 @@ const Wfh = () => {
       render: ({ id, status_name, reason, start_date, end_date, employee_id, status, duration_type }) => {
         return (
           <>
-            {status_name === 'Pending' && isProjectManager == false ? (
+            {status_name === 'Pending' && (isProjectManager == false || (userRole == 1 && isProjectManager == true)) ? (
               <>
                 <Image
                   title="Accept"
@@ -245,7 +245,7 @@ const Wfh = () => {
       label: 'Action',
       render: ({ id, employee_id, status }) => (
         <>
-          {isProjectManager == false && (<>
+          {(isProjectManager == false || (userRole == 1 )) && (<>
             <a
               href="/"
               className="ml-1"
