@@ -487,6 +487,205 @@ function TeamReport() {
     }
   };
 
+  const handleExportTasks = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.exportTasksUrl}`;
+    
+    const params = {};
+
+    // Add from_date in YYYY-MM-DD format
+    if (fromDate) {
+      params.from_date = customFunctions.getDate(fromDate);
+    }
+
+    // Add to_date in YYYY-MM-DD format
+    if (toDate) {
+      params.to_date = customFunctions.getDate(toDate);
+    }
+
+    // Build employee list and add as comma-separated user_id parameter
+    const employeeList = [];
+    
+    if (selectedEmployee && selectedEmployee.length > 0) {
+      selectedEmployee.map((emp) => {
+        team.map((tem) => {
+          if (tem.id === emp.id) {
+            employeeList.push(tem.employee_id);
+          }
+          return tem;
+        });
+        return emp;
+      });
+    }
+
+    // Add user_id as comma-separated employee IDs (e.g., "1,2,3")
+    if (employeeList.length > 0) {
+      params.user_id = employeeList.join(',');
+    }
+
+    // Clean object to remove empty values
+    const cleanParams = customFunctions.cleanObject(params);
+    const url = customFunctions.generateUrl(endPoint, cleanParams);
+
+    console.log('Export Tasks URL:', url);
+    console.log('Export Tasks params:', cleanParams);
+
+    try {
+      // Get the access token for authentication
+      const token = customFunctions.getLocalStorage('access_token');
+      
+      // Fetch the export response using GET
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      // Check content-type header
+      const contentType = response.headers.get('content-type') || '';
+      
+      // If response is not ok, handle error
+      if (!response.ok) {
+        const clonedResponse = response.clone();
+        
+        // Try to parse as JSON first
+        if (contentType.includes('application/json')) {
+          try {
+            const errorData = await clonedResponse.json();
+            const errorMessage = errorData.message || errorData.error || errorData.detail || JSON.stringify(errorData);
+            setShowLoader(false);
+            swal('Export failed', errorMessage, 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+            return;
+          } catch (e) {
+            const errorText = await response.text();
+            setShowLoader(false);
+            swal('Export failed', errorText || 'Failed to export tasks', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+            return;
+          }
+        } else {
+          const errorText = await response.text();
+          setShowLoader(false);
+          swal('Export failed', errorText || 'Failed to export tasks', 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          });
+          return;
+        }
+      }
+
+      // Parse JSON response
+      if (contentType.includes('application/json')) {
+        const jsonData = await response.json();
+        console.log('Export Tasks Response:', jsonData);
+        
+        // Check if response contains file_path (can be in jsonData.file_path or jsonData.data.file_path)
+        let fileUrl = null;
+        let fileName = 'tasks_time_entries_report.csv';
+        let recordsExported = null;
+        let successMessage = null;
+        
+        // Check nested data structure first (jsonData.data.file_path)
+        if (jsonData.success && jsonData.data && jsonData.data.file_path) {
+          fileUrl = jsonData.data.file_path;
+          recordsExported = jsonData.data.records_exported;
+          successMessage = jsonData.data.message;
+        } else if (jsonData.file_path) {
+          // Check direct file_path
+          fileUrl = jsonData.file_path;
+          recordsExported = jsonData.records_exported;
+          successMessage = jsonData.message;
+        }
+        
+        if (fileUrl) {
+          // If file_path is relative, construct full URL
+          if (!fileUrl.startsWith('http')) {
+            // Extract base domain from baseUrl (remove /api/v1/ or /api/v2/ etc.)
+            const baseUrlStr = Api.baseUrl;
+            // Remove trailing slash and /api/v1/ or similar API path
+            const baseDomain = baseUrlStr.replace(/\/api\/v\d+\/?$/, '').replace(/\/$/, '');
+            
+            // Ensure fileUrl starts with / for proper URL construction
+            const mediaPath = fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
+            fileUrl = `${baseDomain}${mediaPath}`;
+          }
+          
+          // Extract filename from URL
+          try {
+            const urlObj = new URL(fileUrl);
+            const pathParts = urlObj.pathname.split('/');
+            if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+              fileName = pathParts[pathParts.length - 1];
+            }
+          } catch (e) {
+            // If URL parsing fails, try simple split
+            const pathParts = fileUrl.split('/');
+            if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+              fileName = pathParts[pathParts.length - 1];
+            }
+          }
+          
+          console.log('Downloading file from:', fileUrl);
+          
+          // Download the file from the file_path URL
+          const fileResponse = await fetch(fileUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          
+          if (!fileResponse.ok) {
+            throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
+          }
+          
+          // Download the file as blob
+          const blob = await fileResponse.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.setAttribute('download', fileName);
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(blobUrl);
+          
+          setShowLoader(false);
+          const finalMessage = successMessage || `File downloaded successfully. ${recordsExported ? `Records exported: ${recordsExported}` : ''}`;
+          swal('Export successful', finalMessage, 'success');
+          return;
+        }
+        // No file_path in response
+        const errorMessage = (jsonData.data && jsonData.data.message) || jsonData.message || 'Server did not return a file path';
+        setShowLoader(false);
+        swal('Export failed', errorMessage, 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        });
+        return;
+      }
+      // Unexpected response type
+      setShowLoader(false);
+      swal('Export failed', 'Unexpected response format from server', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    } catch (error) {
+      setShowLoader(false);
+      swal('Export failed', error.message || 'Something went wrong', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
   return (
     <>
       <Helmet title={title} />
@@ -559,20 +758,30 @@ function TeamReport() {
                       />
                     </Col>
                       <Row className="mt-3">
-                        <Col sm={3}>
+                        <Col sm={2}>
                       <div className="mt-1">
                         <Button
                           variant="primary"
                           type="button"
                           onClick={() => handleExport()}
                           >
-                          Export
+                          Export Timesheet
                         </Button>
                       </div>
                           </Col>
 
-
-                    <Col sm={9}>
+                        <Col sm={2}>
+                      <div className="mt-1">
+                        <Button
+                          variant="primary"
+                          type="button"
+                          onClick={() => handleExportTasks()}
+                          >
+                          Export Tasks & Bugs
+                        </Button>
+                      </div>
+                    </Col>
+                    <Col sm={8}>
                       <div className="filter-btn pull-right filter-btn-report">
                         <Button
                           variant="primary"
