@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Image, Card } from 'react-bootstrap';
+import { Image, Card, Button, Row, Col } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import SearchFormSections from './searchFormschema.json';
@@ -16,7 +16,6 @@ import Loader from '../../components/Loader/index';
 
 function TeamLeaves() {
   const [currentUser, updateCurrentUser] = useState(0);
-  const teamId = customFunctions.getLocalStorage('team_id');
 
   // Declare columns
   const columns = [
@@ -137,6 +136,7 @@ function TeamLeaves() {
 
   const history = useHistory();
 
+
   const getRowData = async (pageNo = 1) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -201,35 +201,247 @@ function TeamLeaves() {
       end_date: formValues.end_date
         ? customFunctions.getDate(formValues.end_date)
         : '',
-      employee: formValues.full_name ? formValues.full_name.value : '',
+      employee_id: formValues.full_name ? formValues.full_name.value : '',
     };
     setFilterData(filterValues);
   };
 
-  const getEmployeeName = async () => {
-    const { data } = await AuthApi.getDataFromServer(
-      `${Api.employeeUrl}?type=all&is_dropdown=1&team_id=${teamId}`
-    );
-    if (!data) {
-      return;
+  const onClear = () => {
+    if(filterData && !Object.keys(filterData).length) return;
+    setFilterData();
+  };
+
+  const handleExport = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.leaveExportCSVUrl}`;
+    
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
+
+    const params = {};
+
+    // Calculate financial year from date range
+    // Financial year starts from April 1st (e.g., 2024 means April 2024 - March 2025)
+    let financialYear = null;
+    if (filterList.start_date) {
+      const startDate = new Date(filterList.start_date);
+      const month = startDate.getMonth() + 1; // 1-12
+      const year = startDate.getFullYear();
+      // If month is April (4) or later, financial year is current year
+      // If month is Jan-Mar, financial year is previous year
+      if (month >= 4) {
+        financialYear = year;
+      } else {
+        financialYear = year - 1;
+      }
+    } else {
+      // If no date provided, use current financial year
+      const now = new Date();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+      if (month >= 4) {
+        financialYear = year;
+      } else {
+        financialYear = year - 1;
+      }
     }
 
-    const dpOptions = [];
-    data.data.map((op) => {
-      dpOptions.push({ label: op.full_name, value: op.id });
-      return op;
-    });
-    const allOptions = {
-      ...filterOptions,
-      ...options,
-      full_name: dpOptions,
-    };
-    filterOptions = { ...allOptions };
-    updateOptions(allOptions);
+    if (financialYear) {
+      params.year = financialYear;
+    }
+
+    // Add employee parameter (API expects 'employee' not 'employee_id')
+    if (filterList.employee_id) {
+      params.employee = filterList.employee_id;
+    }
+
+    // Add sort parameters (optional, using defaults if not provided)
+    params.sort_by = 'id';
+    params.sort_direction = 'ascending';
+
+    // Clean object to remove empty values
+    const cleanParams = customFunctions.cleanObject(params);
+    const url = customFunctions.generateUrl(endPoint, cleanParams);
+
+    try {
+      // Get the access token for authentication
+      const token = customFunctions.getLocalStorage('access_token');
+
+      // Fetch the export API using GET
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      // Check content-type header first
+      const contentType = response.headers.get('content-type') || '';
+
+      // If response is not ok, handle error
+      if (!response.ok) {
+        const clonedResponse = response.clone();
+
+        // Try to parse as JSON first (API might return JSON error)
+        if (contentType.includes('application/json')) {
+          try {
+            const errorData = await clonedResponse.json();
+            const errorMessage = errorData.message || errorData.error || JSON.stringify(errorData);
+            setShowLoader(false);
+            swal('Export failed', errorMessage, 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+            return;
+          } catch (e) {
+            const errorText = await response.text();
+            setShowLoader(false);
+            swal('Export failed', errorText || 'Failed to download file', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+            return;
+          }
+        } else {
+          const errorText = await response.text();
+          setShowLoader(false);
+          swal('Export failed', errorText || 'Failed to download file', 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          });
+          return;
+        }
+      }
+
+      // API returns JSON with file path
+      if (contentType.includes('application/json')) {
+        const jsonData = await response.json();
+
+        // Check if it's a success response with file path
+        let csvPath = null;
+        let fileName = 'employees_leaves_report.xlsx';
+
+        if (jsonData.success && jsonData.data && jsonData.data.csv_path) {
+          csvPath = jsonData.data.csv_path;
+        }
+
+        if (csvPath) {
+          // Extract filename from path
+          const pathParts = csvPath.split('/');
+          if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+            fileName = pathParts[pathParts.length - 1];
+          }
+
+          // Construct full URL from relative path
+          // csvPath is like "media/static/leave_csv/employees_leaves_report_abcd.xlsx"
+          // Media files are served from domain root, not API path
+          // baseUrl is like "http://localhost:8000/api/v1/" or "https://portalsapi.starkdigital.in/api/v1/"
+          // We need "http://localhost:8000/media/static/leave_csv/..." or "https://portalsapi.starkdigital.in/media/static/leave_csv/..."
+          let fileUrl = csvPath;
+          if (!csvPath.startsWith('http')) {
+            // Extract base domain from baseUrl (remove /api/v1/ or /api/v2/ etc.)
+            const baseUrlStr = Api.baseUrl;
+            
+            // More robust regex to handle various API path patterns
+            // Matches: /api/v1/, /api/v2/, /api/v1, /api/v2, etc.
+            const baseDomain = baseUrlStr.replace(/\/api\/v\d+\/?$/, '').replace(/\/$/, '');
+            
+            // Ensure csvPath starts with / for proper URL construction
+            const mediaPath = csvPath.startsWith('/') ? csvPath : `/${csvPath}`;
+            fileUrl = `${baseDomain}${mediaPath}`;
+          }
+          
+          console.log('Constructed file URL:', fileUrl);
+          console.log('CSV path from API:', csvPath);
+          console.log('Base URL:', Api.baseUrl);
+
+          // Download the file from the URL
+          const fileResponse = await fetch(fileUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (!fileResponse.ok) {
+            throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
+          }
+
+          // Download the file as blob (Excel file)
+          const blob = await fileResponse.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.setAttribute('download', fileName);
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(blobUrl);
+
+          setShowLoader(false);
+          swal('Export successful', 'File downloaded successfully', 'success');
+          return;
+        }
+
+        // JSON response but not a file path - show error
+        const errorMessage = jsonData.message || jsonData.error || jsonData.detail || 'Server returned an unexpected response';
+        setShowLoader(false);
+        swal('Export failed', errorMessage, 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        });
+        return;
+      }
+
+      // If response is not JSON, show error
+      const errorText = await response.text();
+      setShowLoader(false);
+      swal('Export failed', errorText || 'Unexpected response format', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    } catch (error) {
+      setShowLoader(false);
+      swal('Export failed', error.message || 'Something went wrong', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
+  const getEmployee = async () => {
+    const { data } = await AuthApi.getDataFromServer(`${Api.teamUrl}`);
+    if (!customFunctions.checkIfEmpty(data && data.data, 'A')) {
+      // Format team data for dropdown options
+      const dpOptions = [];
+      if (data.data && data.data.length > 0) {
+        data.data.map((op) => {
+          if (op.employee_name && op.employee_id) {
+            dpOptions.push({ label: op.employee_name, value: op.employee_id });
+          }
+          return op;
+        });
+      }
+      
+      const allOptions = {
+        ...filterOptions,
+        ...options,
+        full_name: dpOptions,
+      };
+      filterOptions = { ...allOptions };
+      updateOptions(allOptions);
+      
+      // Return options for form builder callback
+      return dpOptions;
+    }
+    return [];
   };
 
   useEffect(() => {
-    getEmployeeName();
+    getEmployee();
   }, []);
 
   return (
@@ -271,12 +483,14 @@ function TeamLeaves() {
                   if(!formValues.full_name && !formValues.start_date) return;
                   submitForm(formValues);
                 }}
-                callbacks={{}}
+                callbacks={{
+                  getEmployeeName: getEmployee,
+                }}
                 submitBtnText="Apply"
                 showResetBtn={true}
                 resetBtnText="Clear"
                 showBtnClass={false}
-                btnContainerClass="form-submit-buttons pull-right"
+                btnContainerClass="d-none"
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {
@@ -284,6 +498,48 @@ function TeamLeaves() {
                   setFilterData();
                 }}
               />
+              <Row className="mt-3">
+                <Col sm={3}>
+                  <div className="mt-1">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      onClick={() => handleExport()}
+                    >
+                      Export
+                    </Button>
+                  </div>
+                </Col>
+                <Col sm={9}>
+                  <div className="filter-btn pull-right filter-btn-report">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      className="ms-4"
+                      onClick={() => {
+                        // Trigger form submit by finding and clicking the hidden submit button
+                        const form = document.querySelector('.stark-form-builder form');
+                        if (form) {
+                          const submitBtn = form.querySelector('button[type="submit"]');
+                          if (submitBtn) {
+                            submitBtn.click();
+                          }
+                        }
+                      }}
+                    >
+                      Apply
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      type="button"
+                      className="ms-4"
+                      onClick={() => onClear()}
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
             </div>
           </Card.Body>
         </Card>
