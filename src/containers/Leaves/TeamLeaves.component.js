@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Image, Card, Button, Row, Col } from 'react-bootstrap';
+import { Image, Card, Button, Row, Col, Tabs, Tab } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import SearchFormSections from './searchFormschema.json';
@@ -132,14 +132,16 @@ function TeamLeaves() {
   const [isShowLoader, setShowLoader] = useState(false);
   const [filterData, setFilterData] = useState({});
   const [options, updateOptions] = useState({});
+  const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'taken'
   let filterOptions = {};
 
   const history = useHistory();
 
 
-  const getRowData = async (pageNo = 1) => {
+  const getRowData = async (pageNo = 1, tab = null) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
+    const currentTab = tab || activeTab;
     const endPoint = `${Api.leavesUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
@@ -150,8 +152,10 @@ function TeamLeaves() {
       page,
       limit,
       my_team: true,
+      tab: currentTab, // Add tab parameter
       sort_by: 'leave_from_date',
-      sort_direction: 'descending',
+      // Sort direction: ascending for upcoming, descending for taken
+      sort_direction: currentTab === 'upcoming' ? 'ascending' : 'descending',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -191,7 +195,7 @@ function TeamLeaves() {
   useEffect(() => {
     getRowData(1);
     setTitle('Leaves');
-  }, [filterData]);
+  }, [filterData, activeTab]);
 
   const submitForm = async (formValues) => {
     const filterValues = {
@@ -549,23 +553,53 @@ function TeamLeaves() {
               <h5 className="card-title mb-0 mt-2 ">Team Leaves</h5>
             </div>
             <hr />
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              showPagination={true}
-              tableClass="table-striped"
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
+            <Tabs
+              activeKey={activeTab}
+              onSelect={(k) => {
+                setActiveTab(k);
+                setCurrentPage(1); // Reset to first page when switching tabs
               }}
-              emptyRender={() => {
-                return 'No record found.';
-              }}
-            />
+              className="mb-3"
+            >
+              <Tab eventKey="upcoming" title="Upcoming">
+                <CustomTable
+                  columns={columns}
+                  rows={rowData}
+                  showPagination={true}
+                  tableClass="table-striped"
+                  paginationProps={{
+                    totalItems: totalCount,
+                    itemsPerPage: limit,
+                    activePage: currentPage,
+                    onPageChange: (pageNo) => {
+                      getRowData(pageNo, 'upcoming');
+                    },
+                  }}
+                  emptyRender={() => {
+                    return 'No upcoming leaves found.';
+                  }}
+                />
+              </Tab>
+              <Tab eventKey="taken" title="Taken">
+                <CustomTable
+                  columns={columns}
+                  rows={rowData}
+                  showPagination={true}
+                  tableClass="table-striped"
+                  paginationProps={{
+                    totalItems: totalCount,
+                    itemsPerPage: limit,
+                    activePage: currentPage,
+                    onPageChange: (pageNo) => {
+                      getRowData(pageNo, 'taken');
+                    },
+                  }}
+                  emptyRender={() => {
+                    return 'No taken leaves found.';
+                  }}
+                />
+              </Tab>
+            </Tabs>
           </Card.Body>
 
           {modalShow && (
@@ -575,7 +609,7 @@ function TeamLeaves() {
               leaveId={leaveId}
               handleModalCLose={(e) => setModalShow(e)}
               onStatusUpdate={() => {
-                getRowData(1);
+                getRowData(1, activeTab);
               }}
             />
           )}

@@ -165,6 +165,10 @@ export default class Api extends Component {
   static fetchTeamworkDataUrl =
     'https://developmentapi.starkdigital.in/api2/fetch/tw-projects/';
 
+  static projectsMilestonesUrl = `${Api.baseUrl.replace('/api/v1/', '/api2/')}projects-milestones/`;
+
+  static deliverablesUrl = `${Api.baseUrl.replace('/api/v1/', '/api2/')}deliverables/`;
+
   static employeeBondDetailsUrl = `${Api.baseUrl}employee-bond-details/`;
 
   static taskProgressUrl = `${Api.baseUrl}progress-tasks/`;

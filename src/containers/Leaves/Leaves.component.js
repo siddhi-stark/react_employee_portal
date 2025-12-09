@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Image, Card } from 'react-bootstrap';
+import { Image, Card, Tabs, Tab } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
@@ -266,22 +266,32 @@ function Leaves() {
   const [title, setTitle] = useState('');
   const [userRole, setUserRole] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
+  const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'taken'
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
 
   const history = useHistory();
 
-  const getRowData = async (pageNo = 1) => {
+  const getRowData = async (pageNo = 1, tab = null) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
+    const currentTab = tab || activeTab;
     const endPoint = `${Api.leavesUrl}`;
 
     const params = {
       page,
       limit,
       my_leaves: true,
+      tab: currentTab, // Add tab parameter
       sort_by: 'leave_from_date',
-      sort_direction: 'descending',
+      // Sort direction: ascending for upcoming, descending for taken
+      sort_direction: currentTab === 'upcoming' ? 'ascending' : 'descending',
     };
+
+    // For upcoming tab, only show Pending leaves (status = 1)
+    if (currentTab === 'upcoming') {
+      params.status = 1; // Pending status
+    }
+
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -349,7 +359,7 @@ function Leaves() {
           }).then(() => {
             // onCancelButton();
             // onStatusUpdate();
-            getRowData(1);
+            getRowData(1, activeTab);
             swal.close();
           });
         }
@@ -376,7 +386,7 @@ function Leaves() {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        getRowData(1);
+        getRowData(1, activeTab);
         swal.close();
       });
     } else {
@@ -391,9 +401,15 @@ function Leaves() {
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
-    getRowData(1);
     setTitle('Leaves');
+    getRowData(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    getRowData(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   return (
     <>
@@ -423,23 +439,53 @@ function Leaves() {
               </div>
             </div>
             <hr />
-            <CustomTable
-              columns={columns}
-              rows={rowData}
-              tableClass="table-striped"
-              showPagination={true}
-              paginationProps={{
-                totalItems: totalCount,
-                itemsPerPage: limit,
-                activePage: currentPage,
-                onPageChange: (pageNo) => {
-                  getRowData(pageNo);
-                },
+            <Tabs
+              activeKey={activeTab}
+              onSelect={(k) => {
+                setActiveTab(k);
+                setCurrentPage(1); // Reset to first page when switching tabs
               }}
-              emptyRender={() => {
-                return 'No Leaves Applied Yet.';
-              }}
-            />
+              className="mb-3"
+            >
+              <Tab eventKey="upcoming" title="Upcoming">
+                <CustomTable
+                  columns={columns}
+                  rows={rowData}
+                  tableClass="table-striped"
+                  showPagination={true}
+                  paginationProps={{
+                    totalItems: totalCount,
+                    itemsPerPage: limit,
+                    activePage: currentPage,
+                    onPageChange: (pageNo) => {
+                      getRowData(pageNo, 'upcoming');
+                    },
+                  }}
+                  emptyRender={() => {
+                    return 'No upcoming leaves found.';
+                  }}
+                />
+              </Tab>
+              <Tab eventKey="taken" title="Taken">
+                <CustomTable
+                  columns={columns}
+                  rows={rowData}
+                  tableClass="table-striped"
+                  showPagination={true}
+                  paginationProps={{
+                    totalItems: totalCount,
+                    itemsPerPage: limit,
+                    activePage: currentPage,
+                    onPageChange: (pageNo) => {
+                      getRowData(pageNo, 'taken');
+                    },
+                  }}
+                  emptyRender={() => {
+                    return 'No taken leaves found.';
+                  }}
+                />
+              </Tab>
+            </Tabs>
           </Card.Body>
         </Card>
       </section>
