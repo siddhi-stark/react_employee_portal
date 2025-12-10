@@ -13,6 +13,7 @@ import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import UserRestrictions from '../../components/UserRestrictions/userrestrictions.component';
 import AddNote from './AddNote.component';
 import Loader from '../../components/Loader/index';
+import MilestoneInfoModal from './MilestoneInfoModal.component';
 
 function TeamLeaves() {
   const [currentUser, updateCurrentUser] = useState(0);
@@ -90,9 +91,8 @@ function TeamLeaves() {
                 <Image
                   title="Accept"
                   onClick={() => {
-                    setLeaveId(id);
-                    setStatusId(2);
-                    setModalShow(true);
+                    // Check for milestone warnings before showing approval modal
+                    checkMilestoneWarningsBeforeApproval(id, 2);
                   }}
                   alt="Accept"
                   src="/images/success.svg"
@@ -133,6 +133,9 @@ function TeamLeaves() {
   const [filterData, setFilterData] = useState({});
   const [options, updateOptions] = useState({});
   const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'taken'
+  const [milestoneWarnings, setMilestoneWarnings] = useState([]);
+  const [showMilestoneInfo, setShowMilestoneInfo] = useState(false);
+  const [pendingApprovalAction, setPendingApprovalAction] = useState(null);
   let filterOptions = {};
 
   const history = useHistory();
@@ -213,6 +216,49 @@ function TeamLeaves() {
   const onClear = () => {
     if(filterData && !Object.keys(filterData).length) return;
     setFilterData();
+  };
+
+  const checkMilestoneWarningsBeforeApproval = async (leaveIdToCheck, statusIdToSet) => {
+    setShowLoader(true);
+    
+    // Set the leave ID and status ID first
+    setLeaveId(leaveIdToCheck);
+    setStatusId(statusIdToSet);
+    
+    try {
+      // Fetch leave details to check for milestone warnings
+      const { data } = await AuthApi.getDataFromServer(
+        `${Api.leavesUrl}${leaveIdToCheck}/`
+      );
+
+      setShowLoader(false);
+
+      if (data && data.data) {
+        // Check for milestone warnings
+        const warnings = data.data.milestone_warnings;
+
+        if (warnings && Array.isArray(warnings) && warnings.length > 0) {
+          // Milestone warnings found - show info modal first
+          setMilestoneWarnings(warnings);
+          setPendingApprovalAction({ 
+            leaveId: leaveIdToCheck, 
+            statusId: statusIdToSet
+          });
+          setShowMilestoneInfo(true);
+        } else {
+          // No warnings - proceed directly to approval modal
+          setModalShow(true);
+        }
+      } else {
+        // If API fails, proceed to approval modal anyway
+        setModalShow(true);
+      }
+    } catch (error) {
+      setShowLoader(false);
+      console.error('Error checking milestone warnings:', error);
+      // If check fails, proceed to approval modal anyway
+      setModalShow(true);
+    }
   };
 
   const handleExport = async () => {
@@ -601,6 +647,24 @@ function TeamLeaves() {
               </Tab>
             </Tabs>
           </Card.Body>
+
+          {showMilestoneInfo && (
+            <MilestoneInfoModal
+              show={showMilestoneInfo}
+              milestoneWarnings={milestoneWarnings}
+              onClose={() => {
+                setShowMilestoneInfo(false);
+                setMilestoneWarnings([]);
+                // After closing milestone modal, show the approval/decline modal
+                if (pendingApprovalAction) {
+                  setLeaveId(pendingApprovalAction.leaveId);
+                  setStatusId(pendingApprovalAction.statusId);
+                  setModalShow(true);
+                  setPendingApprovalAction(null);
+                }
+              }}
+            />
+          )}
 
           {modalShow && (
             <AddNote

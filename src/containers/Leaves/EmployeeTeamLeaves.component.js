@@ -15,6 +15,7 @@ import UserRestrictions from '../../components/UserRestrictions/userrestrictions
 import AddNote from './AddNote.component';
 import Loader from '../../components/Loader/index';
 import EmployeeLeavesDetails from './EmployeeLeavesDetails.component';
+import MilestoneInfoModal from './MilestoneInfoModal.component';
 
 function EmployeeTeamLeaves(props) {
   const { location } = props;
@@ -147,9 +148,8 @@ function EmployeeTeamLeaves(props) {
                 <Image
                   title="Accept"
                   onClick={() => {
-                    setLeaveId(id);
-                    setStatusId(2);
-                    setModalShow(true);
+                    // Check for milestone warnings before showing approval modal
+                    checkMilestoneWarningsBeforeApproval(id, 2, false);
                   }}
                   alt="Accept"
                   src="/images/success.svg"
@@ -157,9 +157,8 @@ function EmployeeTeamLeaves(props) {
                 <Image
                   title="Declined"
                   onClick={() => {
-                    setLeaveId(id);
-                    setStatusId(3);
-                    setModalShow(true);
+                    // Check for milestone warnings before showing decline modal
+                    checkMilestoneWarningsBeforeApproval(id, 3, false);
                   }}
                   alt="Declined"
                   src="/images/fail.svg"
@@ -185,11 +184,8 @@ function EmployeeTeamLeaves(props) {
                 <Image
                   title="Accept"
                   onClick={() => {
-                    setLeaveId(id);
-                    setStatusId(2);
-                    setRevertStatusId(2);
-                    setIsRevert(true)
-                    setModalShow(true);
+                    // Check for milestone warnings before showing approval modal
+                    checkMilestoneWarningsBeforeApproval(id, 2, true);
                   }}
                   alt="Accept"
                   src="/images/success.svg"
@@ -197,11 +193,8 @@ function EmployeeTeamLeaves(props) {
                 <Image
                   title="Declined"
                   onClick={() => {
-                    setLeaveId(id);
-                    setStatusId(3);
-                    setRevertStatusId(2);
-                    setIsRevert(true)
-                    setModalShow(true);
+                    // Check for milestone warnings before showing decline modal
+                    checkMilestoneWarningsBeforeApproval(id, 3, true);
                   }}
                   alt="Declined"
                   src="/images/fail.svg"
@@ -238,6 +231,9 @@ function EmployeeTeamLeaves(props) {
   const [reportTable, setReportTable] = useState(false);
   const [options, updateOptions] = useState({});
   const [filters, setFilters] = useState({});
+  const [milestoneWarnings, setMilestoneWarnings] = useState([]);
+  const [showMilestoneInfo, setShowMilestoneInfo] = useState(false);
+  const [pendingApprovalAction, setPendingApprovalAction] = useState(null);
   let filterOptions = {};
 
   console.log('revertStatusId', revertStatusId);
@@ -296,6 +292,64 @@ function EmployeeTeamLeaves(props) {
       setReportTable(location && location.reportTable);
     }
   }, [location]);
+
+  const checkMilestoneWarningsBeforeApproval = async (leaveIdToCheck, statusIdToSet, isRevertAction = false) => {
+    console.log('checkMilestoneWarningsBeforeApproval called with:', { leaveIdToCheck, statusIdToSet, isRevertAction });
+    setShowLoader(true);
+    
+    // Set the leave ID and status ID first
+    setLeaveId(leaveIdToCheck);
+    setStatusId(statusIdToSet);
+    if (isRevertAction) {
+      setRevertStatusId(2);
+      setIsRevert(true);
+    }
+    
+    try {
+      // Fetch leave details to check for milestone warnings
+      // Using same pattern as AddLeave.component.js
+      const { data } = await AuthApi.getDataFromServer(
+        `${Api.leavesUrl}${leaveIdToCheck}/`
+      );
+
+      setShowLoader(false);
+
+      console.log('Leave details response:', data);
+
+      if (data && data.data) {
+        // Check for milestone warnings - same structure as AddLeave
+        const warnings = data.data.milestone_warnings;
+
+        console.log('Milestone warnings found:', warnings);
+        console.log('Warnings array check:', Array.isArray(warnings), warnings?.length);
+
+        if (warnings && Array.isArray(warnings) && warnings.length > 0) {
+          // Milestone warnings found - show info modal first
+          console.log('Showing milestone info modal with', warnings.length, 'warnings');
+          setMilestoneWarnings(warnings);
+          setPendingApprovalAction({ 
+            leaveId: leaveIdToCheck, 
+            statusId: statusIdToSet,
+            isRevert: isRevertAction
+          });
+          setShowMilestoneInfo(true);
+        } else {
+          // No warnings - proceed directly to approval modal
+          console.log('No milestone warnings, showing approval modal directly');
+          setModalShow(true);
+        }
+      } else {
+        console.log('Invalid response structure, showing approval modal');
+        // If API fails, proceed to approval modal anyway
+        setModalShow(true);
+      }
+    } catch (error) {
+      setShowLoader(false);
+      console.error('Error checking milestone warnings:', error);
+      // If check fails, proceed to approval modal anyway
+      setModalShow(true);
+    }
+  };
 
   const submitForm = async (formValues) => {
     const filterValues = {
@@ -503,6 +557,28 @@ function EmployeeTeamLeaves(props) {
                 />
               )}
           </Card.Body>
+
+          {showMilestoneInfo && (
+            <MilestoneInfoModal
+              show={showMilestoneInfo}
+              milestoneWarnings={milestoneWarnings}
+              onClose={() => {
+                setShowMilestoneInfo(false);
+                setMilestoneWarnings([]);
+                // After closing milestone modal, show the approval/decline modal
+                if (pendingApprovalAction) {
+                  setLeaveId(pendingApprovalAction.leaveId);
+                  setStatusId(pendingApprovalAction.statusId);
+                  if (pendingApprovalAction.isRevert) {
+                    setRevertStatusId(2);
+                    setIsRevert(true);
+                  }
+                  setModalShow(true);
+                  setPendingApprovalAction(null);
+                }
+              }}
+            />
+          )}
 
           {modalShow && (
             <AddNote

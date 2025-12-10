@@ -67,8 +67,6 @@ function AddNote(props) {
 
     console.log("postData", postData);
 
-    onCancelButton();
-
     swal({
       title: 'Are you sure?',
       text: `You want to ${reasonLabel} the leave ?`,
@@ -79,38 +77,162 @@ function AddNote(props) {
       allowOutsideClick: false,
     }).then(async (result) => {
       if (result) {
-        const { data, message } = await AuthApi.putDataToServer(
-          Api.leavesUrl,
-          postData
-        );
-        console.log("data.message[0]", data.message[0]);
-        console.log("data.message[0]", data);
+        // Close the modal immediately when user confirms
+        setShowNote(false);
+        setReasonNote('');
+        handleModalCLose(false);
+        
+        try {
+          const { data, message } = await AuthApi.putDataToServer(
+            Api.leavesUrl,
+            postData
+          );
+          console.log("API Response:", data);
+          console.log("Message:", message);
 
-
-        if (!data) {
-          swal(message, '', 'error', {
-            closeOnClickOutside: false,
-            allowOutsideClick: false,
-            buttons: false,
-            timer: 2000,
-          }).then(() => {
-            if (isSub) {
-              history.push("/employee-leaves", {})
-            } else {
-              swal.close();
+          // Check if data exists and has success flag (code 200 means success in authApi)
+          if (!data || (data.code !== 200 && data.code !== 201)) {
+            const errorMessage = message || (data && data.message && Array.isArray(data.message) ? data.message[0] : 'Something went wrong. Please try again.');
+            
+            // Normalize error message for checking (ensure errorMessage exists)
+            const normalizedError = (errorMessage || '').toLowerCase();
+            
+            // Check if it's a backend error (500) that might have still processed the request
+            // If data is null, it's almost certainly a server error (500, 502, etc.)
+            const isServerError = !data || // Null data = server error
+                                 (errorMessage && errorMessage.includes('referenced before assignment')) || 
+                                 (errorMessage && errorMessage.includes('Internal Server Error')) ||
+                                 normalizedError.includes('server error') ||
+                                 normalizedError.includes('500') ||
+                                 normalizedError.includes('502') ||
+                                 normalizedError.includes('503');
+            
+            // If leave is already approved/declined, or server error, refresh the list
+            const shouldRefresh = normalizedError.includes('already approved') || 
+                                  normalizedError.includes('already declined') ||
+                                  normalizedError.includes('already') ||
+                                  isServerError;
+            
+            // For server errors, verify if the leave was actually processed by checking its status
+            if (isServerError && leaveIds) {
+              try {
+                // Quickly check the leave status to see if it was updated
+                const { data: leaveData } = await AuthApi.getDataFromServer(
+                  `${Api.leavesUrl}${leaveIds}/`
+                );
+                
+                if (leaveData && leaveData.data) {
+                  const leaveStatus = leaveData.data.status;
+                  const expectedStatus = Number(statusIds);
+                  
+                  // If the leave status matches what we tried to set, it was successful
+                  if (leaveStatus === expectedStatus) {
+                    // Success! The leave was approved/declined despite the error
+                    const successMessage = (leaveData.data.message && Array.isArray(leaveData.data.message)) 
+                      ? leaveData.data.message[0] 
+                      : `Leave ${expectedStatus === 2 ? 'approved' : 'declined'} successfully.`;
+                    
+                    swal(successMessage, '', 'success', {
+                      closeOnClickOutside: false,
+                      allowOutsideClick: false,
+                      buttons: false,
+                      timer: 2000,
+                    }).then(() => {
+                      swal.close();
+                      if (onStatusUpdate) {
+                        onStatusUpdate();
+                      }
+                      if (isSub) {
+                        history.push("/employee-leaves", {});
+                      }
+                    });
+                    return; // Exit early, don't show error
+                  }
+                }
+              } catch (checkError) {
+                // If check fails, proceed with warning message
+                console.error("Error checking leave status:", checkError);
+              }
             }
-          });
-        } else {
-          swal("Leave status change successfully.", '', 'success', {
+            
+            // Show warning for server errors (may have succeeded), error for others
+            const alertType = isServerError ? 'warning' : 'error';
+            const alertTitle = isServerError 
+              ? 'Processing...' 
+              : 'Error';
+            // For server errors, show a simpler message
+            const alertText = isServerError
+              ? 'A server error occurred, but your request may have been processed. Verifying status...'
+              : errorMessage;
+            
+            swal({
+              title: alertTitle,
+              text: alertText,
+              icon: alertType,
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: isServerError ? 2000 : 2000,
+            }).then(() => {
+              swal.close();
+              // Always refresh on server errors or "already approved" type errors
+              if (shouldRefresh && onStatusUpdate) {
+                onStatusUpdate();
+              }
+              if (isSub) {
+                history.push("/employee-leaves", {});
+              }
+            });
+          } else {
+            // Success - use the API response message
+            const successMessage = (data && data.message && Array.isArray(data.message)) 
+              ? data.message[0] 
+              : 'Leave status changed successfully.';
+            
+            swal(successMessage, '', 'success', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+              buttons: false,
+              timer: 2000,
+            }).then(() => {
+              swal.close();
+              // Refresh the leave list
+              if (onStatusUpdate) {
+                onStatusUpdate();
+              }
+              if (isSub) {
+                history.push("/employee-leaves", {});
+              }
+            });
+          }
+        } catch (error) {
+          console.error("Error submitting leave approval:", error);
+          // On 500 errors, the backend might have still processed the request
+          // So we'll show a warning but still refresh to check the actual status
+          const errorMessage = error?.response?.data?.message 
+            ? (Array.isArray(error.response.data.message) ? error.response.data.message[0] : error.response.data.message)
+            : 'An error occurred, but the request may have been processed. Please refresh to verify.';
+          
+          swal({
+            title: 'Warning',
+            text: errorMessage,
+            icon: 'warning',
             closeOnClickOutside: false,
             allowOutsideClick: false,
+            buttons: {
+              confirm: {
+                text: 'OK',
+                value: true,
+              }
+            },
           }).then(() => {
-            onCancelButton();
-            onStatusUpdate();
+            swal.close();
+            // Always refresh on error to check if the operation actually succeeded
+            if (onStatusUpdate) {
+              onStatusUpdate();
+            }
             if (isSub) {
-              history.push("/employee-leaves", {})
-            } else {
-              swal.close();
+              history.push("/employee-leaves", {});
             }
           });
         }
@@ -133,9 +255,11 @@ function AddNote(props) {
     setLeaveId(leaveId);
     setStatusId(statusId);
     // setLeavesPaymentType(leavePaymentType)
-  }, []);
+  }, [show, leaveId, statusId]);
 
   const onCancelButton = () => {
+    setShowNote(false);
+    setReasonNote('');
     handleModalCLose(false);
   };
 

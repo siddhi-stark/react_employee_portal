@@ -12,6 +12,8 @@ import Api from '../../helper/api';
 import customFunctions from '../../helper/customFunctions';
 import Loader from '../../components/Loader/index';
 import AddNote from './AddNote.component';
+import MilestoneWarningModal from './MilestoneWarningModal.component';
+import MilestoneInfoModal from './MilestoneInfoModal.component';
 
 function AddLeave(props) {
   const idProps = props;
@@ -64,6 +66,11 @@ function AddLeave(props) {
   const [leavesMsg, setLeavesMsg] = useState(true);
   const [statusId, setStatusId] = useState('')
   const [modalShow, setModalShow] = useState(false);
+  const [milestoneWarnings, setMilestoneWarnings] = useState([]);
+  const [showMilestoneWarning, setShowMilestoneWarning] = useState(false);
+  const [showMilestoneInfo, setShowMilestoneInfo] = useState(false);
+  const [createdLeaveId, setCreatedLeaveId] = useState(null);
+  const [pendingLeaveFormData, setPendingLeaveFormData] = useState(null);
 
 
   // Get today's date
@@ -257,33 +264,95 @@ function AddLeave(props) {
         ? customFunctions.getDate(defaultValues.leave_to_date)
         : '';
     }
-    const callback = leaveId
-      ? AuthApi.putDataToServer
-      : AuthApi.postDataToServer;
 
-    const endPoint = Api.leavesUrl;
     if (!customFunctions.checkIfEmpty(rowData)) {
-      const { data, message } = await callback(endPoint, postData);
+      setShowLoader(true);
+      
+      // First, validate for milestone warnings using the new validation endpoint
+      const validationData = {
+        leave_from_date: postData.leave_from_date,
+        leave_to_date: postData.leave_to_date,
+      };
 
-      if (!data) {
-        setShowLoader(false);
-        swal(message, '', 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-          buttons: false,
-          timer: 2000,
-        }).then(() => {
-          swal.close();
-        });
-      } else {
-        setShowLoader(false);
-        swal(data && data.message[0], '', 'success', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-        }).then(() => {
-          history.push('/leaves');
-          swal.close();
-        });
+      try {
+        const validationResponse = await AuthApi.postDataToServer(
+          Api.leaveValidateUrl,
+          validationData
+        );
+
+        // Check for milestone warnings
+        if (validationResponse && validationResponse.data) {
+          const responseData = validationResponse.data.data || validationResponse.data;
+          const warnings = responseData?.milestone_warnings;
+
+          if (warnings && Array.isArray(warnings) && warnings.length > 0) {
+            // Milestone warnings found - show warning modal and wait for user decision
+            setShowLoader(false);
+            setMilestoneWarnings(warnings);
+            setPendingLeaveFormData({
+              postData,
+              callback: leaveId ? AuthApi.putDataToServer : AuthApi.postDataToServer,
+              endPoint: Api.leavesUrl,
+            });
+            setShowMilestoneWarning(true);
+            return; // Don't create leave yet, wait for user decision
+          }
+        }
+
+        // No warnings found, proceed directly to create leave
+        const callback = leaveId ? AuthApi.putDataToServer : AuthApi.postDataToServer;
+        const endPoint = Api.leavesUrl;
+        
+        const { data, message } = await callback(endPoint, postData);
+
+        if (!data) {
+          setShowLoader(false);
+          swal(message, '', 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+            buttons: false,
+            timer: 2000,
+          }).then(() => {
+            swal.close();
+          });
+        } else {
+          setShowLoader(false);
+          swal(data && data.message[0], '', 'success', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          }).then(() => {
+            history.push('/leaves');
+            swal.close();
+          });
+        }
+      } catch (error) {
+        // If validation fails, proceed with leave creation anyway
+        setShowLoader(true);
+        const callback = leaveId ? AuthApi.putDataToServer : AuthApi.postDataToServer;
+        const endPoint = Api.leavesUrl;
+        
+        const { data, message } = await callback(endPoint, postData);
+
+        if (!data) {
+          setShowLoader(false);
+          swal(message, '', 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+            buttons: false,
+            timer: 2000,
+          }).then(() => {
+            swal.close();
+          });
+        } else {
+          setShowLoader(false);
+          swal(data && data.message[0], '', 'success', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          }).then(() => {
+            history.push('/leaves');
+            swal.close();
+          });
+        }
       }
     }
   };
@@ -298,6 +367,94 @@ function AddLeave(props) {
       setEndDate(formValues.leave_to_date);
     }
     setFormValuesData(formValues);
+
+    // Check for milestone warnings when "Check task" button is clicked
+    await checkMilestoneWarnings(formValues);
+  };
+
+  const checkMilestoneWarnings = async (formValues) => {
+    setShowLoader(true);
+    
+    // Prepare validation data - only need dates for validation endpoint
+    const validationData = {
+      leave_from_date: formValues.leave_from_date
+        ? customFunctions.getDate(formValues.leave_from_date)
+        : customFunctions.getDate(defaultValues.leave_from_date),
+      leave_to_date:
+        formValues.leave_from_type &&
+          formValues.leave_from_type.value === 'Half Day'
+          ? customFunctions.getDate(formValues.leave_from_date)
+          : customFunctions.getDate(formValues.leave_to_date),
+    };
+
+    try {
+      // Use the new validation endpoint - this does NOT create the leave
+      // Just check for warnings, but don't show dialog on "Check task"
+      const response = await AuthApi.postDataToServer(
+        Api.leaveValidateUrl,
+        validationData
+      );
+
+      setShowLoader(false);
+      
+      // Check response structure - backend returns warnings in data.milestone_warnings
+      // Don't show dialog here - just validate silently for "Check task" button
+      if (response && response.data) {
+        const responseData = response.data.data || response.data;
+        const warnings = responseData?.milestone_warnings;
+        
+        if (warnings && Array.isArray(warnings) && warnings.length > 0) {
+          // Milestone warnings found - but don't show dialog for "Check task"
+          // Dialog will be shown when user clicks "Apply Leave"
+          console.log('Milestone warnings found:', warnings.length);
+        } else {
+          // No warnings found
+          console.log('No milestone warnings found');
+        }
+      }
+    } catch (error) {
+      setShowLoader(false);
+      console.error('Error checking milestone warnings:', error);
+      // If validation fails, continue without showing warnings
+    }
+  };
+
+  const submitPendingLeave = async () => {
+    if (!pendingLeaveFormData) return;
+
+    setShowLoader(true);
+    const { postData, callback, endPoint } = pendingLeaveFormData;
+
+    try {
+      const { data, message } = await callback(endPoint, postData);
+
+      if (!data) {
+        setShowLoader(false);
+        swal(message, '', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+          buttons: false,
+          timer: 2000,
+        }).then(() => {
+          swal.close();
+        });
+        setPendingLeaveFormData(null);
+      } else {
+        setShowLoader(false);
+        setPendingLeaveFormData(null);
+        swal(data && data.message[0], '', 'success', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        }).then(() => {
+          history.push('/leaves');
+          swal.close();
+        });
+      }
+    } catch (error) {
+      setShowLoader(false);
+      setPendingLeaveFormData(null);
+      swal('Error submitting leave. Please try again.', '', 'error');
+    }
   };
 
   const getData = async () => {
@@ -322,6 +479,19 @@ function AddLeave(props) {
       setIsProbation(data.data.is_probation);
       setIsSandwich(data.data.is_sandwich);
 
+      // Check for milestone warnings when viewing/approving leave
+      // For approvers viewing leaves, show read-only info modal
+      // For users applying leaves, show warning modal with action buttons
+      if (data.data.milestone_warnings && data.data.milestone_warnings.length > 0) {
+        setMilestoneWarnings(data.data.milestone_warnings);
+        // If viewing as approver (viewLeaveOptions is true), show info modal
+        // Otherwise show warning modal (for leave application flow)
+        if (viewLeaveOptions) {
+          setShowMilestoneInfo(true);
+        } else {
+          setShowMilestoneWarning(true);
+        }
+      }
     }
 
     updateDefaultValues({
@@ -788,6 +958,51 @@ function AddLeave(props) {
                 handleModalCLose={(e) => setModalShow(e)}
                 onStatusUpdate={() => {
                   getRowData(1);
+                }}
+              />
+            )}
+
+            {showMilestoneInfo && (
+              <MilestoneInfoModal
+                show={showMilestoneInfo}
+                milestoneWarnings={milestoneWarnings}
+                onClose={() => {
+                  setShowMilestoneInfo(false);
+                  setMilestoneWarnings([]);
+                }}
+              />
+            )}
+
+            {showMilestoneWarning && (
+              <MilestoneWarningModal
+                show={showMilestoneWarning}
+                milestoneWarnings={milestoneWarnings}
+                onContinue={async () => {
+                  // User confirmed - now make the actual API call
+                  setShowMilestoneWarning(false);
+                  setMilestoneWarnings([]);
+                  
+                  if (pendingLeaveFormData) {
+                    // Make the actual API call to create/update the leave
+                    await submitPendingLeave();
+                  } else if (createdLeaveId) {
+                    // Leave was already created (fallback case)
+                    setCreatedLeaveId(null);
+                    swal('Leave application created successfully.', '', 'success', {
+                      closeOnClickOutside: false,
+                      allowOutsideClick: false,
+                    }).then(() => {
+                      history.push('/leaves');
+                      swal.close();
+                    });
+                  }
+                }}
+                onCancel={() => {
+                  // User cancelled - no leave was created yet, just clear the pending data
+                  setShowMilestoneWarning(false);
+                  setMilestoneWarnings([]);
+                  setPendingLeaveFormData(null);
+                  setCreatedLeaveId(null);
                 }}
               />
             )}

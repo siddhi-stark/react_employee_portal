@@ -185,6 +185,8 @@ export default class Api extends Component {
 
   static leaveCheckUrl = `${Api.baseUrl}leave-check/`;
 
+  static leaveValidateUrl = `${Api.baseUrl}leave-validate/`;
+
   static workloadUrl = `${Api.baseUrl}workload/`;
 
   static employeeActivityUrl = `${Api.baseUrl}employee-activity/`;
