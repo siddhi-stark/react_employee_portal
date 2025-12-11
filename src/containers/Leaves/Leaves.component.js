@@ -2,8 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Image, Card, Tabs, Tab } from 'react-bootstrap';
+import { Image, Card, Tabs, Tab, Form, Row, Col, Button } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
+import StarkFormBuilder from 'stark-form-builder';
+import MyLeavesFilterSchema from './myLeavesFilterSchema.json';
+import LeaveCalendar from '../../components/LeaveCalendar/LeaveCalendar.component';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -196,12 +199,12 @@ function Leaves() {
                   fontSize: "10px",
                   fontWeight: "bold",
                 }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  // changeStatus(id);
-                  submitForm(id)
-                }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // changeStatus(id);
+                    submitRevertForm(id)
+                  }}
 
               >
                 Apply Revert
@@ -267,24 +270,34 @@ function Leaves() {
   const [userRole, setUserRole] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'taken'
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'table'
+  const [filterData, setFilterData] = useState({});
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  const [calendarView, setCalendarView] = useState('month');
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
 
   const history = useHistory();
 
-  const getRowData = async (pageNo = 1, tab = null) => {
+  const getRowData = async (pageNo = 1, tab = null, forCalendar = false) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
     const currentTab = tab || activeTab;
     const endPoint = `${Api.leavesUrl}`;
 
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
+
     const params = {
-      page,
-      limit,
+      page: forCalendar ? 1 : page,
+      limit: forCalendar ? 1000 : limit, // Get all leaves for calendar view
       my_leaves: true,
       tab: currentTab, // Add tab parameter
       sort_by: 'leave_from_date',
       // Sort direction: ascending for upcoming, descending for taken
       sort_direction: currentTab === 'upcoming' ? 'ascending' : 'descending',
+      ...filterList,
     };
 
     // For upcoming tab, only show Pending leaves (status = 1)
@@ -297,15 +310,17 @@ function Leaves() {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      setTotalCount(data.paginator.total_count);
-      setItemsPerPage(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-      const newData = [...data.data];
-      newData.map((item, i) => {
-        const newItem = item;
-        newItem.index = (page - 1) * itemsPerPage + (i + 1);
-        return newItem;
-      });
+      if (!forCalendar) {
+        setTotalCount(data.paginator.total_count);
+        setItemsPerPage(data.paginator.limit);
+        setCurrentPage(Number(data.paginator.current_page));
+        const newData = [...data.data];
+        newData.map((item, i) => {
+          const newItem = item;
+          newItem.index = (page - 1) * itemsPerPage + (i + 1);
+          return newItem;
+        });
+      }
       setRowData((data && data.data) || []);
     } else {
       setShowLoader(false);
@@ -316,7 +331,7 @@ function Leaves() {
     }
   };
 
-  const submitForm = async (id) => {
+  const submitRevertForm = async (id) => {
     const reasonLabel = id === 2 ? 'approve' : 'decline';
 
     const postData = {
@@ -359,7 +374,7 @@ function Leaves() {
           }).then(() => {
             // onCancelButton();
             // onStatusUpdate();
-            getRowData(1, activeTab);
+            getRowData(1, activeTab, viewMode === 'calendar');
             swal.close();
           });
         }
@@ -386,7 +401,7 @@ function Leaves() {
         closeOnClickOutside: false,
         allowOutsideClick: false,
       }).then(() => {
-        getRowData(1, activeTab);
+        getRowData(1, activeTab, viewMode === 'calendar');
         swal.close();
       });
     } else {
@@ -407,9 +422,54 @@ function Leaves() {
   }, []);
 
   useEffect(() => {
-    getRowData(1);
+    getRowData(1, null, viewMode === 'calendar');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab]);
+  }, [activeTab, filterData, viewMode]);
+
+  const submitForm = (formValues) => {
+    const filterValues = {
+      start_date: formValues.start_date
+        ? customFunctions.getDate(formValues.start_date)
+        : '',
+      end_date: formValues.end_date
+        ? customFunctions.getDate(formValues.end_date)
+        : '',
+    };
+    setFilterData(filterValues);
+    
+    // Auto-navigate calendar to selected date range
+    if (formValues.start_date) {
+      setCalendarDate(new Date(formValues.start_date));
+    }
+  };
+
+  const onClear = () => {
+    if (filterData && !Object.keys(filterData).length) return;
+    setFilterData({});
+    setCalendarDate(new Date());
+  };
+
+  const handleCalendarEventClick = (event) => {
+    const leave = event.resource;
+    const { id, status_name, status } = leave;
+    
+    if (status_name !== 'Pending' || status_name === 'Approved') {
+      history.push(`/edit-leave/${id}`, { isViewLeave: true });
+    } else {
+      history.push(`/edit-leave/${id}`, {
+        isViewLeave: false,
+        isView: 'false',
+      });
+    }
+  };
+
+  const handleCalendarNavigate = (date) => {
+    setCalendarDate(date);
+  };
+
+  const handleCalendarViewChange = (view) => {
+    setCalendarView(view);
+  };
 
   return (
     <>
@@ -423,7 +483,7 @@ function Leaves() {
         <Card>
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
-              <h5 className="card-title mb-0 mt-2 ">Leaves</h5>
+              <h5 className="card-title mb-0 mt-2 ">Filters</h5>
               <div className="d-flex align-items-center justify-content-end">
                 {Number(userRole) !== 1 && (
                   <a
@@ -439,6 +499,87 @@ function Leaves() {
               </div>
             </div>
             <hr />
+            <div className="filter-box-main">
+              <StarkFormBuilder
+                containerClass=""
+                formHeaderClass=""
+                formSections={MyLeavesFilterSchema}
+                options={{}}
+                formHeading=""
+                onFormSubmit={(formValues) => {
+                  if (!formValues.start_date && !formValues.end_date) return;
+                  submitForm(formValues);
+                }}
+                submitBtnText="Apply"
+                showResetBtn={true}
+                resetBtnText="Clear"
+                showBtnClass={false}
+                btnContainerClass="d-none"
+                formClass="row"
+                isStepForm={false}
+                onFormReset={() => {
+                  if (filterData && !Object.keys(filterData).length) return;
+                  onClear();
+                }}
+              />
+              <Row className="mt-3">
+                <Col sm={12}>
+                  <div className="filter-btn pull-right filter-btn-report">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      className="ms-4"
+                      onClick={() => {
+                        const form = document.querySelector('.stark-form-builder form');
+                        if (form) {
+                          const submitBtn = form.querySelector('button[type="submit"]');
+                          if (submitBtn) {
+                            submitBtn.click();
+                          }
+                        }
+                      }}
+                    >
+                      Apply
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      type="button"
+                      className="ms-4"
+                      onClick={() => onClear()}
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
+            </div>
+          </Card.Body>
+        </Card>
+        <Card>
+          <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Leaves</h5>
+              <div className="d-flex align-items-center">
+                <Form.Check
+                  type="checkbox"
+                  id="table-view-toggle"
+                  label="Show Tabular View"
+                  checked={viewMode === 'table'}
+                  onChange={(e) => {
+                    setViewMode(e.target.checked ? 'table' : 'calendar');
+                    if (e.target.checked) {
+                      // When switching to table, fetch paginated data
+                      getRowData(1, null, false);
+                    } else {
+                      // When switching to calendar, fetch all data
+                      getRowData(1, null, true);
+                    }
+                  }}
+                  className="ms-3"
+                />
+              </div>
+            </div>
+            <hr />
             <Tabs
               activeKey={activeTab}
               onSelect={(k) => {
@@ -448,42 +589,66 @@ function Leaves() {
               className="mb-3"
             >
               <Tab eventKey="upcoming" title="Upcoming">
-                <CustomTable
-                  columns={columns}
-                  rows={rowData}
-                  tableClass="table-striped"
-                  showPagination={true}
-                  paginationProps={{
-                    totalItems: totalCount,
-                    itemsPerPage: limit,
-                    activePage: currentPage,
-                    onPageChange: (pageNo) => {
-                      getRowData(pageNo, 'upcoming');
-                    },
-                  }}
-                  emptyRender={() => {
-                    return 'No upcoming leaves found.';
-                  }}
-                />
+                {viewMode === 'calendar' ? (
+                  <LeaveCalendar
+                    leaves={rowData}
+                    onSelectEvent={handleCalendarEventClick}
+                    defaultDate={calendarDate}
+                    view={calendarView}
+                    onViewChange={handleCalendarViewChange}
+                    onNavigate={handleCalendarNavigate}
+                    isTeamView={false}
+                  />
+                ) : (
+                  <CustomTable
+                    columns={columns}
+                    rows={rowData}
+                    tableClass="table-striped"
+                    showPagination={true}
+                    paginationProps={{
+                      totalItems: totalCount,
+                      itemsPerPage: limit,
+                      activePage: currentPage,
+                      onPageChange: (pageNo) => {
+                        getRowData(pageNo, 'upcoming');
+                      },
+                    }}
+                    emptyRender={() => {
+                      return 'No upcoming leaves found.';
+                    }}
+                  />
+                )}
               </Tab>
               <Tab eventKey="taken" title="Taken">
-                <CustomTable
-                  columns={columns}
-                  rows={rowData}
-                  tableClass="table-striped"
-                  showPagination={true}
-                  paginationProps={{
-                    totalItems: totalCount,
-                    itemsPerPage: limit,
-                    activePage: currentPage,
-                    onPageChange: (pageNo) => {
-                      getRowData(pageNo, 'taken');
-                    },
-                  }}
-                  emptyRender={() => {
-                    return 'No taken leaves found.';
-                  }}
-                />
+                {viewMode === 'calendar' ? (
+                  <LeaveCalendar
+                    leaves={rowData}
+                    onSelectEvent={handleCalendarEventClick}
+                    defaultDate={calendarDate}
+                    view={calendarView}
+                    onViewChange={handleCalendarViewChange}
+                    onNavigate={handleCalendarNavigate}
+                    isTeamView={false}
+                  />
+                ) : (
+                  <CustomTable
+                    columns={columns}
+                    rows={rowData}
+                    tableClass="table-striped"
+                    showPagination={true}
+                    paginationProps={{
+                      totalItems: totalCount,
+                      itemsPerPage: limit,
+                      activePage: currentPage,
+                      onPageChange: (pageNo) => {
+                        getRowData(pageNo, 'taken');
+                      },
+                    }}
+                    emptyRender={() => {
+                      return 'No taken leaves found.';
+                    }}
+                  />
+                )}
               </Tab>
             </Tabs>
           </Card.Body>

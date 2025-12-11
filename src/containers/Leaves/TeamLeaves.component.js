@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Image, Card, Button, Row, Col, Tabs, Tab } from 'react-bootstrap';
+import { Image, Card, Button, Row, Col, Tabs, Tab, Form, Modal } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import SearchFormSections from './searchFormschema.json';
+import LeaveCalendar from '../../components/LeaveCalendar/LeaveCalendar.component';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -133,15 +134,20 @@ function TeamLeaves() {
   const [filterData, setFilterData] = useState({});
   const [options, updateOptions] = useState({});
   const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'taken'
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'table'
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  const [calendarView, setCalendarView] = useState('month');
   const [milestoneWarnings, setMilestoneWarnings] = useState([]);
   const [showMilestoneInfo, setShowMilestoneInfo] = useState(false);
   const [pendingApprovalAction, setPendingApprovalAction] = useState(null);
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [selectedLeaveId, setSelectedLeaveId] = useState(null);
   let filterOptions = {};
 
   const history = useHistory();
 
 
-  const getRowData = async (pageNo = 1, tab = null) => {
+  const getRowData = async (pageNo = 1, tab = null, forCalendar = false) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
     const currentTab = tab || activeTab;
@@ -152,8 +158,8 @@ function TeamLeaves() {
         : {};
 
     const params = {
-      page,
-      limit,
+      page: forCalendar ? 1 : page,
+      limit: forCalendar ? 1000 : limit, // Get all leaves for calendar view
       my_team: true,
       tab: currentTab, // Add tab parameter
       sort_by: 'leave_from_date',
@@ -166,15 +172,17 @@ function TeamLeaves() {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.data && data.success) {
       setShowLoader(false);
-      setTotalCount(data.paginator.total_count);
-      setItemsPerPage(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-      const newData = [...data.data];
-      newData.map((item, i) => {
-        const newItem = item;
-        newItem.index = (page - 1) * itemsPerPage + (i + 1);
-        return newItem;
-      });
+      if (!forCalendar) {
+        setTotalCount(data.paginator.total_count);
+        setItemsPerPage(data.paginator.limit);
+        setCurrentPage(Number(data.paginator.current_page));
+        const newData = [...data.data];
+        newData.map((item, i) => {
+          const newItem = item;
+          newItem.index = (page - 1) * itemsPerPage + (i + 1);
+          return newItem;
+        });
+      }
       setRowData((data && data.data) || []);
     } else {
       setShowLoader(false);
@@ -196,9 +204,9 @@ function TeamLeaves() {
   }, []);
 
   useEffect(() => {
-    getRowData(1);
+    getRowData(1, null, viewMode === 'calendar');
     setTitle('Leaves');
-  }, [filterData, activeTab]);
+  }, [filterData, activeTab, viewMode]);
 
   const submitForm = async (formValues) => {
     const filterValues = {
@@ -211,11 +219,58 @@ function TeamLeaves() {
       employee_id: formValues.full_name ? formValues.full_name.value : '',
     };
     setFilterData(filterValues);
+    
+    // Auto-navigate calendar to selected date range
+    if (formValues.start_date) {
+      setCalendarDate(new Date(formValues.start_date));
+    }
   };
 
   const onClear = () => {
     if(filterData && !Object.keys(filterData).length) return;
-    setFilterData();
+    setFilterData({});
+    setCalendarDate(new Date());
+  };
+
+  const handleCalendarEventClick = (event) => {
+    const leave = event.resource;
+    const { id, status_name } = leave;
+    
+    // For Team Leaves, if status is Pending, show accept/decline options
+    if (status_name === 'Pending') {
+      // Show action choice modal
+      setSelectedLeaveId(id);
+      setShowActionModal(true);
+    } else {
+      // For non-pending leaves, navigate to view page
+      history.push(`/view-leave/${id}`, {
+        isView: 'true',
+        isViewLeave: true,
+      });
+    }
+  };
+
+  const handleApproveClick = () => {
+    setShowActionModal(false);
+    // Check for milestone warnings before showing approval modal
+    checkMilestoneWarningsBeforeApproval(selectedLeaveId, 2);
+    setSelectedLeaveId(null);
+  };
+
+  const handleDeclineClick = () => {
+    setShowActionModal(false);
+    setLeaveId(selectedLeaveId);
+    setStatusId(3);
+    setModalShow(true);
+    setSelectedLeaveId(null);
+  };
+
+  const handleCalendarNavigate = (date) => {
+    setCalendarDate(date);
+  };
+
+  const handleCalendarViewChange = (view) => {
+    setCalendarView(view);
   };
 
   const checkMilestoneWarningsBeforeApproval = async (leaveIdToCheck, statusIdToSet) => {
@@ -597,6 +652,25 @@ function TeamLeaves() {
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title mb-0 mt-2 ">Team Leaves</h5>
+              <div className="d-flex align-items-center">
+                <Form.Check
+                  type="checkbox"
+                  id="team-table-view-toggle"
+                  label="Show Tabular View"
+                  checked={viewMode === 'table'}
+                  onChange={(e) => {
+                    setViewMode(e.target.checked ? 'table' : 'calendar');
+                    if (e.target.checked) {
+                      // When switching to table, fetch paginated data
+                      getRowData(1, null, false);
+                    } else {
+                      // When switching to calendar, fetch all data
+                      getRowData(1, null, true);
+                    }
+                  }}
+                  className="ms-3"
+                />
+              </div>
             </div>
             <hr />
             <Tabs
@@ -608,42 +682,66 @@ function TeamLeaves() {
               className="mb-3"
             >
               <Tab eventKey="upcoming" title="Upcoming">
-                <CustomTable
-                  columns={columns}
-                  rows={rowData}
-                  showPagination={true}
-                  tableClass="table-striped"
-                  paginationProps={{
-                    totalItems: totalCount,
-                    itemsPerPage: limit,
-                    activePage: currentPage,
-                    onPageChange: (pageNo) => {
-                      getRowData(pageNo, 'upcoming');
-                    },
-                  }}
-                  emptyRender={() => {
-                    return 'No upcoming leaves found.';
-                  }}
-                />
+                {viewMode === 'calendar' ? (
+                  <LeaveCalendar
+                    leaves={rowData}
+                    onSelectEvent={handleCalendarEventClick}
+                    defaultDate={calendarDate}
+                    view={calendarView}
+                    onViewChange={handleCalendarViewChange}
+                    onNavigate={handleCalendarNavigate}
+                    isTeamView={true}
+                  />
+                ) : (
+                  <CustomTable
+                    columns={columns}
+                    rows={rowData}
+                    showPagination={true}
+                    tableClass="table-striped"
+                    paginationProps={{
+                      totalItems: totalCount,
+                      itemsPerPage: limit,
+                      activePage: currentPage,
+                      onPageChange: (pageNo) => {
+                        getRowData(pageNo, 'upcoming');
+                      },
+                    }}
+                    emptyRender={() => {
+                      return 'No upcoming leaves found.';
+                    }}
+                  />
+                )}
               </Tab>
               <Tab eventKey="taken" title="Taken">
-                <CustomTable
-                  columns={columns}
-                  rows={rowData}
-                  showPagination={true}
-                  tableClass="table-striped"
-                  paginationProps={{
-                    totalItems: totalCount,
-                    itemsPerPage: limit,
-                    activePage: currentPage,
-                    onPageChange: (pageNo) => {
-                      getRowData(pageNo, 'taken');
-                    },
-                  }}
-                  emptyRender={() => {
-                    return 'No taken leaves found.';
-                  }}
-                />
+                {viewMode === 'calendar' ? (
+                  <LeaveCalendar
+                    leaves={rowData}
+                    onSelectEvent={handleCalendarEventClick}
+                    defaultDate={calendarDate}
+                    view={calendarView}
+                    onViewChange={handleCalendarViewChange}
+                    onNavigate={handleCalendarNavigate}
+                    isTeamView={true}
+                  />
+                ) : (
+                  <CustomTable
+                    columns={columns}
+                    rows={rowData}
+                    showPagination={true}
+                    tableClass="table-striped"
+                    paginationProps={{
+                      totalItems: totalCount,
+                      itemsPerPage: limit,
+                      activePage: currentPage,
+                      onPageChange: (pageNo) => {
+                        getRowData(pageNo, 'taken');
+                      },
+                    }}
+                    emptyRender={() => {
+                      return 'No taken leaves found.';
+                    }}
+                  />
+                )}
               </Tab>
             </Tabs>
           </Card.Body>
@@ -673,9 +771,45 @@ function TeamLeaves() {
               leaveId={leaveId}
               handleModalCLose={(e) => setModalShow(e)}
               onStatusUpdate={() => {
-                getRowData(1, activeTab);
+                getRowData(1, activeTab, viewMode === 'calendar');
               }}
             />
+          )}
+
+          {showActionModal && (
+            <Modal
+              show={showActionModal}
+              onHide={() => {
+                setShowActionModal(false);
+                setSelectedLeaveId(null);
+              }}
+              centered
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Leave Action</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>Choose an action for this leave:</p>
+                <div className="d-flex justify-content-around mt-3">
+                  <Button
+                    variant="success"
+                    onClick={handleApproveClick}
+                    className="px-4"
+                  >
+                    <Image src="/images/success.svg" className="me-2" style={{ width: '20px', height: '20px' }} />
+                    Approve
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={handleDeclineClick}
+                    className="px-4"
+                  >
+                    <Image src="/images/fail.svg" className="me-2" style={{ width: '20px', height: '20px' }} />
+                    Decline
+                  </Button>
+                </div>
+              </Modal.Body>
+            </Modal>
           )}
         </Card>
       </section>

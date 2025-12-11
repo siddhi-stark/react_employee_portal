@@ -1,0 +1,89 @@
+[
+  {
+    "sectionName": "myLeavesFilter",
+    "sectionTitle": "myLeavesFilter",
+    "layout": { "label": "2 Column", "value": "2column" },
+    "containerClass": "",
+    "displaySection": true,
+    "displaySectionTitle": false,
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "date",
+        "label": "",
+        "id": "",
+        "placeholder": "Select from date",
+        "inputClass": "",
+        "containerClass": "",
+        "dateFormat": "dd/MM/yyyy",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              { "name": "end_date", "value": "end_date", "condition": "!empty" }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      },
+      {
+        "name": "end_date",
+        "type": "date",
+        "label": "",
+        "id": "",
+        "placeholder": "Select to date",
+        "inputClass": "",
+        "containerClass": "",
+        "dateFormat": "dd/MM/yyyy",
+        "validations": [
+          {
+            "type": "required",
+            "applyWhen": [
+              {
+                "name": "start_date",
+                "value": "start_date",
+                "condition": "!empty"
+              }
+            ],
+            "applyWhenRelation": "OR"
+          }
+        ],
+        "displayWhen": {},
+        "haveValidations": "true",
+        "haveDisplayOptions": "false",
+        "callback": "",
+        "callbackUrl": "",
+        "inputToChange": "",
+        "minDateSelector": "start_date",
+        "maxDateSelector": "",
+        "disabled": false,
+        "isMulti": false,
+        "allowedUsers": [],
+        "fieldsToReset": [],
+        "fieldLayout": { "label": "1 Column", "value": "1column" },
+        "fields": [],
+        "optionCallback": "",
+        "options": []
+      }
+    ],
+    "allowedUsers": [],
+    "sectionLayout": "2column"
+  }
+]
+
