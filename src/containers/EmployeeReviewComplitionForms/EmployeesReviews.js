@@ -44,14 +44,14 @@ const EmployeeReviews = () => {
   }, []);
 
   useEffect(() => {
-    if (userId && detailsKeys === "personalInfo") {
+    if (userId && userRole !== null && detailsKeys === "personalInfo") {
       getRowData();
-    } else if (userId && detailsKeys === "empReviewsInfo") {
+    } else if (userId && userRole !== null && detailsKeys === "empReviewsInfo") {
       getTraineeData(1)
-    } else if (userId && detailsKeys === "empProbationReviewsInfo") {
+    } else if (userId && userRole !== null && detailsKeys === "empProbationReviewsInfo") {
       getProbationData(1)
     }
-  }, [userId, detailsKeys]);
+  }, [userId, userRole, detailsKeys]);
 
   useEffect(() => {
     setTitle("Employees WFH")
@@ -434,16 +434,19 @@ const EmployeeReviews = () => {
     };
     console.log("detailsKeys", detailsKeys);
 
-    if (detailsKeys === "personalInfo") {
-      params.employee = userId
-    } else {
-      params.reviewer = userId
+    // Only apply user-based filters if not superadmin (role_id = 1)
+    if (userRole !== 1) {
+      if (detailsKeys === "personalInfo") {
+        params.employee = userId
+      } else {
+        params.reviewer = userId
+      }
     }
     if (selectedDate) {
       params.review_date = customFunctions.getDate(selectedDate)
     }
 
-    if (selectedEmployeeId && detailsKeys !== "personalInfo") {
+    if (selectedEmployeeId && detailsKeys !== "personalInfo" && selectedEmployeeId !== 'all_employess') {
       params.employee = Number(selectedEmployeeId)
     }
 
@@ -489,16 +492,19 @@ const EmployeeReviews = () => {
       is_only_trainee_data: true
     };
 
-    if (detailsKeys === "personalInfo") {
-      params.employee = userId
-    } else {
-      params.reviewer = userId
+    // Only apply user-based filters if not superadmin (role_id = 1)
+    if (userRole !== 1) {
+      if (detailsKeys === "personalInfo") {
+        params.employee = userId
+      } else {
+        params.reviewer = userId
+      }
     }
     if (selectedDate) {
       params.review_date = customFunctions.getDate(selectedDate)
     }
 
-    if (selectedEmployeeId && detailsKeys !== "personalInfo") {
+    if (selectedEmployeeId && detailsKeys !== "personalInfo" && selectedEmployeeId !== 'all_employess') {
       params.employee = Number(selectedEmployeeId)
     }
 
@@ -551,16 +557,19 @@ const EmployeeReviews = () => {
     };
     console.log("detailsKeys", detailsKeys);
 
-    if (detailsKeys === "personalInfo") {
-      params.employee = userId
-    } else {
-      params.reviewer = userId
+    // Only apply user-based filters if not superadmin (role_id = 1)
+    if (userRole !== 1) {
+      if (detailsKeys === "personalInfo") {
+        params.employee = userId
+      } else {
+        params.reviewer = userId
+      }
     }
     if (selectedDate) {
       params.review_date = customFunctions.getDate(selectedDate)
     }
 
-    if (selectedEmployeeId && detailsKeys !== "personalInfo") {
+    if (selectedEmployeeId && detailsKeys !== "personalInfo" && selectedEmployeeId !== 'all_employess') {
       params.employee = Number(selectedEmployeeId)
     }
 
@@ -606,7 +615,13 @@ const EmployeeReviews = () => {
 
   const applyFilters = () => {
     setCurrentPage(1);
-    getRowData(1);
+    if (detailsKeys === "personalInfo") {
+      getRowData(1);
+    } else if (detailsKeys === "empReviewsInfo") {
+      getTraineeData(1);
+    } else if (detailsKeys === "empProbationReviewsInfo") {
+      getProbationData(1);
+    }
   };
 
   return (
