@@ -274,6 +274,7 @@ function Leaves() {
   const [filterData, setFilterData] = useState({});
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [calendarView, setCalendarView] = useState('month');
+  const [holidays, setHolidays] = useState([]);
   const items = [{ to: '/', label: 'Home' }, { label: 'Leaves' }];
 
   const history = useHistory();
@@ -413,11 +414,25 @@ function Leaves() {
     }
   };
 
+  // Fetch holidays
+  const getHolidays = async () => {
+    try {
+      const endPoint = `${Api.holidayUrll}?type=all`;
+      const { data } = await AuthApi.getDataFromServer(endPoint);
+      if (data && data.data && data.success) {
+        setHolidays(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching holidays:', error);
+    }
+  };
+
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
     setTitle('Leaves');
     getRowData(1);
+    getHolidays();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -592,6 +607,7 @@ function Leaves() {
                 {viewMode === 'calendar' ? (
                   <LeaveCalendar
                     leaves={rowData}
+                    holidays={holidays}
                     onSelectEvent={handleCalendarEventClick}
                     defaultDate={calendarDate}
                     view={calendarView}
@@ -623,6 +639,7 @@ function Leaves() {
                 {viewMode === 'calendar' ? (
                   <LeaveCalendar
                     leaves={rowData}
+                    holidays={holidays}
                     onSelectEvent={handleCalendarEventClick}
                     defaultDate={calendarDate}
                     view={calendarView}

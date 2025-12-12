@@ -2,13 +2,26 @@ import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { ModalInput } from '../../components/FormInputs';
 
-function MilestoneInfoModal({ show, milestoneWarnings, onClose }) {
+function MilestoneInfoModal({ show, milestoneWarnings, applicantName, onClose }) {
   // Format date to "Dec 18, 2025" format
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return date.toLocaleDateString('en-US', options);
+  };
+
+  // Determine the message based on whether applicant name is provided (team lead view)
+  const getWarningMessage = () => {
+    const milestoneCount = milestoneWarnings?.length || 0;
+    const milestoneText = milestoneCount === 1 ? 'milestone' : 'milestones';
+    
+    if (applicantName) {
+      // Team lead view - show applicant name
+      return `${applicantName} have ${milestoneCount} ${milestoneText} scheduled around the leave dates:`;
+    }
+    // Applicant view - show "You have"
+    return `You have ${milestoneCount} ${milestoneText} scheduled around your leave dates:`;
   };
 
   return (
@@ -32,8 +45,7 @@ function MilestoneInfoModal({ show, milestoneWarnings, onClose }) {
         <>
           <div className="mb-3">
             <p className="mb-2">
-              You have {milestoneWarnings?.length || 0} milestone
-              {milestoneWarnings?.length !== 1 ? 's' : ''} scheduled around your leave dates:
+              {getWarningMessage()}
             </p>
             <ListGroup>
               {milestoneWarnings?.map((milestone, index) => (

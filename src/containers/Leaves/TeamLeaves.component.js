@@ -140,8 +140,10 @@ function TeamLeaves() {
   const [milestoneWarnings, setMilestoneWarnings] = useState([]);
   const [showMilestoneInfo, setShowMilestoneInfo] = useState(false);
   const [pendingApprovalAction, setPendingApprovalAction] = useState(null);
+  const [applicantName, setApplicantName] = useState('');
   const [showActionModal, setShowActionModal] = useState(false);
   const [selectedLeaveId, setSelectedLeaveId] = useState(null);
+  const [holidays, setHolidays] = useState([]);
   let filterOptions = {};
 
   const history = useHistory();
@@ -201,6 +203,23 @@ function TeamLeaves() {
 
   useEffect(() => {
     getUserRole();
+  }, []);
+
+  // Fetch holidays
+  const getHolidays = async () => {
+    try {
+      const endPoint = `${Api.holidayUrll}?type=all`;
+      const { data } = await AuthApi.getDataFromServer(endPoint);
+      if (data && data.data && data.success) {
+        setHolidays(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching holidays:', error);
+    }
+  };
+
+  useEffect(() => {
+    getHolidays();
   }, []);
 
   useEffect(() => {
@@ -291,10 +310,13 @@ function TeamLeaves() {
       if (data && data.data) {
         // Check for milestone warnings
         const warnings = data.data.milestone_warnings;
+        // Get applicant name from leave data
+        const applicant = data.data.user_name || '';
 
         if (warnings && Array.isArray(warnings) && warnings.length > 0) {
           // Milestone warnings found - show info modal first
           setMilestoneWarnings(warnings);
+          setApplicantName(applicant);
           setPendingApprovalAction({ 
             leaveId: leaveIdToCheck, 
             statusId: statusIdToSet
@@ -685,6 +707,7 @@ function TeamLeaves() {
                 {viewMode === 'calendar' ? (
                   <LeaveCalendar
                     leaves={rowData}
+                    holidays={holidays}
                     onSelectEvent={handleCalendarEventClick}
                     defaultDate={calendarDate}
                     view={calendarView}
@@ -716,6 +739,7 @@ function TeamLeaves() {
                 {viewMode === 'calendar' ? (
                   <LeaveCalendar
                     leaves={rowData}
+                    holidays={holidays}
                     onSelectEvent={handleCalendarEventClick}
                     defaultDate={calendarDate}
                     view={calendarView}
@@ -750,9 +774,11 @@ function TeamLeaves() {
             <MilestoneInfoModal
               show={showMilestoneInfo}
               milestoneWarnings={milestoneWarnings}
+              applicantName={applicantName}
               onClose={() => {
                 setShowMilestoneInfo(false);
                 setMilestoneWarnings([]);
+                setApplicantName('');
                 // After closing milestone modal, show the approval/decline modal
                 if (pendingApprovalAction) {
                   setLeaveId(pendingApprovalAction.leaveId);

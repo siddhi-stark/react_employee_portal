@@ -167,6 +167,91 @@
   cursor: pointer;
 }
 
+/* Holiday day cell backgrounds */
+.leave-calendar-container .rbc-day-bg.holiday-day.mandatory-holiday {
+  background-color: #ff9999 !important;
+}
+
+.leave-calendar-container .rbc-day-bg.holiday-day.optional-holiday {
+  background-color: #ffcc99 !important;
+}
+
+.leave-calendar-container .rbc-day-slot.holiday-day.mandatory-holiday {
+  background-color: #ff9999 !important;
+}
+
+.leave-calendar-container .rbc-day-slot.holiday-day.optional-holiday {
+  background-color: #ffcc99 !important;
+}
+
+/* Holiday date cell text colors - target date cells in rows with holiday days */
+.leave-calendar-container .rbc-month-row:has(.mandatory-holiday) .rbc-date-cell a {
+  color: #8b0000 !important;
+  font-weight: 600 !important;
+}
+
+.leave-calendar-container .rbc-month-row:has(.optional-holiday) .rbc-date-cell a {
+  color: #cc6600 !important;
+  font-weight: 600 !important;
+}
+
+/* Fallback for browsers that don't support :has() - target date cells adjacent to holiday days */
+.leave-calendar-container .rbc-day-bg.mandatory-holiday ~ .rbc-date-cell a,
+.leave-calendar-container .rbc-day-bg.mandatory-holiday + .rbc-date-cell a {
+  color: #8b0000 !important;
+  font-weight: 600 !important;
+}
+
+.leave-calendar-container .rbc-day-bg.optional-holiday ~ .rbc-date-cell a,
+.leave-calendar-container .rbc-day-bg.optional-holiday + .rbc-date-cell a {
+  color: #cc6600 !important;
+  font-weight: 600 !important;
+}
+
+/* Direct targeting for date cells within holiday day containers */
+.leave-calendar-container .rbc-day-bg.mandatory-holiday .rbc-date-cell a,
+.leave-calendar-container .mandatory-holiday .rbc-date-cell a {
+  color: #8b0000 !important;
+  font-weight: 600 !important;
+}
+
+.leave-calendar-container .rbc-day-bg.optional-holiday .rbc-date-cell a,
+.leave-calendar-container .optional-holiday .rbc-date-cell a {
+  color: #cc6600 !important;
+  font-weight: 600 !important;
+}
+
+/* Holiday event labels - semi-transparent backgrounds for readability */
+.leave-calendar-container .rbc-event.holiday-event {
+  font-weight: 600;
+  cursor: default !important;
+}
+
+.leave-calendar-container .rbc-event.holiday-type-1 {
+  background-color: #ff9999 !important;
+  color: #8b0000 !important;
+  border-color: #ff9999 !important;
+  cursor: default !important;
+}
+
+.leave-calendar-container .rbc-event.holiday-type-2 {
+  background-color: #ffcc99 !important;
+  color: #cc6600 !important;
+  border-color: #ffcc99 !important;
+  cursor: default !important;
+}
+
+/* Holiday event readonly styling - allow hover for tooltips but prevent clicks */
+.leave-calendar-container .holiday-event-readonly {
+  cursor: default !important;
+}
+
+/* Prevent holiday events from being clickable */
+.leave-calendar-container .rbc-event.holiday-event:hover {
+  opacity: 1 !important;
+  z-index: 1 !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .leave-calendar-container .rbc-calendar {

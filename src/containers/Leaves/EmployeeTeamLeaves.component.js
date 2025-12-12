@@ -234,6 +234,7 @@ function EmployeeTeamLeaves(props) {
   const [milestoneWarnings, setMilestoneWarnings] = useState([]);
   const [showMilestoneInfo, setShowMilestoneInfo] = useState(false);
   const [pendingApprovalAction, setPendingApprovalAction] = useState(null);
+  const [applicantName, setApplicantName] = useState('');
   let filterOptions = {};
 
   console.log('revertStatusId', revertStatusId);
@@ -319,6 +320,8 @@ function EmployeeTeamLeaves(props) {
       if (data && data.data) {
         // Check for milestone warnings - same structure as AddLeave
         const warnings = data.data.milestone_warnings;
+        // Get applicant name from leave data
+        const applicant = data.data.user_name || '';
 
         console.log('Milestone warnings found:', warnings);
         console.log('Warnings array check:', Array.isArray(warnings), warnings?.length);
@@ -327,6 +330,7 @@ function EmployeeTeamLeaves(props) {
           // Milestone warnings found - show info modal first
           console.log('Showing milestone info modal with', warnings.length, 'warnings');
           setMilestoneWarnings(warnings);
+          setApplicantName(applicant);
           setPendingApprovalAction({ 
             leaveId: leaveIdToCheck, 
             statusId: statusIdToSet,
@@ -562,9 +566,11 @@ function EmployeeTeamLeaves(props) {
             <MilestoneInfoModal
               show={showMilestoneInfo}
               milestoneWarnings={milestoneWarnings}
+              applicantName={applicantName}
               onClose={() => {
                 setShowMilestoneInfo(false);
                 setMilestoneWarnings([]);
+                setApplicantName('');
                 // After closing milestone modal, show the approval/decline modal
                 if (pendingApprovalAction) {
                   setLeaveId(pendingApprovalAction.leaveId);

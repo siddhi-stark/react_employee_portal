@@ -9,6 +9,7 @@ const localizer = momentLocalizer(moment);
 
 function LeaveCalendar({
   leaves = [],
+  holidays = [],
   onSelectEvent,
   defaultDate = new Date(),
   view = 'month',
@@ -19,8 +20,46 @@ function LeaveCalendar({
   const [currentView, setCurrentView] = useState(view);
   const [currentDate, setCurrentDate] = useState(defaultDate);
 
+  // Get current month boundaries for filtering holidays
+  const currentMonthStart = useMemo(() => {
+    return moment(currentDate).startOf('month').toDate();
+  }, [currentDate]);
+
+  const currentMonthEnd = useMemo(() => {
+    return moment(currentDate).endOf('month').toDate();
+  }, [currentDate]);
+
+  // Transform holidays data to calendar events
+  const holidayEvents = useMemo(() => {
+    return holidays
+      .filter((holiday) => {
+        const holidayDate = new Date(holiday.date);
+        // Only include holidays in the current month view
+        return holidayDate >= currentMonthStart && holidayDate <= currentMonthEnd;
+      })
+      .map((holiday) => {
+        const holidayDate = new Date(holiday.date);
+        holidayDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(holidayDate);
+        endDate.setHours(23, 59, 59, 999);
+
+        return {
+          id: `holiday-${holiday.id}`,
+          title: holiday.occasion || 'Holiday',
+          start: holidayDate,
+          end: endDate,
+          resource: {
+            ...holiday,
+            isHoliday: true,
+            holidayType: holiday.holiday_type,
+          },
+          className: `holiday-event holiday-type-${holiday.holiday_type}`,
+        };
+      });
+  }, [holidays, currentMonthStart, currentMonthEnd]);
+
   // Transform leaves data to calendar events
-  const events = useMemo(() => {
+  const leaveEvents = useMemo(() => {
     return leaves.map((leave) => {
       const startDate = new Date(leave.leave_from_date);
       const endDate = new Date(leave.leave_to_date);
@@ -69,9 +108,45 @@ function LeaveCalendar({
     });
   }, [leaves, isTeamView]);
 
+  // Combine leave and holiday events
+  const events = useMemo(() => {
+    return [...leaveEvents, ...holidayEvents];
+  }, [leaveEvents, holidayEvents]);
+
   // Style events based on status and type
   const eventStyleGetter = (event) => {
-    const { status_name, isHalfDay, halfDayStatus } = event.resource;
+    const { status_name, isHalfDay, halfDayStatus, isHoliday, holidayType } = event.resource;
+
+    // Handle holiday events
+    if (isHoliday) {
+      if (holidayType === 1) {
+        // Mandatory holiday - bright red
+        return {
+          style: {
+            backgroundColor: '#ff9999',
+            borderColor: '#ff9999',
+            color: '#8b0000',
+            borderStyle: 'solid',
+            borderRadius: '4px',
+            borderWidth: '2px',
+            fontWeight: '600',
+          },
+        };
+      } else if (holidayType === 2) {
+        // Optional holiday - bright orange
+        return {
+          style: {
+            backgroundColor: '#ffcc99',
+            borderColor: '#ffcc99',
+            color: '#cc6600',
+            borderStyle: 'solid',
+            borderRadius: '4px',
+            borderWidth: '2px',
+            fontWeight: '600',
+          },
+        };
+      }
+    }
     
     let backgroundColor = '#3174ad'; // Default blue
     let borderColor = '#3174ad';
@@ -152,11 +227,58 @@ function LeaveCalendar({
     }
   };
 
+  // Style day cells for holidays
+  const dayPropGetter = (date) => {
+    const dateStr = moment(date).format('YYYY-MM-DD');
+    const holiday = holidays.find((h) => {
+      const holidayDateStr = moment(h.date).format('YYYY-MM-DD');
+      return holidayDateStr === dateStr;
+    });
+
+    // Only apply holiday styling to dates in the current month view
+    const isCurrentMonth = moment(date).isSame(currentDate, 'month');
+
+    if (holiday && isCurrentMonth) {
+      if (holiday.holiday_type === 1) {
+        // Mandatory holiday - bright red background
+        return {
+          className: 'holiday-day mandatory-holiday',
+          style: {
+            backgroundColor: '#ff9999',
+          },
+        };
+      } else if (holiday.holiday_type === 2) {
+        // Optional holiday - bright orange background
+        return {
+          className: 'holiday-day optional-holiday',
+          style: {
+            backgroundColor: '#ffcc99',
+          },
+        };
+      }
+    }
+
+    return {};
+  };
+
+
   // Custom event component with native tooltip
   const EventComponent = ({ event }) => {
-    const { reason, user_name, leave_type, half_day_status } = event.resource || {};
+    const { reason, user_name, leave_type, half_day_status, isHoliday, holidayType } = event.resource || {};
     
-    // Determine Full/Half indicator
+    // Handle holiday events differently
+    if (isHoliday) {
+      const holidayTypeName = holidayType === 1 ? 'Mandatory Holiday' : 'Optional Holiday';
+      const tooltipText = `${event.title}\nType: ${holidayTypeName}`;
+      
+      return (
+        <div title={tooltipText} className="leave-event-tooltip holiday-event-readonly">
+          {event.title}
+        </div>
+      );
+    }
+    
+    // Determine Full/Half indicator for leave events
     const dayType = half_day_status ? '(Half' : '(Full';
     
     // Build tooltip text for native browser tooltip
@@ -181,6 +303,20 @@ function LeaveCalendar({
     );
   };
 
+  // Handle event selection - prevent holiday events from being clickable
+  const handleSelectEvent = (event) => {
+    // Check if the event is a holiday
+    if (event.resource && event.resource.isHoliday) {
+      // Do nothing for holiday events - they are read-only
+      return;
+    }
+    
+    // For non-holiday events, call the original handler
+    if (onSelectEvent) {
+      onSelectEvent(event);
+    }
+  };
+
   return (
     <div className="leave-calendar-container">
       <Calendar
@@ -194,8 +330,9 @@ function LeaveCalendar({
         view={currentView}
         onView={handleViewChange}
         onNavigate={handleNavigate}
-        onSelectEvent={onSelectEvent}
+        onSelectEvent={handleSelectEvent}
         eventPropGetter={eventStyleGetter}
+        dayPropGetter={dayPropGetter}
         components={{
           event: EventComponent,
         }}
