@@ -227,7 +227,7 @@ function LeaveCalendar({
     }
   };
 
-  // Style day cells for holidays
+  // Style day cells for holidays and weekends
   const dayPropGetter = (date) => {
     const dateStr = moment(date).format('YYYY-MM-DD');
     const holiday = holidays.find((h) => {
@@ -235,9 +235,14 @@ function LeaveCalendar({
       return holidayDateStr === dateStr;
     });
 
-    // Only apply holiday styling to dates in the current month view
+    // Only apply styling to dates in the current month view
     const isCurrentMonth = moment(date).isSame(currentDate, 'month');
 
+    // Check if it's a weekend (Saturday = 6, Sunday = 0)
+    const dayOfWeek = moment(date).day();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+    // Holidays take precedence over weekend styling
     if (holiday && isCurrentMonth) {
       if (holiday.holiday_type === 1) {
         // Mandatory holiday - bright red background
@@ -256,6 +261,16 @@ function LeaveCalendar({
           },
         };
       }
+    }
+
+    // Apply weekend styling if it's a weekend and in current month
+    if (isWeekend && isCurrentMonth) {
+      return {
+        className: 'weekend-day',
+        style: {
+          backgroundColor: '#F5F1F0',
+        },
+      };
     }
 
     return {};
