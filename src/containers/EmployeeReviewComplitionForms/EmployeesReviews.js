@@ -39,7 +39,8 @@ const EmployeeReviews = () => {
     const uRole = customFunctions.getLocalStorage('group');
     const userId = customFunctions.getLocalStorage('userId');
     setUserRole(Number(uRole));
-    setUserId(Number(userId));
+    const parsedUserId = userId ? Number(userId) : null;
+    setUserId(parsedUserId);
 
   }, []);
 
@@ -432,51 +433,73 @@ const EmployeeReviews = () => {
       limit: 10,
       sort_direction: 'descending',
     };
-    console.log("detailsKeys", detailsKeys);
+    console.log("User Role:", userRole, "User ID:", userId, "Details Keys:", detailsKeys);
 
-    // Only apply user-based filters if not superadmin (role_id = 1)
-    if (userRole !== 1) {
-      if (detailsKeys === "personalInfo") {
-        params.employee = userId
-      } else {
-        params.reviewer = userId
-      }
-    }
+    // Backend automatically handles role-based filtering:
+    // - Role 1,2,5,6: See all reviews (no filters needed)
+    // - Role 3 (Team Lead): Backend filters by reviewer_id = user_id automatically
+    // - Role 4 (Employee): Backend filters by employee_id = user_id automatically
+    // So we don't need to send employee/reviewer filters for roles 3 and 4
+    
+    // Only apply date filter if selected
     if (selectedDate) {
       params.review_date = customFunctions.getDate(selectedDate)
     }
 
+    // Only apply employee filter if explicitly selected from dropdown (for roles that can see all)
+    // For roles 1,2,5,6: Allow filtering by selected employee
+    // For roles 3,4: Backend ignores this param anyway, but we can still send it for consistency
     if (selectedEmployeeId && detailsKeys !== "personalInfo" && selectedEmployeeId !== 'all_employess') {
       params.employee = Number(selectedEmployeeId)
     }
 
+    console.log("API Request Params:", params);
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data } = await AuthApi.getDataFromServer(url);
-    if (data) {
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-    }
-    if (data && data.success) {
+    
+    try {
+      const { data, error } = await AuthApi.getDataFromServer(url);
       setShowLoader(false);
+      
+      if (data && data.success) {
+        setTotalCount(data.paginator.total_count);
+        setLimit(data.paginator.limit);
+        setCurrentPage(Number(data.paginator.current_page));
 
-      const review_data = data.data.map((item, index) => ({
-        no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
-        id: item.id,
-        employee: item?.employee,
-        reviewer: item?.reviewer,
-        review_date: item?.review_date,
-        review_time: item?.review_time,
-        status: item?.status,
-        status_name: item?.status_name,
-        review_type: item?.review_type,
-        review_type_name: item?.review_type_name,
-        self_evaluation_form: item?.self_evaluation_form,
-        training_review_form: item?.training_review_form,
-        probation_review_form: item?.probation_review_form,
-      }));
+        const review_data = data.data.map((item, index) => ({
+          no: (pageNo - 1) * pagination.itemsPerPage + (index + 1),
+          id: item.id,
+          employee: item?.employee,
+          reviewer: item?.reviewer,
+          review_date: item?.review_date,
+          review_time: item?.review_time,
+          status: item?.status,
+          status_name: item?.status_name,
+          review_type: item?.review_type,
+          review_type_name: item?.review_type_name,
+          self_evaluation_form: item?.self_evaluation_form,
+          training_review_form: item?.training_review_form,
+          probation_review_form: item?.probation_review_form,
+        }));
 
-      setRowData(review_data);
+        setRowData(review_data);
+      } else {
+        console.error("API Error Response:", { error, data, userRole });
+        // Show backend error message if available
+        const errorMessage = error || data?.message || data?.error || 'Failed to fetch review data';
+        // Check if it's a permission error
+        if (errorMessage.includes("don't have access") || errorMessage.includes("access")) {
+          swal('Access Denied', `Your role (${userRole}) does not have permission to access this page. Allowed roles: Superadmin (1), Manager (2), HR (5), HR Team Lead (6).`, 'error');
+        } else {
+          swal('Error', errorMessage, 'error');
+        }
+      }
+    } catch (err) {
+      setShowLoader(false);
+      console.error("API Exception:", err);
+      // Don't show error if it's an auth error (interceptor will handle it)
+      if (err?.response?.status !== 401 && err?.response?.status !== 403) {
+        swal('Failed to fetch review data', err?.message || '', 'error');
+      }
     }
   };
 
@@ -492,54 +515,69 @@ const EmployeeReviews = () => {
       is_only_trainee_data: true
     };
 
-    // Only apply user-based filters if not superadmin (role_id = 1)
-    if (userRole !== 1) {
-      if (detailsKeys === "personalInfo") {
-        params.employee = userId
-      } else {
-        params.reviewer = userId
-      }
-    }
+    // Backend automatically handles role-based filtering:
+    // - Role 1,2,5,6: See all reviews (no filters needed)
+    // - Role 3 (Team Lead): Backend filters by reviewer_id = user_id automatically
+    // - Role 4 (Employee): Backend filters by employee_id = user_id automatically
+    
+    // Only apply date filter if selected
     if (selectedDate) {
       params.review_date = customFunctions.getDate(selectedDate)
     }
 
+    // Only apply employee filter if explicitly selected from dropdown
     if (selectedEmployeeId && detailsKeys !== "personalInfo" && selectedEmployeeId !== 'all_employess') {
       params.employee = Number(selectedEmployeeId)
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data } = await AuthApi.getDataFromServer(url);
-    if (data) {
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-    }
-    if (data && data.success) {
+    
+    try {
+      const { data, error } = await AuthApi.getDataFromServer(url);
       setShowLoader(false);
+      
+      if (data && data.success) {
+        setTotalCount(data.paginator.total_count);
+        setLimit(data.paginator.limit);
+        setCurrentPage(Number(data.paginator.current_page));
 
-      console.log('getRowData data.data: ', data.data);
+        console.log('getTraineeData data.data: ', data.data);
 
-      const traineReviewData =
-        data.data.filter((ele) => ele?.review_type === 1).map((innerElement, innerIndex) => {
-          return {
-            no: (pageNo - 1) * pagination.itemsPerPage + (innerIndex + 1),
-            id: innerElement.id,
-            employee: innerElement?.employee,
-            reviewer: innerElement?.reviewer,
-            review_date: innerElement?.review_date,
-            review_time: innerElement?.review_time,
-            status: innerElement?.status,
-            status_name: innerElement?.status_name,
-            review_type: innerElement?.review_type,
-            review_type_name: innerElement?.review_type_name,
-            self_evaluation_form: innerElement?.self_evaluation_form,
-            training_review_form: innerElement?.training_review_form,
-            probation_review_form: innerElement?.probation_review_form,
-          }
-        })
+        const traineReviewData =
+          data.data.filter((ele) => ele?.review_type === 1).map((innerElement, innerIndex) => {
+            return {
+              no: (pageNo - 1) * pagination.itemsPerPage + (innerIndex + 1),
+              id: innerElement.id,
+              employee: innerElement?.employee,
+              reviewer: innerElement?.reviewer,
+              review_date: innerElement?.review_date,
+              review_time: innerElement?.review_time,
+              status: innerElement?.status,
+              status_name: innerElement?.status_name,
+              review_type: innerElement?.review_type,
+              review_type_name: innerElement?.review_type_name,
+              self_evaluation_form: innerElement?.self_evaluation_form,
+              training_review_form: innerElement?.training_review_form,
+              probation_review_form: innerElement?.probation_review_form,
+            }
+          })
 
-      setTraineeData(traineReviewData)
+        setTraineeData(traineReviewData)
+      } else {
+        console.error("API Error Response:", { error, data, userRole });
+        const errorMessage = error || data?.message || data?.error || 'Failed to fetch trainee data';
+        if (errorMessage.includes("don't have access") || errorMessage.includes("access")) {
+          swal('Access Denied', `Your role (${userRole}) does not have permission to access this page. Allowed roles: Superadmin (1), Manager (2), HR (5), HR Team Lead (6).`, 'error');
+        } else {
+          swal('Error', errorMessage, 'error');
+        }
+      }
+    } catch (err) {
+      setShowLoader(false);
+      console.error("API Exception:", err);
+      if (err?.response?.status !== 401 && err?.response?.status !== 403) {
+        swal('Failed to fetch trainee data', err?.message || '', 'error');
+      }
     }
   };
 
@@ -557,49 +595,65 @@ const EmployeeReviews = () => {
     };
     console.log("detailsKeys", detailsKeys);
 
-    // Only apply user-based filters if not superadmin (role_id = 1)
-    if (userRole !== 1) {
-      if (detailsKeys === "personalInfo") {
-        params.employee = userId
-      } else {
-        params.reviewer = userId
-      }
-    }
+    // Backend automatically handles role-based filtering:
+    // - Role 1,2,5,6: See all reviews (no filters needed)
+    // - Role 3 (Team Lead): Backend filters by reviewer_id = user_id automatically
+    // - Role 4 (Employee): Backend filters by employee_id = user_id automatically
+    
+    // Only apply date filter if selected
     if (selectedDate) {
       params.review_date = customFunctions.getDate(selectedDate)
     }
 
+    // Only apply employee filter if explicitly selected from dropdown
     if (selectedEmployeeId && detailsKeys !== "personalInfo" && selectedEmployeeId !== 'all_employess') {
       params.employee = Number(selectedEmployeeId)
     }
 
     const url = customFunctions.generateUrl(endPoint, params);
-    const { data } = await AuthApi.getDataFromServer(url);
-    if (data) {
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-    }
-    if (data && data.success) {
+    
+    try {
+      const { data, error } = await AuthApi.getDataFromServer(url);
       setShowLoader(false);
-      const probationReviewData = data.data.filter((ele) => [2, 3, 4].includes(ele?.review_type)).map((innerElement, innerIndex) => {
-        return {
-          no: (pageNo - 1) * pagination.itemsPerPage + (innerIndex + 1),
-          id: innerElement.id,
-          employee: innerElement?.employee,
-          reviewer: innerElement?.reviewer,
-          review_date: innerElement?.review_date,
-          review_time: innerElement?.review_time,
-          status: innerElement?.status,
-          status_name: innerElement?.status_name,
-          review_type: innerElement?.review_type,
-          review_type_name: innerElement?.review_type_name,
-          self_evaluation_form: innerElement?.self_evaluation_form,
-          training_review_form: innerElement?.training_review_form,
-          probation_review_form: innerElement?.probation_review_form,
+      
+      if (data && data.success) {
+        setTotalCount(data.paginator.total_count);
+        setLimit(data.paginator.limit);
+        setCurrentPage(Number(data.paginator.current_page));
+        
+        const probationReviewData = data.data.filter((ele) => [2, 3, 4].includes(ele?.review_type)).map((innerElement, innerIndex) => {
+          return {
+            no: (pageNo - 1) * pagination.itemsPerPage + (innerIndex + 1),
+            id: innerElement.id,
+            employee: innerElement?.employee,
+            reviewer: innerElement?.reviewer,
+            review_date: innerElement?.review_date,
+            review_time: innerElement?.review_time,
+            status: innerElement?.status,
+            status_name: innerElement?.status_name,
+            review_type: innerElement?.review_type,
+            review_type_name: innerElement?.review_type_name,
+            self_evaluation_form: innerElement?.self_evaluation_form,
+            training_review_form: innerElement?.training_review_form,
+            probation_review_form: innerElement?.probation_review_form,
+          }
+        })
+        setProbationData(probationReviewData)
+      } else {
+        console.error("API Error Response:", { error, data, userRole });
+        const errorMessage = error || data?.message || data?.error || 'Failed to fetch probation data';
+        if (errorMessage.includes("don't have access") || errorMessage.includes("access")) {
+          swal('Access Denied', `Your role (${userRole}) does not have permission to access this page. Allowed roles: Superadmin (1), Manager (2), HR (5), HR Team Lead (6).`, 'error');
+        } else {
+          swal('Error', errorMessage, 'error');
         }
-      })
-      setProbationData(probationReviewData)
+      }
+    } catch (err) {
+      setShowLoader(false);
+      console.error("API Exception:", err);
+      if (err?.response?.status !== 401 && err?.response?.status !== 403) {
+        swal('Failed to fetch probation data', err?.message || '', 'error');
+      }
     }
   };
 
