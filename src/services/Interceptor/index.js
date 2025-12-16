@@ -46,8 +46,14 @@ export default {
         // } else {
         //   configuration.headers['Content-Type'] = 'application/json';
         // }
-        const token = customFucntions.getLocalStorage('access_token');
-        if (token) configuration.headers['Authorization'] = `Bearer ${token}`; // eslint-disable-line
+        // Get token - try both methods to ensure we get it
+        let token = customFucntions.getLocalStorage('access_token');
+        if (!token || token === false) {
+          token = localStorage.getItem('access_token');
+        }
+        if (token && typeof token === 'string' && token.trim() !== '') {
+          configuration.headers['Authorization'] = `Bearer ${token}`; // eslint-disable-line
+        }
         return configuration;
       },
       (error) => {
@@ -65,10 +71,13 @@ export default {
             data.status === 403 ||
             data.statusText === 'Unauthorized')
         ) {
-          customFucntions.localStorageClear();
-          if (window.location.pathname !== '/login') {
+          // Don't clear token if we're on root path (just came from OIDC) or login page
+          const isRootPath = window.location.pathname === '/';
+          const isLoginPage = window.location.pathname === '/login';
+          
+          if (!isRootPath && !isLoginPage) {
+            customFucntions.localStorageClear();
             localStorage.clear();
-            // window.location.replace = '/login';
             window.location.reload();
           }
           return Promise.reject(error.response.data);
