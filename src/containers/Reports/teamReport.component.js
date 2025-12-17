@@ -587,20 +587,6 @@ function TeamReport() {
 
   const handleExportTasks = async () => {
     // Check if at least one filter is selected (using Tasks & Bugs filters)
-    if (
-      !tasksBugsFromDate && 
-      !tasksBugsToDate && 
-      (!tasksBugsSelectedProject || tasksBugsSelectedProject.length === 0) &&
-      (!tasksBugsSelectedStatus || tasksBugsSelectedStatus.length === 0) &&
-      (!tasksBugsSelectedBugStatus || tasksBugsSelectedBugStatus.length === 0) &&
-      (!tasksBugsSelectedResponsible || tasksBugsSelectedResponsible.length === 0)
-    ) {
-      swal('Export failed', 'Please select at least one filter (dates, project, status, bug status, or responsible person)', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
-      return;
-    }
 
     setShowLoader(true);
     const endPoint = `${Api.exportTasksUrl}`;
