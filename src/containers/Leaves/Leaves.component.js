@@ -468,6 +468,13 @@ function Leaves() {
     const leave = event.resource;
     const { id, status_name, status } = leave;
     
+    // Prevent redirect for upcoming leaves in My Leaves section
+    if (activeTab === 'upcoming') {
+      // Do nothing - don't redirect when clicking upcoming leaves
+      return;
+    }
+    
+    // For taken leaves, keep the existing redirect behavior
     if (status_name !== 'Pending' || status_name === 'Approved') {
       history.push(`/edit-leave/${id}`, { isViewLeave: true });
     } else {

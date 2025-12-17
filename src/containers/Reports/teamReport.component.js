@@ -27,7 +27,19 @@ function TeamReport() {
   const [filterErr, setFilterErr] = useState('');
   const [cntClearFilter, setCntClearFilter] = useState(0);
   const [team, setTeam] = useState([]);
+  const [allEmployees, setAllEmployees] = useState([]); // Store all employees with their user IDs
   const [selectedEmployee, setSelectedEmployee] = useState('');
+  
+  // Tasks & Bugs separate state
+  const [tasksBugsFromDate, setTasksBugsFromDate] = useState('');
+  const [tasksBugsToDate, setTasksBugsToDate] = useState('');
+  const [tasksBugsSelectedProject, setTasksBugsSelectedProject] = useState('');
+  const [tasksBugsSelectedStatus, setTasksBugsSelectedStatus] = useState('');
+  const [tasksBugsSelectedBugStatus, setTasksBugsSelectedBugStatus] = useState('');
+  const [tasksBugsSelectedResponsible, setTasksBugsSelectedResponsible] = useState('');
+  const [tasksBugsFilterErr, setTasksBugsFilterErr] = useState('');
+  
+  const [projectsList, setProjectsList] = useState([]);
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
 
@@ -36,6 +48,7 @@ function TeamReport() {
     itemsPerPage: 10,
     totalItems: 10,
   });
+
 
   const columns = [
     {
@@ -162,11 +175,52 @@ function TeamReport() {
     }
   };
 
+  const getProjectsList = async () => {
+    try {
+      const endPoint = `${Api.projectListUrl}?sort_by=name&status=active&type=all`;
+      const { data } = await AuthApi.getDataFromServer(endPoint);
+      if (data && data.data && data.data.length > 0) {
+        const projectOptions = data.data.map((project) => ({
+          label: project.name,
+          id: project.id,
+          value: project.id,
+        }));
+        setProjectsList(projectOptions);
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
+
+  // Fetch all employees to get their actual user IDs (for tasks API)
+  const getAllEmployees = async () => {
+    try {
+      const url = `${Api.getEmployees}?type=all&status=active`;
+      const { data } = await AuthApi.getDataFromServer(url);
+      if (data && data.success && data.data) {
+        // Store employees with their user IDs
+        const employeesMap = {};
+        data.data.forEach((emp) => {
+          employeesMap[emp.full_name] = emp.id; // Map name to user_id
+          // Also map by employee_id if available
+          if (emp.employee_id) {
+            employeesMap[emp.employee_id] = emp.id;
+          }
+        });
+        setAllEmployees(employeesMap);
+      }
+    } catch (err) {
+      console.error('Error fetching employees:', err);
+    }
+  };
+
   useEffect(() => {
     async function getData() {
       getReports(1);
       setTitle('Team Report');
       getEmployee();
+      getProjectsList();
+      getAllEmployees(); // Fetch employees to map names to user_ids
     }
     getData();
   }, []);
@@ -174,6 +228,7 @@ function TeamReport() {
   useEffect(() => {
     getReports(1);
   }, [cntClearFilter]);
+
 
   const getTeamList = () => {
     if (!team) return [];
@@ -196,11 +251,47 @@ function TeamReport() {
     setCntClearFilter(cntClearFilter + 1);
   };
 
+  // Tasks & Bugs filter validation (no need to fetch data since table is removed)
+  const tasksBugsFilterSearch = (e) => {
+    e.preventDefault();
+    let filterSearchErr = '';
+    let isValid = true;
+
+    // Check if at least one filter is selected
+    if (
+      customFunctions.checkIfEmpty(tasksBugsFromDate) &&
+      customFunctions.checkIfEmpty(tasksBugsToDate) &&
+      customFunctions.checkIfEmpty(tasksBugsSelectedProject) &&
+      customFunctions.checkIfEmpty(tasksBugsSelectedStatus) &&
+      customFunctions.checkIfEmpty(tasksBugsSelectedBugStatus) &&
+      customFunctions.checkIfEmpty(tasksBugsSelectedResponsible)
+    ) {
+      filterSearchErr = 'Please select at least one filter';
+      setTasksBugsFilterErr(filterSearchErr);
+      isValid = false;
+    }
+    if (isValid) {
+      setTasksBugsFilterErr('');
+      // Filters are validated, ready for export
+    }
+  };
+
+  const tasksBugsOnClear = () => {
+    setTasksBugsFilterErr('');
+    setTasksBugsFromDate('');
+    setTasksBugsToDate('');
+    setTasksBugsSelectedProject('');
+    setTasksBugsSelectedStatus('');
+    setTasksBugsSelectedBugStatus('');
+    setTasksBugsSelectedResponsible('');
+  };
+
   const filterSearch = (e) => {
     e.preventDefault();
     let filterSearchErr = '';
     let isValid = true;
 
+    // Check if at least one filter is selected (including new filters)
     if (
       customFunctions.checkIfEmpty(fromDate) &&
       customFunctions.checkIfEmpty(toDate) &&
@@ -372,6 +463,12 @@ function TeamReport() {
               }
             }
             
+            // Add timestamp to filename to prevent overwriting
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5).replace('T', '_');
+            const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+            const fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+            fileName = `${fileNameWithoutExt}_${timestamp}${fileExtension}`;
+            
             console.log('Downloading file from:', fileUrl);
             
             // Download the file from the full URL (backend now provides full URLs)
@@ -460,8 +557,9 @@ function TeamReport() {
         return;
       }
       
-      // Generate filename with current date
-      const fileName = `employee_timesheet_${customFunctions.getDate(new Date())}.csv`;
+      // Generate filename with current date and timestamp to prevent overwriting
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5).replace('T', '_');
+      const fileName = `employee_timesheet_${timestamp}.csv`;
       
       // Create a blob URL and trigger download
       const blobUrl = window.URL.createObjectURL(blob);
@@ -488,40 +586,94 @@ function TeamReport() {
   };
 
   const handleExportTasks = async () => {
+    // Check if at least one filter is selected (using Tasks & Bugs filters)
+    if (
+      !tasksBugsFromDate && 
+      !tasksBugsToDate && 
+      (!tasksBugsSelectedProject || tasksBugsSelectedProject.length === 0) &&
+      (!tasksBugsSelectedStatus || tasksBugsSelectedStatus.length === 0) &&
+      (!tasksBugsSelectedBugStatus || tasksBugsSelectedBugStatus.length === 0) &&
+      (!tasksBugsSelectedResponsible || tasksBugsSelectedResponsible.length === 0)
+    ) {
+      swal('Export failed', 'Please select at least one filter (dates, project, status, bug status, or responsible person)', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+      return;
+    }
+
     setShowLoader(true);
     const endPoint = `${Api.exportTasksUrl}`;
     
     const params = {};
 
-    // Add from_date in YYYY-MM-DD format
-    if (fromDate) {
-      params.from_date = customFunctions.getDate(fromDate);
+    // Add date filters for task creation date (created_at)
+    // API accepts both from_date/to_date OR start_date/end_date
+    if (tasksBugsFromDate) {
+      params.from_date = customFunctions.getDate(tasksBugsFromDate);
+      // Also send as start_date for compatibility
+      params.start_date = customFunctions.getDate(tasksBugsFromDate);
     }
 
-    // Add to_date in YYYY-MM-DD format
-    if (toDate) {
-      params.to_date = customFunctions.getDate(toDate);
+    if (tasksBugsToDate) {
+      params.to_date = customFunctions.getDate(tasksBugsToDate);
+      // Also send as end_date for compatibility
+      params.end_date = customFunctions.getDate(tasksBugsToDate);
     }
 
-    // Build employee list and add as comma-separated user_id parameter
-    const employeeList = [];
-    
-    if (selectedEmployee && selectedEmployee.length > 0) {
-      selectedEmployee.map((emp) => {
-        team.map((tem) => {
-          if (tem.id === emp.id) {
-            employeeList.push(tem.employee_id);
-          }
-          return tem;
-        });
-        return emp;
+    // Add responsible person filter (user_id or user_ids)
+    if (tasksBugsSelectedResponsible && tasksBugsSelectedResponsible.length > 0) {
+      const userIds = [];
+      tasksBugsSelectedResponsible.forEach((resp) => {
+        const userId = allEmployees[resp.label || resp.value];
+        if (userId) {
+          userIds.push(userId);
+        }
       });
+      
+      if (userIds.length > 0) {
+        if (userIds.length === 1) {
+          params.user_id = userIds[0];
+        } else {
+          params.user_ids = userIds.join(',');
+        }
+      }
     }
 
-    // Add user_id as comma-separated employee IDs (e.g., "1,2,3")
-    if (employeeList.length > 0) {
-      params.user_id = employeeList.join(',');
+    // Add project filters (project_id or project_ids)
+    if (tasksBugsSelectedProject && tasksBugsSelectedProject.length > 0) {
+      const projectIds = tasksBugsSelectedProject.map(proj => proj.id || proj.value).filter(id => id);
+      if (projectIds.length === 1) {
+        params.project_id = projectIds[0];
+      } else if (projectIds.length > 1) {
+        params.project_ids = projectIds.join(',');
+      }
     }
+
+    // Add status filter (status or statuses)
+    if (tasksBugsSelectedStatus && tasksBugsSelectedStatus.length > 0) {
+      if (tasksBugsSelectedStatus.length === 1) {
+        params.status = tasksBugsSelectedStatus[0].value || tasksBugsSelectedStatus[0].id;
+      } else {
+        params.statuses = tasksBugsSelectedStatus.map(s => s.value || s.id).filter(s => s).join(',');
+      }
+    }
+
+    // Add bug status filter (bug_status or bug_statuses)
+    if (tasksBugsSelectedBugStatus && tasksBugsSelectedBugStatus.length > 0) {
+      if (tasksBugsSelectedBugStatus.length === 1) {
+        params.bug_status = tasksBugsSelectedBugStatus[0].value || tasksBugsSelectedBugStatus[0].id;
+      } else {
+        params.bug_statuses = tasksBugsSelectedBugStatus.map(s => s.value || s.id).filter(s => s).join(',');
+      }
+    }
+
+    // Include bugs by default (API default is "true")
+    params.include_bugs = 'true';
+
+    // Add sorting
+    params.sort_by = 'id';
+    params.sort_direction = 'descending';
 
     // Clean object to remove empty values
     const cleanParams = customFunctions.cleanObject(params);
@@ -553,7 +705,21 @@ function TeamReport() {
         if (contentType.includes('application/json')) {
           try {
             const errorData = await clonedResponse.json();
-            const errorMessage = errorData.message || errorData.error || errorData.detail || JSON.stringify(errorData);
+            // Handle array messages (e.g., ["No data found for the given filters."])
+            let errorMessage = '';
+            if (Array.isArray(errorData.message)) {
+              errorMessage = errorData.message.join(', ');
+            } else if (typeof errorData.message === 'string') {
+              errorMessage = errorData.message;
+            } else {
+              errorMessage = errorData.error || errorData.detail || 'No data found for the given filters';
+            }
+            
+            // Add helpful suggestion if dates are missing
+            if (!fromDate && !toDate && errorMessage.toLowerCase().includes('no data')) {
+              errorMessage += '. Try adding date filters to narrow down the search.';
+            }
+            
             setShowLoader(false);
             swal('Export failed', errorMessage, 'error', {
               closeOnClickOutside: false,
@@ -584,6 +750,24 @@ function TeamReport() {
       if (contentType.includes('application/json')) {
         const jsonData = await response.json();
         console.log('Export Tasks Response:', jsonData);
+        
+        // Check if API returned an error (success: false)
+        if (jsonData.success === false || !jsonData.success) {
+          let errorMessage = '';
+          if (Array.isArray(jsonData.message)) {
+            errorMessage = jsonData.message.join(', ');
+          } else if (typeof jsonData.message === 'string') {
+            errorMessage = jsonData.message;
+          } else {
+            errorMessage = jsonData.error || jsonData.detail || 'No data found for the given filters';
+          }
+          setShowLoader(false);
+          swal('Export failed', errorMessage, 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          });
+          return;
+        }
         
         // Check if response contains file_path (can be in jsonData.file_path or jsonData.data.file_path)
         let fileUrl = null;
@@ -630,6 +814,12 @@ function TeamReport() {
               fileName = pathParts[pathParts.length - 1];
             }
           }
+          
+          // Add timestamp to filename to prevent overwriting
+          const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5).replace('T', '_');
+          const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+          const fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+          fileName = `${fileNameWithoutExt}_${timestamp}${fileExtension}`;
           
           console.log('Downloading file from:', fileUrl);
           
@@ -757,7 +947,8 @@ function TeamReport() {
                         maxDate={new Date()}
                       />
                     </Col>
-                      <Row className="mt-3">
+                  </Row>
+                  <Row className="mt-3">
                         <Col sm={2}>
                       <div className="mt-1">
                         <Button
@@ -769,18 +960,6 @@ function TeamReport() {
                         </Button>
                       </div>
                           </Col>
-
-                        <Col sm={2}>
-                      <div className="mt-1">
-                        <Button
-                          variant="primary"
-                          type="button"
-                          onClick={() => handleExportTasks()}
-                          >
-                          Export Tasks & Bugs
-                        </Button>
-                      </div>
-                    </Col>
                     <Col sm={8}>
                       <div className="filter-btn pull-right filter-btn-report">
                         <Button
@@ -800,7 +979,6 @@ function TeamReport() {
                         </Button>
                       </div>
                     </Col>
-                    </Row>
                   </Row>
                 </Form>
               </Card.Title>
@@ -832,6 +1010,168 @@ function TeamReport() {
           </Card.Body>
         </Card>
       </div>
+
+      {/* Tasks & Bugs Card - Separate with its own filters */}
+      <div className="mt-3">
+        <Card>
+          <Card.Body>
+            <div className="d-flex align-items-center justify-content-between">
+              <h5 className="card-title mb-0 mt-2 ">Tasks & Bugs</h5>
+            </div>
+            <hr />
+            <Card.Title>
+              <Form onSubmit={(e) => tasksBugsFilterSearch(e)}>
+                {tasksBugsFilterErr && (
+                  <div className="p-3  bg-danger text-white bg-danger-main table-red-bg">
+                    <div className="img-text">
+                      <img src="/images/fail.svg" alt="Success" /> {tasksBugsFilterErr}
+                    </div>
+                  </div>
+                )}
+                <Row className="mt-3">
+                  <Col sm={4}>
+                    <div className="search-bar-input">
+                      <DropdownInput
+                        options={projectsList}
+                        placeholder="Select Project"
+                        defaultValue={tasksBugsSelectedProject}
+                        onSelectHandler={(select) => {
+                          setTasksBugsSelectedProject(select);
+                        }}
+                        isMulti
+                      />
+                    </div>
+                  </Col>
+
+                  <Col sm={4}>
+                    <div className="search-bar-input">
+                      <DropdownInput
+                        options={[
+                          { label: 'New', id: 'new', value: 'new' },
+                          { label: 'In Progress', id: 'in_progress', value: 'in_progress' },
+                          { label: 'Completed', id: 'completed', value: 'completed' },
+                          { label: 'On Hold', id: 'on_hold', value: 'on_hold' },
+                          { label: 'Cancelled', id: 'cancelled', value: 'cancelled' },
+                        ]}
+                        placeholder="Select Status"
+                        defaultValue={tasksBugsSelectedStatus}
+                        onSelectHandler={(select) => {
+                          setTasksBugsSelectedStatus(select);
+                        }}
+                        isMulti
+                      />
+                    </div>
+                  </Col>
+
+                  <Col sm={4}>
+                    <div className="search-bar-input">
+                      <DropdownInput
+                        options={[
+                          { label: 'New', id: 'new', value: 'new' },
+                          { label: 'Open', id: 'open', value: 'open' },
+                          { label: 'In Progress', id: 'in_progress', value: 'in_progress' },
+                          { label: 'Resolved', id: 'resolved', value: 'resolved' },
+                          { label: 'Closed', id: 'closed', value: 'closed' },
+                          { label: 'Reopened', id: 'reopened', value: 'reopened' },
+                        ]}
+                        placeholder="Select Bug Status"
+                        defaultValue={tasksBugsSelectedBugStatus}
+                        onSelectHandler={(select) => {
+                          setTasksBugsSelectedBugStatus(select);
+                        }}
+                        isMulti
+                      />
+                    </div>
+                  </Col>
+                </Row>
+                <Row className="mt-3">
+                  <Col sm={4}>
+                    <div className="search-bar-input">
+                      <DropdownInput
+                        options={Object.keys(allEmployees).map(name => ({
+                          label: name,
+                          id: allEmployees[name],
+                          value: name,
+                        }))}
+                        placeholder="Select Responsible Person"
+                        defaultValue={tasksBugsSelectedResponsible}
+                        onSelectHandler={(select) => {
+                          setTasksBugsSelectedResponsible(select);
+                        }}
+                        isMulti
+                      />
+                    </div>
+                  </Col>
+
+                  <Col sm={4}>
+                    <Datepicker
+                      className="form-control"
+                      selected={tasksBugsFromDate}
+                      onChange={(e) => {
+                        setTasksBugsFromDate(e);
+                      }}
+                      autoComplete="off"
+                      name="startDate"
+                      placeholder="From Date"
+                      dateFormat="dd/MM/yyyy"
+                      maxDate={new Date()}
+                    />
+                  </Col>
+
+                  <Col sm={4}>
+                    <Datepicker
+                      className="form-control"
+                      selected={tasksBugsToDate}
+                      onChange={(e) => {
+                        setTasksBugsToDate(e);
+                      }}
+                      autoComplete="off"
+                      minDate={tasksBugsFromDate}
+                      name="endDate"
+                      dateFormat="dd/MM/yyyy"
+                      placeholder="To Date"
+                      maxDate={new Date()}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mt-3">
+                  <Col sm={2}>
+                    <div className="mt-1">
+                      <Button
+                        variant="primary"
+                        type="button"
+                        onClick={() => handleExportTasks()}
+                      >
+                        Export Tasks & Bugs
+                      </Button>
+                    </div>
+                  </Col>
+                  <Col sm={10}>
+                    <div className="filter-btn pull-right filter-btn-report">
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        className="ms-4"
+                      >
+                        Apply
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        type="button"
+                        className="ms-4"
+                        onClick={() => tasksBugsOnClear()}
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
+              </Form>
+            </Card.Title>
+          </Card.Body>
+        </Card>
+      </div>
+
     </>
   );
 }

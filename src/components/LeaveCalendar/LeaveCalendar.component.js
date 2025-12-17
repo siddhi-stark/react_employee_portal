@@ -59,54 +59,68 @@ function LeaveCalendar({
   }, [holidays, currentMonthStart, currentMonthEnd]);
 
   // Transform leaves data to calendar events
+  // Filter leaves to only show those that fall within the current month
   const leaveEvents = useMemo(() => {
-    return leaves.map((leave) => {
-      const startDate = new Date(leave.leave_from_date);
-      const endDate = new Date(leave.leave_to_date);
-      
-      // For half-day leaves, adjust end time
-      if (leave.half_day_status) {
-        if (leave.half_day_status === 1) {
-          // First half - end at noon
-          endDate.setHours(12, 0, 0, 0);
+    return leaves
+      .filter((leave) => {
+        const leaveStartDate = new Date(leave.leave_from_date);
+        const leaveEndDate = new Date(leave.leave_to_date);
+        
+        // Normalize dates to start of day for comparison
+        leaveStartDate.setHours(0, 0, 0, 0);
+        leaveEndDate.setHours(23, 59, 59, 999);
+        
+        // Only include leaves that overlap with the current month
+        // A leave overlaps if: leave starts before month ends AND leave ends after month starts
+        return leaveStartDate <= currentMonthEnd && leaveEndDate >= currentMonthStart;
+      })
+      .map((leave) => {
+        const startDate = new Date(leave.leave_from_date);
+        const endDate = new Date(leave.leave_to_date);
+        
+        // For half-day leaves, adjust end time
+        if (leave.half_day_status) {
+          if (leave.half_day_status === 1) {
+            // First half - end at noon
+            endDate.setHours(12, 0, 0, 0);
+          } else {
+            // Second half - start at noon, end at end of day
+            startDate.setHours(12, 0, 0, 0);
+            endDate.setHours(23, 59, 59, 999);
+          }
         } else {
-          // Second half - start at noon, end at end of day
-          startDate.setHours(12, 0, 0, 0);
-          endDate.setHours(23, 59, 59, 999);
+          // Full day leaves - end at end of day
+          if (leave.leave_from_date === leave.leave_to_date) {
+            endDate.setHours(23, 59, 59, 999);
+          } else {
+            endDate.setHours(23, 59, 59, 999);
+          }
         }
-      } else {
-        // Full day leaves - end at end of day
-        if (leave.leave_from_date === leave.leave_to_date) {
-          endDate.setHours(23, 59, 59, 999);
+
+        // Determine event title based on view
+        let title = '';
+        if (isTeamView) {
+          title = `${leave.user_name || ''} - ${leave.leave_type || ''}`.trim();
         } else {
-          endDate.setHours(23, 59, 59, 999);
+          title = `${leave.leave_type || 'Leave'}`;
         }
-      }
 
-      // Determine event title based on view
-      let title = '';
-      if (isTeamView) {
-        title = `${leave.user_name || ''} - ${leave.leave_type || ''}`.trim();
-      } else {
-        title = `${leave.leave_type || 'Leave'}`;
-      }
-
-      return {
-        id: leave.id,
-        title: title,
-        start: startDate,
-        end: endDate,
-        resource: {
-          ...leave,
-          isHalfDay: !!leave.half_day_status,
-          halfDayStatus: leave.half_day_status,
-        },
-        className: leave.half_day_status 
-          ? (leave.half_day_status === 1 ? 'half-day-first' : 'half-day-second')
-          : '',
-      };
-    });
-  }, [leaves, isTeamView]);
+        return {
+          id: leave.id,
+          title: title,
+          start: startDate,
+          end: endDate,
+          resource: {
+            ...leave,
+            isHalfDay: !!leave.half_day_status,
+            halfDayStatus: leave.half_day_status,
+          },
+          className: leave.half_day_status 
+            ? (leave.half_day_status === 1 ? 'half-day-first' : 'half-day-second')
+            : '',
+        };
+      });
+  }, [leaves, isTeamView, currentMonthStart, currentMonthEnd]);
 
   // Combine leave and holiday events
   const events = useMemo(() => {

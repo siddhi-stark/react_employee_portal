@@ -314,7 +314,7 @@ export default class Api extends Component {
   // Get base URL of APIs
   static getBaseUrl() {
     // const env = 'local';
-    const env = 'production';
+    const env = 'local';
 
     let url = '';
     switch (env) {

@@ -242,8 +242,64 @@ function EmployeeDetails(props) {
     const { data, message } = await AuthApi.getDataFromServer(url);
 
     if (data?.data?.length > 0 && data && data.success) {
-      setShowLoader(false);
-      window.open(`${data.data.file_name}`, '_blank');
+      try {
+        const fileUrl = data.data.file_name;
+        const token = customFunctions.getLocalStorage('access_token');
+        
+        // Download the file
+        const fileResponse = await fetch(fileUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!fileResponse.ok) {
+          throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
+        }
+
+        // Extract filename from URL and add timestamp
+        let fileName = 'leaves_report.xlsx';
+        try {
+          const urlObj = new URL(fileUrl);
+          const pathParts = urlObj.pathname.split('/');
+          if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+            fileName = pathParts[pathParts.length - 1];
+          }
+        } catch (e) {
+          const pathParts = fileUrl.split('/');
+          if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+            fileName = pathParts[pathParts.length - 1];
+          }
+        }
+        
+        // Add timestamp to filename to prevent overwriting
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5).replace('T', '_');
+        const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+        const fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+        fileName = `${fileNameWithoutExt}_${timestamp}${fileExtension}`;
+
+        // Download the file as blob
+        const blob = await fileResponse.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.setAttribute('download', fileName);
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+
+        setShowLoader(false);
+        swal('Export successful', 'File downloaded successfully', 'success');
+      } catch (error) {
+        setShowLoader(false);
+        swal('Export failed', error.message || 'Failed to download file', 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        });
+      }
     } else {
       setShowLoader(false);
       swal(message, '', 'error', {

@@ -88,7 +88,7 @@ function Greetings() {
   ];
 
   const [rowData, setRowData] = useState([]);
-  const [totalCount, setTotalCount] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
   const [limit, setLimit] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState('');
@@ -135,12 +135,19 @@ function Greetings() {
           return emp;
         });
       setShowLoader(false);
-      setTotalCount(data.paginator.total_count);
-      setLimit(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
+      // Set row data first
       setRowData(newEmpArr || []);
+      
+      // Set pagination values - use 0 if no data or paginator doesn't exist
+      // If newEmpArr is empty, set totalCount to 0 regardless of paginator
+      const totalCountValue = newEmpArr.length === 0 ? 0 : (data.paginator?.total_count || 0);
+      setTotalCount(totalCountValue);
+      setLimit(data.paginator?.limit || limit);
+      setCurrentPage(Number(data.paginator?.current_page || currentPage));
     } else {
       setShowLoader(false);
+      setTotalCount(0);
+      setRowData([]);
       swal(message, '', 'error', {
         closeOnClickOutside: false,
         allowOutsideClick: false,
@@ -217,7 +224,7 @@ function Greetings() {
             <CustomTable
               columns={columns}
               rows={rowData}
-              showPagination={true}
+              showPagination={totalCount > 0}
               tableClass="table-striped"
               paginationProps={{
                 totalItems: totalCount,
