@@ -306,15 +306,10 @@ export default class Api extends Component {
   static exportTasksUrl = `${Api.baseUrl}export-tasks/`
 
 
-
-  
-  
-
-  
   // Get base URL of APIs
   static getBaseUrl() {
     // const env = 'local';
-    const env = 'local';
+    const env = 'stage';
 
     let url = '';
     switch (env) {

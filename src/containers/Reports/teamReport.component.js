@@ -768,111 +768,29 @@ function TeamReport() {
           });
           return;
         }
-        
-        // Check if response contains file_path (can be in jsonData.file_path or jsonData.data.file_path)
-        let fileUrl = null;
-        let fileName = 'tasks_time_entries_report.csv';
-        let recordsExported = null;
-        let successMessage = null;
-        
-        // Check nested data structure first (jsonData.data.file_path)
-        if (jsonData.success && jsonData.data && jsonData.data.file_path) {
-          fileUrl = jsonData.data.file_path;
-          recordsExported = jsonData.data.records_exported;
-          successMessage = jsonData.data.message;
-        } else if (jsonData.file_path) {
-          // Check direct file_path
-          fileUrl = jsonData.file_path;
-          recordsExported = jsonData.records_exported;
-          successMessage = jsonData.message;
-        }
-        
-        if (fileUrl) {
-          // If file_path is relative, construct full URL
-          if (!fileUrl.startsWith('http')) {
-            // Extract base domain from baseUrl (remove /api/v1/ or /api/v2/ etc.)
-            const baseUrlStr = Api.baseUrl;
-            // Remove trailing slash and /api/v1/ or similar API path
-            const baseDomain = baseUrlStr.replace(/\/api\/v\d+\/?$/, '').replace(/\/$/, '');
-            
-            // Ensure fileUrl starts with / for proper URL construction
-            const mediaPath = fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
-            fileUrl = `${baseDomain}${mediaPath}`;
-          }
           
-          // Extract filename from URL
-          try {
-            const urlObj = new URL(fileUrl);
-            const pathParts = urlObj.pathname.split('/');
-            if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
-              fileName = pathParts[pathParts.length - 1];
-            }
-          } catch (e) {
-            // If URL parsing fails, try simple split
-            const pathParts = fileUrl.split('/');
-            if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
-              fileName = pathParts[pathParts.length - 1];
-            }
-          }
-          
-          // Add timestamp to filename to prevent overwriting
-          const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5).replace('T', '_');
-          const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
-          const fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
-          fileName = `${fileNameWithoutExt}_${timestamp}${fileExtension}`;
-          
-          console.log('Downloading file from:', fileUrl);
-          
-          // Download the file from the file_path URL
-          const fileResponse = await fetch(fileUrl, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-          
-          if (!fileResponse.ok) {
-            throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
-          }
-          
-          // Download the file as blob
-          const blob = await fileResponse.blob();
-          const blobUrl = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = blobUrl;
-          link.setAttribute('download', fileName);
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(blobUrl);
-          
-          setShowLoader(false);
-          const finalMessage = successMessage || `File downloaded successfully. ${recordsExported ? `Records exported: ${recordsExported}` : ''}`;
-          swal('Export successful', finalMessage, 'success');
-          return;
-        }
-        // No file_path in response
-        const errorMessage = (jsonData.data && jsonData.data.message) || jsonData.message || 'Server did not return a file path';
+        const link = document.createElement('a');
+        link.href = jsonData?.data?.file_path;
+        link.target = '_blank'; 
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
         setShowLoader(false);
-        swal('Export failed', errorMessage, 'error', {
-          closeOnClickOutside: false,
-          allowOutsideClick: false,
-        });
+
+        swal(
+          'Export successful',
+          jsonData?.message || 'File downloaded successfully',
+          'success'
+        );
         return;
       }
       // Unexpected response type
       setShowLoader(false);
-      swal('Export failed', 'Unexpected response format from server', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
-    } catch (error) {
+      return;
+    }
+    catch (error) {
       setShowLoader(false);
-      swal('Export failed', error.message || 'Something went wrong', 'error', {
-        closeOnClickOutside: false,
-        allowOutsideClick: false,
-      });
     }
   };
 

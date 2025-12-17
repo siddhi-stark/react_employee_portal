@@ -154,7 +154,7 @@ function Dashboard() {
             el.style.pointerEvents = 'none';
           });
           
-          if ([2, 3, 4, 7, 10].includes(Number(roleId))) {
+        if ([2, 3, 4, 7, 10].includes(Number(roleId))) {
             swal({
               title: 'Please Clock In first and Send Report',
               icon: 'warning',
@@ -162,8 +162,8 @@ function Dashboard() {
               closeOnClickOutside: true,
               closeOnEsc: true,
             });
-          }
-          if (userRole === 1 && isProjectManager) {
+        }
+        if (userRole === 1 && isProjectManager) {
             swal({
               title: 'Please Clock In first and Send Report',
               icon: 'warning',
@@ -171,7 +171,7 @@ function Dashboard() {
               closeOnClickOutside: true,
               closeOnEsc: true,
             });
-          }
+        }
         }, 300);
       }
     } else {

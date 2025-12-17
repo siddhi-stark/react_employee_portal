@@ -76,7 +76,7 @@ export default {
           const isLoginPage = window.location.pathname === '/login';
           
           if (!isRootPath && !isLoginPage) {
-            customFucntions.localStorageClear();
+          customFucntions.localStorageClear();
             localStorage.clear();
             window.location.reload();
           }
