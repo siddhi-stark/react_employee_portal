@@ -80,6 +80,7 @@ function Sidebar() {
 
   useEffect(() => {
     const LoginToken = customFunctions.getLocalStorage('access_token');
+    
     if (LoginToken) {
       getBirthday();
       getEvents();
@@ -154,6 +155,7 @@ function Sidebar() {
                   : '';
 
               const parentLinkCls = `nav-link ${hasSubMenu ? 'with-sub' : ''}`;
+              
               return (
                 <UserRestrictions permittedUsers={menuItem.roleaccess}>
                   <li className={`${parentLiCls} ${parentActiveCls}`}>

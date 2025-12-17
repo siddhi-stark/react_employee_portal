@@ -8,12 +8,45 @@ export default function UserRestrictions(props) {
   const [departmentID, setdepartmentID] = useState(null);
   // const [isManager, setIsManager] = useState(null);
 
-  useEffect(() => {
+  const loadUserData = () => {
     const roleId = customFunctions.getLocalStorage('group');
-    setRoleID(JSON.parse(roleId));
     const departmentId = customFunctions.getLocalStorage('department');
-    setdepartmentID(JSON.parse(departmentId));
-  }, []);
+    
+    if (roleId) {
+      try {
+        const parsedRole = JSON.parse(roleId);
+        setRoleID(parsedRole);
+      } catch (e) {
+        // If not JSON, use as number directly
+        setRoleID(Number(roleId));
+      }
+    }
+    
+    if (departmentId) {
+      try {
+        const parsedDept = JSON.parse(departmentId);
+        setdepartmentID(parsedDept);
+      } catch (e) {
+        setdepartmentID(Number(departmentId));
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Load on mount
+    loadUserData();
+    
+    // Listen for profile updates (when OIDC profile is loaded)
+    const handleProfileUpdate = () => {
+      loadUserData();
+    };
+    
+    document.addEventListener('ProfileUpdate', handleProfileUpdate);
+    
+    return () => {
+      document.removeEventListener('ProfileUpdate', handleProfileUpdate);
+    };
+  }, []); // Run on mount
 
   // useEffect(() => {
   //   const isProjectManager =
@@ -47,12 +80,28 @@ export default function UserRestrictions(props) {
   const childArr = ['/projects'];
   const childProjectArr = ['/scheduler', '/team-scheduler'];
 
+  // Check localStorage directly in case roleID state hasn't updated yet
+  const currentRoleIdFromStorage = customFunctions.getLocalStorage('group');
+  let effectiveRoleId = roleID;
+  
+  if (!effectiveRoleId && currentRoleIdFromStorage) {
+    try {
+      effectiveRoleId = JSON.parse(currentRoleIdFromStorage);
+    } catch (e) {
+      effectiveRoleId = Number(currentRoleIdFromStorage);
+    }
+    // Update state for next render
+    if (effectiveRoleId !== roleID) {
+      setRoleID(effectiveRoleId);
+    }
+  }
+
   const hasPermissions =
     // (Number(roleID) === 1 && isManager && permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))) 
     // || 
     // (Number(roleID) === 1 && !isManager) 
     // || 
-    (permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))); // Normal permission check
+    (permittedUsers && permittedUsers.length && permittedUsers.includes(Number(effectiveRoleId))); // Normal permission check
 
   if (
     Number(roleID) === 4 &&

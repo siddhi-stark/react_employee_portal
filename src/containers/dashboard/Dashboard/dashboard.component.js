@@ -144,13 +144,35 @@ function Dashboard() {
         SharedService.clockIn.next(true);
         setShowLoader(false);
       } else {
-        if ([2, 3, 4, 7, 10].includes(Number(roleId))) {
-          swal('Please Clock In first and Send Report', '', 'warning');
-        }
-        if (userRole === 1 && isProjectManager) {
-          swal('Please Clock In first and Send Report', '', 'warning');
-        }
         setShowLoader(false);
+        // Delay to ensure loader is hidden and DOM is updated before showing modal
+        setTimeout(() => {
+          // Force remove any remaining loader elements
+          const loaderElements = document.querySelectorAll('.preloader');
+          loaderElements.forEach((el) => {
+            el.style.display = 'none';
+            el.style.pointerEvents = 'none';
+          });
+          
+          if ([2, 3, 4, 7, 10].includes(Number(roleId))) {
+            swal({
+              title: 'Please Clock In first and Send Report',
+              icon: 'warning',
+              button: 'OK',
+              closeOnClickOutside: true,
+              closeOnEsc: true,
+            });
+          }
+          if (userRole === 1 && isProjectManager) {
+            swal({
+              title: 'Please Clock In first and Send Report',
+              icon: 'warning',
+              button: 'OK',
+              closeOnClickOutside: true,
+              closeOnEsc: true,
+            });
+          }
+        }, 300);
       }
     } else {
       setShowLoader(false);
@@ -297,6 +319,7 @@ function Dashboard() {
 
   useEffect(() => {
     const LoginToken = customFunctions.getLocalStorage('access_token');
+    
     if (LoginToken) {
       getUpcomingHoliday();
       getAppliedLeaves();

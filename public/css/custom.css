@@ -13911,11 +13911,23 @@ tr.trow.policy-approved .form-check {
 
 .swal-overlay.swal-overlay--show-modal,
 .swal-overlay.swal-overlay--show-modal .swal-modal {
-  z-index: 99999;
+  z-index: 100000 !important;
   position: fixed;
 }
 
 .swal-overlay.swal-overlay--show-modal .swal-modal {
   left: 50%;
   transform: translateX(-50%);
+}
+
+/* Ensure SweetAlert buttons are clickable */
+.swal-overlay.swal-overlay--show-modal .swal-button {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 100001 !important;
+}
+
+.swal-overlay.swal-overlay--show-modal .swal-button-container {
+  pointer-events: auto !important;
+  z-index: 100001 !important;
 }/*# sourceMappingURL=custom.css.map */
