@@ -517,34 +517,106 @@ function EmployeeTimesheet() {
             
             console.log('Downloading file from:', fileUrl);
             
-            // Download the file from the full URL (backend now provides full URLs)
-            const fileResponse = await fetch(fileUrl, {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${token}`,
-              },
-            });
-            const fileResponseData = await fileResponse.json();
+            // The media server doesn't support CORS, so we need a workaround
+            // Try to use XMLHttpRequest which might handle CORS differently, or
+            // construct a proxy URL through the API endpoint
             
-            if (!fileResponseData?.success) {
-              throw new Error(`Failed to download file: ${fileResponseData?.message}`);
+            // Extract the relative path from the full URL to construct API proxy URL
+            let apiProxyUrl = null;
+            try {
+              const urlObj = new URL(fileUrl);
+              const pathname = urlObj.pathname;
+              // Construct API proxy URL: /api/v1/download-file?path=/media/...
+              // This assumes backend has a proxy endpoint - if not, we'll fall back
+              apiProxyUrl = `${Api.baseUrl.replace(/\/$/, '')}/download-file?path=${encodeURIComponent(pathname)}`;
+            } catch (e) {
+              // URL parsing failed, skip proxy approach
             }
             
-            // Download the file as blob
-            const link = document.createElement('a');
-            link.href = fileResponseData?.data?.file_url || fileResponseData?.data?.csv_path;
-            link.target = '_blank'; 
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-    
+            // Try multiple download methods
+            let downloadSuccess = false;
+            
+            // Method 1: Try direct fetch (might work if CORS is configured)
+            try {
+              const fileResponse = await fetch(fileUrl, {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                },
+              });
+              
+              if (fileResponse.ok) {
+                const blob = await fileResponse.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.setAttribute('download', fileName);
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+                downloadSuccess = true;
+              }
+            } catch (fetchError) {
+              console.warn('Direct fetch failed:', fetchError);
+            }
+            
+            // Method 2: Try API proxy endpoint if available
+            if (!downloadSuccess && apiProxyUrl) {
+              try {
+                const proxyResponse = await fetch(apiProxyUrl, {
+                  method: 'GET',
+                  headers: {
+                    'Authorization': `Bearer ${token}`,
+                  },
+                });
+                
+                if (proxyResponse.ok) {
+                  const blob = await proxyResponse.blob();
+                  const blobUrl = window.URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = blobUrl;
+                  link.setAttribute('download', fileName);
+                  link.style.display = 'none';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  window.URL.revokeObjectURL(blobUrl);
+                  downloadSuccess = true;
+                }
+              } catch (proxyError) {
+                console.warn('API proxy download failed:', proxyError);
+              }
+            }
+            
+            // Method 3: Fallback - open in new window (user may need to authenticate)
+            if (!downloadSuccess) {
+              // Try opening the file URL directly - browser will handle it
+              // This might work if the media server accepts cookies or has public access
+              const link = document.createElement('a');
+              link.href = fileUrl;
+              link.target = '_blank';
+              link.download = fileName;
+              link.style.display = 'none';
+              document.body.appendChild(link);
+              link.click();
+              setTimeout(() => {
+                document.body.removeChild(link);
+              }, 100);
+              
+              setShowLoader(false);
+              swal(
+                'Download initiated',
+                'The file download has been started. If it doesn\'t work, the media server may require CORS configuration. Please contact your administrator.',
+                'info'
+              );
+              return;
+            }
+            
+            // If we got here, download was successful
             setShowLoader(false);
-            console.log('Downoaded the file from the URL:', fileResponseData);
-            swal(
-              'Export successful',
-              fileResponseData?.data?.message || 'File downloaded successfully',
-              'success'
-            );
+            swal('Export successful', 'File downloaded successfully', 'success');
             return;
           }
           
