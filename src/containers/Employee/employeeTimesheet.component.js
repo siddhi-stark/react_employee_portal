@@ -524,27 +524,25 @@ function EmployeeTimesheet() {
                 'Authorization': `Bearer ${token}`,
               },
             });
-            let response = await fileResponse.json();
             
-            if (!response?.success) {
-              throw new Error(`Failed to download file: ${response?.message}`);
+            if (!fileResponse.ok) {
+              throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
             }
             
             // Download the file as blob
+            const blob = await fileResponse.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = response?.data?.file_url || response?.data?.csv_path;
-            link.target = '_blank'; 
+            link.href = blobUrl;
+            link.setAttribute('download', fileName);
+            link.style.display = 'none';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
     
             setShowLoader(false);
-            console.log('Downoaded the file from the URL:', response);
-            swal(
-              'Export successful',
-              response?.data?.message || 'File downloaded successfully',
-              'success'
-            );
+            swal('Export successful', 'File downloaded successfully', 'success');
             return;
           }
           
