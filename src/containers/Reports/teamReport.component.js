@@ -756,7 +756,7 @@ function TeamReport() {
         }
           
         const link = document.createElement('a');
-        link.href = jsonData?.data?.file_path;
+        link.href = jsonData?.data?.file_path || jsonData?.data?.file_url || jsonData?.data?.csv_path;
         link.target = '_blank'; 
         document.body.appendChild(link);
         link.click();

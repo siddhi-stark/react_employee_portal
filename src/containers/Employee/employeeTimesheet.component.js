@@ -524,37 +524,30 @@ function EmployeeTimesheet() {
                 'Authorization': `Bearer ${token}`,
               },
             });
+            let response = await fileResponse.json();
             
-            if (!fileResponse.ok) {
-              throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
+            if (!response?.success) {
+              throw new Error(`Failed to download file: ${response?.message}`);
             }
             
             // Download the file as blob
-            const blob = await fileResponse.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = blobUrl;
-            link.setAttribute('download', fileName);
-            link.style.display = 'none';
+            link.href = response?.data?.file_url || response?.data?.csv_path;
+            link.target = '_blank'; 
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
-            
+    
             setShowLoader(false);
-            swal('Export successful', 'File downloaded successfully', 'success');
+            console.log('Downoaded the file from the URL:', response);
+            swal(
+              'Export successful',
+              response?.data?.message || 'File downloaded successfully',
+              'success'
+            );
             return;
           }
           
-          // JSON response but not a file path - show error or try to extract message
-          const errorMessage = jsonData.message || jsonData.error || jsonData.detail || 'Server returned an unexpected response';
-          console.error('Unexpected JSON response:', jsonData);
-          setShowLoader(false);
-          swal('Export failed', errorMessage, 'error', {
-            closeOnClickOutside: false,
-            allowOutsideClick: false,
-          });
-          return;
         } catch (e) {
           // If JSON parsing fails, show error (can't read response again)
           console.error('Error parsing JSON:', e);
