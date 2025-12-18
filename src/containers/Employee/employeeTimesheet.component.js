@@ -524,38 +524,30 @@ function EmployeeTimesheet() {
                 'Authorization': `Bearer ${token}`,
               },
             });
+            let response = await fileResponse.json();
             
-            if (!fileResponse.ok) {
-              throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
+            if (!response?.success) {
+              throw new Error(`Failed to download file: ${response?.message}`);
             }
             
             // Download the file as blob
             const link = document.createElement('a');
-            link.href = fileResponse?.data?.file_url || fileResponse?.data?.csv_path;
+            link.href = response?.data?.file_url || response?.data?.csv_path;
             link.target = '_blank'; 
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
     
             setShowLoader(false);
-    
+            console.log('Downoaded the file from the URL:', response);
             swal(
               'Export successful',
-              fileResponse?.message || 'File downloaded successfully',
+              response?.data?.message || 'File downloaded successfully',
               'success'
             );
             return;
           }
           
-          // JSON response but not a file path - show error or try to extract message
-          const errorMessage = jsonData.message || jsonData.error || jsonData.detail || 'Server returned an unexpected response';
-          console.error('Unexpected JSON response:', jsonData);
-          setShowLoader(false);
-          swal('Export failed', errorMessage, 'error', {
-            closeOnClickOutside: false,
-            allowOutsideClick: false,
-          });
-          return;
         } catch (e) {
           // If JSON parsing fails, show error (can't read response again)
           console.error('Error parsing JSON:', e);
