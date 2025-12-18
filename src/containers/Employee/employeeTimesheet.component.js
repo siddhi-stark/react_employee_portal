@@ -524,7 +524,7 @@ function EmployeeTimesheet() {
                 'Authorization': `Bearer ${token}`,
               },
             });
-            let response = await fileResponse.json();
+            const response = await fileResponse.json();
             
             if (!response?.success) {
               throw new Error(`Failed to download file: ${response?.message}`);
