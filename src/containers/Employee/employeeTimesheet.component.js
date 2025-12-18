@@ -530,19 +530,20 @@ function EmployeeTimesheet() {
             }
             
             // Download the file as blob
-            const blob = await fileResponse.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = blobUrl;
-            link.setAttribute('download', fileName);
-            link.style.display = 'none';
+            link.href = fileResponse?.data?.file_url || fileResponse?.data?.csv_path;
+            link.target = '_blank'; 
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
-            
+    
             setShowLoader(false);
-            swal('Export successful', 'File downloaded successfully', 'success');
+    
+            swal(
+              'Export successful',
+              fileResponse?.message || 'File downloaded successfully',
+              'success'
+            );
             return;
           }
           
