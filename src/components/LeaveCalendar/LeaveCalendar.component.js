@@ -311,8 +311,9 @@ function LeaveCalendar({
     const dayType = half_day_status ? '(Half' : '(Full';
     
     // Build tooltip text for native browser tooltip
+    // Always show user_name if available (for both Team Leaves and Employee Leaves)
     let tooltipText = '';
-    if (isTeamView && user_name) {
+    if (user_name) {
       tooltipText = `${user_name} - ${leave_type || 'Leave'} ${dayType} Day)`;
     } else {
       tooltipText = `${leave_type || 'Leave'} ${dayType} Day)`;
