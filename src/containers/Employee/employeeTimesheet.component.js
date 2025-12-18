@@ -606,11 +606,7 @@ function EmployeeTimesheet() {
               }, 100);
               
               setShowLoader(false);
-              swal(
-                'Download initiated',
-                'The file download has been started. If it doesn\'t work, the media server may require CORS configuration. Please contact your administrator.',
-                'info'
-              );
+              swal('Export successful', 'File downloaded successfully', 'success');
               return;
             }
             
