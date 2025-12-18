@@ -75,51 +75,51 @@ function LeaveCalendar({
         return leaveStartDate <= currentMonthEnd && leaveEndDate >= currentMonthStart;
       })
       .map((leave) => {
-        const startDate = new Date(leave.leave_from_date);
-        const endDate = new Date(leave.leave_to_date);
-        
-        // For half-day leaves, adjust end time
-        if (leave.half_day_status) {
-          if (leave.half_day_status === 1) {
-            // First half - end at noon
-            endDate.setHours(12, 0, 0, 0);
-          } else {
-            // Second half - start at noon, end at end of day
-            startDate.setHours(12, 0, 0, 0);
-            endDate.setHours(23, 59, 59, 999);
-          }
+      const startDate = new Date(leave.leave_from_date);
+      const endDate = new Date(leave.leave_to_date);
+      
+      // For half-day leaves, adjust end time
+      if (leave.half_day_status) {
+        if (leave.half_day_status === 1) {
+          // First half - end at noon
+          endDate.setHours(12, 0, 0, 0);
         } else {
-          // Full day leaves - end at end of day
-          if (leave.leave_from_date === leave.leave_to_date) {
-            endDate.setHours(23, 59, 59, 999);
-          } else {
-            endDate.setHours(23, 59, 59, 999);
-          }
+          // Second half - start at noon, end at end of day
+          startDate.setHours(12, 0, 0, 0);
+          endDate.setHours(23, 59, 59, 999);
         }
-
-        // Determine event title based on view
-        let title = '';
-        if (isTeamView) {
-          title = `${leave.user_name || ''} - ${leave.leave_type || ''}`.trim();
+      } else {
+        // Full day leaves - end at end of day
+        if (leave.leave_from_date === leave.leave_to_date) {
+          endDate.setHours(23, 59, 59, 999);
         } else {
-          title = `${leave.leave_type || 'Leave'}`;
+          endDate.setHours(23, 59, 59, 999);
         }
+      }
 
-        return {
-          id: leave.id,
-          title: title,
-          start: startDate,
-          end: endDate,
-          resource: {
-            ...leave,
-            isHalfDay: !!leave.half_day_status,
-            halfDayStatus: leave.half_day_status,
-          },
-          className: leave.half_day_status 
-            ? (leave.half_day_status === 1 ? 'half-day-first' : 'half-day-second')
-            : '',
-        };
-      });
+      // Determine event title based on view
+      let title = '';
+      if (isTeamView) {
+        title = `${leave.user_name || ''} - ${leave.leave_type || ''}`.trim();
+      } else {
+        title = `${leave.leave_type || 'Leave'}`;
+      }
+
+      return {
+        id: leave.id,
+        title: title,
+        start: startDate,
+        end: endDate,
+        resource: {
+          ...leave,
+          isHalfDay: !!leave.half_day_status,
+          halfDayStatus: leave.half_day_status,
+        },
+        className: leave.half_day_status 
+          ? (leave.half_day_status === 1 ? 'half-day-first' : 'half-day-second')
+          : '',
+      };
+    });
   }, [leaves, isTeamView, currentMonthStart, currentMonthEnd]);
 
   // Combine leave and holiday events

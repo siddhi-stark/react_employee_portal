@@ -294,7 +294,7 @@ function EmployeeDetails(props) {
         setShowLoader(false);
         swal('Export successful', 'File downloaded successfully', 'success');
       } catch (error) {
-        setShowLoader(false);
+      setShowLoader(false);
         swal('Export failed', error.message || 'Failed to download file', 'error', {
           closeOnClickOutside: false,
           allowOutsideClick: false,

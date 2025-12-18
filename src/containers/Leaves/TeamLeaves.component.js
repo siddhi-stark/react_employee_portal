@@ -460,7 +460,7 @@ function TeamLeaves() {
           if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
             fileName = pathParts[pathParts.length - 1];
           }
-          
+
           // Add timestamp to filename to prevent overwriting
           const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5).replace('T', '_');
           const fileExtension = fileName.substring(fileName.lastIndexOf('.'));

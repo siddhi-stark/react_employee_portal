@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
-import { Card, Image, Button, Row, Col } from 'react-bootstrap';
+import { Card, Image, Button, Row, Col, Tabs, Tab, Form, Modal } from 'react-bootstrap';
 import CustomTable from 'stark-custom-datatable';
 import StarkFormBuilder from 'stark-form-builder';
 import SearchFormSections from './searchFormschema.json';
+import LeaveCalendar from '../../components/LeaveCalendar/LeaveCalendar.component';
 import customFunctions from '../../helper/customFunctions';
 import AuthApi from '../../helper/authApi';
 import Api from '../../helper/api';
@@ -235,13 +236,21 @@ function EmployeeTeamLeaves(props) {
   const [showMilestoneInfo, setShowMilestoneInfo] = useState(false);
   const [pendingApprovalAction, setPendingApprovalAction] = useState(null);
   const [applicantName, setApplicantName] = useState('');
+  const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'taken'
+  const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'table'
+  const [calendarDate, setCalendarDate] = useState(new Date());
+  const [calendarView, setCalendarView] = useState('month');
+  const [holidays, setHolidays] = useState([]);
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [selectedLeaveId, setSelectedLeaveId] = useState(null);
   let filterOptions = {};
 
   console.log('revertStatusId', revertStatusId);
 
-  const getRowData = async (pageNo = 1) => {
+  const getRowData = async (pageNo = 1, tab = null, forCalendar = false) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
+    const currentTab = tab || activeTab;
     const endPoint = `${Api.leavesUrl}`;
     const filterList =
       filterData && !customFunctions.checkIfEmpty(filterData, 'O')
@@ -249,10 +258,12 @@ function EmployeeTeamLeaves(props) {
         : {};
 
     const params = {
-      page,
-      limit,
+      page: forCalendar ? 1 : page,
+      limit: forCalendar ? 1000 : limit, // Get all leaves for calendar view
+      tab: currentTab, // Add tab parameter
       sort_by: 'leave_from_date',
-      sort_direction: 'descending',
+      // Sort direction: ascending for upcoming, descending for taken
+      sort_direction: currentTab === 'upcoming' ? 'ascending' : 'descending',
       ...filterList,
     };
     const url = customFunctions.generateUrl(endPoint, params);
@@ -260,15 +271,17 @@ function EmployeeTeamLeaves(props) {
 
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
-      setTotalCount(data.paginator.total_count);
-      setItemsPerPage(data.paginator.limit);
-      setCurrentPage(Number(data.paginator.current_page));
-      const newData = [...data.data];
-      newData.map((item, i) => {
-        const newItem = item;
-        newItem.index = (page - 1) * itemsPerPage + (i + 1);
-        return newItem;
-      });
+      if (!forCalendar) {
+        setTotalCount(data.paginator.total_count);
+        setItemsPerPage(data.paginator.limit);
+        setCurrentPage(Number(data.paginator.current_page));
+        const newData = [...data.data];
+        newData.map((item, i) => {
+          const newItem = item;
+          newItem.index = (page - 1) * itemsPerPage + (i + 1);
+          return newItem;
+        });
+      }
       setRowData((data && data.data) || []);
     } else {
       setShowLoader(false);
@@ -279,14 +292,31 @@ function EmployeeTeamLeaves(props) {
     }
   };
 
+  // Fetch holidays
+  const getHolidays = async () => {
+    try {
+      const endPoint = `${Api.holidayUrll}?type=all`;
+      const { data } = await AuthApi.getDataFromServer(endPoint);
+      if (data && data.data && data.success) {
+        setHolidays(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching holidays:', error);
+    }
+  };
+
+  useEffect(() => {
+    getHolidays();
+  }, []);
+
   useEffect(() => {
     const uRole = customFunctions.getLocalStorage('group');
     setUserRole(Number(uRole));
     if (!reportTable) {
-      getRowData(1);
+      getRowData(1, null, viewMode === 'calendar');
     }
     setTitle('Leaves');
-  }, [filterData]);
+  }, [filterData, activeTab, viewMode]);
 
   useEffect(() => {
     if (location && location.reportTable) {
@@ -367,6 +397,58 @@ function EmployeeTeamLeaves(props) {
     };
     setFilters(filterValues);
     setFilterData(filterValues);
+    
+    // Auto-navigate calendar to selected date range
+    if (formValues.start_date) {
+      setCalendarDate(new Date(formValues.start_date));
+    }
+  };
+
+  const onClear = () => {
+    if (filterData && !Object.keys(filterData).length) return;
+    setFilterData({});
+    setCalendarDate(new Date());
+  };
+
+  const handleCalendarEventClick = (event) => {
+    const leave = event.resource;
+    const { id, status_name } = leave;
+    
+    // For Employee Leaves, if status is Pending, show accept/decline options
+    if (status_name === 'Pending') {
+      // Show action choice modal
+      setSelectedLeaveId(id);
+      setShowActionModal(true);
+    } else {
+      // For non-pending leaves, navigate to view page
+      history.push(`/edit-leave/${id}`, {
+        isView: 'true',
+        isViewLeave: true,
+      });
+    }
+  };
+
+  const handleApproveClick = () => {
+    setShowActionModal(false);
+    // Check for milestone warnings before showing approval modal
+    checkMilestoneWarningsBeforeApproval(selectedLeaveId, 2, false);
+    setSelectedLeaveId(null);
+  };
+
+  const handleDeclineClick = () => {
+    setShowActionModal(false);
+    setLeaveId(selectedLeaveId);
+    setStatusId(3);
+    setModalShow(true);
+    setSelectedLeaveId(null);
+  };
+
+  const handleCalendarNavigate = (date) => {
+    setCalendarDate(date);
+  };
+
+  const handleCalendarViewChange = (view) => {
+    setCalendarView(view);
   };
 
   const getEmployeeName = async () => {
@@ -397,6 +479,221 @@ function EmployeeTeamLeaves(props) {
     getEmployeeName();
   }, []);
 
+  // Export function for leaves (same as TeamLeaves)
+  const handleExport = async () => {
+    setShowLoader(true);
+    const endPoint = `${Api.leaveExportCSVUrl}`;
+    
+    const filterList =
+      filterData && !customFunctions.checkIfEmpty(filterData, 'O')
+        ? customFunctions.jsonParse(filterData)
+        : {};
+
+    const params = {};
+
+    // Calculate financial year from date range
+    // Financial year starts from April 1st (e.g., 2024 means April 2024 - March 2025)
+    let financialYear = null;
+    if (filterList.start_date) {
+      const startDate = new Date(filterList.start_date);
+      const month = startDate.getMonth() + 1; // 1-12
+      const year = startDate.getFullYear();
+      // If month is April (4) or later, financial year is current year
+      // If month is Jan-Mar, financial year is previous year
+      if (month >= 4) {
+        financialYear = year;
+      } else {
+        financialYear = year - 1;
+      }
+    } else {
+      // If no date provided, use current financial year
+      const now = new Date();
+      const month = now.getMonth() + 1;
+      const year = now.getFullYear();
+      if (month >= 4) {
+        financialYear = year;
+      } else {
+        financialYear = year - 1;
+      }
+    }
+
+    if (financialYear) {
+      params.year = financialYear;
+    }
+
+    // Add employee parameter (API expects 'employee' not 'employee_id')
+    if (filterList.employee_id) {
+      params.employee = filterList.employee_id;
+    }
+
+    // Add sort parameters (optional, using defaults if not provided)
+    params.sort_by = 'id';
+    params.sort_direction = 'ascending';
+
+    // Clean object to remove empty values
+    const cleanParams = customFunctions.cleanObject(params);
+    const url = customFunctions.generateUrl(endPoint, cleanParams);
+
+    try {
+      // Get the access token for authentication
+      const token = customFunctions.getLocalStorage('access_token');
+
+      // Fetch the export API using GET
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      // Check content-type header first
+      const contentType = response.headers.get('content-type') || '';
+
+      // If response is not ok, handle error
+      if (!response.ok) {
+        const clonedResponse = response.clone();
+
+        // Try to parse as JSON first (API might return JSON error)
+        if (contentType.includes('application/json')) {
+          try {
+            const errorData = await clonedResponse.json();
+            const errorMessage = errorData.message || errorData.error || JSON.stringify(errorData);
+            setShowLoader(false);
+            swal('Export failed', errorMessage, 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+            return;
+          } catch (e) {
+            const errorText = await response.text();
+            setShowLoader(false);
+            swal('Export failed', errorText || 'Failed to download file', 'error', {
+              closeOnClickOutside: false,
+              allowOutsideClick: false,
+            });
+            return;
+          }
+        } else {
+          const errorText = await response.text();
+          setShowLoader(false);
+          swal('Export failed', errorText || 'Failed to download file', 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          });
+          return;
+        }
+      }
+
+      // Parse JSON response
+      if (contentType.includes('application/json')) {
+        const jsonData = await response.json();
+        console.log('Export Response:', jsonData);
+        
+        // Check if API returned an error (success: false)
+        if (jsonData.success === false || !jsonData.success) {
+          const errorMessage = jsonData.message || jsonData.error || jsonData.detail || 'No data found for the given filters';
+          setShowLoader(false);
+          swal('Export failed', errorMessage, 'error', {
+            closeOnClickOutside: false,
+            allowOutsideClick: false,
+          });
+          return;
+        }
+        
+        // Check if response contains file_path
+        let fileUrl = null;
+        let fileName = 'employees_leaves_report.xlsx';
+        
+        if (jsonData.success && jsonData.data && jsonData.data.file_path) {
+          fileUrl = jsonData.data.file_path;
+        } else if (jsonData.file_path) {
+          fileUrl = jsonData.file_path;
+        }
+        
+        if (fileUrl) {
+          // If file_path is relative, construct full URL
+          if (!fileUrl.startsWith('http')) {
+            const baseUrlStr = Api.baseUrl;
+            const baseDomain = baseUrlStr.replace(/\/api\/v\d+\/?$/, '').replace(/\/$/, '');
+            const mediaPath = fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
+            fileUrl = `${baseDomain}${mediaPath}`;
+          }
+          
+          // Extract filename from URL
+          try {
+            const urlObj = new URL(fileUrl);
+            const pathParts = urlObj.pathname.split('/');
+            if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+              fileName = pathParts[pathParts.length - 1];
+            }
+          } catch (e) {
+            const pathParts = fileUrl.split('/');
+            if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+              fileName = pathParts[pathParts.length - 1];
+            }
+          }
+          
+          // Add timestamp to filename to prevent overwriting
+          const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5).replace('T', '_');
+          const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
+          const fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+          fileName = `${fileNameWithoutExt}_${timestamp}${fileExtension}`;
+          
+          console.log('Downloading file from:', fileUrl);
+          
+          // Download the file from the file_path URL
+          const fileResponse = await fetch(fileUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          
+          if (!fileResponse.ok) {
+            throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
+          }
+          
+          // Download the file as blob
+          const blob = await fileResponse.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.setAttribute('download', fileName);
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(blobUrl);
+          
+          setShowLoader(false);
+          swal('Export successful', 'File downloaded successfully', 'success');
+          return;
+        }
+        // No file_path in response
+        const errorMessage = (jsonData.data && jsonData.data.message) || jsonData.message || 'Server did not return a file path';
+        setShowLoader(false);
+        swal('Export failed', errorMessage, 'error', {
+          closeOnClickOutside: false,
+          allowOutsideClick: false,
+        });
+        return;
+      }
+      // Unexpected response type
+      setShowLoader(false);
+      swal('Export failed', 'Unexpected response format from server', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    } catch (error) {
+      setShowLoader(false);
+      swal('Export failed', error.message || 'Something went wrong', 'error', {
+        closeOnClickOutside: false,
+        allowOutsideClick: false,
+      });
+    }
+  };
+
+  // Keep the existing getExportCSV for reportTable functionality
   const getExportCSV = async () => {
     setShowLoader(true);
     const endPoint = `${Api.leaveExportCSVUrl}`;
@@ -457,7 +754,7 @@ function EmployeeTeamLeaves(props) {
         setShowLoader(false);
         swal('Export successful', 'File downloaded successfully', 'success');
       } catch (error) {
-        setShowLoader(false);
+      setShowLoader(false);
         swal('Export failed', error.message || 'Failed to download file', 'error', {
           closeOnClickOutside: false,
           allowOutsideClick: false,
@@ -516,7 +813,7 @@ function EmployeeTeamLeaves(props) {
                 showResetBtn={true}
                 resetBtnText="Clear"
                 showBtnClass={false}
-                btnContainerClass="form-submit-buttons pull-right"
+                btnContainerClass="d-none"
                 formClass="row"
                 isStepForm={false}
                 onFormReset={() => {
@@ -526,6 +823,52 @@ function EmployeeTeamLeaves(props) {
                   setYear(null);
                 }}
               />
+              <Row className="mt-3">
+                <Col sm={3}>
+                  <div className="mt-1">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      onClick={() => handleExport()}
+                    >
+                      Export
+                    </Button>
+                  </div>
+                </Col>
+                <Col sm={9}>
+                  <div className="filter-btn pull-right filter-btn-report">
+                    <Button
+                      variant="primary"
+                      type="button"
+                      className="ms-4"
+                      onClick={() => {
+                        // Trigger form submit by finding and clicking the hidden submit button
+                        const form = document.querySelector('.stark-form-builder form');
+                        if (form) {
+                          const submitBtn = form.querySelector('button[type="submit"]');
+                          if (submitBtn) {
+                            submitBtn.click();
+                          }
+                        }
+                      }}
+                    >
+                      Apply
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      type="button"
+                      className="ms-4"
+                      onClick={() => {
+                        onClear();
+                        setReportTable(false);
+                        setYear(null);
+                      }}
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                </Col>
+              </Row>
             </div>
           </Card.Body>
         </Card>
@@ -533,86 +876,166 @@ function EmployeeTeamLeaves(props) {
           <Card.Body>
             <div className="d-flex align-items-center justify-content-between">
               <h5 className="card-title">Employee Leaves </h5>
-              <div className="float-end">
-                <Row>
-                  <Col className="col-sm-4">
-                    <Datepicker
-                      className="form-control"
-                      selected={year}
-                      containerClass="mb-0"
-                      placeholder="Select Year"
-                      showYearPicker
-                      dateFormat="yyyy"
-                      minDate={new Date('2020-01-01')}
-                      maxDate={new Date()}
-                      onChange={(e) => {
-                        setYear(e);
-                      }}
-                    />
-                  </Col>
-                  <Col className="col-sm-8">
-                    <Button
-                      variant="primary"
-                      title="Show Report"
-                      onClick={() => {
-                        if (!year) {
-                          swal({
-                            title: 'Please select Year',
-                            icon: 'warning',
-                            dangerMode: true,
-                            confirmButtons: true,
-                            closeOnClickOutside: false,
-                            allowOutsideClick: false,
-                          });
-                        } else {
-                          setFilters();
-                          setReportTable(true);
-                        }
-                      }}
-                      type="button"
-                      className="float-right"
-                    >
-                      Show Report
-                    </Button>
+              <div className="d-flex align-items-center">
+                {!reportTable && (
+                  <Form.Check
+                    type="checkbox"
+                    id="employee-table-view-toggle"
+                    label="Show Tabular View"
+                    checked={viewMode === 'table'}
+                    onChange={(e) => {
+                      setViewMode(e.target.checked ? 'table' : 'calendar');
+                      if (e.target.checked) {
+                        // When switching to table, fetch paginated data
+                        getRowData(1, null, false);
+                      } else {
+                        // When switching to calendar, fetch all data
+                        getRowData(1, null, true);
+                      }
+                    }}
+                    className="ms-3"
+                  />
+                )}
+                {reportTable && (
+                  <div className="float-end">
+                    <Row>
+                      <Col className="col-sm-4">
+                        <Datepicker
+                          className="form-control"
+                          selected={year}
+                          containerClass="mb-0"
+                          placeholder="Select Year"
+                          showYearPicker
+                          dateFormat="yyyy"
+                          minDate={new Date('2020-01-01')}
+                          maxDate={new Date()}
+                          onChange={(e) => {
+                            setYear(e);
+                          }}
+                        />
+                      </Col>
+                      <Col className="col-sm-8">
+                        <Button
+                          variant="primary"
+                          title="Show Report"
+                          onClick={() => {
+                            if (!year) {
+                              swal({
+                                title: 'Please select Year',
+                                icon: 'warning',
+                                dangerMode: true,
+                                confirmButtons: true,
+                                closeOnClickOutside: false,
+                                allowOutsideClick: false,
+                              });
+                            } else {
+                              setFilters();
+                              setReportTable(true);
+                            }
+                          }}
+                          type="button"
+                          className="float-right"
+                        >
+                          Show Report
+                        </Button>
 
-                    {reportTable && (
-                      <Button
-                        variant="primary"
-                        title="Download Report"
-                        onClick={() => {
-                          getExportCSV();
-                        }}
-                        type="button"
-                        className="float-right ms-3"
-                      >
-                        Download Report
-                      </Button>
-                    )}
-                  </Col>
-                </Row>
+                        {reportTable && (
+                          <Button
+                            variant="primary"
+                            title="Download Report"
+                            onClick={() => {
+                              getExportCSV();
+                            }}
+                            type="button"
+                            className="float-right ms-3"
+                          >
+                            Download Report
+                          </Button>
+                        )}
+                      </Col>
+                    </Row>
+                  </div>
+                )}
               </div>
             </div>
             <hr />
-            {
-              reportTable ? (<EmployeeLeavesDetails filters={filters} year={year} />) : (
-                <CustomTable
-                  columns={columns}
-                  rows={rowData}
-                  showPagination={true}
-                  tableClass="table-striped"
-                  paginationProps={{
-                    totalItems: totalCount,
-                    itemsPerPage: limit,
-                    activePage: currentPage,
-                    onPageChange: (pageNo) => {
-                      getRowData(pageNo);
-                    },
-                  }}
-                  emptyRender={() => {
-                    return 'No record found.';
-                  }}
-                />
-              )}
+            {reportTable ? (
+              <EmployeeLeavesDetails filters={filters} year={year} />
+            ) : (
+              <Tabs
+                activeKey={activeTab}
+                onSelect={(k) => {
+                  setActiveTab(k);
+                  setCurrentPage(1); // Reset to first page when switching tabs
+                }}
+                className="mb-3"
+              >
+                <Tab eventKey="upcoming" title="Upcoming">
+                  {viewMode === 'calendar' ? (
+                    <LeaveCalendar
+                      leaves={rowData}
+                      holidays={holidays}
+                      onSelectEvent={handleCalendarEventClick}
+                      defaultDate={calendarDate}
+                      view={calendarView}
+                      onViewChange={handleCalendarViewChange}
+                      onNavigate={handleCalendarNavigate}
+                      isTeamView={false}
+                    />
+                  ) : (
+                    <CustomTable
+                      columns={columns}
+                      rows={rowData}
+                      showPagination={true}
+                      tableClass="table-striped"
+                      paginationProps={{
+                        totalItems: totalCount,
+                        itemsPerPage: limit,
+                        activePage: currentPage,
+                        onPageChange: (pageNo) => {
+                          getRowData(pageNo, 'upcoming');
+                        },
+                      }}
+                      emptyRender={() => {
+                        return 'No upcoming leaves found.';
+                      }}
+                    />
+                  )}
+                </Tab>
+                <Tab eventKey="taken" title="Taken">
+                  {viewMode === 'calendar' ? (
+                    <LeaveCalendar
+                      leaves={rowData}
+                      holidays={holidays}
+                      onSelectEvent={handleCalendarEventClick}
+                      defaultDate={calendarDate}
+                      view={calendarView}
+                      onViewChange={handleCalendarViewChange}
+                      onNavigate={handleCalendarNavigate}
+                      isTeamView={false}
+                    />
+                  ) : (
+                    <CustomTable
+                      columns={columns}
+                      rows={rowData}
+                      showPagination={true}
+                      tableClass="table-striped"
+                      paginationProps={{
+                        totalItems: totalCount,
+                        itemsPerPage: limit,
+                        activePage: currentPage,
+                        onPageChange: (pageNo) => {
+                          getRowData(pageNo, 'taken');
+                        },
+                      }}
+                      emptyRender={() => {
+                        return 'No taken leaves found.';
+                      }}
+                    />
+                  )}
+                </Tab>
+              </Tabs>
+            )}
           </Card.Body>
 
           {showMilestoneInfo && (
@@ -647,9 +1070,45 @@ function EmployeeTeamLeaves(props) {
               isRevert={isRevert}
               handleModalCLose={(e) => setModalShow(e)}
               onStatusUpdate={() => {
-                getRowData(1);
+                getRowData(1, null, viewMode === 'calendar');
               }}
             />
+          )}
+
+          {showActionModal && (
+            <Modal
+              show={showActionModal}
+              onHide={() => {
+                setShowActionModal(false);
+                setSelectedLeaveId(null);
+              }}
+              centered
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Leave Action</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>Choose an action for this leave:</p>
+                <div className="d-flex justify-content-around mt-3">
+                  <Button
+                    variant="success"
+                    onClick={handleApproveClick}
+                    className="px-4"
+                  >
+                    <Image src="/images/success.svg" className="me-2" style={{ width: '20px', height: '20px' }} />
+                    Approve
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={handleDeclineClick}
+                    className="px-4"
+                  >
+                    <Image src="/images/fail.svg" className="me-2" style={{ width: '20px', height: '20px' }} />
+                    Decline
+                  </Button>
+                </div>
+              </Modal.Body>
+            </Modal>
           )}
         </Card>
       </section>
