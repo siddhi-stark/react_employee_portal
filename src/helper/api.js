@@ -302,6 +302,7 @@ export default class Api extends Component {
   static configureSetting = `${Api.baseUrl}configure-setting/`
 
   static interviewQuestionsUrl = `${Api.baseUrl}ai-interview-questions/`
+  
   static exportTasksUrl = `${Api.baseUrl}export-tasks/`
 
 
