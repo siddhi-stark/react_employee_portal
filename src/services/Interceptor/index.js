@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
-import customFucntions from '../../helper/customFunctions';
+import customFunctions from '../../helper/customFunctions';
 
 export default {
   setupInterceptors: async () => {
@@ -47,7 +47,7 @@ export default {
         //   configuration.headers['Content-Type'] = 'application/json';
         // }
         // Get token - try both methods to ensure we get it
-        let token = customFucntions.getLocalStorage('access_token');
+        let token = customFunctions.getLocalStorage('access_token');
         if (!token || token === false) {
           token = localStorage.getItem('access_token');
         }
@@ -71,14 +71,20 @@ export default {
             data.status === 403 ||
             data.statusText === 'Unauthorized')
         ) {
-          // Don't clear token if we're on root path (just came from OIDC) or login page
-          const isRootPath = window.location.pathname === '/';
+          // Check if we're in the middle of OIDC flow (token in URL)
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlToken = urlParams.get('token');
+          const isOidcFlow = !!urlToken;
+          
+          // Don't clear token if we're in OIDC flow or on login page
           const isLoginPage = window.location.pathname === '/login';
           
-          if (!isRootPath && !isLoginPage) {
-          customFucntions.localStorageClear();
+          if (!isOidcFlow && !isLoginPage) {
+            // Token is expired or invalid - clear storage and reload
+            customFunctions.localStorageClear();
             localStorage.clear();
-            window.location.reload();
+            // Redirect to login instead of reload to avoid infinite loop
+            window.location.href = '/login';
           }
           return Promise.reject(error.response.data);
         }

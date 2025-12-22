@@ -89,7 +89,7 @@ function App() {
     }
   }, [history, dispatch]);
 
-  const checkLoggedIn = () => {
+  const checkLoggedIn = async () => {
     token = customFunctions.getLocalStorage('access_token');
     if (!token) {
       const path = window.location.pathname.split('/');
@@ -107,14 +107,74 @@ function App() {
         setIsLoggedIn(true);
       }
     } else {
-      setIsLoggedIn(true);
-      dispatch({ type: 'LOGIN', value: true });
+      // Validate token by calling profile API
+      // This ensures token is still valid (not expired)
+      try {
+        const response = await AuthApi.getDataFromServer(Api.profileUrl);
+        if (response && response.data && response.data.data) {
+          // Token is valid, update user data if needed
+          const userData = response.data.data;
+          
+          // Update user data in localStorage (in case it changed)
+          if (userData.id) {
+            customFunctions.setLocalStorage('userId', userData.id);
+          }
+          const roleId = userData.role_id || userData.group;
+          if (roleId) {
+            customFunctions.setLocalStorage('group', roleId);
+          }
+          if (userData.department_id) {
+            customFunctions.setLocalStorage('department', userData.department_id);
+          }
+          if (userData.full_name) {
+            customFunctions.setLocalStorage('name', userData.full_name);
+          }
+          
+          // Dispatch event to notify components that profile data is loaded
+          const profileUpdateEvent = new Event('ProfileUpdate');
+          document.dispatchEvent(profileUpdateEvent);
+          
+          setProfileLoaded(true);
+          setIsLoggedIn(true);
+          dispatch({ type: 'LOGIN', value: true });
+        } else {
+          // Profile API returned invalid response, token might be expired
+          throw new Error('Invalid profile response');
+        }
+      } catch (error) {
+        // Token is invalid or expired - clear storage and redirect to login
+        customFunctions.localStorageClear();
+        localStorage.clear();
+        const path = window.location.pathname.split('/');
+        const extractedPath = path.length > 1 ? path[1].toString() : '';
+        if (
+          extractedPath !== 'login' &&
+          extractedPath !== 'forget-password' &&
+          extractedPath !== 'password' &&
+          extractedPath !== 'verify' &&
+          extractedPath !== 'temporary'
+        ) {
+          setIsLoggedIn(false);
+          dispatch({ type: 'LOGIN', value: false });
+          history.push('/login');
+        } else {
+          setIsLoggedIn(false);
+          dispatch({ type: 'LOGIN', value: false });
+        }
+      }
     }
   };
 
   useEffect(() => {
-    checkLoggedIn();
-  }, [isLoggedIn, token]);
+    // Only check if there's no OIDC token in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get('token');
+    
+    if (!urlToken) {
+      checkLoggedIn();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const roleId = customFunctions.getLocalStorage('group');
