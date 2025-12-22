@@ -103,7 +103,7 @@ function InterviewerRoundsStatus(props) {
     const postData = {
       data: [
         {
-          id: applicantRoundsId?.[0]?.applicant_rounds?.[0]?.applicant_round_id,
+          id: applicantInterviewId,
           comments: formValues?.comments,
           status: Number(formValues?.status),
           applicant: applicantId,

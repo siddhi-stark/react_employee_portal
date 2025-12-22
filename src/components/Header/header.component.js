@@ -110,7 +110,7 @@ function Header() {
 
   useEffect(() => {
     if (extractedPath == 'password') return;
-    getNotificationCount();
+    // getNotificationCount();
   }, []);
 
   const onMenuChange = () => {
