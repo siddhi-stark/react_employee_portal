@@ -95,13 +95,30 @@ export default function UserRestrictions(props) {
       setRoleID(effectiveRoleId);
     }
   }
+  
+  // Fallback: if roleID is still null, use localStorage directly
+  if (effectiveRoleId === null && currentRoleIdFromStorage) {
+    try {
+      effectiveRoleId = JSON.parse(currentRoleIdFromStorage);
+    } catch (e) {
+      effectiveRoleId = Number(currentRoleIdFromStorage);
+    }
+  }
 
+  // Ensure effectiveRoleId is a number for comparison
+  const numericRoleId = effectiveRoleId !== null && effectiveRoleId !== undefined 
+    ? Number(effectiveRoleId) 
+    : null;
+  
   const hasPermissions =
     // (Number(roleID) === 1 && isManager && permittedUsers && permittedUsers.length && permittedUsers.includes(Number(roleID))) 
     // || 
     // (Number(roleID) === 1 && !isManager) 
     // || 
-    (permittedUsers && permittedUsers.length && permittedUsers.includes(Number(effectiveRoleId))); // Normal permission check
+    (numericRoleId !== null && 
+     permittedUsers && 
+     permittedUsers.length && 
+     permittedUsers.includes(numericRoleId)); // Normal permission check
 
   if (
     Number(roleID) === 4 &&

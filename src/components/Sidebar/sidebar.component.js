@@ -140,17 +140,32 @@ function Sidebar() {
             {menu.map((menuItem, menuIndex) => {
               const hasSubMenu =
                 menuItem.submenu && menuItem.submenu.length > 0;
+              
+              // Check if any submenu item matches current path
+              const isSubmenuActive = hasSubMenu && menuItem.submenu.some(
+                (sub) => sub.path === window.location.pathname
+              );
+              
+              // For menu items with path '#', check if activeMenu matches or submenu is active
+              const isMenuActive = menuItem.path === '#' 
+                ? (activeMenu === menuIndex || isSubmenuActive)
+                : (window.location.pathname === menuItem.path ||
+                   (window.location.pathname.includes(menuItem.path) &&
+                    menuItem.path.length > 1));
+              
+              // Show submenu if activeMenu matches and menu has submenu
+              const shouldShowSubmenu = hasSubMenu && activeMenu === menuIndex;
+              
               const parentLiCls = `nav-item ${
-                menuIndex === 0 || window.location.pathname === menuItem.path
+                menuIndex === 0 || isMenuActive || shouldShowSubmenu
                   ? 'show'
                   : ''
               }`;
               const parentActiveCls =
-                (activeMenu === menuIndex &&
-                  window.location.pathname === menuItem.path) ||
-                window.location.pathname === menuItem.path ||
-                (window.location.pathname.includes(menuItem.path) &&
-                  menuItem.path.length > 1)
+                (activeMenu === menuIndex && (isMenuActive || hasSubMenu)) ||
+                isMenuActive ||
+                isSubmenuActive ||
+                shouldShowSubmenu
                   ? 'show active'
                   : '';
 
@@ -164,18 +179,29 @@ function Sidebar() {
                       to={
                         menuItem.redirect !== 'undefined' &&
                         menuItem.redirect === false
-                          ? false
+                          ? '#'
                           : menuItem.path
                       }
-                      onClick={() => {
+                      onClick={(e) => {
                         if (menuItem.title === 'Log Out') {
                           // customFunctions.clearLocalStorage();
                           customFunctions.onLogout();
                           document.dispatchEvent(event);
                           dispatch({ type: 'LOGIN', value: false });
                           history.push('/login');
+                        } else if (
+                          menuItem.redirect !== 'undefined' &&
+                          menuItem.redirect === false
+                        ) {
+                          // Prevent navigation for menu items with redirect: false
+                          e.preventDefault();
+                          // Toggle submenu: if already active, close it; otherwise, open it
+                          if (hasSubMenu) {
+                            setActiveMenu(activeMenu === menuIndex ? -1 : menuIndex);
+                          }
+                        } else {
+                          setActiveMenu(menuIndex);
                         }
-                        setActiveMenu(menuIndex);
                       }}
                     >
                       <img
