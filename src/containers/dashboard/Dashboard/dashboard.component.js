@@ -311,10 +311,10 @@ function Dashboard() {
 
   const getInstagramPost = async () => {
     const endPoint = `${Api.socialMediaUrl}`;
-    const { data } = await AuthApi.getDataFromServer(endPoint);
-    if (data) {
-      setSocialMediaData(data.data);
-    }
+    // const { data } = await AuthApi.getDataFromServer(endPoint);
+    // if (data) {
+    //   setSocialMediaData(data.data);
+    // }
   };
 
   useEffect(() => {
