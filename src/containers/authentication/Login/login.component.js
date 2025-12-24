@@ -105,6 +105,8 @@ function Login() {
       CustomFunctions.setLocalStorage('group', data.data.group);
       CustomFunctions.setLocalStorage('department', data.data.department_id);
       CustomFunctions.setLocalStorage('name', data.data.full_name);
+      // Set flag to show login success toast
+      CustomFunctions.setLocalStorage('showLoginToast', 'true');
       setDisableButton(false);
       dispatch({ type: 'LOGIN', value: true });
       const timer = setInterval(async () => {

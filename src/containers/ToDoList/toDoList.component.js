@@ -759,17 +759,19 @@ function ToDoList(props) {
                 <div className="d-flex align-items-center justify-content-between">
                   <h5 className="card-title mb-0 mt-2 "> To Do</h5>
                   <div className="d-flex align-items-center justify-content-end">
-                    <a
-                      href="#"
-                      onClick={() => {
-                        customFunctions.removeLocalStorage('taskid');
-                        setModalShow(true);
-                        forceUpdate(count + 1);
-                      }}
-                      className="btn-link mr-3"
-                    >
-                      Add Task
-                    </a>
+                    {userRole !== 4 && (
+                      <a
+                        href="#"
+                        onClick={() => {
+                          customFunctions.removeLocalStorage('taskid');
+                          setModalShow(true);
+                          forceUpdate(count + 1);
+                        }}
+                        className="btn-link mr-3"
+                      >
+                        Add Task
+                      </a>
+                    )}
                     <div>
                       <Button
                         onClick={() => {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { Toaster, toast } from 'react-hot-toast';
 import Routes from './routes';
 import Layout from './components/Layout/layout.component';
 import customFunctions from './helper/customFunctions';
@@ -9,6 +10,30 @@ import AuthApi from './helper/authApi';
 import Api from './helper/api';
 
 let token = customFunctions.getLocalStorage('access_token');
+
+// Function to show login success toast
+const showLoginSuccessToast = (userData) => {
+  const profileImage = userData?.profile_image_url || '';
+  const userName = userData?.full_name || customFunctions.getLocalStorage('name') || 'User';
+  
+  toast.success(`Welcome back, ${userName}!`, {
+    position: 'top-center',
+    duration: 3000,
+    icon: profileImage ? (
+      <img 
+        src={profileImage} 
+        alt={userName}
+        style={{
+          width: '32px',
+          height: '32px',
+          borderRadius: '50%',
+          marginRight: '8px',
+          objectFit: 'cover'
+        }}
+      />
+    ) : undefined,
+  });
+};
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(token ? true : false); // eslint-disable-line
@@ -59,6 +84,9 @@ function App() {
             customFunctions.setLocalStorage('email', encryptedEmail.toString());
           }
           
+          // Store full profile data
+          customFunctions.setLocalStorage('profileData', JSON.stringify(userData));
+          
           // Dispatch event to notify components that profile data is loaded
           const profileUpdateEvent = new Event('ProfileUpdate');
           document.dispatchEvent(profileUpdateEvent);
@@ -69,6 +97,10 @@ function App() {
           // Set auth state AFTER profile is fetched and stored
           setIsLoggedIn(true);
           dispatch({ type: 'LOGIN', value: true });
+          
+          // Set flag for toast and show it immediately for OIDC
+          customFunctions.setLocalStorage('showLoginToast', 'true');
+          showLoginSuccessToast(userData);
           
           // Small delay to ensure localStorage is written and event is processed
           setTimeout(() => {
@@ -130,6 +162,9 @@ function App() {
             customFunctions.setLocalStorage('name', userData.full_name);
           }
           
+          // Store full profile data
+          customFunctions.setLocalStorage('profileData', JSON.stringify(userData));
+          
           // Dispatch event to notify components that profile data is loaded
           const profileUpdateEvent = new Event('ProfileUpdate');
           document.dispatchEvent(profileUpdateEvent);
@@ -137,6 +172,13 @@ function App() {
           setProfileLoaded(true);
           setIsLoggedIn(true);
           dispatch({ type: 'LOGIN', value: true });
+          
+          // Check if we should show login toast
+          const showToastFlag = customFunctions.getLocalStorage('showLoginToast');
+          if (showToastFlag === 'true') {
+            showLoginSuccessToast(userData);
+            customFunctions.setLocalStorage('showLoginToast', 'false');
+          }
         } else {
           // Profile API returned invalid response, token might be expired
           throw new Error('Invalid profile response');
@@ -219,6 +261,7 @@ function App() {
 
   return (
     <>
+      <Toaster position="top-center" />
       {isLoggedIn ? (
         <Layout key={profileLoaded ? 'profile-loaded' : 'profile-loading'}>
           <Switch>
