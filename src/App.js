@@ -13,25 +13,11 @@ let token = customFunctions.getLocalStorage('access_token');
 
 // Function to show login success toast
 const showLoginSuccessToast = (userData) => {
-  const profileImage = userData?.profile_image_url || '';
   const userName = userData?.full_name || customFunctions.getLocalStorage('name') || 'User';
   
   toast.success(`Welcome back, ${userName}!`, {
     position: 'top-center',
     duration: 3000,
-    icon: profileImage ? (
-      <img 
-        src={profileImage} 
-        alt={userName}
-        style={{
-          width: '32px',
-          height: '32px',
-          borderRadius: '50%',
-          marginRight: '8px',
-          objectFit: 'cover'
-        }}
-      />
-    ) : undefined,
   });
 };
 
