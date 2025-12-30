@@ -127,7 +127,7 @@ const menu = [
         path: '/todays-project-reports',
         icon: 'Employee.svg',
         submenu: [],
-        roleaccess: [1],
+        roleaccess: [1, 2, 3],
       },
       {
         title: 'Generate Project Reports',
@@ -137,7 +137,7 @@ const menu = [
         roleaccess: [1, 2, 3],
       },
     ],
-    roleaccess: [1],
+    roleaccess: [1, 2, 3],
   },
 
   // {

@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import SimpleReactValidator from 'simple-react-validator';
 
-const items = [{ to: '/', label: 'Home' }, { label: `Weekly Generated Reports` }];
+const items = [{ to: '/', label: 'Home' }, { label: `Monthly Generated Reports` }];
 
 const ProjectReportsDetails = () => {
   const history = useHistory();
@@ -118,10 +118,12 @@ const ProjectReportsDetails = () => {
           }
         })
 
-        setTotalCount(data.paginator.total_count);
-        setLimit(data.paginator.limit);
-        setCurrentPage(Number(data.paginator.current_page));
+        setRowData(morningReportData);
+        setTotalCount(data.paginator?.total_count || 0);
+        setLimit(data.paginator?.limit || 10);
+        setCurrentPage(Number(data.paginator?.current_page || 1));
       } else {
+        setRowData([]);
         swal(data.message || 'Error fetching data', '', 'error');
       }
     } catch (error) {
@@ -262,7 +264,7 @@ const ProjectReportsDetails = () => {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Weekly Generated Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Monthly Generated Reports</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
