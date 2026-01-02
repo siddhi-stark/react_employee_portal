@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
@@ -62,125 +62,142 @@ const EmployeeReviews = () => {
   }, [userRole, detailsKeys]);
 
 
-  const columns = [
-    { id: 'no', label: 'SR No' },
-    {
-      id: 'full_name',
-      label: 'Reviewer Name',
-      render: (rowData) => {
-        return <>{rowData?.reviewer?.full_name}</>;
+  const columns = useMemo(() => {
+    const baseColumns = [
+      { id: 'no', label: 'SR No' },
+      {
+        id: 'full_name',
+        label: 'Reviewer Name',
+        render: (rowData) => {
+          return <>{rowData?.reviewer?.full_name}</>;
+        },
       },
-    },
-    {
-      id: 'review_date',
-      label: 'Review Date',
-    },
-    {
-      id: 'review_time',
-      label: 'Review Time',
-    },
-    {
-      id: 'status_name',
-      label: 'Status',
-    },
-    {
-      id: 'review_type_name',
-      label: 'Review Type',
-    },
-    {
-      id: 'action',
-      label: 'Action',
-      render: ({ id, reviewer, employee, review_date, self_evaluation_form }) => {
-        console.log("self_evaluation_form", self_evaluation_form)
-        return (
-          <>
-            {self_evaluation_form ? (
-              <a
-                href="/"
-                className="ms-2 pl-2"
-                title="Update Form "
-                style={{
-                  display: "inline-block",
-                  padding: "5px 10px",
-                  backgroundColor: "#007bff",
-                  color: "#fff",
-                  textAlign: "center",
-                  textDecoration: "none",
-                  borderRadius: "4px",
-                  border: "1px solid #007bff",
-                  cursor: "pointer",
-                  fontSize: "10px",
-                  fontWeight: "bold",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  history.push('/evaluation-form', {
-                    state: {
-                      reviewId: id,
-                      reviewData: reviewer,
-                      employeeData: employee,
-                      revieweDate: review_date,
-                      selfEvaluationForm: self_evaluation_form
-
-                    }
-                  })
-                }}
-
-              >
-                Update Evaluation Form
-              </a>
-            ) : (
-              <a
-                href="/"
-                className="ms-2 pl-2"
-                title="Generate Form"
-                style={{
-                  display: "inline-block",
-                  padding: "5px 10px",
-                  backgroundColor: "#007bff",
-                  color: "#fff",
-                  textAlign: "center",
-                  textDecoration: "none",
-                  borderRadius: "4px",
-                  border: "1px solid #007bff",
-                  cursor: "pointer",
-                  fontSize: "10px",
-                  fontWeight: "bold",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  history.push('/evaluation-form', {
-                    state: {
-                      reviewId: id,
-                      reviewData: reviewer,
-                      employeeData: employee,
-                      revieweDate: review_date,
-                      selfEvaluationForm: false
-                    }
-                  })
-                }}
-
-              >
-                Submit Evaluation Form
-              </a>
-            )
-            }
-          </>)
+      {
+        id: 'full_name',
+        label: 'Employee Name',
+        render: (rowData) => {
+          return <>{rowData?.employee?.full_name}</>;
+        },
       },
-    },
-  ];
-
-  const takenReviewsColumns = [
-    { id: 'no', label: 'SR No' },
-    {
-      id: 'full_name',
-      label: 'Employee Name',
-      render: (rowData) => {
-        return <>{rowData?.employee?.full_name}</>;
+      {
+        id: 'review_date',
+        label: 'Review Date',
       },
-    },
+      {
+        id: 'review_time',
+        label: 'Review Time',
+      },
+      {
+        id: 'status_name',
+        label: 'Status',
+      },
+      {
+        id: 'review_type_name',
+        label: 'Review Type',
+      },
+      {
+        id: 'action',
+        label: 'Action',
+        render: ({ id, reviewer, employee, review_date, self_evaluation_form }) => {
+          console.log("self_evaluation_form", self_evaluation_form)
+          return (
+            <>
+              {self_evaluation_form ? (
+                <a
+                  href="/"
+                  className="ms-2 pl-2"
+                  title="Update Form "
+                  style={{
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    textAlign: "center",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    border: "1px solid #007bff",
+                    cursor: "pointer",
+                    fontSize: "10px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    history.push('/evaluation-form', {
+                      state: {
+                        reviewId: id,
+                        reviewData: reviewer,
+                        employeeData: employee,
+                        revieweDate: review_date,
+                        selfEvaluationForm: self_evaluation_form
+
+                      }
+                    })
+                  }}
+
+                >
+                  Update Evaluation Form
+                </a>
+              ) : (
+                <a
+                  href="/"
+                  className="ms-2 pl-2"
+                  title="Generate Form"
+                  style={{
+                    display: "inline-block",
+                    padding: "5px 10px",
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    textAlign: "center",
+                    textDecoration: "none",
+                    borderRadius: "4px",
+                    border: "1px solid #007bff",
+                    cursor: "pointer",
+                    fontSize: "10px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    history.push('/evaluation-form', {
+                      state: {
+                        reviewId: id,
+                        reviewData: reviewer,
+                        employeeData: employee,
+                        revieweDate: review_date,
+                        selfEvaluationForm: false
+                      }
+                    })
+                  }}
+
+                >
+                  Submit Evaluation Form
+                </a>
+              )
+              }
+            </>)
+        },
+      },
+    ];
+
+    // Hide "Employee Name" column if logged-in user is an employee (role 4)
+    if (userRole === 4) {
+      return baseColumns.filter(column => column.label !== 'Employee Name');
+    }
+
+    return baseColumns;
+  }, [userRole, history]);
+
+  const takenReviewsColumns = useMemo(() => {
+    const baseColumns = [
+      { id: 'no', label: 'SR No' },
+      {
+        id: 'full_name',
+        label: 'Employee Name',
+        render: (rowData) => {
+          return <>{rowData?.employee?.full_name}</>;
+        },
+      },
     {
       id: 'review_date',
       label: 'Review Date',
@@ -283,17 +300,26 @@ const EmployeeReviews = () => {
         )
       },
     },
-  ];
+    ];
 
-  const probationReviewsColumns = [
-    { id: 'no', label: 'SR No' },
-    {
-      id: 'full_name',
-      label: 'Employee Name',
-      render: (rowData) => {
-        return <>{rowData?.employee?.full_name}</>;
+    // Hide "Employee Name" column if logged-in user is an employee (role 4)
+    if (userRole === 4) {
+      return baseColumns.filter(column => column.label !== 'Employee Name');
+    }
+
+    return baseColumns;
+  }, [userRole, history]);
+
+  const probationReviewsColumns = useMemo(() => {
+    const baseColumns = [
+      { id: 'no', label: 'SR No' },
+      {
+        id: 'full_name',
+        label: 'Employee Name',
+        render: (rowData) => {
+          return <>{rowData?.employee?.full_name}</>;
+        },
       },
-    },
     {
       id: 'review_date',
       label: 'Review Date',
@@ -396,7 +422,15 @@ const EmployeeReviews = () => {
         )
       },
     },
-  ];
+    ];
+
+    // Hide "Employee Name" column if logged-in user is an employee (role 4)
+    if (userRole === 4) {
+      return baseColumns.filter(column => column.label !== 'Employee Name');
+    }
+
+    return baseColumns;
+  }, [userRole, history]);
 
   const getEmployeeName = async () => {
     setShowLoader(true);

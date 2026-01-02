@@ -353,6 +353,16 @@ const EvaluationForm = () => {
                             />
                         </Col>
                         <Col sm={2}>
+                            <Form.Label>
+                                Employee Name <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Form.Control
+                                type='text'
+                                value={employeeData?.full_name}
+                                disabled='true'
+                            />
+                        </Col>
+                        <Col sm={2}>
                             <Datepicker
                                 label="Review Date"
                                 asterisk="*"
