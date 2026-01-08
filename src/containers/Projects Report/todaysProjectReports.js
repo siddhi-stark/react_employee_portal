@@ -13,7 +13,7 @@ import swal from 'sweetalert';
 import { useHistory } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
 
-const items = [{ to: '/', label: 'Home' }, { label: `Weekly Generated Reports` }];
+const items = [{ to: '/', label: 'Home' }, { label: `Monthly Project Reports` }];
 
 const TodaysProjectReports = () => {
   const history = useHistory();
@@ -228,6 +228,158 @@ const TodaysProjectReports = () => {
     }
   }
 
+  const handleExportCSV = async () => {
+    // Validate that reports are selected
+    if (!selectedId || selectedId.length === 0) {
+      swal('Please select reports', 'You need to select at least one report to export', 'warning');
+      return;
+    }
+
+    setShowLoader(true);
+
+    try {
+      // Build query parameters
+      const params = {
+        project_reports_ids: selectedId.join(','), // Comma-separated string
+      };
+
+      // Optional filters - can be added if needed
+      if (fromDate) {
+        params.report_date = fromDate;
+      }
+      if (reportType?.value) {
+        params.report_type = reportType.value;
+      }
+      if (UserID) {
+        params.user_id = UserID;
+      }
+
+      const url = customFunctions.generateUrl(Api.projectReportsExportCSVUrl, params);
+      const token = customFunctions.getLocalStorage('access_token');
+
+      // Fetch the export API using GET
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      // Check content-type header
+      const contentType = response.headers.get('content-type') || '';
+
+      // Handle error responses
+      if (!response.ok) {
+        const clonedResponse = response.clone();
+
+        if (contentType.includes('application/json')) {
+          try {
+            const errorData = await clonedResponse.json();
+            const errorMessage = errorData.message || errorData.error || JSON.stringify(errorData);
+            setShowLoader(false);
+            swal('Export failed', Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage, 'error');
+            return;
+          } catch (e) {
+            const errorText = await response.text();
+            setShowLoader(false);
+            swal('Export failed', errorText || 'Failed to download file', 'error');
+            return;
+          }
+        } else {
+          const errorText = await response.text();
+          setShowLoader(false);
+          swal('Export failed', errorText || 'Failed to download file', 'error');
+          return;
+        }
+      }
+
+      // Parse JSON response
+      if (contentType.includes('application/json')) {
+        const jsonData = await response.json();
+
+        if (jsonData.success && jsonData.data) {
+          // Get file URL from response (prefer download_url, then file_url, then csv_path)
+          let fileUrl = jsonData.data.download_url || jsonData.data.file_url || jsonData.data.csv_path;
+          let fileName = 'project_reports_export.csv';
+
+          if (!fileUrl) {
+            setShowLoader(false);
+            swal('Export failed', 'No file URL returned from server', 'error');
+            return;
+          }
+
+          // Extract filename from URL if it's a full URL
+          try {
+            if (fileUrl.startsWith('http')) {
+              const urlObj = new URL(fileUrl);
+              const pathParts = urlObj.pathname.split('/');
+              if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+                fileName = pathParts[pathParts.length - 1];
+              }
+            } else {
+              // Handle relative path
+              const baseUrlStr = Api.baseUrl;
+              const baseDomain = baseUrlStr.replace(/\/api\/v\d+\/?$/, '').replace(/\/$/, '');
+              const mediaPath = fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
+              fileUrl = `${baseDomain}${mediaPath}`;
+              
+              // Extract filename from path
+              const pathParts = fileUrl.split('/');
+              if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+                fileName = pathParts[pathParts.length - 1];
+              }
+            }
+          } catch (e) {
+            // If URL parsing fails, use default filename
+            console.log('Error parsing URL:', e);
+          }
+
+          // Download the file from the URL
+          const fileResponse = await fetch(fileUrl, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+
+          if (!fileResponse.ok) {
+            throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
+          }
+
+          // Download the file as blob
+          const blob = await fileResponse.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.setAttribute('download', fileName);
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(blobUrl);
+
+          setShowLoader(false);
+          swal('Export successful', 'File downloaded successfully', 'success');
+          return;
+        } else {
+          // Error response from API
+          const errorMessage = jsonData.message || 'Export failed';
+          setShowLoader(false);
+          swal('Export failed', Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage, 'error');
+          return;
+        }
+      }
+
+      // If response is not JSON, show error
+      const errorText = await response.text();
+      setShowLoader(false);
+      swal('Export failed', errorText || 'Unexpected response format', 'error');
+    } catch (error) {
+      setShowLoader(false);
+      swal('Export failed', error.message || 'An error occurred while exporting', 'error');
+    }
+  }
+
   const handleFilter = (e) => {
     getTodaysReport()
   }
@@ -240,7 +392,7 @@ const TodaysProjectReports = () => {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Weekly Generated Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Monthly Project Reports</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -346,16 +498,26 @@ const TodaysProjectReports = () => {
           <br />
           {
             selectedId && selectedId?.length > 0 && (
-              <Button
-                variant="secondary"
-                className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
-                type="submit"
-                onClick={() => {
-                  setShowSubmit(true)
-                }}
-              >
-                Sent Report
-              </Button>
+              <>
+                <Button
+                  variant="secondary"
+                  className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                  type="submit"
+                  onClick={() => {
+                    setShowSubmit(true)
+                  }}
+                >
+                  Sent Report
+                </Button>
+                <Button
+                  variant="success"
+                  className="border-0 h4 m-0 text-white rounded-3 ml-3"
+                  type="button"
+                  onClick={handleExportCSV}
+                >
+                  Export CSV
+                </Button>
+              </>
             )
           }
         </Card.Body>

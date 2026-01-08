@@ -307,6 +307,8 @@ export default class Api extends Component {
   
   static exportTasksUrl = `${Api.baseUrl}export-tasks/`
 
+  static projectReportsExportCSVUrl = `${Api.baseUrl}project-reports-export-csv/`
+
 
   // Get base URL of APIs
   static getBaseUrl() {

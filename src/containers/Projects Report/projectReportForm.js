@@ -293,7 +293,7 @@ const ProjectReportForm = () => {
                 onChange={(e) => setToDate(e)}
                 autoComplete="off"
                 name="endDate"
-                maxDate={fromDate ? new Date(fromDate.getTime() + 7 * 24 * 60 * 60 * 1000) : null}
+                maxDate={fromDate ? new Date(fromDate.getTime() + 30 * 24 * 60 * 60 * 1000) : null}
                 minDate={fromDate}
                 dateFormat="dd/MM/yyyy"
                 placeholder="Select date"

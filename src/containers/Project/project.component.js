@@ -375,7 +375,7 @@ function Project() {
     const params = {
       type: 'all',
       sort_by: 'deadline',
-      sort_direction: 'ascending',
+      sort_direction: 'descending',
     };
 
     // Add project_id filter only if a project is selected
@@ -408,12 +408,12 @@ function Project() {
         }
       });
 
-      // Sort by deadline (milestones without deadlines go to end)
+      // Sort by deadline descending (newest first, milestones without deadlines go to end)
       flattenedMilestones.sort((a, b) => {
         if (!a.deadline_raw && !b.deadline_raw) return 0;
         if (!a.deadline_raw) return 1;
         if (!b.deadline_raw) return -1;
-        return new Date(a.deadline_raw) - new Date(b.deadline_raw);
+        return new Date(b.deadline_raw) - new Date(a.deadline_raw); // Descending: newest first
       });
 
       // Store all milestones and project ID
@@ -472,7 +472,7 @@ function Project() {
     const params = {
       type: 'all',
       sort_by: 'end_date',
-      sort_direction: 'ascending',
+      sort_direction: 'descending',
     };
 
     // Add project_id filter only if a project is selected
@@ -505,12 +505,12 @@ function Project() {
         project_name: deliverable.project?.name || '-',
       }));
 
-      // Sort by end_date (deliverables without end_date go to end)
+      // Sort by end_date descending (newest first, deliverables without end_date go to end)
       processedDeliverables.sort((a, b) => {
         if (!a.end_date_raw && !b.end_date_raw) return 0;
         if (!a.end_date_raw) return 1;
         if (!b.end_date_raw) return -1;
-        return new Date(a.end_date_raw) - new Date(b.end_date_raw);
+        return new Date(b.end_date_raw) - new Date(a.end_date_raw); // Descending: newest first
       });
 
       // Store all deliverables and project ID
