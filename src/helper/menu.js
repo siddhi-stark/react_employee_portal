@@ -548,6 +548,14 @@ const menu = [
     roleaccess: [1],
   },
 
+  {
+    title: 'App Settings',
+    path: '/app-settings',
+    icon: 'setting.svg',
+    submenu: [],
+    roleaccess: [1],
+  },
+
   // {
   //   title: 'Probation reviewer form',
   //   path: '/probation-reviewer-form',

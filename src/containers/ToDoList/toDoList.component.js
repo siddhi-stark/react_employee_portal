@@ -56,6 +56,7 @@ function ToDoList(props) {
   const [showSendReport, setShowSendReport] = useState(false);
   const [isShowLoader, setShowLoader] = useState(false);
   const [isManager, setIsManager] = useState(null);
+  const [rolesCanAddTask, setRolesCanAddTask] = useState([]); // Array of role IDs that can add tasks
   // const [pmsId, setPmsId] = useState(null);
 
   useEffect(() => {
@@ -223,7 +224,48 @@ function ToDoList(props) {
 
   useEffect(()=>{
     getTableData();
+    fetchAddTaskSetting();
   },[pmsId]);
+
+  // Listen for settings updates
+  useEffect(() => {
+    const handleSettingsUpdate = () => {
+      fetchAddTaskSetting();
+    };
+    
+    document.addEventListener('SettingsUpdate', handleSettingsUpdate);
+    return () => {
+      document.removeEventListener('SettingsUpdate', handleSettingsUpdate);
+    };
+  }, []);
+
+  const fetchAddTaskSetting = async () => {
+    try {
+      const { data } = await AuthApi.getDataFromServer(Api.settingsUrl);
+      
+      if (data && data.data) {
+        // API returns array, get the first setting
+        // Based on backend response: { id, is_add_task_enabled, roles_can_add_task }
+        const setting = Array.isArray(data.data) ? data.data[0] : data.data;
+        
+        if (setting && setting.roles_can_add_task) {
+          // Set the array of role IDs that can add tasks
+          if (Array.isArray(setting.roles_can_add_task)) {
+            setRolesCanAddTask(setting.roles_can_add_task);
+          } else {
+            setRolesCanAddTask([]);
+          }
+        } else {
+          // No setting found or roles_can_add_task not provided, default to empty array
+          setRolesCanAddTask([]);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching add task setting:', error);
+      // Default to empty array if API fails (safer - no one can add tasks)
+      setRolesCanAddTask([]);
+    }
+  };
 
   const getTableData = async (pageNo = 0) => {
     setShowLoader(true);
@@ -759,17 +801,19 @@ function ToDoList(props) {
                 <div className="d-flex align-items-center justify-content-between">
                   <h5 className="card-title mb-0 mt-2 "> To Do</h5>
                   <div className="d-flex align-items-center justify-content-end">
-                    <a
-                      href="#"
-                      onClick={() => {
-                        customFunctions.removeLocalStorage('taskid');
-                        setModalShow(true);
-                        forceUpdate(count + 1);
-                      }}
-                      className="btn-link mr-3"
-                    >
-                      Add Task
-                    </a>
+                    {userRole !== 4 && rolesCanAddTask.includes(Number(userRole)) && (
+                      <a
+                        href="#"
+                        onClick={() => {
+                          customFunctions.removeLocalStorage('taskid');
+                          setModalShow(true);
+                          forceUpdate(count + 1);
+                        }}
+                        className="btn-link mr-3"
+                      >
+                        Add Task
+                      </a>
+                    )}
                     <div>
                       <Button
                         onClick={() => {

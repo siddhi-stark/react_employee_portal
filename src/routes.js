@@ -130,6 +130,7 @@ import ProjectReportsDetails from './containers/Projects Report/projectReportsDe
 import ProbationForm from './containers/EmployeeReviewComplitionForms/probationForm';
 import ConfigureSettings from './containers/configure setting/configureSettings';
 import AddSettings from './containers/configure setting/addSettings';
+import AppSettings from './containers/AppSettings/appSettings.component';
 import InterviewQuestions from './containers/Applications/InterviewQuestions';
 
 // import AddHistory from './containers/Employees/AddHistory.component';
@@ -403,6 +404,7 @@ function Routes() {
       
       <Route path="/settings" exact component={ConfigureSettings}/>
       <Route path="/configure-settings" exact component={AddSettings}/>
+      <Route path="/app-settings" exact component={AppSettings}/>
 
       <Route path="/interview-questions" exact component={InterviewQuestions}/>
 

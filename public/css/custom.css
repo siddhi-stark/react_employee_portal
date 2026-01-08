@@ -13915,9 +13915,13 @@ tr.trow.policy-approved .form-check {
   position: fixed;
 }
 
+/* Global solution: Center all SweetAlert modals properly from the start */
 .swal-overlay.swal-overlay--show-modal .swal-modal {
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
 }
 
 /* Ensure SweetAlert buttons are clickable */

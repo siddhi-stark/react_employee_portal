@@ -301,6 +301,8 @@ export default class Api extends Component {
 
   static configureSetting = `${Api.baseUrl}configure-setting/`
 
+  static settingsUrl = `${Api.baseUrl}settings/`
+
   static interviewQuestionsUrl = `${Api.baseUrl}ai-interview-questions/`
   
   static exportTasksUrl = `${Api.baseUrl}export-tasks/`
@@ -311,7 +313,7 @@ export default class Api extends Component {
   // Get base URL of APIs
   static getBaseUrl() {
     // const env = 'local';
-    const env = 'production';
+    const env = 'local';
 
     let url = '';
     switch (env) {
