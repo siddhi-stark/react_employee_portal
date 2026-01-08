@@ -118,12 +118,12 @@ const menu = [
   },
 
   {
-    title: 'Monthly Project Reports',
+    title: 'Weekly Project Reports',
     path: '#',
     icon: 'Employee.svg',
     submenu: [
       {
-        title: 'Monthly Project Reports',
+        title: 'Weekly Generated Reports',
         path: '/todays-project-reports',
         icon: 'Employee.svg',
         submenu: [],
