@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from 'react';
-import { Helmet, DropdownInput } from '../../components/FormInputs';
+import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import { Card, Row, Col, Button, Image } from 'react-bootstrap';
@@ -10,13 +10,12 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
-
-const items = [{ to: '/', label: 'Home' }, { label: `Weekly Generated Reports` }];
 
 const TodaysProjectReports = () => {
   const history = useHistory();
+  const location = useLocation();
   const validator = useRef(new SimpleReactValidator());
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
@@ -28,7 +27,15 @@ const TodaysProjectReports = () => {
   const [showSubmit, setShowSubmit] = useState(false);
   const [title, setTitle] = useState('');
   const UserID = customFunctions.getLocalStorage('userId');
-  const fromDate = customFunctions.getDate(new Date())
+  
+  // Detect if it's monthly reports route
+  const isMonthly = location.pathname === '/monthly-project-reports';
+  const items = [{ to: '/', label: 'Home' }, { label: isMonthly ? `Monthly Generated Reports` : `Weekly Generated Reports` }];
+  
+  // Date range for weekly (single date) or monthly (date range)
+  const [fromDate, setFromDate] = useState(isMonthly ? null : customFunctions.getDate(new Date()));
+  const [toDate, setToDate] = useState(isMonthly ? null : customFunctions.getDate(new Date()));
+  
   const [reportType, setReportType] = useState({ "label": 'Morning', "value": 1 },)
   const [selectedId, setSelectedId] = useState([]);
   const [projectsList, setProjectsList] = useState('')
@@ -36,14 +43,17 @@ const TodaysProjectReports = () => {
 
   useEffect(() => {
     if (UserID) {
-      getTodaysReport();
+      // Only auto-fetch for weekly reports (today's date)
+      if (!isMonthly) {
+        getTodaysReport();
+      }
     }
-  }, [UserID]);
+  }, [UserID, isMonthly]);
 
   useEffect(() => {
-    setTitle(`Today's Reports`)
+    setTitle(isMonthly ? `Monthly Reports` : `Today's Reports`)
     getProjectList();
-  }, []);
+  }, [isMonthly]);
 
   const getProjectList = async () => {
     const { data, message } = await AuthApi.getDataFromServer(
@@ -70,10 +80,23 @@ const TodaysProjectReports = () => {
     setShowLoader(true);
     const params = {
       user: UserID,
-      // type: 'all',
-      start_date: fromDate,
-      end_date: fromDate
     };
+
+    // For weekly: use single date, for monthly: use date range
+    if (isMonthly) {
+      if (fromDate && toDate) {
+        params.start_date = customFunctions.getDate(fromDate);
+        params.end_date = customFunctions.getDate(toDate);
+      } else {
+        setShowLoader(false);
+        swal('Please select date range', 'Select both start and end dates for monthly reports', 'warning');
+        return;
+      }
+    } else {
+      // Weekly reports - use single date
+      params.start_date = fromDate;
+      params.end_date = fromDate;
+    }
 
     if (selectedProject) {
       params.project = +selectedProject?.value
@@ -243,10 +266,11 @@ const TodaysProjectReports = () => {
         project_reports_ids: selectedId.join(','), // Comma-separated string
       };
 
-      // Optional filters - can be added if needed
-      if (fromDate) {
-        params.report_date = fromDate;
-      }
+      // IMPORTANT: Don't pass report_date for weekly/monthly exports
+      // Only pass project_reports_ids as per backend requirements
+      // report_date is only for exact date matching, not date ranges
+      
+      // Optional filters (but not report_date for range exports)
       if (reportType?.value) {
         params.report_type = reportType.value;
       }
@@ -340,13 +364,17 @@ const TodaysProjectReports = () => {
 
   const handleClear = (e) => {
     setProject('')
+    if (isMonthly) {
+      setFromDate(null);
+      setToDate(null);
+    }
   }
 
   return (
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Weekly Generated Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">{isMonthly ? 'Monthly Generated Reports' : 'Weekly Generated Reports'}</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -368,6 +396,52 @@ const TodaysProjectReports = () => {
           </div>
           <hr style={{ borderColor: "white" }} />
           <Row>
+            {isMonthly && (
+              <>
+                <Col sm={2}>
+                  <Datepicker
+                    className="form-control"
+                    label="Start Date"
+                    asterisk="*"
+                    selected={fromDate}
+                    onChange={(e) => {
+                      setFromDate(e);
+                    }}
+                    autoComplete="off"
+                    name="startDate"
+                    dateFormat="dd/MM/yyyy"
+                    placeholder="Select start date"
+                    errorMessage={validator.current.message(
+                      'Start Date',
+                      fromDate,
+                      'required'
+                    )}
+                  />
+                </Col>
+                <Col sm={2}>
+                  <Datepicker
+                    className="form-control"
+                    label="End Date"
+                    asterisk="*"
+                    selected={toDate}
+                    onChange={(e) => {
+                      setToDate(e);
+                    }}
+                    autoComplete="off"
+                    name="endDate"
+                    dateFormat="dd/MM/yyyy"
+                    placeholder="Select end date"
+                    minDate={fromDate}
+                    maxDate={fromDate ? new Date(fromDate.getTime() + 30 * 24 * 60 * 60 * 1000) : null}
+                    errorMessage={validator.current.message(
+                      'End Date',
+                      toDate,
+                      'required'
+                    )}
+                  />
+                </Col>
+              </>
+            )}
             <Col sm={2}>
               <DropdownInput
                 label="Project"
@@ -453,16 +527,16 @@ const TodaysProjectReports = () => {
           {
             selectedId && selectedId?.length > 0 && (
               <>
-                <Button
-                  variant="secondary"
-                  className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
-                  type="submit"
-                  onClick={() => {
-                    setShowSubmit(true)
-                  }}
-                >
-                  Sent Report
-                </Button>
+              <Button
+                variant="secondary"
+                className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                type="submit"
+                onClick={() => {
+                  setShowSubmit(true)
+                }}
+              >
+                Sent Report
+              </Button>
                 <Button
                   variant="success"
                   className="border-0 h4 m-0 text-white rounded-3 ml-3"

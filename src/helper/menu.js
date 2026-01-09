@@ -118,10 +118,17 @@ const menu = [
   },
 
   {
-    title: 'Weekly Project Reports',
+    title: 'Project Reports',
     path: '#',
     icon: 'Employee.svg',
     submenu: [
+      {
+        title: 'Generate Project Reports',
+        path: '/project-report-generation',
+        icon: 'recruitement.svg',
+        submenu: [],
+        roleaccess: [1, 2, 3],
+      },
       {
         title: 'Weekly Generated Reports',
         path: '/todays-project-reports',
@@ -130,9 +137,9 @@ const menu = [
         roleaccess: [1, 2, 3],
       },
       {
-        title: 'Generate Project Reports',
-        path: '/project-report-generation',
-        icon: 'recruitement.svg',
+        title: 'Monthly Generated Reports',
+        path: '/monthly-project-reports',
+        icon: 'Employee.svg',
         submenu: [],
         roleaccess: [1, 2, 3],
       },
