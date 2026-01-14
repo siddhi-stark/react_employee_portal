@@ -8,7 +8,7 @@ import customFunctions from '../../helper/customFunctions';
 import UserRestrictions from '../UserRestrictions/userrestrictions.component';
 import SharedService from '../../services/SharedService/sharedServices';
 
-function Header() {
+function Header({ isMobile = false }) {
   const date = new Date().toDateString().split(' ');
   const formattedDate = `${date[0]}, ${date[1]} ${date[2]} ${date[3]} `;
   const [designation, setDesignation] = useState('');
@@ -143,12 +143,34 @@ function Header() {
     }
   };
 
+  const toggleSidebar = () => {
+    if (window.toggleSidebar && typeof window.toggleSidebar === 'function') {
+      window.toggleSidebar();
+    } else {
+      console.warn('toggleSidebar function not available');
+    }
+  };
+
   return (
     <>
       <div className="main-header side-header sticky sticky-pin">
-        <div className="container-fluid d-flex align-items-center justify-content-end h-100">
+        <div className="container-fluid d-flex align-items-center justify-content-between h-100">
+          {/* Sidebar Toggle Button - Mobile/Tablet Only */}
+          {isMobile && (
+            <button
+              type="button"
+              className="header-sidebar-toggle-btn"
+              onClick={toggleSidebar}
+              aria-label="Toggle sidebar"
+              title="Toggle sidebar"
+            >
+              <span className="hamburger-icon"></span>
+            </button>
+          )}
+          
+          <div className="d-flex align-items-center justify-content-end flex-grow-1">
           <UserRestrictions permittedUsers={[2, 3, 4, 5]} roleId={userRole}>
-            <div className="main-header-left">
+            <div className="main-header-left header-clock-info-mobile-hide">
               {time ? (
                 <div className="d-flex justify-content-start clock-in-time">
                   <h7>You are clocked out at {time} </h7>
@@ -158,7 +180,7 @@ function Header() {
               )}
             </div>
             {clockedInTime ? (
-              <div className="d-flex justify-content-end clock-in-time">
+              <div className="d-flex justify-content-end clock-in-time header-clock-info-mobile-hide">
                 <h7>You are clocked in at {clockedInTime} </h7>
               </div>
             ) : (
@@ -167,7 +189,7 @@ function Header() {
           </UserRestrictions>
 
           <div className="main-header-right">
-            <div className="day-date">
+            <div className="day-date header-date-mobile-hide">
               <h5>{formattedDate}</h5>
             </div>
 
@@ -332,8 +354,30 @@ function Header() {
               </div>
             </div>
           </div>
+          </div>
         </div>
       </div>
+      
+      {/* Mobile Time/Date Card - Only visible on mobile */}
+      {isMobile && (
+        <div className="mobile-time-date-card">
+          <div className="mobile-date-time-content">
+            <div className="mobile-date">
+              <h5>{formattedDate}</h5>
+            </div>
+            {time && (
+              <div className="mobile-clock-status">
+                <span>You are clocked out at {time}</span>
+              </div>
+            )}
+            {clockedInTime && (
+              <div className="mobile-clock-status">
+                <span>You are clocked in at {clockedInTime}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

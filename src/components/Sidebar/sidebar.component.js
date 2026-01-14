@@ -10,7 +10,7 @@ import Api from '../../helper/api';
 import AuthApi from '../../helper/authApi';
 import { ModalInput } from '../FormInputs';
 
-function Sidebar() {
+function Sidebar({ isOpen = false }) {
   const initialState = {
     imgURL: '',
     eventTitle: '',
@@ -123,9 +123,14 @@ function Sidebar() {
     return true;
   };
 
+  // Determine sidebar visibility classes
+  const sidebarClasses = `main-sidebar main-sidebar-sticky side-menu ps ${
+    isOpen ? 'visible' : 'sidebar-hidden'
+  }`;
+
   return (
     <>
-      <div className="main-sidebar main-sidebar-sticky side-menu ps">
+      <div className={sidebarClasses}>
         <div className="sidemenu-logo">
           <a className="main-logo" href="/">
             <img
