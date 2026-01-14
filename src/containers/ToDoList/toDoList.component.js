@@ -862,11 +862,11 @@ function ToDoList(props) {
                     )}
                   />
                 </Row>
-                <div className="d-flex justify-content-end mr-3">
+                <div className="todo-action-buttons">
                   {pagination.totalItems > 0 && (
                     <Button
                       variant="primary"
-                      className="mb-3 ms-4"
+                      className="mb-3"
                       onClick={() => {
                         OnSaveProgress();
                       }}
@@ -877,7 +877,7 @@ function ToDoList(props) {
                   {!morningMail && !signOutMail && pagination.totalItems > 0 && (
                     <Button
                       variant="primary"
-                      className="mb-3 ms-4"
+                      className="mb-3"
                       onClick={() => {
                         setShowScrumPopup(true);
                       }}
@@ -890,7 +890,7 @@ function ToDoList(props) {
                     String(totalHours) !== '0 Hrs 0 Mins' && (
                       <Button
                         variant="primary"
-                        className="mb-3 ms-2"
+                        className="mb-3"
                         onClick={() => {
                           setShowBreak(true);
                         }}

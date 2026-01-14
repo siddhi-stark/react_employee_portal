@@ -529,10 +529,10 @@ function Dashboard() {
       <Loader showLoader={isShowLoader} needFullPage={false} />
       <section className="content-area">
         <Row>
-          <Col xl={8} id="main-content">
+          <Col xl={8} lg={12} md={12} sm={12} xs={12} id="main-content">
             <Jumbotron className="welcome-box">
-              <Row className="align-items-center w-100">
-                <Col md={5}>
+              <Row className="align-items-center w-100 flex-column flex-md-row">
+                <Col md={5} xs={12} sm={12} className="order-1 order-md-1">
                   <div className="welcome-text">
                     <h1>
                       Welcome{' '}
@@ -570,7 +570,9 @@ function Dashboard() {
                 </Col>
                 <Col
                   md={3}
-                  className="d-flex justify-content-space-between flex-wrap"
+                  xs={12}
+                  sm={12}
+                  className="d-flex justify-content-space-between flex-wrap order-2 order-md-2"
                 >
                   <UserRestrictions
                     permittedUsers={isProjectManager ? [1, 2, 3, 4, 7, 10] : [2, 3, 4, 7, 10]}
@@ -618,8 +620,8 @@ function Dashboard() {
                     </div>
                   </UserRestrictions>
                 </Col>
-                <Col md={4}>
-                  <div className="welcome-img text-right">
+                <Col md={4} xs={12} sm={12} className="order-3 order-md-3">
+                  <div className="welcome-img text-right text-md-right text-center text-sm-center">
                     <img src="/images/welcome-img.svg" alt="img" />
                   </div>
                 </Col>
@@ -658,13 +660,13 @@ function Dashboard() {
               </UserRestrictions>
             )}
 
-            <Row className="birthday-wish-section-row mt-3 justify-content-center">
+            <Row className="birthday-wish-section-row mt-3 justify-content-center flex-column flex-md-row">
               {birthdayArr && birthdayArr.length > 0 && (
                 <>
                   {birthdayArr &&
                     birthdayArr.length > 0 &&
                     birthdayArr.map((emp) => (
-                      <Col>
+                      <Col xs={12} sm={12} md={6} lg={4} xl={4} key={emp.id || Math.random()}>
                         <Card className="dark-blue-bg">
                           <Card.Body>
                             <div className="media birthday-wish-section align-items-center">
@@ -788,7 +790,7 @@ function Dashboard() {
                   {anniversary &&
                     anniversary.length > 0 &&
                     anniversary.map((emp) => (
-                      <Col>
+                      <Col xs={12} sm={12} md={6} lg={4} xl={4} key={emp.id || Math.random()}>
                         <Card className="dark-blue-bg">
                           <Card.Body>
                             <div className="media birthday-wish-section align-items-center">
@@ -916,7 +918,7 @@ function Dashboard() {
                   {appreciationData &&
                     appreciationData.length > 0 &&
                     appreciationData.map((appr) => (
-                      <Col>
+                      <Col xs={12} sm={12} md={6} lg={4} xl={4} key={appr.id || Math.random()}>
                         <Card className="dark-blue-bg">
                           <Card.Body>
                             {appr.employee_data &&
@@ -1037,14 +1039,14 @@ function Dashboard() {
               )}
             </Row>
 
-            <div classNameName="row">
+            <div className="row">
               {leavesUpdate && leavesUpdate.length > 0 && (
-                <div classnamename="dark-blue-bg mb-4 col-md-12 card">
+                <div className="dark-blue-bg mb-4 col-md-12 col-sm-12 col-xs-12 card">
                   <UserRestrictions
                     permittedUsers={[1, 2, 3, 5, 6, 7]}
                     roleId={userRole}
                   >
-                    <div classnamename="pie-chart-graph card today-pending-leaves-interviews">
+                    <div className="pie-chart-graph card today-pending-leaves-interviews">
                       <div className="purple-bg card-header">
                         <span>Today's Pending Leaves</span>
                       </div>
@@ -1088,8 +1090,8 @@ function Dashboard() {
                 </div>
               )}
               {interviewsUpdate && interviewsUpdate.length > 0 && (
-                <Card classNameName="dark-blue-bg mb-4 col-md-12">
-                  <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
+                <Card className="dark-blue-bg mb-4 col-md-12 col-sm-12 col-xs-12">
+                  <div className="pie-chart-graph card today-pending-leaves-interviews">
                     {interviewsUpdate && interviewsUpdate.length > 0 ? (
                       <div className="purple-bg card-header">
                         <span>Today's Interviews</span>
@@ -1124,8 +1126,8 @@ function Dashboard() {
               )}
               <UserRestrictions permittedUsers={[1, 5, 6]} roleId={userRole}>
                 {confirmationEmployee && confirmationEmployee.length > 0 && (
-                  <Card classNameName="dark-blue-bg mb-4 col-md-12">
-                    <div classNameName="pie-chart-graph card today-pending-leaves-interviews">
+                  <Card className="dark-blue-bg mb-4 col-md-12 col-sm-12 col-xs-12">
+                    <div className="pie-chart-graph card today-pending-leaves-interviews">
                       {confirmationEmployee &&
                         confirmationEmployee.length > 0 ? (
                         <div className="purple-bg card-header">
@@ -1216,7 +1218,7 @@ function Dashboard() {
               />
             )}
           </Col>
-          <Col xl={4} id="right-sidebar">
+          <Col xl={4} lg={12} md={12} sm={12} xs={12} id="right-sidebar">
             <UserRestrictions
               permittedUsers={[1, 2, 3, 4, 10]}
               roleId={userRole}
@@ -1316,7 +1318,7 @@ function Dashboard() {
 
             <div className="holidays-applied">
               <div className="row">
-                <div className="col-xl-6">
+                <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <div className="upcoming-bg">
                     <div className="upcoming-event-box">
                       <div className="upcoming-event-img upcoming-event-img-edit">
@@ -1366,7 +1368,7 @@ function Dashboard() {
                   permittedUsers={isProjectManager ? [1, 2, 3, 4, 5, 6, 7, 10] : [2, 3, 4, 5, 6, 7, 10]}
                   roleId={userRole}
                 >
-                  <div className="col-xl-6">
+                  <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <div className="upcoming-bg faint-orange">
                       <div className="upcoming-event-box">
                         <div className="upcoming-event-img upcoming-event-img-edit">

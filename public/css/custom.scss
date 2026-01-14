@@ -1098,16 +1098,53 @@
              }
          }
      }
-     &.main-sidebar-sticky {
-         position: fixed;
-         top: 0px;
-         left: 0;
-         bottom: 0;
-         box-shadow: 0 8px 24px rgba(61, 119, 180, 0.12%);
-         transition: left 0.3s ease, width 0.3s ease;
-         border-right: 1px solid #e1e6f1;
-     }
- }
+    &.main-sidebar-sticky {
+        position: fixed;
+        top: 0px;
+        left: 0;
+        bottom: 0;
+        box-shadow: 0 8px 24px rgba(61, 119, 180, 0.12%);
+        transition: left 0.3s ease, width 0.3s ease;
+        border-right: 1px solid #e1e6f1;
+    }
+    
+    // Mobile/Tablet: Overlay drawer style
+    @media (max-width: 991px) {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        height: 100dvh;
+        z-index: 1000;
+        width: 85vw;
+        max-width: 320px;
+        visibility: visible !important; // Keep in DOM for animations
+        transition: transform 0.3s ease;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        display: flex !important; // Ensure flex display on mobile
+        
+        // Default state: Show sidebar (can be hidden with .sidebar-hidden class)
+        transform: translateX(0) !important; // Visible by default on mobile
+        
+        // Sidebar visible state (explicitly shown)
+        &.visible:not(.sidebar-hidden) {
+            transform: translateX(0) !important; // Slide into view
+        }
+        
+        // Sidebar hidden state (explicitly hidden)
+        &.sidebar-hidden {
+            transform: translateX(-100%) !important; // Slide out of view
+        }
+        
+        // Override sticky positioning on mobile
+        &.main-sidebar-sticky {
+            position: fixed !important;
+        }
+    }
+}
  
  .nav {
      display: flex;
@@ -1864,17 +1901,44 @@
      }
  }
  
- .main-sidebar-hide {
-     .side-menu {
-         transition: left 0.3s ease, width 0.3s ease;
-         display: none;
-     }
-     .main-content {
-         &.side-content {
-             margin-left: 0px;
-         }
-     }
- }
+.main-sidebar-hide {
+    .side-menu {
+        transition: left 0.3s ease, width 0.3s ease;
+        display: none;
+    }
+    .main-content {
+        &.side-content {
+            margin-left: 0px;
+        }
+    }
+}
+
+// Sidebar backdrop overlay (mobile/tablet only)
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    visibility: hidden;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    
+    &.show {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    @media (min-width: 992px) {
+        display: none !important;
+    }
+}
  
  .side-header {
      position: sticky;
