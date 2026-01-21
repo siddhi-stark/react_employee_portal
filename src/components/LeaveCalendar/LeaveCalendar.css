@@ -198,6 +198,26 @@
   cursor: pointer;
 }
 
+/* Leave badge styling - color-coded badges with employee names */
+.leave-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  transition: opacity 0.2s ease;
+}
+
+.leave-badge:hover {
+  opacity: 0.9;
+  z-index: 10;
+  position: relative;
+}
+
 /* Holiday day cell backgrounds */
 .leave-calendar-container .rbc-day-bg.holiday-day.mandatory-holiday {
   background-color: #ff9999 !important;

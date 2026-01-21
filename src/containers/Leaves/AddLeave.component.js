@@ -64,14 +64,13 @@ function AddLeave(props) {
   const [leavesCount, setLeavesCount] = useState(initialState);
   const [sandwichMsg, setSandwichMsg] = useState('');
   const [leavesMsg, setLeavesMsg] = useState(true);
-  const [statusId, setStatusId] = useState('')
+  const [statusId, setStatusId] = useState('');
   const [modalShow, setModalShow] = useState(false);
   const [milestoneWarnings, setMilestoneWarnings] = useState([]);
   const [showMilestoneWarning, setShowMilestoneWarning] = useState(false);
   const [showMilestoneInfo, setShowMilestoneInfo] = useState(false);
   const [createdLeaveId, setCreatedLeaveId] = useState(null);
   const [pendingLeaveFormData, setPendingLeaveFormData] = useState(null);
-
 
   // Get today's date
   const today = new Date();
@@ -766,8 +765,6 @@ function AddLeave(props) {
                     </span>
                   )}
 
-
-
                   {leavesCount.CasualLeavesCount >= 0 && (
                     <span>
                       <i className="fas fa-exclamation-circle" />
@@ -904,7 +901,6 @@ function AddLeave(props) {
                   </p>
                 )}
 
-
                 {totalCount === 0 &&
                   flag &&
                   changeDate &&
@@ -922,19 +918,18 @@ function AddLeave(props) {
                   <>
                     <Button
                       onClick={() => {
-                        setStatusId(2)
-                        setModalShow(true)
-
+                        setStatusId(2);
+                        setModalShow(true);
                       }}
-                    // className="ml-3"
+                      // className="ml-3"
                     >
                       Approve
                     </Button>
 
                     <Button
                       onClick={() => {
-                        setStatusId(2)
-                        setModalShow(true)
+                        setStatusId(2);
+                        setModalShow(true);
                       }}
                       className="ml-3"
 

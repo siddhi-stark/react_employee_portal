@@ -148,7 +148,6 @@ function TeamLeaves() {
 
   const history = useHistory();
 
-
   const getRowData = async (pageNo = 1, tab = null, forCalendar = false) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -163,12 +162,34 @@ function TeamLeaves() {
       page: forCalendar ? 1 : page,
       limit: forCalendar ? 1000 : limit, // Get all leaves for calendar view
       my_team: true,
-      tab: currentTab, // Add tab parameter
       sort_by: 'leave_from_date',
       // Sort direction: ascending for upcoming, descending for taken
       sort_direction: currentTab === 'upcoming' ? 'ascending' : 'descending',
       ...filterList,
     };
+
+    // For calendar view, ensure we request the full current month range
+    // so retroactive and future team leaves are visible for that month.
+    if (forCalendar && !filterList.start_date && !filterList.end_date) {
+      const monthStart = new Date(calendarDate);
+      monthStart.setDate(1);
+      monthStart.setHours(0, 0, 0, 0);
+
+      const monthEnd = new Date(monthStart);
+      monthEnd.setMonth(monthEnd.getMonth() + 1);
+      monthEnd.setDate(0);
+      monthEnd.setHours(23, 59, 59, 999);
+
+      params.start_date = customFunctions.getDate(monthStart);
+      params.end_date = customFunctions.getDate(monthEnd);
+    }
+
+    // Preserve existing tab-based behaviour for table data,
+    // but for calendar view do not restrict by tab so that
+    // both past and future leaves are visible in the calendar.
+    if (!forCalendar) {
+      params.tab = currentTab; // Add tab parameter only for table view
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -486,10 +507,6 @@ function TeamLeaves() {
             fileUrl = `${baseDomain}${mediaPath}`;
           }
           
-          console.log('Constructed file URL:', fileUrl);
-          console.log('CSV path from API:', csvPath);
-          console.log('Base URL:', Api.baseUrl);
-
           // Download the file from the URL
           const fileResponse = await fetch(fileUrl, {
             method: 'GET',
@@ -714,6 +731,7 @@ function TeamLeaves() {
                   <LeaveCalendar
                     leaves={rowData}
                     holidays={holidays}
+                    activeTab={activeTab}
                     onSelectEvent={handleCalendarEventClick}
                     defaultDate={calendarDate}
                     view={calendarView}
@@ -746,6 +764,7 @@ function TeamLeaves() {
                   <LeaveCalendar
                     leaves={rowData}
                     holidays={holidays}
+                    activeTab={activeTab}
                     onSelectEvent={handleCalendarEventClick}
                     defaultDate={calendarDate}
                     view={calendarView}
