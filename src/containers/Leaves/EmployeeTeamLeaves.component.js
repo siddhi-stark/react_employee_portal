@@ -260,12 +260,34 @@ function EmployeeTeamLeaves(props) {
     const params = {
       page: forCalendar ? 1 : page,
       limit: forCalendar ? 1000 : limit, // Get all leaves for calendar view
-      tab: currentTab, // Add tab parameter
       sort_by: 'leave_from_date',
       // Sort direction: ascending for upcoming, descending for taken
       sort_direction: currentTab === 'upcoming' ? 'ascending' : 'descending',
       ...filterList,
     };
+
+    // For calendar view, explicitly request the full current month range
+    // so retroactive and future leaves are available for that month.
+    if (forCalendar && !filterList.start_date && !filterList.end_date) {
+      const monthStart = new Date(calendarDate);
+      monthStart.setDate(1);
+      monthStart.setHours(0, 0, 0, 0);
+
+      const monthEnd = new Date(monthStart);
+      monthEnd.setMonth(monthEnd.getMonth() + 1);
+      monthEnd.setDate(0);
+      monthEnd.setHours(23, 59, 59, 999);
+
+      params.start_date = customFunctions.getDate(monthStart);
+      params.end_date = customFunctions.getDate(monthEnd);
+    }
+
+    // For table view, keep existing upcoming/taken behaviour via tab.
+    // For calendar view, avoid restricting by tab so past and future
+    // leaves are all available for the visible date range.
+    if (!forCalendar) {
+      params.tab = currentTab; // Add tab parameter only for table data
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -975,6 +997,7 @@ function EmployeeTeamLeaves(props) {
                     <LeaveCalendar
                       leaves={rowData}
                       holidays={holidays}
+                      activeTab={activeTab}
                       onSelectEvent={handleCalendarEventClick}
                       defaultDate={calendarDate}
                       view={calendarView}
@@ -1007,6 +1030,7 @@ function EmployeeTeamLeaves(props) {
                     <LeaveCalendar
                       leaves={rowData}
                       holidays={holidays}
+                      activeTab={activeTab}
                       onSelectEvent={handleCalendarEventClick}
                       defaultDate={calendarDate}
                       view={calendarView}

@@ -16,6 +16,7 @@ function LeaveCalendar({
   onViewChange,
   onNavigate,
   isTeamView = false,
+  activeTab, // 'upcoming' or 'taken' – used for status-based filtering aligned with tabs
 }) {
   const [currentView, setCurrentView] = useState(view);
   const [currentDate, setCurrentDate] = useState(defaultDate);
@@ -60,9 +61,25 @@ function LeaveCalendar({
 
   // Transform leaves data to calendar events
   // Filter leaves to only show those that fall within the current month
+  // and respect tab-based semantics (upcoming vs taken) by status:
+  // - Upcoming: non-approved (e.g. Pending/Cancelled/Declined)
+  // - Taken: approved only
   const leaveEvents = useMemo(() => {
     return leaves
       .filter((leave) => {
+        // 1) Apply status-based filtering according to activeTab
+        if (activeTab === 'upcoming') {
+          // Show only non-approved leaves in Upcoming tab
+          if (leave.status_name === 'Approved') {
+            return false;
+          }
+        } else if (activeTab === 'taken') {
+          // Show only approved leaves in Taken tab
+          if (leave.status_name !== 'Approved') {
+            return false;
+          }
+        }
+
         const leaveStartDate = new Date(leave.leave_from_date);
         const leaveEndDate = new Date(leave.leave_to_date);
         
@@ -97,13 +114,10 @@ function LeaveCalendar({
         }
       }
 
-      // Determine event title based on view
-      let title = '';
-      if (isTeamView) {
-        title = `${leave.user_name || ''} - ${leave.leave_type || ''}`.trim();
-      } else {
-        title = `${leave.leave_type || 'Leave'}`;
-      }
+      // Display employee name as title (for both team view and individual view)
+      // For individual view, user_name may not be available, so use a fallback
+      const employeeName = leave.user_name || 'My Leave';
+      const title = employeeName;
 
       return {
         id: leave.id,
@@ -120,16 +134,45 @@ function LeaveCalendar({
           : '',
       };
     });
-  }, [leaves, isTeamView, currentMonthStart, currentMonthEnd]);
+  }, [leaves, currentMonthStart, currentMonthEnd, activeTab]);
 
   // Combine leave and holiday events
   const events = useMemo(() => {
     return [...leaveEvents, ...holidayEvents];
   }, [leaveEvents, holidayEvents]);
 
-  // Style events based on status and type
+  // Get color for leave type
+  const getLeaveTypeColor = (leaveType) => {
+    if (!leaveType) return { bg: '#3174ad', border: '#3174ad', text: '#fff' };
+    
+    const normalizedType = leaveType.toLowerCase().trim();
+    
+    // Map leave types to colors
+    if (normalizedType.includes('sick')) {
+      return { bg: '#dc3545', border: '#c82333', text: '#fff' }; // Red
+    } else if (normalizedType.includes('casual')) {
+      return { bg: '#007bff', border: '#0056b3', text: '#fff' }; // Blue
+    } else if (normalizedType.includes('privilege') || normalizedType.includes('earned')) {
+      return { bg: '#28a745', border: '#218838', text: '#fff' }; // Green
+    } else if (normalizedType.includes('optional holiday')) {
+      return { bg: '#ff9800', border: '#f57c00', text: '#fff' }; // Orange
+    } else if (normalizedType.includes('compensatory')) {
+      return { bg: '#9c27b0', border: '#7b1fa2', text: '#fff' }; // Purple
+    } else if (normalizedType.includes('leave without pay') || normalizedType.includes('lwp')) {
+      return { bg: '#6c757d', border: '#5a6268', text: '#fff' }; // Gray
+    } else if (normalizedType.includes('maternity')) {
+      return { bg: '#e91e63', border: '#c2185b', text: '#fff' }; // Pink
+    } else if (normalizedType.includes('paternity')) {
+      return { bg: '#00bcd4', border: '#0097a7', text: '#fff' }; // Cyan
+    } else {
+      // Default color for unknown leave types
+      return { bg: '#3174ad', border: '#3174ad', text: '#fff' }; // Default blue
+    }
+  };
+
+  // Style events based on leave type (not status)
   const eventStyleGetter = (event) => {
-    const { status_name, isHalfDay, halfDayStatus, isHoliday, holidayType } = event.resource;
+    const { leave_type, isHalfDay, halfDayStatus, isHoliday, holidayType, status_name } = event.resource;
 
     // Handle holiday events
     if (isHoliday) {
@@ -162,27 +205,24 @@ function LeaveCalendar({
       }
     }
     
-    let backgroundColor = '#3174ad'; // Default blue
-    let borderColor = '#3174ad';
-    let color = '#fff';
+    // Get colors based on leave type
+    const colors = getLeaveTypeColor(leave_type);
+    let backgroundColor = colors.bg;
+    let borderColor = colors.border;
+    let color = colors.text;
     let borderStyle = 'solid';
-    let height = '100%';
-
-    // Color coding based on status
-    if (status_name === 'Pending') {
-      backgroundColor = '#ffc107'; // Yellow/Orange
-      borderColor = '#ff9800';
-      color = '#000';
-    } else if (status_name === 'Approved') {
-      backgroundColor = '#28a745'; // Green
-      borderColor = '#218838';
-    } else if (status_name === 'Declined') {
-      backgroundColor = '#dc3545'; // Red
+    
+    // If status is declined or cancelled, make it more muted
+    if (status_name === 'Declined') {
+      backgroundColor = '#dc3545'; // Red for declined
       borderColor = '#c82333';
+      color = '#fff';
     } else if (status_name === 'Cancelled') {
-      backgroundColor = '#6c757d'; // Gray
+      backgroundColor = '#6c757d'; // Gray for cancelled
       borderColor = '#5a6268';
+      color = '#fff';
     }
+    // Pending and Approved use leave type colors
 
     // Half-day indicator styling
     if (isHalfDay) {
@@ -198,6 +238,8 @@ function LeaveCalendar({
             borderStyle,
             borderRadius: '4px',
             borderWidth: '2px',
+            padding: '2px 6px',
+            fontWeight: '500',
           },
         };
       } else {
@@ -210,6 +252,8 @@ function LeaveCalendar({
             borderStyle,
             borderRadius: '4px',
             borderWidth: '2px',
+            padding: '2px 6px',
+            fontWeight: '500',
           },
         };
       }
@@ -223,6 +267,8 @@ function LeaveCalendar({
         borderStyle,
         borderRadius: '4px',
         borderWidth: '2px',
+        padding: '2px 6px',
+        fontWeight: '500',
       },
     };
   };
@@ -291,9 +337,9 @@ function LeaveCalendar({
   };
 
 
-  // Custom event component with native tooltip
+  // Custom event component with native tooltip showing reason on hover
   const EventComponent = ({ event }) => {
-    const { reason, user_name, leave_type, half_day_status, isHoliday, holidayType } = event.resource || {};
+    const { reason, user_name, leave_type, half_day_status, isHoliday, holidayType, status_name } = event.resource || {};
     
     // Handle holiday events differently
     if (isHoliday) {
@@ -307,27 +353,40 @@ function LeaveCalendar({
       );
     }
     
-    // Determine Full/Half indicator for leave events
-    const dayType = half_day_status ? '(Half' : '(Full';
-    
     // Build tooltip text for native browser tooltip
-    // Always show user_name if available (for both Team Leaves and Employee Leaves)
+    // Show leave type, employee name, status, and reason on hover
     let tooltipText = '';
-    if (user_name) {
-      tooltipText = `${user_name} - ${leave_type || 'Leave'} ${dayType} Day)`;
-    } else {
-      tooltipText = `${leave_type || 'Leave'} ${dayType} Day)`;
-    }
-
     
+    // Add leave type
+    if (leave_type) {
+      tooltipText += `Leave Type: ${leave_type}`;
+    }
+    
+    // Add employee name (if different from title, or for clarity)
+    const employeeName = user_name || event.title;
+    if (employeeName) {
+      tooltipText += `\nEmployee: ${employeeName}`;
+    }
+    
+    // Add status
+    if (status_name) {
+      tooltipText += `\nStatus: ${status_name}`;
+    }
+    
+    // Add day type (Full/Half)
+    const dayType = half_day_status ? 'Half Day' : 'Full Day';
+    tooltipText += `\nDuration: ${dayType}`;
+    
+    // Add reason (main content)
     if (reason) {
-      tooltipText += `\nReason: ${reason}`;
+      tooltipText += `\n\nReason: ${reason}`;
     } else {
-      tooltipText += '\nReason: Not provided';
+      tooltipText += `\n\nReason: Not provided`;
     }
 
+    // Display employee name in the badge (event.title already contains employee name)
     return (
-      <div title={tooltipText} className="leave-event-tooltip">
+      <div title={tooltipText} className="leave-event-tooltip leave-badge">
         {event.title}
       </div>
     );
