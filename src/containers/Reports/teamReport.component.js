@@ -48,8 +48,6 @@ function TeamReport() {
     itemsPerPage: 10,
     totalItems: 10,
   });
-
-
   const columns = [
     {
       id: 'no',
@@ -103,7 +101,6 @@ function TeamReport() {
 
     let postData = {};
     const employeeList = [];
-    console.log('selectedEmployee', selectedEmployee);
     
     if (selectedEmployee && selectedEmployee.length > 0) {
       selectedEmployee.map((emp) => {
