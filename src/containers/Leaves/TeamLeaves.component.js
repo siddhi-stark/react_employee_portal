@@ -148,7 +148,6 @@ function TeamLeaves() {
 
   const history = useHistory();
 
-
   const getRowData = async (pageNo = 1, tab = null, forCalendar = false) => {
     setShowLoader(true);
     const page = pageNo || currentPage;
@@ -508,10 +507,6 @@ function TeamLeaves() {
             fileUrl = `${baseDomain}${mediaPath}`;
           }
           
-          console.log('Constructed file URL:', fileUrl);
-          console.log('CSV path from API:', csvPath);
-          console.log('Base URL:', Api.baseUrl);
-
           // Download the file from the URL
           const fileResponse = await fetch(fileUrl, {
             method: 'GET',
