@@ -457,6 +457,34 @@ function CurrentEmployee() {
     }
   };
 
+  const getBackendMessage = (data, message) => {
+    const dataMessage = data?.message;
+    if (Array.isArray(dataMessage)) return dataMessage[0];
+    if (typeof dataMessage === 'string') return dataMessage;
+    if (Array.isArray(message)) return message[0];
+    if (typeof message === 'string') return message;
+    return 'Something went wrong! Please try again later';
+  };
+
+  const updateEmployeeRole = async (employeeId, roleId) => {
+    if (!employeeId || !roleId) return;
+    const { data, message } = await AuthApi.patchDataToServer(
+      `${Api.employeeAdd}${employeeId}/role/`,
+      { role_id: Number(roleId) }
+    );
+    if (data) {
+      swal(getBackendMessage(data, message), '', 'success', {
+        buttons: false,
+        timer: 2000,
+      }).then(() => {
+        swal.close();
+        getEmployeeData(currentPage);
+      });
+      return;
+    }
+    swal(getBackendMessage(data, message), '', 'error');
+  };
+
   const onCancel = () => {
     validator.current.hideMessages();
     // setEmployeeTwId('');
@@ -936,6 +964,20 @@ function CurrentEmployee() {
                   </Card.Body>
                   <Card.Footer className="card-footer-view">
                     <h4 className="text-primary">SDMS{emp.emp_code}</h4>
+                    {Number(userRole) === 1 && Number(emp.role_id) !== 2 && (
+                      <Button
+                        size="sm"
+                        className="pull-right mr-2"
+                        title="Convert to Manager"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          updateEmployeeRole(emp.id, 2);
+                        }}
+                      >
+                        Make Manager
+                      </Button>
+                    )}
                     <Button
                       size="sm"
                       className="pull-right"
