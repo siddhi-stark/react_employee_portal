@@ -92,6 +92,35 @@ class AuthApi {
         }
       );
 
+  patchDataToServer = async (endPoint, payload) =>
+    httpService
+      .patch(endPoint, payload) // eslint-disable-line
+      .then(
+        (response) => {
+          if (response.data.code === 200) {
+            httpResponse.data = response.data;
+            return httpResponse;
+          }
+          httpResponse.success = false;
+          httpResponse.message = response.data.message;
+          return httpResponse;
+        },
+        (err) => {
+          httpResponse.success = false;
+          httpResponse.data = null;
+          httpResponse.message =
+            err && err.data && err.data.message
+              ? err.data.message[0]
+              : err &&
+                err.response &&
+                err.response.data &&
+                err.response.data.message
+              ? err.response.data.message[0]
+              : 'Something went wrong! Please try again later'; // eslint-disable-line
+          return httpResponse;
+        }
+      );
+
   deleteDataFromServer = async (endPoint) =>
     httpService
       .delete(endPoint) // eslint-disable-line

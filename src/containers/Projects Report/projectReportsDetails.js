@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 import CustomTable from 'stark-custom-datatable';
 import SimpleReactValidator from 'simple-react-validator';
 
-const items = [{ to: '/', label: 'Home' }, { label: `Monthly Generated Reports` }];
+const items = [{ to: '/', label: 'Home' }, { label: `Weekly Generated Reports` }];
 
 const ProjectReportsDetails = () => {
   const history = useHistory();
@@ -264,7 +264,7 @@ const ProjectReportsDetails = () => {
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Monthly Generated Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">Weekly Generated Reports</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />

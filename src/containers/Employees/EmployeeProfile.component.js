@@ -1,6 +1,15 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Button, Image, Row, Card, Table, Col, Modal } from 'react-bootstrap';
+import {
+  Button,
+  Image,
+  Row,
+  Card,
+  Table,
+  Col,
+  Modal,
+  Form,
+} from 'react-bootstrap';
 import { Link, useHistory, withRouter } from 'react-router-dom';
 // import CustomTable from 'stark-custom-datatable';
 import axios from 'axios';
@@ -57,6 +66,11 @@ function EmployeeProfile(props) {
   const [reviewData, setReviewData] = useState('');
   const [reviewId, setReviewId] = useState();
   const [currentUserId, setCurrentUserId] = useState();
+  const [currentUserRole, setCurrentUserRole] = useState(0);
+  const [roleList, setRoleList] = useState([]);
+  const [selectedRoleId, setSelectedRoleId] = useState('');
+  const [showRoleUpdateModal, setShowRoleUpdateModal] = useState(false);
+  const [isRoleUpdating, setIsRoleUpdating] = useState(false);
   const [rowData, setRowData] = useState([]);
 
   const employeeID = match.params.id;
@@ -305,9 +319,61 @@ function EmployeeProfile(props) {
   }, [currentUserId]);
 
   useEffect(() => {
+    const roleId = customFunctions?.getLocalStorage('group');
+    setCurrentUserRole(Number(roleId || 0));
+  }, []);
+
+  useEffect(() => {
     getEmployeeDetails();
     getData();
   }, [refreshData]);
+
+  const getBackendMessage = (data, message) => {
+    const dataMessage = data?.message;
+    if (Array.isArray(dataMessage)) return dataMessage[0];
+    if (typeof dataMessage === 'string') return dataMessage;
+    if (Array.isArray(message)) return message[0];
+    if (typeof message === 'string') return message;
+    return 'Something went wrong! Please try again later';
+  };
+
+  const getRoleList = async () => {
+    const { data, message } = await AuthApi.getDataFromServer(`${Api.roleUrl}`);
+    if (data && Array.isArray(data?.data)) {
+      setRoleList(data.data);
+      return;
+    }
+    swal(getBackendMessage(data, message), '', 'error');
+  };
+
+  const openRoleUpdateModal = async () => {
+    setSelectedRoleId(employeeDetails?.role_id || '');
+    if (!roleList.length) {
+      await getRoleList();
+    }
+    setShowRoleUpdateModal(true);
+  };
+
+  const updateEmployeeRole = async (roleIdOverride = null) => {
+    const roleIdToUpdate = roleIdOverride || selectedRoleId;
+    if (!roleIdToUpdate) return;
+    setIsRoleUpdating(true);
+    const payload = {
+      role_id: Number(roleIdToUpdate),
+    };
+    const { data, message } = await AuthApi.patchDataToServer(
+      `${Api.employeeAdd}${employeeDetails?.id}/role/`,
+      payload
+    );
+    setIsRoleUpdating(false);
+    if (data) {
+      swal(getBackendMessage(data, message), '', 'success');
+      setShowRoleUpdateModal(false);
+      getEmployeeDetails();
+      return;
+    }
+    swal(getBackendMessage(data, message), '', 'error');
+  };
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -1195,7 +1261,28 @@ function EmployeeProfile(props) {
                           <label>
                             <strong>Role</strong>
                           </label>
-                          <p>{employeeDetails?.role_name}</p>
+                          <p className="mb-1">{employeeDetails?.role_name}</p>
+                          {Number(currentUserRole) === 1 && (
+                            <div className="d-flex">
+                              <Button
+                                size="sm"
+                                variant="outline-primary"
+                                onClick={openRoleUpdateModal}
+                              >
+                                Change Role
+                              </Button>
+                              {Number(employeeDetails?.role_id) !== 2 && (
+                                <Button
+                                  className="ml-2"
+                                  size="sm"
+                                  variant="outline-success"
+                                  onClick={() => updateEmployeeRole(2)}
+                                >
+                                  Convert To Manager
+                                </Button>
+                              )}
+                            </div>
+                          )}
                         </li>
                         <li className="p-0 border-bottom border-1 mt-3 mx-2">
                           <label>
@@ -2738,6 +2825,49 @@ function EmployeeProfile(props) {
           </span>
         }
       />
+      <Modal
+        show={showRoleUpdateModal}
+        onHide={() => !isRoleUpdating && setShowRoleUpdateModal(false)}
+        backdrop="static"
+        centered
+      >
+        <Modal.Header closeButton={!isRoleUpdating}>
+          <Modal.Title>Update Employee Role</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>Select Role</Form.Label>
+            <Form.Select
+              value={selectedRoleId}
+              onChange={(e) => setSelectedRoleId(e.target.value)}
+              disabled={isRoleUpdating}
+            >
+              <option value="">Select role</option>
+              {roleList.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowRoleUpdateModal(false)}
+            disabled={isRoleUpdating}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={updateEmployeeRole}
+            disabled={isRoleUpdating || !selectedRoleId}
+          >
+            {isRoleUpdating ? 'Updating...' : 'Update Role'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

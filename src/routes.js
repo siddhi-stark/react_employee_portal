@@ -399,6 +399,7 @@ function Routes() {
 
       <Route path="/project-report-generation" exact component={ProjectReportForm}/>
       <Route path="/todays-project-reports" exact component={TodaysProjectReports}/>
+      <Route path="/monthly-project-reports" exact component={TodaysProjectReports}/>
       <Route path="/view-reports-projects/:id" exact component={ProjectsViewReports}/>
       <Route path="/project-reports-details" exact component={ProjectReportsDetails}/>
       

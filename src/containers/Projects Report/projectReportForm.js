@@ -50,6 +50,7 @@ const ProjectReportForm = () => {
   console.log("selectedTasks", selectedTasks);
 
   const [selectedReportType, setReportType] = useState({ "label": 'Morning', "value": 1 })
+  const [reportPeriod, setReportPeriod] = useState('weekly'); // 'weekly' or 'monthly'
 
   // useEffect(() => {
   //   if (filterDate && projectId) {
@@ -263,6 +264,33 @@ const ProjectReportForm = () => {
             </Button>
           </div>
           <hr style={{ borderColor: "white" }} />
+          <Row className="mb-3">
+            <Col sm={12}>
+              <div className="d-flex align-items-center">
+                <label className="mr-3 mb-0">Report Period:</label>
+                <div className="btn-group" role="group">
+                  <Button
+                    variant={reportPeriod === 'weekly' ? 'primary' : 'outline-primary'}
+                    onClick={() => {
+                      setReportPeriod('weekly');
+                      setToDate(''); // Reset to date when switching
+                    }}
+                  >
+                    Weekly
+                  </Button>
+                  <Button
+                    variant={reportPeriod === 'monthly' ? 'primary' : 'outline-primary'}
+                    onClick={() => {
+                      setReportPeriod('monthly');
+                      setToDate(''); // Reset to date when switching
+                    }}
+                  >
+                    Monthly
+                  </Button>
+                </div>
+              </div>
+            </Col>
+          </Row>
           <Row>
             <Col sm={2}>
               <Datepicker
@@ -293,7 +321,7 @@ const ProjectReportForm = () => {
                 onChange={(e) => setToDate(e)}
                 autoComplete="off"
                 name="endDate"
-                maxDate={fromDate ? new Date(fromDate.getTime() + 30 * 24 * 60 * 60 * 1000) : null}
+                maxDate={fromDate ? new Date(fromDate.getTime() + (reportPeriod === 'weekly' ? 7 : 30) * 24 * 60 * 60 * 1000) : null}
                 minDate={fromDate}
                 dateFormat="dd/MM/yyyy"
                 placeholder="Select date"

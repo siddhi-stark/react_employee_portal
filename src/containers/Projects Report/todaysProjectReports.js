@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useRef, useEffect } from 'react';
-import { Helmet, DropdownInput } from '../../components/FormInputs';
+import { Helmet, DropdownInput, Datepicker } from '../../components/FormInputs';
 import Breadcrumb from '../../components/Breadcrumb/breadcrumb.component';
 import Loader from '../../components/Loader/index';
 import { Card, Row, Col, Button, Image } from 'react-bootstrap';
@@ -10,13 +10,12 @@ import AuthApi from '../../helper/authApi';
 import customFunctions from '../../helper/customFunctions';
 import Api from '../../helper/api';
 import swal from 'sweetalert';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import SimpleReactValidator from 'simple-react-validator';
-
-const items = [{ to: '/', label: 'Home' }, { label: `Monthly Project Reports` }];
 
 const TodaysProjectReports = () => {
   const history = useHistory();
+  const location = useLocation();
   const validator = useRef(new SimpleReactValidator());
   const [isShowLoader, setShowLoader] = useState(false);
   const [rowData, setRowData] = useState([]);
@@ -28,7 +27,15 @@ const TodaysProjectReports = () => {
   const [showSubmit, setShowSubmit] = useState(false);
   const [title, setTitle] = useState('');
   const UserID = customFunctions.getLocalStorage('userId');
-  const fromDate = customFunctions.getDate(new Date())
+  
+  // Detect if it's monthly reports route
+  const isMonthly = location.pathname === '/monthly-project-reports';
+  const items = [{ to: '/', label: 'Home' }, { label: isMonthly ? `Monthly Generated Reports` : `Weekly Generated Reports` }];
+  
+  // Date range for weekly (single date) or monthly (date range)
+  const [fromDate, setFromDate] = useState(isMonthly ? null : customFunctions.getDate(new Date()));
+  const [toDate, setToDate] = useState(isMonthly ? null : customFunctions.getDate(new Date()));
+  
   const [reportType, setReportType] = useState({ "label": 'Morning', "value": 1 },)
   const [selectedId, setSelectedId] = useState([]);
   const [projectsList, setProjectsList] = useState('')
@@ -36,14 +43,17 @@ const TodaysProjectReports = () => {
 
   useEffect(() => {
     if (UserID) {
-      getTodaysReport();
+      // Only auto-fetch for weekly reports (today's date)
+      if (!isMonthly) {
+        getTodaysReport();
+      }
     }
-  }, [UserID]);
+  }, [UserID, isMonthly]);
 
   useEffect(() => {
-    setTitle(`Today's Reports`)
+    setTitle(isMonthly ? `Monthly Reports` : `Today's Reports`)
     getProjectList();
-  }, []);
+  }, [isMonthly]);
 
   const getProjectList = async () => {
     const { data, message } = await AuthApi.getDataFromServer(
@@ -70,10 +80,23 @@ const TodaysProjectReports = () => {
     setShowLoader(true);
     const params = {
       user: UserID,
-      // type: 'all',
-      start_date: fromDate,
-      end_date: fromDate
     };
+
+    // For weekly: use single date, for monthly: use date range
+    if (isMonthly) {
+      if (fromDate && toDate) {
+        params.start_date = customFunctions.getDate(fromDate);
+        params.end_date = customFunctions.getDate(toDate);
+      } else {
+        setShowLoader(false);
+        swal('Please select date range', 'Select both start and end dates for monthly reports', 'warning');
+        return;
+      }
+    } else {
+      // Weekly reports - use single date
+      params.start_date = fromDate;
+      params.end_date = fromDate;
+    }
 
     if (selectedProject) {
       params.project = +selectedProject?.value
@@ -243,10 +266,11 @@ const TodaysProjectReports = () => {
         project_reports_ids: selectedId.join(','), // Comma-separated string
       };
 
-      // Optional filters - can be added if needed
-      if (fromDate) {
-        params.report_date = fromDate;
-      }
+      // IMPORTANT: Don't pass report_date for weekly/monthly exports
+      // Only pass project_reports_ids as per backend requirements
+      // report_date is only for exact date matching, not date ranges
+      
+      // Optional filters (but not report_date for range exports)
       if (reportType?.value) {
         params.report_type = reportType.value;
       }
@@ -255,125 +279,79 @@ const TodaysProjectReports = () => {
       }
 
       const url = customFunctions.generateUrl(Api.projectReportsExportCSVUrl, params);
-      const token = customFunctions.getLocalStorage('access_token');
+      const { data, message } = await AuthApi.getDataFromServer(url);
 
-      // Fetch the export API using GET
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+      if (data && data.success && data.data) {
+        // Get file URL from response (prefer download_url, then file_url, then csv_path)
+        let fileUrl = data.data.download_url || data.data.file_url || data.data.csv_path;
+        let fileName = 'project_reports_export.csv';
 
-      // Check content-type header
-      const contentType = response.headers.get('content-type') || '';
-
-      // Handle error responses
-      if (!response.ok) {
-        const clonedResponse = response.clone();
-
-        if (contentType.includes('application/json')) {
-          try {
-            const errorData = await clonedResponse.json();
-            const errorMessage = errorData.message || errorData.error || JSON.stringify(errorData);
-            setShowLoader(false);
-            swal('Export failed', Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage, 'error');
-            return;
-          } catch (e) {
-            const errorText = await response.text();
-            setShowLoader(false);
-            swal('Export failed', errorText || 'Failed to download file', 'error');
-            return;
-          }
-        } else {
-          const errorText = await response.text();
+        if (!fileUrl) {
           setShowLoader(false);
-          swal('Export failed', errorText || 'Failed to download file', 'error');
+          swal('Export failed', 'No file URL returned from server', 'error');
           return;
         }
-      }
 
-      // Parse JSON response
-      if (contentType.includes('application/json')) {
-        const jsonData = await response.json();
-
-        if (jsonData.success && jsonData.data) {
-          // Get file URL from response (prefer download_url, then file_url, then csv_path)
-          let fileUrl = jsonData.data.download_url || jsonData.data.file_url || jsonData.data.csv_path;
-          let fileName = 'project_reports_export.csv';
-
-          if (!fileUrl) {
-            setShowLoader(false);
-            swal('Export failed', 'No file URL returned from server', 'error');
-            return;
-          }
-
-          // Extract filename from URL if it's a full URL
-          try {
-            if (fileUrl.startsWith('http')) {
-              const urlObj = new URL(fileUrl);
-              const pathParts = urlObj.pathname.split('/');
-              if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
-                fileName = pathParts[pathParts.length - 1];
-              }
-            } else {
-              // Handle relative path
-              const baseUrlStr = Api.baseUrl;
-              const baseDomain = baseUrlStr.replace(/\/api\/v\d+\/?$/, '').replace(/\/$/, '');
-              const mediaPath = fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
-              fileUrl = `${baseDomain}${mediaPath}`;
-              
-              // Extract filename from path
-              const pathParts = fileUrl.split('/');
-              if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
-                fileName = pathParts[pathParts.length - 1];
-              }
+        // Extract filename from URL if it's a full URL
+        try {
+          if (fileUrl.startsWith('http')) {
+            const urlObj = new URL(fileUrl);
+            const pathParts = urlObj.pathname.split('/');
+            if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+              fileName = pathParts[pathParts.length - 1];
             }
-          } catch (e) {
-            // If URL parsing fails, use default filename
-            console.log('Error parsing URL:', e);
+          } else {
+            // Handle relative path
+            const baseUrlStr = Api.baseUrl;
+            const baseDomain = baseUrlStr.replace(/\/api\/v\d+\/?$/, '').replace(/\/$/, '');
+            const mediaPath = fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
+            fileUrl = `${baseDomain}${mediaPath}`;
+            
+            // Extract filename from path
+            const pathParts = fileUrl.split('/');
+            if (pathParts.length > 0 && pathParts[pathParts.length - 1]) {
+              fileName = pathParts[pathParts.length - 1];
+            }
           }
-
-          // Download the file from the URL
-          const fileResponse = await fetch(fileUrl, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
-          if (!fileResponse.ok) {
-            throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
-          }
-
-          // Download the file as blob
-          const blob = await fileResponse.blob();
-          const blobUrl = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = blobUrl;
-          link.setAttribute('download', fileName);
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(blobUrl);
-
-          setShowLoader(false);
-          swal('Export successful', 'File downloaded successfully', 'success');
-          return;
-        } else {
-          // Error response from API
-          const errorMessage = jsonData.message || 'Export failed';
-          setShowLoader(false);
-          swal('Export failed', Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage, 'error');
-          return;
+        } catch (e) {
+          // If URL parsing fails, use default filename
+          console.log('Error parsing URL:', e);
         }
-      }
 
-      // If response is not JSON, show error
-      const errorText = await response.text();
-      setShowLoader(false);
-      swal('Export failed', errorText || 'Unexpected response format', 'error');
+        const token = customFunctions.getLocalStorage('access_token');
+
+        // Download the file from the URL
+        const fileResponse = await fetch(fileUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!fileResponse.ok) {
+          throw new Error(`Failed to download file: ${fileResponse.status} ${fileResponse.statusText}`);
+        }
+
+        // Download the file as blob
+        const blob = await fileResponse.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.setAttribute('download', fileName);
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+
+        setShowLoader(false);
+        swal('Export successful', 'File downloaded successfully', 'success');
+      } else {
+        // Error response from API
+        const errorMessage = data?.message || message || 'Export failed';
+        setShowLoader(false);
+        swal('Export failed', Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage, 'error');
+      }
     } catch (error) {
       setShowLoader(false);
       swal('Export failed', error.message || 'An error occurred while exporting', 'error');
@@ -386,13 +364,17 @@ const TodaysProjectReports = () => {
 
   const handleClear = (e) => {
     setProject('')
+    if (isMonthly) {
+      setFromDate(null);
+      setToDate(null);
+    }
   }
 
   return (
     <>
       <Helmet title={title} />
       <div className="title-breadcrumb-section">
-        <h2 className="main-content-title tx-24 mg-b-5">Monthly Project Reports</h2>
+        <h2 className="main-content-title tx-24 mg-b-5">{isMonthly ? 'Monthly Generated Reports' : 'Weekly Generated Reports'}</h2>
         <Breadcrumb items={items} />
       </div>
       <Loader showLoader={isShowLoader} needFullPage={false} />
@@ -414,6 +396,52 @@ const TodaysProjectReports = () => {
           </div>
           <hr style={{ borderColor: "white" }} />
           <Row>
+            {isMonthly && (
+              <>
+                <Col sm={2}>
+                  <Datepicker
+                    className="form-control"
+                    label="Start Date"
+                    asterisk="*"
+                    selected={fromDate}
+                    onChange={(e) => {
+                      setFromDate(e);
+                    }}
+                    autoComplete="off"
+                    name="startDate"
+                    dateFormat="dd/MM/yyyy"
+                    placeholder="Select start date"
+                    errorMessage={validator.current.message(
+                      'Start Date',
+                      fromDate,
+                      'required'
+                    )}
+                  />
+                </Col>
+                <Col sm={2}>
+                  <Datepicker
+                    className="form-control"
+                    label="End Date"
+                    asterisk="*"
+                    selected={toDate}
+                    onChange={(e) => {
+                      setToDate(e);
+                    }}
+                    autoComplete="off"
+                    name="endDate"
+                    dateFormat="dd/MM/yyyy"
+                    placeholder="Select end date"
+                    minDate={fromDate}
+                    maxDate={fromDate ? new Date(fromDate.getTime() + 30 * 24 * 60 * 60 * 1000) : null}
+                    errorMessage={validator.current.message(
+                      'End Date',
+                      toDate,
+                      'required'
+                    )}
+                  />
+                </Col>
+              </>
+            )}
             <Col sm={2}>
               <DropdownInput
                 label="Project"
@@ -499,16 +527,16 @@ const TodaysProjectReports = () => {
           {
             selectedId && selectedId?.length > 0 && (
               <>
-                <Button
-                  variant="secondary"
-                  className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
-                  type="submit"
-                  onClick={() => {
-                    setShowSubmit(true)
-                  }}
-                >
-                  Sent Report
-                </Button>
+              <Button
+                variant="secondary"
+                className="bg-primary border-0 border-primary h4 m-0 text-white rounded-3"
+                type="submit"
+                onClick={() => {
+                  setShowSubmit(true)
+                }}
+              >
+                Sent Report
+              </Button>
                 <Button
                   variant="success"
                   className="border-0 h4 m-0 text-white rounded-3 ml-3"
