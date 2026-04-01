@@ -52,7 +52,7 @@ function RightContainer() {
         <Form>
           <Form.Label>Student Registration</Form.Label>
           <Table striped bordered hover>
-            <thead variant="primary">
+            <thead className="table-primary">
               <tr>
                 <th>Student Name</th>
                 <th>Year</th>

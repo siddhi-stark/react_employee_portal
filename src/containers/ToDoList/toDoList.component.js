@@ -924,7 +924,7 @@ function ToDoList(props) {
             getTableData(1);
             setShowMsg(false);
           }}
-          label={<h4 variant="primary">Add Break</h4>}
+          label={<h4 className="text-primary">Add Break</h4>}
           id="contained-modal-title-vcenter"
           modalBody={
             <Form onSubmit={onBreakSubmit}>
