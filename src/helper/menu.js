@@ -48,13 +48,13 @@ const menu = [
         submenu: [],
         roleaccess: [1],
       },
-      {
-        title: 'WFH',
-        path: '/wfh',
-        icon: '',
-        submenu: [],
-        roleaccess: [1, 2, 3, 5, 6],
-      },
+      // {
+      //   title: 'WFH',
+      //   path: '/wfh',
+      //   icon: '',
+      //   submenu: [],
+      //   roleaccess: [1, 2, 3, 5, 6],
+      // },
       {
         title: 'Timesheet',
         path: '/reports',
@@ -187,19 +187,19 @@ const menu = [
     path: '#',
     icon: 'timesheet.svg',
     submenu: [
-      // {
-      //   title: 'Employees WFH',
-      //   path: '/wfh',
-      //   icon: '',
-      //   submenu: [],
-      //   roleaccess: [1, 2, 3, 5, 6],
-      // },
+      {
+        title: 'Employees WFH',
+        path: '/wfh',
+        icon: '',
+        submenu: [],
+        roleaccess: [1, 2, 3, 5, 6],
+      },
       {
         title: 'My WFH',
         path: '/wfh-employees',
         icon: '',
         submenu: [],
-        roleaccess: [4, 5, 6, 3],
+        roleaccess: [2 ,4, 5, 6, 3],
       },
       // {
       //   title: 'Interview Questions',
