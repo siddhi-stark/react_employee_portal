@@ -27,14 +27,9 @@ function NewInterviewRounds7(props) {
                 item.fields.map((it) => {
                     const itemData = it;
                     const date = new Date();
-                    const minDate = new Date(date);
-                    minDate.setDate(minDate.getDate() - 90);
-                    const maxDate = new Date(date);
-                    maxDate.setDate(maxDate.getDate() + 90);
-                    if (it.name === 'int_date') {
-                        itemData.minDate = minDate;
-                        itemData.maxDate = maxDate;
-                    }
+                    
+                    if (it.name === 'int_date') itemData.minDate = date;
+
                     if (it.name === 'id') itemData.disabled = true;
 
                     return it;
