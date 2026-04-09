@@ -17,6 +17,7 @@ function LeaveCalendar({
   onNavigate,
   isTeamView = false,
   activeTab, // 'upcoming' or 'taken' – used for status-based filtering aligned with tabs
+  filterByTab = true, // when false, show all statuses together (Pattern C)
 }) {
   const [currentView, setCurrentView] = useState(view);
   const [currentDate, setCurrentDate] = useState(defaultDate);
@@ -62,20 +63,20 @@ function LeaveCalendar({
   // Transform leaves data to calendar events
   // Filter leaves to only show those that fall within the current month
   // and respect tab-based semantics (upcoming vs taken) by status:
-  // - Upcoming: non-approved (e.g. Pending/Cancelled/Declined)
-  // - Taken: approved only
+  // - Upcoming: Pending + Approved
+  // - Taken: Approved + Declined
   const leaveEvents = useMemo(() => {
     return leaves
       .filter((leave) => {
         // 1) Apply status-based filtering according to activeTab
         if (activeTab === 'upcoming') {
-          // Show only non-approved leaves in Upcoming tab
-          if (leave.status_name === 'Approved') {
+          // Show pending + approved
+          if (leave.status_name !== 'Pending' && leave.status_name !== 'Approved') {
             return false;
           }
         } else if (activeTab === 'taken') {
-          // Show only approved leaves in Taken tab
-          if (leave.status_name !== 'Approved') {
+          // Show approved + declined
+          if (leave.status_name !== 'Approved' && leave.status_name !== 'Declined') {
             return false;
           }
         }
@@ -134,7 +135,7 @@ function LeaveCalendar({
           : '',
       };
     });
-  }, [leaves, currentMonthStart, currentMonthEnd, activeTab]);
+  }, [leaves, currentMonthStart, currentMonthEnd, activeTab, filterByTab]);
 
   // Combine leave and holiday events
   const events = useMemo(() => {
@@ -211,6 +212,7 @@ function LeaveCalendar({
     let borderColor = colors.border;
     let color = colors.text;
     let borderStyle = 'solid';
+    let opacity = 1;
     
     // If status is declined or cancelled, make it more muted
     if (status_name === 'Declined') {
@@ -223,6 +225,10 @@ function LeaveCalendar({
       color = '#fff';
     }
     // Pending and Approved use leave type colors
+    if (status_name === 'Pending') {
+      opacity = 0.75;
+      borderStyle = 'dotted';
+    }
 
     // Half-day indicator styling
     if (isHalfDay) {
@@ -265,6 +271,7 @@ function LeaveCalendar({
         borderColor,
         color,
         borderStyle,
+        opacity,
         borderRadius: '4px',
         borderWidth: '2px',
         padding: '2px 6px',

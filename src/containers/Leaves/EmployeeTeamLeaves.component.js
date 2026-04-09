@@ -282,12 +282,8 @@ function EmployeeTeamLeaves(props) {
       params.end_date = customFunctions.getDate(monthEnd);
     }
 
-    // For table view, keep existing upcoming/taken behaviour via tab.
-    // For calendar view, avoid restricting by tab so past and future
-    // leaves are all available for the visible date range.
-    if (!forCalendar) {
-      params.tab = currentTab; // Add tab parameter only for table data
-    }
+    // Use the same tab semantics for both table & calendar requests.
+    params.tab = currentTab;
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
