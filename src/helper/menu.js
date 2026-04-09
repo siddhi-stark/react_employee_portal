@@ -210,7 +210,7 @@ const menu = [
       //   roleaccess: [4, 5, 6, 3],
       // },
     ],
-    roleaccess: [2, 3, 4, 5, 6],
+    roleaccess: [1, 2, 3, 4, 5, 6],
   },
 
 
