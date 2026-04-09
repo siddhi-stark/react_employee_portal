@@ -189,18 +189,18 @@ const menu = [
     icon: 'timesheet.svg',
     submenu: [
       {
-        title: 'Employees WFH',
-        path: '/wfh',
-        icon: '',
-        submenu: [],
-        roleaccess: [1, 2, 3, 5, 6],
-      },
-      {
         title: 'My WFH',
         path: '/wfh-employees',
         icon: '',
         submenu: [],
         roleaccess: [2 ,4, 5, 6, 3],
+      },
+      {
+        title: 'Employees WFH',
+        path: '/wfh',
+        icon: '',
+        submenu: [],
+        roleaccess: [1, 2, 3, 5, 6],
       },
       // {
       //   title: 'Interview Questions',
