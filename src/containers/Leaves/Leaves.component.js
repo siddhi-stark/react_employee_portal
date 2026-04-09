@@ -316,18 +316,9 @@ function Leaves() {
       params.end_date = customFunctions.getDate(monthEnd);
     }
 
-
-    // For table view, keep existing upcoming/taken behaviour via tab & status filters.
-    // For calendar view, avoid restricting by tab/status so past and future leaves
-    // are all available to the calendar within its visible date range.
-    if (!forCalendar) {
-      params.tab = currentTab; // Add tab parameter only for table data
-
-      // For upcoming tab, only show Pending leaves (status = 1)
-      if (currentTab === 'upcoming') {
-        params.status = 1; // Pending status
-      }
-    }
+    // Use the same tab semantics for both table & calendar requests so the API includes Approved leaves
+    // in Upcoming and returns consistent results across views.
+    params.tab = currentTab;
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
