@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -21,15 +21,6 @@ function LeaveCalendar({
 }) {
   const [currentView, setCurrentView] = useState(view);
   const [currentDate, setCurrentDate] = useState(defaultDate);
-
-  // Keep internal calendar state in sync with parent props
-  useEffect(() => {
-    setCurrentView(view);
-  }, [view]);
-
-  useEffect(() => {
-    setCurrentDate(defaultDate);
-  }, [defaultDate]);
 
   // Get current month boundaries for filtering holidays
   const currentMonthStart = useMemo(() => {

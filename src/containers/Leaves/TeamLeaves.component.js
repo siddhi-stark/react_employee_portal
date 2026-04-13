@@ -184,8 +184,12 @@ function TeamLeaves() {
       params.end_date = customFunctions.getDate(monthEnd);
     }
 
-    // Send tab for calendar too so API uses upcoming/taken logic consistently.
-    params.tab = currentTab;
+    // Preserve existing tab-based behaviour for table data,
+    // but for calendar view do not restrict by tab so that
+    // both past and future leaves are visible in the calendar.
+    if (!forCalendar) {
+      params.tab = currentTab; // Add tab parameter only for table view
+      }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -242,7 +246,7 @@ function TeamLeaves() {
   useEffect(() => {
     getRowData(1, null, viewMode === 'calendar');
     setTitle('Leaves');
-  }, [filterData, activeTab, viewMode, calendarDate]);
+  }, [filterData, activeTab, viewMode]);
 
   const submitForm = async (formValues) => {
     const filterValues = {
