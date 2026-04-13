@@ -281,12 +281,8 @@ function EmployeeTeamLeaves(props) {
       params.start_date = customFunctions.getDate(monthStart);
       params.end_date = customFunctions.getDate(monthEnd);
     }
-// For table view, keep existing upcoming/taken behaviour via tab.
-    // For calendar view, avoid restricting by tab so past and future
-    // leaves are all available for the visible date range.
-    if (!forCalendar) {
-      params.tab = currentTab; // Add tab parameter only for table data
-    }
+    // Send tab for calendar too so API uses upcoming/taken logic consistently.
+    params.tab = currentTab;
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -337,7 +333,7 @@ function EmployeeTeamLeaves(props) {
       getRowData(1, null, viewMode === 'calendar');
     }
     setTitle('Leaves');
-  }, [filterData, activeTab, viewMode]);
+  }, [filterData, activeTab, viewMode, calendarDate]);
 
   useEffect(() => {
     if (location && location.reportTable) {
