@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { withRouter, useHistory } from 'react-router-dom';
 import swal from 'sweetalert';
 import { Image, Card, Tabs, Tab, Form, Row, Col, Button } from 'react-bootstrap';
@@ -279,7 +279,10 @@ function Leaves() {
 
   const history = useHistory();
 
-  const getRowData = async (pageNo = 1, tab = null, forCalendar = false) => {
+  const latestRequestSeq = useRef(0);
+
+  const getRowData = useCallback(async (pageNo = 1, tab = null, forCalendar = false) => {
+    const requestSeq = ++latestRequestSeq.current;
     setShowLoader(true);
     const page = pageNo || currentPage;
     const currentTab = tab || activeTab;
@@ -323,6 +326,9 @@ function Leaves() {
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
+    // Ignore stale responses (e.g. user switches tabs quickly)
+    if (requestSeq !== latestRequestSeq.current) return;
+
     if (!customFunctions.checkIfEmpty(data, 'O') && data && data.success) {
       setShowLoader(false);
       if (!forCalendar) {
@@ -344,7 +350,7 @@ function Leaves() {
         allowOutsideClick: false,
       });
     }
-  };
+  }, [activeTab, calendarDate, currentPage, filterData, itemsPerPage]);
 
   const submitRevertForm = async (id) => {
     const reasonLabel = id === 2 ? 'approve' : 'decline';
@@ -451,9 +457,8 @@ function Leaves() {
   }, []);
 
   useEffect(() => {
-    getRowData(1, null, viewMode === 'calendar');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, filterData, viewMode]);
+    getRowData(1, activeTab, viewMode === 'calendar');
+  }, [activeTab, filterData, viewMode, calendarDate, getRowData]);
 
   const submitForm = (formValues) => {
     const filterValues = {
@@ -603,13 +608,6 @@ function Leaves() {
                   checked={viewMode === 'table'}
                   onChange={(e) => {
                     setViewMode(e.target.checked ? 'table' : 'calendar');
-                    if (e.target.checked) {
-                      // When switching to table, fetch paginated data
-                      getRowData(1, null, false);
-                    } else {
-                      // When switching to calendar, fetch all data
-                      getRowData(1, null, true);
-                    }
                   }}
                   className="ms-3"
                 />
@@ -619,8 +617,11 @@ function Leaves() {
             <Tabs
               activeKey={activeTab}
               onSelect={(k) => {
-                setActiveTab(k);
-                setCurrentPage(1); // Reset to first page when switching tabs
+                  if (!k) return;
+                  setActiveTab(k);
+                  setCurrentPage(1); // Reset to first page when switching tabs
+                  setRowData([]); // Clear old data so calendar doesn't look "stuck"
+                  getRowData(1, k, viewMode === 'calendar'); // Fetch immediately for better UX
               }}
               className="mb-3"
             >
