@@ -272,6 +272,7 @@ function Leaves() {
   const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'taken'
   const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'table'
   const [filterData, setFilterData] = useState({});
+  const [filterFormKey, setFilterFormKey] = useState(0);
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [calendarView, setCalendarView] = useState('month');
   const [holidays, setHolidays] = useState([]);
@@ -316,9 +317,9 @@ function Leaves() {
       params.end_date = customFunctions.getDate(monthEnd);
     }
 
-    // Use the same tab semantics for both table & calendar requests so the API includes Approved leaves
-    // in Upcoming and returns consistent results across views.
-    params.tab = currentTab;
+    if (!forCalendar) {
+      params.tab = currentTab;
+    }
 
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -476,6 +477,7 @@ function Leaves() {
     if (filterData && !Object.keys(filterData).length) return;
     setFilterData({});
     setCalendarDate(new Date());
+    setFilterFormKey((k) => k + 1);
   };
 
   const handleCalendarEventClick = (event) => {
@@ -537,6 +539,7 @@ function Leaves() {
             <hr />
             <div className="filter-box-main">
               <StarkFormBuilder
+                key={filterFormKey}
                 containerClass=""
                 formHeaderClass=""
                 formSections={MyLeavesFilterSchema}

@@ -78,11 +78,10 @@
         "type": "date",
         "label": "",
         "id": "",
-        "placeholder": "",
         "inputClass": "",
         "containerClass": "",
         "dateFormat": "dd/MM/yyyy",
-        "placeholder": "Select form date",
+        "placeholder": "Select to date",
         "validations": [
           {
             "type": "required",

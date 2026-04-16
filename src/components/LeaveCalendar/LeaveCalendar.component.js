@@ -75,18 +75,19 @@ function LeaveCalendar({
             return false;
           }
         } else if (activeTab === 'taken') {
-          // Show approved + declined
-          if (leave.status_name !== 'Approved' && leave.status_name !== 'Declined') {
-            return false;
-          }
+          if (leave.status_name !== 'Approved' && leave.status_name !== 'Declined' && leave.status_name !== 'Pending') return false;
         }
 
         const leaveStartDate = new Date(leave.leave_from_date);
         const leaveEndDate = new Date(leave.leave_to_date);
-        
-        // Normalize dates to start of day for comparison
         leaveStartDate.setHours(0, 0, 0, 0);
         leaveEndDate.setHours(23, 59, 59, 999);
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        // Past Pending: show only in Taken, hide from Upcoming
+        if (leave.status_name === 'Pending' && leaveStartDate.getTime() < today.getTime()) {
+          if (activeTab === 'upcoming') return false;
+        }
+        if (activeTab === 'taken' && leave.status_name === 'Pending' && leaveStartDate.getTime() > today.getTime()) return false;
         
         // Only include leaves that overlap with the current month
         // A leave overlaps if: leave starts before month ends AND leave ends after month starts

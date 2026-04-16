@@ -132,6 +132,7 @@ function TeamLeaves() {
   const [leaveId, setLeaveId] = useState('');
   const [isShowLoader, setShowLoader] = useState(false);
   const [filterData, setFilterData] = useState({});
+  const [filterFormKey, setFilterFormKey] = useState(0);
   const [options, updateOptions] = useState({});
   const [activeTab, setActiveTab] = useState('upcoming'); // 'upcoming' or 'taken'
   const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'table'
@@ -168,8 +169,6 @@ function TeamLeaves() {
       ...filterList,
     };
 
-    // For calendar view, ensure we request the full current month range
-    // so retroactive and future team leaves are visible for that month.
     if (forCalendar && !filterList.start_date && !filterList.end_date) {
       const monthStart = new Date(calendarDate);
       monthStart.setDate(1);
@@ -184,12 +183,9 @@ function TeamLeaves() {
       params.end_date = customFunctions.getDate(monthEnd);
     }
 
-    // Preserve existing tab-based behaviour for table data,
-    // but for calendar view do not restrict by tab so that
-    // both past and future leaves are visible in the calendar.
     if (!forCalendar) {
-      params.tab = currentTab; // Add tab parameter only for table view
-      }
+      params.tab = currentTab;
+    }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
 
@@ -270,6 +266,7 @@ function TeamLeaves() {
     if(filterData && !Object.keys(filterData).length) return;
     setFilterData({});
     setCalendarDate(new Date());
+    setFilterFormKey((k) => k + 1);
   };
 
   const handleCalendarEventClick = (event) => {
@@ -624,6 +621,7 @@ function TeamLeaves() {
             <hr />
             <div className="filter-box-main">
               <StarkFormBuilder
+                key={filterFormKey}
                 containerClass=""
                 formHeaderClass=""
                 formSections={SearchFormSections}
@@ -645,7 +643,7 @@ function TeamLeaves() {
                 isStepForm={false}
                 onFormReset={() => {
                   if(filterData && !Object.keys(filterData).length) return;
-                  setFilterData();
+                  onClear();
                 }}
               />
               <Row className="mt-3">

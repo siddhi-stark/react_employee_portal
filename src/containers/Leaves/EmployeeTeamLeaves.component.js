@@ -228,6 +228,7 @@ function EmployeeTeamLeaves(props) {
   const [isShowLoader, setShowLoader] = useState(false);
   const history = useHistory();
   const [filterData, setFilterData] = useState({});
+  const [filterFormKey, setFilterFormKey] = useState(0);
   const [year, setYear] = useState(null);
   const [reportTable, setReportTable] = useState(false);
   const [options, updateOptions] = useState({});
@@ -266,8 +267,6 @@ function EmployeeTeamLeaves(props) {
       ...filterList,
     };
 
-    // For calendar view, explicitly request the full current month range
-    // so retroactive and future leaves are available for that month.
     if (forCalendar && !filterList.start_date && !filterList.end_date) {
       const monthStart = new Date(calendarDate);
       monthStart.setDate(1);
@@ -281,11 +280,8 @@ function EmployeeTeamLeaves(props) {
       params.start_date = customFunctions.getDate(monthStart);
       params.end_date = customFunctions.getDate(monthEnd);
     }
-// For table view, keep existing upcoming/taken behaviour via tab.
-    // For calendar view, avoid restricting by tab so past and future
-    // leaves are all available for the visible date range.
     if (!forCalendar) {
-      params.tab = currentTab; // Add tab parameter only for table data
+      params.tab = currentTab;
     }
     const url = customFunctions.generateUrl(endPoint, params);
     const { data, message } = await AuthApi.getDataFromServer(url);
@@ -429,6 +425,7 @@ function EmployeeTeamLeaves(props) {
     if (filterData && !Object.keys(filterData).length) return;
     setFilterData({});
     setCalendarDate(new Date());
+    setFilterFormKey((k) => k + 1);
   };
 
   const handleCalendarEventClick = (event) => {
@@ -820,6 +817,7 @@ function EmployeeTeamLeaves(props) {
             <hr />
             <div className="filter-box-main">
               <StarkFormBuilder
+                key={filterFormKey}
                 containerClass=""
                 formHeaderClass=""
                 formSections={SearchFormSections}
@@ -840,7 +838,7 @@ function EmployeeTeamLeaves(props) {
                 onFormReset={() => {
                   if (filterData && !Object.keys(filterData).length) return;
                   setReportTable(false);
-                  setFilterData();
+                  onClear();
                   setYear(null);
                 }}
               />
