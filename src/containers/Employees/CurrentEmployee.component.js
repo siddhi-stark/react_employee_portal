@@ -1275,7 +1275,6 @@ function CurrentEmployee() {
               <Col sm={6}>
                 <DropdownInput
                   label="Manager"
-                  asterisk="*"
                   options={getManagerList()}
                   placeholder="Select Manager"
                   defaultValue={selectedManager}
@@ -1283,11 +1282,6 @@ function CurrentEmployee() {
                   onSelectHandler={(select) => {
                     setSelectedManager(select);
                   }}
-                  errorMessage={validator.current.message(
-                    'Manager',
-                    selectedManager,
-                    'required'
-                  )}
                 />
               </Col>
 

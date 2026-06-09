@@ -781,7 +781,6 @@ const AddEmployeeComponent = () => {
                     <Col sm={6}>
                       <DropdownInput
                         label="Manager"
-                        asterisk="*"
                         options={getManagerList()}
                         placeholder="Select Manager"
                         defaultValue={selectedManager}
@@ -789,11 +788,6 @@ const AddEmployeeComponent = () => {
                         onSelectHandler={(select) => {
                           setSelectedManager(select);
                         }}
-                        errorMessage={validator.current.message(
-                          'Manager',
-                          selectedManager,
-                          'required'
-                        )}
                       />
                     </Col>
 
