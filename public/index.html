@@ -34,6 +34,37 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script>
+      function onSurakshaConsent(result) {
+        console.log('[Suraksha consent]', result);
+      }
+      // Suraksha consent — staging SDK/API (EMP staging). Layout opens via SSO + SDK.init.
+      // Purpose: stark_wellness.medical.record (employee_medical_records is unpublished).
+      (function () {
+        var s = document.createElement('script');
+        s.id = 'suraksha-consent-sdk';
+        s.src = 'http://115.160.211.220:8080/sdk/v1/consent.js';
+        s.async = false;
+        s.setAttribute('data-tenant', 'stark');
+        s.setAttribute('data-purpose', 'stark_wellness.medical.record');
+        s.setAttribute('data-api-base', 'http://115.160.211.220:8080/api/v1');
+        // Token is not available at HTML parse time in CRA — Layout SSO sets it on SDK.init.
+        s.setAttribute('data-principal-token', '');
+        s.setAttribute('data-locale', 'mr');
+        s.setAttribute('data-auto-open', 'false');
+        s.setAttribute('data-fail-mode', 'block');
+        s.setAttribute('data-callback', 'onSurakshaConsent');
+        s.onerror = function () {
+          console.error('[Suraksha] failed to load SDK from http://115.160.211.220:8080/sdk/v1/consent.js');
+        };
+        var here = document.currentScript;
+        if (here && here.parentNode) {
+          here.parentNode.insertBefore(s, here.nextSibling);
+        } else {
+          document.head.appendChild(s);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <!--
       This HTML file is a template.
